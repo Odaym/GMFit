@@ -15,6 +15,9 @@
  */
 package com.mcsaatchi.gmfit.logger;
 
+import android.content.Context;
+import android.widget.Toast;
+
 /**
  * Helper class for a list (or tree) of LoggerNodes.
  *
@@ -44,6 +47,9 @@ public class Log {
         return mLogNode;
     }
 
+    public static void toaster(Context context, String message){
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+    }
     /**
      * Sets the LogNode data will be sent to.
      */
