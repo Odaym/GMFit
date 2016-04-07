@@ -59,6 +59,16 @@ public class GoogleFit_Fragment extends Fragment {
     private Activity parentActivity;
 
     @Override
+    public void onStop() {
+        super.onStop();
+
+        if (googleApiFitnessClient != null && googleApiFitnessClient.isConnected()) {
+            googleApiFitnessClient.stopAutoManage(getActivity());
+            googleApiFitnessClient.disconnect();
+        }
+    }
+
+    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
 
