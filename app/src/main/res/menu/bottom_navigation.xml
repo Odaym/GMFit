@@ -20,4 +20,9 @@
         android:icon="@drawable/ic_update_white_24dp"
         android:title="Four"/>
 
+    <item
+        android:id="@+id/item_five"
+        android:icon="@drawable/places_ic_search"
+        android:title="Five"/>
+
 </menu>
