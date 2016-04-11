@@ -1,14 +1,15 @@
 package com.mcsaatchi.gmfit.activities;
 
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 
 import com.mcsaatchi.gmfit.R;
+import com.mcsaatchi.gmfit.databinding.MainActivityBinding;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnMenuTabClickListener;
 
@@ -21,10 +22,11 @@ public class Main_Activity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
-        bottomBar = BottomBar.attachShy((CoordinatorLayout) findViewById(R.id.myCoordinator),
-                findViewById(R.id.myScrollingContent), savedInstanceState);
+        MainActivityBinding binding = DataBindingUtil.setContentView(this, R.layout.main_activity);
+
+        bottomBar = BottomBar.attachShy(binding.myCoordinator,
+                binding.myScrollingContent, savedInstanceState);
 
         bottomBar.noTopOffset();
         bottomBar.noNavBarGoodness();
@@ -47,6 +49,9 @@ public class Main_Activity extends AppCompatActivity {
                     case R.id.item_four:
                         fragmentReplace = new Second_Fragment();
                         break;
+                    case R.id.item_five:
+                        fragmentReplace = new Second_Fragment();
+                        break;
                 }
 
                 getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
@@ -62,6 +67,7 @@ public class Main_Activity extends AppCompatActivity {
         bottomBar.mapColorForTab(1, ContextCompat.getColor(this, android.R.color.holo_green_dark));
         bottomBar.mapColorForTab(2, "#7B1FA2");
         bottomBar.mapColorForTab(3, "#FF5252");
+        bottomBar.mapColorForTab(4, ContextCompat.getColor(this, android.R.color.holo_green_dark));
     }
 
     @Override
