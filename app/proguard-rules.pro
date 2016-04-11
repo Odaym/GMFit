@@ -4,7 +4,16 @@
 # You can edit the include path and order by changing the proguardFiles
 # directive in build.gradle.
 
-# Picasso
+
+######## OKIO
+-dontwarn okio.**
+
+
+######## Charting Library (MikePhil)
+-keep class com.github.mikephil.**
+-dontwarn com.github.mikephil.**
+
+######## Picasso
 -dontwarn com.squareup.okhttp.**
 
 ######## Somewhat Global
@@ -26,6 +35,10 @@
     @butterknife.* <methods>;
 }
 
+
+######## RxAndroid
+-keep class rx.internal.util.**
+-dontwarn rx.internal.util.**
 
 ######## Glide
 
@@ -90,3 +103,19 @@
 ######## Apache Harmony, Sun Mail and Java CommandInfo
 
 -dontwarn java.awt.**, javax.security.**, java.beans.**
+
+
+######## RxAndroid
+
+-keep class rx.schedulers.Schedulers {
+    public static <methods>;
+}
+-keep class rx.schedulers.ImmediateScheduler {
+    public <methods>;
+}
+-keep class rx.schedulers.TestScheduler {
+    public <methods>;
+}
+-keep class rx.schedulers.Schedulers {
+    public static ** test();
+}
