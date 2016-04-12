@@ -8,4 +8,14 @@
         functionality.</string>
     <string name="settings">Settings</string>
     <string name="ok">OK</string>
+
+    <!-- SIGN UP ACTIVITY -->
+    <string name="field_empty_error_message">Can\'t be empty</string>
+    <string name="email_address_label">E-mail Address</string>
+    <string name="email_address_hint">email@example.com</string>
+    <string name="password_label">Password</string>
+    <string name="password_hint">at least 8 characters</string>
+    <string name="confirm_password_label">Confirm Password</string>
+    <string name="confirm_password_hint">your password, again</string>
+
 </resources>
