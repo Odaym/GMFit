@@ -6,14 +6,13 @@ import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.databinding.MainActivityBinding;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnMenuTabClickListener;
 
-public class Main_Activity extends AppCompatActivity {
+public class Main_Activity extends Base_Activity {
 
     private BottomBar bottomBar;
     private Fragment fragmentReplace;
