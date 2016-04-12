@@ -23,11 +23,13 @@
         android:orientation="vertical">
 
         <Button
+            android:id="@+id/loginFacebookBTN"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Login with Facebook"/>
 
         <Button
+            android:id="@+id/signUpBTN"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Sign up with Email"/>
