@@ -19,6 +19,6 @@
         android:layout_marginTop="20dp"
         android:layout_centerInParent="true"
         android:gravity="center_horizontal"
-        android:text="This is the FIRST fragment"/>
+        android:text="This is the THIRD fragment"/>
 
 </RelativeLayout>
