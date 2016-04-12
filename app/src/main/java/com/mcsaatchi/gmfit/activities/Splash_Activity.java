@@ -21,8 +21,6 @@ public class Splash_Activity extends AppCompatActivity {
             public void run() {
                 Intent i = new Intent(Splash_Activity.this, Login_Activity.class);
                 startActivity(i);
-
-                finish();
             }
         }, SPLASH_TIME_OUT);
     }
