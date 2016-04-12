@@ -42,7 +42,6 @@ public class IntroSlider_Fragment extends Fragment {
 
         ImageView introIMG = (ImageView) view.findViewById(R.id.introIMG);
 
-
         switch (layoutResId) {
             case R.layout.fragment_intro_slide_1:
                 Picasso.with(getActivity()).load(R.drawable.fragment_intro_picture_1).transform(new CircleTransform()

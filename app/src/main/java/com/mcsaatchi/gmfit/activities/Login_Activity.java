@@ -1,10 +1,13 @@
 package com.mcsaatchi.gmfit.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
 
 import com.mcsaatchi.gmfit.R;
@@ -19,14 +22,33 @@ public class Login_Activity extends Base_Activity {
 
     @Bind(R.id.viewpager)
     ViewPager viewPager;
+    @Bind(R.id.loginFacebookBTN)
+    Button loginFacebookBTN;
+    @Bind (R.id.signUpBTN)
+    Button signUpBTN;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.login_activity);
 
         ButterKnife.bind(this);
+
+        signUpBTN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Login_Activity.this, SignUp_Activity.class);
+                startActivity(intent);
+            }
+        });
+
+        loginFacebookBTN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Login_Activity.this, Main_Activity.class);
+                startActivity(intent);
+            }
+        });
 
         viewPager.setAdapter(new IntroAdapter(getSupportFragmentManager()));
 
