@@ -17,7 +17,7 @@
             android:name=".activities.Splash_Activity"
             android:noHistory="true"
             android:screenOrientation="portrait"
-            android:theme="@style/Splash_Activity_Theme">
+            android:theme="@style/No_ActionBar_Theme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -31,6 +31,11 @@
 
         <activity
             android:name=".activities.Login_Activity"
+            android:screenOrientation="portrait"
+            android:theme="@style/No_ActionBar_Theme"/>
+
+        <activity
+            android:name=".activities.SignUp_Activity"
             android:screenOrientation="portrait"/>
     </application>
 </manifest>
