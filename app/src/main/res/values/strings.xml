@@ -21,5 +21,19 @@
     <string name="password_hint">Password, at least 8 characters</string>
     <string name="confirm_password_hint">Confirm Password</string>
     <string name="create_account_button">CREATE ACCOUNT</string>
-    <string name="creating_account_TOS">By creating an account, you agree to the <a href="">Terms of Use.</a></string>
+    <string name="creating_account_TOS">By creating an account, you agree to the
+        <a href="http://www.google.com">Terms of Use.</a></string>
+
+    <!-- TERMS OF USAGE ACTIVITY -->
+    <string name="tos_activity_title">Terms of Use</string>
+    <string name="terms_of_use_value">Lorem ipsum dolor sit amet, accumsan praesent vulputate has ad, vel ne liber zril. Ea qui audire suavitate, ut stet debitis complectitur nec. Ex vim wisi mutat denique, his sint congue ne. Ut duo partiendo percipitur, et eum dolorum mandamus. Mea dicam vivendum ex, ad labitur quaerendum cum.
+
+Stet reprehendunt eu vel, usu hinc dolor ad. Vero legimus mel et, nam nibh expetenda no, cu ullum aeque sed. Vel vitae maiorum periculis ex, modus tantas populo mei ea. Per ne laudem quidam feugiat.
+
+Ancillae nominati consulatu vim te, id vim duis inimicus conceptam. Mea ancillae vulputate at, nam id feugait reprimique. Ut utinam invidunt vulputate nam. Sit nisl offendit id, vel eloquentiam intellegebat in. Duo singulis splendide ex, est albucius nominavi deserunt ad.
+
+Summo vivendo ei has, ne enim putant fastidii qui. Vis at brute soleat nostrum, ceteros assentior sed eu. At pro commodo inermis atomorum, mei eu reque laudem nominati. Ut inani instructior vix, per vidisse adolescens ea.
+
+Sit eleifend partiendo temporibus ad, mel reque adversarium an, vix nibh accommodare concludaturque ne. Sed no inani nonumy vocibus, te sed dicunt invenire partiendo. Mei id meliore persecuti, ridens iuvaret usu no. Brute novum altera cum ne. Id his labore vulputate dissentiet, ut mei oportere neglegentur, malis petentium ad vim. Sit eu quidam regione erroribus, usu an ullum errem deserunt.
+    <a href="http://www.globemedlebanon.com">http://www.globemedlebanon.com</a></string>
 </resources>
