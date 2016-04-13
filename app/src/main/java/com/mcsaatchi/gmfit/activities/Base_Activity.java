@@ -6,14 +6,22 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 
+import com.mcsaatchi.gmfit.R;
+
 public class Base_Activity extends AppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (getSupportActionBar() != null)
+        if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+            if (savedInstanceState != null && savedInstanceState.get("activity_title") != null)
+                getSupportActionBar().setTitle(getString(savedInstanceState.getInt("activity_title")));
+            else
+                getSupportActionBar().setTitle(getString(R.string.app_name));
+        }
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.mcsaatchi.gmfit.activities;
 
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.widget.TextView;
 
 import com.andreabaccega.widget.FormEditText;
 import com.mcsaatchi.gmfit.R;
@@ -17,10 +18,16 @@ public class SignUp_Activity extends Base_Activity {
     FormEditText passwordET;
     @Bind(R.id.confirmPasswordET)
     FormEditText confirmPasswordET;
+    @Bind(R.id.alreadySignedUpTV)
+    TextView alreadySignedUpTV;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        Bundle bundle = new Bundle();
+        bundle.putInt("activity_title", R.string.sign_up_activity_title);
+
+        super.onCreate(bundle);
+
         setContentView(R.layout.signup_activity);
 
         ButterKnife.bind(this);
