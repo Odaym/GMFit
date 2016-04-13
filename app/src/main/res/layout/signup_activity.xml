@@ -99,11 +99,10 @@
             android:text="@string/create_account_button"/>
 
         <TextView
-            android:id="@+id/alreadySignedUpTV"
+            android:id="@+id/creatingAccountTOSTV"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:gravity="center"
-            android:text="@string/creating_account_TOS"/>
+            android:gravity="center"/>
     </LinearLayout>
 </ScrollView>
