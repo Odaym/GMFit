@@ -35,7 +35,9 @@
                     android:textColor="@android:color/black"
                     android:textColorHint="@color/edittext_hint_color"
                     android:textCursorDrawable="@null"
-                    validator:emptyErrorString="@string/field_empty_error_message"/>
+                    validator:emptyErrorString="@string/field_empty_error_message"
+                    validator:testErrorString="@string/error_email_address_not_valid"
+                    validator:testType="email"/>
 
             </com.wrapp.floatlabelededittext.FloatLabeledEditText>
         </LinearLayout>
@@ -61,7 +63,10 @@
                     android:textColor="@android:color/black"
                     android:textColorHint="@color/edittext_hint_color"
                     android:textCursorDrawable="@null"
-                    validator:emptyErrorString="@string/field_empty_error_message"/>
+                    validator:customRegexp="@string/password_requirements_regex"
+                    validator:emptyErrorString="@string/field_empty_error_message"
+                    validator:testErrorString="@string/field_password_too_short_error"
+                    validator:testType="regexp"/>
 
             </com.wrapp.floatlabelededittext.FloatLabeledEditText>
         </LinearLayout>
@@ -87,12 +92,16 @@
                     android:textColor="@android:color/black"
                     android:textColorHint="@color/edittext_hint_color"
                     android:textCursorDrawable="@null"
-                    validator:emptyErrorString="@string/field_empty_error_message"/>
+                    validator:customRegexp="@string/password_requirements_regex"
+                    validator:emptyErrorString="@string/field_empty_error_message"
+                    validator:testErrorString="@string/field_password_too_short_error"
+                    validator:testType="regexp"/>
 
             </com.wrapp.floatlabelededittext.FloatLabeledEditText>
         </LinearLayout>
 
         <Button
+            android:id="@+id/createAccountBTN"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"

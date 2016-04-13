@@ -10,10 +10,15 @@ import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.andreabaccega.widget.FormEditText;
 import com.mcsaatchi.gmfit.R;
+import com.mcsaatchi.gmfit.classes.Helpers;
+import com.mcsaatchi.gmfit.logger.Log;
+
+import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -26,8 +31,13 @@ public class SignUp_Activity extends Base_Activity {
     FormEditText passwordET;
     @Bind(R.id.confirmPasswordET)
     FormEditText confirmPasswordET;
+    @Bind(R.id.createAccountBTN)
+    Button createAccountBTN;
     @Bind(R.id.creatingAccountTOSTV)
     TextView creatingAccountTOSTV;
+
+    private Helpers helpers = Helpers.getInstance();
+    private ArrayList<FormEditText> allFields = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,8 +50,21 @@ public class SignUp_Activity extends Base_Activity {
 
         ButterKnife.bind(this);
 
+        allFields.add(emailET);
+        allFields.add(passwordET);
+        allFields.add(confirmPasswordET);
+
         passwordET.setTypeface(Typeface.DEFAULT);
         confirmPasswordET.setTypeface(Typeface.DEFAULT);
+
+        createAccountBTN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (helpers.validateFields(allFields)){
+                    Log.toaster(SignUp_Activity.this, "All fields check out!");
+                }
+            }
+        });
 
         SpannableString ss = new SpannableString(getString(R.string.creating_account_TOS));
         ClickableSpan clickableSpan = new ClickableSpan() {
