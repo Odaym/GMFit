@@ -1,12 +1,15 @@
 <resources>
     <string name="app_name">GMFit</string>
+
+    <!-- GLOBAL COMMON -->
+    <string name="submit">Submit</string>
+    <string name="settings">Settings</string>
+
     <string name="intro_text">Hi! Let\'s listen to some available data sources! Check the menu for more actions!</string>
     <string name="action_unregister_listener">Unregister listener</string>
-    <string name="action_settings">Settings</string>
     <string name="permission_rationale">Location data is used as part of the Google Fit API</string>
     <string name="permission_denied_explanation">Permission was denied, but is needed for core
         functionality.</string>
-    <string name="settings">Settings</string>
     <string name="ok">OK</string>
 
     <!-- LOGIN ACTIVITY -->
@@ -15,7 +18,7 @@
     <string name="already_signed_up">Already a user? Sign in</string>
 
     <!-- SIGN UP ACTIVITY -->
-    <string name="sign_up_activity_title">Sign up</string>
+    <string name="sign_up_activity_title">Sign Up</string>
     <string name="field_empty_error_message">Can\'t be empty</string>
     <string name="email_address_hint">Email Address</string>
     <string name="password_hint">Password, at least 8 characters</string>
@@ -23,6 +26,16 @@
     <string name="create_account_button">CREATE ACCOUNT</string>
     <string name="creating_account_TOS">By creating an account, you agree to the
         <a href="http://www.google.com">Terms of Use.</a></string>
+
+    <!-- SIGN IN ACTIVITY -->
+    <string name="sign_in_button">SIGN IN</string>
+    <string name="existing_password_hint">Password</string>
+    <string name="sign_in_activity_title">Sign In</string>
+    <string name="forgot_password_button">Forgot Password?</string>
+
+    <!-- FORGOT PASSWORD ACTIVITY -->
+    <string name="forgot_password_activity_title">Forgot Password</string>
+    <string name="didnt_receive_forgot_password_email">Didn\'t receive an email yet? Let us know!</string>
 
     <!-- TERMS OF USAGE ACTIVITY -->
     <string name="tos_activity_title">Terms of Use</string>
