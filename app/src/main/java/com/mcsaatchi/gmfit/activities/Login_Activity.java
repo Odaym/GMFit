@@ -1,14 +1,21 @@
 package com.mcsaatchi.gmfit.activities;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextPaint;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.classes.DefaultIndicator_Controller;
@@ -26,6 +33,8 @@ public class Login_Activity extends Base_Activity {
     Button loginFacebookBTN;
     @Bind (R.id.signUpBTN)
     Button signUpBTN;
+    @Bind(R.id.alreadySignedUpTV)
+    TextView alreadySignedUpTV;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +42,14 @@ public class Login_Activity extends Base_Activity {
         setContentView(R.layout.login_activity);
 
         ButterKnife.bind(this);
+
+        loginFacebookBTN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Login_Activity.this, Main_Activity.class);
+                startActivity(intent);
+            }
+        });
 
         signUpBTN.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -42,13 +59,24 @@ public class Login_Activity extends Base_Activity {
             }
         });
 
-        loginFacebookBTN.setOnClickListener(new View.OnClickListener() {
+        SpannableString ss = new SpannableString(getString(R.string.already_signed_up));
+        ClickableSpan clickableSpan = new ClickableSpan() {
             @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Login_Activity.this, Main_Activity.class);
-                startActivity(intent);
+            public void onClick(View textView) {
+                startActivity(new Intent(Login_Activity.this, SignIn_Activity.class));
             }
-        });
+            @Override
+            public void updateDrawState(TextPaint ds) {
+                super.updateDrawState(ds);
+                ds.setUnderlineText(false);
+            }
+        };
+
+        ss.setSpan(clickableSpan, 16, ss.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        alreadySignedUpTV.setText(ss);
+        alreadySignedUpTV.setMovementMethod(LinkMovementMethod.getInstance());
+        alreadySignedUpTV.setHighlightColor(Color.TRANSPARENT);
 
         viewPager.setAdapter(new IntroAdapter(getSupportFragmentManager()));
 
