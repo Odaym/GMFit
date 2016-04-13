@@ -7,7 +7,8 @@
     android:paddingBottom="@dimen/activity_horizontal_margin"
     android:paddingEnd="@dimen/activity_vertical_margin"
     android:paddingStart="@dimen/activity_vertical_margin"
-    android:paddingTop="@dimen/activity_horizontal_margin">
+    android:paddingTop="@dimen/activity_horizontal_margin"
+    android:scrollbars="none">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -18,14 +19,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/emailAddressTV"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginEnd="40dp"
-                android:text="@string/email_address_label"/>
 
             <com.wrapp.floatlabelededittext.FloatLabeledEditText
                 android:id="@+id/emailETFloating"
@@ -51,13 +44,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginEnd="40dp"
-                android:text="@string/password_label"/>
 
             <com.wrapp.floatlabelededittext.FloatLabeledEditText
                 android:id="@+id/passwordETFloating"
@@ -85,13 +71,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginEnd="40dp"
-                android:text="@string/confirm_password_label"/>
-
             <com.wrapp.floatlabelededittext.FloatLabeledEditText
                 android:id="@+id/confirmPasswordETFloating"
                 android:layout_width="match_parent"
@@ -116,14 +95,15 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            android:text="CREATE ACCOUNT"/>
+            android:layout_marginTop="20dp"
+            android:text="@string/create_account_button"/>
 
         <TextView
+            android:id="@+id/alreadySignedUpTV"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center|bottom"
+            android:layout_marginTop="20dp"
             android:gravity="center"
-            android:text="By creating an account, you agree to the Terms of Use"/>
+            android:text="@string/creating_account_TOS"/>
     </LinearLayout>
 </ScrollView>

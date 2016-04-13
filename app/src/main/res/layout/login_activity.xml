@@ -26,19 +26,19 @@
             android:id="@+id/loginFacebookBTN"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Login with Facebook"/>
+            android:text="@string/login_with_facebook"/>
 
         <Button
             android:id="@+id/signUpBTN"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Sign up with Email"/>
+            android:text="@string/sign_up_activity_title"/>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:text="Already a user? Sign in"/>
+            android:text="@string/already_signed_up"/>
     </LinearLayout>
 </RelativeLayout>
 

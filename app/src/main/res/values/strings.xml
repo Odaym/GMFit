@@ -9,13 +9,17 @@
     <string name="settings">Settings</string>
     <string name="ok">OK</string>
 
-    <!-- SIGN UP ACTIVITY -->
-    <string name="field_empty_error_message">Can\'t be empty</string>
-    <string name="email_address_label">E-mail Address</string>
-    <string name="email_address_hint">email@example.com</string>
-    <string name="password_label">Password</string>
-    <string name="password_hint">at least 8 characters</string>
-    <string name="confirm_password_label">Confirm Password</string>
-    <string name="confirm_password_hint">your password, again</string>
+    <!-- LOGIN ACTIVITY -->
+    <string name="login_with_facebook">LOGIN WITH FACEBOOK</string>
+    <string name="sign_up_email">SIGN UP</string>
+    <string name="already_signed_up">Already a user? Sign in</string>
 
+    <!-- SIGN UP ACTIVITY -->
+    <string name="sign_up_activity_title">Sign up</string>
+    <string name="field_empty_error_message">Can\'t be empty</string>
+    <string name="email_address_hint">Email Address</string>
+    <string name="password_hint">Password, at least 8 characters</string>
+    <string name="confirm_password_hint">Confirm Password</string>
+    <string name="create_account_button">CREATE ACCOUNT</string>
+    <string name="creating_account_TOS">By creating an account, you agree to the <a href="">Terms of Use.</a></string>
 </resources>
