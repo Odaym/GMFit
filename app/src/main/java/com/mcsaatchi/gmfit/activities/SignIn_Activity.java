@@ -58,6 +58,8 @@ public class SignIn_Activity extends Base_Activity {
             public void onClick(View v) {
                 if (helpers.validateFields(allFields)) {
                     Log.toaster(SignIn_Activity.this, "All fields check out!");
+                    Intent intent = new Intent(SignIn_Activity.this, GetStarted_Activity.class);
+                    startActivity(intent);
                 }
             }
         });
