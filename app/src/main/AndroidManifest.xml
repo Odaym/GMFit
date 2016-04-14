@@ -49,5 +49,11 @@
         <activity
             android:name=".activities.TOS_Activity"
             android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".activities.GetStarted_Activity"
+            android:screenOrientation="portrait"
+            android:theme="@style/No_ActionBar_Theme"/>
+
     </application>
 </manifest>
