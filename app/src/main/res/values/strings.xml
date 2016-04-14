@@ -3,6 +3,7 @@
 
     <!-- GLOBAL COMMON -->
     <string name="submit">Submit</string>
+    <string name="search">Search&#8230;</string>
     <string name="settings">Settings</string>
     <string name="password_requirements_regex">^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$</string>
     <string name="intro_text">Hi! Let\'s listen to some available data sources! Check the menu for more actions!</string>
@@ -51,4 +52,12 @@ Summo vivendo ei has, ne enim putant fastidii qui. Vis at brute soleat nostrum, 
 
 Sit eleifend partiendo temporibus ad, mel reque adversarium an, vix nibh accommodare concludaturque ne. Sed no inani nonumy vocibus, te sed dicunt invenire partiendo. Mei id meliore persecuti, ridens iuvaret usu no. Brute novum altera cum ne. Id his labore vulputate dissentiet, ut mei oportere neglegentur, malis petentium ad vim. Sit eu quidam regione erroribus, usu an ullum errem deserunt.
     <a href="http://www.globemedlebanon.com">http://www.globemedlebanon.com</a></string>
+
+    <!-- GET STARTED ACTIVITY -->
+    <string name="get_started_tag_line">Let\'s get started</string>
+    <string name="get_started_message">Lorem ipsum dolor sit amet, accumsan praesent vulputate has ad, vel ne liber zril. Ea qui audire suavitate, ut stet debitis complectitur nec. Ex vim wisi mutat denique, his sint congue ne.</string>
+    <string name="setup_my_profile_button">SETUP MY PROFILE</string>
+
+    <!-- SETUP PROFILE STEP 1 -->
+    <string name="choose_country_hint">Choose your country</string>
 </resources>
