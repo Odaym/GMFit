@@ -1,9 +1,9 @@
 package com.mcsaatchi.gmfit.activities;
 
 import android.content.Intent;
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.view.Menu;
@@ -25,10 +25,10 @@ public class Main_Activity extends Base_Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        MainActivityBinding binding = DataBindingUtil.setContentView(this, R.layout.main_activity);
+        setContentView(R.layout.activity_main);
 
-        bottomBar = BottomBar.attachShy(binding.myCoordinator,
-                binding.myScrollingContent, savedInstanceState);
+        bottomBar = BottomBar.attachShy((CoordinatorLayout) findViewById(R.id.myCoordinator),
+                findViewById(R.id.myScrollingContent), savedInstanceState);
 
         bottomBar.noTopOffset();
         bottomBar.noNavBarGoodness();
@@ -81,7 +81,7 @@ public class Main_Activity extends Base_Activity {
 
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main_activity, menu);
+        inflater.inflate(R.menu.main, menu);
         return true;
     }
 
