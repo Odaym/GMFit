@@ -44,7 +44,7 @@ public class SignIn_Activity extends Base_Activity {
 
         super.onCreate(bundle);
 
-        setContentView(R.layout.signin_activity);
+        setContentView(R.layout.activity_sign_in);
 
         ButterKnife.bind(this);
 

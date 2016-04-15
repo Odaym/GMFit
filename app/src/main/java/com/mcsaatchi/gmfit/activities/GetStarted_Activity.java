@@ -27,7 +27,7 @@ public class GetStarted_Activity extends Base_Activity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.get_started_activity);
+        setContentView(R.layout.activity_get_started);
 
         ButterKnife.bind(this);
 

@@ -73,7 +73,7 @@ public class CountryListAdapter extends BaseAdapter {
 
 		if (convertView == null) {
 			cell = new Cell();
-			cellView = inflater.inflate(R.layout.country_picker_row, null);
+			cellView = inflater.inflate(R.layout.list_item_country_picker, null);
 			cell.textView = (TextView) cellView.findViewById(R.id.row_title);
 			cell.imageView = (ImageView) cellView.findViewById(R.id.row_icon);
 			cellView.setTag(cell);

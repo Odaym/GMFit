@@ -46,7 +46,7 @@ public class SignUp_Activity extends Base_Activity {
 
         super.onCreate(bundle);
 
-        setContentView(R.layout.signup_activity);
+        setContentView(R.layout.activity_sign_up);
 
         ButterKnife.bind(this);
 

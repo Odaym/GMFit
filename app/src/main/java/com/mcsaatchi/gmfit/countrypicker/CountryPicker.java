@@ -167,7 +167,7 @@ public class CountryPicker extends DialogFragment implements
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		// Inflate view
-		View view = inflater.inflate(R.layout.country_picker, null);
+		View view = inflater.inflate(R.layout.dialog_country_picker, null);
 
 		// Get countries from the json
 		getAllCountries();

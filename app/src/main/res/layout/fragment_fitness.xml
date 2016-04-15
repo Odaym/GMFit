@@ -138,6 +138,7 @@
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="200dp"
+            android:layout_marginTop="5dp"
             android:layout_gravity="center"
             card_view:cardCornerRadius="2dp"
             card_view:cardElevation="5dp"
@@ -153,5 +154,26 @@
                     android:layout_height="match_parent"/>
             </RelativeLayout>
         </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="5dp"
+            card_view:cardCornerRadius="2dp"
+            card_view:cardElevation="5dp"
+            card_view:cardUseCompatPadding="true">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.github.mikephil.charting.charts.BarChart
+                    android:id="@+id/stepsChart"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+            </RelativeLayout>
+        </android.support.v7.widget.CardView>
+
     </LinearLayout>
 </ScrollView>

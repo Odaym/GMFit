@@ -21,7 +21,7 @@ public class TOS_Activity extends Base_Activity {
 
         super.onCreate(bundle);
 
-        setContentView(R.layout.tos_activity);
+        setContentView(R.layout.activity_terms_of_use);
 
         ButterKnife.bind(this);
 

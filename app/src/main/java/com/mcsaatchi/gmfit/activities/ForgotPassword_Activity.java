@@ -40,7 +40,7 @@ public class ForgotPassword_Activity extends Base_Activity {
 
         super.onCreate(bundle);
 
-        setContentView(R.layout.forgot_password_activity);
+        setContentView(R.layout.activity_forgot_password);
 
         ButterKnife.bind(this);
 
