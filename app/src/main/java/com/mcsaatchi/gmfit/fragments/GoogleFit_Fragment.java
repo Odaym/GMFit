@@ -1,4 +1,4 @@
-package com.mcsaatchi.gmfit.activities;
+package com.mcsaatchi.gmfit.fragments;
 
 import android.Manifest;
 import android.app.Activity;
@@ -36,6 +36,7 @@ import com.google.android.gms.fitness.request.SensorRequest;
 import com.google.android.gms.fitness.result.DataSourcesResult;
 import com.mcsaatchi.gmfit.BuildConfig;
 import com.mcsaatchi.gmfit.R;
+import com.mcsaatchi.gmfit.activities.Main_Activity;
 import com.mcsaatchi.gmfit.logger.Log;
 import com.mcsaatchi.gmfit.logger.LogView;
 import com.mcsaatchi.gmfit.logger.LogWrapper;

@@ -1,4 +1,4 @@
-package com.mcsaatchi.gmfit.activities;
+package com.mcsaatchi.gmfit.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

@@ -1,4 +1,4 @@
-package com.mcsaatchi.gmfit.activities;
+package com.mcsaatchi.gmfit.fragments;
 
 import android.graphics.Color;
 import android.os.Bundle;

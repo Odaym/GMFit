@@ -10,6 +10,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 
 import com.mcsaatchi.gmfit.R;
+import com.mcsaatchi.gmfit.fragments.GoogleFit_Fragment;
+import com.mcsaatchi.gmfit.fragments.Second_Fragment;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnMenuTabClickListener;
 

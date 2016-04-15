@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.classes.DefaultIndicator_Controller;
+import com.mcsaatchi.gmfit.fragments.IntroSlider_Fragment;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
