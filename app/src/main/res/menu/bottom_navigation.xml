@@ -3,26 +3,26 @@
     <item
         android:id="@+id/item_one"
         android:icon="@drawable/ic_local_dining_white_24dp"
-        android:title="One"/>
+        android:title="@string/fitness_tab_title"/>
 
     <item
         android:id="@+id/item_two"
         android:icon="@drawable/ic_location_on_white_24dp"
-        android:title="Two"/>
+        android:title="@string/nutrition_tab_title"/>
 
     <item
         android:id="@+id/item_three"
         android:icon="@drawable/ic_favorite_white_24dp"
-        android:title="Three"/>
+        android:title="@string/health_tab_title"/>
 
     <item
         android:id="@+id/item_four"
         android:icon="@drawable/ic_update_white_24dp"
-        android:title="Four"/>
+        android:title="@string/directory_tab_title"/>
 
     <item
         android:id="@+id/item_five"
         android:icon="@drawable/places_ic_search"
-        android:title="Five"/>
+        android:title="@string/profile_tab_title"/>
 
 </menu>
