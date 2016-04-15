@@ -13,6 +13,13 @@
         functionality.</string>
     <string name="ok">OK</string>
 
+    <!-- MAIN ACTIVITY -->
+    <string name="fitness_tab_title">Fitness</string>
+    <string name="nutrition_tab_title">Nutrition</string>
+    <string name="health_tab_title">Health</string>
+    <string name="directory_tab_title">Directory</string>
+    <string name="profile_tab_title">Profile</string>
+
     <!-- LOGIN ACTIVITY -->
     <string name="login_with_facebook">LOGIN WITH FACEBOOK</string>
     <string name="sign_up_email">SIGN UP</string>
