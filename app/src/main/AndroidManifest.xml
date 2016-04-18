@@ -30,16 +30,22 @@
             android:noHistory="true"
             android:screenOrientation="portrait"
             android:theme="@style/No_ActionBar_Theme">
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN"/>-->
+<!---->
+                <!--<category android:name="android.intent.category.LAUNCHER"/>-->
+            <!--</intent-filter>-->
+        </activity>
+
+        <activity
+            android:name=".activities.Main_Activity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-
-        <activity
-            android:name=".activities.Main_Activity"
-            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".activities.Login_Activity"
