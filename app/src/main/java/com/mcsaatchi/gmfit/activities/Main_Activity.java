@@ -11,7 +11,7 @@ import android.view.MenuInflater;
 
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.fragments.GoogleFit_Fragment;
-import com.mcsaatchi.gmfit.fragments.Second_Fragment;
+import com.mcsaatchi.gmfit.fragments.Fitness_Fragment;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnMenuTabClickListener;
 
@@ -32,7 +32,7 @@ public class Main_Activity extends Base_Activity {
 
         bottomBar.noTopOffset();
         bottomBar.noNavBarGoodness();
-
+        
         bottomBar.setItemsFromMenu(R.menu.bottom_navigation, new OnMenuTabClickListener() {
             @Override
             public void onMenuTabSelected(@IdRes int menuItemId) {
@@ -43,16 +43,16 @@ public class Main_Activity extends Base_Activity {
                         fragmentReplace = new GoogleFit_Fragment();
                         break;
                     case R.id.item_two:
-                        fragmentReplace = new Second_Fragment();
+                        fragmentReplace = new Fitness_Fragment();
                         break;
                     case R.id.item_three:
-                        fragmentReplace = new Second_Fragment();
+                        fragmentReplace = new Fitness_Fragment();
                         break;
                     case R.id.item_four:
-                        fragmentReplace = new Second_Fragment();
+                        fragmentReplace = new Fitness_Fragment();
                         break;
                     case R.id.item_five:
-                        fragmentReplace = new Second_Fragment();
+                        fragmentReplace = new Fitness_Fragment();
                         break;
                 }
 

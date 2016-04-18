@@ -2,6 +2,8 @@
     <string name="app_name">GMFit</string>
 
     <!-- GLOBAL COMMON -->
+    <string name="facebook_app_id" translatable="false">114477082289283</string>
+
     <string name="submit">Submit</string>
     <string name="search">Search&#8230;</string>
     <string name="settings">Settings</string>

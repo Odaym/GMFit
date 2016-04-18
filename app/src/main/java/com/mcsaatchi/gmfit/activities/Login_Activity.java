@@ -17,6 +17,12 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.classes.DefaultIndicator_Controller;
 import com.mcsaatchi.gmfit.fragments.IntroSlider_Fragment;
@@ -31,24 +37,42 @@ public class Login_Activity extends Base_Activity {
     @Bind(R.id.viewpager)
     ViewPager viewPager;
     @Bind(R.id.loginFacebookBTN)
-    Button loginFacebookBTN;
+    LoginButton loginFacebookBTN;
     @Bind (R.id.signUpBTN)
     Button signUpBTN;
     @Bind(R.id.alreadySignedUpTV)
     TextView alreadySignedUpTV;
 
+    private CallbackManager callbackManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        callbackManager = CallbackManager.Factory.create();
+
         setContentView(R.layout.activity_login);
 
         ButterKnife.bind(this);
 
-        loginFacebookBTN.setOnClickListener(new View.OnClickListener() {
+        loginFacebookBTN.setReadPermissions("user_friends");
+        loginFacebookBTN.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
-            public void onClick(View v) {
+            public void onSuccess(LoginResult loginResult) {
+                // App code
                 Intent intent = new Intent(Login_Activity.this, Main_Activity.class);
                 startActivity(intent);
+            }
+
+            @Override
+            public void onCancel() {
+                // App code
+            }
+
+            @Override
+            public void onError(FacebookException exception) {
+                // App code
             }
         });
 
@@ -99,6 +123,12 @@ public class Login_Activity extends Base_Activity {
         });
 
         initController();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
     private void initController() {
