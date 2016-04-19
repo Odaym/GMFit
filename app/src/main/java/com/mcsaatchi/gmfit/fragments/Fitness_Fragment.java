@@ -3,13 +3,15 @@ package com.mcsaatchi.gmfit.fragments;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.OvershootInterpolator;
+import android.widget.Button;
+import android.widget.LinearLayout;
 
 import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.charts.HorizontalBarChart;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
@@ -24,9 +26,9 @@ import java.util.ArrayList;
 
 public class Fitness_Fragment extends Fragment {
 
-    private BarChart stepsChart;
-    private HorizontalBarChart barLineChartBase;
     private DecoView dynamicArc;
+    private LinearLayout cards_container;
+    private Button addNewChartBTN;
 
     @Override
     public View onCreateView(LayoutInflater inflater,
@@ -35,26 +37,43 @@ public class Fitness_Fragment extends Fragment {
 
         View fragmentView = inflater.inflate(R.layout.fragment_fitness, container, false);
 
-        stepsChart = (BarChart) fragmentView.findViewById(R.id.chart_1);
-        barLineChartBase = (HorizontalBarChart) fragmentView.findViewById(R.id.chart_2);
+        BarChart barChart = (BarChart) fragmentView.findViewById(R.id.bar_chart);
         dynamicArc = (DecoView) fragmentView.findViewById(R.id.dynamicArcView);
+        cards_container = (LinearLayout) fragmentView.findViewById(R.id.cards_container);
+        addNewChartBTN = (Button) fragmentView.findViewById(R.id.addChartBTN);
 
         setUpDecoViewArc();
 
-        setChartData(stepsChart, 100, 100);
-        setChartData(barLineChartBase, 50, 50);
+        setChartData(barChart, 50, 50);
+
+        addNewChartBTN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CardView cardView = new CardView(getActivity());
+                cardView.setLayoutParams(new ViewGroup.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        getResources().getDimensionPixelSize(R.dimen.chart_height)));
+                cardView.setUseCompatPadding(true);
+                cardView.setCardElevation(getResources().getDimensionPixelSize(R.dimen.cardview_default_elevation));
+                cardView.setRadius(getResources().getDimensionPixelSize(R.dimen.cardview_default_radius));
+
+                BarChart barChart2 = new BarChart(getActivity());
+                barChart2.setLayoutParams(new ViewGroup.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.MATCH_PARENT));
+                setChartData(barChart2, 10, 10);
+
+                cardView.addView(barChart2);
+
+                cards_container.addView(cardView);
+                cards_container.invalidate();
+            }
+        });
 
         return fragmentView;
     }
 
     private void setUpDecoViewArc() {
-//        dynamicArc.addSeries(new SeriesItem.Builder(Color.argb(255, 218, 218, 218))
-//                .setRange(0, 100, 100)
-//                .setInitialVisibility(false)
-//                .setLineWidth(32f)
-//                .build());
-
-//        Create data series track
         SeriesItem seriesItem1 = new SeriesItem.Builder(Color.argb(255, 64, 196, 0))
                 .setRange(0, 100, 0)
                 .setInterpolator(new OvershootInterpolator())
@@ -63,18 +82,11 @@ public class Fitness_Fragment extends Fragment {
 
         int series1Index = dynamicArc.addSeries(seriesItem1);
 
-//        dynamicArc.addEvent(new DecoEvent.Builder(DecoEvent.EventType.EVENT_SHOW, true)
-//                .setDelay(1000)
-//                .setDuration(2000)
-//                .build());
-
         dynamicArc.addEvent(new DecoEvent.Builder(75).setIndex(series1Index).build());
-//        dynamicArc.addEvent(new DecoEvent.Builder(100).setIndex(series1Index).setDelay(8000).build());
-//        dynamicArc.addEvent(new DecoEvent.Builder(10).setIndex(series1Index).setDelay(12000).build());
     }
 
     public void setChartData(BarChart chart, int xLimits, int yLimits) {
-        ArrayList<BarEntry> yVals1 = new ArrayList<BarEntry>();
+        ArrayList<BarEntry> yVals1 = new ArrayList<>();
 
         for (int i = 0; i < yLimits + 1; i++) {
             float mult = (yLimits + 1);
@@ -82,7 +94,7 @@ public class Fitness_Fragment extends Fragment {
             yVals1.add(new BarEntry((int) val1, i));
         }
 
-        ArrayList<String> xVals = new ArrayList<String>();
+        ArrayList<String> xVals = new ArrayList<>();
         for (int i = 0; i < xLimits + 1; i++) {
             xVals.add((int) yVals1.get(i).getVal() + "");
         }
@@ -92,7 +104,7 @@ public class Fitness_Fragment extends Fragment {
         set1.setColors(ColorTemplate.VORDIPLOM_COLORS);
         set1.setDrawValues(false);
 
-        ArrayList<IBarDataSet> dataSets = new ArrayList<IBarDataSet>();
+        ArrayList<IBarDataSet> dataSets = new ArrayList<>();
         dataSets.add(set1);
 
         BarData data = new BarData(xVals, dataSets);

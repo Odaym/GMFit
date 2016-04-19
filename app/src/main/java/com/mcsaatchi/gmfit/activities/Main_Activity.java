@@ -32,7 +32,7 @@ public class Main_Activity extends Base_Activity {
 
         bottomBar.noTopOffset();
         bottomBar.noNavBarGoodness();
-        
+
         bottomBar.setItemsFromMenu(R.menu.bottom_navigation, new OnMenuTabClickListener() {
             @Override
             public void onMenuTabSelected(@IdRes int menuItemId) {
