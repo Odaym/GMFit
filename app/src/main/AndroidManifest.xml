@@ -41,9 +41,9 @@
             android:name=".activities.Main_Activity"
             android:screenOrientation="portrait">
             <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN"/>-->
-<!---->
-                <!--<category android:name="android.intent.category.LAUNCHER"/>-->
+            <!--<action android:name="android.intent.action.MAIN"/>-->
+            <!---->
+            <!--<category android:name="android.intent.category.LAUNCHER"/>-->
             <!--</intent-filter>-->
         </activity>
 
@@ -54,15 +54,18 @@
 
         <activity
             android:name=".activities.SignUp_Activity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateVisible"/>
 
         <activity
             android:name=".activities.SignIn_Activity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateVisible"/>
 
         <activity
             android:name=".activities.ForgotPassword_Activity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateVisible"/>
 
         <activity
             android:name=".activities.TOS_Activity"
