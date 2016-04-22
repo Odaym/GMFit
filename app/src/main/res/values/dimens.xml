@@ -12,7 +12,8 @@
     <!-- LOGIN ACTIVITY -->
     <dimen name="intro_image_dimens">150dp</dimen>
 
-    <!-- CHARTS LISTVIEW -->
+    <!-- DASHBOARD CHARTS -->
+    <dimen name="remove_chart_button_dimens">40dp</dimen>
     <dimen name="chart_height">200dp</dimen>
     <dimen name="cardview_corner_radius">2dp</dimen>
     <dimen name="cardview_elevation">5dp</dimen>

@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.view.animation.BounceInterpolator;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.data.BarData;
@@ -52,21 +53,40 @@ public class Fitness_Fragment extends Fragment {
         addNewChartBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CardView cardView = new CardView(getActivity());
-                cardView.setLayoutParams(new ViewGroup.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT,
+                final CardView cardView = new CardView(getActivity());
+                cardView.setLayoutParams(new RelativeLayout.LayoutParams(
+                        RelativeLayout.LayoutParams.MATCH_PARENT,
                         getResources().getDimensionPixelSize(R.dimen.chart_height)));
                 cardView.setUseCompatPadding(true);
                 cardView.setCardElevation(getResources().getDimensionPixelSize(R.dimen.cardview_default_elevation));
                 cardView.setRadius(getResources().getDimensionPixelSize(R.dimen.cardview_default_radius));
 
-                BarChart newBarChart = new BarChart(getActivity());
-                newBarChart.setLayoutParams(new ViewGroup.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.MATCH_PARENT));
+                final BarChart newBarChart = new BarChart(getActivity());
+                newBarChart.setLayoutParams(new RelativeLayout.LayoutParams(
+                        RelativeLayout.LayoutParams.MATCH_PARENT,
+                        RelativeLayout.LayoutParams.MATCH_PARENT));
                 setChartData(newBarChart, 10, 10);
 
+                Button removeChartBTN = new Button(getActivity());
+                RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
+                        getResources().getDimensionPixelSize(R.dimen.remove_chart_button_dimens),
+                        getResources().getDimensionPixelSize(R.dimen.remove_chart_button_dimens));
+
+                lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+                lp.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+
+                removeChartBTN.setLayoutParams(lp);
+                removeChartBTN.setText("X");
+
+                cardView.addView(removeChartBTN);
                 cardView.addView(newBarChart);
+
+                removeChartBTN.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        cards_container.removeView(cardView);
+                    }
+                });
 
                 cards_container.addView(cardView);
 
