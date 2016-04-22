@@ -1,5 +1,7 @@
 package com.mcsaatchi.gmfit.classes;
 
+import android.os.Bundle;
+
 import com.andreabaccega.widget.FormEditText;
 
 import java.util.ArrayList;
@@ -27,6 +29,18 @@ public class Helpers {
         }
 
         return allValid;
+    }
+
+    public static Bundle createActivityBundleWithProperties(int activityTitleResourceId, boolean enableBackButton) {
+        Bundle bundle = new Bundle();
+
+        if (activityTitleResourceId != 0) {
+            bundle.putInt(Constants.BUNDLE_ACTIVITY_TITLE, activityTitleResourceId);
+        }
+
+        bundle.putBoolean(Constants.BUNDLE_ACTIVITY_BACK_BUTTON_ENABLED, enableBackButton);
+
+        return bundle;
     }
 
 //    public static void linkifyString (final Context context, TextView tv, int stringResourceId, int startIndex, int
