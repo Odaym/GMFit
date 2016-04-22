@@ -1,6 +1,5 @@
 package com.mcsaatchi.gmfit.fragments;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.NestedScrollView;
@@ -8,7 +7,7 @@ import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.BounceInterpolator;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
@@ -84,10 +83,11 @@ public class Fitness_Fragment extends Fragment {
     }
 
     private void setUpDecoViewArc() {
-        SeriesItem seriesItem1 = new SeriesItem.Builder(Color.argb(255, 64, 196, 0))
+        SeriesItem seriesItem1 = new SeriesItem.Builder(getResources().getColor(android.R.color.holo_orange_dark))
                 .setRange(0, 100, 0)
-                .setInterpolator(new AccelerateDecelerateInterpolator())
-                .setLineWidth(32f)
+                .setSpinDuration(2500)
+                .setInterpolator(new BounceInterpolator())
+                .setLineWidth(35f)
                 .build();
 
         int series1Index = dynamicArc.addSeries(seriesItem1);
