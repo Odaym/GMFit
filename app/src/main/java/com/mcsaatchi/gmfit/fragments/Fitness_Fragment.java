@@ -3,6 +3,7 @@ package com.mcsaatchi.gmfit.fragments;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +28,7 @@ import java.util.ArrayList;
 public class Fitness_Fragment extends Fragment {
 
     private DecoView dynamicArc;
+    private NestedScrollView parentScrollView;
     private LinearLayout cards_container;
 
     @Override
@@ -37,10 +39,12 @@ public class Fitness_Fragment extends Fragment {
         View fragmentView = inflater.inflate(R.layout.fragment_fitness, container, false);
 
         dynamicArc = (DecoView) fragmentView.findViewById(R.id.dynamicArcView);
+        parentScrollView = (NestedScrollView) getActivity().findViewById(R.id.myScrollingContent);
         cards_container = (LinearLayout) fragmentView.findViewById(R.id.cards_container);
 
         BarChart barChart = (BarChart) fragmentView.findViewById(R.id.bar_chart);
         Button addNewChartBTN = (Button) fragmentView.findViewById(R.id.addChartBTN);
+        setHasOptionsMenu(true);
 
         setUpDecoViewArc();
 
@@ -66,7 +70,13 @@ public class Fitness_Fragment extends Fragment {
                 cardView.addView(newBarChart);
 
                 cards_container.addView(cardView);
-                cards_container.invalidate();
+
+                parentScrollView.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        parentScrollView.fullScroll(View.FOCUS_DOWN);
+                    }
+                }, 500);
             }
         });
 

@@ -1,171 +1,169 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:card_view="http://schemas.android.com/apk/res-auto"
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <View
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_centerInParent="true"
+            android:background="@android:color/black"/>
+
+        <View
+            android:layout_width="0.5dp"
+            android:layout_height="200dp"
+            android:layout_centerInParent="true"
+            android:background="@android:color/black"/>
+
+        <com.hookedonplay.decoviewlib.DecoView
+            android:id="@+id/dynamicArcView"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_centerInParent="true"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
             android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/metricCounterTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2,391"
+                android:textAppearance="?android:textAppearanceLarge"/>
+
+            <TextView
+                android:id="@+id/metricCounterLabelTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="STEPS TODAY"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/firstMetricIMG"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_search_black_24dp"/>
+
+            <TextView
+                android:id="@+id/firstMetricTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Test"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/secondMetricIMG"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_search_black_24dp"/>
+
+            <TextView
+                android:id="@+id/secondMetricTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Test"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/thirdMetricIMG"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_search_black_24dp"/>
+
+            <TextView
+                android:id="@+id/thirdMetricTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Test"/>
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/fourthMetricIMG"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_search_black_24dp"/>
+
+            <TextView
+                android:id="@+id/fourthMetricTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Test"/>
+        </LinearLayout>
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:layout_centerInParent="true"
-                android:background="@android:color/black"/>
-
-            <View
-                android:layout_width="0.5dp"
-                android:layout_height="200dp"
-                android:layout_centerInParent="true"
-                android:background="@android:color/black"/>
-
-            <com.hookedonplay.decoviewlib.DecoView
-                android:id="@+id/dynamicArcView"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:layout_centerInParent="true"/>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/metricCounterTV"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="2,391"
-                    android:textAppearance="?android:textAppearanceLarge"/>
-
-                <TextView
-                    android:id="@+id/metricCounterLabelTV"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:text="STEPS TODAY"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:id="@+id/firstMetricIMG"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_search_black_24dp"/>
-
-                <TextView
-                    android:id="@+id/firstMetricTV"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Test"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:id="@+id/secondMetricIMG"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_search_black_24dp"/>
-
-                <TextView
-                    android:id="@+id/secondMetricTV"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Test"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:id="@+id/thirdMetricIMG"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_search_black_24dp"/>
-
-                <TextView
-                    android:id="@+id/thirdMetricTV"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Test"/>
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentEnd="true"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:id="@+id/fourthMetricIMG"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_search_black_24dp"/>
-
-                <TextView
-                    android:id="@+id/fourthMetricTV"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Test"/>
-            </LinearLayout>
-        </RelativeLayout>
-
         <LinearLayout
+            android:id="@+id/cards_container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:animateLayoutChanges="true"
             android:orientation="vertical">
 
-            <LinearLayout
-                android:id="@+id/cards_container"
+            <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:layout_height="@dimen/chart_height"
+                android:layout_gravity="center"
+                android:layout_marginTop="5dp"
+                card_view:cardCornerRadius="@dimen/cardview_default_radius"
+                card_view:cardElevation="@dimen/cardview_default_elevation"
+                card_view:cardUseCompatPadding="true">
 
-                <android.support.v7.widget.CardView
+                <com.github.mikephil.charting.charts.HorizontalBarChart
+                    android:id="@+id/bar_chart"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/chart_height"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="5dp"
-                    card_view:cardCornerRadius="@dimen/cardview_default_radius"
-                    card_view:cardElevation="@dimen/cardview_default_elevation"
-                    card_view:cardUseCompatPadding="true">
+                    android:layout_height="match_parent"/>
+            </android.support.v7.widget.CardView>
 
-                    <com.github.mikephil.charting.charts.HorizontalBarChart
-                        android:id="@+id/bar_chart"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"/>
-                </android.support.v7.widget.CardView>
-            </LinearLayout>
-
-            <Button
-                android:id="@+id/addChartBTN"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="ADD NEW CHART"/>
         </LinearLayout>
 
+        <Button
+            android:id="@+id/addChartBTN"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="ADD NEW CHART"/>
     </LinearLayout>
-</ScrollView>
+
+</LinearLayout>
