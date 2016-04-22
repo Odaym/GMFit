@@ -31,17 +31,19 @@
             android:id="@+id/loginFacebookBTN"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"/>
+            android:layout_gravity="center_horizontal"
+            android:paddingBottom="15dp"
+            android:paddingTop="15dp"/>
 
         <com.google.android.gms.common.SignInButton
             android:id="@+id/loginGoogleBTN"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="@dimen/login_button_height"/>
 
         <Button
             android:id="@+id/signUpBTN"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/login_button_height"
             android:text="@string/sign_up_activity_title"/>
 
         <TextView
