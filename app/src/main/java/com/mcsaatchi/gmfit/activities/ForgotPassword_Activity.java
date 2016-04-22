@@ -35,10 +35,7 @@ public class ForgotPassword_Activity extends Base_Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Bundle bundle = new Bundle();
-        bundle.putInt("activity_title", R.string.forgot_password_activity_title);
-
-        super.onCreate(bundle);
+        super.onCreate(Helpers.createActivityBundleWithProperties(R.string.forgot_password_activity_title, true));
 
         setContentView(R.layout.activity_forgot_password);
 

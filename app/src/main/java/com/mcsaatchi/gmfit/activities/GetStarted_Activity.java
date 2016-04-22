@@ -8,6 +8,7 @@ import android.widget.ImageView;
 
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.classes.CircleTransform;
+import com.mcsaatchi.gmfit.classes.Helpers;
 import com.mcsaatchi.gmfit.countrypicker.CountryPicker;
 import com.mcsaatchi.gmfit.countrypicker.CountryPickerListener;
 import com.mcsaatchi.gmfit.logger.Log;
@@ -25,7 +26,7 @@ public class GetStarted_Activity extends Base_Activity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        super.onCreate(Helpers.createActivityBundleWithProperties(0, false));
 
         setContentView(R.layout.activity_get_started);
 

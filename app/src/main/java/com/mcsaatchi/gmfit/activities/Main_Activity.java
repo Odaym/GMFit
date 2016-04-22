@@ -10,8 +10,9 @@ import android.view.Menu;
 import android.view.MenuInflater;
 
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.fragments.GoogleFit_Fragment;
+import com.mcsaatchi.gmfit.classes.Helpers;
 import com.mcsaatchi.gmfit.fragments.Fitness_Fragment;
+import com.mcsaatchi.gmfit.fragments.GoogleFit_Fragment;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnMenuTabClickListener;
 
@@ -23,7 +24,7 @@ public class Main_Activity extends Base_Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        super.onCreate(Helpers.createActivityBundleWithProperties(0, false));
 
         setContentView(R.layout.activity_main);
 

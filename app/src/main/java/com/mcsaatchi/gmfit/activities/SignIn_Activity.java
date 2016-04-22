@@ -35,14 +35,10 @@ public class SignIn_Activity extends Base_Activity {
     TextView forgotPasswordTV;
 
     private ArrayList<FormEditText> allFields = new ArrayList<>();
-    private Helpers helpers = Helpers.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Bundle bundle = new Bundle();
-        bundle.putInt("activity_title", R.string.sign_in_activity_title);
-
-        super.onCreate(bundle);
+        super.onCreate(Helpers.createActivityBundleWithProperties(R.string.sign_in_activity_title, true));
 
         setContentView(R.layout.activity_sign_in);
 
@@ -56,7 +52,7 @@ public class SignIn_Activity extends Base_Activity {
         signInBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (helpers.validateFields(allFields)) {
+                if (Helpers.validateFields(allFields)) {
                     Log.toaster(SignIn_Activity.this, "All fields check out!");
                     Intent intent = new Intent(SignIn_Activity.this, GetStarted_Activity.class);
                     startActivity(intent);
@@ -70,6 +66,7 @@ public class SignIn_Activity extends Base_Activity {
             public void onClick(View textView) {
                 startActivity(new Intent(SignIn_Activity.this, ForgotPassword_Activity.class));
             }
+
             @Override
             public void updateDrawState(TextPaint ds) {
                 super.updateDrawState(ds);

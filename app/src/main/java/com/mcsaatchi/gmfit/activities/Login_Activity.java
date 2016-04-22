@@ -21,6 +21,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -38,6 +39,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.classes.Constants;
 import com.mcsaatchi.gmfit.classes.DefaultIndicator_Controller;
+import com.mcsaatchi.gmfit.classes.Helpers;
 import com.mcsaatchi.gmfit.fragments.IntroSlider_Fragment;
 import com.mcsaatchi.gmfit.models.User;
 
@@ -71,7 +73,7 @@ public class Login_Activity extends Base_Activity implements
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        super.onCreate(Helpers.createActivityBundleWithProperties(0, false));
 
         FacebookSdk.sdkInitialize(getApplicationContext());
         callbackManager = CallbackManager.Factory.create();
@@ -82,26 +84,19 @@ public class Login_Activity extends Base_Activity implements
 
         prefs = getSharedPreferences(Constants.EXTRAS_PREFS, Context.MODE_PRIVATE);
 
-        loginFacebookBTN.setReadPermissions("user_friends");
-        loginFacebookBTN.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+        signUpBTN.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onSuccess(LoginResult loginResult) {
-                // App code
-                Intent intent = new Intent(Login_Activity.this, Main_Activity.class);
+            public void onClick(View v) {
+                Intent intent = new Intent(Login_Activity.this, SignUp_Activity.class);
                 startActivity(intent);
-            }
-
-            @Override
-            public void onCancel() {
-                // App code
-            }
-
-            @Override
-            public void onError(FacebookException exception) {
-                // App code
             }
         });
 
+        fixGoogleButtonShape();
+
+        /**
+         * This stuff cannot go in a function, go ahead, try it
+         */
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
@@ -117,34 +112,13 @@ public class Login_Activity extends Base_Activity implements
                 loginWithGoogle();
             }
         });
+        /**
+         * see?
+         */
 
-        signUpBTN.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Login_Activity.this, SignUp_Activity.class);
-                startActivity(intent);
-            }
-        });
+        hookUpAlreadySignedUpBTN();
 
-        SpannableString ss = new SpannableString(getString(R.string.already_signed_up));
-        ClickableSpan clickableSpan = new ClickableSpan() {
-            @Override
-            public void onClick(View textView) {
-                startActivity(new Intent(Login_Activity.this, SignIn_Activity.class));
-            }
-
-            @Override
-            public void updateDrawState(TextPaint ds) {
-                super.updateDrawState(ds);
-                ds.setUnderlineText(false);
-            }
-        };
-
-        ss.setSpan(clickableSpan, 16, ss.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-        alreadySignedUpTV.setText(ss);
-        alreadySignedUpTV.setMovementMethod(LinkMovementMethod.getInstance());
-        alreadySignedUpTV.setHighlightColor(Color.TRANSPARENT);
+        initializeFacebookLogin();
 
         viewPager.setAdapter(new IntroAdapter(getSupportFragmentManager()));
 
@@ -168,6 +142,64 @@ public class Login_Activity extends Base_Activity implements
         initController();
     }
 
+    private void hookUpAlreadySignedUpBTN() {
+        SpannableString ss = new SpannableString(getString(R.string.already_signed_up));
+        ClickableSpan clickableSpan = new ClickableSpan() {
+            @Override
+            public void onClick(View textView) {
+                startActivity(new Intent(Login_Activity.this, SignIn_Activity.class));
+            }
+
+            @Override
+            public void updateDrawState(TextPaint ds) {
+                super.updateDrawState(ds);
+                ds.setUnderlineText(false);
+            }
+        };
+
+        ss.setSpan(clickableSpan, 16, ss.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        alreadySignedUpTV.setText(ss);
+        alreadySignedUpTV.setMovementMethod(LinkMovementMethod.getInstance());
+        alreadySignedUpTV.setHighlightColor(Color.TRANSPARENT);
+    }
+
+    private void fixGoogleButtonShape() {
+        loginGoogleBTN.setSize(SignInButton.SIZE_STANDARD);
+
+        for (int i = 0; i < loginGoogleBTN.getChildCount(); i++) {
+            View v = loginGoogleBTN.getChildAt(i);
+            if (v instanceof TextView) {
+                TextView mTextView = (TextView) v;
+                mTextView.setText("Log in with Google");
+                return;
+            }
+        }
+    }
+
+    private void initializeFacebookLogin() {
+        loginFacebookBTN.setReadPermissions("email", "public_profile", "user_friends");
+        loginFacebookBTN.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                // App code
+                Toast.makeText(Login_Activity.this, "Facebook logged in successfully", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(Login_Activity.this, Main_Activity.class);
+                startActivity(intent);
+            }
+
+            @Override
+            public void onCancel() {
+                // App code
+            }
+
+            @Override
+            public void onError(FacebookException exception) {
+                // App code
+            }
+        });
+    }
+
     private void loginWithGoogle() {
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
         startActivityForResult(signInIntent, RC_SIGN_IN);
@@ -179,12 +211,14 @@ public class Login_Activity extends Base_Activity implements
         callbackManager.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-            handleSignInResult(result);
+            handleGoogleSignInResult(result);
         }
     }
 
-    private void handleSignInResult(GoogleSignInResult result) {
+    private void handleGoogleSignInResult(GoogleSignInResult result) {
         if (result.isSuccess()) {
+
+            Toast.makeText(Login_Activity.this, "Google logged in successfully", Toast.LENGTH_SHORT).show();
 
             GoogleSignInAccount acct = result.getSignInAccount();
 
@@ -196,10 +230,10 @@ public class Login_Activity extends Base_Activity implements
                 assert acct.getPhotoUrl() != null;
                 user.setPhoto_url(acct.getPhotoUrl().toString());
 
-                Log.d(TAG, "handleSignInResult: Display Name " + acct.getDisplayName());
-                Log.d(TAG, "handleSignInResult: Email " + acct.getEmail());
+                Log.d(TAG, "handleGoogleSignInResult: Display Name " + acct.getDisplayName());
+                Log.d(TAG, "handleGoogleSignInResult: Email " + acct.getEmail());
                 if (acct.getPhotoUrl() != null)
-                    Log.d(TAG, "handleSignInResult: Photo " + acct.getPhotoUrl().toString());
+                    Log.d(TAG, "handleGoogleSignInResult: Photo " + acct.getPhotoUrl().toString());
 
                 prefsEditor = prefs.edit();
                 prefsEditor.putBoolean(Constants.EXTRAS_USER_LOGGED_IN, true);

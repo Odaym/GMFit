@@ -6,6 +6,7 @@ import android.text.method.LinkMovementMethod;
 import android.widget.TextView;
 
 import com.mcsaatchi.gmfit.R;
+import com.mcsaatchi.gmfit.classes.Helpers;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -16,10 +17,7 @@ public class TOS_Activity extends Base_Activity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        Bundle bundle = new Bundle();
-        bundle.putInt("activity_title", R.string.tos_activity_title);
-
-        super.onCreate(bundle);
+        super.onCreate(Helpers.createActivityBundleWithProperties(R.string.tos_activity_title, true));
 
         setContentView(R.layout.activity_terms_of_use);
 
