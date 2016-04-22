@@ -7,7 +7,7 @@ import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.OvershootInterpolator;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
@@ -28,7 +28,6 @@ public class Fitness_Fragment extends Fragment {
 
     private DecoView dynamicArc;
     private LinearLayout cards_container;
-    private Button addNewChartBTN;
 
     @Override
     public View onCreateView(LayoutInflater inflater,
@@ -37,10 +36,11 @@ public class Fitness_Fragment extends Fragment {
 
         View fragmentView = inflater.inflate(R.layout.fragment_fitness, container, false);
 
-        BarChart barChart = (BarChart) fragmentView.findViewById(R.id.bar_chart);
         dynamicArc = (DecoView) fragmentView.findViewById(R.id.dynamicArcView);
         cards_container = (LinearLayout) fragmentView.findViewById(R.id.cards_container);
-        addNewChartBTN = (Button) fragmentView.findViewById(R.id.addChartBTN);
+
+        BarChart barChart = (BarChart) fragmentView.findViewById(R.id.bar_chart);
+        Button addNewChartBTN = (Button) fragmentView.findViewById(R.id.addChartBTN);
 
         setUpDecoViewArc();
 
@@ -57,13 +57,13 @@ public class Fitness_Fragment extends Fragment {
                 cardView.setCardElevation(getResources().getDimensionPixelSize(R.dimen.cardview_default_elevation));
                 cardView.setRadius(getResources().getDimensionPixelSize(R.dimen.cardview_default_radius));
 
-                BarChart barChart2 = new BarChart(getActivity());
-                barChart2.setLayoutParams(new ViewGroup.LayoutParams(
+                BarChart newBarChart = new BarChart(getActivity());
+                newBarChart.setLayoutParams(new ViewGroup.LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT,
                         ViewGroup.LayoutParams.MATCH_PARENT));
-                setChartData(barChart2, 10, 10);
+                setChartData(newBarChart, 10, 10);
 
-                cardView.addView(barChart2);
+                cardView.addView(newBarChart);
 
                 cards_container.addView(cardView);
                 cards_container.invalidate();
@@ -76,7 +76,7 @@ public class Fitness_Fragment extends Fragment {
     private void setUpDecoViewArc() {
         SeriesItem seriesItem1 = new SeriesItem.Builder(Color.argb(255, 64, 196, 0))
                 .setRange(0, 100, 0)
-                .setInterpolator(new OvershootInterpolator())
+                .setInterpolator(new AccelerateDecelerateInterpolator())
                 .setLineWidth(32f)
                 .build();
 
