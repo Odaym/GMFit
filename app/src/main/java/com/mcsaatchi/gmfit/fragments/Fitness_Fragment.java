@@ -1,10 +1,12 @@
 package com.mcsaatchi.gmfit.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.BounceInterpolator;
@@ -22,6 +24,7 @@ import com.hookedonplay.decoviewlib.DecoView;
 import com.hookedonplay.decoviewlib.charts.SeriesItem;
 import com.hookedonplay.decoviewlib.events.DecoEvent;
 import com.mcsaatchi.gmfit.R;
+import com.mcsaatchi.gmfit.activities.CustomizeWidget_Activity;
 
 import java.util.ArrayList;
 
@@ -44,6 +47,7 @@ public class Fitness_Fragment extends Fragment {
 
         BarChart barChart = (BarChart) fragmentView.findViewById(R.id.bar_chart);
         Button addNewChartBTN = (Button) fragmentView.findViewById(R.id.addChartBTN);
+
         setHasOptionsMenu(true);
 
         setUpDecoViewArc();
@@ -100,6 +104,14 @@ public class Fitness_Fragment extends Fragment {
         });
 
         return fragmentView;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent = new Intent(getActivity(), CustomizeWidget_Activity.class);
+        startActivity(intent);
+
+        return super.onOptionsItemSelected(item);
     }
 
     private void setUpDecoViewArc() {

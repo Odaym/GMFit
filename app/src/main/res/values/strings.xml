@@ -69,4 +69,8 @@ Sit eleifend partiendo temporibus ad, mel reque adversarium an, vix nibh accommo
 
     <!-- SETUP PROFILE STEP 1 -->
     <string name="choose_country_hint">Choose your country</string>
+
+    <!-- CUSTOMIZE WIDGETS ACTIVITY -->
+    <string name="customize_widgets_activity_title">Customize Widgets</string>
+
 </resources>
