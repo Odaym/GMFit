@@ -1,5 +1,6 @@
 package com.mcsaatchi.gmfit.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
@@ -9,9 +10,6 @@ import android.widget.ImageView;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.classes.CircleTransform;
 import com.mcsaatchi.gmfit.classes.Helpers;
-import com.mcsaatchi.gmfit.countrypicker.CountryPicker;
-import com.mcsaatchi.gmfit.countrypicker.CountryPickerListener;
-import com.mcsaatchi.gmfit.logger.Log;
 import com.squareup.picasso.Picasso;
 
 import butterknife.Bind;
@@ -38,16 +36,18 @@ public class GetStarted_Activity extends Base_Activity {
         setupProfileBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CountryPicker picker = CountryPicker.newInstance("Select Country");
-                picker.show(getSupportFragmentManager(), "COUNTRY_PICKER");
-
-                picker.setListener(new CountryPickerListener() {
-
-                    @Override
-                    public void onSelectCountry(String name, String code) {
-                        Log.toaster(GetStarted_Activity.this, "Country selected : " + name + "\nCode: " + code);
-                    }
-                });
+//                CountryPicker picker = CountryPicker.newInstance("Select Country");
+//                picker.show(getSupportFragmentManager(), "COUNTRY_PICKER");
+//
+//                picker.setListener(new CountryPickerListener() {
+//
+//                    @Override
+//                    public void onSelectCountry(String name, String code) {
+//                        Log.toaster(GetStarted_Activity.this, "Country selected : " + name + "\nCode: " + code);
+//                    }
+//                });
+                Intent intent = new Intent(GetStarted_Activity.this, SetupProfile_Activity.class);
+                startActivity(intent);
             }
         });
     }
