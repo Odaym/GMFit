@@ -67,8 +67,10 @@ Sit eleifend partiendo temporibus ad, mel reque adversarium an, vix nibh accommo
     <string name="get_started_message">Lorem ipsum dolor sit amet, accumsan praesent vulputate has ad, vel ne liber zril. Ea qui audire suavitate, ut stet debitis complectitur nec. Ex vim wisi mutat denique, his sint congue ne.</string>
     <string name="setup_my_profile_button">SETUP MY PROFILE</string>
 
-    <!-- SETUP PROFILE STEP 1 -->
+    <!-- SETUP PROFILE ACTIVITY -->
+    <string name="setup_profile_activity_title">Setup Profile</string>
     <string name="choose_country_hint">Choose your country</string>
+
 
     <!-- CUSTOMIZE WIDGETS ACTIVITY -->
     <string name="customize_widgets_activity_title">Customize Widgets</string>

@@ -76,6 +76,9 @@
             android:screenOrientation="portrait"
             android:theme="@style/No_ActionBar_Theme"/>
 
+        <activity android:name=".activities.SetupProfile_Activity"
+                  android:screenOrientation="portrait"/>
+
         <activity android:name=".activities.CustomizeWidget_Activity"
                   android:screenOrientation="portrait"/>
 
