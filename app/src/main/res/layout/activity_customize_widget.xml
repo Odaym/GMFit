@@ -15,11 +15,11 @@
         android:layout_height="match_parent"
         android:layout_centerInParent="true"
         android:choiceMode="singleChoice"
-        android:dividerHeight="5.0sp"
+        android:dividerHeight="1.0sp"
         android:listSelector="@android:color/transparent"
         dslv:drag_scroll_start="0.03"
         dslv:drag_start_mode="onLongPress"
-        dslv:float_alpha="0.6"
+        dslv:float_alpha="0.3"
         dslv:max_drag_scroll_speed="0.7"
         dslv:slide_shuffle_speed="0.05"/>
 
