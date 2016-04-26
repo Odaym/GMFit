@@ -50,7 +50,6 @@ public class Login_Activity extends Base_Activity implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
 
-
     @Bind(R.id.viewpager)
     ViewPager viewPager;
     @Bind(R.id.loginFacebookBTN)
@@ -120,6 +119,10 @@ public class Login_Activity extends Base_Activity implements
 
         initializeFacebookLogin();
 
+        setupViewPager();
+    }
+
+    private void setupViewPager(){
         viewPager.setAdapter(new IntroAdapter(getSupportFragmentManager()));
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
