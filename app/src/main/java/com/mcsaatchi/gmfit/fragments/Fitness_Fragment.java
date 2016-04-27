@@ -1,18 +1,24 @@
 package com.mcsaatchi.gmfit.fragments;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.CardView;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.BounceInterpolator;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.data.BarData;
@@ -25,14 +31,44 @@ import com.hookedonplay.decoviewlib.charts.SeriesItem;
 import com.hookedonplay.decoviewlib.events.DecoEvent;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.activities.CustomizeWidget_Activity;
+import com.mcsaatchi.gmfit.classes.Constants;
+import com.mcsaatchi.gmfit.classes.EventBus_Poster;
+import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
+import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Fitness_Fragment extends Fragment {
 
     private DecoView dynamicArc;
     private NestedScrollView parentScrollView;
     private LinearLayout cards_container;
+
+    private TextView firstMetricTV;
+    private ImageView firstMetricIMG;
+
+    private TextView secondMetricTV;
+    private ImageView secondMetricIMG;
+
+    private TextView thirdMetricTV;
+    private ImageView thirdMetricIMG;
+
+    private TextView fourthMetricTV;
+    private ImageView fourthMetricIMG;
+
+
+    private List<Integer> itemIndeces;
+    private SparseArray<String[]> itemsMap;
+
+    private SharedPreferences prefs;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        EventBus_Singleton.getInstance().register(this);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater,
@@ -45,14 +81,28 @@ public class Fitness_Fragment extends Fragment {
         parentScrollView = (NestedScrollView) getActivity().findViewById(R.id.myScrollingContent);
         cards_container = (LinearLayout) fragmentView.findViewById(R.id.cards_container);
 
+        firstMetricTV = (TextView) fragmentView.findViewById(R.id.firstMetricTV);
+        firstMetricIMG = (ImageView) fragmentView.findViewById(R.id.firstMetricIMG);
+
+        secondMetricTV = (TextView) fragmentView.findViewById(R.id.secondMetricTV);
+        secondMetricIMG = (ImageView) fragmentView.findViewById(R.id.secondMetricIMG);
+
+        thirdMetricTV = (TextView) fragmentView.findViewById(R.id.thirdMetricTV);
+        thirdMetricIMG = (ImageView) fragmentView.findViewById(R.id.thirdMetricIMG);
+
+        fourthMetricTV = (TextView) fragmentView.findViewById(R.id.fourthMetricTV);
+        fourthMetricIMG = (ImageView) fragmentView.findViewById(R.id.fourthMetricIMG);
+
         BarChart barChart = (BarChart) fragmentView.findViewById(R.id.bar_chart);
         Button addNewChartBTN = (Button) fragmentView.findViewById(R.id.addChartBTN);
+
+        prefs = getActivity().getSharedPreferences(Constants.EXTRAS_PREFS, Context.MODE_PRIVATE);
 
         setHasOptionsMenu(true);
 
         setUpDecoViewArc();
 
-        setChartData(barChart, 50, 50);
+        setChartData(barChart, 20, 20);
 
         addNewChartBTN.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,12 +156,41 @@ public class Fitness_Fragment extends Fragment {
         return fragmentView;
     }
 
+    @Subscribe
+    public void handle_BusEvents(EventBus_Poster ebp) {
+        String ebpMessage = ebp.getMessage();
+
+        switch (ebpMessage) {
+            case Constants.EVENT_WIDGETS_ORDER_ARRAY_CHANGED:
+                if (ebp.getSparseArrayExtra() != null) {
+                    itemsMap = ebp.getSparseArrayExtra();
+
+                    firstMetricTV.setText(itemsMap.get(0)[0].split(" ")[0]);
+                    firstMetricIMG.setImageDrawable(getResources().getDrawable(R.drawable.walking));
+                    secondMetricTV.setText(itemsMap.get(1)[0].split(" ")[0]);
+                    secondMetricIMG.setImageDrawable(getResources().getDrawable(R.drawable.biking));
+                    thirdMetricTV.setText(itemsMap.get(2)[0].split(" ")[0]);
+                    thirdMetricIMG.setImageDrawable(getResources().getDrawable(R.drawable.calories));
+                    fourthMetricTV.setText(itemsMap.get(3)[0].split(" ")[0]);
+                    fourthMetricIMG.setImageDrawable(getResources().getDrawable(R.drawable.stairs));
+                }
+
+                break;
+        }
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent intent = new Intent(getActivity(), CustomizeWidget_Activity.class);
         startActivity(intent);
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus_Singleton.getInstance().unregister(this);
     }
 
     private void setUpDecoViewArc() {
