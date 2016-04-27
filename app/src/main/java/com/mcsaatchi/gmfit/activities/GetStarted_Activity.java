@@ -36,16 +36,6 @@ public class GetStarted_Activity extends Base_Activity {
         setupProfileBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                CountryPicker picker = CountryPicker.newInstance("Select Country");
-//                picker.show(getSupportFragmentManager(), "COUNTRY_PICKER");
-//
-//                picker.setListener(new CountryPickerListener() {
-//
-//                    @Override
-//                    public void onSelectCountry(String name, String code) {
-//                        Log.toaster(GetStarted_Activity.this, "Country selected : " + name + "\nCode: " + code);
-//                    }
-//                });
                 Intent intent = new Intent(GetStarted_Activity.this, SetupProfile_Activity.class);
                 startActivity(intent);
             }
