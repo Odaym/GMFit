@@ -17,6 +17,7 @@ import com.mcsaatchi.gmfit.classes.DefaultIndicator_Controller;
 import com.mcsaatchi.gmfit.classes.Helpers;
 import com.mcsaatchi.gmfit.classes.Indicator_Controller;
 import com.mcsaatchi.gmfit.fragments.IntroSlider_Fragment;
+import com.mcsaatchi.gmfit.fragments.Setup_Profile_1_Fragment;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -115,7 +116,7 @@ public class SetupProfile_Activity extends Base_Activity {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    return IntroSlider_Fragment.newInstance(R.layout.fragment_intro_slide_1);
+                    return new Setup_Profile_1_Fragment();
                 case 1:
                     return IntroSlider_Fragment.newInstance(R.layout.fragment_intro_slide_2);
                 case 2:
