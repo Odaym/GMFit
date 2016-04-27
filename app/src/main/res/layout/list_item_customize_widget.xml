@@ -1,12 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical">
-
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
     <TextView
         android:id="@+id/itemNameTV"
         android:layout_width="wrap_content"
-        android:textColor="@android:color/holo_blue_dark"
-        android:layout_height="@dimen/login_button_height"/>
-</LinearLayout>
+        android:layout_height="@dimen/login_button_height"
+        android:gravity="center_vertical"
+        android:textColor="@android:color/holo_blue_dark"/>
+
+    <TextView
+        android:id="@+id/itemHintTV"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/login_button_height"
+        android:layout_alignParentEnd="true"
+        android:gravity="center_vertical"
+        android:textColor="@android:color/holo_blue_dark"/>
+
+</RelativeLayout>
