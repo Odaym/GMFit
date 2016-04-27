@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+    <TextView
+        android:id="@+id/headerItemNameTV"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/login_button_height"
+        android:gravity="center_vertical"
+        android:text="Number of Steps"/>
+
+    <TextView
+        android:id="@+id/headerItemHintTV"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/login_button_height"
+        android:layout_alignParentEnd="true"
+        android:gravity="center_vertical"
+        android:text="Goal: 2500/Day"/>
+
+    <View android:layout_width="match_parent" android:layout_height="1dp"
+          android:layout_below="@+id/headerItemHintTV"
+          android:background="#D1D1D1"/>
+
+</RelativeLayout>
