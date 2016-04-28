@@ -21,4 +21,7 @@
     <!-- TOP OF DASHBOARD-->
     <dimen name="metric_cell_padding_horizontal">25dp</dimen>
     <dimen name="metric_cell_padding_vertical">45dp</dimen>
+
+    <!-- SETUP PROFILE STEPS-->
+    <dimen name="radiobutton_row_height">60dp</dimen>
 </resources>

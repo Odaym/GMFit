@@ -18,6 +18,8 @@ import com.mcsaatchi.gmfit.classes.Helpers;
 import com.mcsaatchi.gmfit.classes.Indicator_Controller;
 import com.mcsaatchi.gmfit.fragments.IntroSlider_Fragment;
 import com.mcsaatchi.gmfit.fragments.Setup_Profile_1_Fragment;
+import com.mcsaatchi.gmfit.fragments.Setup_Profile_2_Fragment;
+import com.mcsaatchi.gmfit.fragments.Setup_Profile_3_Fragment;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -118,9 +120,9 @@ public class SetupProfile_Activity extends Base_Activity {
                 case 0:
                     return new Setup_Profile_1_Fragment();
                 case 1:
-                    return IntroSlider_Fragment.newInstance(R.layout.fragment_intro_slide_2);
+                    return new Setup_Profile_2_Fragment();
                 case 2:
-                    return IntroSlider_Fragment.newInstance(R.layout.fragment_intro_slide_3);
+                    return new Setup_Profile_3_Fragment();
                 case 3:
                     return IntroSlider_Fragment.newInstance(R.layout.fragment_intro_slide_4);
                 case 4:

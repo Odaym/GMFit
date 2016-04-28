@@ -12,7 +12,8 @@
     <string name="action_unregister_listener">Unregister listener</string>
     <string name="permission_rationale">Location data is used as part of the Google Fit API</string>
     <string name="permission_denied_explanation">Permission was denied, but is needed for core
-        functionality.</string>
+        functionality.
+    </string>
     <string name="ok">OK</string>
 
     <!-- MAIN ACTIVITY -->
@@ -36,8 +37,7 @@
     <string name="password_hint">Password, at least 8 characters</string>
     <string name="confirm_password_hint">Confirm Password</string>
     <string name="create_account_button">CREATE ACCOUNT</string>
-    <string name="creating_account_TOS">By creating an account, you agree to the
-        <a href="http://www.google.com">Terms of Use.</a></string>
+    <string name="creating_account_TOS">By creating an account, you agree to the Terms of Use.</string>
 
     <!-- SIGN IN ACTIVITY -->
     <string name="sign_in_button">SIGN IN</string>
@@ -51,28 +51,46 @@
 
     <!-- TERMS OF USAGE ACTIVITY -->
     <string name="tos_activity_title">Terms of Use</string>
-    <string name="terms_of_use_value">Lorem ipsum dolor sit amet, accumsan praesent vulputate has ad, vel ne liber zril. Ea qui audire suavitate, ut stet debitis complectitur nec. Ex vim wisi mutat denique, his sint congue ne. Ut duo partiendo percipitur, et eum dolorum mandamus. Mea dicam vivendum ex, ad labitur quaerendum cum.
+    <string name="terms_of_use_value">Lorem ipsum dolor sit amet, accumsan praesent vulputate has ad, vel ne liber zril. Ea qui audire suavitate, ut stet
+        debitis complectitur nec. Ex vim wisi mutat denique, his sint congue ne. Ut duo partiendo percipitur, et eum dolorum mandamus. Mea dicam vivendum ex, ad
+        labitur quaerendum cum.
 
-Stet reprehendunt eu vel, usu hinc dolor ad. Vero legimus mel et, nam nibh expetenda no, cu ullum aeque sed. Vel vitae maiorum periculis ex, modus tantas populo mei ea. Per ne laudem quidam feugiat.
+        Stet reprehendunt eu vel, usu hinc dolor ad. Vero legimus mel et, nam nibh expetenda no, cu ullum aeque sed. Vel vitae maiorum periculis ex, modus
+        tantas populo mei ea. Per ne laudem quidam feugiat.
 
-Ancillae nominati consulatu vim te, id vim duis inimicus conceptam. Mea ancillae vulputate at, nam id feugait reprimique. Ut utinam invidunt vulputate nam. Sit nisl offendit id, vel eloquentiam intellegebat in. Duo singulis splendide ex, est albucius nominavi deserunt ad.
+        Ancillae nominati consulatu vim te, id vim duis inimicus conceptam. Mea ancillae vulputate at, nam id feugait reprimique. Ut utinam invidunt vulputate
+        nam. Sit nisl offendit id, vel eloquentiam intellegebat in. Duo singulis splendide ex, est albucius nominavi deserunt ad.
 
-Summo vivendo ei has, ne enim putant fastidii qui. Vis at brute soleat nostrum, ceteros assentior sed eu. At pro commodo inermis atomorum, mei eu reque laudem nominati. Ut inani instructior vix, per vidisse adolescens ea.
+        Summo vivendo ei has, ne enim putant fastidii qui. Vis at brute soleat nostrum, ceteros assentior sed eu. At pro commodo inermis atomorum, mei eu reque
+        laudem nominati. Ut inani instructior vix, per vidisse adolescens ea.
 
-Sit eleifend partiendo temporibus ad, mel reque adversarium an, vix nibh accommodare concludaturque ne. Sed no inani nonumy vocibus, te sed dicunt invenire partiendo. Mei id meliore persecuti, ridens iuvaret usu no. Brute novum altera cum ne. Id his labore vulputate dissentiet, ut mei oportere neglegentur, malis petentium ad vim. Sit eu quidam regione erroribus, usu an ullum errem deserunt.
-    <a href="http://www.globemedlebanon.com">http://www.globemedlebanon.com</a></string>
+        Sit eleifend partiendo temporibus ad, mel reque adversarium an, vix nibh accommodare concludaturque ne. Sed no inani nonumy vocibus, te sed dicunt
+        invenire partiendo. Mei id meliore persecuti, ridens iuvaret usu no. Brute novum altera cum ne. Id his labore vulputate dissentiet, ut mei oportere
+        neglegentur, malis petentium ad vim. Sit eu quidam regione erroribus, usu an ullum errem deserunt.
+        <a href="http://www.globemedlebanon.com">http://www.globemedlebanon.com</a>
+    </string>
 
     <!-- GET STARTED ACTIVITY -->
     <string name="get_started_tag_line">Let\'s get started</string>
-    <string name="get_started_message">Lorem ipsum dolor sit amet, accumsan praesent vulputate has ad, vel ne liber zril. Ea qui audire suavitate, ut stet debitis complectitur nec. Ex vim wisi mutat denique, his sint congue ne.</string>
+    <string name="get_started_message">Lorem ipsum dolor sit amet, accumsan praesent vulputate has ad, vel ne liber zril. Ea qui audire suavitate, ut stet
+        debitis complectitur nec. Ex vim wisi mutat denique, his sint congue ne.
+    </string>
     <string name="setup_my_profile_button">SETUP MY PROFILE</string>
 
     <!-- SETUP PROFILE ACTIVITY -->
     <string name="setup_profile_activity_title">Setup Profile</string>
     <string name="choose_country_hint">Choose your country</string>
-
+    <string name="connect_google_fit">Connect to Google Fit</string>
+    <string name="connect_google_fit_hint">Connecting to Google Fit allows automatic tracking of your daily activities</string>
+    <string name="connect_google_fit_learn">Learn more about Google Fit</string>
+    <string name="choose_goal_hint">Choose your goal</string>
+    <string name="choose_measurement_unit">Units of Measurement</string>
+    <string name="goal_purpose_lose_weight">Lose Weight</string>
+    <string name="goal_purpose_maintain_weight">Maintain Weight</string>
+    <string name="goal_purpose_gain_weight">Gain Weight</string>
 
     <!-- CUSTOMIZE WIDGETS ACTIVITY -->
     <string name="customize_widgets_activity_title">Customize Widgets</string>
 
+    <string name="about_google_fit_acitivity_title">About Google Fit</string>
 </resources>

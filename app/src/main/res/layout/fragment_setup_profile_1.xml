@@ -2,9 +2,23 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:orientation="vertical">
+              android:orientation="vertical"
+              android:paddingEnd="@dimen/activity_vertical_margin"
+              android:paddingStart="@dimen/activity_vertical_margin">
+
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+              android:text="@string/choose_country_hint"/>
     <Spinner
         android:id="@+id/countrySpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"/>
+
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+              android:text="@string/choose_measurement_unit"/>
+
+    <Spinner
+        android:id="@+id/measurementsSpinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 </LinearLayout>

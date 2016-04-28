@@ -6,7 +6,6 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
-import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.view.View;
@@ -69,16 +68,11 @@ public class SignUp_Activity extends Base_Activity {
             public void onClick(View textView) {
                 startActivity(new Intent(SignUp_Activity.this, TOS_Activity.class));
             }
-            @Override
-            public void updateDrawState(TextPaint ds) {
-                super.updateDrawState(ds);
-                ds.setUnderlineText(false);
-            }
         };
         ss.setSpan(clickableSpan, 40, ss.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         creatingAccountTOSTV.setText(ss);
         creatingAccountTOSTV.setMovementMethod(LinkMovementMethod.getInstance());
-        creatingAccountTOSTV.setHighlightColor(Color.TRANSPARENT);
+        creatingAccountTOSTV.setHighlightColor(Color.BLUE);
     }
 }

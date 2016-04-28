@@ -19,6 +19,6 @@
 
     <View android:layout_width="match_parent" android:layout_height="1dp"
           android:layout_below="@+id/headerItemHintTV"
-          android:background="#D1D1D1"/>
+          android:background="@color/light_gray"/>
 
 </RelativeLayout>

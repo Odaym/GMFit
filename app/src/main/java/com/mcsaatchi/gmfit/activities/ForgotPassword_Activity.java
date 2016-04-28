@@ -4,7 +4,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
-import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.view.View;
@@ -58,18 +57,12 @@ public class ForgotPassword_Activity extends Base_Activity {
             public void onClick(View textView) {
                 Log.toaster(ForgotPassword_Activity.this, "Handle forgot password logic");
             }
-
-            @Override
-            public void updateDrawState(TextPaint ds) {
-                super.updateDrawState(ds);
-                ds.setUnderlineText(false);
-            }
         };
 
         ss.setSpan(clickableSpan, 29, ss.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         didntReceivePasswordEmailTV.setText(ss);
         didntReceivePasswordEmailTV.setMovementMethod(LinkMovementMethod.getInstance());
-        didntReceivePasswordEmailTV.setHighlightColor(Color.TRANSPARENT);
+        didntReceivePasswordEmailTV.setHighlightColor(Color.BLUE);
     }
 }

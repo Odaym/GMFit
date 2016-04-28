@@ -28,6 +28,7 @@
             android:id="@+id/getStartedTaglineTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textAppearance="?android:textAppearanceMedium"
             android:text="@string/get_started_tag_line"
             android:layout_gravity="center_horizontal"/>
 

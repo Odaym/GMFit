@@ -6,7 +6,6 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.Spanned;
-import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.view.View;
@@ -66,18 +65,12 @@ public class SignIn_Activity extends Base_Activity {
             public void onClick(View textView) {
                 startActivity(new Intent(SignIn_Activity.this, ForgotPassword_Activity.class));
             }
-
-            @Override
-            public void updateDrawState(TextPaint ds) {
-                super.updateDrawState(ds);
-                ds.setUnderlineText(false);
-            }
         };
 
         ss.setSpan(clickableSpan, 0, ss.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         forgotPasswordTV.setText(ss);
         forgotPasswordTV.setMovementMethod(LinkMovementMethod.getInstance());
-        forgotPasswordTV.setHighlightColor(Color.TRANSPARENT);
+        forgotPasswordTV.setHighlightColor(Color.BLUE);
     }
 }
