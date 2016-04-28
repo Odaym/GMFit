@@ -2,6 +2,7 @@ package com.mcsaatchi.gmfit.countrypicker;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.text.Editable;
@@ -55,6 +56,8 @@ public class CountryPicker extends DialogFragment implements
 	 * Listener to which country user selected
 	 */
 	private CountryPickerListener listener;
+
+	private DialogInterface.OnDismissListener dismissListener;
 
 	/**
 	 * Set listener
@@ -259,4 +262,12 @@ public class CountryPicker extends DialogFragment implements
 		return lhs.getName().compareTo(rhs.getName());
 	}
 
+	@Override
+	public void onDismiss(DialogInterface dialog) {
+		super.onDismiss(dialog);
+
+		if (listener != null){
+			listener.onDismissDialog();
+		}
+	}
 }

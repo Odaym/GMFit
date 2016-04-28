@@ -6,4 +6,5 @@ package com.mcsaatchi.gmfit.countrypicker;
  */
 public interface CountryPickerListener {
 	public void onSelectCountry(String name, String code);
+	public void onDismissDialog();
 }
