@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 import com.mcsaatchi.gmfit.R;
@@ -41,8 +42,8 @@ public class Setup_Profile_1_Fragment extends Fragment {
 
         Spinner citizenship = (Spinner) fragmentView.findViewById(R.id.countrySpinner);
         citizenship.setPrompt("Select your country");
-//        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, countries);
-//        citizenship.setAdapter(adapter);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, countries);
+        citizenship.setAdapter(adapter);
 
         citizenship.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -58,7 +59,13 @@ public class Setup_Profile_1_Fragment extends Fragment {
                         public void onSelectCountry(String name, String code) {
                             Log.toaster(getActivity(), "Country selected : " + name + "\nCode: " + code);
                         }
+
+                        @Override
+                        public void onDismissDialog() {
+                            touched = false;
+                        }
                     });
+
                 }
 
                 return true;
