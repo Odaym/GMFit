@@ -14,7 +14,13 @@
     <string name="permission_denied_explanation">Permission was denied, but is needed for core
         functionality.
     </string>
+
     <string name="ok">OK</string>
+    <string name="finish">Finish</string>
+    <string name="next_page">Next</string>
+    <string name="previous_page">Back</string>
+    <string name="accept_ok">OK</string>
+    <string name="decline_cancel">Cancel</string>
 
     <!-- MAIN ACTIVITY -->
     <string name="fitness_tab_title">Fitness</string>
@@ -88,6 +94,18 @@
     <string name="goal_purpose_lose_weight">Lose Weight</string>
     <string name="goal_purpose_maintain_weight">Maintain Weight</string>
     <string name="goal_purpose_gain_weight">Gain Weight</string>
+    <string name="notifications_and_location_title">Notifications &amp; Location</string>
+    <string name="enable_notifications_location_hint">To further improve your GlobeMed Fit experience, we would like to send you push notifications and
+    access your location</string>
+    <string name="enable_notifications_location_permissions">Enable Notifications &amp; Location</string>
+    <string name="first_name_hint">First Name</string>
+    <string name="last_name_hint">Last Name</string>
+    <string name="gender_hint">Gender</string>
+    <string name="date_of_birth_hint">Date of Birth</string>
+    <string name="blood_type_hint">Blood Type</string>
+    <string name="weight_hint">Weight</string>
+    <string name="height_hint">Height</string>
+    <string name="error_first_name_not_valid">Names cannot contain numbers</string>
 
     <!-- CUSTOMIZE WIDGETS ACTIVITY -->
     <string name="customize_widgets_activity_title">Customize Widgets</string>

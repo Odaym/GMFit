@@ -17,23 +17,15 @@
 
         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
                   android:layout_marginBottom="10dp"
-                  android:text="@string/connect_google_fit"
+                  android:text="@string/notifications_and_location_title"
                   android:textAppearance="?android:textAppearanceLarge"/>
 
         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
                   android:layout_marginBottom="60dp"
                   android:gravity="center"
-                  android:text="@string/connect_google_fit_hint"/>
+                  android:text="@string/enable_notifications_location_hint"/>
 
         <Button android:layout_width="match_parent" android:layout_height="@dimen/login_button_height"
-                android:text="@string/connect_google_fit"/>
+                android:text="@string/enable_notifications_location_permissions"/>
     </LinearLayout>
-
-    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-              android:id="@+id/learnMoreGoogleFitTV"
-              android:layout_alignParentBottom="true"
-              android:layout_marginBottom="30dp"
-              android:layout_centerHorizontal="true"
-              android:layout_gravity="center_horizontal|bottom"
-              android:text="@string/connect_google_fit_learn"/>
 </RelativeLayout>

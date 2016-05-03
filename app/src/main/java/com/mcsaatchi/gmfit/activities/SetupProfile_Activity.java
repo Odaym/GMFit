@@ -16,10 +16,11 @@ import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.classes.DefaultIndicator_Controller;
 import com.mcsaatchi.gmfit.classes.Helpers;
 import com.mcsaatchi.gmfit.classes.Indicator_Controller;
-import com.mcsaatchi.gmfit.fragments.IntroSlider_Fragment;
 import com.mcsaatchi.gmfit.fragments.Setup_Profile_1_Fragment;
 import com.mcsaatchi.gmfit.fragments.Setup_Profile_2_Fragment;
 import com.mcsaatchi.gmfit.fragments.Setup_Profile_3_Fragment;
+import com.mcsaatchi.gmfit.fragments.Setup_Profile_4_Fragment;
+import com.mcsaatchi.gmfit.fragments.Setup_Profile_5_Fragment;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -84,6 +85,9 @@ public class SetupProfile_Activity extends Base_Activity {
                     previousPageControllerLayout.setVisibility(View.VISIBLE);
 
                 viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
+
+                if (viewPager.getCurrentItem() == 4)
+                    nextPageBTN.setText(getString(R.string.finish));
             }
         });
 
@@ -94,6 +98,9 @@ public class SetupProfile_Activity extends Base_Activity {
                     previousPageControllerLayout.setVisibility(View.INVISIBLE);
 
                 viewPager.setCurrentItem(viewPager.getCurrentItem() - 1);
+
+                if (viewPager.getCurrentItem() < 4)
+                    nextPageBTN.setText(getString(R.string.next_page));
             }
         });
     }
@@ -124,9 +131,9 @@ public class SetupProfile_Activity extends Base_Activity {
                 case 2:
                     return new Setup_Profile_3_Fragment();
                 case 3:
-                    return IntroSlider_Fragment.newInstance(R.layout.fragment_intro_slide_4);
+                    return new Setup_Profile_4_Fragment();
                 case 4:
-                    return IntroSlider_Fragment.newInstance(R.layout.fragment_intro_slide_4);
+                    return new Setup_Profile_5_Fragment();
                 default:
                     return null;
             }

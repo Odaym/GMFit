@@ -35,7 +35,7 @@
                 android:id="@+id/nextPageBTN"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Next"/>
+                android:text="@string/next_page"/>
 
             <ImageView
                 android:id="@+id/nextPageIMG"
@@ -68,7 +68,7 @@
                 android:id="@+id/previousPageBTN"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Back"/>
+                android:text="@string/previous_page"/>
         </LinearLayout>
     </RelativeLayout>
 

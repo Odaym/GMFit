@@ -18,8 +18,6 @@ import com.mcsaatchi.gmfit.activities.LearnMoreGoogleFit_Activity;
 
 public class Setup_Profile_3_Fragment extends Fragment {
 
-    private TextView learnMoreGoogleFitTV;
-
     @Override
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container,
@@ -27,7 +25,7 @@ public class Setup_Profile_3_Fragment extends Fragment {
 
         View fragmentView = inflater.inflate(R.layout.fragment_setup_profile_3, container, false);
 
-        learnMoreGoogleFitTV = (TextView) fragmentView.findViewById(R.id.learnMoreGoogleFitTV);
+        TextView learnMoreGoogleFitTV = (TextView) fragmentView.findViewById(R.id.learnMoreGoogleFitTV);
 
         hookupLearnMoreButton(learnMoreGoogleFitTV);
 
