@@ -16,7 +16,13 @@ import android.widget.TextView;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.activities.LearnMoreGoogleFit_Activity;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 public class Setup_Profile_3_Fragment extends Fragment {
+
+    @Bind(R.id.learnMoreGoogleFitTV)
+    TextView learnMoreGoogleFitTV;
 
     @Override
     public View onCreateView(LayoutInflater inflater,
@@ -25,7 +31,7 @@ public class Setup_Profile_3_Fragment extends Fragment {
 
         View fragmentView = inflater.inflate(R.layout.fragment_setup_profile_3, container, false);
 
-        TextView learnMoreGoogleFitTV = (TextView) fragmentView.findViewById(R.id.learnMoreGoogleFitTV);
+        ButterKnife.bind(this, fragmentView);
 
         hookupLearnMoreButton(learnMoreGoogleFitTV);
 

@@ -13,9 +13,14 @@ import com.mcsaatchi.gmfit.R;
 
 import java.util.Calendar;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 public class Setup_Profile_5_Fragment extends Fragment implements CalendarDatePickerDialogFragment.OnDateSetListener {
 
-    private Button dateOfBirthBTN;
+    @Bind(R.id.dateOfBirthBTN)
+    Button dateOfBirthBTN;
+
     private static final String FRAG_TAG_DATE_PICKER = "fragment_date_picker_name";
 
     @Override
@@ -25,7 +30,7 @@ public class Setup_Profile_5_Fragment extends Fragment implements CalendarDatePi
 
         View fragmentView = inflater.inflate(R.layout.fragment_setup_profile_5, container, false);
 
-        dateOfBirthBTN = (Button) fragmentView.findViewById(R.id.dateOfBirthBTN);
+        ButterKnife.bind(this, fragmentView);
 
         dateOfBirthBTN.setOnClickListener(new View.OnClickListener() {
             @Override

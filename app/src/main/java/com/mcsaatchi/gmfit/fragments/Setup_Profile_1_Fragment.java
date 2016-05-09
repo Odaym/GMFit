@@ -19,8 +19,16 @@ import com.mcsaatchi.gmfit.logger.Log;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 public class Setup_Profile_1_Fragment extends Fragment {
     private boolean touched = false;
+
+    @Bind(R.id.countrySpinner)
+    Spinner citizenship;
+    @Bind(R.id.measurementsSpinner)
+    Spinner measurements;
 
     @Override
     public View onCreateView(LayoutInflater inflater,
@@ -29,9 +37,7 @@ public class Setup_Profile_1_Fragment extends Fragment {
 
         View fragmentView = inflater.inflate(R.layout.fragment_setup_profile_1, container, false);
 
-        Spinner citizenship = (Spinner) fragmentView.findViewById(R.id.countrySpinner);
-
-        Spinner measurements = (Spinner) fragmentView.findViewById(R.id.measurementsSpinner);
+        ButterKnife.bind(this, fragmentView);
 
         setupCountriesSpinner(citizenship);
 
