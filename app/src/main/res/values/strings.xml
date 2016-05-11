@@ -111,4 +111,6 @@
     <string name="customize_widgets_activity_title">Customize Widgets</string>
 
     <string name="about_google_fit_acitivity_title">About Google Fit</string>
+
+    <!-- HEALTH FRAGMENT -->
 </resources>

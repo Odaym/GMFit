@@ -24,4 +24,7 @@
 
     <!-- SETUP PROFILE STEPS-->
     <dimen name="radiobutton_row_height">60dp</dimen>
+
+    <!-- HEALTH FRAGMENT-->
+    <dimen name="default_padding_1">10dp</dimen>
 </resources>
