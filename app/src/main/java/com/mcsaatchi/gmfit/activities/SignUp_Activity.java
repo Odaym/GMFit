@@ -38,7 +38,6 @@ public class SignUp_Activity extends Base_Activity {
     @Bind(R.id.creatingAccountTOSTV)
     TextView creatingAccountTOSTV;
 
-    private Helpers helpers = Helpers.getInstance();
     private ArrayList<FormEditText> allFields = new ArrayList<>();
 
     @Override
@@ -61,7 +60,7 @@ public class SignUp_Activity extends Base_Activity {
         createAccountBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (helpers.validateFields(allFields)){
+                if (Helpers.validateFields(allFields)){
                     Log.toaster(SignUp_Activity.this, "All fields check out!");
                 }
             }
