@@ -8,15 +8,15 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Parcelable;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.classes.Helpers;
@@ -63,42 +63,44 @@ public class AddHealthTest_Activity extends Base_Activity {
         });
     }
 
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (resultCode == RESULT_OK) {
             if (requestCode == SELECT_PICTURE) {
-                // retrieve a collection of selected images
 
-                ArrayList<Parcelable> list = data.getParcelableArrayListExtra(Intent.EXTRA_STREAM);
-
-                if (data.getClipData() != null) {
-                    for (int i = 0; i < data.getClipData().getItemCount(); i++)
-                        Log.d(TAG, "onActivityResult: Clip : " + getPath(AddHealthTest_Activity.this, data.getClipData().getItemAt(i).getUri()));
+                if (intent.getClipData() != null) {
+                    for (int i = 0; i < intent.getClipData().getItemCount(); i++) {
+                        selectedImagePaths.add(getPath(AddHealthTest_Activity.this, intent.getClipData().getItemAt(i).getUri()));
+                        testPhotosLayout.addView(createNewImageViewLayout(intent.getClipData().getItemAt(i).getUri()));
+                    }
                 } else {
-                    Uri selectedImageUri = data.getData();
-                    selectedImagePaths.add(getPath(AddHealthTest_Activity.this, selectedImageUri));
-                    Log.d(TAG, "onActivityResult: Single pic" + selectedImageUri);
-
-                    final View singlePhotoLayout = getLayoutInflater().inflate(R.layout.view_test_photo_item, null);
-
-                    ImageView testPhotoIMG = (ImageView) singlePhotoLayout.findViewById(R.id.testPhotoIMG);
-                    Button deleteTestPhotoBTN = (Button) singlePhotoLayout.findViewById(R.id.deleteTestPhotoBTN);
-
-                    Picasso.with(AddHealthTest_Activity.this).load(new File(getPath(AddHealthTest_Activity.this, selectedImageUri))).resize(300, 300)
-                            .centerInside
-                            ().into(testPhotoIMG);
-                    Log.d(TAG, "onActivityResult: REAL PATH " + new File(getPath(AddHealthTest_Activity.this, selectedImageUri)));
-
-                    deleteTestPhotoBTN.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            testPhotosLayout.removeView(singlePhotoLayout);
-                        }
-                    });
-
-                    testPhotosLayout.addView(singlePhotoLayout);
+                    testPhotosLayout.addView(createNewImageViewLayout(intent.getData()));
                 }
             }
         }
+    }
+
+    public View createNewImageViewLayout(Uri imageURI) {
+        final View singlePhotoLayout = getLayoutInflater().inflate(R.layout.view_test_photo_item, null);
+
+        ImageView testPhotoIMG = (ImageView) singlePhotoLayout.findViewById(R.id.testPhotoIMG);
+        Button deleteTestPhotoBTN = (Button) singlePhotoLayout.findViewById(R.id.deleteTestPhotoBTN);
+
+        Picasso.with(AddHealthTest_Activity.this).load(new File(getPath(AddHealthTest_Activity.this, imageURI))).fit().into
+                (testPhotoIMG);
+
+        deleteTestPhotoBTN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                testPhotosLayout.removeView(singlePhotoLayout);
+            }
+        });
+
+        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(getResources().getDimensionPixelSize(R.dimen.test_photos_width),
+                getResources().getDimensionPixelSize(R.dimen.test_photos_height));
+        singlePhotoLayout.setPadding(20, 0, 20, 0);
+        singlePhotoLayout.setLayoutParams(layoutParams);
+
+        return singlePhotoLayout;
     }
 
     public static String getPath(final Context context, final Uri uri) {
@@ -144,7 +146,7 @@ public class AddHealthTest_Activity extends Base_Activity {
                 }
 
                 final String selection = "_id=?";
-                final String[] selectionArgs = new String[] {
+                final String[] selectionArgs = new String[]{
                         split[1]
                 };
 
