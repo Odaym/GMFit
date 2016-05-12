@@ -5,6 +5,7 @@ def playServicesVersion = '8.4.0'
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.3"
+    useLibrary 'org.apache.http.legacy'
 
     defaultConfig {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -51,6 +52,7 @@ dependencies {
     compile 'com.facebook.android:facebook-android-sdk:[4,5)'
     compile "com.android.support:design:$supportLibVersion"
     compile 'com.code-troopers.betterpickers:library:2.5.3'
+    compile 'com.github.florent37:materialtextfield:1.0.4'
     compile 'com.wrapp.floatlabelededittext:library:0.0.6'
     compile 'com.github.PhilJay:MPAndroidChart:v2.2.4'
     compile 'com.squareup.picasso:picasso:2.5.2'

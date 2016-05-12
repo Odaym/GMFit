@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.andreabaccega.widget.FormEditText;
+import com.github.florent37.materialtextfield.MaterialTextField;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.classes.Helpers;
 import com.mcsaatchi.gmfit.logger.Log;
@@ -26,6 +27,8 @@ public class SignIn_Activity extends Base_Activity {
 
     @Bind(R.id.emailET)
     FormEditText emailET;
+    @Bind(R.id.emailETFloating)
+    MaterialTextField emailETFloating;
     @Bind(R.id.passwordET)
     FormEditText passwordET;
     @Bind(R.id.signInBTN)
@@ -47,6 +50,8 @@ public class SignIn_Activity extends Base_Activity {
 
         allFields.add(emailET);
         allFields.add(passwordET);
+
+        emailETFloating.expand();
 
         signInBTN.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.andreabaccega.widget.FormEditText;
+import com.github.florent37.materialtextfield.MaterialTextField;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.classes.Helpers;
 import com.mcsaatchi.gmfit.logger.Log;
@@ -26,6 +27,8 @@ public class SignUp_Activity extends Base_Activity {
 
     @Bind(R.id.emailET)
     FormEditText emailET;
+    @Bind(R.id.emailETFloating)
+    MaterialTextField emailETFloating;
     @Bind(R.id.passwordET)
     FormEditText passwordET;
     @Bind(R.id.confirmPasswordET)
@@ -49,6 +52,8 @@ public class SignUp_Activity extends Base_Activity {
         allFields.add(emailET);
         allFields.add(passwordET);
         allFields.add(confirmPasswordET);
+
+        emailETFloating.expand();
 
         passwordET.setTypeface(Typeface.DEFAULT);
         confirmPasswordET.setTypeface(Typeface.DEFAULT);

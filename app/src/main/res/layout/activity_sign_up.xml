@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:validator="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/white"
     android:paddingBottom="@dimen/activity_horizontal_margin"
     android:paddingEnd="@dimen/activity_vertical_margin"
     android:paddingStart="@dimen/activity_vertical_margin"
@@ -20,10 +22,14 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <com.wrapp.floatlabelededittext.FloatLabeledEditText
+            <com.github.florent37.materialtextfield.MaterialTextField
                 android:id="@+id/emailETFloating"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:background="@null"
+                app:mtf_cardCollapsedHeight="@dimen/material_textfield_collapsed_height"
+                app:mtf_image="@drawable/ic_email_black_24dp"
+                app:mtf_labelColor="@android:color/black">
 
                 <com.andreabaccega.widget.FormEditText
                     android:id="@+id/emailET"
@@ -39,7 +45,7 @@
                     validator:testErrorString="@string/error_email_address_not_valid"
                     validator:testType="email"/>
 
-            </com.wrapp.floatlabelededittext.FloatLabeledEditText>
+            </com.github.florent37.materialtextfield.MaterialTextField>
         </LinearLayout>
 
         <LinearLayout
@@ -47,11 +53,12 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <com.wrapp.floatlabelededittext.FloatLabeledEditText
-                android:id="@+id/passwordETFloating"
+            <com.github.florent37.materialtextfield.MaterialTextField
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical|end">
+                app:mtf_cardCollapsedHeight="@dimen/material_textfield_collapsed_height"
+                app:mtf_image="@drawable/ic_vpn_key_black_24dp"
+                app:mtf_labelColor="@android:color/black">
 
                 <com.andreabaccega.widget.FormEditText
                     android:id="@+id/passwordET"
@@ -68,7 +75,7 @@
                     validator:testErrorString="@string/field_password_too_short_error"
                     validator:testType="regexp"/>
 
-            </com.wrapp.floatlabelededittext.FloatLabeledEditText>
+            </com.github.florent37.materialtextfield.MaterialTextField>
         </LinearLayout>
 
         <LinearLayout
@@ -76,11 +83,13 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <com.wrapp.floatlabelededittext.FloatLabeledEditText
-                android:id="@+id/confirmPasswordETFloating"
+            <com.github.florent37.materialtextfield.MaterialTextField
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical|end">
+                android:layout_gravity="center_vertical|end"
+                app:mtf_cardCollapsedHeight="@dimen/material_textfield_collapsed_height"
+                app:mtf_image="@drawable/ic_vpn_key_black_24dp"
+                app:mtf_labelColor="@android:color/black">
 
                 <com.andreabaccega.widget.FormEditText
                     android:id="@+id/confirmPasswordET"
@@ -97,7 +106,7 @@
                     validator:testErrorString="@string/field_password_too_short_error"
                     validator:testType="regexp"/>
 
-            </com.wrapp.floatlabelededittext.FloatLabeledEditText>
+            </com.github.florent37.materialtextfield.MaterialTextField>
         </LinearLayout>
 
         <Button
