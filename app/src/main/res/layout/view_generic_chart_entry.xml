@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+    <TextView android:id="@+id/entryTitleTV" android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="TEST 1"
+              android:textAppearance="?android:textAppearanceMedium"/>
+
+    <TextView android:id="@+id/entryDescriptionTV" android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_below="@+id/entryTitleTV"
+              android:text="test smaller"/>
+
+    <TextView android:id="@+id/entryUnitsTV" android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_alignParentEnd="true"
+              android:layout_centerVertical="true"
+              android:text="right value"/>
+</RelativeLayout>
