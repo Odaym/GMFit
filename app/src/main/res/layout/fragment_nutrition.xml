@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_centerInParent="true"
+            android:background="@android:color/black"/>
+
+        <View
+            android:layout_width="0.5dp"
+            android:layout_height="200dp"
+            android:layout_centerInParent="true"
+            android:background="@android:color/black"/>
+
+        <com.hookedonplay.decoviewlib.DecoView
+            android:id="@+id/dynamicArcView"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_centerInParent="true"
+            android:background="@color/white"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/metricCounterTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="760"
+                android:textAppearance="?android:textAppearanceLarge"/>
+
+            <TextView
+                android:id="@+id/metricCounterLabelTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="CALORIES TODAY"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingEnd="@dimen/metric_cell_padding_horizontal"
+            android:paddingStart="@dimen/metric_cell_padding_horizontal"
+            android:paddingTop="@dimen/metric_cell_padding_horizontal">
+
+            <TextView
+                android:id="@+id/firstMetricTitleTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Protein"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/firstMetricValueTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="152 g"/>
+
+            <TextView
+                android:id="@+id/firstMetricPercentagesTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="(17%)"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingEnd="@dimen/metric_cell_padding_horizontal"
+            android:paddingStart="@dimen/metric_cell_padding_horizontal"
+            android:paddingTop="@dimen/metric_cell_padding_horizontal">
+
+            <TextView
+                android:id="@+id/secondMetricTitleTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Fat"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/secondMetricValueTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="87 g"/>
+
+            <TextView
+                android:id="@+id/secondMetricPercentagesTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="(29%)"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/metric_cell_padding_horizontal_smaller"
+            android:paddingEnd="@dimen/metric_cell_padding_horizontal"
+            android:paddingStart="@dimen/metric_cell_padding_horizontal">
+
+            <TextView
+                android:id="@+id/thirdMetricTitleTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sodium"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/thirdMetricValueTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="200 mg"/>
+
+            <TextView
+                android:id="@+id/thirdMetricPercentagesTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="(105%)"/>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/metric_cell_padding_horizontal_smaller"
+            android:paddingEnd="@dimen/metric_cell_padding_horizontal"
+            android:paddingStart="@dimen/metric_cell_padding_horizontal">
+
+            <TextView
+                android:id="@+id/fourthMetricTitleTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Calcium"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/fourthMetricValueTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="345 mg"/>
+
+            <TextView
+                android:id="@+id/fourthMetricPercentagesTV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="(89%)"/>
+
+        </LinearLayout>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/cards_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:animateLayoutChanges="true"
+            android:orientation="vertical">
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/chart_height"
+                android:layout_gravity="center"
+                android:layout_marginTop="5dp"
+                card_view:cardCornerRadius="@dimen/cardview_default_radius"
+                card_view:cardElevation="@dimen/cardview_default_elevation"
+                card_view:cardUseCompatPadding="true">
+
+                <RelativeLayout android:layout_width="match_parent" android:layout_height="match_parent">
+                    <!-- YOUR CONTENT HERE-->
+                </RelativeLayout>
+            </android.support.v7.widget.CardView>
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/addChartBTN"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="ADD NEW CHART"/>
+    </LinearLayout>
+
+</LinearLayout>
