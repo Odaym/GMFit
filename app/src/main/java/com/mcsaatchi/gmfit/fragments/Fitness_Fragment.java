@@ -13,30 +13,22 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.BounceInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.BarDataSet;
-import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
-import com.github.mikephil.charting.utils.ColorTemplate;
 import com.hookedonplay.decoviewlib.DecoView;
-import com.hookedonplay.decoviewlib.charts.SeriesItem;
-import com.hookedonplay.decoviewlib.events.DecoEvent;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.activities.AddNewChart_Activity;
 import com.mcsaatchi.gmfit.activities.CustomizeWidget_Activity;
 import com.mcsaatchi.gmfit.classes.Constants;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
+import com.mcsaatchi.gmfit.classes.Helpers;
 import com.squareup.otto.Subscribe;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Fitness_Fragment extends Fragment {
@@ -102,20 +94,22 @@ public class Fitness_Fragment extends Fragment {
         fourthMetricIMG = (ImageView) fragmentView.findViewById(R.id.fourthMetricIMG);
 
         BarChart barChart = (BarChart) fragmentView.findViewById(R.id.bar_chart);
-        Button addNewChartBTN = (Button) fragmentView.findViewById(R.id.addChartBTN);
+        Button addNewBarChartBTN = (Button) fragmentView.findViewById(R.id.addChartBTN);
 
         prefs = getActivity().getSharedPreferences(Constants.EXTRAS_PREFS, Context.MODE_PRIVATE);
 
         setHasOptionsMenu(true);
 
-        setUpDecoViewArc();
+        Helpers.setUpDecoViewArc(getActivity(), dynamicArc);
 
-        setChartData(barChart, 20, 20);
+        Helpers.setChartData(barChart, 20, 20);
 
-        addNewChartBTN.setOnClickListener(new View.OnClickListener() {
+        addNewBarChartBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivityForResult(new Intent(getActivity(), AddNewChart_Activity.class), ADD_NEW_FITNESS_CHART_REQUEST_CODE);
+                Intent intent = new Intent(getActivity(), AddNewChart_Activity.class);
+                intent.putExtra(Constants.EXTRAS_ADD_CHART_WHAT_TYPE, Constants.EXTRAS_ADD_FITNESS_CHART);
+                startActivityForResult(intent, ADD_NEW_FITNESS_CHART_REQUEST_CODE);
             }
         });
 
@@ -131,22 +125,22 @@ public class Fitness_Fragment extends Fragment {
                 if (data != null) {
                     switch (data.getStringExtra(Constants.EXTRAS_CHART_TYPE_SELECTED)) {
                         case numberOfStepsChartType:
-                            addNewChart(numberOfStepsChartType);
+                            addNewBarChart(numberOfStepsChartType);
                             break;
                         case walkingDistanceChartType:
-                            addNewChart(walkingDistanceChartType);
+                            addNewBarChart(walkingDistanceChartType);
                             break;
                         case cyclingDistanceChartType:
-                            addNewChart(cyclingDistanceChartType);
+                            addNewBarChart(cyclingDistanceChartType);
                             break;
                         case totalDistanceChartType:
-                            addNewChart(totalDistanceChartType);
+                            addNewBarChart(totalDistanceChartType);
                             break;
                         case flightsClimbedChartType:
-                            addNewChart(flightsClimbedChartType);
+                            addNewBarChart(flightsClimbedChartType);
                             break;
                         case activeCaloriesChartType:
-                            addNewChart(activeCaloriesChartType);
+                            addNewBarChart(activeCaloriesChartType);
                             break;
                     }
                 }
@@ -154,7 +148,7 @@ public class Fitness_Fragment extends Fragment {
         }
     }
 
-    public void addNewChart(String chartTitle) {
+    public void addNewBarChart(String chartTitle) {
         final View barChartLayout = getActivity().getLayoutInflater().inflate(R.layout.view_barchart_container, null);
 
         Button removeChartBTN = (Button) barChartLayout.findViewById(R.id.removeChartBTN);
@@ -165,7 +159,7 @@ public class Fitness_Fragment extends Fragment {
         if (chartTitle != null)
             chartTitleTV.setText(chartTitle);
 
-        setChartData(barChart, 10, 10);
+        Helpers.setChartData(barChart, 10, 10);
 
         removeChartBTN.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -221,48 +215,5 @@ public class Fitness_Fragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         EventBus_Singleton.getInstance().unregister(this);
-    }
-
-    private void setUpDecoViewArc() {
-        SeriesItem seriesItem1 = new SeriesItem.Builder(getResources().getColor(android.R.color.holo_orange_dark))
-                .setRange(0, 100, 0)
-                .setSpinDuration(2500)
-                .setInterpolator(new BounceInterpolator())
-                .setLineWidth(35f)
-                .build();
-
-        int series1Index = dynamicArc.addSeries(seriesItem1);
-
-        dynamicArc.addEvent(new DecoEvent.Builder(75).setIndex(series1Index).build());
-    }
-
-    public void setChartData(BarChart chart, int xLimits, int yLimits) {
-        ArrayList<BarEntry> yVals1 = new ArrayList<>();
-
-        for (int i = 0; i < yLimits + 1; i++) {
-            float mult = (yLimits + 1);
-            float val1 = (float) (Math.random() * mult) + mult / 3;
-            yVals1.add(new BarEntry((int) val1, i));
-        }
-
-        ArrayList<String> xVals = new ArrayList<>();
-        for (int i = 0; i < xLimits + 1; i++) {
-            xVals.add((int) yVals1.get(i).getVal() + "");
-        }
-
-        BarDataSet set1;
-        set1 = new BarDataSet(yVals1, "Legend");
-        set1.setColors(ColorTemplate.VORDIPLOM_COLORS);
-        set1.setBarShadowColor(R.color.bpblack);
-        set1.setDrawValues(false);
-
-        ArrayList<IBarDataSet> dataSets = new ArrayList<>();
-        dataSets.add(set1);
-
-        BarData data = new BarData(xVals, dataSets);
-
-        chart.setDescription("");
-        chart.setData(data);
-        chart.invalidate();
     }
 }
