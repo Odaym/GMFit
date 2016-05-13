@@ -7,7 +7,7 @@
         android:layout_width="wrap_content"
         android:layout_height="@dimen/login_button_height"
         android:gravity="center_vertical"
-        android:textColor="@android:color/holo_blue_dark"/>
+        android:textColor="@android:color/holo_green_dark"/>
 
     <TextView
         android:id="@+id/itemHintTV"

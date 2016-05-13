@@ -113,4 +113,8 @@
     <string name="about_google_fit_acitivity_title">About Google Fit</string>
 
     <!-- HEALTH FRAGMENT -->
+
+    <!-- ADD NEW CHART -->
+    <string name="add_new_chart_activity_title">Add New Chart</string>
+    <string name="add_new_chart_prompt">Add a chart from the list below</string>
 </resources>
