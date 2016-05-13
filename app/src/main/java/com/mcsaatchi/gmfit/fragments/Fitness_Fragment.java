@@ -17,7 +17,6 @@ import android.view.animation.BounceInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
@@ -30,6 +29,7 @@ import com.hookedonplay.decoviewlib.DecoView;
 import com.hookedonplay.decoviewlib.charts.SeriesItem;
 import com.hookedonplay.decoviewlib.events.DecoEvent;
 import com.mcsaatchi.gmfit.R;
+import com.mcsaatchi.gmfit.activities.AddNewChart_Activity;
 import com.mcsaatchi.gmfit.activities.CustomizeWidget_Activity;
 import com.mcsaatchi.gmfit.classes.Constants;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
@@ -57,11 +57,19 @@ public class Fitness_Fragment extends Fragment {
     private TextView fourthMetricTV;
     private ImageView fourthMetricIMG;
 
+    public static final int ADD_NEW_FITNESS_CHART_REQUEST_CODE = 1;
 
     private List<Integer> itemIndeces;
     private SparseArray<String[]> itemsMap;
 
     private SharedPreferences prefs;
+
+    private final String numberOfStepsChartType = "Number of Steps";
+    private final String walkingDistanceChartType = "Walking and Running Distance";
+    private final String cyclingDistanceChartType = "Cycling Distance";
+    private final String totalDistanceChartType = "Total Distance Traveled";
+    private final String flightsClimbedChartType = "Flights Climbed";
+    private final String activeCaloriesChartType = "Active Calories";
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -107,53 +115,75 @@ public class Fitness_Fragment extends Fragment {
         addNewChartBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final CardView cardView = new CardView(getActivity());
-                cardView.setLayoutParams(new RelativeLayout.LayoutParams(
-                        RelativeLayout.LayoutParams.MATCH_PARENT,
-                        getResources().getDimensionPixelSize(R.dimen.chart_height)));
-                cardView.setUseCompatPadding(true);
-                cardView.setCardElevation(getResources().getDimensionPixelSize(R.dimen.cardview_default_elevation));
-                cardView.setRadius(getResources().getDimensionPixelSize(R.dimen.cardview_default_radius));
-
-                final BarChart newBarChart = new BarChart(getActivity());
-                newBarChart.setLayoutParams(new RelativeLayout.LayoutParams(
-                        RelativeLayout.LayoutParams.MATCH_PARENT,
-                        RelativeLayout.LayoutParams.MATCH_PARENT));
-                setChartData(newBarChart, 10, 10);
-
-                Button removeChartBTN = new Button(getActivity());
-                RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
-                        getResources().getDimensionPixelSize(R.dimen.remove_chart_button_dimens),
-                        getResources().getDimensionPixelSize(R.dimen.remove_chart_button_dimens));
-
-                lp.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-                lp.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-
-                removeChartBTN.setLayoutParams(lp);
-                removeChartBTN.setText("X");
-
-                cardView.addView(removeChartBTN);
-                cardView.addView(newBarChart);
-
-                removeChartBTN.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        cards_container.removeView(cardView);
-                    }
-                });
-
-                cards_container.addView(cardView);
-
-                parentScrollView.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        parentScrollView.fullScroll(View.FOCUS_DOWN);
-                    }
-                }, 500);
+                startActivityForResult(new Intent(getActivity(), AddNewChart_Activity.class), ADD_NEW_FITNESS_CHART_REQUEST_CODE);
             }
         });
 
         return fragmentView;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode) {
+            case ADD_NEW_FITNESS_CHART_REQUEST_CODE:
+                if (data != null) {
+                    switch (data.getStringExtra(Constants.EXTRAS_CHART_TYPE_SELECTED)) {
+                        case numberOfStepsChartType:
+                            addNewChart(numberOfStepsChartType);
+                            break;
+                        case walkingDistanceChartType:
+                            addNewChart(walkingDistanceChartType);
+                            break;
+                        case cyclingDistanceChartType:
+                            addNewChart(cyclingDistanceChartType);
+                            break;
+                        case totalDistanceChartType:
+                            addNewChart(totalDistanceChartType);
+                            break;
+                        case flightsClimbedChartType:
+                            addNewChart(flightsClimbedChartType);
+                            break;
+                        case activeCaloriesChartType:
+                            addNewChart(activeCaloriesChartType);
+                            break;
+                    }
+                }
+                break;
+        }
+    }
+
+    public void addNewChart(String chartTitle) {
+        final View barChartLayout = getActivity().getLayoutInflater().inflate(R.layout.view_barchart_container, null);
+
+        Button removeChartBTN = (Button) barChartLayout.findViewById(R.id.removeChartBTN);
+        final CardView cardLayout = (CardView) barChartLayout.findViewById(R.id.cardLayoutContainer);
+        TextView chartTitleTV = (TextView) barChartLayout.findViewById(R.id.chartTitleTV);
+        BarChart barChart = (BarChart) barChartLayout.findViewById(R.id.barChart);
+
+        if (chartTitle != null)
+            chartTitleTV.setText(chartTitle);
+
+        setChartData(barChart, 10, 10);
+
+        removeChartBTN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cards_container.removeView(cardLayout);
+            }
+        });
+
+        barChartLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, getResources().getDimensionPixelSize(R.dimen.chart_height)));
+
+        cards_container.addView(barChartLayout);
+
+        parentScrollView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                parentScrollView.fullScroll(View.FOCUS_DOWN);
+            }
+        }, 500);
     }
 
     @Subscribe
@@ -161,7 +191,7 @@ public class Fitness_Fragment extends Fragment {
         String ebpMessage = ebp.getMessage();
 
         switch (ebpMessage) {
-            case Constants.EVENT_WIDGETS_ORDER_ARRAY_CHANGED:
+            case Constants.EXTRAS_WIDGETS_ORDER_ARRAY_CHANGED:
                 if (ebp.getSparseArrayExtra() != null) {
                     itemsMap = ebp.getSparseArrayExtra();
 
@@ -223,6 +253,7 @@ public class Fitness_Fragment extends Fragment {
         BarDataSet set1;
         set1 = new BarDataSet(yVals1, "Legend");
         set1.setColors(ColorTemplate.VORDIPLOM_COLORS);
+        set1.setBarShadowColor(R.color.bpblack);
         set1.setDrawValues(false);
 
         ArrayList<IBarDataSet> dataSets = new ArrayList<>();
@@ -230,7 +261,7 @@ public class Fitness_Fragment extends Fragment {
 
         BarData data = new BarData(xVals, dataSets);
 
-        chart.setDescription("Chart Data");
+        chart.setDescription("");
         chart.setData(data);
         chart.invalidate();
     }
