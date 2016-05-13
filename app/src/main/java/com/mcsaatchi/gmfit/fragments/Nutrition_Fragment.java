@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.hookedonplay.decoviewlib.DecoView;
@@ -47,6 +48,16 @@ public class Nutrition_Fragment extends Fragment {
     public static final int ADD_NEW_NUTRITION_CHART_REQUEST = 1;
 
     private SharedPreferences prefs;
+
+    private final String caloriesChartType = "Calories";
+    private final String biotinChartType = "Biotin";
+    private final String caffeineChartType = "Caffeine";
+    private final String calciumChartType = "Calcium";
+    private final String carbohydratesChartType = "Carbohydrates";
+    private final String chlorideChartType = "Chloride";
+    private final String chromiumChartType = "Chromium";
+    private final String copperChartType = "Copper";
+    private final String dietary_cholesterolChartType = "Dietary Cholesterol";
 
     @Override
     public View onCreateView(LayoutInflater inflater,
@@ -83,7 +94,10 @@ public class Nutrition_Fragment extends Fragment {
         addNewChartBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivityForResult(new Intent(getActivity(), AddNewChart_Activity.class), ADD_NEW_NUTRITION_CHART_REQUEST);
+                Intent intent = new Intent(getActivity(), AddNewChart_Activity.class);
+                intent.putExtra(Constants.EXTRAS_ADD_CHART_WHAT_TYPE, Constants.EXTRAS_ADD_NUTRIITION_CHART);
+                startActivityForResult(intent,
+                        ADD_NEW_NUTRITION_CHART_REQUEST);
             }
         });
 
@@ -93,6 +107,14 @@ public class Nutrition_Fragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode) {
+            case ADD_NEW_NUTRITION_CHART_REQUEST:
+                if (data != null) {
+                    Toast.makeText(getActivity(), "Nutrition chart was " + data.getStringExtra(Constants.EXTRAS_CHART_TYPE_SELECTED), Toast.LENGTH_SHORT).show();
+                }
+                break;
+        }
     }
 
     private void setUpDecoViewArc() {
