@@ -6,24 +6,22 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.NestedScrollView;
+import android.support.v7.widget.CardView;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.BounceInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.hookedonplay.decoviewlib.DecoView;
-import com.hookedonplay.decoviewlib.charts.SeriesItem;
-import com.hookedonplay.decoviewlib.events.DecoEvent;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.activities.AddNewChart_Activity;
 import com.mcsaatchi.gmfit.classes.Constants;
+import com.mcsaatchi.gmfit.classes.Helpers;
 
 public class Nutrition_Fragment extends Fragment {
 
@@ -45,7 +43,7 @@ public class Nutrition_Fragment extends Fragment {
 
     private SparseArray<String[]> itemsMap;
 
-    public static final int ADD_NEW_NUTRITION_CHART_REQUEST = 1;
+    public static final int ADD_NEW_NUTRITION_CHART_REQUEST = 2;
 
     private SharedPreferences prefs;
 
@@ -89,7 +87,7 @@ public class Nutrition_Fragment extends Fragment {
 
         setHasOptionsMenu(true);
 
-        setUpDecoViewArc();
+        Helpers.setUpDecoViewArc(getActivity(), dynamicArc);
 
         addNewChartBTN.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,22 +109,57 @@ public class Nutrition_Fragment extends Fragment {
         switch (requestCode) {
             case ADD_NEW_NUTRITION_CHART_REQUEST:
                 if (data != null) {
-                    Toast.makeText(getActivity(), "Nutrition chart was " + data.getStringExtra(Constants.EXTRAS_CHART_TYPE_SELECTED), Toast.LENGTH_SHORT).show();
+                    switch (data.getStringExtra(Constants.EXTRAS_CHART_TYPE_SELECTED)) {
+                        case caloriesChartType:
+                            addNewBarChart(caloriesChartType);
+                            break;
+                        default:
+                            addNewNutritionChart(data.getStringExtra(Constants.EXTRAS_CHART_TYPE_SELECTED));
+                            break;
+                    }
                 }
                 break;
         }
     }
 
-    private void setUpDecoViewArc() {
-        SeriesItem seriesItem1 = new SeriesItem.Builder(getResources().getColor(android.R.color.holo_orange_dark))
-                .setRange(0, 100, 0)
-                .setSpinDuration(2500)
-                .setInterpolator(new BounceInterpolator())
-                .setLineWidth(35f)
-                .build();
+    private void addNewNutritionChart(String chartTitle) {
+        final View genericChartLayout = getActivity().getLayoutInflater().inflate(R.layout.view_generic_chart_container, null);
 
-        int series1Index = dynamicArc.addSeries(seriesItem1);
+        TextView chartTitleTV = (TextView) genericChartLayout.findViewById(R.id.chartTitleTV);
+        chartTitleTV.setText(chartTitle);
 
-        dynamicArc.addEvent(new DecoEvent.Builder(75).setIndex(series1Index).build());
+        cards_container.addView(genericChartLayout);
+    }
+
+    public void addNewBarChart(String chartTitle) {
+        final View barChartLayout = getActivity().getLayoutInflater().inflate(R.layout.view_barchart_container, null);
+
+        Button removeChartBTN = (Button) barChartLayout.findViewById(R.id.removeChartBTN);
+        final CardView cardLayout = (CardView) barChartLayout.findViewById(R.id.cardLayoutContainer);
+        TextView chartTitleTV = (TextView) barChartLayout.findViewById(R.id.chartTitleTV);
+        BarChart barChart = (BarChart) barChartLayout.findViewById(R.id.barChart);
+
+        if (chartTitle != null)
+            chartTitleTV.setText(chartTitle);
+
+        Helpers.setChartData(barChart, 10, 10);
+
+        removeChartBTN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cards_container.removeView(cardLayout);
+            }
+        });
+
+        barChartLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, getResources().getDimensionPixelSize(R.dimen.chart_height)));
+
+        cards_container.addView(barChartLayout);
+
+        parentScrollView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                parentScrollView.fullScroll(View.FOCUS_DOWN);
+            }
+        }, 500);
     }
 }
