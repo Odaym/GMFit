@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.HorizontalBarChart;
 import com.hookedonplay.decoviewlib.DecoView;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.activities.AddNewChart_Activity;
@@ -31,23 +32,37 @@ import com.squareup.otto.Subscribe;
 
 import java.util.List;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 public class Fitness_Fragment extends Fragment {
 
-    private DecoView dynamicArc;
     private NestedScrollView parentScrollView;
-    private LinearLayout cards_container;
 
-    private TextView firstMetricTV;
-    private ImageView firstMetricIMG;
-
-    private TextView secondMetricTV;
-    private ImageView secondMetricIMG;
-
-    private TextView thirdMetricTV;
-    private ImageView thirdMetricIMG;
-
-    private TextView fourthMetricTV;
-    private ImageView fourthMetricIMG;
+    @Bind(R.id.dynamicArcView)
+    DecoView dynamicArc;
+    @Bind(R.id.cards_container)
+    LinearLayout cards_container;
+    @Bind(R.id.bar_chart)
+    HorizontalBarChart barChart;
+    @Bind(R.id.addChartBTN)
+    Button addNewBarChartBTN;
+    @Bind(R.id.firstMetricTV)
+    TextView firstMetricTV;
+    @Bind(R.id.firstMetricIMG)
+    ImageView firstMetricIMG;
+    @Bind(R.id.secondMetricTV)
+    TextView secondMetricTV;
+    @Bind(R.id.secondMetricIMG)
+    ImageView secondMetricIMG;
+    @Bind(R.id.thirdMetricTV)
+    TextView thirdMetricTV;
+    @Bind(R.id.thirdMetricIMG)
+    ImageView thirdMetricIMG;
+    @Bind(R.id.fourthMetricTV)
+    TextView fourthMetricTV;
+    @Bind(R.id.fourthMetricIMG)
+    ImageView fourthMetricIMG;
 
     public static final int ADD_NEW_FITNESS_CHART_REQUEST_CODE = 1;
 
@@ -77,24 +92,9 @@ public class Fitness_Fragment extends Fragment {
 
         View fragmentView = inflater.inflate(R.layout.fragment_fitness, container, false);
 
-        dynamicArc = (DecoView) fragmentView.findViewById(R.id.dynamicArcView);
         parentScrollView = (NestedScrollView) getActivity().findViewById(R.id.myScrollingContent);
-        cards_container = (LinearLayout) fragmentView.findViewById(R.id.cards_container);
 
-        firstMetricTV = (TextView) fragmentView.findViewById(R.id.firstMetricTV);
-        firstMetricIMG = (ImageView) fragmentView.findViewById(R.id.firstMetricIMG);
-
-        secondMetricTV = (TextView) fragmentView.findViewById(R.id.secondMetricTV);
-        secondMetricIMG = (ImageView) fragmentView.findViewById(R.id.secondMetricIMG);
-
-        thirdMetricTV = (TextView) fragmentView.findViewById(R.id.thirdMetricTV);
-        thirdMetricIMG = (ImageView) fragmentView.findViewById(R.id.thirdMetricIMG);
-
-        fourthMetricTV = (TextView) fragmentView.findViewById(R.id.fourthMetricTV);
-        fourthMetricIMG = (ImageView) fragmentView.findViewById(R.id.fourthMetricIMG);
-
-        BarChart barChart = (BarChart) fragmentView.findViewById(R.id.bar_chart);
-        Button addNewBarChartBTN = (Button) fragmentView.findViewById(R.id.addChartBTN);
+        ButterKnife.bind(this, fragmentView);
 
         prefs = getActivity().getSharedPreferences(Constants.EXTRAS_PREFS, Context.MODE_PRIVATE);
 
