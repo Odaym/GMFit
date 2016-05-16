@@ -1,24 +1,28 @@
 package com.mcsaatchi.gmfit.classes;
 
 import android.content.Context;
-import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mcsaatchi.gmfit.R;
 
-public class DraggableOneItem_ListAdapter extends BaseAdapter {
+import java.util.List;
+
+public class SimpleOneItemWithIcon_ListAdapter extends BaseAdapter {
 
     private Context context;
-    private SparseArray<String[]> listItems;
+    private List<String> listItems;
+    private int drawableResId;
 
-    public DraggableOneItem_ListAdapter(Context context, SparseArray<String[]> listItems) {
+    public SimpleOneItemWithIcon_ListAdapter(Context context, List<String> listItems, int drawableResId) {
         super();
         this.context = context;
         this.listItems = listItems;
+        this.drawableResId = drawableResId;
     }
 
     public void notifyData() {
@@ -31,7 +35,7 @@ public class DraggableOneItem_ListAdapter extends BaseAdapter {
     }
 
     @Override
-    public String[] getItem(int index) {
+    public String getItem(int index) {
         return listItems.get(index);
     }
 
@@ -46,24 +50,27 @@ public class DraggableOneItem_ListAdapter extends BaseAdapter {
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.list_item_simple_draggable, parent,
+            convertView = inflater.inflate(R.layout.list_item_simple_one_with_icon, parent,
                     false);
 
             holder = new ViewHolder();
 
             holder.itemNameTV = (TextView) convertView.findViewById(R.id.itemNameTV);
+            holder.itemIconRightIMG = (ImageView) convertView.findViewById(R.id.itemIconRightIMG);
 
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.itemNameTV.setText(listItems.get(position)[0]);
+        holder.itemNameTV.setText(listItems.get(position));
+        holder.itemIconRightIMG.setImageResource(drawableResId);
 
         return convertView;
     }
 
     class ViewHolder {
         TextView itemNameTV;
+        ImageView itemIconRightIMG;
     }
 }
