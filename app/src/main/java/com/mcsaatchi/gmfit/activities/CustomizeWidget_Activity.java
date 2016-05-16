@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.classes.Constants;
-import com.mcsaatchi.gmfit.classes.DraggableOneItem_ListAdapter;
+import com.mcsaatchi.gmfit.classes.SimpleOneItemWithIcon_Sparse_ListAdapter;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
 import com.mcsaatchi.gmfit.classes.Helpers;
@@ -29,7 +29,7 @@ public class CustomizeWidget_Activity extends Base_Activity {
     @Bind(R.id.widgetsListView)
     DragSortListView widgetsListView;
 
-    private DraggableOneItem_ListAdapter customizeWidgetsAdapter;
+    private SimpleOneItemWithIcon_Sparse_ListAdapter customizeWidgetsAdapter;
 
     private SharedPreferences prefs;
     private SharedPreferences.Editor prefsEditor;
@@ -113,7 +113,7 @@ public class CustomizeWidget_Activity extends Base_Activity {
         widgetsListView.setDragListener(onDrag);
         widgetsListView.setDropListener(onDrop);
 
-        customizeWidgetsAdapter = new DraggableOneItem_ListAdapter(this, items);
+        customizeWidgetsAdapter = new SimpleOneItemWithIcon_Sparse_ListAdapter(this, items, /* */R.drawable.ic_menu_black_24dp);
         widgetsListView.setAdapter(customizeWidgetsAdapter);
 
         LayoutInflater inflater = getLayoutInflater();
