@@ -16,9 +16,11 @@ public class Base_Activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         if (getSupportActionBar() != null && savedInstanceState != null) {
-
             if (savedInstanceState.get(Constants.BUNDLE_ACTIVITY_TITLE) != null)
-                getSupportActionBar().setTitle(getString(savedInstanceState.getInt(Constants.BUNDLE_ACTIVITY_TITLE)));
+                if (savedInstanceState.getInt(Constants.BUNDLE_ACTIVITY_TITLE, -1) != -1)
+                    getSupportActionBar().setTitle(getString(savedInstanceState.getInt(Constants.BUNDLE_ACTIVITY_TITLE)));
+                else
+                    getSupportActionBar().setTitle(savedInstanceState.getString(Constants.BUNDLE_ACTIVITY_TITLE));
             else
                 getSupportActionBar().setTitle(getString(R.string.app_name));
 
