@@ -12,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -20,26 +19,56 @@ import com.github.mikephil.charting.charts.BarChart;
 import com.hookedonplay.decoviewlib.DecoView;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.activities.AddNewChart_Activity;
+import com.mcsaatchi.gmfit.activities.AddNewMealItem_Activity;
 import com.mcsaatchi.gmfit.classes.Constants;
 import com.mcsaatchi.gmfit.classes.Helpers;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 public class Nutrition_Fragment extends Fragment {
 
-    private DecoView dynamicArc;
     private NestedScrollView parentScrollView;
-    private LinearLayout cards_container;
 
-    private TextView firstMetricTV;
-    private ImageView firstMetricIMG;
+    @Bind(R.id.dynamicArcView)
+    DecoView dynamicArc;
+    @Bind(R.id.cards_container)
+    LinearLayout cards_container;
+    @Bind(R.id.addChartBTN)
+    Button addNewChartBTN;
+    @Bind(R.id.chartTitleTV)
+    TextView chartTitleTV;
 
-    private TextView secondMetricTV;
-    private ImageView secondMetricIMG;
+    @Bind(R.id.firstMetricTitleTV)
+    TextView firstMetricTitleTV;
+    @Bind(R.id.firstMetricValueTV)
+    TextView firstMetricValueTV;
+    @Bind(R.id.firstMetricPercentagesTV)
+    TextView firstMetricPercentagesTV;
 
-    private TextView thirdMetricTV;
-    private ImageView thirdMetricIMG;
+    @Bind(R.id.secondMetricTitleTV)
+    TextView secondMetricTitleTV;
+    @Bind(R.id.secondMetricValueTV)
+    TextView secondMetricValueTV;
+    @Bind(R.id.secondMetricPercentagesTV)
+    TextView secondMetricPercentagesTV;
 
-    private TextView fourthMetricTV;
-    private ImageView fourthMetricIMG;
+    @Bind(R.id.thirdMetricTitleTV)
+    TextView thirdMetricTitleTV;
+    @Bind(R.id.thirdMetricValueTV)
+    TextView thirdMetricValueTV;
+    @Bind(R.id.thirdMetricPercentagesTV)
+    TextView thirdMetricPercentagesTV;
+
+    @Bind(R.id.fourthMetricTitleTV)
+    TextView fourthMetricTitleTV;
+    @Bind(R.id.fourthMetricValueTV)
+    TextView fourthMetricValueTV;
+    @Bind(R.id.fourthMetricPercentagesTV)
+    TextView fourthMetricPercentagesTV;
+
+    @Bind(R.id.addEntryBTN)
+    Button addNewEntryBTN;
 
     private SparseArray<String[]> itemsMap;
 
@@ -64,24 +93,9 @@ public class Nutrition_Fragment extends Fragment {
 
         View fragmentView = inflater.inflate(R.layout.fragment_nutrition, container, false);
 
-        dynamicArc = (DecoView) fragmentView.findViewById(R.id.dynamicArcView);
         parentScrollView = (NestedScrollView) getActivity().findViewById(R.id.myScrollingContent);
-        cards_container = (LinearLayout) fragmentView.findViewById(R.id.cards_container);
 
-        firstMetricTV = (TextView) fragmentView.findViewById(R.id.firstMetricTV);
-        firstMetricIMG = (ImageView) fragmentView.findViewById(R.id.firstMetricIMG);
-
-        secondMetricTV = (TextView) fragmentView.findViewById(R.id.secondMetricTV);
-        secondMetricIMG = (ImageView) fragmentView.findViewById(R.id.secondMetricIMG);
-
-        thirdMetricTV = (TextView) fragmentView.findViewById(R.id.thirdMetricTV);
-        thirdMetricIMG = (ImageView) fragmentView.findViewById(R.id.thirdMetricIMG);
-
-        fourthMetricTV = (TextView) fragmentView.findViewById(R.id.fourthMetricTV);
-        fourthMetricIMG = (ImageView) fragmentView.findViewById(R.id.fourthMetricIMG);
-
-        BarChart barChart = (BarChart) fragmentView.findViewById(R.id.bar_chart);
-        Button addNewChartBTN = (Button) fragmentView.findViewById(R.id.addChartBTN);
+        ButterKnife.bind(this, fragmentView);
 
         prefs = getActivity().getSharedPreferences(Constants.EXTRAS_PREFS, Context.MODE_PRIVATE);
 
@@ -99,6 +113,13 @@ public class Nutrition_Fragment extends Fragment {
             }
         });
 
+        addNewEntryBTN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addNewNutritionElement(chartTitleTV.getText().toString());
+            }
+        });
+
         return fragmentView;
     }
 
@@ -109,29 +130,19 @@ public class Nutrition_Fragment extends Fragment {
         switch (requestCode) {
             case ADD_NEW_NUTRITION_CHART_REQUEST:
                 if (data != null) {
-                    switch (data.getStringExtra(Constants.EXTRAS_CHART_TYPE_SELECTED)) {
-                        case caloriesChartType:
-                            addNewBarChart(caloriesChartType);
-                            break;
-                        default:
-                            addNewNutritionChart(data.getStringExtra(Constants.EXTRAS_CHART_TYPE_SELECTED));
-                            break;
-                    }
+                    addNewBarChart(data.getStringExtra(Constants.EXTRAS_CHART_TYPE_SELECTED));
                 }
                 break;
         }
     }
 
-    private void addNewNutritionChart(String chartTitle) {
-        final View genericChartLayout = getActivity().getLayoutInflater().inflate(R.layout.view_generic_chart_container, null);
-
-        TextView chartTitleTV = (TextView) genericChartLayout.findViewById(R.id.chartTitleTV);
-        chartTitleTV.setText(chartTitle);
-
-        cards_container.addView(genericChartLayout);
+    private void addNewNutritionElement(String mainMealName) {
+        Intent intent = new Intent(getActivity(), AddNewMealItem_Activity.class);
+        intent.putExtra(Constants.EXTRAS_MAIN_MEAL_NAME, mainMealName);
+        startActivity(intent);
     }
 
-    public void addNewBarChart(String chartTitle) {
+    private void addNewBarChart(String chartTitle) {
         final View barChartLayout = getActivity().getLayoutInflater().inflate(R.layout.view_barchart_container, null);
 
         Button removeChartBTN = (Button) barChartLayout.findViewById(R.id.removeChartBTN);
@@ -162,4 +173,5 @@ public class Nutrition_Fragment extends Fragment {
             }
         }, 500);
     }
+
 }
