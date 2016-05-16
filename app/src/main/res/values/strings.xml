@@ -117,4 +117,10 @@
     <!-- ADD NEW CHART -->
     <string name="add_new_chart_activity_title">Add New Chart</string>
     <string name="add_new_chart_prompt">Add a chart from the list below</string>
+
+    <!-- ADD NEW MEAL ITEM ACTIVITY -->
+    <string name="add_new_meal_item_activity_title">Add</string>
+    <string name="list_section_recently_added">Recently Added</string>
+    <string name="list_section_popular_meals">Popular Meals</string>
+    <string name="search_hint">Search meals</string>
 </resources>

@@ -55,6 +55,18 @@ public class Helpers {
         return bundle;
     }
 
+    public static Bundle createActivityBundleWithProperties(String activityTitle, boolean enableBackButton) {
+        Bundle bundle = new Bundle();
+
+        if (activityTitle != null) {
+            bundle.putString(Constants.BUNDLE_ACTIVITY_TITLE, activityTitle);
+        }
+
+        bundle.putBoolean(Constants.BUNDLE_ACTIVITY_BACK_BUTTON_ENABLED, enableBackButton);
+
+        return bundle;
+    }
+
     public static void setChartData(BarChart chart, int xLimits, int yLimits) {
         ArrayList<BarEntry> yVals1 = new ArrayList<>();
 
