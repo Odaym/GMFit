@@ -19,7 +19,7 @@
             <TextView android:id="@+id/chartTitleTV" android:layout_width="0dp"
                       android:layout_height="wrap_content"
                       android:layout_weight="30"
-                      android:text="TESTING 1"
+                      android:text="BREAKFAST"
                       android:textAppearance="?android:textAppearanceLarge"/>
 
             <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
