@@ -4,17 +4,24 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 
+import com.j256.ormlite.stmt.PreparedQuery;
+import com.j256.ormlite.stmt.QueryBuilder;
+import com.j256.ormlite.stmt.SelectArg;
+import com.j256.ormlite.stmt.Where;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.classes.Constants;
 import com.mcsaatchi.gmfit.classes.Helpers;
 import com.mcsaatchi.gmfit.classes.SimpleOneItemWithIcon_ListAdapter;
+import com.mcsaatchi.gmfit.models.MealItem;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,99 +31,68 @@ import dev.dworks.libs.astickyheader.SimpleSectionedListAdapter;
 import dev.dworks.libs.astickyheader.SimpleSectionedListAdapter.Section;
 
 public class AddNewMealItem_Activity extends Base_Activity implements SearchView.OnQueryTextListener {
-    private String mainMealName;
-
-    private ArrayList<Section> sections = new ArrayList<>();
 
     private SearchView searchView;
 
+    private QueryBuilder<MealItem, Integer> mealsQueryBuilder;
+    private PreparedQuery<MealItem> pq;
+
     @Bind(R.id.mealItemsList)
     ListView mealItemsList;
-
-    private List<String> meals_BREAKFAST = new ArrayList<String>() {{
-        add("Nescafe - 2 in 1 coffee");
-        add("Labne");
-        add("Jebne");
-        add("Test");
-        add("Testing");
-        add("Test");
-        add("Testing");
-        add("Breakfast 1");
-        add("Breakfast 2");
-        add("Sushi");
-        add("Hamburger");
-        add("Breakfast 1");
-        add("Breakfast 2");
-        add("Sushi");
-        add("Hamburger");
-        add("Pizza");
-    }};
-
-    private List<String> meals_LUNCH = new ArrayList<String>() {{
-        add("Hamburger");
-        add("Pizza");
-        add("Mloukhiyye");
-        add("Fish Filet");
-        add("Steak Sandwich");
-        add("Lunch 1");
-        add("Lunch 2");
-        add("Lunch 3");
-        add("Sushi");
-        add("Hamburger");
-        add("Pizza");
-    }};
-
-    private List<String> meals_DINNER = new ArrayList<String>() {{
-        add("Chicken Sub");
-        add("Pizza");
-        add("Mloukhiyye");
-        add("Crepe");
-        add("Pepperoni Pizza");
-        add("Lunch 1");
-        add("Lunch 2");
-        add("Lunch 3");
-        add("Sushi");
-        add("Hamburger");
-        add("Pizza");
-    }};
-
+    private String mealType;
     private String[] mHeaderNames;
     private Integer[] mHeaderPositions;
+    private List<MealItem> mealsList = new ArrayList<>();
+    private List<Section> sections = new ArrayList<>();
+    private SimpleSectionedListAdapter simpleSectionedListAdapter;
+    private SimpleOneItemWithIcon_ListAdapter simpleOneItem_ListAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
 
+        String actionBarTitle;
+
         if (getIntent().getExtras() != null) {
-            mainMealName = getString(R.string.add_new_meal_item_activity_title) + " " + getIntent().getExtras().getString(Constants.EXTRAS_MAIN_MEAL_NAME);
+            actionBarTitle = getString(R.string.add_new_meal_item_activity_title) + " " + getIntent().getExtras().getString(Constants.EXTRAS_MAIN_MEAL_NAME);
+            mealType = getIntent().getExtras().getString(Constants.EXTRAS_MAIN_MEAL_NAME);
         } else {
-            mainMealName = getString(R.string.app_name);
+            actionBarTitle = getString(R.string.app_name);
+            mealType = "BREAKFAST";
         }
 
-        super.onCreate(Helpers.createActivityBundleWithProperties(mainMealName, true));
+        super.onCreate(Helpers.createActivityBundleWithProperties(actionBarTitle, true));
         setContentView(R.layout.activity_add_new_meal_item);
 
         ButterKnife.bind(this);
 
-        mHeaderNames = new String[]{getString(R.string.list_section_recently_added), getString(R.string.list_section_popular_meals)};
-        mHeaderPositions = new Integer[]{0, 3};
 
-        initMealsList(meals_BREAKFAST);
+        mHeaderNames = new String[]{getString(R.string.list_section_recently_added), getString(R.string.list_section_popular_meals)};
+        mHeaderPositions = new Integer[]{0, 15};
+
+        prepareQueryForAllMealTypeItems(mealType);
+        mealsList = getHelper().getMealItemDAO().query(pq);
+        initMealsList();
     }
 
-    private void initMealsList(List<String> listItems) {
-        sections.clear();
+    private void initMealsList() {
+        if (!sections.isEmpty()) {
+            simpleOneItem_ListAdapter.notifyDataSetChanged();
+        } else {
 
-        for (int i = 0; i < mHeaderPositions.length; i++) {
-            sections.add(new Section(mHeaderPositions[i], mHeaderNames[i]));
+            for (int i = 0; i < mHeaderPositions.length; i++) {
+                sections.add(new Section(mHeaderPositions[i], mHeaderNames[i]));
+            }
+
+            simpleOneItem_ListAdapter = new SimpleOneItemWithIcon_ListAdapter(this,
+                    mealsList, R.drawable.ic_chevron_right_black_24dp);
+
+            simpleSectionedListAdapter = new SimpleSectionedListAdapter(this, simpleOneItem_ListAdapter,
+                    R.layout.view_header_add_new_meal_item_list, R.id.header);
+
+            simpleSectionedListAdapter.setSections(sections.toArray(new Section[sections.size()]));
+
+            mealItemsList.setAdapter(simpleSectionedListAdapter);
         }
-
-        SimpleSectionedListAdapter simpleSectionedListAdapter = new SimpleSectionedListAdapter(this, new SimpleOneItemWithIcon_ListAdapter(this,
-                listItems, R.drawable.ic_chevron_right_black_24dp),
-                R.layout.view_header_add_new_meal_item_list, R.id.header);
-
-        simpleSectionedListAdapter.setSections(sections.toArray(new Section[0]));
-
-        mealItemsList.setAdapter(simpleSectionedListAdapter);
     }
 
     @Override
@@ -145,23 +121,56 @@ public class AddNewMealItem_Activity extends Base_Activity implements SearchView
         return super.onCreateOptionsMenu(menu);
     }
 
+    public void prepareQueryForSearchTerm(String searchQuery, String mealType) {
+        try {
+            mealsQueryBuilder = getHelper().getMealItemDAO().queryBuilder();
+
+            SelectArg nameSelectArg = new SelectArg("%" + searchQuery + "%");
+
+            Where where = mealsQueryBuilder.where();
+            where.eq("type", mealType).and().like("name", nameSelectArg);
+            pq = mealsQueryBuilder.prepare();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void prepareQueryForAllMealTypeItems(String mealType) {
+        try {
+            mealsQueryBuilder = getHelper().getMealItemDAO().queryBuilder();
+
+            Where where = mealsQueryBuilder.where();
+            where.eq("type", mealType);
+            pq = mealsQueryBuilder.prepare();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public boolean onQueryTextSubmit(String query) {
         return false;
     }
 
+    private static final String TAG = "AddNewMealItem_Activity";
+
     @Override
     public boolean onQueryTextChange(String newText) {
-        List<String> filteredMeals = new ArrayList<>();
 
-        for (String meal : meals_BREAKFAST){
-            if (meal.contains(newText)) {
-                filteredMeals.add(meal);
-            }
+        if (!newText.isEmpty()) {
+            prepareQueryForSearchTerm(newText, mealType);
+
+            mealsList = getHelper().getMealItemDAO().query(pq);
+        } else {
+            prepareQueryForAllMealTypeItems("DINNER");
+
+            mealsList = getHelper().getMealItemDAO().query(pq);
         }
 
-//        initMealsList(filteredMeals);
+        Log.d(TAG, "onQueryTextChange: Meals size : " + mealsList.size());
 
-        return false;
+        initMealsList();
+
+        return true;
     }
 }
