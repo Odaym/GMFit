@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.j256.ormlite.stmt.PreparedQuery;
@@ -17,6 +18,8 @@ import com.j256.ormlite.stmt.SelectArg;
 import com.j256.ormlite.stmt.Where;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.classes.Constants;
+import com.mcsaatchi.gmfit.classes.EventBus_Poster;
+import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
 import com.mcsaatchi.gmfit.classes.Helpers;
 import com.mcsaatchi.gmfit.classes.SimpleOneItemWithIcon_ListAdapter;
 import com.mcsaatchi.gmfit.models.MealItem;
@@ -65,34 +68,31 @@ public class AddNewMealItem_Activity extends Base_Activity implements SearchView
 
         ButterKnife.bind(this);
 
-
         mHeaderNames = new String[]{getString(R.string.list_section_recently_added), getString(R.string.list_section_popular_meals)};
-        mHeaderPositions = new Integer[]{0, 15};
+        mHeaderPositions = new Integer[]{0, 7};
 
         prepareQueryForAllMealTypeItems(mealType);
         mealsList = getHelper().getMealItemDAO().query(pq);
         initMealsList();
+        addListSections();
+
+        mealItemsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                EventBus_Singleton.getInstance().post(new EventBus_Poster(Constants.EXTRAS_PICKED_MEAL_ENTRY, mealsList.get(position)));
+                Log.d(TAG, "onItemClick: MEAL TYPE " + mealsList.get(position).getType());
+                finish();
+            }
+        });
     }
 
     private void initMealsList() {
-        if (!sections.isEmpty()) {
-            simpleOneItem_ListAdapter.notifyDataSetChanged();
-        } else {
+        simpleOneItem_ListAdapter = new SimpleOneItemWithIcon_ListAdapter(this,
+                mealsList, R.drawable.ic_chevron_right_black_24dp);
+        simpleSectionedListAdapter = new SimpleSectionedListAdapter(this, simpleOneItem_ListAdapter,
+                R.layout.view_header_add_new_meal_item_list, R.id.header);
 
-            for (int i = 0; i < mHeaderPositions.length; i++) {
-                sections.add(new Section(mHeaderPositions[i], mHeaderNames[i]));
-            }
-
-            simpleOneItem_ListAdapter = new SimpleOneItemWithIcon_ListAdapter(this,
-                    mealsList, R.drawable.ic_chevron_right_black_24dp);
-
-            simpleSectionedListAdapter = new SimpleSectionedListAdapter(this, simpleOneItem_ListAdapter,
-                    R.layout.view_header_add_new_meal_item_list, R.id.header);
-
-            simpleSectionedListAdapter.setSections(sections.toArray(new Section[sections.size()]));
-
-            mealItemsList.setAdapter(simpleSectionedListAdapter);
-        }
+        mealItemsList.setAdapter(simpleSectionedListAdapter);
     }
 
     @Override
@@ -147,6 +147,16 @@ public class AddNewMealItem_Activity extends Base_Activity implements SearchView
         }
     }
 
+    public void addListSections() {
+        for (int i = 0; i < mHeaderPositions.length; i++) {
+            sections.add(new Section(mHeaderPositions[i], mHeaderNames[i]));
+        }
+
+        simpleSectionedListAdapter.setSections(sections.toArray(new Section[sections.size()]));
+
+        Log.d(TAG, "addListSections: WE are here");
+    }
+
     @Override
     public boolean onQueryTextSubmit(String query) {
         return false;
@@ -158,18 +168,22 @@ public class AddNewMealItem_Activity extends Base_Activity implements SearchView
     public boolean onQueryTextChange(String newText) {
 
         if (!newText.isEmpty()) {
+            //Run actual search query for this meal type
             prepareQueryForSearchTerm(newText, mealType);
 
             mealsList = getHelper().getMealItemDAO().query(pq);
+            sections.clear();
+
+            initMealsList();
         } else {
-            prepareQueryForAllMealTypeItems("DINNER");
+            //Show all results for this meal type
+            prepareQueryForAllMealTypeItems(mealType);
 
             mealsList = getHelper().getMealItemDAO().query(pq);
+
+            initMealsList();
+            addListSections();
         }
-
-        Log.d(TAG, "onQueryTextChange: Meals size : " + mealsList.size());
-
-        initMealsList();
 
         return true;
     }
