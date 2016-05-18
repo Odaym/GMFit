@@ -9,24 +9,21 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mcsaatchi.gmfit.R;
+import com.mcsaatchi.gmfit.models.MealItem;
 
 import java.util.List;
 
 public class SimpleOneItemWithIcon_ListAdapter extends BaseAdapter {
 
     private Context context;
-    private List<String> listItems;
+    private List<MealItem> listItems;
     private int drawableResId;
 
-    public SimpleOneItemWithIcon_ListAdapter(Context context, List<String> listItems, int drawableResId) {
+    public SimpleOneItemWithIcon_ListAdapter(Context context, List<MealItem> listItems, int drawableResId) {
         super();
         this.context = context;
         this.listItems = listItems;
         this.drawableResId = drawableResId;
-    }
-
-    public void notifyData() {
-        notifyDataSetChanged();
     }
 
     @Override
@@ -35,7 +32,7 @@ public class SimpleOneItemWithIcon_ListAdapter extends BaseAdapter {
     }
 
     @Override
-    public String getItem(int index) {
+    public MealItem getItem(int index) {
         return listItems.get(index);
     }
 
@@ -63,7 +60,7 @@ public class SimpleOneItemWithIcon_ListAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.itemNameTV.setText(listItems.get(position));
+        holder.itemNameTV.setText(listItems.get(position).getName());
         holder.itemIconRightIMG.setImageResource(drawableResId);
 
         return convertView;
