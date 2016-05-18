@@ -4,10 +4,13 @@
 # You can edit the include path and order by changing the proguardFiles
 # directive in build.gradle.
 
+-dontwarn org.apache.http.**
+-dontwarn android.net.http.AndroidHttpClient
+-dontwarn com.google.android.gms.**
+-dontwarn com.android.volley.toolbox.**
 
 ######## OKIO
 -dontwarn okio.**
-
 
 ######## Charting Library (MikePhil)
 -keep class com.github.mikephil.**
