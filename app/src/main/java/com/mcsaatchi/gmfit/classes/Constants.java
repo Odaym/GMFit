@@ -12,6 +12,8 @@ public class Constants {
     public static final String EXTRAS_ADD_NUTRIITION_CHART = "add_nutrition_chart";
     public static final String EXTRAS_MAIN_MEAL_NAME = "main_meal_name";
 
+    public static final String EXTRAS_PICKED_MEAL_ENTRY = "picked_meal_entry";
+
     public static final String EXTRAS_USER_LOGGED_IN = "user_logged_in";
     public static final String EXTRAS_USER_FULL_NAME = "user_full_name";
     public static final String EXTRAS_USER_EMAIL = "user_email_address";
