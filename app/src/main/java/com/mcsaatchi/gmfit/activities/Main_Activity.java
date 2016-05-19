@@ -12,7 +12,6 @@ import android.view.MenuInflater;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.classes.Helpers;
 import com.mcsaatchi.gmfit.fragments.Fitness_Fragment;
-import com.mcsaatchi.gmfit.fragments.GoogleFit_Fragment;
 import com.mcsaatchi.gmfit.fragments.Nutrition_Fragment;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnMenuTabClickListener;
@@ -48,13 +47,14 @@ public class Main_Activity extends Base_Activity {
                         fragmentReplace = new Nutrition_Fragment();
                         break;
                     case R.id.item_three:
-                        fragmentReplace = new Fitness_Fragment();
+                        fragmentReplace = new Nutrition_Fragment();
                         break;
                     case R.id.item_four:
-                        fragmentReplace = new Fitness_Fragment();
+                        fragmentReplace = new Nutrition_Fragment();
                         break;
                     case R.id.item_five:
-                        fragmentReplace = new GoogleFit_Fragment();
+                        fragmentReplace = new Nutrition_Fragment();
+//                        fragmentReplace = new GoogleFit_Fragment();
                         break;
                 }
 
