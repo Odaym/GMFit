@@ -185,7 +185,7 @@ public class Nutrition_Fragment extends Fragment {
                 openMealEntryPickerActivity(chartTitleTV_LUNCH.getText().toString());
             }
         });
-        addNewEntryBTN_LUNCH.setOnClickListener(new View.OnClickListener() {
+        scanEntryBTN_LUNCH.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 handleScanMealEntry();
@@ -198,12 +198,13 @@ public class Nutrition_Fragment extends Fragment {
                 openMealEntryPickerActivity(chartTitleTV_DINNER.getText().toString());
             }
         });
-        addNewEntryBTN_DINNER.setOnClickListener(new View.OnClickListener() {
+        scanEntryBTN_DINNER.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 handleScanMealEntry();
             }
         });
+
         return fragmentView;
     }
 
