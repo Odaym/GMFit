@@ -6,6 +6,7 @@
 
     <string name="submit">Submit</string>
     <string name="search">Search&#8230;</string>
+    <string name="OK">OK</string>
     <string name="settings">Settings</string>
     <string name="password_requirements_regex">^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$</string>
     <string name="intro_text">Hi! Let\'s listen to some available data sources! Check the menu for more actions!</string>
@@ -123,4 +124,12 @@
     <string name="list_section_recently_added">Recently Added</string>
     <string name="list_section_popular_meals">Popular Meals</string>
     <string name="search_hint">Search meals</string>
+
+    <!-- BARCODE CAPTURE ACTIVITY -->
+    <string name="capture_barcode_instructions">Tap to capture. Pinch/Stretch to zoom.</string>
+    <string name="permission_capture_rationale">Access to the camera is needed</string>
+    <string name="low_storage_error">Barcode detector dependencies cannot be downloaded due to low device storage</string>
+    <string name="no_camera_permission">To scan barcodes, GMFIT needs permission to use the camera</string>
+    <string name="no_barcode_detected_here">No barcode detected here</string>
+
 </resources>
