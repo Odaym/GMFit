@@ -26,16 +26,13 @@ import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.fitness.Fitness;
 import com.google.android.gms.fitness.data.DataPoint;
-import com.google.android.gms.fitness.data.DataSet;
 import com.google.android.gms.fitness.data.DataSource;
 import com.google.android.gms.fitness.data.DataType;
 import com.google.android.gms.fitness.data.Field;
 import com.google.android.gms.fitness.data.Value;
-import com.google.android.gms.fitness.request.DataReadRequest;
 import com.google.android.gms.fitness.request.DataSourcesRequest;
 import com.google.android.gms.fitness.request.OnDataPointListener;
 import com.google.android.gms.fitness.request.SensorRequest;
-import com.google.android.gms.fitness.result.DailyTotalResult;
 import com.google.android.gms.fitness.result.DataSourcesResult;
 import com.mcsaatchi.gmfit.BuildConfig;
 import com.mcsaatchi.gmfit.R;
@@ -45,12 +42,7 @@ import com.mcsaatchi.gmfit.logger.LogView;
 import com.mcsaatchi.gmfit.logger.LogWrapper;
 import com.mcsaatchi.gmfit.logger.MessageOnlyLogFilter;
 
-import java.text.DateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.concurrent.TimeUnit;
-
-import static java.text.DateFormat.getTimeInstance;
 
 public class GoogleFit_Fragment extends Fragment {
 
@@ -131,60 +123,17 @@ public class GoogleFit_Fragment extends Fragment {
     private void buildFitnessClient() {
         googleApiFitnessClient = new GoogleApiClient.Builder(parentActivity)
                 .addApi(Fitness.SENSORS_API)
-                .addApi(Fitness.HISTORY_API)
-                .addScope(new Scope(Scopes.FITNESS_LOCATION_READ))
+//                .addScope(new Scope(Scopes.FITNESS_LOCATION_READ))
                 .addScope(new Scope(Scopes.FITNESS_ACTIVITY_READ_WRITE))
-                .addScope(new Scope(Scopes.FITNESS_NUTRITION_READ_WRITE))
-                .addScope(new Scope(Scopes.FITNESS_BODY_READ_WRITE))
+//                .addScope(new Scope(Scopes.FITNESS_NUTRITION_READ_WRITE))
+//                .addScope(new Scope(Scopes.FITNESS_BODY_READ_WRITE))
                 .addConnectionCallbacks(
                         new GoogleApiClient.ConnectionCallbacks() {
                             @Override
                             public void onConnected(Bundle bundle) {
                                 Log.i(TAG, "Connected!!!");
                                 // Now you can make calls to the Fitness APIs.
-//                                findFitnessDataSources();
-
-
-                                new Thread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        Calendar cal = Calendar.getInstance();
-                                        Date now = new Date();
-                                        cal.setTime(now);
-                                        long endTime = cal.getTimeInMillis();
-                                        cal.add(Calendar.WEEK_OF_YEAR, -1);
-                                        long startTime = cal.getTimeInMillis();
-
-                                        DataReadRequest readRequest = new DataReadRequest.Builder()
-                                                .aggregate(DataType.TYPE_CALORIES_EXPENDED, DataType.AGGREGATE_CALORIES_EXPENDED)
-                                                .bucketByActivityType(1, TimeUnit.SECONDS)
-                                                .setTimeRange(startTime, endTime, TimeUnit.MILLISECONDS)
-                                                .build();
-
-
-                                        Fitness.HistoryApi.readDailyTotal(googleApiFitnessClient, DataType.TYPE_CALORIES_EXPENDED).setResultCallback(new ResultCallback<DailyTotalResult>() {
-                                            @Override
-                                            public void onResult(@NonNull DailyTotalResult dailyTotalResult) {
-                                                DataSet dataSet = dailyTotalResult.getTotal();
-
-                                                DateFormat dateFormat = getTimeInstance();
-
-                                                if (dataSet != null) {
-                                                    for (DataPoint dp : dataSet.getDataPoints()) {
-                                                        Log.i(TAG, "Data point:");
-                                                        Log.i(TAG, "\tType: " + dp.getDataType().getName());
-                                                        Log.i(TAG, "\tStart: " + dateFormat.format(dp.getStartTime(TimeUnit.MILLISECONDS)));
-                                                        Log.i(TAG, "\tEnd: " + dateFormat.format(dp.getEndTime(TimeUnit.MILLISECONDS)));
-                                                        for(Field field : dp.getDataType().getFields()) {
-                                                            Log.i(TAG, "\tField: " + field.getName() +
-                                                                    " Value: " + dp.getValue(field));
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        });
-                                    }
-                                }).start();
+                                findFitnessDataSources();
                             }
 
                             @Override
@@ -223,7 +172,7 @@ public class GoogleFit_Fragment extends Fragment {
         // Note: Fitness.SensorsApi.findDataSources() requires the ACCESS_FINE_LOCATION permission.
         Fitness.SensorsApi.findDataSources(googleApiFitnessClient, new DataSourcesRequest.Builder()
                 // At least one datatype must be specified.
-                .setDataTypes(DataType.TYPE_ACTIVITY_SEGMENT)
+                .setDataTypes(DataType.TYPE_STEP_COUNT_CUMULATIVE)
                 // Can specify whether data type is raw or derived.
                 .setDataSourceTypes(DataSource.TYPE_RAW)
                 .build())
@@ -231,18 +180,17 @@ public class GoogleFit_Fragment extends Fragment {
                     @Override
                     public void onResult(DataSourcesResult dataSourcesResult) {
                         Log.i(TAG, "Result: " + dataSourcesResult.getStatus().toString());
-                        android.util.Log.d(TAG, "onResult: Datasources inside this result : " + dataSourcesResult.getDataSources(DataType.TYPE_ACTIVITY_SEGMENT));
                         for (DataSource dataSource : dataSourcesResult.getDataSources()) {
                             Log.i(TAG, "Data source found: " + dataSource.toString());
                             Log.i(TAG, "Data Source type: " + dataSource.getDataType().getName());
 
                             //Let's register a listener to receive Activity data!
-//                            if (dataSource.getDataType().equals(DataType.TYPE_STEP_COUNT_DELTA)
-//                                    && mListener == null) {
-//                                Log.i(TAG, "Data source for " + dataSource.getDataType() + " found!  Registering.");
-//                            }
-                            registerFitnessDataListener(dataSource,
-                                    DataType.TYPE_ACTIVITY_SAMPLE);
+                            if (dataSource.getDataType().equals(DataType.TYPE_STEP_COUNT_CUMULATIVE)
+                                    && mListener == null) {
+                                Log.i(TAG, "Data source for " + dataSource.getDataType() + " found!  Registering.");
+                                registerFitnessDataListener(dataSource,
+                                        DataType.TYPE_STEP_COUNT_CUMULATIVE);
+                            }
                         }
                     }
                 });
@@ -267,8 +215,8 @@ public class GoogleFit_Fragment extends Fragment {
         Fitness.SensorsApi.add(
                 googleApiFitnessClient,
                 new SensorRequest.Builder()
-                        .setDataSource(dataSource)
-                        .setDataType(dataType)
+                        .setDataSource(dataSource) // Optional but recommended for custom data sets.
+                        .setDataType(DataType.TYPE_STEP_COUNT_CUMULATIVE) // Can't be omitted.
                         .setSamplingRate(1, TimeUnit.SECONDS)
                         .build(),
                 mListener)
