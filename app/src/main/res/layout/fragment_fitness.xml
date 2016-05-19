@@ -37,11 +37,10 @@
             android:gravity="center"
             android:orientation="vertical">
 
-            <TextView
+            <TextSwitcher
                 android:id="@+id/metricCounterTV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="2,391"
                 android:textAppearance="?android:textAppearanceLarge"/>
 
             <TextView
