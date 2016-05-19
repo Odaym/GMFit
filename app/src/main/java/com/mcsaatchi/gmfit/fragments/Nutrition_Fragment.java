@@ -15,12 +15,16 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.BarChart;
+import com.google.android.gms.common.api.CommonStatusCodes;
+import com.google.android.gms.vision.barcode.Barcode;
 import com.hookedonplay.decoviewlib.DecoView;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.activities.AddNewChart_Activity;
 import com.mcsaatchi.gmfit.activities.AddNewMealItem_Activity;
+import com.mcsaatchi.gmfit.activities.BarcodeCapture_Activity;
 import com.mcsaatchi.gmfit.classes.Constants;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
@@ -33,6 +37,7 @@ public class Nutrition_Fragment extends Fragment {
 
     private NestedScrollView parentScrollView;
     private Activity parentActivity;
+    private static final int BARCODE_CAPTURE_RC = 773;
 
     /**
      * CHARTS
@@ -47,6 +52,8 @@ public class Nutrition_Fragment extends Fragment {
     TextView chartTitleTV_BREAKFAST;
     @Bind(R.id.addEntryBTN_BREAKFAST)
     Button addNewEntryBTN_BREAKFAST;
+    @Bind(R.id.scanEntryBTN_BREAKFAST)
+    Button scanEntryBTN_BREAKFAST;
     @Bind(R.id.entriesContainerLayout_BREAKFAST)
     LinearLayout entriesContainerLayout_BREAKFAST;
 
@@ -57,6 +64,8 @@ public class Nutrition_Fragment extends Fragment {
     TextView chartTitleTV_LUNCH;
     @Bind(R.id.addEntryBTN_LUNCH)
     Button addNewEntryBTN_LUNCH;
+    @Bind(R.id.scanEntryBTN_LUNCH)
+    Button scanEntryBTN_LUNCH;
     @Bind(R.id.entriesContainerLayout_LUNCH)
     LinearLayout entriesContainerLayout_LUNCH;
 
@@ -67,6 +76,8 @@ public class Nutrition_Fragment extends Fragment {
     TextView chartTitleTV_DINNER;
     @Bind(R.id.addEntryBTN_DINNER)
     Button addNewEntryBTN_DINNER;
+    @Bind(R.id.scanEntryBTN_DINNER)
+    Button scanEntryBTN_DINNER;
     @Bind(R.id.entriesContainerLayout_DINNER)
     LinearLayout entriesContainerLayout_DINNER;
 
@@ -161,7 +172,12 @@ public class Nutrition_Fragment extends Fragment {
                 openMealEntryPickerActivity(chartTitleTV_BREAKFAST.getText().toString());
             }
         });
-
+        scanEntryBTN_BREAKFAST.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                handleScanMealEntry();
+            }
+        });
 
         addNewEntryBTN_LUNCH.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -169,7 +185,12 @@ public class Nutrition_Fragment extends Fragment {
                 openMealEntryPickerActivity(chartTitleTV_LUNCH.getText().toString());
             }
         });
-
+        addNewEntryBTN_LUNCH.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                handleScanMealEntry();
+            }
+        });
 
         addNewEntryBTN_DINNER.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -177,7 +198,12 @@ public class Nutrition_Fragment extends Fragment {
                 openMealEntryPickerActivity(chartTitleTV_DINNER.getText().toString());
             }
         });
-
+        addNewEntryBTN_DINNER.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                handleScanMealEntry();
+            }
+        });
         return fragmentView;
     }
 
@@ -212,14 +238,36 @@ public class Nutrition_Fragment extends Fragment {
         }
     }
 
+    public void handleScanMealEntry(){
+        Intent intent = new Intent(getActivity(), BarcodeCapture_Activity.class);
+        intent.putExtra(BarcodeCapture_Activity.AutoFocus, true);
+        intent.putExtra(BarcodeCapture_Activity.UseFlash, false);
+
+        startActivityForResult(intent, BARCODE_CAPTURE_RC);
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        String scanContent;
 
         switch (requestCode) {
             case ADD_NEW_NUTRITION_CHART_REQUEST:
                 if (data != null) {
                     addNewBarChart(data.getStringExtra(Constants.EXTRAS_CHART_TYPE_SELECTED));
+                }
+                break;
+            case BARCODE_CAPTURE_RC:
+                if (resultCode == CommonStatusCodes.SUCCESS) {
+                    if (data != null) {
+                        Barcode barcode = data.getParcelableExtra(BarcodeCapture_Activity.BarcodeObject);
+                        scanContent = barcode.displayValue;
+
+                        Toast.makeText(getActivity(), "Barcode value: " + scanContent, Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getActivity(), getString(R.string.no_barcode_detected_here), Toast.LENGTH_LONG).show();
+                    }
                 }
                 break;
         }
