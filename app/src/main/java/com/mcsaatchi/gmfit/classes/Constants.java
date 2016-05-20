@@ -4,10 +4,21 @@ public class Constants {
     public static final String EXTRAS_PREFS = "GMFIT_PREFS";
     public static final String TAG = "GMFIT_DEBUG";
 
-    public static final String EXTRAS_WIDGETS_ORDER_ARRAY = "widgets_order_array";
-    public static final String EXTRAS_WIDGETS_ORDER_ARRAY_CHANGED = "widgets_order_array_changed";
-    public static final String EXTRAS_CHART_TYPE_SELECTED = "widgets_order_array_changed";
     public static final String EXTRAS_ADD_CHART_WHAT_TYPE = "add_chart_what_type";
+    public static final String EXTRAS_CHART_TYPE_SELECTED = "chart_type_selected";
+
+    public static final String EXTRAS_FITNESS_WIDGETS_ORDER_ARRAY = "fitness_widgets_order_array";
+    public static final String EXTRAS_FITNESS_WIDGETS_ORDER_ARRAY_CHANGED = "fitness_widgets_order_array_changed";
+    public static final String EXTRAS_NUTRITION_WIDGETS_ORDER_ARRAY = "nutrition_widgets_order_array";
+    public static final String EXTRAS_NUTRITION_WIDGETS_ORDER_ARRAY_CHANGED = "nutrition_widgets_order_array_changed";
+    public static final String EXTRAS_HEALTH_WIDGETS_ORDER_ARRAY = "health_widgets_order_array";
+    public static final String EXTRAS_HEALTH_WIDGETS_ORDER_ARRAY_CHANGED = "health_widgets_order_array_changed";
+
+    public static final String EXTRAS_CUSTOMIZE_WIDGETS_FRAGMENT_TYPE = "customize_widgets_type";
+    public static final String EXTRAS_FITNESS_FRAGMENT_IDENTIFIER = "FITNESS";
+    public static final String EXTRAS_NUTRITION_FRAGMENT_IDENTIFIER = "NUTRITION";
+    public static final String EXTRAS_HEALTH_FRAGMENT_IDENTIFIER = "HEALTH";
+
     public static final String EXTRAS_ADD_FITNESS_CHART = "add_fitness_chart";
     public static final String EXTRAS_ADD_NUTRIITION_CHART = "add_nutrition_chart";
     public static final String EXTRAS_MAIN_MEAL_NAME = "main_meal_name";
