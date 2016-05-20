@@ -311,7 +311,7 @@ public class Fitness_Fragment extends Fragment {
                     Log.i(TAG, "Detected DataPoint field: " + field.getName());
                     Log.i(TAG, "Detected DataPoint value: " + val);
 
-                    getActivity().runOnUiThread(new Runnable() {
+                    parentActivity.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
 
