@@ -108,8 +108,8 @@
     <string name="height_hint">Height</string>
     <string name="error_first_name_not_valid">Names cannot contain numbers</string>
 
-    <!-- CUSTOMIZE WIDGETS ACTIVITY -->
-    <string name="customize_widgets_activity_title">Customize Widgets</string>
+    <!-- CUSTOMIZE WIDGETS AND CHARTS ACTIVITY -->
+    <string name="customize_widgets_and_charts_activity_title">Customize</string>
 
     <string name="about_google_fit_acitivity_title">About Google Fit</string>
 
