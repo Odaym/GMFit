@@ -46,7 +46,7 @@ public class SimpleTwoItem_ListAdapter extends BaseAdapter {
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.list_item_simple_two, parent,
+            convertView = inflater.inflate(R.layout.list_item_simple_two_items, parent,
                     false);
 
             holder = new ViewHolder();
