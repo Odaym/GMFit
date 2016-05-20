@@ -10,6 +10,7 @@ import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.CardView;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -25,6 +26,7 @@ import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.activities.AddNewChart_Activity;
 import com.mcsaatchi.gmfit.activities.AddNewMealItem_Activity;
 import com.mcsaatchi.gmfit.activities.BarcodeCapture_Activity;
+import com.mcsaatchi.gmfit.activities.CustomizeWidgetsAndCharts_Activity;
 import com.mcsaatchi.gmfit.classes.Constants;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
@@ -38,6 +40,7 @@ public class Nutrition_Fragment extends Fragment {
     private NestedScrollView parentScrollView;
     private Activity parentActivity;
     private static final int BARCODE_CAPTURE_RC = 773;
+    private static final String TAG = "Nutrition_Fragment";
 
     /**
      * CHARTS
@@ -215,6 +218,15 @@ public class Nutrition_Fragment extends Fragment {
         parentActivity = (Activity) context;
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent = new Intent(getActivity(), CustomizeWidgetsAndCharts_Activity.class);
+        intent.putExtra(Constants.EXTRAS_CUSTOMIZE_WIDGETS_FRAGMENT_TYPE, "NUTRITION");
+        startActivity(intent);
+
+        return super.onOptionsItemSelected(item);
+    }
+
     @com.squareup.otto.Subscribe
     public void handle_BusEvents(EventBus_Poster ebp) {
         String ebpMessage = ebp.getMessage();
@@ -222,7 +234,7 @@ public class Nutrition_Fragment extends Fragment {
         switch (ebpMessage) {
             case Constants.EXTRAS_PICKED_MEAL_ENTRY:
                 if (ebp.getMealItemExtra() != null) {
-                    switch(ebp.getMealItemExtra().getType()){
+                    switch (ebp.getMealItemExtra().getType()) {
                         case "BREAKFAST":
                             addMealEntryLayout(ebp.getMealItemExtra().getName(), entriesContainerLayout_BREAKFAST);
                             break;
@@ -236,10 +248,32 @@ public class Nutrition_Fragment extends Fragment {
                 }
 
                 break;
+            case Constants.EXTRAS_NUTRITION_WIDGETS_ORDER_ARRAY_CHANGED:
+                itemsMap = ebp.getSparseArrayExtra();
+
+                //See the SparsArrays in CustomizeWidget_Fragment to understand how these arrays are split up and which values are used, pretty straight-forward
+
+                firstMetricTitleTV.setText(itemsMap.get(0)[0]);
+                firstMetricValueTV.setText(itemsMap.get(0)[1] + " " + itemsMap.get(0)[2]);
+                firstMetricPercentagesTV.setText(itemsMap.get(0)[3]);
+
+                secondMetricTitleTV.setText(itemsMap.get(1)[0]);
+                secondMetricValueTV.setText(itemsMap.get(1)[1] + " " + itemsMap.get(1)[2]);
+                secondMetricPercentagesTV.setText(itemsMap.get(1)[3]);
+
+                thirdMetricTitleTV.setText(itemsMap.get(2)[0]);
+                thirdMetricValueTV.setText(itemsMap.get(2)[1] + " " + itemsMap.get(2)[2]);
+                thirdMetricPercentagesTV.setText(itemsMap.get(2)[3]);
+
+                fourthMetricTitleTV.setText(itemsMap.get(3)[0]);
+                fourthMetricValueTV.setText(itemsMap.get(3)[1] + " " + itemsMap.get(3)[2]);
+                fourthMetricPercentagesTV.setText(itemsMap.get(3)[3]);
+
+                break;
         }
     }
 
-    public void handleScanMealEntry(){
+    public void handleScanMealEntry() {
         Intent intent = new Intent(getActivity(), BarcodeCapture_Activity.class);
         intent.putExtra(BarcodeCapture_Activity.AutoFocus, true);
         intent.putExtra(BarcodeCapture_Activity.UseFlash, false);

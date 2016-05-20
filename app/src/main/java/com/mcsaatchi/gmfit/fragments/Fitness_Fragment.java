@@ -53,7 +53,7 @@ import com.hookedonplay.decoviewlib.DecoView;
 import com.mcsaatchi.gmfit.BuildConfig;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.activities.AddNewChart_Activity;
-import com.mcsaatchi.gmfit.activities.CustomizeWidget_Activity;
+import com.mcsaatchi.gmfit.activities.CustomizeWidgetsAndCharts_Activity;
 import com.mcsaatchi.gmfit.activities.Main_Activity;
 import com.mcsaatchi.gmfit.classes.Constants;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
@@ -451,16 +451,19 @@ public class Fitness_Fragment extends Fragment {
         String ebpMessage = ebp.getMessage();
 
         switch (ebpMessage) {
-            case Constants.EXTRAS_WIDGETS_ORDER_ARRAY_CHANGED:
+            case Constants.EXTRAS_FITNESS_WIDGETS_ORDER_ARRAY_CHANGED:
                 if (ebp.getSparseArrayExtra() != null) {
                     itemsMap = ebp.getSparseArrayExtra();
 
                     firstMetricTV.setText(itemsMap.get(0)[0].split(" ")[0]);
                     firstMetricIMG.setImageDrawable(getResources().getDrawable(R.drawable.walking));
+
                     secondMetricTV.setText(itemsMap.get(1)[0].split(" ")[0]);
                     secondMetricIMG.setImageDrawable(getResources().getDrawable(R.drawable.biking));
+
                     thirdMetricTV.setText(itemsMap.get(2)[0].split(" ")[0]);
                     thirdMetricIMG.setImageDrawable(getResources().getDrawable(R.drawable.calories));
+
                     fourthMetricTV.setText(itemsMap.get(3)[0].split(" ")[0]);
                     fourthMetricIMG.setImageDrawable(getResources().getDrawable(R.drawable.stairs));
                 }
@@ -471,7 +474,8 @@ public class Fitness_Fragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Intent intent = new Intent(getActivity(), CustomizeWidget_Activity.class);
+        Intent intent = new Intent(getActivity(), CustomizeWidgetsAndCharts_Activity.class);
+        intent.putExtra(Constants.EXTRAS_CUSTOMIZE_WIDGETS_FRAGMENT_TYPE, "FITNESS");
         startActivity(intent);
 
         return super.onOptionsItemSelected(item);
