@@ -3,11 +3,21 @@ package com.mcsaatchi.gmfit.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
+@DatabaseTable(tableName = "User")
+
 public class User implements Parcelable {
 
-    private String full_name;
-    private String email_address;
-    private String photo_url;
+    @DatabaseField(generatedId = true, index = true)
+    int id;
+    @DatabaseField
+    String full_name;
+    @DatabaseField
+    String email_address;
+    @DatabaseField
+    String photo_url;
 
     public User() {
     }
