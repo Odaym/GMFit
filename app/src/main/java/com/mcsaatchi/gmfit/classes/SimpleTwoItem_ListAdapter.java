@@ -21,10 +21,6 @@ public class SimpleTwoItem_ListAdapter extends BaseAdapter {
         this.listItems = listItems;
     }
 
-    public void notifyData() {
-        notifyDataSetChanged();
-    }
-
     @Override
     public int getCount() {
         return listItems.size();

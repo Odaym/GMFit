@@ -17,7 +17,7 @@ import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.stmt.SelectArg;
 import com.j256.ormlite.stmt.Where;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.classes.Constants;
+import com.mcsaatchi.gmfit.classes.Cons;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
 import com.mcsaatchi.gmfit.classes.Helpers;
@@ -56,8 +56,8 @@ public class AddNewMealItem_Activity extends Base_Activity implements SearchView
         String actionBarTitle;
 
         if (getIntent().getExtras() != null) {
-            actionBarTitle = getString(R.string.add_new_meal_item_activity_title) + " " + getIntent().getExtras().getString(Constants.EXTRAS_MAIN_MEAL_NAME);
-            mealType = getIntent().getExtras().getString(Constants.EXTRAS_MAIN_MEAL_NAME);
+            actionBarTitle = getString(R.string.add_new_meal_item_activity_title) + " " + getIntent().getExtras().getString(Cons.EXTRAS_MAIN_MEAL_NAME);
+            mealType = getIntent().getExtras().getString(Cons.EXTRAS_MAIN_MEAL_NAME);
         } else {
             actionBarTitle = getString(R.string.app_name);
             mealType = "BREAKFAST";
@@ -72,14 +72,14 @@ public class AddNewMealItem_Activity extends Base_Activity implements SearchView
         mHeaderPositions = new Integer[]{0, 7};
 
         prepareQueryForAllMealTypeItems(mealType);
-        mealsList = getHelper().getMealItemDAO().query(pq);
+        mealsList = getDBHelper().getMealItemDAO().query(pq);
         initMealsList();
         addListSections();
 
         mealItemsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                EventBus_Singleton.getInstance().post(new EventBus_Poster(Constants.EXTRAS_PICKED_MEAL_ENTRY, mealsList.get(position)));
+                EventBus_Singleton.getInstance().post(new EventBus_Poster(Cons.EXTRAS_PICKED_MEAL_ENTRY, mealsList.get(position)));
                 Log.d(TAG, "onItemClick: MEAL TYPE " + mealsList.get(position).getType());
                 finish();
             }
@@ -123,7 +123,7 @@ public class AddNewMealItem_Activity extends Base_Activity implements SearchView
 
     public void prepareQueryForSearchTerm(String searchQuery, String mealType) {
         try {
-            mealsQueryBuilder = getHelper().getMealItemDAO().queryBuilder();
+            mealsQueryBuilder = getDBHelper().getMealItemDAO().queryBuilder();
 
             SelectArg nameSelectArg = new SelectArg("%" + searchQuery + "%");
 
@@ -137,7 +137,7 @@ public class AddNewMealItem_Activity extends Base_Activity implements SearchView
 
     public void prepareQueryForAllMealTypeItems(String mealType) {
         try {
-            mealsQueryBuilder = getHelper().getMealItemDAO().queryBuilder();
+            mealsQueryBuilder = getDBHelper().getMealItemDAO().queryBuilder();
 
             Where where = mealsQueryBuilder.where();
             where.eq("type", mealType);
@@ -171,7 +171,7 @@ public class AddNewMealItem_Activity extends Base_Activity implements SearchView
             //Run actual search query for this meal type
             prepareQueryForSearchTerm(newText, mealType);
 
-            mealsList = getHelper().getMealItemDAO().query(pq);
+            mealsList = getDBHelper().getMealItemDAO().query(pq);
             sections.clear();
 
             initMealsList();
@@ -179,7 +179,7 @@ public class AddNewMealItem_Activity extends Base_Activity implements SearchView
             //Show all results for this meal type
             prepareQueryForAllMealTypeItems(mealType);
 
-            mealsList = getHelper().getMealItemDAO().query(pq);
+            mealsList = getDBHelper().getMealItemDAO().query(pq);
 
             initMealsList();
             addListSections();
