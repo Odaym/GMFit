@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -50,15 +51,18 @@ import com.google.android.gms.fitness.request.OnDataPointListener;
 import com.google.android.gms.fitness.request.SensorRequest;
 import com.google.android.gms.fitness.result.DataSourcesResult;
 import com.hookedonplay.decoviewlib.DecoView;
+import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.mcsaatchi.gmfit.BuildConfig;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.activities.AddNewChart_Activity;
+import com.mcsaatchi.gmfit.activities.Base_Activity;
 import com.mcsaatchi.gmfit.activities.CustomizeWidgetsAndCharts_Activity;
 import com.mcsaatchi.gmfit.activities.Main_Activity;
-import com.mcsaatchi.gmfit.classes.Constants;
+import com.mcsaatchi.gmfit.classes.Cons;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
 import com.mcsaatchi.gmfit.classes.Helpers;
+import com.mcsaatchi.gmfit.models.DataChart;
 import com.squareup.otto.Subscribe;
 
 import java.text.NumberFormat;
@@ -77,7 +81,7 @@ public class Fitness_Fragment extends Fragment {
     @Bind(R.id.cards_container)
     LinearLayout cards_container;
     @Bind(R.id.bar_chart)
-    HorizontalBarChart barChart;
+    HorizontalBarChart defaultBarChart;
     @Bind(R.id.addChartBTN)
     Button addNewBarChartBTN;
 
@@ -101,6 +105,11 @@ public class Fitness_Fragment extends Fragment {
     @Bind(R.id.fourthMetricIMG)
     ImageView fourthMetricIMG;
 
+    private Handler handler;
+    private List<DataChart> allDataCharts;
+    private RuntimeExceptionDao<DataChart, Integer> dataChartDAO;
+    private final int ADD_NEW_CHART_HANDLER_MESSAGE = 90;
+
     public static final int ADD_NEW_FITNESS_CHART_REQUEST_CODE = 1;
 
     public static final String TAG = "GMFit";
@@ -116,19 +125,13 @@ public class Fitness_Fragment extends Fragment {
 
     private SharedPreferences prefs;
 
-    private final String numberOfStepsChartType = "Number of Steps";
-    private final String walkingDistanceChartType = "Walking and Running Distance";
-    private final String cyclingDistanceChartType = "Cycling Distance";
-    private final String totalDistanceChartType = "Total Distance Traveled";
-    private final String flightsClimbedChartType = "Flights Climbed";
-    private final String activeCaloriesChartType = "Active Calories";
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
 
         if (context instanceof Activity) {
             parentActivity = (Activity) context;
+            dataChartDAO = ((Base_Activity) parentActivity).getDBHelper().getDataChartDAO();
         }
     }
 
@@ -150,26 +153,80 @@ public class Fitness_Fragment extends Fragment {
 
         ButterKnife.bind(this, fragmentView);
 
-        prefs = getActivity().getSharedPreferences(Constants.EXTRAS_PREFS, Context.MODE_PRIVATE);
+        prefs = getActivity().getSharedPreferences(Cons.EXTRAS_PREFS, Context.MODE_PRIVATE);
 
         setHasOptionsMenu(true);
 
         Helpers.setUpDecoViewArc(getActivity(), dynamicArc);
 
-        Helpers.setChartData(barChart, 20, 20);
+        Helpers.setChartData(defaultBarChart, 20, 20);
 
         addNewBarChartBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), AddNewChart_Activity.class);
-                intent.putExtra(Constants.EXTRAS_ADD_CHART_WHAT_TYPE, Constants.EXTRAS_ADD_FITNESS_CHART);
+                intent.putExtra(Cons.EXTRAS_ADD_CHART_WHAT_TYPE, Cons.EXTRAS_ADD_FITNESS_CHART);
                 startActivityForResult(intent, ADD_NEW_FITNESS_CHART_REQUEST_CODE);
             }
         });
 
         setUpMetricCounterTextSwitcherAnimation();
 
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                allDataCharts = dataChartDAO.queryForAll().subList(0, 4);
+
+                if (!allDataCharts.isEmpty()) {
+                    Log.d(TAG, "populateWithDataCharts: charts size " + allDataCharts.size());
+                    parentActivity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            for (DataChart chart :
+                                    allDataCharts) {
+                                addNewBarChart(chart.getName());
+                            }
+                        }
+                    });
+                }
+            }
+        }).start();
+
         return fragmentView;
+    }
+
+    public void addNewBarChart(String chartTitle) {
+        final View barChartLayout_NEW_CHART = getActivity().getLayoutInflater().inflate(R.layout.view_barchart_container, null);
+
+        Button removeChartBTN_NEW_CHART = (Button) barChartLayout_NEW_CHART.findViewById(R.id.removeChartBTN);
+        final CardView cardLayout_NEW_CHART = (CardView) barChartLayout_NEW_CHART.findViewById(R.id.cardLayoutContainer);
+        TextView chartTitleTV_NEW_CHART = (TextView) barChartLayout_NEW_CHART.findViewById(R.id.chartTitleTV);
+        BarChart barChart_NEW_CHART = (BarChart) barChartLayout_NEW_CHART.findViewById(R.id.barChart);
+
+        if (chartTitle != null)
+            chartTitleTV_NEW_CHART.setText(chartTitle);
+
+        Helpers.setChartData(barChart_NEW_CHART, 10, 10);
+
+        removeChartBTN_NEW_CHART.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cards_container.removeView(cardLayout_NEW_CHART);
+            }
+        });
+
+
+        barChartLayout_NEW_CHART.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, getResources().getDimensionPixelSize(R.dimen
+                .chart_height)));
+
+        cards_container.addView(barChartLayout_NEW_CHART);
+
+//        parentScrollView.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                parentScrollView.fullScroll(View.FOCUS_DOWN);
+//            }
+//        }, 500);
     }
 
     private void setUpMetricCounterTextSwitcherAnimation() {
@@ -194,26 +251,14 @@ public class Fitness_Fragment extends Fragment {
 
         if (requestCode == ADD_NEW_FITNESS_CHART_REQUEST_CODE) {
             if (data != null) {
-                switch (data.getStringExtra(Constants.EXTRAS_CHART_TYPE_SELECTED)) {
-                    case numberOfStepsChartType:
-                        addNewBarChart(numberOfStepsChartType);
-                        break;
-                    case walkingDistanceChartType:
-                        addNewBarChart(walkingDistanceChartType);
-                        break;
-                    case cyclingDistanceChartType:
-                        addNewBarChart(cyclingDistanceChartType);
-                        break;
-                    case totalDistanceChartType:
-                        addNewBarChart(totalDistanceChartType);
-                        break;
-                    case flightsClimbedChartType:
-                        addNewBarChart(flightsClimbedChartType);
-                        break;
-                    case activeCaloriesChartType:
-                        addNewBarChart(activeCaloriesChartType);
-                        break;
-                }
+
+                String chartType = data.getStringExtra(Cons.EXTRAS_CHART_TYPE_SELECTED);
+
+                //Add the chart entry to the database
+                dataChartDAO.create(new DataChart(chartType, Cons.BarChart_CHART_TYPE, allDataCharts.size() + 1));
+
+                addNewBarChart(chartType);
+
             } else if (requestCode == Main_Activity.USER_AUTHORISED_REQUEST_CODE && googleApiFitnessClient != null) {
                 googleApiFitnessClient.stopAutoManage(getActivity());
                 googleApiFitnessClient.disconnect();
@@ -414,44 +459,12 @@ public class Fitness_Fragment extends Fragment {
         }
     }
 
-    public void addNewBarChart(String chartTitle) {
-        final View barChartLayout = getActivity().getLayoutInflater().inflate(R.layout.view_barchart_container, null);
-
-        Button removeChartBTN = (Button) barChartLayout.findViewById(R.id.removeChartBTN);
-        final CardView cardLayout = (CardView) barChartLayout.findViewById(R.id.cardLayoutContainer);
-        TextView chartTitleTV = (TextView) barChartLayout.findViewById(R.id.chartTitleTV);
-        BarChart barChart = (BarChart) barChartLayout.findViewById(R.id.barChart);
-
-        if (chartTitle != null)
-            chartTitleTV.setText(chartTitle);
-
-        Helpers.setChartData(barChart, 10, 10);
-
-        removeChartBTN.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                cards_container.removeView(cardLayout);
-            }
-        });
-
-        barChartLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, getResources().getDimensionPixelSize(R.dimen.chart_height)));
-
-        cards_container.addView(barChartLayout);
-
-        parentScrollView.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                parentScrollView.fullScroll(View.FOCUS_DOWN);
-            }
-        }, 500);
-    }
-
     @Subscribe
     public void handle_BusEvents(EventBus_Poster ebp) {
         String ebpMessage = ebp.getMessage();
 
         switch (ebpMessage) {
-            case Constants.EXTRAS_FITNESS_WIDGETS_ORDER_ARRAY_CHANGED:
+            case Cons.EXTRAS_FITNESS_WIDGETS_ORDER_ARRAY_CHANGED:
                 if (ebp.getSparseArrayExtra() != null) {
                     itemsMap = ebp.getSparseArrayExtra();
 
@@ -475,7 +488,7 @@ public class Fitness_Fragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent intent = new Intent(getActivity(), CustomizeWidgetsAndCharts_Activity.class);
-        intent.putExtra(Constants.EXTRAS_CUSTOMIZE_WIDGETS_FRAGMENT_TYPE, "FITNESS");
+        intent.putExtra(Cons.EXTRAS_CUSTOMIZE_WIDGETS_FRAGMENT_TYPE, "FITNESS");
         startActivity(intent);
 
         return super.onOptionsItemSelected(item);
