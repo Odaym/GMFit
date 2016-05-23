@@ -27,7 +27,7 @@ import com.mcsaatchi.gmfit.activities.AddNewChart_Activity;
 import com.mcsaatchi.gmfit.activities.AddNewMealItem_Activity;
 import com.mcsaatchi.gmfit.activities.BarcodeCapture_Activity;
 import com.mcsaatchi.gmfit.activities.CustomizeWidgetsAndCharts_Activity;
-import com.mcsaatchi.gmfit.classes.Constants;
+import com.mcsaatchi.gmfit.classes.Cons;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
 import com.mcsaatchi.gmfit.classes.Helpers;
@@ -153,7 +153,7 @@ public class Nutrition_Fragment extends Fragment {
 
         ButterKnife.bind(this, fragmentView);
 
-        prefs = getActivity().getSharedPreferences(Constants.EXTRAS_PREFS, Context.MODE_PRIVATE);
+        prefs = getActivity().getSharedPreferences(Cons.EXTRAS_PREFS, Context.MODE_PRIVATE);
 
         setHasOptionsMenu(true);
 
@@ -163,7 +163,7 @@ public class Nutrition_Fragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), AddNewChart_Activity.class);
-                intent.putExtra(Constants.EXTRAS_ADD_CHART_WHAT_TYPE, Constants.EXTRAS_ADD_NUTRIITION_CHART);
+                intent.putExtra(Cons.EXTRAS_ADD_CHART_WHAT_TYPE, Cons.EXTRAS_ADD_NUTRIITION_CHART);
                 startActivityForResult(intent,
                         ADD_NEW_NUTRITION_CHART_REQUEST);
             }
@@ -221,7 +221,7 @@ public class Nutrition_Fragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent intent = new Intent(getActivity(), CustomizeWidgetsAndCharts_Activity.class);
-        intent.putExtra(Constants.EXTRAS_CUSTOMIZE_WIDGETS_FRAGMENT_TYPE, "NUTRITION");
+        intent.putExtra(Cons.EXTRAS_CUSTOMIZE_WIDGETS_FRAGMENT_TYPE, "NUTRITION");
         startActivity(intent);
 
         return super.onOptionsItemSelected(item);
@@ -232,7 +232,7 @@ public class Nutrition_Fragment extends Fragment {
         String ebpMessage = ebp.getMessage();
 
         switch (ebpMessage) {
-            case Constants.EXTRAS_PICKED_MEAL_ENTRY:
+            case Cons.EXTRAS_PICKED_MEAL_ENTRY:
                 if (ebp.getMealItemExtra() != null) {
                     switch (ebp.getMealItemExtra().getType()) {
                         case "BREAKFAST":
@@ -248,10 +248,10 @@ public class Nutrition_Fragment extends Fragment {
                 }
 
                 break;
-            case Constants.EXTRAS_NUTRITION_WIDGETS_ORDER_ARRAY_CHANGED:
+            case Cons.EXTRAS_NUTRITION_WIDGETS_ORDER_ARRAY_CHANGED:
                 itemsMap = ebp.getSparseArrayExtra();
 
-                //See the SparsArrays in CustomizeWidget_Fragment to understand how these arrays are split up and which values are used, pretty straight-forward
+                //See the SparsArrays in CustomizeWidgets_Fragment to understand how these arrays are split up and which values are used, pretty straight-forward
 
                 firstMetricTitleTV.setText(itemsMap.get(0)[0]);
                 firstMetricValueTV.setText(itemsMap.get(0)[1] + " " + itemsMap.get(0)[2]);
@@ -290,7 +290,7 @@ public class Nutrition_Fragment extends Fragment {
         switch (requestCode) {
             case ADD_NEW_NUTRITION_CHART_REQUEST:
                 if (data != null) {
-                    addNewBarChart(data.getStringExtra(Constants.EXTRAS_CHART_TYPE_SELECTED));
+                    addNewBarChart(data.getStringExtra(Cons.EXTRAS_CHART_TYPE_SELECTED));
                 }
                 break;
             case BARCODE_CAPTURE_RC:
@@ -310,7 +310,7 @@ public class Nutrition_Fragment extends Fragment {
 
     private void openMealEntryPickerActivity(String mainMealName) {
         Intent intent = new Intent(parentActivity, AddNewMealItem_Activity.class);
-        intent.putExtra(Constants.EXTRAS_MAIN_MEAL_NAME, mainMealName);
+        intent.putExtra(Cons.EXTRAS_MAIN_MEAL_NAME, mainMealName);
         startActivity(intent);
     }
 

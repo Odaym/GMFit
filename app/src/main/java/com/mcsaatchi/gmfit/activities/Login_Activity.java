@@ -37,7 +37,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.classes.Constants;
+import com.mcsaatchi.gmfit.classes.Cons;
 import com.mcsaatchi.gmfit.classes.DefaultIndicator_Controller;
 import com.mcsaatchi.gmfit.classes.Helpers;
 import com.mcsaatchi.gmfit.fragments.IntroSlider_Fragment;
@@ -81,7 +81,7 @@ public class Login_Activity extends Base_Activity implements
 
         ButterKnife.bind(this);
 
-        prefs = getSharedPreferences(Constants.EXTRAS_PREFS, Context.MODE_PRIVATE);
+        prefs = getSharedPreferences(Cons.EXTRAS_PREFS, Context.MODE_PRIVATE);
 
         signUpBTN.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -239,10 +239,10 @@ public class Login_Activity extends Base_Activity implements
                     Log.d(TAG, "handleGoogleSignInResult: Photo " + acct.getPhotoUrl().toString());
 
                 prefsEditor = prefs.edit();
-                prefsEditor.putBoolean(Constants.EXTRAS_USER_LOGGED_IN, true);
-                prefsEditor.putString(Constants.EXTRAS_USER_FULL_NAME, user.getFull_name());
-                prefsEditor.putString(Constants.EXTRAS_USER_DISPLAY_PHOTO, user.getPhoto_url());
-                prefsEditor.putString(Constants.EXTRAS_USER_EMAIL, user.getEmail_address());
+                prefsEditor.putBoolean(Cons.EXTRAS_USER_LOGGED_IN, true);
+                prefsEditor.putString(Cons.EXTRAS_USER_FULL_NAME, user.getFull_name());
+                prefsEditor.putString(Cons.EXTRAS_USER_DISPLAY_PHOTO, user.getPhoto_url());
+                prefsEditor.putString(Cons.EXTRAS_USER_EMAIL, user.getEmail_address());
                 prefsEditor.apply();
 
                 Intent openBooksActivity = new Intent(Login_Activity.this, Main_Activity.class);

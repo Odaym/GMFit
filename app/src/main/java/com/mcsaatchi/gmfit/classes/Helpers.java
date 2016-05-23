@@ -47,10 +47,10 @@ public class Helpers {
         Bundle bundle = new Bundle();
 
         if (activityTitleResourceId != 0) {
-            bundle.putInt(Constants.BUNDLE_ACTIVITY_TITLE, activityTitleResourceId);
+            bundle.putInt(Cons.BUNDLE_ACTIVITY_TITLE, activityTitleResourceId);
         }
 
-        bundle.putBoolean(Constants.BUNDLE_ACTIVITY_BACK_BUTTON_ENABLED, enableBackButton);
+        bundle.putBoolean(Cons.BUNDLE_ACTIVITY_BACK_BUTTON_ENABLED, enableBackButton);
 
         return bundle;
     }
@@ -59,10 +59,10 @@ public class Helpers {
         Bundle bundle = new Bundle();
 
         if (activityTitle != null) {
-            bundle.putString(Constants.BUNDLE_ACTIVITY_TITLE, activityTitle);
+            bundle.putString(Cons.BUNDLE_ACTIVITY_TITLE, activityTitle);
         }
 
-        bundle.putBoolean(Constants.BUNDLE_ACTIVITY_BACK_BUTTON_ENABLED, enableBackButton);
+        bundle.putBoolean(Cons.BUNDLE_ACTIVITY_BACK_BUTTON_ENABLED, enableBackButton);
 
         return bundle;
     }

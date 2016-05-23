@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.classes.Constants;
+import com.mcsaatchi.gmfit.classes.Cons;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
 import com.mcsaatchi.gmfit.classes.SimpleOneItemWithIcon_Sparse_ListAdapter;
@@ -25,7 +25,7 @@ import java.util.StringTokenizer;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class CustomizeWidget_Fragment extends Fragment {
+public class CustomizeWidgets_Fragment extends Fragment {
     @Bind(R.id.widgetsListView)
     DragSortListView widgetsListView;
 
@@ -79,39 +79,39 @@ public class CustomizeWidget_Fragment extends Fragment {
                              ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View fragmentView = inflater.inflate(R.layout.fragment_customize_widget, null);
+        View fragmentView = inflater.inflate(R.layout.fragment_customize_widgets, null);
 
         ButterKnife.bind(this, fragmentView);
 
         Bundle fragmentBundle = getArguments();
 
         if (fragmentBundle != null) {
-            typeOfFragmentToCustomizeFor = fragmentBundle.getString(Constants.EXTRAS_CUSTOMIZE_WIDGETS_FRAGMENT_TYPE);
+            typeOfFragmentToCustomizeFor = fragmentBundle.getString(Cons.EXTRAS_CUSTOMIZE_WIDGETS_FRAGMENT_TYPE);
 
             if (typeOfFragmentToCustomizeFor != null) {
                 switch (typeOfFragmentToCustomizeFor) {
-                    case Constants.EXTRAS_FITNESS_FRAGMENT_IDENTIFIER:
+                    case Cons.EXTRAS_FITNESS_FRAGMENT_IDENTIFIER:
                         itemsMap = fitnessItemsMap;
-                        PREFS_WIDGETS_ORDER_ARRAY_IDENTIFIER = Constants.EXTRAS_FITNESS_WIDGETS_ORDER_ARRAY;
-                        WIDGETS_ORDER_ARRAY_CHANGED_EVENT = Constants.EXTRAS_FITNESS_WIDGETS_ORDER_ARRAY_CHANGED;
+                        PREFS_WIDGETS_ORDER_ARRAY_IDENTIFIER = Cons.EXTRAS_FITNESS_WIDGETS_ORDER_ARRAY;
+                        WIDGETS_ORDER_ARRAY_CHANGED_EVENT = Cons.EXTRAS_FITNESS_WIDGETS_ORDER_ARRAY_CHANGED;
                         break;
-                    case Constants.EXTRAS_NUTRITION_FRAGMENT_IDENTIFIER:
+                    case Cons.EXTRAS_NUTRITION_FRAGMENT_IDENTIFIER:
                         itemsMap = nutritionItemsMap;
-                        PREFS_WIDGETS_ORDER_ARRAY_IDENTIFIER = Constants.EXTRAS_NUTRITION_WIDGETS_ORDER_ARRAY;
-                        WIDGETS_ORDER_ARRAY_CHANGED_EVENT = Constants.EXTRAS_NUTRITION_WIDGETS_ORDER_ARRAY_CHANGED;
+                        PREFS_WIDGETS_ORDER_ARRAY_IDENTIFIER = Cons.EXTRAS_NUTRITION_WIDGETS_ORDER_ARRAY;
+                        WIDGETS_ORDER_ARRAY_CHANGED_EVENT = Cons.EXTRAS_NUTRITION_WIDGETS_ORDER_ARRAY_CHANGED;
                         break;
-                    case Constants.EXTRAS_HEALTH_FRAGMENT_IDENTIFIER:
+                    case Cons.EXTRAS_HEALTH_FRAGMENT_IDENTIFIER:
                         //TODO
 //                        itemsMap = healthItemsMap;
-                        PREFS_WIDGETS_ORDER_ARRAY_IDENTIFIER = Constants.EXTRAS_HEALTH_WIDGETS_ORDER_ARRAY;
-                        WIDGETS_ORDER_ARRAY_CHANGED_EVENT = Constants.EXTRAS_HEALTH_WIDGETS_ORDER_ARRAY_CHANGED;
+                        PREFS_WIDGETS_ORDER_ARRAY_IDENTIFIER = Cons.EXTRAS_HEALTH_WIDGETS_ORDER_ARRAY;
+                        WIDGETS_ORDER_ARRAY_CHANGED_EVENT = Cons.EXTRAS_HEALTH_WIDGETS_ORDER_ARRAY_CHANGED;
                         break;
                 }
             }
         }
 
 
-        prefs = parentActivity.getSharedPreferences(Constants.EXTRAS_PREFS, Context.MODE_PRIVATE);
+        prefs = parentActivity.getSharedPreferences(Cons.EXTRAS_PREFS, Context.MODE_PRIVATE);
 
         if (prefs.getString(PREFS_WIDGETS_ORDER_ARRAY_IDENTIFIER, null) != null) {
             String savedString = prefs.getString(PREFS_WIDGETS_ORDER_ARRAY_IDENTIFIER, null);

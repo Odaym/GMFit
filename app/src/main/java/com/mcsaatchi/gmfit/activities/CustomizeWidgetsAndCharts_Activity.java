@@ -8,10 +8,10 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.classes.Constants;
+import com.mcsaatchi.gmfit.classes.Cons;
 import com.mcsaatchi.gmfit.classes.Helpers;
 import com.mcsaatchi.gmfit.classes.SlidingTabLayout;
-import com.mcsaatchi.gmfit.fragments.CustomizeWidget_Fragment;
+import com.mcsaatchi.gmfit.fragments.CustomizeWidgets_Fragment;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -49,7 +49,7 @@ public class CustomizeWidgetsAndCharts_Activity extends Base_Activity {
 
         //Grab the Fragment type from one of the three Fragments (Fitness, Nutrition, Health)
         if (intentExtras != null) {
-            typeOfFragmentToCustomizeFor = intentExtras.getString(Constants.EXTRAS_CUSTOMIZE_WIDGETS_FRAGMENT_TYPE);
+            typeOfFragmentToCustomizeFor = intentExtras.getString(Cons.EXTRAS_CUSTOMIZE_WIDGETS_FRAGMENT_TYPE);
         }
     }
 
@@ -66,15 +66,15 @@ public class CustomizeWidgetsAndCharts_Activity extends Base_Activity {
         @Override
         public Fragment getItem(int position) {
             Bundle fragmentArguments = new Bundle();
-            fragmentArguments.putString(Constants.EXTRAS_CUSTOMIZE_WIDGETS_FRAGMENT_TYPE, typeOfFragmentToCustomizeFor);
+            fragmentArguments.putString(Cons.EXTRAS_CUSTOMIZE_WIDGETS_FRAGMENT_TYPE, typeOfFragmentToCustomizeFor);
 
             switch (position) {
                 case 0:
-                    Fragment customizeWidgetFragment = new CustomizeWidget_Fragment();
+                    Fragment customizeWidgetFragment = new CustomizeWidgets_Fragment();
                     customizeWidgetFragment.setArguments(fragmentArguments);
                     return customizeWidgetFragment;
                 case 1:
-                    Fragment customizeChartsFragment = new CustomizeWidget_Fragment();
+                    Fragment customizeChartsFragment = new CustomizeWidgets_Fragment();
                     customizeChartsFragment.setArguments(fragmentArguments);
                     return customizeChartsFragment;
             }

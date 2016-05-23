@@ -9,7 +9,7 @@ import android.view.MenuItem;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.classes.Constants;
+import com.mcsaatchi.gmfit.classes.Cons;
 import com.mcsaatchi.gmfit.classes.DBHelper;
 
 public class Base_Activity extends AppCompatActivity {
@@ -22,19 +22,19 @@ public class Base_Activity extends AppCompatActivity {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO);
 
         if (getSupportActionBar() != null && savedInstanceState != null) {
-            if (savedInstanceState.get(Constants.BUNDLE_ACTIVITY_TITLE) != null && savedInstanceState.get(Constants.BUNDLE_ACTIVITY_TITLE) instanceof String) {
+            if (savedInstanceState.get(Cons.BUNDLE_ACTIVITY_TITLE) != null && savedInstanceState.get(Cons.BUNDLE_ACTIVITY_TITLE) instanceof String) {
                 //String was passed
-                getSupportActionBar().setTitle(savedInstanceState.getString(Constants.BUNDLE_ACTIVITY_TITLE));
-            } else if (savedInstanceState.get(Constants.BUNDLE_ACTIVITY_TITLE) != null) {
+                getSupportActionBar().setTitle(savedInstanceState.getString(Cons.BUNDLE_ACTIVITY_TITLE));
+            } else if (savedInstanceState.get(Cons.BUNDLE_ACTIVITY_TITLE) != null) {
                 //Integer was passed
-                getSupportActionBar().setTitle(getString(savedInstanceState.getInt(Constants.BUNDLE_ACTIVITY_TITLE)));
+                getSupportActionBar().setTitle(getString(savedInstanceState.getInt(Cons.BUNDLE_ACTIVITY_TITLE)));
             } else {
                 //Null was passed
                 getSupportActionBar().setTitle(getString(R.string.app_name));
             }
 
             //Set back button only on applicable activities
-            if (savedInstanceState.get(Constants.BUNDLE_ACTIVITY_BACK_BUTTON_ENABLED) != null && savedInstanceState.getBoolean(Constants.BUNDLE_ACTIVITY_BACK_BUTTON_ENABLED)) {
+            if (savedInstanceState.get(Cons.BUNDLE_ACTIVITY_BACK_BUTTON_ENABLED) != null && savedInstanceState.getBoolean(Cons.BUNDLE_ACTIVITY_BACK_BUTTON_ENABLED)) {
                 getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             }
         }
@@ -65,6 +65,7 @@ public class Base_Activity extends AppCompatActivity {
         }
         return super.onKeyDown(keyCode, event);
     }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -74,7 +75,7 @@ public class Base_Activity extends AppCompatActivity {
         }
     }
 
-    public DBHelper getHelper() {
+    public DBHelper getDBHelper() {
         if (dbHelper == null) {
             dbHelper =
                     OpenHelperManager.getHelper(this, DBHelper.class);
