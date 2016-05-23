@@ -8,7 +8,9 @@ import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
+import com.mcsaatchi.gmfit.models.DataChart;
 import com.mcsaatchi.gmfit.models.MealItem;
+import com.mcsaatchi.gmfit.models.User;
 
 import java.sql.SQLException;
 import java.util.Random;
@@ -82,6 +84,8 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
             "Herb-Stuffed Turkey Breast"};
 
     private RuntimeExceptionDao<MealItem, Integer> mealItemRunTimeDAO = null;
+    private RuntimeExceptionDao<DataChart, Integer> dataChartRunTimeDAO = null;
+    private RuntimeExceptionDao<User, Integer> userRunTimeDAO = null;
 
     public DBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -91,6 +95,8 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
     public void onCreate(SQLiteDatabase db, ConnectionSource connectionSource) {
         try {
             TableUtils.createTable(connectionSource, MealItem.class);
+            TableUtils.createTable(connectionSource, DataChart.class);
+            TableUtils.createTable(connectionSource, User.class);
 
             Log.d(TAG, "DBHelper: We're here in the DATABASE constructor");
 
@@ -113,6 +119,20 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
             mealItemRunTimeDAO = getRuntimeExceptionDao(MealItem.class);
         }
         return mealItemRunTimeDAO;
+    }
+
+    public RuntimeExceptionDao<DataChart, Integer> getDataChartDAO() {
+        if (dataChartRunTimeDAO == null) {
+            dataChartRunTimeDAO = getRuntimeExceptionDao(DataChart.class);
+        }
+        return dataChartRunTimeDAO;
+    }
+
+    public RuntimeExceptionDao<User, Integer> getUserDAO() {
+        if (userRunTimeDAO == null) {
+            userRunTimeDAO = getRuntimeExceptionDao(User.class);
+        }
+        return userRunTimeDAO;
     }
 
     @Override
