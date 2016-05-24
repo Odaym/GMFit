@@ -115,5 +115,8 @@
         <activity android:name=".activities.AddNewChart_Activity"
                   android:screenOrientation="portrait"/>
 
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="36e136351325660be3ac92f428de565fcbdc3033" />
     </application>
 </manifest>
