@@ -23,6 +23,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -45,6 +46,7 @@ import com.mcsaatchi.gmfit.models.User;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import io.fabric.sdk.android.Fabric;
 
 public class Login_Activity extends Base_Activity implements
         GoogleApiClient.ConnectionCallbacks,
@@ -73,6 +75,7 @@ public class Login_Activity extends Base_Activity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(Helpers.createActivityBundleWithProperties(0, false));
+        Fabric.with(this, new Crashlytics());
 
         FacebookSdk.sdkInitialize(getApplicationContext());
         callbackManager = CallbackManager.Factory.create();
