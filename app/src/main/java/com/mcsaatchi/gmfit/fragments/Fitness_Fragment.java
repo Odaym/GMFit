@@ -175,10 +175,9 @@ public class Fitness_Fragment extends Fragment {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                allDataCharts = dataChartDAO.queryForAll().subList(0, 4);
+                allDataCharts = dataChartDAO.queryForAll();
 
                 if (!allDataCharts.isEmpty()) {
-                    Log.d(TAG, "populateWithDataCharts: charts size " + allDataCharts.size());
                     parentActivity.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -191,6 +190,10 @@ public class Fitness_Fragment extends Fragment {
                 }
             }
         }).start();
+
+        if (!checkPermissions()) {
+            requestPermissions();
+        }
 
         return fragmentView;
     }
@@ -215,18 +218,17 @@ public class Fitness_Fragment extends Fragment {
             }
         });
 
-
         barChartLayout_NEW_CHART.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, getResources().getDimensionPixelSize(R.dimen
                 .chart_height)));
 
         cards_container.addView(barChartLayout_NEW_CHART);
 
-//        parentScrollView.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                parentScrollView.fullScroll(View.FOCUS_DOWN);
-//            }
-//        }, 500);
+        parentScrollView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                parentScrollView.fullScroll(View.FOCUS_DOWN);
+            }
+        }, 500);
     }
 
     private void setUpMetricCounterTextSwitcherAnimation() {
@@ -321,7 +323,7 @@ public class Fitness_Fragment extends Fragment {
                 // At least one datatype must be specified.
                 .setDataTypes(DataType.TYPE_STEP_COUNT_CUMULATIVE)
                 // Can specify whether data type is raw or derived.
-                .setDataSourceTypes(DataSource.TYPE_RAW)
+                .setDataSourceTypes(DataSource.TYPE_DERIVED)
                 .build())
                 .setResultCallback(new ResultCallback<DataSourcesResult>() {
                     @Override
