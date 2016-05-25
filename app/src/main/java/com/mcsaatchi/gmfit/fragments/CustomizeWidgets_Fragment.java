@@ -14,7 +14,7 @@ import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.classes.Cons;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
-import com.mcsaatchi.gmfit.classes.SimpleOneItemWithIcon_Sparse_ListAdapter;
+import com.mcsaatchi.gmfit.adapters.OneItemWithIcon_Sparse_ListAdapter;
 import com.mcsaatchi.gmfit.reorderable_listview.DragSortListView;
 
 import java.util.ArrayList;
@@ -29,7 +29,7 @@ public class CustomizeWidgets_Fragment extends Fragment {
     @Bind(R.id.widgetsListView)
     DragSortListView widgetsListView;
 
-    private SimpleOneItemWithIcon_Sparse_ListAdapter customizeWidgetsAdapter;
+    private OneItemWithIcon_Sparse_ListAdapter customizeWidgetsAdapter;
 
     private SharedPreferences prefs;
     private SharedPreferences.Editor prefsEditor;
@@ -59,7 +59,6 @@ public class CustomizeWidgets_Fragment extends Fragment {
     private String WIDGETS_ORDER_ARRAY_CHANGED_EVENT;
 
     private Activity parentActivity;
-    private String typeOfFragmentToCustomizeFor;
     private SparseArray<String[]> itemsMap = new SparseArray<>();
     private SparseArray<String[]> orderedItemsMap = new SparseArray<>();
 
@@ -86,21 +85,21 @@ public class CustomizeWidgets_Fragment extends Fragment {
         Bundle fragmentBundle = getArguments();
 
         if (fragmentBundle != null) {
-            typeOfFragmentToCustomizeFor = fragmentBundle.getString(Cons.EXTRAS_CUSTOMIZE_WIDGETS_FRAGMENT_TYPE);
+            String typeOfFragmentToCustomizeFor = fragmentBundle.getString(Cons.EXTRAS_CUSTOMIZE_WIDGETS_FRAGMENT_TYPE);
 
             if (typeOfFragmentToCustomizeFor != null) {
                 switch (typeOfFragmentToCustomizeFor) {
-                    case Cons.EXTRAS_FITNESS_FRAGMENT_IDENTIFIER:
+                    case Cons.EXTRAS_FITNESS_FRAGMENT:
                         itemsMap = fitnessItemsMap;
                         PREFS_WIDGETS_ORDER_ARRAY_IDENTIFIER = Cons.EXTRAS_FITNESS_WIDGETS_ORDER_ARRAY;
                         WIDGETS_ORDER_ARRAY_CHANGED_EVENT = Cons.EXTRAS_FITNESS_WIDGETS_ORDER_ARRAY_CHANGED;
                         break;
-                    case Cons.EXTRAS_NUTRITION_FRAGMENT_IDENTIFIER:
+                    case Cons.EXTRAS_NUTRITION_FRAGMENT:
                         itemsMap = nutritionItemsMap;
                         PREFS_WIDGETS_ORDER_ARRAY_IDENTIFIER = Cons.EXTRAS_NUTRITION_WIDGETS_ORDER_ARRAY;
                         WIDGETS_ORDER_ARRAY_CHANGED_EVENT = Cons.EXTRAS_NUTRITION_WIDGETS_ORDER_ARRAY_CHANGED;
                         break;
-                    case Cons.EXTRAS_HEALTH_FRAGMENT_IDENTIFIER:
+                    case Cons.EXTRAS_HEALTH_FRAGMENT:
                         //TODO
 //                        itemsMap = healthItemsMap;
                         PREFS_WIDGETS_ORDER_ARRAY_IDENTIFIER = Cons.EXTRAS_HEALTH_WIDGETS_ORDER_ARRAY;
@@ -170,11 +169,7 @@ public class CustomizeWidgets_Fragment extends Fragment {
         widgetsListView.setDragListener(onDrag);
         widgetsListView.setDropListener(onDrop);
 
-        customizeWidgetsAdapter = new SimpleOneItemWithIcon_Sparse_ListAdapter(parentActivity, items,R.drawable.ic_menu_black_24dp);
+        customizeWidgetsAdapter = new OneItemWithIcon_Sparse_ListAdapter(parentActivity, items,R.drawable.ic_menu_black_24dp);
         widgetsListView.setAdapter(customizeWidgetsAdapter);
-
-        LayoutInflater inflater = parentActivity.getLayoutInflater();
-        ViewGroup header = (ViewGroup) inflater.inflate(R.layout.list_header_customize_widgets, widgetsListView, false);
-        widgetsListView.addHeaderView(header, null, false);
     }
 }
