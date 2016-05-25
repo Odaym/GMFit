@@ -2,13 +2,17 @@ package com.mcsaatchi.gmfit.classes;
 
 import android.util.SparseArray;
 
+import com.mcsaatchi.gmfit.models.DataChart;
 import com.mcsaatchi.gmfit.models.MealItem;
+
+import java.util.List;
 
 public class EventBus_Poster {
     private String message;
     private String stringExtra;
     private MealItem mealItem;
     private SparseArray<String[]> sparseArrayExtra;
+    private List<DataChart> dataChartsListExtra;
 
     public EventBus_Poster(String message) {
         this.message = message;
@@ -29,7 +33,12 @@ public class EventBus_Poster {
         this.stringExtra = stringExtra;
     }
 
-    public MealItem getMealItemExtra(){
+    public EventBus_Poster(String message, List<DataChart> dataChartsListExtra) {
+        this.message = message;
+        this.dataChartsListExtra = dataChartsListExtra;
+    }
+
+    public MealItem getMealItemExtra() {
         return mealItem;
     }
 
@@ -47,5 +56,9 @@ public class EventBus_Poster {
 
     public SparseArray<String[]> getSparseArrayExtra() {
         return sparseArrayExtra;
+    }
+
+    public List<DataChart> getDataChartsListExtra() {
+        return dataChartsListExtra;
     }
 }
