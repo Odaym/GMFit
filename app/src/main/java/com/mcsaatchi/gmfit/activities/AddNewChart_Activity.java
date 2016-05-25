@@ -11,7 +11,7 @@ import android.widget.ListView;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.classes.Cons;
 import com.mcsaatchi.gmfit.classes.Helpers;
-import com.mcsaatchi.gmfit.classes.SimpleTwoItem_ListAdapter;
+import com.mcsaatchi.gmfit.adapters.TwoItem_Sparse_ListAdapter;
 import com.mcsaatchi.gmfit.fragments.Fitness_Fragment;
 import com.mcsaatchi.gmfit.fragments.Nutrition_Fragment;
 
@@ -61,7 +61,7 @@ public class AddNewChart_Activity extends Base_Activity {
             if (CALL_PURPOSE != null) {
                 switch (CALL_PURPOSE) {
                     case Cons.EXTRAS_ADD_FITNESS_CHART:
-                        chartsList.setAdapter(new SimpleTwoItem_ListAdapter(this, fitnessItemsMap));
+                        chartsList.setAdapter(new TwoItem_Sparse_ListAdapter(this, fitnessItemsMap));
                         chartsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                             @Override
                             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
@@ -73,7 +73,7 @@ public class AddNewChart_Activity extends Base_Activity {
                         });
                         break;
                     case Cons.EXTRAS_ADD_NUTRIITION_CHART:
-                        chartsList.setAdapter(new SimpleTwoItem_ListAdapter(this, nutritionItemsMap));
+                        chartsList.setAdapter(new TwoItem_Sparse_ListAdapter(this, nutritionItemsMap));
                         chartsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                             @Override
                             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
