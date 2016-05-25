@@ -10,7 +10,6 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -33,7 +32,6 @@ import android.widget.TextSwitcher;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.charts.HorizontalBarChart;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -80,8 +78,6 @@ public class Fitness_Fragment extends Fragment {
     DecoView dynamicArc;
     @Bind(R.id.cards_container)
     LinearLayout cards_container;
-    @Bind(R.id.bar_chart)
-    HorizontalBarChart defaultBarChart;
     @Bind(R.id.addChartBTN)
     Button addNewBarChartBTN;
 
@@ -105,15 +101,13 @@ public class Fitness_Fragment extends Fragment {
     @Bind(R.id.fourthMetricIMG)
     ImageView fourthMetricIMG;
 
-    private Handler handler;
     private List<DataChart> allDataCharts;
     private RuntimeExceptionDao<DataChart, Integer> dataChartDAO;
-    private final int ADD_NEW_CHART_HANDLER_MESSAGE = 90;
 
     public static final int ADD_NEW_FITNESS_CHART_REQUEST_CODE = 1;
+    private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
 
     public static final String TAG = "GMFit";
-    private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
     private GoogleApiClient googleApiFitnessClient;
     private OnDataPointListener mListener;
 
@@ -121,7 +115,6 @@ public class Fitness_Fragment extends Fragment {
     private View fragmentView;
 
     private List<Integer> itemIndeces;
-    private SparseArray<String[]> itemsMap;
 
     private SharedPreferences prefs;
 
@@ -158,8 +151,6 @@ public class Fitness_Fragment extends Fragment {
         setHasOptionsMenu(true);
 
         Helpers.setUpDecoViewArc(getActivity(), dynamicArc);
-
-        Helpers.setChartData(defaultBarChart, 20, 20);
 
         addNewBarChartBTN.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -257,7 +248,7 @@ public class Fitness_Fragment extends Fragment {
                 String chartType = data.getStringExtra(Cons.EXTRAS_CHART_TYPE_SELECTED);
 
                 //Add the chart entry to the database
-                dataChartDAO.create(new DataChart(chartType, Cons.BarChart_CHART_TYPE, allDataCharts.size() + 1));
+                dataChartDAO.create(new DataChart(chartType, Cons.BarChart_CHART_TYPE, dataChartDAO.queryForAll().size() + 1, Cons.EXTRAS_FITNESS_FRAGMENT));
 
                 addNewBarChart(chartType);
 
@@ -323,7 +314,7 @@ public class Fitness_Fragment extends Fragment {
                 // At least one datatype must be specified.
                 .setDataTypes(DataType.TYPE_STEP_COUNT_CUMULATIVE)
                 // Can specify whether data type is raw or derived.
-                .setDataSourceTypes(DataSource.TYPE_DERIVED)
+                .setDataSourceTypes(DataSource.TYPE_RAW)
                 .build())
                 .setResultCallback(new ResultCallback<DataSourcesResult>() {
                     @Override
@@ -468,19 +459,30 @@ public class Fitness_Fragment extends Fragment {
         switch (ebpMessage) {
             case Cons.EXTRAS_FITNESS_WIDGETS_ORDER_ARRAY_CHANGED:
                 if (ebp.getSparseArrayExtra() != null) {
-                    itemsMap = ebp.getSparseArrayExtra();
+                    SparseArray<String[]> widgetsMap = ebp.getSparseArrayExtra();
 
-                    firstMetricTV.setText(itemsMap.get(0)[0].split(" ")[0]);
+                    firstMetricTV.setText(widgetsMap.get(0)[0].split(" ")[0]);
                     firstMetricIMG.setImageDrawable(getResources().getDrawable(R.drawable.walking));
 
-                    secondMetricTV.setText(itemsMap.get(1)[0].split(" ")[0]);
+                    secondMetricTV.setText(widgetsMap.get(1)[0].split(" ")[0]);
                     secondMetricIMG.setImageDrawable(getResources().getDrawable(R.drawable.biking));
 
-                    thirdMetricTV.setText(itemsMap.get(2)[0].split(" ")[0]);
+                    thirdMetricTV.setText(widgetsMap.get(2)[0].split(" ")[0]);
                     thirdMetricIMG.setImageDrawable(getResources().getDrawable(R.drawable.calories));
 
-                    fourthMetricTV.setText(itemsMap.get(3)[0].split(" ")[0]);
+                    fourthMetricTV.setText(widgetsMap.get(3)[0].split(" ")[0]);
                     fourthMetricIMG.setImageDrawable(getResources().getDrawable(R.drawable.stairs));
+                }
+
+                break;
+            case Cons.EXTRAS_FITNESS_CHARTS_ORDER_ARRAY_CHANGED:
+                allDataCharts = ebp.getDataChartsListExtra();
+
+                cards_container.removeAllViews();
+
+                for (DataChart chart :
+                        allDataCharts) {
+                    addNewBarChart(chart.getName());
                 }
 
                 break;
@@ -490,7 +492,7 @@ public class Fitness_Fragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent intent = new Intent(getActivity(), CustomizeWidgetsAndCharts_Activity.class);
-        intent.putExtra(Cons.EXTRAS_CUSTOMIZE_WIDGETS_FRAGMENT_TYPE, "FITNESS");
+        intent.putExtra(Cons.EXTRAS_CUSTOMIZE_WIDGETS_FRAGMENT_TYPE, Cons.EXTRAS_FITNESS_FRAGMENT);
         startActivity(intent);
 
         return super.onOptionsItemSelected(item);
