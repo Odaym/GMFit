@@ -12,16 +12,17 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.stmt.SelectArg;
 import com.j256.ormlite.stmt.Where;
 import com.mcsaatchi.gmfit.R;
+import com.mcsaatchi.gmfit.adapters.OneItemWithIcon_ListAdapter;
 import com.mcsaatchi.gmfit.classes.Cons;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
 import com.mcsaatchi.gmfit.classes.Helpers;
-import com.mcsaatchi.gmfit.classes.SimpleOneItemWithIcon_ListAdapter;
 import com.mcsaatchi.gmfit.models.MealItem;
 
 import java.sql.SQLException;
@@ -37,6 +38,7 @@ public class AddNewMealItem_Activity extends Base_Activity implements SearchView
 
     private SearchView searchView;
 
+    private RuntimeExceptionDao<MealItem, Integer> mealItemsDAO;
     private QueryBuilder<MealItem, Integer> mealsQueryBuilder;
     private PreparedQuery<MealItem> pq;
 
@@ -48,7 +50,7 @@ public class AddNewMealItem_Activity extends Base_Activity implements SearchView
     private List<MealItem> mealsList = new ArrayList<>();
     private List<Section> sections = new ArrayList<>();
     private SimpleSectionedListAdapter simpleSectionedListAdapter;
-    private SimpleOneItemWithIcon_ListAdapter simpleOneItem_ListAdapter;
+    private OneItemWithIcon_ListAdapter oneItem_ListAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -67,6 +69,8 @@ public class AddNewMealItem_Activity extends Base_Activity implements SearchView
         setContentView(R.layout.activity_add_new_meal_item);
 
         ButterKnife.bind(this);
+
+        mealItemsDAO = getDBHelper().getMealItemDAO();
 
         mHeaderNames = new String[]{getString(R.string.list_section_recently_added), getString(R.string.list_section_popular_meals)};
         mHeaderPositions = new Integer[]{0, 7};
@@ -87,9 +91,15 @@ public class AddNewMealItem_Activity extends Base_Activity implements SearchView
     }
 
     private void initMealsList() {
-        simpleOneItem_ListAdapter = new SimpleOneItemWithIcon_ListAdapter(this,
-                mealsList, R.drawable.ic_chevron_right_black_24dp);
-        simpleSectionedListAdapter = new SimpleSectionedListAdapter(this, simpleOneItem_ListAdapter,
+        List<String> mealNames = new ArrayList<>();
+
+        for (MealItem meal :
+                mealsList) {
+            mealNames.add(meal.getName());
+        }
+        oneItem_ListAdapter = new OneItemWithIcon_ListAdapter(this,
+                mealNames, R.drawable.ic_chevron_right_black_24dp);
+        simpleSectionedListAdapter = new SimpleSectionedListAdapter(this, oneItem_ListAdapter,
                 R.layout.view_header_add_new_meal_item_list, R.id.header);
 
         mealItemsList.setAdapter(simpleSectionedListAdapter);
@@ -123,7 +133,7 @@ public class AddNewMealItem_Activity extends Base_Activity implements SearchView
 
     public void prepareQueryForSearchTerm(String searchQuery, String mealType) {
         try {
-            mealsQueryBuilder = getDBHelper().getMealItemDAO().queryBuilder();
+            mealsQueryBuilder = mealItemsDAO.queryBuilder();
 
             SelectArg nameSelectArg = new SelectArg("%" + searchQuery + "%");
 
@@ -137,7 +147,7 @@ public class AddNewMealItem_Activity extends Base_Activity implements SearchView
 
     public void prepareQueryForAllMealTypeItems(String mealType) {
         try {
-            mealsQueryBuilder = getDBHelper().getMealItemDAO().queryBuilder();
+            mealsQueryBuilder = mealItemsDAO.queryBuilder();
 
             Where where = mealsQueryBuilder.where();
             where.eq("type", mealType);
@@ -171,7 +181,7 @@ public class AddNewMealItem_Activity extends Base_Activity implements SearchView
             //Run actual search query for this meal type
             prepareQueryForSearchTerm(newText, mealType);
 
-            mealsList = getDBHelper().getMealItemDAO().query(pq);
+            mealsList = mealItemsDAO.query(pq);
             sections.clear();
 
             initMealsList();
@@ -179,7 +189,7 @@ public class AddNewMealItem_Activity extends Base_Activity implements SearchView
             //Show all results for this meal type
             prepareQueryForAllMealTypeItems(mealType);
 
-            mealsList = getDBHelper().getMealItemDAO().query(pq);
+            mealsList = mealItemsDAO.query(pq);
 
             initMealsList();
             addListSections();
