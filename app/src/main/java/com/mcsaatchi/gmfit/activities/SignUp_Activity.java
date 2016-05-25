@@ -73,7 +73,7 @@ public class SignUp_Activity extends Base_Activity {
                 startActivity(new Intent(SignUp_Activity.this, TOS_Activity.class));
             }
         };
-        ss.setSpan(clickableSpan, 40, ss.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        ss.setSpan(clickableSpan, 41, ss.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         creatingAccountTOSTV.setText(ss);
         creatingAccountTOSTV.setMovementMethod(LinkMovementMethod.getInstance());
