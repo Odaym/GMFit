@@ -1,29 +1,24 @@
-package com.mcsaatchi.gmfit.classes;
+package com.mcsaatchi.gmfit.adapters;
 
 import android.content.Context;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.models.MealItem;
 
-import java.util.List;
-
-public class SimpleOneItemWithIcon_ListAdapter extends BaseAdapter {
+public class TwoItem_Sparse_ListAdapter extends BaseAdapter {
 
     private Context context;
-    private List<MealItem> listItems;
-    private int drawableResId;
+    private SparseArray<String[]> listItems;
 
-    public SimpleOneItemWithIcon_ListAdapter(Context context, List<MealItem> listItems, int drawableResId) {
+    public TwoItem_Sparse_ListAdapter(Context context, SparseArray<String[]> listItems) {
         super();
         this.context = context;
         this.listItems = listItems;
-        this.drawableResId = drawableResId;
     }
 
     @Override
@@ -32,7 +27,7 @@ public class SimpleOneItemWithIcon_ListAdapter extends BaseAdapter {
     }
 
     @Override
-    public MealItem getItem(int index) {
+    public String[] getItem(int index) {
         return listItems.get(index);
     }
 
@@ -47,27 +42,27 @@ public class SimpleOneItemWithIcon_ListAdapter extends BaseAdapter {
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.list_item_simple_one_with_icon, parent,
+            convertView = inflater.inflate(R.layout.list_item_two_items, parent,
                     false);
 
             holder = new ViewHolder();
 
             holder.itemNameTV = (TextView) convertView.findViewById(R.id.itemNameTV);
-            holder.itemIconRightIMG = (ImageView) convertView.findViewById(R.id.itemIconRightIMG);
+            holder.itemHintTV = (TextView) convertView.findViewById(R.id.itemHintTV);
 
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.itemNameTV.setText(listItems.get(position).getName());
-        holder.itemIconRightIMG.setImageResource(drawableResId);
+        holder.itemNameTV.setText(listItems.get(position)[0]);
+        holder.itemHintTV.setText(listItems.get(position)[1]);
 
         return convertView;
     }
 
     class ViewHolder {
         TextView itemNameTV;
-        ImageView itemIconRightIMG;
+        TextView itemHintTV;
     }
 }

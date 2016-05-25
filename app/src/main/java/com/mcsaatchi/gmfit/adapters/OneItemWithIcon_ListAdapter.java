@@ -1,7 +1,6 @@
-package com.mcsaatchi.gmfit.classes;
+package com.mcsaatchi.gmfit.adapters;
 
 import android.content.Context;
-import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,13 +10,15 @@ import android.widget.TextView;
 
 import com.mcsaatchi.gmfit.R;
 
-public class SimpleOneItemWithIcon_Sparse_ListAdapter extends BaseAdapter {
+import java.util.List;
+
+public class OneItemWithIcon_ListAdapter extends BaseAdapter {
 
     private Context context;
-    private SparseArray<String[]> listItems;
+    private List<String> listItems;
     private int drawableResId;
 
-    public SimpleOneItemWithIcon_Sparse_ListAdapter(Context context, SparseArray<String[]> listItems, int drawableResId) {
+    public OneItemWithIcon_ListAdapter(Context context, List<String> listItems, int drawableResId) {
         super();
         this.context = context;
         this.listItems = listItems;
@@ -34,7 +35,7 @@ public class SimpleOneItemWithIcon_Sparse_ListAdapter extends BaseAdapter {
     }
 
     @Override
-    public String[] getItem(int index) {
+    public String getItem(int index) {
         return listItems.get(index);
     }
 
@@ -49,7 +50,7 @@ public class SimpleOneItemWithIcon_Sparse_ListAdapter extends BaseAdapter {
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.list_item_simple_one_with_icon, parent,
+            convertView = inflater.inflate(R.layout.list_item_one_with_icon, parent,
                     false);
 
             holder = new ViewHolder();
@@ -62,7 +63,7 @@ public class SimpleOneItemWithIcon_Sparse_ListAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.itemNameTV.setText(listItems.get(position)[0]);
+        holder.itemNameTV.setText(listItems.get(position));
         holder.itemIconRightIMG.setImageResource(drawableResId);
 
         return convertView;
