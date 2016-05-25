@@ -56,6 +56,17 @@ android {
 }
 
 dependencies {
+    testCompile 'junit:junit:4.12'
+    testCompile 'org.mockito:mockito-core:1.10.19'
+    androidTestCompile 'com.android.support.test:runner:0.4'
+    // Set this dependency to use JUnit 4 rules
+    androidTestCompile 'com.android.support.test:rules:0.4'
+    // Set this dependency to build and run Espresso tests
+    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.1'
+    // Set this dependency to build and run UI Automator tests
+    androidTestCompile 'com.android.support.test.uiautomator:uiautomator-v18:2.1.2'
+    androidTestCompile 'com.android.support:support-annotations:23.4.0'
+
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile files('libs/ormlite-android-4.48.jar')
     compile files('libs/ormlite-core-4.48.jar')
