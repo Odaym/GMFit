@@ -14,13 +14,22 @@ public class DataChart {
     @DatabaseField
     int order;
 
+    /**
+     * 1 = FITNESS
+     * 2 = NUTRITION
+     * 3 = HEALTH
+     */
+    @DatabaseField
+    String whichFragment;
+
     public DataChart() {
     }
 
-    public DataChart(String name, int type, int order) {
+    public DataChart(String name, int type, int order, String whichFragment) {
         this.name = name;
         this.type = type;
         this.order = order;
+        this.whichFragment = whichFragment;
     }
 
     public String getName() {
@@ -45,5 +54,13 @@ public class DataChart {
 
     public void setOrder(int order) {
         this.order = order;
+    }
+
+    public String getWhichFragment() {
+        return whichFragment;
+    }
+
+    public void setWhichFragment(String whichFragment) {
+        this.whichFragment = whichFragment;
     }
 }
