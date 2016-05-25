@@ -11,6 +11,7 @@ import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.classes.Cons;
 import com.mcsaatchi.gmfit.classes.Helpers;
 import com.mcsaatchi.gmfit.classes.SlidingTabLayout;
+import com.mcsaatchi.gmfit.fragments.CustomizeCharts_Fragment;
 import com.mcsaatchi.gmfit.fragments.CustomizeWidgets_Fragment;
 
 import butterknife.Bind;
@@ -74,7 +75,7 @@ public class CustomizeWidgetsAndCharts_Activity extends Base_Activity {
                     customizeWidgetFragment.setArguments(fragmentArguments);
                     return customizeWidgetFragment;
                 case 1:
-                    Fragment customizeChartsFragment = new CustomizeWidgets_Fragment();
+                    Fragment customizeChartsFragment = new CustomizeCharts_Fragment();
                     customizeChartsFragment.setArguments(fragmentArguments);
                     return customizeChartsFragment;
             }
