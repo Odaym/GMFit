@@ -78,37 +78,6 @@
             </com.github.florent37.materialtextfield.MaterialTextField>
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <com.github.florent37.materialtextfield.MaterialTextField
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical|end"
-                app:mtf_cardCollapsedHeight="@dimen/material_textfield_collapsed_height"
-                app:mtf_image="@drawable/ic_vpn_key_black_24dp"
-                app:mtf_labelColor="@android:color/black">
-
-                <com.andreabaccega.widget.FormEditText
-                    android:id="@+id/confirmPasswordET"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/confirm_password_hint"
-                    android:inputType="textPassword"
-                    android:singleLine="true"
-                    android:textColor="@android:color/black"
-                    android:textColorHint="@color/edittext_hint_color"
-                    android:textCursorDrawable="@null"
-                    validator:customRegexp="@string/password_requirements_regex"
-                    validator:emptyErrorString="@string/field_empty_error_message"
-                    validator:testErrorString="@string/field_password_too_short_error"
-                    validator:testType="regexp"/>
-
-            </com.github.florent37.materialtextfield.MaterialTextField>
-        </LinearLayout>
-
         <Button
             android:id="@+id/createAccountBTN"
             android:layout_width="match_parent"
