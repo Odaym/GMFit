@@ -110,6 +110,7 @@ public class Helpers {
         dynamicArc.addEvent(new DecoEvent.Builder(75).setIndex(series1Index).build());
     }
 
+
 //    public static void linkifyString (final Context context, TextView tv, int stringResourceId, int startIndex, int
 //            endIndex){
 //        SpannableString ss = new SpannableString(context.getString(stringResourceId));
