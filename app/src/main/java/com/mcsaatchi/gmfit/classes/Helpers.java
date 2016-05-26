@@ -1,6 +1,7 @@
 package com.mcsaatchi.gmfit.classes;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.view.animation.BounceInterpolator;
 
@@ -110,6 +111,13 @@ public class Helpers {
         dynamicArc.addEvent(new DecoEvent.Builder(75).setIndex(series1Index).build());
     }
 
+    public static boolean isInternetAvailable(Context context) {
+        ConnectivityManager cm =
+                (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        return cm.getActiveNetworkInfo() != null &&
+                cm.getActiveNetworkInfo().isConnectedOrConnecting();
+    }
 
 //    public static void linkifyString (final Context context, TextView tv, int stringResourceId, int startIndex, int
 //            endIndex){
