@@ -63,6 +63,37 @@ public class CustomizeWidgets_Fragment extends Fragment {
     private SparseArray<String[]> orderedItemsMap = new SparseArray<>();
 
     private List<Integer> itemIndeces = new ArrayList<>();
+    private DragSortListView.DropListener onDrop =
+            new DragSortListView.DropListener() {
+                @Override
+                public void drop(int from, int to) {
+
+                    EventBus_Singleton.getInstance().post(new EventBus_Poster(WIDGETS_ORDER_ARRAY_CHANGED_EVENT, itemsMap));
+
+                    customizeWidgetsAdapter.notifyData();
+
+                    StringBuilder str = new StringBuilder();
+                    for (int i = 0; i < itemsMap.size(); i++) {
+                        str.append(itemIndeces.get(i)).append(",");
+                    }
+
+                    prefsEditor = prefs.edit();
+                    prefsEditor.putString(PREFS_WIDGETS_ORDER_ARRAY_IDENTIFIER, str.toString());
+                    prefsEditor.apply();
+                }
+            };
+    private DragSortListView.DragListener onDrag = new DragSortListView.DragListener() {
+        @Override
+        public void drag(int from, int to) {
+            if (to < itemsMap.size() && from < itemsMap.size()) {
+                Collections.swap(itemIndeces, from, to);
+
+                String[] tempItem = itemsMap.get(from);
+                itemsMap.setValueAt(from, itemsMap.get(to));
+                itemsMap.setValueAt(to, tempItem);
+            }
+        }
+    };
 
     @Override
     public void onAttach(Context context) {
@@ -110,7 +141,7 @@ public class CustomizeWidgets_Fragment extends Fragment {
         }
 
 
-        prefs = parentActivity.getSharedPreferences(Cons.EXTRAS_PREFS, Context.MODE_PRIVATE);
+        prefs = parentActivity.getSharedPreferences(Cons.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
 
         if (prefs.getString(PREFS_WIDGETS_ORDER_ARRAY_IDENTIFIER, null) != null) {
             String savedString = prefs.getString(PREFS_WIDGETS_ORDER_ARRAY_IDENTIFIER, null);
@@ -131,39 +162,6 @@ public class CustomizeWidgets_Fragment extends Fragment {
 
         return fragmentView;
     }
-
-    private DragSortListView.DropListener onDrop =
-            new DragSortListView.DropListener() {
-                @Override
-                public void drop(int from, int to) {
-
-                    EventBus_Singleton.getInstance().post(new EventBus_Poster(WIDGETS_ORDER_ARRAY_CHANGED_EVENT, itemsMap));
-
-                    customizeWidgetsAdapter.notifyData();
-
-                    StringBuilder str = new StringBuilder();
-                    for (int i = 0; i < itemsMap.size(); i++) {
-                        str.append(itemIndeces.get(i)).append(",");
-                    }
-
-                    prefsEditor = prefs.edit();
-                    prefsEditor.putString(PREFS_WIDGETS_ORDER_ARRAY_IDENTIFIER, str.toString());
-                    prefsEditor.apply();
-                }
-            };
-
-    private DragSortListView.DragListener onDrag = new DragSortListView.DragListener() {
-        @Override
-        public void drag(int from, int to) {
-            if (to < itemsMap.size() && from < itemsMap.size()) {
-                Collections.swap(itemIndeces, from, to);
-
-                String[] tempItem = itemsMap.get(from);
-                itemsMap.setValueAt(from, itemsMap.get(to));
-                itemsMap.setValueAt(to, tempItem);
-            }
-        }
-    };
 
     private void hookupListWithItems(SparseArray<String[]> items) {
         widgetsListView.setDragListener(onDrag);

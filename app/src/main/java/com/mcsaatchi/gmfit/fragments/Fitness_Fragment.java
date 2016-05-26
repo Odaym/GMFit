@@ -72,18 +72,17 @@ import butterknife.ButterKnife;
 
 public class Fitness_Fragment extends Fragment {
 
-    private NestedScrollView parentScrollView;
-
+    public static final int ADD_NEW_FITNESS_CHART_REQUEST_CODE = 1;
+    public static final String TAG = "GMFit";
+    private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
     @Bind(R.id.dynamicArcView)
     DecoView dynamicArc;
     @Bind(R.id.cards_container)
     LinearLayout cards_container;
     @Bind(R.id.addChartBTN)
     Button addNewBarChartBTN;
-
     @Bind(R.id.metricCounterTV)
     TextSwitcher metricCounterTV;
-
     @Bind(R.id.firstMetricTV)
     TextView firstMetricTV;
     @Bind(R.id.firstMetricIMG)
@@ -100,14 +99,9 @@ public class Fitness_Fragment extends Fragment {
     TextView fourthMetricTV;
     @Bind(R.id.fourthMetricIMG)
     ImageView fourthMetricIMG;
-
+    private NestedScrollView parentScrollView;
     private List<DataChart> allDataCharts;
     private RuntimeExceptionDao<DataChart, Integer> dataChartDAO;
-
-    public static final int ADD_NEW_FITNESS_CHART_REQUEST_CODE = 1;
-    private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
-
-    public static final String TAG = "GMFit";
     private GoogleApiClient googleApiFitnessClient;
     private OnDataPointListener mListener;
 
@@ -146,7 +140,7 @@ public class Fitness_Fragment extends Fragment {
 
         ButterKnife.bind(this, fragmentView);
 
-        prefs = getActivity().getSharedPreferences(Cons.EXTRAS_PREFS, Context.MODE_PRIVATE);
+        prefs = getActivity().getSharedPreferences(Cons.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
 
         setHasOptionsMenu(true);
 

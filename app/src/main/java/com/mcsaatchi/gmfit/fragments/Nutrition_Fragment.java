@@ -37,17 +37,23 @@ import butterknife.ButterKnife;
 
 public class Nutrition_Fragment extends Fragment {
 
-    private NestedScrollView parentScrollView;
-    private Activity parentActivity;
+    public static final int ADD_NEW_NUTRITION_CHART_REQUEST = 2;
     private static final int BARCODE_CAPTURE_RC = 773;
     private static final String TAG = "Nutrition_Fragment";
-
+    private final String caloriesChartType = "Calories";
+    private final String biotinChartType = "Biotin";
+    private final String caffeineChartType = "Caffeine";
+    private final String calciumChartType = "Calcium";
+    private final String carbohydratesChartType = "Carbohydrates";
+    private final String chlorideChartType = "Chloride";
+    private final String chromiumChartType = "Chromium";
+    private final String copperChartType = "Copper";
+    private final String dietary_cholesterolChartType = "Dietary Cholesterol";
     /**
      * CHARTS
      */
     @Bind(R.id.cards_container)
     LinearLayout cards_container;
-
     /**
      * BREAKFAST CHART
      */
@@ -59,7 +65,6 @@ public class Nutrition_Fragment extends Fragment {
     Button scanEntryBTN_BREAKFAST;
     @Bind(R.id.entriesContainerLayout_BREAKFAST)
     LinearLayout entriesContainerLayout_BREAKFAST;
-
     /**
      * LUNCH CHART
      */
@@ -71,7 +76,6 @@ public class Nutrition_Fragment extends Fragment {
     Button scanEntryBTN_LUNCH;
     @Bind(R.id.entriesContainerLayout_LUNCH)
     LinearLayout entriesContainerLayout_LUNCH;
-
     /**
      * DINNER CHART
      */
@@ -83,62 +87,44 @@ public class Nutrition_Fragment extends Fragment {
     Button scanEntryBTN_DINNER;
     @Bind(R.id.entriesContainerLayout_DINNER)
     LinearLayout entriesContainerLayout_DINNER;
-
     /**
      * ADD CHART BUTTON
      */
     @Bind(R.id.addChartBTN)
     Button addNewChartBTN;
-
     /**
      * TOP LAYOUT WITH WIDGETS
      */
     @Bind(R.id.dynamicArcView)
     DecoView dynamicArc;
-
     @Bind(R.id.firstMetricTitleTV)
     TextView firstMetricTitleTV;
     @Bind(R.id.firstMetricValueTV)
     TextView firstMetricValueTV;
     @Bind(R.id.firstMetricPercentagesTV)
     TextView firstMetricPercentagesTV;
-
     @Bind(R.id.secondMetricTitleTV)
     TextView secondMetricTitleTV;
     @Bind(R.id.secondMetricValueTV)
     TextView secondMetricValueTV;
     @Bind(R.id.secondMetricPercentagesTV)
     TextView secondMetricPercentagesTV;
-
     @Bind(R.id.thirdMetricTitleTV)
     TextView thirdMetricTitleTV;
     @Bind(R.id.thirdMetricValueTV)
     TextView thirdMetricValueTV;
     @Bind(R.id.thirdMetricPercentagesTV)
     TextView thirdMetricPercentagesTV;
-
     @Bind(R.id.fourthMetricTitleTV)
     TextView fourthMetricTitleTV;
     @Bind(R.id.fourthMetricValueTV)
     TextView fourthMetricValueTV;
     @Bind(R.id.fourthMetricPercentagesTV)
     TextView fourthMetricPercentagesTV;
-
+    private NestedScrollView parentScrollView;
+    private Activity parentActivity;
     private SparseArray<String[]> itemsMap;
-
-    public static final int ADD_NEW_NUTRITION_CHART_REQUEST = 2;
-
     private SharedPreferences prefs;
-
-    private final String caloriesChartType = "Calories";
-    private final String biotinChartType = "Biotin";
-    private final String caffeineChartType = "Caffeine";
-    private final String calciumChartType = "Calcium";
-    private final String carbohydratesChartType = "Carbohydrates";
-    private final String chlorideChartType = "Chloride";
-    private final String chromiumChartType = "Chromium";
-    private final String copperChartType = "Copper";
-    private final String dietary_cholesterolChartType = "Dietary Cholesterol";
 
     @Override
     public View onCreateView(LayoutInflater inflater,
@@ -153,7 +139,7 @@ public class Nutrition_Fragment extends Fragment {
 
         ButterKnife.bind(this, fragmentView);
 
-        prefs = getActivity().getSharedPreferences(Cons.EXTRAS_PREFS, Context.MODE_PRIVATE);
+        prefs = getActivity().getSharedPreferences(Cons.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
 
         setHasOptionsMenu(true);
 
