@@ -40,9 +40,12 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.classes.Cons;
 import com.mcsaatchi.gmfit.classes.DefaultIndicator_Controller;
+import com.mcsaatchi.gmfit.classes.EventBus_Poster;
+import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
 import com.mcsaatchi.gmfit.classes.Helpers;
 import com.mcsaatchi.gmfit.fragments.IntroSlider_Fragment;
 import com.mcsaatchi.gmfit.models.User;
+import com.squareup.otto.Subscribe;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -52,6 +55,8 @@ public class Login_Activity extends Base_Activity implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
 
+    private static final int RC_SIGN_IN = 5;
+    private static final String TAG = "Login_Activity";
     @Bind(R.id.viewpager)
     ViewPager viewPager;
     @Bind(R.id.loginFacebookBTN)
@@ -62,10 +67,6 @@ public class Login_Activity extends Base_Activity implements
     Button signUpBTN;
     @Bind(R.id.alreadySignedUpTV)
     TextView alreadySignedUpTV;
-
-    private static final int RC_SIGN_IN = 5;
-    private static final String TAG = "Login_Activity";
-
     private DefaultIndicator_Controller indicatorController;
     private GoogleApiClient googleApiClient;
     private CallbackManager callbackManager;
@@ -84,7 +85,9 @@ public class Login_Activity extends Base_Activity implements
 
         ButterKnife.bind(this);
 
-        prefs = getSharedPreferences(Cons.EXTRAS_PREFS, Context.MODE_PRIVATE);
+        EventBus_Singleton.getInstance().register(this);
+
+        prefs = getSharedPreferences(Cons.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
 
         signUpBTN.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -123,6 +126,24 @@ public class Login_Activity extends Base_Activity implements
         initializeFacebookLogin();
 
         setupViewPager();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        EventBus_Singleton.getInstance().unregister(this);
+    }
+
+    @Subscribe
+    public void handle_BusEvents(EventBus_Poster ebp) {
+        String ebpMessage = ebp.getMessage();
+
+        switch (ebpMessage) {
+            case Cons.EVENT_SIGNNED_UP_SUCCESSFULLY_CLOSE_LOGIN_ACTIVITY:
+                finish();
+                break;
+        }
     }
 
     private void setupViewPager(){
@@ -268,6 +289,21 @@ public class Login_Activity extends Base_Activity implements
         indicatorController.initialize(4);
     }
 
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
     public class IntroAdapter extends FragmentPagerAdapter {
 
         public IntroAdapter(FragmentManager fm) {
@@ -294,20 +330,5 @@ public class Login_Activity extends Base_Activity implements
         public int getCount() {
             return 4;
         }
-    }
-
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
     }
 }
