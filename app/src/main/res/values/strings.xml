@@ -34,6 +34,8 @@
     <string name="directory_tab_title">Directory</string>
     <string name="profile_tab_title">Profile</string>
     <string name="sign_out">Sign out</string>
+    <string name="signing_out_dialog_title">Signing Out</string>
+    <string name="signing_out_dialog_message">Please wait…</string>
 
     <!-- LOGIN ACTIVITY -->
     <string name="login_with_facebook">LOGIN WITH FACEBOOK</string>
@@ -144,5 +146,15 @@
     <string name="low_storage_error">Barcode detector dependencies cannot be downloaded due to low device storage</string>
     <string name="no_camera_permission">To scan barcodes, GMFIT needs permission to use the camera</string>
     <string name="no_barcode_detected_here">No barcode detected here</string>
+
+    <!-- MAIN PROFILE FRAGMENT -->
+    <string name="grabbing_user_policy_dialog_title">Fetching user policy</string>
+    <string name="grabbing_user_policy_dialog_message">Please wait…</string>
+    <string name="downloading_pdf_profile_dialog_title">Downloading PDF Profile</string>
+    <string name="downloading_pdf_profile_dialog_message">Please Wait…</string>
+
+    <!-- USER POLICY ACTIVITY -->
+    <string name="user_policy_activity_title">User Policy</string>
+
 
 </resources>

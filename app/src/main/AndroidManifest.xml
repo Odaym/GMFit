@@ -5,6 +5,7 @@
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.BODY_SENSORS"/>
     <uses-permission android:name="android.permission.CAMERA"/>
@@ -115,8 +116,11 @@
         <activity android:name=".activities.AddNewChart_Activity"
                   android:screenOrientation="portrait"/>
 
+        <activity android:name=".activities.UserPolicy_Activity"
+                  android:screenOrientation="portrait"/>
+
         <meta-data
             android:name="io.fabric.ApiKey"
-            android:value="36e136351325660be3ac92f428de565fcbdc3033" />
+            android:value="36e136351325660be3ac92f428de565fcbdc3033"/>
     </application>
 </manifest>

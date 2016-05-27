@@ -485,9 +485,14 @@ public class Fitness_Fragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Intent intent = new Intent(getActivity(), CustomizeWidgetsAndCharts_Activity.class);
-        intent.putExtra(Cons.EXTRAS_CUSTOMIZE_WIDGETS_FRAGMENT_TYPE, Cons.EXTRAS_FITNESS_FRAGMENT);
-        startActivity(intent);
+        switch(item.getItemId()){
+            case R.id.settings:
+                Intent intent = new Intent(getActivity(), CustomizeWidgetsAndCharts_Activity.class);
+                intent.putExtra(Cons.EXTRAS_CUSTOMIZE_WIDGETS_FRAGMENT_TYPE, Cons.EXTRAS_FITNESS_FRAGMENT);
+                startActivity(intent);
+
+                break;
+        }
 
         return super.onOptionsItemSelected(item);
     }

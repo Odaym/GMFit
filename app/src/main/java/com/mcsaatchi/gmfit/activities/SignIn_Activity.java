@@ -119,38 +119,53 @@ public class SignIn_Activity extends Base_Activity {
 
                                 protected void onPostExecute(String aResult) {
 
-                                    int responseCode = ApiHelper.parseAPIResponseForCode(aResult);
+                                    if (aResult == null) {
+                                        Helpers.showNoInternetDialog(SignIn_Activity.this);
+                                    } else {
+                                        int responseCode = ApiHelper.parseAPIResponseForCode(aResult);
 
-                                    AlertDialog alertDialog = new AlertDialog.Builder(SignIn_Activity.this).create();
-                                    alertDialog.setTitle(R.string.login_failed_alert_dialog_title);
-                                    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
-                                            new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                    dialog.dismiss();
+                                        AlertDialog alertDialog = new AlertDialog.Builder(SignIn_Activity.this).create();
+                                        alertDialog.setTitle(R.string.login_failed_alert_dialog_title);
+                                        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
+                                                new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        dialog.dismiss();
+                                                    }
+                                                });
+
+                                        loggingInDialog.dismiss();
+
+                                        switch (responseCode) {
+                                            case Cons.REGISTERATION_API_RESPONSE_NOT_PARSED_CORRECTLY:
+                                                alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
+                                                alertDialog.show();
+                                                break;
+                                            case Cons.LOGIN_API_WRONG_CREDENTIALS:
+                                                alertDialog.setMessage(getString(R.string.login_failed_wrong_credentials));
+                                                alertDialog.show();
+
+                                                emailET.requestFocus();
+
+                                                break;
+                                            case Cons.API_REQUEST_SUCCEEDED_CODE:
+                                                int operationStatusCode = ApiHelper.parseAndSaveRegisterationToken(SignIn_Activity.this, aResult);
+
+                                                switch (operationStatusCode) {
+                                                    case Cons.REGISTRATION_PROCESS_SUCCEEDED_TOKEN_SAVED:
+                                                        EventBus_Singleton.getInstance().post(new EventBus_Poster(Cons.EVENT_SIGNNED_UP_SUCCESSFULLY_CLOSE_LOGIN_ACTIVITY));
+
+                                                        Intent intent = new Intent(SignIn_Activity.this, Main_Activity.class);
+                                                        startActivity(intent);
+                                                        finish();
+                                                        break;
+                                                    case Cons.REGISTERATION_API_RESPONSE_NOT_PARSED_CORRECTLY:
+                                                        alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
+                                                        alertDialog.show();
+                                                        break;
                                                 }
-                                            });
 
-                                    loggingInDialog.dismiss();
-
-                                    switch (responseCode) {
-                                        case Cons.REGISTERATION_API_RESPONSE_NOT_PARSED_CORRECTLY:
-                                            alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
-                                            alertDialog.show();
-                                            break;
-                                        case Cons.LOGIN_API_WRONG_CREDENTIALS:
-                                            alertDialog.setMessage(getString(R.string.login_failed_wrong_credentials));
-                                            alertDialog.show();
-
-                                            emailET.requestFocus();
-
-                                            break;
-                                        case Cons.REGISTERATION_API_REQUEST_SUCCEEDED_CODE:
-                                            EventBus_Singleton.getInstance().post(new EventBus_Poster(Cons.EVENT_SIGNNED_UP_SUCCESSFULLY_CLOSE_LOGIN_ACTIVITY));
-
-                                            Intent intent = new Intent(SignIn_Activity.this, Main_Activity.class);
-                                            startActivity(intent);
-                                            finish();
-                                            break;
+                                                break;
+                                        }
                                     }
                                 }
                             }.execute();
@@ -158,16 +173,7 @@ public class SignIn_Activity extends Base_Activity {
                             e.printStackTrace();
                         }
                     } else {
-                        AlertDialog alertDialog = new AlertDialog.Builder(SignIn_Activity.this).create();
-                        alertDialog.setTitle(R.string.login_failed_alert_dialog_title);
-                        alertDialog.setMessage(getString(R.string.no_internet_connection));
-                        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                    }
-                                });
-                        alertDialog.show();
+                        Helpers.showNoInternetDialog(SignIn_Activity.this);
                     }
                 }
             }

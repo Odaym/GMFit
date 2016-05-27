@@ -89,6 +89,8 @@ public class Login_Activity extends Base_Activity implements
 
         prefs = getSharedPreferences(Cons.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
 
+        Log.d(TAG, "onCreate: User access token is : " + prefs.getString(Cons.PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS));
+
         signUpBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

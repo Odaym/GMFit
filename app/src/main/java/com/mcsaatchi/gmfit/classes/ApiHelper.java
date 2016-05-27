@@ -7,7 +7,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class ApiHelper {
-    public static int parseAPIResponseForCode(String responseObject){
+    public static int parseAPIResponseForCode(String responseObject) {
         try {
             JSONObject jsonResponse = new JSONObject(responseObject);
             JSONObject dataJSONObject = jsonResponse.getJSONObject("data");
@@ -20,7 +20,21 @@ public class ApiHelper {
         return Cons.REGISTERATION_API_RESPONSE_NOT_PARSED_CORRECTLY;
     }
 
-    public static int parseAndSaveRegisterationToken(Context context, String responseObject){
+    public static String parseResponseForUserPolicy(Context context, String responseObject) {
+        try {
+            JSONObject jsonResponse = new JSONObject(responseObject);
+            JSONObject dataJSONObject = jsonResponse.getJSONObject("data");
+            JSONObject bodyJSONObject = dataJSONObject.getJSONObject("body");
+
+            return bodyJSONObject.getString("user_policy");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public static int parseAndSaveRegisterationToken(Context context, String responseObject) {
         try {
             JSONObject jsonResponse = new JSONObject(responseObject);
             JSONObject dataJSONObject = jsonResponse.getJSONObject("data");

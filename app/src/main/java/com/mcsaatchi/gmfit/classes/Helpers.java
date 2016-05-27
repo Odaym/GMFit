@@ -1,8 +1,10 @@
 package com.mcsaatchi.gmfit.classes;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.view.animation.BounceInterpolator;
 
 import com.andreabaccega.widget.FormEditText;
@@ -117,6 +119,19 @@ public class Helpers {
 
         return cm.getActiveNetworkInfo() != null &&
                 cm.getActiveNetworkInfo().isConnectedOrConnecting();
+    }
+
+    public static void showNoInternetDialog(Context context){
+        AlertDialog alertDialog = new AlertDialog.Builder(context).create();
+        alertDialog.setTitle(R.string.login_failed_alert_dialog_title);
+        alertDialog.setMessage(context.getString(R.string.no_internet_connection));
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, context.getString(R.string.ok),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        alertDialog.show();
     }
 
 //    public static void linkifyString (final Context context, TextView tv, int stringResourceId, int startIndex, int
