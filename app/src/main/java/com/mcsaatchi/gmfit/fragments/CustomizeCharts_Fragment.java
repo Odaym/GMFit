@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.j256.ormlite.stmt.PreparedQuery;
@@ -32,6 +33,8 @@ import butterknife.ButterKnife;
 public class CustomizeCharts_Fragment extends Fragment {
     @Bind(R.id.chartsListView)
     DragSortListView chartsListView;
+    @Bind(R.id.noChartsYetTV)
+    TextView noChartsYetTV;
 
     private OneItemWithIcon_ListAdapter customizeChartsAdapter;
 
@@ -95,6 +98,11 @@ public class CustomizeCharts_Fragment extends Fragment {
                 dataChartsMap) {
             chartNames.add(dataChart.getName());
         }
+
+        if (chartNames.isEmpty())
+            noChartsYetTV.setVisibility(View.VISIBLE);
+        else
+            noChartsYetTV.setVisibility(View.GONE);
 
         hookupListWithItems(chartNames);
 
