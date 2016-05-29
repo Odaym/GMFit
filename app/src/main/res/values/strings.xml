@@ -23,7 +23,8 @@
     <string name="accept_ok">OK</string>
     <string name="decline_cancel">Cancel</string>
 
-    <string name="no_internet_connection">Oops! Please check your Internet connection and try again.</string>
+    <string name="no_internet_conection_dialog_title">Failed to connect</string>
+    <string name="no_internet_connection_dialog_message">Oops! Please check your Internet connection and try again.</string>
     <string name="error_response_from_server_incorrect">Oops! Something went wrong while trying to communicate with the server, please try again later
         .</string>
 
@@ -122,6 +123,8 @@
     <string name="weight_hint">Weight</string>
     <string name="height_hint">Height</string>
     <string name="error_first_name_not_valid">Names cannot contain numbers</string>
+    <string name="setting_up_profile_dialog_title">Setting up your profile</string>
+    <string name="setting_up_profile_dialog_message">Please wait…</string>
 
     <!-- CUSTOMIZE WIDGETS AND CHARTS ACTIVITY -->
     <string name="customize_widgets_and_charts_activity_title">Customize</string>
