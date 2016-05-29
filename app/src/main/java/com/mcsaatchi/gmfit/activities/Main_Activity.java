@@ -40,6 +40,7 @@ public class Main_Activity extends Base_Activity {
     private BottomBar bottomBar;
     private Fragment fragmentReplace;
     private SharedPreferences prefs;
+    private static final String DEBUG_TAG = "Main_Activity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +49,8 @@ public class Main_Activity extends Base_Activity {
         setContentView(R.layout.activity_main);
 
         prefs = getSharedPreferences(Cons.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
+
+        Log.d("USER_ACCESS_TOKEN", "onCreate: User access token is : " + prefs.getString(Cons.PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS));
 
         bottomBar = BottomBar.attachShy((CoordinatorLayout) findViewById(R.id.myCoordinator),
                 findViewById(R.id.myScrollingContent), savedInstanceState);
@@ -161,7 +164,7 @@ public class Main_Activity extends Base_Activity {
                                 signingOutDialog.dismiss();
 
                                 switch (responseCode) {
-                                    case Cons.REGISTERATION_API_RESPONSE_NOT_PARSED_CORRECTLY:
+                                    case Cons.API_RESPONSE_NOT_PARSED_CORRECTLY:
                                         alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
                                         alertDialog.show();
                                         break;
