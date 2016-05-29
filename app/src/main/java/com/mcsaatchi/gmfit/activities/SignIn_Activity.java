@@ -136,7 +136,7 @@ public class SignIn_Activity extends Base_Activity {
                                         loggingInDialog.dismiss();
 
                                         switch (responseCode) {
-                                            case Cons.REGISTERATION_API_RESPONSE_NOT_PARSED_CORRECTLY:
+                                            case Cons.API_RESPONSE_NOT_PARSED_CORRECTLY:
                                                 alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
                                                 alertDialog.show();
                                                 break;
@@ -158,7 +158,7 @@ public class SignIn_Activity extends Base_Activity {
                                                         startActivity(intent);
                                                         finish();
                                                         break;
-                                                    case Cons.REGISTERATION_API_RESPONSE_NOT_PARSED_CORRECTLY:
+                                                    case Cons.API_RESPONSE_NOT_PARSED_CORRECTLY:
                                                         alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
                                                         alertDialog.show();
                                                         break;

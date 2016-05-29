@@ -17,7 +17,7 @@ public class ApiHelper {
             e.printStackTrace();
         }
 
-        return Cons.REGISTERATION_API_RESPONSE_NOT_PARSED_CORRECTLY;
+        return Cons.API_RESPONSE_NOT_PARSED_CORRECTLY;
     }
 
     public static String parseResponseForUserPolicy(Context context, String responseObject) {
@@ -51,6 +51,6 @@ public class ApiHelper {
             e.printStackTrace();
         }
 
-        return Cons.REGISTERATION_API_RESPONSE_NOT_PARSED_CORRECTLY;
+        return Cons.API_RESPONSE_NOT_PARSED_CORRECTLY;
     }
 }
