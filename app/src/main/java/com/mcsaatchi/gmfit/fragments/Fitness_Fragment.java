@@ -391,20 +391,10 @@ public class Fitness_Fragment extends Fragment {
 
         if (shouldProvideRationale) {
             Log.i(TAG, "Displaying permission rationale to provide additional context.");
-            Snackbar.make(
-                    fragmentView.findViewById(R.id.main_activity_view),
-                    R.string.permission_rationale,
-                    Snackbar.LENGTH_INDEFINITE)
-                    .setAction(R.string.ok, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            // Request permission
-                            ActivityCompat.requestPermissions(parentActivity,
-                                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.BODY_SENSORS},
-                                    REQUEST_PERMISSIONS_REQUEST_CODE);
-                        }
-                    })
-                    .show();
+            ActivityCompat.requestPermissions(parentActivity,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.BODY_SENSORS},
+                    REQUEST_PERMISSIONS_REQUEST_CODE);
+
         } else {
             Log.i(TAG, "Requesting permission");
             ActivityCompat.requestPermissions(parentActivity,
