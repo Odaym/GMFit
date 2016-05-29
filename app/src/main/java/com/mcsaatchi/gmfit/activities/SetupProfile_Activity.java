@@ -13,7 +13,10 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import com.mcsaatchi.gmfit.R;
+import com.mcsaatchi.gmfit.classes.Cons;
 import com.mcsaatchi.gmfit.classes.DefaultIndicator_Controller;
+import com.mcsaatchi.gmfit.classes.EventBus_Poster;
+import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
 import com.mcsaatchi.gmfit.classes.Helpers;
 import com.mcsaatchi.gmfit.classes.Indicator_Controller;
 import com.mcsaatchi.gmfit.fragments.Setup_Profile_1_Fragment;
@@ -86,8 +89,14 @@ public class SetupProfile_Activity extends Base_Activity {
 
                 viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
 
+                // Time for submission
+                if (nextPageBTN.getText().toString().equals("Finish")){
+                    EventBus_Singleton.getInstance().post(new EventBus_Poster(Cons.EVENT_USER_FINALIZE_SETUP_PROFILE));
+                }
+
                 if (viewPager.getCurrentItem() == 4)
                     nextPageBTN.setText(getString(R.string.finish));
+
             }
         });
 
