@@ -44,10 +44,22 @@ public class Cons {
     public static final String API_NAME_LOGIN = "login";
     public static final String API_NAME_USER_POLICY = "user-policy";
     public static final String API_NAME_EMERGENCY = "emergency";
+    public static final String API_NAME_GET_PROFILE = "user/profile";
+    public static final String API_NAME_UPDATE_PROFILE = "user/update-profile";
 
     public static final String REQUEST_PARAM_EMAIL = "email";
     public static final String REQUEST_PARAM_PASSWORD = "password";
+    public static final String REQUEST_PARAM_NAME = "name";
+    public static final String REQUEST_PARAM_WEIGHT = "weight";
+    public static final String REQUEST_PARAM_HEIGHT = "height";
+    public static final String REQUEST_PARAM_BMI = "body_mass_index";
+    public static final String REQUEST_PARAM_BIRTHDAY = "birthday";
+    public static final String REQUEST_PARAM_BLOOD_TYPE = "blood_type";
+    public static final String REQUEST_PARAM_GENDER = "gender";
+
+    public static final String EVENT_USER_FINALIZE_SETUP_PROFILE = "user_finalize_setup_profile";
     public static final String EVENT_SIGNNED_UP_SUCCESSFULLY_CLOSE_LOGIN_ACTIVITY = "signned_up_successfully_close_login_activity";
+
     //REGISTERATION API
     public static final String NO_ACCESS_TOKEN_FOUND_IN_PREFS = "no_access_token_in_prefs";
     public static final String PREF_USER_ACCESS_TOKEN = "user_access_token";
@@ -56,7 +68,7 @@ public class Cons {
     public static final int API_REQUEST_SUCCEEDED_CODE = 200;
     public static final int REGISTERATION_API_EMAIL_TAKEN_CODE = 449;
     public static final int LOGIN_API_WRONG_CREDENTIALS = 401;
-    public static final int REGISTERATION_API_RESPONSE_NOT_PARSED_CORRECTLY = -1;
+    public static final int API_RESPONSE_NOT_PARSED_CORRECTLY = -1;
 
     public static enum ChartTypes {
 
