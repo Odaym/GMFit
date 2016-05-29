@@ -93,9 +93,12 @@
                       android:text="@string/blood_type_hint"
                       android:textColor="@color/edittext_hint_color"/>
 
-            <Spinner style="@style/Base.Widget.AppCompat.Spinner.Underlined" android:layout_width="match_parent"
-                     android:layout_height="wrap_content"
-                     android:entries="@array/blood_types"/>
+            <Spinner
+                android:id="@+id/bloodTypeSpinner"
+                style="@style/Base.Widget.AppCompat.Spinner.Underlined"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:entries="@array/blood_types"/>
         </LinearLayout>
 
         <LinearLayout android:layout_width="match_parent" android:layout_height="60dp"
@@ -117,6 +120,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/weight_hint"
+                        android:inputType="numberDecimal"
                         android:maxLength="4"
                         android:textColor="@android:color/black"
                         android:textColorHint="@color/edittext_hint_color"
@@ -145,6 +149,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="@string/height_hint"
+                        android:inputType="numberDecimal"
                         android:maxLength="4"
                         android:textColor="@android:color/black"
                         android:textColorHint="@color/edittext_hint_color"
