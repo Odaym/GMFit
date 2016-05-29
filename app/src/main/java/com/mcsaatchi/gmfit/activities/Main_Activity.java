@@ -54,6 +54,7 @@ public class Main_Activity extends Base_Activity {
 
         bottomBar.noTopOffset();
         bottomBar.noNavBarGoodness();
+        bottomBar.ignoreNightMode();
 
         bottomBar.setItemsFromMenu(R.menu.bottom_navigation, new OnMenuTabClickListener() {
             @Override
