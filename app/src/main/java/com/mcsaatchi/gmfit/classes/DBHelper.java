@@ -83,6 +83,9 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
             "Butternut Squash Soup",
             "Herb-Stuffed Turkey Breast"};
 
+    private String[] snackNames = new String[]{"Snickers", "Mars", "Biscuits", "Ice cream", "Lollipops", "Muffins", "Donuts", "Sunflower seeds", "Cereal",
+            "Chocolate Chip Cookies", "Waffer Biscuits", "Nuts and crackers"};
+
     private RuntimeExceptionDao<MealItem, Integer> mealItemRunTimeDAO = null;
     private RuntimeExceptionDao<DataChart, Integer> dataChartRunTimeDAO = null;
     private RuntimeExceptionDao<User, Integer> userRunTimeDAO = null;
@@ -102,6 +105,10 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
 
             for (int i = 0; i < mealNames.length; i++) {
                 getMealItemDAO().create(new MealItem(mealNames[new Random().nextInt(mealNames.length)], mealTypes[new Random().nextInt(mealTypes.length)]));
+            }
+
+            for (int i = 0; i < snackNames.length; i++){
+                getMealItemDAO().create(new MealItem(snackNames[i], "SNACKS"));
             }
         } catch (SQLException e) {
             Log.e(DBHelper.class.getName(), "Can't create database", e);
