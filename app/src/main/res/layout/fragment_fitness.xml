@@ -37,7 +37,7 @@
             android:gravity="center"
             android:orientation="vertical">
 
-            <TextSwitcher
+            <TextView
                 android:id="@+id/metricCounterTV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -71,7 +71,7 @@
                 android:id="@+id/firstMetricTV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Walking"/>
+                android:text="Distance"/>
         </LinearLayout>
 
         <LinearLayout
@@ -113,11 +113,10 @@
                 android:layout_marginBottom="5dp"
                 android:src="@drawable/stairs"/>
 
-            <TextView
+            <TextSwitcher
                 android:id="@+id/thirdMetricTV"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Stairs"/>
+                android:layout_height="wrap_content"/>
         </LinearLayout>
 
 
@@ -157,6 +156,21 @@
             android:layout_height="match_parent"
             android:animateLayoutChanges="true"
             android:orientation="vertical">
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/chart_height"
+                android:layout_gravity="center"
+                android:layout_marginTop="5dp"
+                card_view:cardCornerRadius="@dimen/cardview_default_radius"
+                card_view:cardElevation="@dimen/cardview_default_elevation"
+                card_view:cardUseCompatPadding="true">
+
+                <com.github.mikephil.charting.charts.HorizontalBarChart
+                    android:id="@+id/bar_chart"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+            </android.support.v7.widget.CardView>
 
         </LinearLayout>
 
