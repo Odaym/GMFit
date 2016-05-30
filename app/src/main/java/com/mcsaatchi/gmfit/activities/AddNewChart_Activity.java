@@ -22,8 +22,6 @@ public class AddNewChart_Activity extends Base_Activity {
     @Bind(R.id.chartsList)
     ListView chartsList;
 
-    private String CALL_PURPOSE;
-
     private SparseArray<String[]> fitnessItemsMap = new SparseArray<String[]>() {{
         put(0, new String[]{"Number of Steps", "Steps"});
         put(1, new String[]{"Walking and Running Distance", "KM"});
@@ -56,7 +54,7 @@ public class AddNewChart_Activity extends Base_Activity {
         Bundle extras = getIntent().getExtras();
 
         if (extras != null) {
-            CALL_PURPOSE = extras.getString(Cons.EXTRAS_ADD_CHART_WHAT_TYPE);
+            String CALL_PURPOSE = extras.getString(Cons.EXTRAS_ADD_CHART_WHAT_TYPE);
 
             if (CALL_PURPOSE != null) {
                 switch (CALL_PURPOSE) {
