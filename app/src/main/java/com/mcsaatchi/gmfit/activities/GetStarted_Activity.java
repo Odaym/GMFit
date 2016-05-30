@@ -30,7 +30,7 @@ public class GetStarted_Activity extends Base_Activity {
 
         ButterKnife.bind(this);
 
-        Picasso.with(this).load(R.drawable.fragment_intro_picture_1).transform(new CircleTransform()).into
+        Picasso.with(this).load(R.drawable.fragment_intro_picture).transform(new CircleTransform()).into
                 (getStartedIMG);
 
         setupProfileBTN.setOnClickListener(new View.OnClickListener() {
