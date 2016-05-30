@@ -35,12 +35,12 @@ import okhttp3.Response;
 
 public class Main_Activity extends Base_Activity {
 
+    private static final String DEBUG_TAG = "Main_Activity";
     public static int USER_AUTHORISED_REQUEST_CODE = 5;
     private static OkHttpClient client = new OkHttpClient();
     private BottomBar bottomBar;
     private Fragment fragmentReplace;
     private SharedPreferences prefs;
-    private static final String DEBUG_TAG = "Main_Activity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +57,7 @@ public class Main_Activity extends Base_Activity {
 
         bottomBar.noTopOffset();
         bottomBar.noNavBarGoodness();
+        bottomBar.setActiveTabColor(ContextCompat.getColor(this, R.color.colorAccent));
         bottomBar.ignoreNightMode();
 
         bottomBar.setItemsFromMenu(R.menu.bottom_navigation, new OnMenuTabClickListener() {
@@ -71,12 +72,12 @@ public class Main_Activity extends Base_Activity {
                     case R.id.item_two:
                         fragmentReplace = new Nutrition_Fragment();
                         break;
-                    case R.id.item_three:
-                        fragmentReplace = new Nutrition_Fragment();
-                        break;
-                    case R.id.item_four:
-                        fragmentReplace = new Nutrition_Fragment();
-                        break;
+//                    case R.id.item_three:
+//                        fragmentReplace = new Nutrition_Fragment();
+//                        break;
+//                    case R.id.item_four:
+//                        fragmentReplace = new Nutrition_Fragment();
+//                        break;
                     case R.id.item_five:
                         fragmentReplace = new MainProfile_Fragment();
                         break;
@@ -93,9 +94,9 @@ public class Main_Activity extends Base_Activity {
 
         bottomBar.mapColorForTab(0, ContextCompat.getColor(this, R.color.colorAccent));
         bottomBar.mapColorForTab(1, ContextCompat.getColor(this, android.R.color.holo_green_dark));
-        bottomBar.mapColorForTab(2, "#7B1FA2");
-        bottomBar.mapColorForTab(3, "#FF5252");
-        bottomBar.mapColorForTab(4, ContextCompat.getColor(this, android.R.color.holo_green_dark));
+        bottomBar.mapColorForTab(2, "#FF5252");
+//        bottomBar.mapColorForTab(3, "#FF5252");
+//        bottomBar.mapColorForTab(2, ContextCompat.getColor(this, android.R.color.holo_green_dark));
     }
 
     @Override
