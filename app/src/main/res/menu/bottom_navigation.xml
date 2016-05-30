@@ -10,15 +10,15 @@
         android:icon="@drawable/ic_location_on_white_24dp"
         android:title="@string/nutrition_tab_title"/>
 
-    <item
-        android:id="@+id/item_three"
-        android:icon="@drawable/ic_favorite_white_24dp"
-        android:title="@string/health_tab_title"/>
+    <!--<item-->
+        <!--android:id="@+id/item_three"-->
+        <!--android:icon="@drawable/ic_favorite_white_24dp"-->
+        <!--android:title="@string/health_tab_title"/>-->
 
-    <item
-        android:id="@+id/item_four"
-        android:icon="@drawable/ic_update_white_24dp"
-        android:title="@string/directory_tab_title"/>
+    <!--<item-->
+        <!--android:id="@+id/item_four"-->
+        <!--android:icon="@drawable/ic_update_white_24dp"-->
+        <!--android:title="@string/directory_tab_title"/>-->
 
     <item
         android:id="@+id/item_five"
