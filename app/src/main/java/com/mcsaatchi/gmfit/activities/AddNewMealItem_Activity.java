@@ -36,14 +36,12 @@ import dev.dworks.libs.astickyheader.SimpleSectionedListAdapter.Section;
 
 public class AddNewMealItem_Activity extends Base_Activity implements SearchView.OnQueryTextListener {
 
-    private SearchView searchView;
-
+    private static final String TAG = "AddNewMealItem_Activity";
+    @Bind(R.id.mealItemsList)
+    ListView mealItemsList;
     private RuntimeExceptionDao<MealItem, Integer> mealItemsDAO;
     private QueryBuilder<MealItem, Integer> mealsQueryBuilder;
     private PreparedQuery<MealItem> pq;
-
-    @Bind(R.id.mealItemsList)
-    ListView mealItemsList;
     private String mealType;
     private String[] mHeaderNames;
     private Integer[] mHeaderPositions;
@@ -83,8 +81,13 @@ public class AddNewMealItem_Activity extends Base_Activity implements SearchView
         mealItemsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                if (position > 7)
+                    position -= 2;
+                else
+                    position -= 1;
+
+                Log.d(TAG, "onItemClick: Selected " + mealsList.get(position).getName() + " at index " + position);
                 EventBus_Singleton.getInstance().post(new EventBus_Poster(Cons.EXTRAS_PICKED_MEAL_ENTRY, mealsList.get(position)));
-                Log.d(TAG, "onItemClick: MEAL TYPE " + mealsList.get(position).getType());
                 finish();
             }
         });
@@ -112,7 +115,7 @@ public class AddNewMealItem_Activity extends Base_Activity implements SearchView
         inflater.inflate(R.menu.add_new_meal_item_activity, menu);
 
         MenuItem searchItem = menu.findItem(R.id.search);
-        searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         searchView.setOnSearchClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -163,16 +166,12 @@ public class AddNewMealItem_Activity extends Base_Activity implements SearchView
         }
 
         simpleSectionedListAdapter.setSections(sections.toArray(new Section[sections.size()]));
-
-        Log.d(TAG, "addListSections: WE are here");
     }
 
     @Override
     public boolean onQueryTextSubmit(String query) {
         return false;
     }
-
-    private static final String TAG = "AddNewMealItem_Activity";
 
     @Override
     public boolean onQueryTextChange(String newText) {
