@@ -1,5 +1,6 @@
 package com.mcsaatchi.gmfit.fragments;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -11,7 +12,9 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -120,7 +123,6 @@ public class MainProfile_Fragment extends Fragment {
                                         alertDialog.show();
                                         break;
                                     case Cons.API_REQUEST_SUCCEEDED_CODE:
-                                        //TODO: open a webview with the contents
                                         String userPolicyString = ApiHelper.parseResponseForUserPolicy(getActivity(), aResult);
 
                                         if (userPolicyString != null) {
@@ -148,47 +150,15 @@ public class MainProfile_Fragment extends Fragment {
             public void onClick(View view) {
                 if (Helpers.isInternetAvailable(getActivity())) {
 
-                    new AsyncTask<String, String, InputStream>() {
-                        ProgressDialog downloadingPDFProfileDialog;
-
-                        protected void onPreExecute() {
-                            downloadingPDFProfileDialog = new ProgressDialog(getActivity());
-                            downloadingPDFProfileDialog.setTitle(getString(R.string.downloading_pdf_profile_dialog_title));
-                            downloadingPDFProfileDialog.setMessage(getString(R.string.downloading_pdf_profile_dialog_message));
-                            downloadingPDFProfileDialog.show();
-                        }
-
-                        protected InputStream doInBackground(String... aParams) {
-                            Request request = new Request.Builder()
-                                    .addHeader(Cons.USER_ACCESS_TOKEN_HEADER_PARAMETER, prefs.getString(Cons.PREF_USER_ACCESS_TOKEN, ""))
-                                    .url(Cons.ROOT_URL_ADDRESS + Cons.API_NAME_EMERGENCY)
-                                    .build();
-
-                            try {
-                                Response response = client.newCall(request).execute();
-                                return response.body().byteStream();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-
-                            return null;
-                        }
-
-                        protected void onPostExecute(InputStream aResult) {
-                            Log.d("ASYNCRESULT", "onPostExecute: Response was : \n" + aResult);
-
-                            if (aResult == null) {
-                                Helpers.showNoInternetDialog(getActivity());
-                            } else {
-
-                                usableInputStream = aResult;
-
-                                downloadingPDFProfileDialog.dismiss();
-
-                                getUserEmergencyProfile(usableInputStream);
-                            }
-                        }
-                    }.execute();
+                    boolean hasPermission = (ContextCompat.checkSelfPermission(getActivity(),
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED);
+                    if (!hasPermission) {
+                        ActivityCompat.requestPermissions(getActivity(),
+                                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                                REQUEST_WRITE_STORAGE);
+                    } else {
+                        fireUpEmergencyProfileAsyncTask();
+                    }
                 } else {
                     Helpers.showNoInternetDialog(getActivity());
                 }
@@ -205,13 +175,60 @@ public class MainProfile_Fragment extends Fragment {
             case REQUEST_WRITE_STORAGE: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     //reload my activity with permission granted or use the features what required the permission
-                    getUserEmergencyProfile(usableInputStream);
+                    Toast.makeText(getActivity(), "Just got the permission", Toast.LENGTH_SHORT).show();
+                    fireUpEmergencyProfileAsyncTask();
                 } else {
                     Toast.makeText(getActivity(), "The app was not allowed to write to your storage. Hence, it cannot function properly. Please consider granting it " +
                             "this permission", Toast.LENGTH_LONG).show();
                 }
             }
         }
+    }
+
+    private void fireUpEmergencyProfileAsyncTask() {
+        Toast.makeText(getActivity(), "Now inside AsyncTask", Toast.LENGTH_SHORT).show();
+
+        new AsyncTask<String, String, InputStream>() {
+            ProgressDialog downloadingPDFProfileDialog;
+
+            protected void onPreExecute() {
+                downloadingPDFProfileDialog = new ProgressDialog(getActivity());
+                downloadingPDFProfileDialog.setTitle(getString(R.string.downloading_pdf_profile_dialog_title));
+                downloadingPDFProfileDialog.setMessage(getString(R.string.downloading_pdf_profile_dialog_message));
+                downloadingPDFProfileDialog.show();
+            }
+
+            protected InputStream doInBackground(String... aParams) {
+                Request request = new Request.Builder()
+                        .addHeader(Cons.USER_ACCESS_TOKEN_HEADER_PARAMETER, prefs.getString(Cons.PREF_USER_ACCESS_TOKEN, ""))
+                        .url(Cons.ROOT_URL_ADDRESS + Cons.API_NAME_EMERGENCY)
+                        .build();
+
+                try {
+                    Response response = client.newCall(request).execute();
+                    return response.body().byteStream();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                return null;
+            }
+
+            protected void onPostExecute(InputStream aResult) {
+                Log.d("ASYNCRESULT", "onPostExecute: Response was : \n" + aResult);
+
+                if (aResult == null) {
+                    Helpers.showNoInternetDialog(getActivity());
+                } else {
+
+                    usableInputStream = aResult;
+
+                    downloadingPDFProfileDialog.dismiss();
+
+                    getUserEmergencyProfile(usableInputStream);
+                }
+            }
+        }.execute();
     }
 
     private void getUserEmergencyProfile(final InputStream inputStreamResult) {
