@@ -8,7 +8,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.classes.CircleTransform;
 import com.squareup.picasso.Picasso;
 
 public class IntroSlider_Fragment extends Fragment {
@@ -44,20 +43,16 @@ public class IntroSlider_Fragment extends Fragment {
 
         switch (layoutResId) {
             case R.layout.fragment_intro_slide_1:
-                Picasso.with(getActivity()).load(R.drawable.fragment_intro_picture_1).transform(new CircleTransform()
-                ).into(introIMG);
+                Picasso.with(getActivity()).load(R.drawable.fragment_intro_picture).into(introIMG);
                 break;
             case R.layout.fragment_intro_slide_2:
-                Picasso.with(getActivity()).load(R.drawable.fragment_intro_picture_1).transform(new CircleTransform()
-                ).into(introIMG);
+                Picasso.with(getActivity()).load(R.drawable.fragment_intro_picture).into(introIMG);
                 break;
             case R.layout.fragment_intro_slide_3:
-                Picasso.with(getActivity()).load(R.drawable.fragment_intro_picture_1).transform(new CircleTransform()
-                ).into(introIMG);
+                Picasso.with(getActivity()).load(R.drawable.fragment_intro_picture).into(introIMG);
                 break;
             case R.layout.fragment_intro_slide_4:
-                Picasso.with(getActivity()).load(R.drawable.fragment_intro_picture_1).transform(new CircleTransform()
-                ).into(introIMG);
+                Picasso.with(getActivity()).load(R.drawable.fragment_intro_picture).into(introIMG);
                 break;
         }
 
