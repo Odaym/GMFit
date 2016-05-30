@@ -28,11 +28,15 @@ public class UserPolicy_Activity extends Base_Activity {
             String userPolicyString = getIntent().getExtras().getString(Cons.EXTRAS_USER_POLICY);
 
             WebSettings settings = userPolicyWebView.getSettings();
-            settings.setUseWideViewPort(true);
             settings.setLoadWithOverviewMode(true);
             settings.setBuiltInZoomControls(true);
+            settings.setUseWideViewPort(true);
             userPolicyWebView.setVerticalScrollBarEnabled(false);
             userPolicyWebView.setHorizontalScrollBarEnabled(false);
+
+            //No effect
+            settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
+            userPolicyWebView.setInitialScale(1);
 
             String finalHTMLString = "<!DOCTYPE html>\n" +
                     "<html>\n" +
