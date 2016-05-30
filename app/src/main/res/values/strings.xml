@@ -131,7 +131,10 @@
 
     <string name="about_google_fit_acitivity_title">About Google Fit</string>
 
-    <!-- HEALTH FRAGMENT -->
+    <!-- FITNESS FRAGMENT -->
+    <string name="syncing_up_dialog_title">Syncronising Fitness data</string>
+    <string name="syncing_up_dialog_message">Please wait...</string>
+
 
     <!-- ADD NEW CHART -->
     <string name="add_new_chart_activity_title">Add New Chart</string>
