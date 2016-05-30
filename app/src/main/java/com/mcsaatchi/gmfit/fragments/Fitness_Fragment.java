@@ -2,13 +2,15 @@ package com.mcsaatchi.gmfit.fragments;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
@@ -18,6 +20,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.NestedScrollView;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.util.SparseArray;
@@ -32,6 +35,7 @@ import android.widget.TextSwitcher;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.HorizontalBarChart;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -40,6 +44,7 @@ import com.google.android.gms.common.api.Scope;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.fitness.Fitness;
 import com.google.android.gms.fitness.data.DataPoint;
+import com.google.android.gms.fitness.data.DataSet;
 import com.google.android.gms.fitness.data.DataSource;
 import com.google.android.gms.fitness.data.DataType;
 import com.google.android.gms.fitness.data.Field;
@@ -47,6 +52,7 @@ import com.google.android.gms.fitness.data.Value;
 import com.google.android.gms.fitness.request.DataSourcesRequest;
 import com.google.android.gms.fitness.request.OnDataPointListener;
 import com.google.android.gms.fitness.request.SensorRequest;
+import com.google.android.gms.fitness.result.DailyTotalResult;
 import com.google.android.gms.fitness.result.DataSourcesResult;
 import com.hookedonplay.decoviewlib.DecoView;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
@@ -56,6 +62,7 @@ import com.mcsaatchi.gmfit.activities.AddNewChart_Activity;
 import com.mcsaatchi.gmfit.activities.Base_Activity;
 import com.mcsaatchi.gmfit.activities.CustomizeWidgetsAndCharts_Activity;
 import com.mcsaatchi.gmfit.activities.Main_Activity;
+import com.mcsaatchi.gmfit.classes.ApiHelper;
 import com.mcsaatchi.gmfit.classes.Cons;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
@@ -63,18 +70,32 @@ import com.mcsaatchi.gmfit.classes.Helpers;
 import com.mcsaatchi.gmfit.models.DataChart;
 import com.squareup.otto.Subscribe;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class Fitness_Fragment extends Fragment {
 
     public static final int ADD_NEW_FITNESS_CHART_REQUEST_CODE = 1;
     public static final String TAG = "GMFit";
     private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
+    private static OkHttpClient client = new OkHttpClient();
+    @Bind(R.id.bar_chart)
+    HorizontalBarChart defaultBarChart;
     @Bind(R.id.dynamicArcView)
     DecoView dynamicArc;
     @Bind(R.id.cards_container)
@@ -82,7 +103,7 @@ public class Fitness_Fragment extends Fragment {
     @Bind(R.id.addChartBTN)
     Button addNewBarChartBTN;
     @Bind(R.id.metricCounterTV)
-    TextSwitcher metricCounterTV;
+    TextView metricCounterTV;
     @Bind(R.id.firstMetricTV)
     TextView firstMetricTV;
     @Bind(R.id.firstMetricIMG)
@@ -92,7 +113,7 @@ public class Fitness_Fragment extends Fragment {
     @Bind(R.id.secondMetricIMG)
     ImageView secondMetricIMG;
     @Bind(R.id.thirdMetricTV)
-    TextView thirdMetricTV;
+    TextSwitcher thirdMetricTV;
     @Bind(R.id.thirdMetricIMG)
     ImageView thirdMetricIMG;
     @Bind(R.id.fourthMetricTV)
@@ -104,10 +125,10 @@ public class Fitness_Fragment extends Fragment {
     private RuntimeExceptionDao<DataChart, Integer> dataChartDAO;
     private GoogleApiClient googleApiFitnessClient;
     private OnDataPointListener mListener;
-
     private Activity parentActivity;
     private View fragmentView;
-
+    private boolean syncedUpWithAPI = false;
+    private DecimalFormat dFormat = new DecimalFormat("#.00");
     private List<Integer> itemIndeces;
 
     private SharedPreferences prefs;
@@ -145,6 +166,8 @@ public class Fitness_Fragment extends Fragment {
         setHasOptionsMenu(true);
 
         Helpers.setUpDecoViewArc(getActivity(), dynamicArc);
+
+        Helpers.setChartData(defaultBarChart, 20, 20);
 
         addNewBarChartBTN.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -217,19 +240,15 @@ public class Fitness_Fragment extends Fragment {
     }
 
     private void setUpMetricCounterTextSwitcherAnimation() {
-        metricCounterTV.setInAnimation(getActivity(), R.anim.fade_in);
-        metricCounterTV.setOutAnimation(getActivity(), R.anim.fade_out);
+        thirdMetricTV.setInAnimation(getActivity(), R.anim.fade_in);
+        thirdMetricTV.setOutAnimation(getActivity(), R.anim.fade_out);
         TextView textView1 = new TextView(getActivity());
-        textView1.setTextSize(22f);
         textView1.setTypeface(null, Typeface.BOLD);
-        textView1.setTextColor(Color.BLACK);
         TextView textView2 = new TextView(getActivity());
-        textView2.setTextSize(22f);
-        textView2.setTextColor(Color.BLACK);
         textView2.setTypeface(null, Typeface.BOLD);
 
-        metricCounterTV.addView(textView1);
-        metricCounterTV.addView(textView2);
+        thirdMetricTV.addView(textView1);
+        thirdMetricTV.addView(textView2);
     }
 
     @Override
@@ -257,17 +276,26 @@ public class Fitness_Fragment extends Fragment {
     private void buildFitnessClient() {
         googleApiFitnessClient = new GoogleApiClient.Builder(parentActivity)
                 .addApi(Fitness.SENSORS_API)
-//                .addScope(new Scope(Scopes.FITNESS_LOCATION_READ))
+                .addApi(Fitness.HISTORY_API)
+                .addScope(new Scope(Scopes.FITNESS_LOCATION_READ))
                 .addScope(new Scope(Scopes.FITNESS_ACTIVITY_READ_WRITE))
 //                .addScope(new Scope(Scopes.FITNESS_NUTRITION_READ_WRITE))
-//                .addScope(new Scope(Scopes.FITNESS_BODY_READ_WRITE))
+                .addScope(new Scope(Scopes.FITNESS_BODY_READ_WRITE))
                 .addConnectionCallbacks(
                         new GoogleApiClient.ConnectionCallbacks() {
                             @Override
                             public void onConnected(Bundle bundle) {
                                 Log.i(TAG, "Connected!!!");
                                 // Now you can make calls to the Fitness APIs.
-                                findFitnessDataSources();
+                                findStepCountDataSource();
+                                new Thread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        displayCaloriesDataForToday();
+                                        displayStepCountForToday();
+                                        displayDistanceCoveredForToday();
+                                    }
+                                }).start();
                             }
 
                             @Override
@@ -302,7 +330,7 @@ public class Fitness_Fragment extends Fragment {
                 .build();
     }
 
-    private void findFitnessDataSources() {
+    private void findStepCountDataSource() {
         // Note: Fitness.SensorsApi.findDataSources() requires the ACCESS_FINE_LOCATION permission.
         Fitness.SensorsApi.findDataSources(googleApiFitnessClient, new DataSourcesRequest.Builder()
                 // At least one datatype must be specified.
@@ -322,7 +350,7 @@ public class Fitness_Fragment extends Fragment {
                             if (dataSource.getDataType().equals(DataType.TYPE_STEP_COUNT_CUMULATIVE)
                                     && mListener == null) {
                                 Log.i(TAG, "Data source for " + dataSource.getDataType() + " found!  Registering.");
-                                registerFitnessDataListener(dataSource,
+                                registerStepCountDataSource(dataSource,
                                         DataType.TYPE_STEP_COUNT_CUMULATIVE);
                             }
                         }
@@ -334,7 +362,7 @@ public class Fitness_Fragment extends Fragment {
      * Register a listener with the Sensors API for the provided {@link DataSource} and
      * {@link DataType} combo.
      */
-    private void registerFitnessDataListener(DataSource dataSource, DataType dataType) {
+    private void registerStepCountDataSource(DataSource dataSource, DataType dataType) {
         mListener = new OnDataPointListener() {
             @Override
             public void onDataPoint(DataPoint dataPoint) {
@@ -347,7 +375,7 @@ public class Fitness_Fragment extends Fragment {
                         @Override
                         public void run() {
 
-                            metricCounterTV.setText(NumberFormat.getInstance().format(Double.parseDouble(val.toString())));
+                            thirdMetricTV.setText(NumberFormat.getInstance().format(Double.parseDouble(val.toString())));
                         }
                     });
                 }
@@ -374,6 +402,244 @@ public class Fitness_Fragment extends Fragment {
                 });
     }
 
+    public void saveUserHeight(int heightCentimiters) {
+        // to post data
+        float height = ((float) heightCentimiters) / 100.0f;
+        Calendar cal = Calendar.getInstance();
+        Date now = new Date();
+        cal.setTime(now);
+        long endTime = cal.getTimeInMillis();
+        cal.add(Calendar.DAY_OF_YEAR, -1);
+        long startTime = cal.getTimeInMillis();
+
+        DataSet heightDataSet = createDataForRequest(
+                DataType.TYPE_HEIGHT,    // for height, it would be DataType.TYPE_HEIGHT
+                DataSource.TYPE_RAW,
+                height,                  // weight in kgs
+                startTime,              // start time
+                endTime,                // end time
+                TimeUnit.MILLISECONDS                // Time Unit, for example, TimeUnit.MILLISECONDS
+        );
+
+        com.google.android.gms.common.api.Status heightInsertStatus =
+                Fitness.HistoryApi.insertData(googleApiFitnessClient, heightDataSet)
+                        .await(1, TimeUnit.MINUTES);
+    }
+
+    public void saveUserWeight(float weight) {
+        // to post data
+        Calendar cal = Calendar.getInstance();
+        Date now = new Date();
+        cal.setTime(now);
+        long endTime = cal.getTimeInMillis();
+        cal.add(Calendar.DAY_OF_YEAR, -1);
+        long startTime = cal.getTimeInMillis();
+
+        DataSet weightDataSet = createDataForRequest(
+                DataType.TYPE_WEIGHT,    // for height, it would be DataType.TYPE_HEIGHT
+                DataSource.TYPE_RAW,
+                weight,                  // weight in kgs
+                startTime,              // start time
+                endTime,                // end time
+                TimeUnit.MILLISECONDS                // Time Unit, for example, TimeUnit.MILLISECONDS
+        );
+
+        com.google.android.gms.common.api.Status weightInsertStatus =
+                Fitness.HistoryApi.insertData(googleApiFitnessClient, weightDataSet)
+                        .await(1, TimeUnit.MINUTES);
+    }
+
+    public DataSet createDataForRequest(DataType dataType,
+                                        int dataSourceType,
+                                        Object values,
+                                        long startTime,
+                                        long endTime,
+                                        TimeUnit timeUnit) {
+        DataSource dataSource = new DataSource.Builder()
+                .setAppPackageName(getActivity())
+                .setDataType(dataType)
+                .setType(dataSourceType)
+                .build();
+
+        DataSet dataSet = DataSet.create(dataSource);
+        DataPoint dataPoint = dataSet.createDataPoint().setTimeInterval(startTime, endTime, timeUnit);
+
+        if (values instanceof Integer) {
+            dataPoint = dataPoint.setIntValues((Integer) values);
+        } else {
+            dataPoint = dataPoint.setFloatValues((Float) values);
+        }
+
+        dataSet.add(dataPoint);
+
+        return dataSet;
+    }
+
+    public void displayCaloriesDataForToday() {
+        saveUserHeight(180);
+        saveUserWeight(79);
+
+        DailyTotalResult resultcalories = Fitness.HistoryApi.readDailyTotal(googleApiFitnessClient, DataType.AGGREGATE_CALORIES_EXPENDED).await();
+        showCaloryDataPoints(resultcalories.getTotal());
+    }
+
+    public void displayStepCountForToday() {
+        DailyTotalResult resultSteps = Fitness.HistoryApi.readDailyTotal(googleApiFitnessClient, DataType.AGGREGATE_STEP_COUNT_DELTA).await();
+        showStepDataPoints(resultSteps.getTotal());
+    }
+
+    public void displayDistanceCoveredForToday() {
+        DailyTotalResult resultDistance = Fitness.HistoryApi.readDailyTotal(googleApiFitnessClient, DataType.AGGREGATE_DISTANCE_DELTA).await();
+        showDistanceDataPoints(resultDistance.getTotal());
+    }
+
+    private void showCaloryDataPoints(DataSet caloriesDataSet) {
+        for (DataPoint dp : caloriesDataSet.getDataPoints()) {
+
+            for (Field field : dp.getDataType().getFields()) {
+                final Value val = dp.getValue(field);
+                Log.i(TAG, "Detected Calories DataPoint field: " + field.getName());
+                Log.i(TAG, "Detected Calories DataPoint value: " + val);
+                parentActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        secondMetricTV.setText(dFormat.format(Double.parseDouble(val.toString())));
+                    }
+                });
+            }
+        }
+    }
+
+    private void showStepDataPoints(DataSet stepsDataSet) {
+        for (DataPoint dp : stepsDataSet.getDataPoints()) {
+
+            for (Field field : dp.getDataType().getFields()) {
+                final Value val = dp.getValue(field);
+                Log.i(TAG, "Detected Steps DataPoint field: " + field.getName());
+                Log.i(TAG, "Detected Steps DataPoint value: " + val);
+                parentActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        metricCounterTV.setText(val.toString());
+                    }
+                });
+            }
+        }
+    }
+
+    private void showDistanceDataPoints(DataSet distanceDataSet) {
+        Log.d(TAG, "showDistanceDataPoints: size : " + distanceDataSet.getDataPoints().size());
+        for (DataPoint dp : distanceDataSet.getDataPoints()) {
+
+            for (Field field : dp.getDataType().getFields()) {
+                final Value val = dp.getValue(field);
+                Log.i(TAG, "Detected Distance DataPoint field: " + field.getName());
+                Log.i(TAG, "Detected Distance DataPoint value: " + val);
+                parentActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        firstMetricTV.setText(dFormat.format(Double.parseDouble(val.toString())));
+
+                        if (!syncedUpWithAPI) {
+                            if (Helpers.isInternetAvailable(getActivity())) {
+
+                                if (!metricCounterTV.getText().toString().isEmpty())
+                                    syncUpMetricsWithFitnessAPI("steps-count", Double.parseDouble(metricCounterTV.getText().toString()));
+
+                                if (!metricCounterTV.getText().toString().isEmpty())
+                                    syncUpMetricsWithFitnessAPI("active-calories", Double.parseDouble(secondMetricTV.getText().toString()));
+
+                                if (!metricCounterTV.getText().toString().isEmpty())
+                                    syncUpMetricsWithFitnessAPI("distance-traveled", Double.parseDouble(firstMetricTV.getText().toString()));
+                            } else {
+                                Helpers.showNoInternetDialog(getActivity());
+                            }
+                        }
+                    }
+                });
+            }
+        }
+    }
+
+    private void syncUpMetricsWithFitnessAPI(String fitnessSlug, double value) {
+        try {
+            Calendar cal = Calendar.getInstance();
+            Date now = new Date();
+            cal.setTime(now);
+
+            final JSONObject jsonForRequest = new JSONObject();
+            jsonForRequest.put(Cons.REQUEST_PARAM_SLUG, fitnessSlug);
+            jsonForRequest.put(Cons.REQUEST_PARAM_VALUE, value);
+            jsonForRequest.put(Cons.REQUEST_PARAM_DATE, cal.get(Calendar.YEAR) + "-" + cal.get(Calendar.MONTH) + "-" + cal.get(Calendar.DAY_OF_MONTH));
+
+            new AsyncTask<String, String, String>() {
+                ProgressDialog syncingUpDialog;
+
+                protected void onPreExecute() {
+                    syncingUpDialog = new ProgressDialog(getActivity());
+                    syncingUpDialog.setTitle(getString(R.string.syncing_up_dialog_title));
+                    syncingUpDialog.setMessage(getString(R.string.syncing_up_dialog_message));
+                    syncingUpDialog.show();
+                }
+
+                protected String doInBackground(String... aParams) {
+                    String userAccessToken = prefs.getString(Cons.PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS);
+
+                    RequestBody body = RequestBody.create(Cons.JSON_FORMAT_IDENTIFIER, jsonForRequest.toString());
+                    Request request = new Request.Builder()
+                            .url(Cons.ROOT_URL_ADDRESS + Cons.API_NAME_ADD_METRIC)
+                            .addHeader(Cons.USER_ACCESS_TOKEN_HEADER_PARAMETER, userAccessToken)
+                            .post(body)
+                            .build();
+
+                    try {
+                        Response response = client.newCall(request).execute();
+                        return response.body().string();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    return null;
+                }
+
+                protected void onPostExecute(String aResult) {
+                    Log.d("ASYNCRESULT", "onPostExecute: Response was : \n" + aResult);
+
+                    if (aResult == null) {
+                        Helpers.showNoInternetDialog(getActivity());
+                    } else {
+
+                        int responseCode = ApiHelper.parseAPIResponseForCode(aResult);
+
+                        AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+                        alertDialog.setTitle(R.string.syncing_up_dialog_title);
+                        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                });
+
+                        syncingUpDialog.dismiss();
+
+                        switch (responseCode) {
+                            //TODO: Change this code to be universal 449, not just for registration
+                            case Cons.REGISTERATION_API_EMAIL_TAKEN_CODE:
+                            case Cons.API_RESPONSE_NOT_PARSED_CORRECTLY:
+                                alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
+                                alertDialog.show();
+                                break;
+                            case Cons.API_REQUEST_SUCCEEDED_CODE:
+                                syncedUpWithAPI = true;
+                                break;
+                        }
+                    }
+                }
+            }.execute();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * Return the current state of the permissions needed.
@@ -475,7 +741,7 @@ public class Fitness_Fragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.settings:
                 Intent intent = new Intent(getActivity(), CustomizeWidgetsAndCharts_Activity.class);
                 intent.putExtra(Cons.EXTRAS_CUSTOMIZE_WIDGETS_FRAGMENT_TYPE, Cons.EXTRAS_FITNESS_FRAGMENT);
