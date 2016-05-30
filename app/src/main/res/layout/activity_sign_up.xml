@@ -70,10 +70,8 @@
                     android:textColor="@android:color/black"
                     android:textColorHint="@color/edittext_hint_color"
                     android:textCursorDrawable="@null"
-                    validator:customRegexp="@string/password_requirements_regex"
                     validator:emptyErrorString="@string/field_empty_error_message"
-                    validator:testErrorString="@string/field_password_too_short_error"
-                    validator:testType="regexp"/>
+                    validator:testErrorString="@string/field_password_too_short_error"/>
 
             </com.github.florent37.materialtextfield.MaterialTextField>
         </LinearLayout>
