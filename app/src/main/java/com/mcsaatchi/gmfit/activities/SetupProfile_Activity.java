@@ -22,8 +22,6 @@ import com.mcsaatchi.gmfit.classes.Indicator_Controller;
 import com.mcsaatchi.gmfit.fragments.Setup_Profile_1_Fragment;
 import com.mcsaatchi.gmfit.fragments.Setup_Profile_2_Fragment;
 import com.mcsaatchi.gmfit.fragments.Setup_Profile_3_Fragment;
-import com.mcsaatchi.gmfit.fragments.Setup_Profile_4_Fragment;
-import com.mcsaatchi.gmfit.fragments.Setup_Profile_5_Fragment;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -94,7 +92,7 @@ public class SetupProfile_Activity extends Base_Activity {
                     EventBus_Singleton.getInstance().post(new EventBus_Poster(Cons.EVENT_USER_FINALIZE_SETUP_PROFILE));
                 }
 
-                if (viewPager.getCurrentItem() == 4)
+                if (viewPager.getCurrentItem() == 2)
                     nextPageBTN.setText(getString(R.string.finish));
 
             }
@@ -108,7 +106,7 @@ public class SetupProfile_Activity extends Base_Activity {
 
                 viewPager.setCurrentItem(viewPager.getCurrentItem() - 1);
 
-                if (viewPager.getCurrentItem() < 4)
+                if (viewPager.getCurrentItem() < 2)
                     nextPageBTN.setText(getString(R.string.next_page));
             }
         });
@@ -121,7 +119,7 @@ public class SetupProfile_Activity extends Base_Activity {
         FrameLayout indicatorContainer = (FrameLayout) findViewById(R.id.indicator_container);
         indicatorContainer.addView(indicatorController.newInstance(this));
 
-        indicatorController.initialize(5);
+        indicatorController.initialize(3);
     }
 
     public class SetupProfile_Adapter extends FragmentPagerAdapter {
@@ -139,10 +137,6 @@ public class SetupProfile_Activity extends Base_Activity {
                     return new Setup_Profile_2_Fragment();
                 case 2:
                     return new Setup_Profile_3_Fragment();
-                case 3:
-                    return new Setup_Profile_4_Fragment();
-                case 4:
-                    return new Setup_Profile_5_Fragment();
                 default:
                     return null;
             }
@@ -150,7 +144,7 @@ public class SetupProfile_Activity extends Base_Activity {
 
         @Override
         public int getCount() {
-            return 5;
+            return 3;
         }
     }
 }
