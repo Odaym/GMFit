@@ -73,7 +73,11 @@ public class Setup_Profile_3_Fragment extends Fragment implements CalendarDatePi
 
         ButterKnife.bind(this, fragmentView);
 
-        EventBus_Singleton.getInstance().register(this);
+        try {
+            EventBus_Singleton.getInstance().register(this);
+        } catch (IllegalArgumentException ignored) {
+
+        }
 
         prefs = getActivity().getSharedPreferences(Cons.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
 
