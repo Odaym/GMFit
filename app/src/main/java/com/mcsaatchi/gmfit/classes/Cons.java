@@ -46,6 +46,11 @@ public class Cons {
     public static final String API_NAME_EMERGENCY = "emergency";
     public static final String API_NAME_GET_PROFILE = "user/profile";
     public static final String API_NAME_UPDATE_PROFILE = "user/update-profile";
+    public static final String API_NAME_ADD_METRIC = "user/add-metric";
+
+    public static final String REQUEST_PARAM_SLUG = "slug";
+    public static final String REQUEST_PARAM_VALUE = "value";
+    public static final String REQUEST_PARAM_DATE = "date";
 
     public static final String REQUEST_PARAM_EMAIL = "email";
     public static final String REQUEST_PARAM_PASSWORD = "password";
