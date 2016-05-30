@@ -88,6 +88,17 @@ public class Nutrition_Fragment extends Fragment {
     @Bind(R.id.entriesContainerLayout_DINNER)
     LinearLayout entriesContainerLayout_DINNER;
     /**
+     * SNACKS CHART
+     */
+    @Bind(R.id.chartTitleTV_SNACKS)
+    TextView chartTitleTV_SNACKS;
+    @Bind(R.id.addEntryBTN_SNACKS)
+    Button addNewEntryBTN_SNACKS;
+    @Bind(R.id.scanEntryBTN_SNACKS)
+    Button scanEntryBTN_SNACKS;
+    @Bind(R.id.entriesContainerLayout_SNACKS)
+    LinearLayout entriesContainerLayout_SNACKS;
+    /**
      * ADD CHART BUTTON
      */
     @Bind(R.id.addChartBTN)
@@ -194,6 +205,19 @@ public class Nutrition_Fragment extends Fragment {
             }
         });
 
+        addNewEntryBTN_SNACKS.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openMealEntryPickerActivity(chartTitleTV_SNACKS.getText().toString());
+            }
+        });
+        scanEntryBTN_SNACKS.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                handleScanMealEntry();
+            }
+        });
+
         return fragmentView;
     }
 
@@ -229,6 +253,9 @@ public class Nutrition_Fragment extends Fragment {
                             break;
                         case "DINNER":
                             addMealEntryLayout(ebp.getMealItemExtra().getName(), entriesContainerLayout_DINNER);
+                            break;
+                        case "SNACKS":
+                            addMealEntryLayout(ebp.getMealItemExtra().getName(), entriesContainerLayout_SNACKS);
                             break;
                     }
                 }

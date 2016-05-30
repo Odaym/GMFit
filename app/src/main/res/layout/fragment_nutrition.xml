@@ -244,9 +244,9 @@
                     <LinearLayout
                         android:id="@+id/entriesContainerLayout_BREAKFAST"
                         android:layout_width="match_parent"
-                        android:animateLayoutChanges="true"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/separatorView_BREAKFAST" android:orientation="vertical">
+                        android:layout_below="@+id/separatorView_BREAKFAST"
+                        android:animateLayoutChanges="true" android:orientation="vertical">
 
                         <!--<include layout="@layout/view_generic_chart_entry"/>-->
                         <!--<include layout="@layout/view_generic_chart_entry"/>-->
@@ -379,6 +379,72 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/separatorView_DINNER" android:orientation="vertical">
+
+                        <!--<include layout="@layout/view_generic_chart_entry"/>-->
+                        <!--<include layout="@layout/view_generic_chart_entry"/>-->
+                        <!--<include layout="@layout/view_generic_chart_entry"/>-->
+
+                    </LinearLayout>
+                </RelativeLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/cardLayoutContainer_SNACKS"
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:elevation="@dimen/cardview_default_elevation"
+                app:cardCornerRadius="@dimen/cardview_default_radius" app:cardUseCompatPadding="true">
+
+                <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content">
+                    <LinearLayout android:id="@+id/chartTopBarLayout_SNACKS" android:layout_width="match_parent"
+                                  android:layout_height="wrap_content"
+                                  android:gravity="center_vertical"
+                                  android:orientation="horizontal"
+                                  android:paddingBottom="@dimen/metric_cell_padding_horizontal_smaller"
+                                  android:paddingTop="@dimen/metric_cell_padding_horizontal_smaller">
+
+                        <TextView android:id="@+id/chartTitleTV_SNACKS" android:layout_width="0dp"
+                                  android:layout_height="wrap_content"
+                                  android:layout_weight="30"
+                                  android:text="SNACKS"
+                                  android:textAppearance="?android:textAppearanceLarge"/>
+
+                        <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                      android:layout_weight="1"
+                                      android:gravity="center_vertical">
+
+                            <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                       android:src="@android:drawable/ic_input_add"/>
+                            <Button
+                                android:id="@+id/addEntryBTN_SNACKS"
+                                android:layout_width="60dp"
+                                android:layout_height="40dp"
+                                android:layout_weight="1" android:text="ADD"/>
+
+                            <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                                       android:src="@android:drawable/ic_input_add"/>
+
+                            <Button
+                                android:id="@+id/scanEntryBTN_SNACKS"
+                                android:layout_width="60dp"
+                                android:layout_height="40dp"
+                                android:layout_weight="1" android:text="SCAN"/>
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <View android:id="@+id/separatorView_SNACKS" android:layout_width="match_parent"
+                          android:layout_height="1dp"
+                          android:layout_below="@+id/chartTopBarLayout_SNACKS"
+                          android:background="@color/light_gray"/>
+
+                    <LinearLayout
+                        android:id="@+id/entriesContainerLayout_SNACKS"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/separatorView_SNACKS" android:orientation="vertical">
 
                         <!--<include layout="@layout/view_generic_chart_entry"/>-->
                         <!--<include layout="@layout/view_generic_chart_entry"/>-->
