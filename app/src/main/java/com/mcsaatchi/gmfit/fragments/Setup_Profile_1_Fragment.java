@@ -5,30 +5,26 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.telephony.TelephonyManager;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.countrypicker.CountryPicker;
-import com.mcsaatchi.gmfit.countrypicker.CountryPickerListener;
-import com.mcsaatchi.gmfit.logger.Log;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class Setup_Profile_1_Fragment extends Fragment {
-    private boolean touched = false;
-
     @Bind(R.id.countrySpinner)
     Spinner citizenship;
     @Bind(R.id.measurementsSpinner)
     Spinner measurements;
+    private boolean touched = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater,
@@ -46,43 +42,26 @@ public class Setup_Profile_1_Fragment extends Fragment {
         return fragmentView;
     }
 
-    private void setupCountriesSpinner(Spinner countriesSpinner) {
-        ArrayList<String> countries = new ArrayList<String>();
+    private void setupCountriesSpinner(final Spinner countriesSpinner) {
         TelephonyManager teleMgr = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
-        String localeCountry = teleMgr.getNetworkCountryIso();
-        if (localeCountry != null) {
-            Locale loc = new Locale("", localeCountry);
-            countries.add(loc.getDisplayCountry());
+        String localeCountry = new Locale("", teleMgr.getNetworkCountryIso()).getDisplayCountry();
+
+        Locale[] locale = Locale.getAvailableLocales();
+        ArrayList<String> countries = new ArrayList<String>();
+        String country;
+        for (Locale loc : locale) {
+            country = loc.getDisplayCountry();
+            if (country.length() > 0 && !countries.contains(country)) {
+                countries.add(country);
+            }
         }
+
+        Collections.sort(countries, String.CASE_INSENSITIVE_ORDER);
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, countries);
         countriesSpinner.setAdapter(adapter);
 
-        countriesSpinner.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (!touched) {
-                    touched = true;
-
-                    CountryPicker picker = CountryPicker.newInstance(getString(R.string.choose_country_hint));
-                    picker.show(getActivity().getSupportFragmentManager(), "COUNTRY_PICKER");
-
-                    picker.setListener(new CountryPickerListener() {
-                        @Override
-                        public void onSelectCountry(String name, String code) {
-                            Log.toaster(getActivity(), "Country selected : " + name + "\nCode: " + code);
-                        }
-
-                        @Override
-                        public void onDismissDialog() {
-                            touched = false;
-                        }
-                    });
-                }
-
-                return true;
-            }
-        });
+        countriesSpinner.setSelection(countries.indexOf(localeCountry));
     }
 
     private void setupMeasurementsSpinner(Spinner measurementsSpinner) {
