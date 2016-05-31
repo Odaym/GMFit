@@ -24,7 +24,6 @@ public class Setup_Profile_1_Fragment extends Fragment {
     Spinner citizenship;
     @Bind(R.id.measurementsSpinner)
     Spinner measurements;
-    private boolean touched = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater,
