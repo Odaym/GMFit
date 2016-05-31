@@ -20,6 +20,8 @@ import com.hookedonplay.decoviewlib.events.DecoEvent;
 import com.mcsaatchi.gmfit.R;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 public class Helpers {
 
@@ -44,6 +46,14 @@ public class Helpers {
         }
 
         return allValid;
+    }
+
+    public static String getCalendarDate(){
+        Calendar cal = Calendar.getInstance();
+        Date now = new Date();
+        cal.setTime(now);
+
+        return cal.get(Calendar.YEAR) + "-" + (cal.get(Calendar.MONTH) + 1) + "-" + cal.get(Calendar.DAY_OF_MONTH);
     }
 
     public static Bundle createActivityBundleWithProperties(int activityTitleResourceId, boolean enableBackButton) {
