@@ -11,6 +11,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
@@ -127,9 +128,12 @@ public class Fitness_Fragment extends Fragment {
     private OnDataPointListener mListener;
     private Activity parentActivity;
     private View fragmentView;
-    private boolean syncedUpWithAPI = false;
     private DecimalFormat dFormat = new DecimalFormat("#.00");
     private List<Integer> itemIndeces;
+
+    private boolean syncedUpWithAPI = false;
+    private boolean callsSucceeded = false;
+    private int requestsCount = 0;
 
     private SharedPreferences prefs;
 
@@ -166,6 +170,9 @@ public class Fitness_Fragment extends Fragment {
         setHasOptionsMenu(true);
 
         Helpers.setUpDecoViewArc(getActivity(), dynamicArc);
+
+        Log.d(TAG, "onCreateView: Device info : " + Build.MANUFACTURER + " " + Build.MODEL + " (" + Build.DEVICE + ") - "
+                + Build.VERSION.RELEASE);
 
         Helpers.setChartData(defaultBarChart, 20, 20);
 
@@ -336,7 +343,7 @@ public class Fitness_Fragment extends Fragment {
                 // At least one datatype must be specified.
                 .setDataTypes(DataType.TYPE_STEP_COUNT_CUMULATIVE)
                 // Can specify whether data type is raw or derived.
-                .setDataSourceTypes(DataSource.TYPE_RAW)
+                .setDataSourceTypes(DataSource.TYPE_DERIVED)
                 .build())
                 .setResultCallback(new ResultCallback<DataSourcesResult>() {
                     @Override
@@ -551,6 +558,7 @@ public class Fitness_Fragment extends Fragment {
 
                                 if (!metricCounterTV.getText().toString().isEmpty())
                                     syncUpMetricsWithFitnessAPI("distance-traveled", Double.parseDouble(firstMetricTV.getText().toString()));
+
                             } else {
                                 Helpers.showNoInternetDialog(getActivity());
                             }
@@ -563,14 +571,10 @@ public class Fitness_Fragment extends Fragment {
 
     private void syncUpMetricsWithFitnessAPI(String fitnessSlug, double value) {
         try {
-            Calendar cal = Calendar.getInstance();
-            Date now = new Date();
-            cal.setTime(now);
-
             final JSONObject jsonForRequest = new JSONObject();
             jsonForRequest.put(Cons.REQUEST_PARAM_SLUG, fitnessSlug);
             jsonForRequest.put(Cons.REQUEST_PARAM_VALUE, value);
-            jsonForRequest.put(Cons.REQUEST_PARAM_DATE, cal.get(Calendar.YEAR) + "-" + cal.get(Calendar.MONTH) + "-" + cal.get(Calendar.DAY_OF_MONTH));
+            jsonForRequest.put(Cons.REQUEST_PARAM_DATE, Helpers.getCalendarDate());
 
             new AsyncTask<String, String, String>() {
                 ProgressDialog syncingUpDialog;
@@ -605,33 +609,39 @@ public class Fitness_Fragment extends Fragment {
                 protected void onPostExecute(String aResult) {
                     Log.d("ASYNCRESULT", "onPostExecute: Response was : \n" + aResult);
 
+
                     if (aResult == null) {
                         Helpers.showNoInternetDialog(getActivity());
                     } else {
 
                         int responseCode = ApiHelper.parseAPIResponseForCode(aResult);
 
-                        AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
-                        alertDialog.setTitle(R.string.syncing_up_dialog_title);
-                        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                    }
-                                });
-
+                        requestsCount++;
                         syncingUpDialog.dismiss();
 
                         switch (responseCode) {
                             //TODO: Change this code to be universal 449, not just for registration
                             case Cons.REGISTERATION_API_EMAIL_TAKEN_CODE:
                             case Cons.API_RESPONSE_NOT_PARSED_CORRECTLY:
-                                alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
-                                alertDialog.show();
+                                callsSucceeded = false;
                                 break;
                             case Cons.API_REQUEST_SUCCEEDED_CODE:
                                 syncedUpWithAPI = true;
+                                callsSucceeded = true;
                                 break;
+                        }
+
+                        if (requestsCount == 3 && !callsSucceeded) {
+                            AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+                            alertDialog.setTitle(R.string.syncing_up_dialog_title);
+                            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                        }
+                                    });
+                            alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
+                            alertDialog.show();
                         }
                     }
                 }
