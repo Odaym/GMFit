@@ -38,6 +38,7 @@ public class GetStarted_Activity extends Base_Activity {
             public void onClick(View v) {
                 Intent intent = new Intent(GetStarted_Activity.this, SetupProfile_Activity.class);
                 startActivity(intent);
+                finish();
             }
         });
     }
