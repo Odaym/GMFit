@@ -66,6 +66,8 @@ public class MainProfile_Fragment extends Fragment {
 
         prefs = getActivity().getSharedPreferences(Cons.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
 
+        setHasOptionsMenu(false);
+
         userPolicyBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -186,8 +188,6 @@ public class MainProfile_Fragment extends Fragment {
     }
 
     private void fireUpEmergencyProfileAsyncTask() {
-        Toast.makeText(getActivity(), "Now inside AsyncTask", Toast.LENGTH_SHORT).show();
-
         new AsyncTask<String, String, InputStream>() {
             ProgressDialog downloadingPDFProfileDialog;
 
@@ -277,8 +277,6 @@ public class MainProfile_Fragment extends Fragment {
                                     new String[]{"support@gmfit.com"});
                             i.putExtra(Intent.EXTRA_STREAM, uri);
                             i.putExtra(Intent.EXTRA_SUBJECT, "EMERGENCY PROFILE");
-//                                + Build.MANUFACTURER + " " + Build.MODEL + " (" + Build.DEVICE + ") - "
-//                                + Build.VERSION.RELEASE);
                             i.putExtra(Intent.EXTRA_TEXT, "This is an emergency, please check my profile.");
                             try {
                                 startActivity(Intent.createChooser(i, "Send email through"));
