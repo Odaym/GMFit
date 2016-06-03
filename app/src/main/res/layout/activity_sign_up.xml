@@ -22,14 +22,11 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <com.github.florent37.materialtextfield.MaterialTextField
+            <com.wrapp.floatlabelededittext.FloatLabeledEditText
                 android:id="@+id/emailETFloating"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@null"
-                app:mtf_cardCollapsedHeight="@dimen/material_textfield_collapsed_height"
-                app:mtf_image="@drawable/ic_email_black_24dp"
-                app:mtf_labelColor="@android:color/black">
+                android:background="@null">
 
                 <com.andreabaccega.widget.FormEditText
                     android:id="@+id/emailET"
@@ -45,7 +42,7 @@
                     validator:testErrorString="@string/error_email_address_not_valid"
                     validator:testType="email"/>
 
-            </com.github.florent37.materialtextfield.MaterialTextField>
+            </com.wrapp.floatlabelededittext.FloatLabeledEditText>
         </LinearLayout>
 
         <LinearLayout
@@ -53,12 +50,9 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <com.github.florent37.materialtextfield.MaterialTextField
+            <com.wrapp.floatlabelededittext.FloatLabeledEditText
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:mtf_cardCollapsedHeight="@dimen/material_textfield_collapsed_height"
-                app:mtf_image="@drawable/ic_vpn_key_black_24dp"
-                app:mtf_labelColor="@android:color/black">
+                android:layout_height="wrap_content">
 
                 <com.andreabaccega.widget.FormEditText
                     android:id="@+id/passwordET"
@@ -73,8 +67,34 @@
                     validator:emptyErrorString="@string/field_empty_error_message"
                     validator:testErrorString="@string/field_password_too_short_error"/>
 
-            </com.github.florent37.materialtextfield.MaterialTextField>
+            </com.wrapp.floatlabelededittext.FloatLabeledEditText>
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.wrapp.floatlabelededittext.FloatLabeledEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.andreabaccega.widget.FormEditText
+                    android:id="@+id/confirmPasswordET"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/confirm_password_hint"
+                    android:inputType="textPassword"
+                    android:singleLine="true"
+                    android:textColor="@android:color/black"
+                    android:textColorHint="@color/edittext_hint_color"
+                    android:textCursorDrawable="@null"
+                    validator:emptyErrorString="@string/field_empty_error_message"
+                    validator:testErrorString="@string/field_password_too_short_error"/>
+
+            </com.wrapp.floatlabelededittext.FloatLabeledEditText>
+        </LinearLayout>
+
 
         <Button
             android:id="@+id/createAccountBTN"

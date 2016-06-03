@@ -39,14 +39,17 @@ public class Cons {
     public static final MediaType JSON_FORMAT_IDENTIFIER
             = MediaType.parse("application/json; charset=utf-8");
 
-    public static final String API_NAME_LOGOUT = "logout";
+    public static final String API_NAME_SIGN_OUT = "logout";
     public static final String API_NAME_REGISTER = "register";
-    public static final String API_NAME_LOGIN = "login";
+    public static final String API_NAME_SIGN_IN = "login";
     public static final String API_NAME_USER_POLICY = "user-policy";
     public static final String API_NAME_EMERGENCY = "emergency";
     public static final String API_NAME_GET_PROFILE = "user/profile";
     public static final String API_NAME_UPDATE_PROFILE = "user/update-profile";
     public static final String API_NAME_ADD_METRIC = "user/add-metric";
+
+    public static final int POST_REQUEST_TYPE = 500;
+    public static final int GET_REQUEST_TYPE = 1000;
 
     public static final String REQUEST_PARAM_SLUG = "slug";
     public static final String REQUEST_PARAM_VALUE = "value";
@@ -71,7 +74,7 @@ public class Cons {
     public static final String USER_ACCESS_TOKEN_HEADER_PARAMETER = "Authorization";
     public static final int REGISTRATION_PROCESS_SUCCEEDED_TOKEN_SAVED = 120;
     public static final int API_REQUEST_SUCCEEDED_CODE = 200;
-    public static final int REGISTERATION_API_EMAIL_TAKEN_CODE = 449;
+    public static final int API_RESPONSE_INVALID_PARAMETERS = 449;
     public static final int LOGIN_API_WRONG_CREDENTIALS = 401;
     public static final int API_RESPONSE_NOT_PARSED_CORRECTLY = -1;
 

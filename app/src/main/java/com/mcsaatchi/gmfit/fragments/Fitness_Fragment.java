@@ -2,15 +2,12 @@ package com.mcsaatchi.gmfit.fragments;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -21,7 +18,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.NestedScrollView;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.util.SparseArray;
@@ -71,12 +67,13 @@ import com.mcsaatchi.gmfit.classes.Helpers;
 import com.mcsaatchi.gmfit.models.DataChart;
 import com.squareup.otto.Subscribe;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -84,17 +81,12 @@ import java.util.concurrent.TimeUnit;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
 
 public class Fitness_Fragment extends Fragment {
 
     public static final int ADD_NEW_FITNESS_CHART_REQUEST_CODE = 1;
     public static final String TAG = "GMFit";
     private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
-    private static OkHttpClient client = new OkHttpClient();
     @Bind(R.id.bar_chart)
     HorizontalBarChart defaultBarChart;
     @Bind(R.id.dynamicArcView)
@@ -535,119 +527,61 @@ public class Fitness_Fragment extends Fragment {
     }
 
     private void showDistanceDataPoints(DataSet distanceDataSet) {
+        Value val = null;
+
         Log.d(TAG, "showDistanceDataPoints: size : " + distanceDataSet.getDataPoints().size());
         for (DataPoint dp : distanceDataSet.getDataPoints()) {
 
             for (Field field : dp.getDataType().getFields()) {
-                final Value val = dp.getValue(field);
+                val = dp.getValue(field);
                 Log.i(TAG, "Detected Distance DataPoint field: " + field.getName());
                 Log.i(TAG, "Detected Distance DataPoint value: " + val);
-                parentActivity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        firstMetricTV.setText(dFormat.format(Double.parseDouble(val.toString())));
-
-                        if (!syncedUpWithAPI) {
-                            if (Helpers.isInternetAvailable(getActivity())) {
-
-                                if (!metricCounterTV.getText().toString().isEmpty())
-                                    syncUpMetricsWithFitnessAPI("steps-count", Double.parseDouble(metricCounterTV.getText().toString()));
-
-                                if (!metricCounterTV.getText().toString().isEmpty())
-                                    syncUpMetricsWithFitnessAPI("active-calories", Double.parseDouble(secondMetricTV.getText().toString()));
-
-                                if (!metricCounterTV.getText().toString().isEmpty())
-                                    syncUpMetricsWithFitnessAPI("distance-traveled", Double.parseDouble(firstMetricTV.getText().toString()));
-
-                            } else {
-                                Helpers.showNoInternetDialog(getActivity());
-                            }
-                        }
-                    }
-                });
             }
         }
-    }
 
-    private void syncUpMetricsWithFitnessAPI(String fitnessSlug, double value) {
-        try {
-            final JSONObject jsonForRequest = new JSONObject();
-            jsonForRequest.put(Cons.REQUEST_PARAM_SLUG, fitnessSlug);
-            jsonForRequest.put(Cons.REQUEST_PARAM_VALUE, value);
-            jsonForRequest.put(Cons.REQUEST_PARAM_DATE, Helpers.getCalendarDate());
+        final Value finalVal = val;
 
-            new AsyncTask<String, String, String>() {
-                ProgressDialog syncingUpDialog;
+        if (finalVal != null) {
+            parentActivity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    firstMetricTV.setText(dFormat.format(Double.parseDouble(finalVal.toString())));
 
-                protected void onPreExecute() {
-                    syncingUpDialog = new ProgressDialog(getActivity());
-                    syncingUpDialog.setTitle(getString(R.string.syncing_up_dialog_title));
-                    syncingUpDialog.setMessage(getString(R.string.syncing_up_dialog_message));
-                    syncingUpDialog.show();
-                }
+                    if (!syncedUpWithAPI) {
+                        if (Helpers.isInternetAvailable(getActivity())) {
 
-                protected String doInBackground(String... aParams) {
-                    String userAccessToken = prefs.getString(Cons.PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS);
+                            try {
+                                final JSONObject jsonForRequest = new JSONObject();
 
-                    RequestBody body = RequestBody.create(Cons.JSON_FORMAT_IDENTIFIER, jsonForRequest.toString());
-                    Request request = new Request.Builder()
-                            .url(Cons.ROOT_URL_ADDRESS + Cons.API_NAME_ADD_METRIC)
-                            .addHeader(Cons.USER_ACCESS_TOKEN_HEADER_PARAMETER, userAccessToken)
-                            .post(body)
-                            .build();
+                                final JSONArray slugsArray = new JSONArray(Arrays.asList(new String[]{"steps-count", "active-calories", "distance-traveled"}));
+                                final JSONArray valuesArray;
 
-                    try {
-                        Response response = client.newCall(request).execute();
-                        return response.body().string();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                                double[] tempValuesArray = new double[]{Double
+                                        .parseDouble(metricCounterTV.getText().toString()), Double.parseDouble(secondMetricTV.getText().toString()),
+                                        Double.parseDouble(firstMetricTV.getText().toString())};
 
-                    return null;
-                }
+                                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+                                    valuesArray = new JSONArray(tempValuesArray);
+                                } else {
+                                    valuesArray = new JSONArray(Arrays.asList(tempValuesArray));
+                                }
 
-                protected void onPostExecute(String aResult) {
-                    Log.d("ASYNCRESULT", "onPostExecute: Response was : \n" + aResult);
+                                jsonForRequest.put(Cons.REQUEST_PARAM_SLUG, slugsArray);
+                                jsonForRequest.put(Cons.REQUEST_PARAM_VALUE, valuesArray);
+                                jsonForRequest.put(Cons.REQUEST_PARAM_DATE, Helpers.getCalendarDate());
 
+                                ApiHelper.runApiAsyncTask(getActivity(), Cons.API_NAME_ADD_METRIC, Cons.POST_REQUEST_TYPE, jsonForRequest, R.string
+                                        .syncing_up_dialog_title, R.string.syncing_up_dialog_message, null);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
 
-                    if (aResult == null) {
-                        Helpers.showNoInternetDialog(getActivity());
-                    } else {
-
-                        int responseCode = ApiHelper.parseAPIResponseForCode(aResult);
-
-                        requestsCount++;
-                        syncingUpDialog.dismiss();
-
-                        switch (responseCode) {
-                            //TODO: Change this code to be universal 449, not just for registration
-                            case Cons.REGISTERATION_API_EMAIL_TAKEN_CODE:
-                            case Cons.API_RESPONSE_NOT_PARSED_CORRECTLY:
-                                callsSucceeded = false;
-                                break;
-                            case Cons.API_REQUEST_SUCCEEDED_CODE:
-                                syncedUpWithAPI = true;
-                                callsSucceeded = true;
-                                break;
-                        }
-
-                        if (requestsCount == 3 && !callsSucceeded) {
-                            AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
-                            alertDialog.setTitle(R.string.syncing_up_dialog_title);
-                            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
-                                    new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            dialog.dismiss();
-                                        }
-                                    });
-                            alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
-                            alertDialog.show();
+                        } else {
+                            Helpers.showNoInternetDialog(getActivity());
                         }
                     }
                 }
-            }.execute();
-        } catch (JSONException e) {
-            e.printStackTrace();
+            });
         }
     }
 

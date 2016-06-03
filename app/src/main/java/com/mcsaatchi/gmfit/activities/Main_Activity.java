@@ -1,17 +1,13 @@
 package com.mcsaatchi.gmfit.activities;
 
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,17 +23,12 @@ import com.mcsaatchi.gmfit.fragments.Nutrition_Fragment;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnMenuTabClickListener;
 
-import java.io.IOException;
-
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
+import java.util.concurrent.Callable;
 
 public class Main_Activity extends Base_Activity {
 
     private static final String DEBUG_TAG = "Main_Activity";
     public static int USER_AUTHORISED_REQUEST_CODE = 5;
-    private static OkHttpClient client = new OkHttpClient();
     private BottomBar bottomBar;
     private Fragment fragmentReplace;
     private SharedPreferences prefs;
@@ -56,9 +47,10 @@ public class Main_Activity extends Base_Activity {
                 findViewById(R.id.myScrollingContent), savedInstanceState);
 
         bottomBar.noTopOffset();
-        bottomBar.noNavBarGoodness();
-        bottomBar.setActiveTabColor(ContextCompat.getColor(this, R.color.colorAccent));
+//        bottomBar.noNavBarGoodness();
+//        bottomBar.setActiveTabColor(ContextCompat.getColor(this, R.color.colorAccent));
         bottomBar.ignoreNightMode();
+        bottomBar.useFixedMode();
 
         bottomBar.setItemsFromMenu(R.menu.bottom_navigation, new OnMenuTabClickListener() {
             @Override
@@ -96,7 +88,7 @@ public class Main_Activity extends Base_Activity {
         bottomBar.mapColorForTab(1, ContextCompat.getColor(this, android.R.color.holo_green_dark));
         bottomBar.mapColorForTab(2, "#FF5252");
 //        bottomBar.mapColorForTab(3, "#FF5252");
-//        bottomBar.mapColorForTab(2, ContextCompat.getColor(this, android.R.color.holo_green_dark));
+//        bottomBar.mapColorForTab(4, ContextCompat.getColor(this, android.R.color.holo_green_dark));
     }
 
     @Override
@@ -116,74 +108,19 @@ public class Main_Activity extends Base_Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.signOut:
-                if (Helpers.isInternetAvailable(Main_Activity.this)) {
+                ApiHelper.runApiAsyncTask(this, Cons.API_NAME_SIGN_OUT, Cons.GET_REQUEST_TYPE, null, R.string.signing_out_dialog_title, R.string
+                        .signing_out_dialog_message, new Callable<Void>() {
+                    @Override
+                    public Void call() throws Exception {
+                        prefs.edit().putString(Cons.PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS).apply();
 
-                    new AsyncTask<String, String, String>() {
-                        ProgressDialog signingOutDialog;
+                        Intent intent = new Intent(Main_Activity.this, Login_Activity.class);
+                        startActivity(intent);
+                        finish();
 
-                        protected void onPreExecute() {
-                            signingOutDialog = new ProgressDialog(Main_Activity.this);
-                            signingOutDialog.setTitle(getString(R.string.signing_out_dialog_title));
-                            signingOutDialog.setMessage(getString(R.string.signing_out_dialog_message));
-                            signingOutDialog.show();
-                        }
-
-                        protected String doInBackground(String... aParams) {
-                            Request request = new Request.Builder()
-                                    .addHeader(Cons.USER_ACCESS_TOKEN_HEADER_PARAMETER, prefs.getString(Cons.PREF_USER_ACCESS_TOKEN, ""))
-                                    .url(Cons.ROOT_URL_ADDRESS + Cons.API_NAME_LOGOUT)
-                                    .build();
-
-                            try {
-                                Response response = client.newCall(request).execute();
-                                return response.body().string();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-
-                            return null;
-                        }
-
-                        protected void onPostExecute(String aResult) {
-                            Log.d("ASYNCRESULT", "onPostExecute: Response was : \n" + aResult);
-
-                            if (aResult == null) {
-                                Helpers.showNoInternetDialog(Main_Activity.this);
-                            } else {
-
-                                int responseCode = ApiHelper.parseAPIResponseForCode(aResult);
-
-                                AlertDialog alertDialog = new AlertDialog.Builder(Main_Activity.this).create();
-                                alertDialog.setTitle(R.string.signing_out_dialog_title);
-                                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
-                                        new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                dialog.dismiss();
-                                            }
-                                        });
-
-                                signingOutDialog.dismiss();
-
-                                switch (responseCode) {
-                                    case Cons.API_RESPONSE_NOT_PARSED_CORRECTLY:
-                                        alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
-                                        alertDialog.show();
-                                        break;
-                                    case Cons.API_REQUEST_SUCCEEDED_CODE:
-                                        //Set a shared pref for Logged In / Logged Out status maybe
-                                        prefs.edit().putString(Cons.PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS).apply();
-
-                                        Intent intent = new Intent(Main_Activity.this, Login_Activity.class);
-                                        startActivity(intent);
-                                        finish();
-
-                                        break;
-                                }
-                            }
-                        }
-                    }.execute();
-                }
-
+                        return null;
+                    }
+                });
                 break;
         }
         return super.onOptionsItemSelected(item);

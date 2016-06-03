@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -15,7 +14,6 @@ import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,7 +22,6 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.activities.UserPolicy_Activity;
 import com.mcsaatchi.gmfit.classes.ApiHelper;
 import com.mcsaatchi.gmfit.classes.Cons;
 import com.mcsaatchi.gmfit.classes.Helpers;
@@ -53,8 +50,6 @@ public class MainProfile_Fragment extends Fragment {
     Button emergencyProfileBTN;
     private SharedPreferences prefs;
 
-    private InputStream usableInputStream;
-
     @Override
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container,
@@ -71,79 +66,8 @@ public class MainProfile_Fragment extends Fragment {
         userPolicyBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (Helpers.isInternetAvailable(getActivity())) {
-                    new AsyncTask<String, String, String>() {
-                        ProgressDialog grabbingUserPolicyDialog;
-
-                        protected void onPreExecute() {
-                            grabbingUserPolicyDialog = new ProgressDialog(getActivity());
-                            grabbingUserPolicyDialog.setTitle(getString(R.string.grabbing_user_policy_dialog_title));
-                            grabbingUserPolicyDialog.setMessage(getString(R.string.grabbing_user_policy_dialog_message));
-                            grabbingUserPolicyDialog.show();
-                        }
-
-                        protected String doInBackground(String... aParams) {
-                            Request request = new Request.Builder()
-                                    .addHeader(Cons.USER_ACCESS_TOKEN_HEADER_PARAMETER, prefs.getString(Cons.PREF_USER_ACCESS_TOKEN, ""))
-                                    .url(Cons.ROOT_URL_ADDRESS + Cons.API_NAME_USER_POLICY)
-                                    .build();
-
-                            try {
-                                Response response = client.newCall(request).execute();
-                                return response.body().string();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-
-                            return null;
-                        }
-
-                        protected void onPostExecute(String aResult) {
-                            Log.d("ASYNCRESULT", "onPostExecute: Response was : \n" + aResult);
-
-                            if (aResult == null) {
-                                Helpers.showNoInternetDialog(getActivity());
-                            } else {
-
-                                int responseCode = ApiHelper.parseAPIResponseForCode(aResult);
-
-                                AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
-                                alertDialog.setTitle(R.string.grabbing_user_policy_dialog_title);
-                                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
-                                        new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                dialog.dismiss();
-                                            }
-                                        });
-
-                                grabbingUserPolicyDialog.dismiss();
-
-                                switch (responseCode) {
-                                    case Cons.API_RESPONSE_NOT_PARSED_CORRECTLY:
-
-                                        alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
-                                        alertDialog.show();
-                                        break;
-                                    case Cons.API_REQUEST_SUCCEEDED_CODE:
-                                        String userPolicyString = ApiHelper.parseResponseForUserPolicy(getActivity(), aResult);
-
-                                        if (userPolicyString != null) {
-                                            Intent intent = new Intent(getActivity(), UserPolicy_Activity.class);
-                                            intent.putExtra(Cons.EXTRAS_USER_POLICY, userPolicyString);
-                                            startActivity(intent);
-                                        } else {
-                                            alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
-                                            alertDialog.show();
-                                        }
-
-                                        break;
-                                }
-                            }
-                        }
-                    }.execute();
-                } else {
-                    Helpers.showNoInternetDialog(getActivity());
-                }
+                ApiHelper.runApiAsyncTask(getActivity(), Cons.API_NAME_USER_POLICY, Cons.GET_REQUEST_TYPE, null, R.string.grabbing_user_policy_dialog_title,
+                        R.string.grabbing_user_policy_dialog_message, null);
             }
         });
 
@@ -221,11 +145,9 @@ public class MainProfile_Fragment extends Fragment {
                     Helpers.showNoInternetDialog(getActivity());
                 } else {
 
-                    usableInputStream = aResult;
-
                     downloadingPDFProfileDialog.dismiss();
 
-                    getUserEmergencyProfile(usableInputStream);
+                    getUserEmergencyProfile(aResult);
                 }
             }
         }.execute();
