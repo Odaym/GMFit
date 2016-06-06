@@ -11,10 +11,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mcsaatchi.gmfit.R;
+import com.mcsaatchi.gmfit.adapters.OneItemWithIcon_Sparse_ListAdapter;
 import com.mcsaatchi.gmfit.classes.Cons;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
-import com.mcsaatchi.gmfit.adapters.OneItemWithIcon_Sparse_ListAdapter;
 import com.mcsaatchi.gmfit.reorderable_listview.DragSortListView;
 
 import java.util.ArrayList;
@@ -26,27 +26,22 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class CustomizeWidgets_Fragment extends Fragment {
+    private static final String TAG = "CustomizeWidgets_Fragment";
     @Bind(R.id.widgetsListView)
     DragSortListView widgetsListView;
-
     private OneItemWithIcon_Sparse_ListAdapter customizeWidgetsAdapter;
-
     private SharedPreferences prefs;
     private SharedPreferences.Editor prefsEditor;
-
     private SparseArray<String[]> fitnessItemsMap = new SparseArray<String[]>() {{
         put(0, new String[]{"Walking and Running Distance"});
-        put(1, new String[]{"Cycling Distance"});
-        put(2, new String[]{"Distance Traveled"});
-        put(3, new String[]{"Flights Climbed"});
-        put(4, new String[]{"Active Calories"});
-        put(5, new String[]{"Resting Calories"});
+        put(1, new String[]{"Distance Traveled"});
+        put(2, new String[]{"Flights Climbed"});
+        put(3, new String[]{"Active Calories"});
     }};
-
     private SparseArray<String[]> nutritionItemsMap = new SparseArray<String[]>() {{
         put(0, new String[]{"Calories", "125", "kcal", "102%"});
         put(1, new String[]{"Biotin", "321", "mcg", "120%"});
-        put(2, new String[]{"Caffeine","913", "mg", "39%"});
+        put(2, new String[]{"Caffeine", "913", "mg", "39%"});
         put(3, new String[]{"Calcium", "1092", "mg", "40%"});
         put(4, new String[]{"Carbohydrates", "129", "g", "92%"});
         put(5, new String[]{"Chloride", "923", "mg", "41%"});
@@ -54,14 +49,11 @@ public class CustomizeWidgets_Fragment extends Fragment {
         put(7, new String[]{"Copper", "301", "mg", "103%"});
         put(8, new String[]{"Dietary Cholesterol", "11", "mg", "2%"});
     }};
-
     private String PREFS_WIDGETS_ORDER_ARRAY_IDENTIFIER;
     private String WIDGETS_ORDER_ARRAY_CHANGED_EVENT;
-
     private Activity parentActivity;
     private SparseArray<String[]> itemsMap = new SparseArray<>();
     private SparseArray<String[]> orderedItemsMap = new SparseArray<>();
-
     private List<Integer> itemIndeces = new ArrayList<>();
     private DragSortListView.DropListener onDrop =
             new DragSortListView.DropListener() {
@@ -167,7 +159,7 @@ public class CustomizeWidgets_Fragment extends Fragment {
         widgetsListView.setDragListener(onDrag);
         widgetsListView.setDropListener(onDrop);
 
-        customizeWidgetsAdapter = new OneItemWithIcon_Sparse_ListAdapter(parentActivity, items,R.drawable.ic_menu_black_24dp);
+        customizeWidgetsAdapter = new OneItemWithIcon_Sparse_ListAdapter(parentActivity, items, R.drawable.ic_menu_black_24dp);
         widgetsListView.setAdapter(customizeWidgetsAdapter);
     }
 }
