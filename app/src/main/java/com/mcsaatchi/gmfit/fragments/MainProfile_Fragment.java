@@ -76,6 +76,8 @@ public class MainProfile_Fragment extends Fragment {
             public void onClick(View view) {
                 if (Helpers.isInternetAvailable(getActivity())) {
 
+                    prefs.edit().putBoolean("SYNCED_METRICS", false).apply();
+
                     boolean hasPermission = (ContextCompat.checkSelfPermission(getActivity(),
                             Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED);
                     if (!hasPermission) {
