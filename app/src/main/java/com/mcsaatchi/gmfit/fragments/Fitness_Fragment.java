@@ -121,11 +121,6 @@ public class Fitness_Fragment extends Fragment {
     private Activity parentActivity;
     private View fragmentView;
     private DecimalFormat dFormat = new DecimalFormat("#.00");
-    private List<Integer> itemIndeces;
-
-    private boolean syncedUpWithAPI = false;
-    private boolean callsSucceeded = false;
-    private int requestsCount = 0;
 
     private SharedPreferences prefs;
 
@@ -198,10 +193,6 @@ public class Fitness_Fragment extends Fragment {
             }
         }).start();
 
-        if (!checkPermissions()) {
-            requestPermissions();
-        }
-
         return fragmentView;
     }
 
@@ -273,60 +264,116 @@ public class Fitness_Fragment extends Fragment {
     }
 
     private void buildFitnessClient() {
-        googleApiFitnessClient = new GoogleApiClient.Builder(parentActivity)
-                .addApi(Fitness.SENSORS_API)
-                .addApi(Fitness.HISTORY_API)
-                .addScope(new Scope(Scopes.FITNESS_LOCATION_READ))
-                .addScope(new Scope(Scopes.FITNESS_ACTIVITY_READ_WRITE))
-//                .addScope(new Scope(Scopes.FITNESS_NUTRITION_READ_WRITE))
-                .addScope(new Scope(Scopes.FITNESS_BODY_READ_WRITE))
-                .addConnectionCallbacks(
-                        new GoogleApiClient.ConnectionCallbacks() {
-                            @Override
-                            public void onConnected(Bundle bundle) {
-                                Log.i(TAG, "Connected!!!");
-                                // Now you can make calls to the Fitness APIs.
-                                findStepCountDataSource();
-                                new Thread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        displayCaloriesDataForToday();
-                                        displayStepCountForToday();
-                                        displayDistanceCoveredForToday();
-                                    }
-                                }).start();
-                            }
+        if (!checkPermissions()) {
+            requestPermissions();
+        } else {
 
-                            @Override
-                            public void onConnectionSuspended(int i) {
-                                // If your connection to the sensor gets lost at some point,
-                                // you'll be able to determine the reason and react to it here.
-                                if (i == GoogleApiClient.ConnectionCallbacks.CAUSE_NETWORK_LOST) {
-                                    Log.i(TAG, "Connection lost.  Cause: Network Lost.");
-                                } else if (i
-                                        == GoogleApiClient.ConnectionCallbacks.CAUSE_SERVICE_DISCONNECTED) {
-                                    Log.i(TAG,
-                                            "Connection lost.  Reason: Service Disconnected");
+            googleApiFitnessClient = new GoogleApiClient.Builder(parentActivity)
+                    .addApi(Fitness.SENSORS_API)
+                    .addApi(Fitness.HISTORY_API)
+                    .addScope(new Scope(Scopes.FITNESS_LOCATION_READ))
+                    .addScope(new Scope(Scopes.FITNESS_ACTIVITY_READ_WRITE))
+//                .addScope(new Scope(Scopes.FITNESS_NUTRITION_READ_WRITE))
+                    .addScope(new Scope(Scopes.FITNESS_BODY_READ_WRITE))
+                    .addConnectionCallbacks(
+                            new GoogleApiClient.ConnectionCallbacks() {
+                                @Override
+                                public void onConnected(Bundle bundle) {
+                                    Log.i(TAG, "Connected!!!");
+                                    // Now you can make calls to the Fitness APIs.
+
+                                    findStepCountDataSource();
+
+                                    new Thread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            final String caloriesToday = displayCaloriesDataForToday();
+                                            final String stepCountToday = displayStepCountForToday();
+                                            final String distanceCoveredToday = displayDistanceCoveredForToday();
+
+                                            parentActivity.runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    firstMetricTV.setText(distanceCoveredToday);
+                                                    metricCounterTV.setText(stepCountToday);
+                                                    secondMetricTV.setText(caloriesToday);
+
+                                                    Log.d(TAG, "run: Prefs SYNCED METRICS is : " + prefs.getBoolean("SYNCED_METRICS", false));
+
+                                                    if (!prefs.getBoolean("SYNCED_METRICS", false)) {
+
+                                                        prefs.edit().putBoolean("SYNCED_METRICS", true).apply();
+
+                                                        Log.d(TAG, "run: NOT SYNCED, SYNCING NOW");
+
+                                                        if (Helpers.isInternetAvailable(getActivity())) {
+                                                            try {
+                                                                final JSONObject jsonForRequest = new JSONObject();
+
+                                                                final JSONArray slugsArray = new JSONArray(Arrays.asList(new String[]{"steps-count", "active-calories", "distance-traveled"}));
+                                                                final JSONArray valuesArray;
+
+                                                                double[] tempValuesArray = new double[]{Double
+                                                                        .parseDouble(metricCounterTV.getText().toString()), Double.parseDouble(secondMetricTV.getText().toString()),
+                                                                        Double.parseDouble(firstMetricTV.getText().toString())};
+
+                                                                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+                                                                    valuesArray = new JSONArray(tempValuesArray);
+                                                                } else {
+                                                                    valuesArray = new JSONArray(Arrays.asList(tempValuesArray));
+                                                                }
+
+                                                                jsonForRequest.put(Cons.REQUEST_PARAM_SLUG, slugsArray);
+                                                                jsonForRequest.put(Cons.REQUEST_PARAM_VALUE, valuesArray);
+                                                                jsonForRequest.put(Cons.REQUEST_PARAM_DATE, Helpers.getCalendarDate());
+
+                                                                ApiHelper.runApiAsyncTask(getActivity(), Cons.API_NAME_ADD_METRIC, Cons.POST_REQUEST_TYPE, jsonForRequest, R.string
+                                                                        .syncing_up_dialog_title, R.string.syncing_up_dialog_message, null);
+                                                            } catch (JSONException e) {
+                                                                e.printStackTrace();
+                                                            }
+
+                                                        } else {
+                                                            Helpers.showNoInternetDialog(getActivity());
+                                                        }
+                                                    }
+                                                }
+                                            });
+                                        }
+                                    }).start();
+                                }
+
+                                @Override
+                                public void onConnectionSuspended(int i) {
+                                    // If your connection to the sensor gets lost at some point,
+                                    // you'll be able to determine the reason and react to it here.
+                                    if (i == GoogleApiClient.ConnectionCallbacks.CAUSE_NETWORK_LOST) {
+                                        Log.i(TAG, "Connection lost.  Cause: Network Lost.");
+                                    } else if (i
+                                            == GoogleApiClient.ConnectionCallbacks.CAUSE_SERVICE_DISCONNECTED) {
+                                        Log.i(TAG,
+                                                "Connection lost.  Reason: Service Disconnected");
+                                    }
                                 }
                             }
-                        }
-                )
-                .addOnConnectionFailedListener(
-                        new GoogleApiClient.OnConnectionFailedListener() {
-                            @Override
-                            public void onConnectionFailed(ConnectionResult connectionResult) {
-                                Log.d(TAG, "Connection failed! " + connectionResult.getErrorMessage());
+                    )
+                    .addOnConnectionFailedListener(
+                            new GoogleApiClient.OnConnectionFailedListener() {
+                                @Override
+                                public void onConnectionFailed(ConnectionResult connectionResult) {
+                                    Log.d(TAG, "Connection failed! " + connectionResult.getErrorMessage());
+                                }
                             }
+                    )
+                    .enableAutoManage((FragmentActivity) parentActivity, 0, new GoogleApiClient.OnConnectionFailedListener() {
+                        @Override
+                        public void onConnectionFailed(ConnectionResult result) {
+                            Log.i(TAG, "Google Play services connection failed. Cause: " +
+                                    result.toString());
                         }
-                )
-                .enableAutoManage((FragmentActivity) parentActivity, 0, new GoogleApiClient.OnConnectionFailedListener() {
-                    @Override
-                    public void onConnectionFailed(ConnectionResult result) {
-                        Log.i(TAG, "Google Play services connection failed. Cause: " +
-                                result.toString());
-                    }
-                })
-                .build();
+                    })
+                    .build();
+        }
     }
 
     private void findStepCountDataSource() {
@@ -335,7 +382,7 @@ public class Fitness_Fragment extends Fragment {
                 // At least one datatype must be specified.
                 .setDataTypes(DataType.TYPE_STEP_COUNT_CUMULATIVE)
                 // Can specify whether data type is raw or derived.
-                .setDataSourceTypes(DataSource.TYPE_DERIVED)
+                .setDataSourceTypes(DataSource.TYPE_RAW)
                 .build())
                 .setResultCallback(new ResultCallback<DataSourcesResult>() {
                     @Override
@@ -373,7 +420,6 @@ public class Fitness_Fragment extends Fragment {
                     parentActivity.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-
                             thirdMetricTV.setText(NumberFormat.getInstance().format(Double.parseDouble(val.toString())));
                         }
                     });
@@ -474,115 +520,43 @@ public class Fitness_Fragment extends Fragment {
         return dataSet;
     }
 
-    public void displayCaloriesDataForToday() {
+    public String displayCaloriesDataForToday() {
         saveUserHeight(180);
         saveUserWeight(79);
 
-        DailyTotalResult resultcalories = Fitness.HistoryApi.readDailyTotal(googleApiFitnessClient, DataType.AGGREGATE_CALORIES_EXPENDED).await();
-        showCaloryDataPoints(resultcalories.getTotal());
+        DailyTotalResult resultingMetrics = Fitness.HistoryApi.readDailyTotal(googleApiFitnessClient, DataType.AGGREGATE_CALORIES_EXPENDED).await();
+
+        return showResultingDataPoints(resultingMetrics.getTotal());
     }
 
-    public void displayStepCountForToday() {
-        DailyTotalResult resultSteps = Fitness.HistoryApi.readDailyTotal(googleApiFitnessClient, DataType.AGGREGATE_STEP_COUNT_DELTA).await();
-        showStepDataPoints(resultSteps.getTotal());
+    public String displayStepCountForToday() {
+        DailyTotalResult resultingMetrics = Fitness.HistoryApi.readDailyTotal(googleApiFitnessClient, DataType.AGGREGATE_STEP_COUNT_DELTA).await();
+
+        return showResultingDataPoints(resultingMetrics.getTotal());
     }
 
-    public void displayDistanceCoveredForToday() {
-        DailyTotalResult resultDistance = Fitness.HistoryApi.readDailyTotal(googleApiFitnessClient, DataType.AGGREGATE_DISTANCE_DELTA).await();
-        showDistanceDataPoints(resultDistance.getTotal());
+    public String displayDistanceCoveredForToday() {
+        DailyTotalResult resultingMetrics = Fitness.HistoryApi.readDailyTotal(googleApiFitnessClient, DataType.AGGREGATE_DISTANCE_DELTA).await();
+
+        return showResultingDataPoints(resultingMetrics.getTotal());
     }
 
-    private void showCaloryDataPoints(DataSet caloriesDataSet) {
+    private String showResultingDataPoints(DataSet caloriesDataSet) {
+        Value val;
+        String finalValue = null;
+
         for (DataPoint dp : caloriesDataSet.getDataPoints()) {
 
             for (Field field : dp.getDataType().getFields()) {
-                final Value val = dp.getValue(field);
-                Log.i(TAG, "Detected Calories DataPoint field: " + field.getName());
-                Log.i(TAG, "Detected Calories DataPoint value: " + val);
-                parentActivity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        secondMetricTV.setText(dFormat.format(Double.parseDouble(val.toString())));
-                    }
-                });
-            }
-        }
-    }
-
-    private void showStepDataPoints(DataSet stepsDataSet) {
-        for (DataPoint dp : stepsDataSet.getDataPoints()) {
-
-            for (Field field : dp.getDataType().getFields()) {
-                final Value val = dp.getValue(field);
-                Log.i(TAG, "Detected Steps DataPoint field: " + field.getName());
-                Log.i(TAG, "Detected Steps DataPoint value: " + val);
-                parentActivity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        metricCounterTV.setText(val.toString());
-                    }
-                });
-            }
-        }
-    }
-
-    private void showDistanceDataPoints(DataSet distanceDataSet) {
-        Value val = null;
-
-        Log.d(TAG, "showDistanceDataPoints: size : " + distanceDataSet.getDataPoints().size());
-        for (DataPoint dp : distanceDataSet.getDataPoints()) {
-
-            for (Field field : dp.getDataType().getFields()) {
                 val = dp.getValue(field);
-                Log.i(TAG, "Detected Distance DataPoint field: " + field.getName());
-                Log.i(TAG, "Detected Distance DataPoint value: " + val);
+                Log.i(TAG, "Detected " + dp.getDataType() + " DataPoint field: " + field.getName());
+                Log.i(TAG, "Detected " + dp.getDataType() + " DataPoint value: " + val);
+
+                finalValue = dFormat.format(Double.parseDouble(val != null ? val.toString() : null));
             }
         }
 
-        final Value finalVal = val;
-
-        if (finalVal != null) {
-            parentActivity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    firstMetricTV.setText(dFormat.format(Double.parseDouble(finalVal.toString())));
-
-                    if (!syncedUpWithAPI) {
-                        if (Helpers.isInternetAvailable(getActivity())) {
-
-                            try {
-                                final JSONObject jsonForRequest = new JSONObject();
-
-                                final JSONArray slugsArray = new JSONArray(Arrays.asList(new String[]{"steps-count", "active-calories", "distance-traveled"}));
-                                final JSONArray valuesArray;
-
-                                double[] tempValuesArray = new double[]{Double
-                                        .parseDouble(metricCounterTV.getText().toString()), Double.parseDouble(secondMetricTV.getText().toString()),
-                                        Double.parseDouble(firstMetricTV.getText().toString())};
-
-                                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
-                                    valuesArray = new JSONArray(tempValuesArray);
-                                } else {
-                                    valuesArray = new JSONArray(Arrays.asList(tempValuesArray));
-                                }
-
-                                jsonForRequest.put(Cons.REQUEST_PARAM_SLUG, slugsArray);
-                                jsonForRequest.put(Cons.REQUEST_PARAM_VALUE, valuesArray);
-                                jsonForRequest.put(Cons.REQUEST_PARAM_DATE, Helpers.getCalendarDate());
-
-                                ApiHelper.runApiAsyncTask(getActivity(), Cons.API_NAME_ADD_METRIC, Cons.POST_REQUEST_TYPE, jsonForRequest, R.string
-                                        .syncing_up_dialog_title, R.string.syncing_up_dialog_message, null);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-
-                        } else {
-                            Helpers.showNoInternetDialog(getActivity());
-                        }
-                    }
-                }
-            });
-        }
+        return finalValue;
     }
 
     /**
@@ -622,6 +596,9 @@ public class Fitness_Fragment extends Fragment {
                 Log.i(TAG, "User interaction was cancelled.");
             } else if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 buildFitnessClient();
+                googleApiFitnessClient.connect();
+
+
             } else {
                 Snackbar.make(
                         fragmentView.findViewById(R.id.main_activity_view),
@@ -656,16 +633,16 @@ public class Fitness_Fragment extends Fragment {
                     SparseArray<String[]> widgetsMap = ebp.getSparseArrayExtra();
 
                     firstMetricTV.setText(widgetsMap.get(0)[0].split(" ")[0]);
-                    firstMetricIMG.setImageDrawable(getResources().getDrawable(R.drawable.walking));
+//                    firstMetricIMG.setImageDrawable(getResources().getDrawable(R.drawable.walking));
 
                     secondMetricTV.setText(widgetsMap.get(1)[0].split(" ")[0]);
-                    secondMetricIMG.setImageDrawable(getResources().getDrawable(R.drawable.biking));
+//                    secondMetricIMG.setImageDrawable(getResources().getDrawable(R.drawable.biking));
 
                     thirdMetricTV.setText(widgetsMap.get(2)[0].split(" ")[0]);
-                    thirdMetricIMG.setImageDrawable(getResources().getDrawable(R.drawable.calories));
+//                    thirdMetricIMG.setImageDrawable(getResources().getDrawable(R.drawable.calories));
 
                     fourthMetricTV.setText(widgetsMap.get(3)[0].split(" ")[0]);
-                    fourthMetricIMG.setImageDrawable(getResources().getDrawable(R.drawable.stairs));
+//                    fourthMetricIMG.setImageDrawable(getResources().getDrawable(R.drawable.stairs));
                 }
 
                 break;
@@ -726,7 +703,6 @@ public class Fitness_Fragment extends Fragment {
         } else {
             Log.d(TAG, "onResume REACHED, client null, buildingClient");
             buildFitnessClient();
-            googleApiFitnessClient.connect();
         }
     }
 }
