@@ -22,7 +22,6 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.classes.ApiHelper;
 import com.mcsaatchi.gmfit.classes.Cons;
 import com.mcsaatchi.gmfit.classes.Helpers;
 
@@ -37,6 +36,7 @@ import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -66,8 +66,10 @@ public class MainProfile_Fragment extends Fragment {
         userPolicyBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ApiHelper.runApiAsyncTask(getActivity(), Cons.API_NAME_USER_POLICY, Cons.GET_REQUEST_TYPE, null, R.string.grabbing_user_policy_dialog_title,
-                        R.string.grabbing_user_policy_dialog_message, null);
+//                ApiHelper.runApiAsyncTask(getActivity(), Cons.API_NAME_USER_POLICY, Cons.GET_REQUEST_TYPE, null, R.string.grabbing_user_policy_dialog_title,
+//                        R.string.grabbing_user_policy_dialog_message, null);
+
+                getMetricsByDate();
             }
         });
 
@@ -149,13 +151,13 @@ public class MainProfile_Fragment extends Fragment {
 
                     downloadingPDFProfileDialog.dismiss();
 
-                    getUserEmergencyProfile(aResult);
+                    downloadUserEmergencyProfile(aResult);
                 }
             }
         }.execute();
     }
 
-    private void getUserEmergencyProfile(final InputStream inputStreamResult) {
+    private void downloadUserEmergencyProfile(final InputStream inputStreamResult) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -177,6 +179,7 @@ public class MainProfile_Fragment extends Fragment {
                     String profileFileName = folder.toString() + File.separator + simpleDateFormat.format(new Date()) + ".pdf";
 
                     Log.d("PROFILE", "run: Profile filename " + profileFileName);
+
                     try {
                         output = new FileOutputStream(profileFileName);
 
@@ -219,5 +222,60 @@ public class MainProfile_Fragment extends Fragment {
                 }
             }
         }).start();
+    }
+
+    private void getMetricsByDate() {
+
+        new AsyncTask<String, String, InputStream>() {
+            ProgressDialog gettingMetrics;
+
+            protected void onPreExecute() {
+                gettingMetrics = new ProgressDialog(getActivity());
+                gettingMetrics.setTitle("Getting metrics");
+                gettingMetrics.setMessage(getString(R.string.downloading_pdf_profile_dialog_message));
+                gettingMetrics.show();
+            }
+
+            protected InputStream doInBackground(String... aParams) {
+                HttpUrl url = new HttpUrl.Builder()
+                        .scheme("http://")
+                        .host("gmfit.mcsaatchi.me/api/v1/user/metrics/")
+                        .addQueryParameter("start_date", "2016-06-07")
+                        .addQueryParameter("end_date", "2016-06-07")
+                        .addQueryParameter("type", "fitness")
+                        .addQueryParameter("monitored_parameters", "steps-count,active-calories")
+                        .build();
+
+                Log.d("URL_PARAM", "doInBackground: " + url.toString());
+
+                Request request = new Request.Builder()
+                        .addHeader(Cons.USER_ACCESS_TOKEN_HEADER_PARAMETER, prefs.getString(Cons.PREF_USER_ACCESS_TOKEN, ""))
+                        .url(url)
+                        .build();
+
+
+                try {
+                    Response response = client.newCall(request).execute();
+                    return response.body().byteStream();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                return null;
+            }
+
+            protected void onPostExecute(InputStream aResult) {
+                Log.d("ASYNCRESULT", "onPostExecute: Response was : \n" + aResult);
+
+                if (aResult == null) {
+                    Helpers.showNoInternetDialog(getActivity());
+                } else {
+
+                    gettingMetrics.dismiss();
+
+                    downloadUserEmergencyProfile(aResult);
+                }
+            }
+        }.execute();
     }
 }

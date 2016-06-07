@@ -146,7 +146,7 @@ public class Login_Activity extends Base_Activity implements
         }
     }
 
-    private void setupViewPager(){
+    private void setupViewPager() {
         viewPager.setAdapter(new IntroAdapter(getSupportFragmentManager()));
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
