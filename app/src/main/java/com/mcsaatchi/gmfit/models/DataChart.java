@@ -10,7 +10,7 @@ public class DataChart {
     @DatabaseField
     String name;
     @DatabaseField
-    int type;
+    String type;
     @DatabaseField
     int order;
 
@@ -25,7 +25,7 @@ public class DataChart {
     public DataChart() {
     }
 
-    public DataChart(String name, int type, int order, String whichFragment) {
+    public DataChart(String name, String type, int order, String whichFragment) {
         this.name = name;
         this.type = type;
         this.order = order;
@@ -40,11 +40,11 @@ public class DataChart {
         this.name = name;
     }
 
-    public int getType() {
+    public String getType() {
         return type;
     }
 
-    public void setType(int type) {
+    public void setType(String type) {
         this.type = type;
     }
 
