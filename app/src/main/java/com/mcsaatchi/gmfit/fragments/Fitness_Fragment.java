@@ -73,6 +73,7 @@ import org.json.JSONObject;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -84,8 +85,8 @@ import butterknife.ButterKnife;
 
 public class Fitness_Fragment extends Fragment {
 
-    public static final int ADD_NEW_FITNESS_CHART_REQUEST_CODE = 1;
     public static final String TAG = "GMFit";
+    public static final int ADD_NEW_FITNESS_CHART_REQUEST_CODE = 1;
     private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
     @Bind(R.id.bar_chart)
     HorizontalBarChart defaultBarChart;
@@ -121,8 +122,9 @@ public class Fitness_Fragment extends Fragment {
     private Activity parentActivity;
     private View fragmentView;
     private DecimalFormat dFormat = new DecimalFormat("#.00");
-
     private SharedPreferences prefs;
+    private String chartType;
+    private String chartName;
 
     @Override
     public void onAttach(Context context) {
@@ -161,7 +163,7 @@ public class Fitness_Fragment extends Fragment {
         Log.d(TAG, "onCreateView: Device info : " + Build.MANUFACTURER + " " + Build.MODEL + " (" + Build.DEVICE + ") - "
                 + Build.VERSION.RELEASE);
 
-        Helpers.setChartData(defaultBarChart, 20, 20);
+        Helpers.temporarySetHorizontalChartData(defaultBarChart, 20, 20);
 
         addNewBarChartBTN.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -174,29 +176,29 @@ public class Fitness_Fragment extends Fragment {
 
         setUpMetricCounterTextSwitcherAnimation();
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                allDataCharts = dataChartDAO.queryForAll();
-
-                if (!allDataCharts.isEmpty()) {
-                    parentActivity.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            for (DataChart chart :
-                                    allDataCharts) {
-                                addNewBarChart(chart.getName());
-                            }
-                        }
-                    });
-                }
-            }
-        }).start();
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                allDataCharts = dataChartDAO.queryForAll();
+//
+//                if (!allDataCharts.isEmpty()) {
+//                    parentActivity.runOnUiThread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            for (DataChart chart :
+//                                    allDataCharts) {
+//                                addNewBarChart(chart.getName(), ebp.getFloatArrayExtra()());
+//                            }
+//                        }
+//                    });
+//                }
+//            }
+//        }).start();
 
         return fragmentView;
     }
 
-    public void addNewBarChart(String chartTitle) {
+    public void addNewBarChart(String chartTitle, ArrayList<Float> floatArrayExtra) {
         final View barChartLayout_NEW_CHART = getActivity().getLayoutInflater().inflate(R.layout.view_barchart_container, null);
 
         Button removeChartBTN_NEW_CHART = (Button) barChartLayout_NEW_CHART.findViewById(R.id.removeChartBTN);
@@ -207,7 +209,7 @@ public class Fitness_Fragment extends Fragment {
         if (chartTitle != null)
             chartTitleTV_NEW_CHART.setText(chartTitle);
 
-        Helpers.setChartData(barChart_NEW_CHART, 10, 10);
+        Helpers.setBarChartData(barChart_NEW_CHART, floatArrayExtra);
 
         removeChartBTN_NEW_CHART.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -248,12 +250,13 @@ public class Fitness_Fragment extends Fragment {
         if (requestCode == ADD_NEW_FITNESS_CHART_REQUEST_CODE) {
             if (data != null) {
 
-                String chartType = data.getStringExtra(Cons.EXTRAS_CHART_TYPE_SELECTED);
+                chartType = data.getStringExtra(Cons.EXTRAS_CHART_TYPE_SELECTED);
+                chartName = data.getStringExtra(Cons.EXTRAS_CHART_FULL_NAME);
 
                 //Add the chart entry to the database
-                dataChartDAO.create(new DataChart(chartType, Cons.BarChart_CHART_TYPE, dataChartDAO.queryForAll().size() + 1, Cons.EXTRAS_FITNESS_FRAGMENT));
+//                dataChartDAO.create(new DataChart(chartName, chartType, dataChartDAO.queryForAll().size() + 1, Cons.EXTRAS_FITNESS_FRAGMENT));
 
-                addNewBarChart(chartType);
+                ApiHelper.getChartMetricsByDate(getActivity(), chartType);
 
             } else if (requestCode == Main_Activity.USER_AUTHORISED_REQUEST_CODE && googleApiFitnessClient != null) {
                 googleApiFitnessClient.stopAutoManage(getActivity());
@@ -458,12 +461,12 @@ public class Fitness_Fragment extends Fragment {
         long startTime = cal.getTimeInMillis();
 
         DataSet heightDataSet = createDataForRequest(
-                DataType.TYPE_HEIGHT,    // for height, it would be DataType.TYPE_HEIGHT
+                DataType.TYPE_HEIGHT,
                 DataSource.TYPE_RAW,
-                height,                  // weight in kgs
-                startTime,              // start time
-                endTime,                // end time
-                TimeUnit.MILLISECONDS                // Time Unit, for example, TimeUnit.MILLISECONDS
+                height,
+                startTime,
+                endTime,
+                TimeUnit.MILLISECONDS
         );
 
         com.google.android.gms.common.api.Status heightInsertStatus =
@@ -481,12 +484,12 @@ public class Fitness_Fragment extends Fragment {
         long startTime = cal.getTimeInMillis();
 
         DataSet weightDataSet = createDataForRequest(
-                DataType.TYPE_WEIGHT,    // for height, it would be DataType.TYPE_HEIGHT
+                DataType.TYPE_WEIGHT,
                 DataSource.TYPE_RAW,
-                weight,                  // weight in kgs
-                startTime,              // start time
-                endTime,                // end time
-                TimeUnit.MILLISECONDS                // Time Unit, for example, TimeUnit.MILLISECONDS
+                weight,
+                startTime,
+                endTime,
+                TimeUnit.MILLISECONDS
         );
 
         com.google.android.gms.common.api.Status weightInsertStatus =
@@ -598,7 +601,6 @@ public class Fitness_Fragment extends Fragment {
                 buildFitnessClient();
                 googleApiFitnessClient.connect();
 
-
             } else {
                 Snackbar.make(
                         fragmentView.findViewById(R.id.main_activity_view),
@@ -653,8 +655,12 @@ public class Fitness_Fragment extends Fragment {
 
                 for (DataChart chart :
                         allDataCharts) {
-                    addNewBarChart(chart.getName());
+                    addNewBarChart(chart.getName(), ebp.getFloatArrayExtra());
                 }
+
+                break;
+            case Cons.EVENT_CHART_METRICS_RECEIVED:
+                addNewBarChart(chartName, ebp.getFloatArrayExtra());
 
                 break;
         }
