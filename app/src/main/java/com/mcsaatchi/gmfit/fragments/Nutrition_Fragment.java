@@ -353,7 +353,7 @@ public class Nutrition_Fragment extends Fragment {
         if (chartTitle != null)
             chartTitleTV.setText(chartTitle);
 
-        Helpers.setChartData(barChart, 10, 10);
+        //TODO: apply the same change you did here as in the Fitness Fragment
 
         removeChartBTN.setOnClickListener(new View.OnClickListener() {
             @Override
