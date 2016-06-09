@@ -11,7 +11,10 @@ public class Cons {
     public static final String EXTRAS_HEALTH_FRAGMENT = "HEALTH";
 
     public static final String EXTRAS_ADD_CHART_WHAT_TYPE = "add_chart_what_type";
+    public static final String EXTRAS_ADD_CHART_WHAT_NAME = "add_chart_what_name";
     public static final String EXTRAS_CHART_TYPE_SELECTED = "chart_type_selected";
+    public static final String EXTRAS_CHART_FULL_NAME = "chart_full_name";
+
     public static final int BarChart_CHART_TYPE = 1;
     public static final String EXTRAS_FITNESS_WIDGETS_ORDER_ARRAY = "fitness_widgets_order_array";
     public static final String EXTRAS_FITNESS_WIDGETS_ORDER_ARRAY_CHANGED = "fitness_widgets_order_array_changed";
@@ -55,6 +58,11 @@ public class Cons {
     public static final String REQUEST_PARAM_VALUE = "value";
     public static final String REQUEST_PARAM_DATE = "date";
 
+    public static final String SLUG_VALUE_STEPS_COUNT = "steps-count";
+    public static final String SLUG_VALUE_DISTANCE_TRAVELED = "distance-traveled";
+    public static final String SLUG_VALUE_CYCLING_DISTANCE = "cycling-distance";
+    public static final String SLUG_VALUE_ACTIVE_CALORIES = "active-calories";
+
     public static final String REQUEST_PARAM_EMAIL = "email";
     public static final String REQUEST_PARAM_PASSWORD = "password";
     public static final String REQUEST_PARAM_NAME = "name";
@@ -66,6 +74,7 @@ public class Cons {
     public static final String REQUEST_PARAM_GENDER = "gender";
 
     public static final String EVENT_USER_FINALIZE_SETUP_PROFILE = "user_finalize_setup_profile";
+    public static final String EVENT_CHART_METRICS_RECEIVED = "event_chart_metrics_received";
     public static final String EVENT_SIGNNED_UP_SUCCESSFULLY_CLOSE_LOGIN_ACTIVITY = "signned_up_successfully_close_login_activity";
 
     //REGISTERATION API
