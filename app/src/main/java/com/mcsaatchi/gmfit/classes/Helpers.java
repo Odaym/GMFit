@@ -48,7 +48,7 @@ public class Helpers {
         return allValid;
     }
 
-    public static String getCalendarDate(){
+    public static String getCalendarDate() {
         Calendar cal = Calendar.getInstance();
         Date now = new Date();
         cal.setTime(now);
@@ -80,7 +80,7 @@ public class Helpers {
         return bundle;
     }
 
-    public static void setChartData(BarChart chart, int xLimits, int yLimits) {
+    public static void temporarySetHorizontalChartData(BarChart chart, int xLimits, int yLimits) {
         ArrayList<BarEntry> yVals1 = new ArrayList<>();
 
         for (int i = 0; i < yLimits + 1; i++) {
@@ -110,6 +110,39 @@ public class Helpers {
         chart.invalidate();
     }
 
+    public static void setBarChartData(BarChart chart, ArrayList<Float> metricsArray) {
+        ArrayList<BarEntry> valsMetrics = new ArrayList<>();
+
+        for (int i = 0; i < metricsArray.size(); i++) {
+            BarEntry val1 = new BarEntry(metricsArray.get(i), i);
+            valsMetrics.add(val1);
+        }
+
+        BarDataSet set1;
+        set1 = new BarDataSet(valsMetrics, "Legend");
+        set1.setColors(ColorTemplate.VORDIPLOM_COLORS);
+        set1.setBarShadowColor(R.color.bpblack);
+        set1.setDrawValues(false);
+
+        ArrayList<IBarDataSet> dataSets = new ArrayList<>();
+        dataSets.add(set1);
+
+        ArrayList<String> xVals = new ArrayList<>();
+        xVals.add("S");
+        xVals.add("S");
+        xVals.add("M");
+        xVals.add("T");
+        xVals.add("W");
+        xVals.add("Th");
+        xVals.add("F");
+
+        BarData data = new BarData(xVals, dataSets);
+
+        chart.setData(data);
+
+        chart.invalidate();
+    }
+
     public static void setUpDecoViewArc(Context ctx, DecoView dynamicArc) {
         SeriesItem seriesItem1 = new SeriesItem.Builder(ctx.getResources().getColor(android.R.color.holo_orange_dark))
                 .setRange(0, 100, 0)
@@ -131,7 +164,7 @@ public class Helpers {
                 cm.getActiveNetworkInfo().isConnectedOrConnecting();
     }
 
-    public static void showNoInternetDialog(Context context){
+    public static void showNoInternetDialog(Context context) {
         AlertDialog alertDialog = new AlertDialog.Builder(context).create();
         alertDialog.setTitle(R.string.no_internet_conection_dialog_title);
         alertDialog.setMessage(context.getString(R.string.no_internet_connection_dialog_message));
@@ -143,26 +176,4 @@ public class Helpers {
                 });
         alertDialog.show();
     }
-
-//    public static void linkifyString (final Context context, TextView tv, int stringResourceId, int startIndex, int
-//            endIndex){
-//        SpannableString ss = new SpannableString(context.getString(stringResourceId));
-//        ClickableSpan clickableSpan = new ClickableSpan() {
-//            @Override
-//            public void onClick(View textView) {
-//                Log.toaster(context, "Implement forgot password logic");
-//            }
-//            @Override
-//            public void updateDrawState(TextPaint ds) {
-//                super.updateDrawState(ds);
-//                ds.setUnderlineText(false);
-//            }
-//        };
-//
-//        ss.setSpan(clickableSpan, startIndex, ss.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-//
-//        tv.setText(ss);
-//        tv.setMovementMethod(LinkMovementMethod.getInstance());
-//        tv.setHighlightColor(Color.TRANSPARENT);
-//    }
 }
