@@ -15,18 +15,24 @@ import com.mcsaatchi.gmfit.activities.GetStarted_Activity;
 import com.mcsaatchi.gmfit.activities.Main_Activity;
 import com.mcsaatchi.gmfit.activities.UserPolicy_Activity;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.concurrent.Callable;
 
+import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class ApiHelper {
+
+    private static final String TAG = "ApiHelper";
 
     public static void runApiAsyncTask(final Context context, final String ApiName, final int requestType, final JSONObject jsonParams, final int
             dialogTitleResId, final int dialogMessageResId, final Callable<Void> successCallback) {
@@ -184,6 +190,69 @@ public class ApiHelper {
         }
     }
 
+    public static void getChartMetricsByDate(final Context context, final String type) {
+        final SharedPreferences prefs = context.getSharedPreferences(Cons.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
+        final OkHttpClient client = new OkHttpClient();
+
+        new AsyncTask<String, String, String>() {
+
+            private ProgressDialog gettingMetrics;
+            private ArrayList<Float> metricsForThatDay;
+
+            protected void onPreExecute() {
+                gettingMetrics = new ProgressDialog(context);
+                gettingMetrics.setTitle("Getting metrics");
+                gettingMetrics.setMessage(context.getString(R.string.downloading_pdf_profile_dialog_message));
+                gettingMetrics.show();
+            }
+
+            protected String doInBackground(String... aParams) {
+                HttpUrl url = new HttpUrl.Builder()
+                        .scheme("http")
+                        .host("gmfit.mcsaatchi.me")
+                        .addPathSegments("api/v1/user/metrics")
+                        .addQueryParameter("start_date", "2016-05-07")
+                        .addQueryParameter("end_date", "2016-06-07")
+                        .addQueryParameter("type", "fitness")
+                        .addQueryParameter("monitored_metrics", type)
+                        .build();
+
+                Log.d("URL_PARAM", "doInBackground: " + url.toString());
+
+                Request request = new Request.Builder()
+                        .addHeader(Cons.USER_ACCESS_TOKEN_HEADER_PARAMETER, prefs.getString(Cons.PREF_USER_ACCESS_TOKEN, ""))
+                        .url(url)
+                        .build();
+
+                try {
+                    Response response = client.newCall(request).execute();
+                    return response.body().string();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                return null;
+            }
+
+            protected void onPostExecute(String aResult) {
+                Log.d("ASYNCRESULT", "onPostExecute: Response was : \n" + aResult);
+
+                if (aResult == null) {
+                    Helpers.showNoInternetDialog(context);
+                } else {
+                    gettingMetrics.dismiss();
+
+                    metricsForThatDay = parseAPIResponseForMetricsByDate(aResult);
+
+                    if (metricsForThatDay != null) {
+                        EventBus_Singleton.getInstance().post(new EventBus_Poster(Cons.EVENT_CHART_METRICS_RECEIVED, metricsForThatDay));
+                    }
+                }
+            }
+
+        }.execute();
+    }
+
     public static int parseAPIResponseForCode(String responseObject) {
         try {
             JSONObject jsonResponse = new JSONObject(responseObject);
@@ -195,6 +264,45 @@ public class ApiHelper {
         }
 
         return Cons.API_RESPONSE_NOT_PARSED_CORRECTLY;
+    }
+
+    public static ArrayList<Float> parseAPIResponseForMetricsByDate(String responseObject) {
+        try {
+            JSONObject jsonResponse = new JSONObject(responseObject);
+            JSONObject dataJSONObject = jsonResponse.getJSONObject("data");
+            JSONArray bodyJSONArray = dataJSONObject.getJSONArray("body");
+
+            JSONObject bodyContentsObject = ((JSONObject) bodyJSONArray.get(0));
+
+            Iterator<?> keys = ((JSONObject) bodyJSONArray.get(0)).keys();
+
+            ArrayList<Float> finalMetrics = new ArrayList<>();
+
+            while (keys.hasNext()) {
+                String key = (String) keys.next();
+
+                if (bodyContentsObject.get(key) instanceof JSONObject) {
+
+                    JSONObject keyObject = (JSONObject) bodyContentsObject.get(key);
+
+                    JSONArray metricsArray = (JSONArray) keyObject.get("metrics");
+
+//                    Log.d(TAG, "parseAPIResponseForMetricsByDate: The metrics array here is " + metricsArray.length() + " objects long");
+
+                    JSONObject metricContents = ((JSONObject) metricsArray.get(0));
+
+                    Log.d(TAG, "parseAPIResponseForMetricsByDate: Value is : " + metricContents.get("value"));
+
+                    finalMetrics.add((float) metricContents.getDouble("value"));
+                }
+            }
+
+            return finalMetrics;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     public static String parseResponseForUserPolicy(Context context, String responseObject) {
