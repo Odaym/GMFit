@@ -5,6 +5,7 @@ import android.util.SparseArray;
 import com.mcsaatchi.gmfit.models.DataChart;
 import com.mcsaatchi.gmfit.models.MealItem;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class EventBus_Poster {
@@ -12,6 +13,7 @@ public class EventBus_Poster {
     private String stringExtra;
     private MealItem mealItem;
     private SparseArray<String[]> sparseArrayExtra;
+    private ArrayList<Float> floatArrayExtra;
     private List<DataChart> dataChartsListExtra;
 
     public EventBus_Poster(String message) {
@@ -21,6 +23,11 @@ public class EventBus_Poster {
     public EventBus_Poster(String message, SparseArray<String[]> sparseArrayExtra) {
         this.message = message;
         this.sparseArrayExtra = sparseArrayExtra;
+    }
+
+    public EventBus_Poster(String message, ArrayList<Float> floatArrayExtra) {
+        this.message = message;
+        this.floatArrayExtra = floatArrayExtra;
     }
 
     public EventBus_Poster(String message, MealItem mealItem) {
@@ -40,6 +47,14 @@ public class EventBus_Poster {
 
     public MealItem getMealItemExtra() {
         return mealItem;
+    }
+
+    public ArrayList<Float> getFloatArrayExtra() {
+        return floatArrayExtra;
+    }
+
+    public void setDoubleArrayExtra(ArrayList<Float> floatArrayExtra) {
+        this.floatArrayExtra = floatArrayExtra;
     }
 
     public String getStringExtra() {
