@@ -23,12 +23,12 @@ public class AddNewChart_Activity extends Base_Activity {
     ListView chartsList;
 
     private SparseArray<String[]> fitnessItemsMap = new SparseArray<String[]>() {{
-        put(0, new String[]{"Number of Steps", "Steps"});
-        put(1, new String[]{"Walking and Running Distance", "KM"});
-        put(2, new String[]{"Cycling Distance", "KM"});
-        put(3, new String[]{"Total Distance Traveled", "KM"});
-        put(4, new String[]{"Flights Climbed", "Steps"});
-        put(5, new String[]{"Active Calories", "kcal"});
+        put(0, new String[]{"Number of Steps", "Steps", "steps-count"});
+        put(1, new String[]{"Walking and Running Distance", "KM", "distance-traveled"});
+        put(2, new String[]{"Cycling Distance", "KM", "cycling-distance"});
+        put(3, new String[]{"Total Distance Traveled", "KM", "active-calories"});
+        put(4, new String[]{"Flights Climbed", "Steps", "steps-count"});
+        put(5, new String[]{"Active Calories", "kcal", "active-calories"});
     }};
 
     private SparseArray<String[]> nutritionItemsMap = new SparseArray<String[]>() {{
@@ -64,7 +64,8 @@ public class AddNewChart_Activity extends Base_Activity {
                             @Override
                             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                                 Intent intent = new Intent();
-                                intent.putExtra(Cons.EXTRAS_CHART_TYPE_SELECTED, fitnessItemsMap.get(position)[0]);
+                                intent.putExtra(Cons.EXTRAS_CHART_FULL_NAME, fitnessItemsMap.get(position)[0]);
+                                intent.putExtra(Cons.EXTRAS_CHART_TYPE_SELECTED, fitnessItemsMap.get(position)[2]);
                                 setResult(Fitness_Fragment.ADD_NEW_FITNESS_CHART_REQUEST_CODE, intent);
                                 finish();
                             }
@@ -76,7 +77,8 @@ public class AddNewChart_Activity extends Base_Activity {
                             @Override
                             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                                 Intent intent = new Intent();
-                                intent.putExtra(Cons.EXTRAS_CHART_TYPE_SELECTED, nutritionItemsMap.get(position)[0]);
+                                intent.putExtra(Cons.EXTRAS_CHART_FULL_NAME, nutritionItemsMap.get(position)[0]);
+                                intent.putExtra(Cons.EXTRAS_CHART_TYPE_SELECTED, nutritionItemsMap.get(position)[2]);
                                 setResult(Nutrition_Fragment.ADD_NEW_NUTRITION_CHART_REQUEST, intent);
                                 finish();
                             }
