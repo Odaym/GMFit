@@ -120,6 +120,7 @@ public class Setup_Profile_3_Fragment extends Fragment implements CalendarDatePi
                         jsonForRequest.put(Cons.REQUEST_PARAM_WEIGHT, weightET.getText().toString());
                         jsonForRequest.put(Cons.REQUEST_PARAM_BMI, calculateBMI(Double.parseDouble(weightET.getText().toString()), Double.parseDouble(heightET.getText().toString())));
 
+
 //                        ApiHelper.runApiAsyncTask(getActivity(), Cons.API_NAME_UPDATE_PROFILE, Cons.POST_REQUEST_TYPE, jsonForRequest, R.string
 //                                .setting_up_profile_dialog_title, R.string.setting_up_profile_dialog_message, new Callable<Void>() {
 //                            @Override

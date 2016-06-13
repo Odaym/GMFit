@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:validator="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -34,6 +33,7 @@
                     android:inputType="textEmailAddress"
                     android:singleLine="true"
                     android:textColor="@android:color/black"
+                    android:text="oday.maleh@gmail.con"
                     android:textColorHint="@color/edittext_hint_color"
                     android:textCursorDrawable="@null"
                     validator:emptyErrorString="@string/field_empty_error_message"
@@ -61,6 +61,7 @@
                     android:singleLine="true"
                     android:textColor="@android:color/black"
                     android:textColorHint="@color/edittext_hint_color"
+                    android:text="odayoday"
                     android:textCursorDrawable="@null"
                     validator:emptyErrorString="@string/field_empty_error_message"
                     validator:testErrorString="@string/field_password_too_short_error"/>

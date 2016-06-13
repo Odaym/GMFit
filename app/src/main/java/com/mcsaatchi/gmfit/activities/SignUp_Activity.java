@@ -8,15 +8,18 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.andreabaccega.widget.FormEditText;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.classes.ApiHelper;
 import com.mcsaatchi.gmfit.classes.Cons;
 import com.mcsaatchi.gmfit.classes.Helpers;
+import com.mcsaatchi.gmfit.models.DefaultResponse;
+import com.mcsaatchi.gmfit.rest.RestClient;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,6 +28,10 @@ import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import rx.Observable;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class SignUp_Activity extends Base_Activity {
 
@@ -39,6 +46,7 @@ public class SignUp_Activity extends Base_Activity {
     @Bind(R.id.creatingAccountTOSTV)
     TextView creatingAccountTOSTV;
     private ArrayList<FormEditText> allFields = new ArrayList<>();
+    private static final String TAG = "SignUp_Activity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,8 +70,10 @@ public class SignUp_Activity extends Base_Activity {
                         final JSONObject jsonForRequest = new JSONObject();
                         jsonForRequest.put(Cons.REQUEST_PARAM_EMAIL, emailET.getText().toString());
                         jsonForRequest.put(Cons.REQUEST_PARAM_PASSWORD, passwordET.getText().toString());
-                        ApiHelper.runApiAsyncTask(SignUp_Activity.this, Cons.API_NAME_REGISTER, Cons.POST_REQUEST_TYPE, jsonForRequest, R.string
-                                .setting_up_profile_dialog_title, R.string.setting_up_profile_dialog_message, null);
+//                        ApiHelper.runApiAsyncTask(SignUp_Activity.this, Cons.API_NAME_REGISTER, Cons.POST_REQUEST_TYPE, jsonForRequest, R.string
+//                                .setting_up_profile_dialog_title, R.string.setting_up_profile_dialog_message, null);
+
+                        registerUser(jsonForRequest);
 
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -84,5 +94,40 @@ public class SignUp_Activity extends Base_Activity {
         creatingAccountTOSTV.setText(ss);
         creatingAccountTOSTV.setMovementMethod(LinkMovementMethod.getInstance());
         creatingAccountTOSTV.setHighlightColor(Color.BLUE);
+    }
+
+    private void registerUser(JSONObject userCredentials) {
+        Observable<DefaultResponse> registerUserObservable = new RestClient().getGMFitService().registerUser(userCredentials);
+
+        registerUserObservable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .unsubscribeOn(Schedulers.io())
+                .subscribe(new Subscriber<DefaultResponse>() {
+                    @Override
+                    public void onCompleted() {
+                        Toast.makeText(SignUp_Activity.this,
+                                "Completed",
+                                Toast.LENGTH_SHORT)
+                                .show();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Toast.makeText(SignUp_Activity.this,
+                                e.getMessage(),
+                                Toast.LENGTH_SHORT)
+                                .show();
+                    }
+
+                    @Override
+                    public void onNext(DefaultResponse response) {
+                        Log.d(TAG, "onResponse: Call succeeded, RESPONSE : " + response.getData().getBody());
+
+
+                        Log.d(TAG, "onResponse: Call succeeded, here's the response BODY : " + response.getData().getMessage());
+                        Log.d(TAG, "onResponse: Call succeeded, here's the response MESSAGE : " + response.getData().getMessage());
+                        Log.d(TAG, "onResponse: Call succeeded, here's the response CODE: " + response.getData().getCode());
+                    }
+                });
     }
 }

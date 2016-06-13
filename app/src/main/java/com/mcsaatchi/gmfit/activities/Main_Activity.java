@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.classes.Cons;
@@ -19,14 +20,15 @@ import com.mcsaatchi.gmfit.classes.Helpers;
 import com.mcsaatchi.gmfit.fragments.Fitness_Fragment;
 import com.mcsaatchi.gmfit.fragments.MainProfile_Fragment;
 import com.mcsaatchi.gmfit.fragments.Nutrition_Fragment;
-import com.mcsaatchi.gmfit.models.LogoutResponse;
+import com.mcsaatchi.gmfit.models.DefaultResponse;
 import com.mcsaatchi.gmfit.rest.RestClient;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnMenuTabClickListener;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import rx.Observable;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 public class Main_Activity extends Base_Activity {
 
@@ -117,40 +119,54 @@ public class Main_Activity extends Base_Activity {
 //                      .signing_out_dialog_message, new Callable<Void>() {
 //                    @Override
 //                    public Void call() throws Exception {
-//                        prefs.edit().putString(Cons.PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS).apply();
 //
-//                        Intent intent = new Intent(Main_Activity.this, Login_Activity.class);
-//                        startActivity(intent);
-//                        finish();
 //
 //                        return null;
 //                    }
 //                });
 
 
-                Call<LogoutResponse> callSignOutUser = new RestClient().getGMFitService().signOutUser(prefs.getString(Cons.PREF_USER_ACCESS_TOKEN, Cons
-                        .NO_ACCESS_TOKEN_FOUND_IN_PREFS));
-
-                callSignOutUser.enqueue(new Callback<LogoutResponse>() {
-                    @Override
-                    public void onResponse(Call<LogoutResponse> call, Response<LogoutResponse> response) {
-                        Log.d(TAG, "onResponse: Call succeeded, RESPONSE : " + response.body().toString());
-//
-//                        Log.d(TAG, "onResponse: Call succeeded, here's the response BODY : " + response.body().getBody());
-//                        Log.d(TAG, "onResponse: Call succeeded, here's the response MESSAGE : " + response.body().getMessage());
-//                        Log.d(TAG, "onResponse: Call succeeded, here's the response CODE: " + response.body().getCode());
-
-                    }
-
-                    @Override
-                    public void onFailure(Call<LogoutResponse> call, Throwable t) {
-
-                    }
-                });
+                signOutUser();
 
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void signOutUser() {
+        Observable<DefaultResponse> signOutUserObservable = new RestClient().getGMFitService().signOutUser(prefs.getString(Cons.PREF_USER_ACCESS_TOKEN, Cons
+                .NO_ACCESS_TOKEN_FOUND_IN_PREFS));
+
+        signOutUserObservable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .unsubscribeOn(Schedulers.io())
+                .subscribe(new Subscriber<DefaultResponse>() {
+                    @Override
+                    public void onCompleted() {
+                        Toast.makeText(getApplicationContext(),
+                                "Completed",
+                                Toast.LENGTH_SHORT)
+                                .show();
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Toast.makeText(getApplicationContext(),
+                                e.getMessage(),
+                                Toast.LENGTH_SHORT)
+                                .show();
+                    }
+
+                    @Override
+                    public void onNext(DefaultResponse response) {
+                        Log.d(TAG, "onResponse: Call succeeded, RESPONSE : " + response.getData().getBody());
+
+
+                        Log.d(TAG, "onResponse: Call succeeded, here's the response BODY : " + response.getData().getMessage());
+                        Log.d(TAG, "onResponse: Call succeeded, here's the response MESSAGE : " + response.getData().getMessage());
+                        Log.d(TAG, "onResponse: Call succeeded, here's the response CODE: " + response.getData().getCode());
+                    }
+                });
     }
 
     @Override

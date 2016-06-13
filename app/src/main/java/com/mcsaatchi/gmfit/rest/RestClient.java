@@ -1,9 +1,9 @@
 package com.mcsaatchi.gmfit.rest;
 
 import com.mcsaatchi.gmfit.classes.Cons;
-import com.mcsaatchi.gmfit.classes.GMFit_Service;
 
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RestClient {
@@ -14,6 +14,7 @@ public class RestClient {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Cons.BASE_URL_ADDRESS)
                 .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .build();
 
         apiService = retrofit.create(GMFit_Service.class);
