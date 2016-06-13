@@ -1,4 +1,4 @@
-package com.mcsaatchi.gmfit.models;
+package com.mcsaatchi.gmfit.rest;
 
 public class MetricsResponse {
 

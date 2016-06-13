@@ -18,7 +18,7 @@ import com.andreabaccega.widget.FormEditText;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.classes.Cons;
 import com.mcsaatchi.gmfit.classes.Helpers;
-import com.mcsaatchi.gmfit.models.DefaultResponse;
+import com.mcsaatchi.gmfit.rest.RegisterResponse;
 import com.mcsaatchi.gmfit.rest.RestClient;
 
 import org.json.JSONException;
@@ -73,7 +73,7 @@ public class SignUp_Activity extends Base_Activity {
 //                        ApiHelper.runApiAsyncTask(SignUp_Activity.this, Cons.API_NAME_REGISTER, Cons.POST_REQUEST_TYPE, jsonForRequest, R.string
 //                                .setting_up_profile_dialog_title, R.string.setting_up_profile_dialog_message, null);
 
-                        registerUser(jsonForRequest);
+                        registerUser(emailET.getText().toString(), passwordET.getText().toString());
 
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -96,13 +96,13 @@ public class SignUp_Activity extends Base_Activity {
         creatingAccountTOSTV.setHighlightColor(Color.BLUE);
     }
 
-    private void registerUser(JSONObject userCredentials) {
-        Observable<DefaultResponse> registerUserObservable = new RestClient().getGMFitService().registerUser(userCredentials);
+    private void registerUser(String email, String password) {
+        Observable<RegisterResponse> registerUserObservable = new RestClient().getGMFitService().registerUser(new RegisterRequest(email, password));
 
         registerUserObservable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<DefaultResponse>() {
+                .subscribe(new Subscriber<RegisterResponse>() {
                     @Override
                     public void onCompleted() {
                         Toast.makeText(SignUp_Activity.this,
@@ -120,7 +120,7 @@ public class SignUp_Activity extends Base_Activity {
                     }
 
                     @Override
-                    public void onNext(DefaultResponse response) {
+                    public void onNext(RegisterResponse response) {
                         Log.d(TAG, "onResponse: Call succeeded, RESPONSE : " + response.getData().getBody());
 
 
@@ -129,5 +129,15 @@ public class SignUp_Activity extends Base_Activity {
                         Log.d(TAG, "onResponse: Call succeeded, here's the response CODE: " + response.getData().getCode());
                     }
                 });
+    }
+
+    public class RegisterRequest{
+        final String email;
+        final String password;
+
+        public RegisterRequest(String email, String password) {
+            this.email = email;
+            this.password = password;
+        }
     }
 }

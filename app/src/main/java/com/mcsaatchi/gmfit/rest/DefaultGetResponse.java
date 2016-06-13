@@ -1,26 +1,25 @@
-package com.mcsaatchi.gmfit.models;
+package com.mcsaatchi.gmfit.rest;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class DefaultResponse {
+public class DefaultGetResponse {
 
     @SerializedName("data")
     @Expose
-    private Data data;
+    private DataGETResponse_Contents data;
 
     /**
      * @return The data
      */
-    public Data getData() {
+    public DataGETResponse_Contents getData() {
         return data;
     }
 
     /**
      * @param data The data
      */
-    public void setData(Data data) {
+    public void setData(DataGETResponse_Contents data) {
         this.data = data;
     }
-
 }

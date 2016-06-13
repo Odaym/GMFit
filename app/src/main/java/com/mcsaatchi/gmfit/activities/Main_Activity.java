@@ -20,7 +20,7 @@ import com.mcsaatchi.gmfit.classes.Helpers;
 import com.mcsaatchi.gmfit.fragments.Fitness_Fragment;
 import com.mcsaatchi.gmfit.fragments.MainProfile_Fragment;
 import com.mcsaatchi.gmfit.fragments.Nutrition_Fragment;
-import com.mcsaatchi.gmfit.models.DefaultResponse;
+import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.rest.RestClient;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnMenuTabClickListener;
@@ -134,13 +134,13 @@ public class Main_Activity extends Base_Activity {
     }
 
     private void signOutUser() {
-        Observable<DefaultResponse> signOutUserObservable = new RestClient().getGMFitService().signOutUser(prefs.getString(Cons.PREF_USER_ACCESS_TOKEN, Cons
+        Observable<DefaultGetResponse> signOutUserObservable = new RestClient().getGMFitService().signOutUser(prefs.getString(Cons.PREF_USER_ACCESS_TOKEN, Cons
                 .NO_ACCESS_TOKEN_FOUND_IN_PREFS));
 
         signOutUserObservable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .unsubscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<DefaultResponse>() {
+                .subscribe(new Subscriber<DefaultGetResponse>() {
                     @Override
                     public void onCompleted() {
                         Toast.makeText(getApplicationContext(),
@@ -158,7 +158,7 @@ public class Main_Activity extends Base_Activity {
                     }
 
                     @Override
-                    public void onNext(DefaultResponse response) {
+                    public void onNext(DefaultGetResponse response) {
                         Log.d(TAG, "onResponse: Call succeeded, RESPONSE : " + response.getData().getBody());
 
 
