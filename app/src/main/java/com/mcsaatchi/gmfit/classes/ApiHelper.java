@@ -63,13 +63,13 @@ public class ApiHelper {
                         body = RequestBody.create(Cons.JSON_FORMAT_IDENTIFIER, jsonParams.toString());
 
                         request = new Request.Builder()
-                                .url(Cons.ROOT_URL_ADDRESS + ApiName)
+                                .url(Cons.BASE_URL_ADDRESS + ApiName)
                                 .addHeader(Cons.USER_ACCESS_TOKEN_HEADER_PARAMETER, userAccessToken)
                                 .post(body)
                                 .build();
                     } else {
                         request = new Request.Builder()
-                                .url(Cons.ROOT_URL_ADDRESS + ApiName)
+                                .url(Cons.BASE_URL_ADDRESS + ApiName)
                                 .addHeader(Cons.USER_ACCESS_TOKEN_HEADER_PARAMETER, userAccessToken)
                                 .build();
                     }

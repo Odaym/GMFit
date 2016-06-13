@@ -38,7 +38,7 @@ public class Cons {
     public static final String EXTRAS_USER_POLICY = "user_policy";
     public static final String BUNDLE_ACTIVITY_TITLE = "activity_title";
     public static final String BUNDLE_ACTIVITY_BACK_BUTTON_ENABLED = "activity_back_button_enabled";
-    public static final String ROOT_URL_ADDRESS = "http://gmfit.mcsaatchi.me/api/v1/";
+    public static final String BASE_URL_ADDRESS = "http://gmfit.mcsaatchi.me/api/v1/";
     public static final MediaType JSON_FORMAT_IDENTIFIER
             = MediaType.parse("application/json; charset=utf-8");
 

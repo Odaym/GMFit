@@ -14,20 +14,24 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.classes.ApiHelper;
 import com.mcsaatchi.gmfit.classes.Cons;
 import com.mcsaatchi.gmfit.classes.Helpers;
 import com.mcsaatchi.gmfit.fragments.Fitness_Fragment;
 import com.mcsaatchi.gmfit.fragments.MainProfile_Fragment;
 import com.mcsaatchi.gmfit.fragments.Nutrition_Fragment;
+import com.mcsaatchi.gmfit.models.LogoutResponse;
+import com.mcsaatchi.gmfit.rest.RestClient;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnMenuTabClickListener;
 
-import java.util.concurrent.Callable;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class Main_Activity extends Base_Activity {
 
     private static final String DEBUG_TAG = "Main_Activity";
+    private static final String TAG = "Main_Activity";
     public static int USER_AUTHORISED_REQUEST_CODE = 5;
     private BottomBar bottomBar;
     private Fragment fragmentReplace;
@@ -108,19 +112,42 @@ public class Main_Activity extends Base_Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.signOut:
-                ApiHelper.runApiAsyncTask(this, Cons.API_NAME_SIGN_OUT, Cons.GET_REQUEST_TYPE, null, R.string.signing_out_dialog_title, R.string
-                        .signing_out_dialog_message, new Callable<Void>() {
+//                ApiHelper.runApiAsyncTask(this, Cons.API_NAME_SIGN_OUT, Cons.GET_REQUEST_TYPE, null, R.string.signing_out_dialog_title, R.string
+//
+//                      .signing_out_dialog_message, new Callable<Void>() {
+//                    @Override
+//                    public Void call() throws Exception {
+//                        prefs.edit().putString(Cons.PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS).apply();
+//
+//                        Intent intent = new Intent(Main_Activity.this, Login_Activity.class);
+//                        startActivity(intent);
+//                        finish();
+//
+//                        return null;
+//                    }
+//                });
+
+
+                Call<LogoutResponse> callSignOutUser = new RestClient().getGMFitService().signOutUser(prefs.getString(Cons.PREF_USER_ACCESS_TOKEN, Cons
+                        .NO_ACCESS_TOKEN_FOUND_IN_PREFS));
+
+                callSignOutUser.enqueue(new Callback<LogoutResponse>() {
                     @Override
-                    public Void call() throws Exception {
-                        prefs.edit().putString(Cons.PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS).apply();
+                    public void onResponse(Call<LogoutResponse> call, Response<LogoutResponse> response) {
+                        Log.d(TAG, "onResponse: Call succeeded, RESPONSE : " + response.body().toString());
+//
+//                        Log.d(TAG, "onResponse: Call succeeded, here's the response BODY : " + response.body().getBody());
+//                        Log.d(TAG, "onResponse: Call succeeded, here's the response MESSAGE : " + response.body().getMessage());
+//                        Log.d(TAG, "onResponse: Call succeeded, here's the response CODE: " + response.body().getCode());
 
-                        Intent intent = new Intent(Main_Activity.this, Login_Activity.class);
-                        startActivity(intent);
-                        finish();
+                    }
 
-                        return null;
+                    @Override
+                    public void onFailure(Call<LogoutResponse> call, Throwable t) {
+
                     }
                 });
+
                 break;
         }
         return super.onOptionsItemSelected(item);

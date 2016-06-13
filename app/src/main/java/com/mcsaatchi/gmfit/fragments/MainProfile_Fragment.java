@@ -127,7 +127,7 @@ public class MainProfile_Fragment extends Fragment {
             protected InputStream doInBackground(String... aParams) {
                 Request request = new Request.Builder()
                         .addHeader(Cons.USER_ACCESS_TOKEN_HEADER_PARAMETER, prefs.getString(Cons.PREF_USER_ACCESS_TOKEN, ""))
-                        .url(Cons.ROOT_URL_ADDRESS + Cons.API_NAME_EMERGENCY)
+                        .url(Cons.BASE_URL_ADDRESS + Cons.API_NAME_EMERGENCY)
                         .build();
 
                 try {

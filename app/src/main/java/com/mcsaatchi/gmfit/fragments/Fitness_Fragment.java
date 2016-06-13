@@ -256,7 +256,26 @@ public class Fitness_Fragment extends Fragment {
                 //Add the chart entry to the database
 //                dataChartDAO.create(new DataChart(chartName, chartType, dataChartDAO.queryForAll().size() + 1, Cons.EXTRAS_FITNESS_FRAGMENT));
 
-                ApiHelper.getChartMetricsByDate(getActivity(), chartType);
+//                ApiHelper.getChartMetricsByDate(getActivity(), chartType);
+
+//                Call<MetricsResponse> callSignOutUser = new RestClient().getGMFitService().getChartMetricsByDate(prefs.getString(Cons.PREF_USER_ACCESS_TOKEN, Cons
+//                        .NO_ACCESS_TOKEN_FOUND_IN_PREFS), "2016-05-07", "2016-06-07", "fitness", "fitness");
+//
+//                callSignOutUser.enqueue(new Callback<MetricsResponse>() {
+//                    @Override
+//                    public void onResponse(Call<MetricsResponse> call, Response<MetricsResponse> response) {
+//                        Log.d(TAG, "onResponse: Call succeeded, here's the response : " + response.body().getEmail());
+//                        Log.d(TAG, "onResponse: Call succeeded, here's the response : " + response.body().getPassword());
+//
+//                    }
+//
+//                    @Override
+//                    public void onFailure(Call<MetricsResponse> call, Throwable t) {
+//
+//                    }
+//                });
+
+
 
             } else if (requestCode == Main_Activity.USER_AUTHORISED_REQUEST_CODE && googleApiFitnessClient != null) {
                 googleApiFitnessClient.stopAutoManage(getActivity());

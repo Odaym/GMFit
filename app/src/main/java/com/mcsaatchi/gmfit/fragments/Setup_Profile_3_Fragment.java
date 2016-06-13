@@ -1,7 +1,6 @@
 package com.mcsaatchi.gmfit.fragments;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -15,8 +14,6 @@ import android.widget.Toast;
 import com.andreabaccega.widget.FormEditText;
 import com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialogFragment;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.activities.Main_Activity;
-import com.mcsaatchi.gmfit.classes.ApiHelper;
 import com.mcsaatchi.gmfit.classes.Cons;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
@@ -28,7 +25,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.concurrent.Callable;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -36,6 +32,7 @@ import butterknife.ButterKnife;
 public class Setup_Profile_3_Fragment extends Fragment implements CalendarDatePickerDialogFragment.OnDateSetListener {
 
     private static final String FRAG_TAG_DATE_PICKER = "fragment_date_picker_name";
+    private static final String TAG = "Setup_Profile_3_Fragment";
     @Bind(R.id.dateOfBirthBTN)
     Button dateOfBirthBTN;
     @Bind(R.id.firstNameET)
@@ -123,17 +120,17 @@ public class Setup_Profile_3_Fragment extends Fragment implements CalendarDatePi
                         jsonForRequest.put(Cons.REQUEST_PARAM_WEIGHT, weightET.getText().toString());
                         jsonForRequest.put(Cons.REQUEST_PARAM_BMI, calculateBMI(Double.parseDouble(weightET.getText().toString()), Double.parseDouble(heightET.getText().toString())));
 
-                        ApiHelper.runApiAsyncTask(getActivity(), Cons.API_NAME_UPDATE_PROFILE, Cons.POST_REQUEST_TYPE, jsonForRequest, R.string
-                                .setting_up_profile_dialog_title, R.string.setting_up_profile_dialog_message, new Callable<Void>() {
-                            @Override
-                            public Void call() throws Exception {
-                                Intent intent = new Intent(getActivity(), Main_Activity.class);
-                                startActivity(intent);
-                                getActivity().finish();
-
-                                return null;
-                            }
-                        });
+//                        ApiHelper.runApiAsyncTask(getActivity(), Cons.API_NAME_UPDATE_PROFILE, Cons.POST_REQUEST_TYPE, jsonForRequest, R.string
+//                                .setting_up_profile_dialog_title, R.string.setting_up_profile_dialog_message, new Callable<Void>() {
+//                            @Override
+//                            public Void call() throws Exception {
+//                                Intent intent = new Intent(getActivity(), Main_Activity.class);
+//                                startActivity(intent);
+//                                getActivity().finish();
+//
+//                                return null;
+//                            }
+//                        });
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
