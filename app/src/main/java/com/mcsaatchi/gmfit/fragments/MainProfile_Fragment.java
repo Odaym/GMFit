@@ -4,16 +4,17 @@ import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,9 +23,14 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.classes.ApiHelper;
+import com.mcsaatchi.gmfit.activities.UserPolicy_Activity;
 import com.mcsaatchi.gmfit.classes.Cons;
 import com.mcsaatchi.gmfit.classes.Helpers;
+import com.mcsaatchi.gmfit.rest.RestClient;
+import com.mcsaatchi.gmfit.rest.UserPolicyResponse;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -38,10 +44,12 @@ import java.util.Locale;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainProfile_Fragment extends Fragment {
+    private static final String TAG = "MainProfile_Fragment";
     private static final int REQUEST_WRITE_STORAGE = 112;
     private static OkHttpClient client = new OkHttpClient();
     @Bind(R.id.userPolicyBTN)
@@ -66,8 +74,9 @@ public class MainProfile_Fragment extends Fragment {
         userPolicyBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ApiHelper.runApiAsyncTask(getActivity(), Cons.API_NAME_USER_POLICY, Cons.GET_REQUEST_TYPE, null, R.string.grabbing_user_policy_dialog_title,
-                        R.string.grabbing_user_policy_dialog_message, null);
+                getUserPolicy();
+//                ApiHelper.runApiAsyncTask(getActivity(), Cons.API_NAME_USER_POLICY, Cons.GET_REQUEST_TYPE, null, R.string.grabbing_user_policy_dialog_title,
+//                        R.string.grabbing_user_policy_dialog_message, null);
             }
         });
 
@@ -85,7 +94,7 @@ public class MainProfile_Fragment extends Fragment {
                                 new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                                 REQUEST_WRITE_STORAGE);
                     } else {
-                        fireUpEmergencyProfileAsyncTask();
+//                        fireUpEmergencyProfileAsyncTask();
                     }
                 } else {
                     Helpers.showNoInternetDialog(getActivity());
@@ -104,7 +113,7 @@ public class MainProfile_Fragment extends Fragment {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     //reload my activity with permission granted or use the features what required the permission
                     Toast.makeText(getActivity(), "Just got the permission", Toast.LENGTH_SHORT).show();
-                    fireUpEmergencyProfileAsyncTask();
+//                    fireUpEmergencyProfileAsyncTask();
                 } else {
                     Toast.makeText(getActivity(), "The app was not allowed to write to your storage. Hence, it cannot function properly. Please consider granting it " +
                             "this permission", Toast.LENGTH_LONG).show();
@@ -113,47 +122,116 @@ public class MainProfile_Fragment extends Fragment {
         }
     }
 
-    private void fireUpEmergencyProfileAsyncTask() {
-        new AsyncTask<String, String, InputStream>() {
-            ProgressDialog downloadingPDFProfileDialog;
+    private void getUserPolicy() {
+        final ProgressDialog waitingDialog = new ProgressDialog(getActivity());
+        waitingDialog.setTitle(getString(R.string.grabbing_user_policy_dialog_title));
+        waitingDialog.setMessage(getString(R.string.grabbing_user_policy_dialog_message));
+        waitingDialog.show();
 
-            protected void onPreExecute() {
-                downloadingPDFProfileDialog = new ProgressDialog(getActivity());
-                downloadingPDFProfileDialog.setTitle(getString(R.string.downloading_pdf_profile_dialog_title));
-                downloadingPDFProfileDialog.setMessage(getString(R.string.downloading_pdf_profile_dialog_message));
-                downloadingPDFProfileDialog.show();
-            }
+        final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+        alertDialog.setTitle(R.string.grabbing_user_policy_dialog_title);
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
 
-            protected InputStream doInBackground(String... aParams) {
-                Request request = new Request.Builder()
-                        .addHeader(Cons.USER_ACCESS_TOKEN_HEADER_PARAMETER, prefs.getString(Cons.PREF_USER_ACCESS_TOKEN, ""))
-                        .url(Cons.BASE_URL_ADDRESS + Cons.API_NAME_EMERGENCY)
-                        .build();
+                        if (waitingDialog.isShowing())
+                            waitingDialog.dismiss();
+                    }
+                });
 
-                try {
-                    Response response = client.newCall(request).execute();
-                    return response.body().byteStream();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+        Call<UserPolicyResponse> registerUserCall = new RestClient().getGMFitService().getUserPolicy(prefs.getString(Cons.PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS));
 
-                return null;
-            }
+        registerUserCall.enqueue(new Callback<UserPolicyResponse>() {
+            @Override
+            public void onResponse(Call<UserPolicyResponse> call, Response<UserPolicyResponse> response) {
+                Log.d(TAG, "onResponse: Request sent");
 
-            protected void onPostExecute(InputStream aResult) {
-                Log.d("ASYNCRESULT", "onPostExecute: Response was : \n" + aResult);
+                if (response.body() != null) {
+                    switch (response.code()) {
+                        case Cons.API_REQUEST_SUCCEEDED_CODE:
+                            waitingDialog.dismiss();
 
-                if (aResult == null) {
-                    Helpers.showNoInternetDialog(getActivity());
+//                            Log.d(TAG, "onResponse: Response succeeded, it was : " + response.body().getData().getBody().toString());
+                            String userPolicyString = response.body().getData().getBody().getUserPolicy();
+
+                            Intent intent = new Intent(getActivity(), UserPolicy_Activity.class);
+                            intent.putExtra(Cons.EXTRAS_USER_POLICY, userPolicyString);
+                            startActivity(intent);
+                            break;
+//                        case Cons.LOGIN_API_WRONG_CREDENTIALS:
+//                            alertDialog.setMessage(getString(R.string.login_failed_wrong_credentials));
+//                            alertDialog.show();
+//                            break;
+                    }
                 } else {
+                    waitingDialog.dismiss();
 
-                    downloadingPDFProfileDialog.dismiss();
+                    //Handle the error
+                    try {
+                        JSONObject errorBody = new JSONObject(response.errorBody().string());
+                        JSONObject errorData = errorBody.getJSONObject("data");
+                        int errorCodeInData = errorData.getInt("code");
 
-                    downloadUserEmergencyProfile(aResult);
+//                        if (errorCodeInData == Cons.LOGIN_API_WRONG_CREDENTIALS) {
+//                            alertDialog.setMessage(getString(R.string.login_failed_wrong_credentials));
+//                            alertDialog.show();
+//                        }
+                    } catch (IOException | JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
-        }.execute();
+
+            @Override
+            public void onFailure(Call<UserPolicyResponse> call, Throwable t) {
+                alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
+                alertDialog.show();
+            }
+        });
     }
+
+//    private void fireUpEmergencyProfileAsyncTask() {
+//        new AsyncTask<String, String, InputStream>() {
+//            ProgressDialog downloadingPDFProfileDialog;
+//
+//            protected void onPreExecute() {
+//                downloadingPDFProfileDialog = new ProgressDialog(getActivity());
+//                downloadingPDFProfileDialog.setTitle(getString(R.string.downloading_pdf_profile_dialog_title));
+//                downloadingPDFProfileDialog.setMessage(getString(R.string.downloading_pdf_profile_dialog_message));
+//                downloadingPDFProfileDialog.show();
+//            }
+//
+//            protected InputStream doInBackground(String... aParams) {
+//                Request request = new Request.Builder()
+//                        .addHeader(Cons.USER_ACCESS_TOKEN_HEADER_PARAMETER, prefs.getString(Cons.PREF_USER_ACCESS_TOKEN, ""))
+//                        .url(Cons.BASE_URL_ADDRESS + Cons.API_NAME_EMERGENCY)
+//                        .build();
+//
+//                try {
+//                    Response response = client.newCall(request).execute();
+//                    return response.body().byteStream();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//
+//                return null;
+//            }
+//
+//            protected void onPostExecute(InputStream aResult) {
+//                Log.d("ASYNCRESULT", "onPostExecute: Response was : \n" + aResult);
+//
+//                if (aResult == null) {
+//                    Helpers.showNoInternetDialog(getActivity());
+//                } else {
+//
+//                    downloadingPDFProfileDialog.dismiss();
+//
+//                    downloadUserEmergencyProfile(aResult);
+//                }
+//            }
+//        }.execute();
+//    }
 
     private void downloadUserEmergencyProfile(final InputStream inputStreamResult) {
         new Thread(new Runnable() {
