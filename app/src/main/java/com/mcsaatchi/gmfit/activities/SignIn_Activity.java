@@ -26,9 +26,6 @@ import com.mcsaatchi.gmfit.classes.Helpers;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponse;
 import com.mcsaatchi.gmfit.rest.RestClient;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 
 import butterknife.Bind;
@@ -70,19 +67,10 @@ public class SignIn_Activity extends Base_Activity {
             @Override
             public void onClick(View v) {
                 if (Helpers.validateFields(allFields)) {
-                    try {
-                        final JSONObject jsonForRequest = new JSONObject();
-                        jsonForRequest.put(Cons.REQUEST_PARAM_EMAIL, emailET.getText().toString());
-                        jsonForRequest.put(Cons.REQUEST_PARAM_PASSWORD, passwordET.getText().toString());
-
-                        if (Helpers.isInternetAvailable(SignIn_Activity.this))
-                            signInUser(emailET.getText().toString(), passwordET.getText().toString());
-                        else
-                            Helpers.showNoInternetDialog(SignIn_Activity.this);
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+                    if (Helpers.isInternetAvailable(SignIn_Activity.this))
+                        signInUser(emailET.getText().toString(), passwordET.getText().toString());
+                    else
+                        Helpers.showNoInternetDialog(SignIn_Activity.this);
                 }
             }
         });

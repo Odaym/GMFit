@@ -72,16 +72,7 @@ public class SignUp_Activity extends Base_Activity {
             @Override
             public void onClick(View v) {
                 if (Helpers.validateFields(allFields)) {
-                    try {
-                        final JSONObject jsonForRequest = new JSONObject();
-                        jsonForRequest.put(Cons.REQUEST_PARAM_EMAIL, emailET.getText().toString());
-                        jsonForRequest.put(Cons.REQUEST_PARAM_PASSWORD, passwordET.getText().toString());
-
-                        registerUser(emailET.getText().toString(), passwordET.getText().toString());
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+                    registerUser(emailET.getText().toString(), passwordET.getText().toString());
                 }
             }
         });
