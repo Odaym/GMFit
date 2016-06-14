@@ -1,6 +1,8 @@
 package com.mcsaatchi.gmfit.activities;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -8,11 +10,11 @@ import android.support.annotation.IdRes;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.classes.Cons;
@@ -25,15 +27,12 @@ import com.mcsaatchi.gmfit.rest.RestClient;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnMenuTabClickListener;
 
-import rx.Observable;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class Main_Activity extends Base_Activity {
 
-    private static final String DEBUG_TAG = "Main_Activity";
-    private static final String TAG = "Main_Activity";
     public static int USER_AUTHORISED_REQUEST_CODE = 5;
     private BottomBar bottomBar;
     private Fragment fragmentReplace;
@@ -114,59 +113,64 @@ public class Main_Activity extends Base_Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.signOut:
-//                ApiHelper.runApiAsyncTask(this, Cons.API_NAME_SIGN_OUT, Cons.GET_REQUEST_TYPE, null, R.string.signing_out_dialog_title, R.string
-//
-//                      .signing_out_dialog_message, new Callable<Void>() {
-//                    @Override
-//                    public Void call() throws Exception {
-//
-//
-//                        return null;
-//                    }
-//                });
 
-
-                signOutUser();
+                if (Helpers.isInternetAvailable(this)) {
+                    signOutUser();
+                } else {
+                    Helpers.showNoInternetDialog(this);
+                }
 
                 break;
         }
+
         return super.onOptionsItemSelected(item);
     }
 
     private void signOutUser() {
-        Observable<DefaultGetResponse> signOutUserObservable = new RestClient().getGMFitService().signOutUser(prefs.getString(Cons.PREF_USER_ACCESS_TOKEN, Cons
-                .NO_ACCESS_TOKEN_FOUND_IN_PREFS));
+        final ProgressDialog waitingDialog = new ProgressDialog(this);
+        waitingDialog.setTitle(getString(R.string.signing_out_dialog_title));
+        waitingDialog.setMessage(getString(R.string.signing_out_dialog_message));
+        waitingDialog.show();
 
-        signOutUserObservable.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .unsubscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<DefaultGetResponse>() {
-                    @Override
-                    public void onCompleted() {
-                        Toast.makeText(getApplicationContext(),
-                                "Completed",
-                                Toast.LENGTH_SHORT)
-                                .show();
-                    }
+        final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+        alertDialog.setTitle(R.string.signing_out_dialog_title);
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
 
-                    @Override
-                    public void onError(Throwable e) {
-                        Toast.makeText(getApplicationContext(),
-                                e.getMessage(),
-                                Toast.LENGTH_SHORT)
-                                .show();
-                    }
-
-                    @Override
-                    public void onNext(DefaultGetResponse response) {
-                        Log.d(TAG, "onResponse: Call succeeded, RESPONSE : " + response.getData().getBody());
-
-
-                        Log.d(TAG, "onResponse: Call succeeded, here's the response BODY : " + response.getData().getMessage());
-                        Log.d(TAG, "onResponse: Call succeeded, here's the response MESSAGE : " + response.getData().getMessage());
-                        Log.d(TAG, "onResponse: Call succeeded, here's the response CODE: " + response.getData().getCode());
+                        if (waitingDialog.isShowing())
+                            waitingDialog.dismiss();
                     }
                 });
+
+        Call<DefaultGetResponse> signOutUserCall = new RestClient().getGMFitService().signOutUser(prefs.getString(Cons.PREF_USER_ACCESS_TOKEN, Cons
+                .NO_ACCESS_TOKEN_FOUND_IN_PREFS));
+
+        signOutUserCall.enqueue(new Callback<DefaultGetResponse>() {
+            @Override
+            public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
+                if (response.body() != null) {
+                    switch (response.code()) {
+                        case Cons.API_REQUEST_SUCCEEDED_CODE:
+                            waitingDialog.dismiss();
+
+                            prefs.edit().putString(Cons.PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS).apply();
+
+                            Intent intent = new Intent(Main_Activity.this, Login_Activity.class);
+                            startActivity(intent);
+                            finish();
+                            break;
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+                alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
+                alertDialog.show();
+            }
+        });
     }
 
     @Override
