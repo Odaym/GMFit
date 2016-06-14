@@ -25,4 +25,7 @@ public interface GMFit_Service {
     @POST("user/update-profile")
     Call<DefaultGetResponse> updateUserProfile(@Header(Cons.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken, @Body Setup_Profile_3_Fragment
             .UpdateProfileRequest updateProfileRequest);
+
+    @GET("user-policy")
+    Call<UserPolicyResponse> getUserPolicy(@Header(Cons.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken);
 }
