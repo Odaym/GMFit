@@ -26,6 +26,10 @@ import com.mcsaatchi.gmfit.classes.Helpers;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponse;
 import com.mcsaatchi.gmfit.rest.RestClient;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 
 import butterknife.Bind;
@@ -131,6 +135,22 @@ public class SignIn_Activity extends Base_Activity {
                             alertDialog.setMessage(getString(R.string.login_failed_wrong_credentials));
                             alertDialog.show();
                             break;
+                    }
+                } else {
+                    waitingDialog.dismiss();
+
+                    //Handle the error
+                    try {
+                        JSONObject errorBody = new JSONObject(response.errorBody().string());
+                        JSONObject errorData = errorBody.getJSONObject("data");
+                        int errorCodeInData = errorData.getInt("code");
+
+                        if (errorCodeInData == Cons.LOGIN_API_WRONG_CREDENTIALS) {
+                            alertDialog.setMessage(getString(R.string.login_failed_wrong_credentials));
+                            alertDialog.show();
+                        }
+                    } catch (IOException | JSONException e) {
+                        e.printStackTrace();
                     }
                 }
             }
