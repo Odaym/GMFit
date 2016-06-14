@@ -276,7 +276,6 @@ public class Fitness_Fragment extends Fragment {
 //                });
 
 
-
             } else if (requestCode == Main_Activity.USER_AUTHORISED_REQUEST_CODE && googleApiFitnessClient != null) {
                 googleApiFitnessClient.stopAutoManage(getActivity());
                 googleApiFitnessClient.disconnect();
@@ -335,26 +334,29 @@ public class Fitness_Fragment extends Fragment {
                                                                 final JSONArray slugsArray = new JSONArray(Arrays.asList(new String[]{"steps-count", "active-calories", "distance-traveled"}));
                                                                 final JSONArray valuesArray;
 
-                                                                double[] tempValuesArray = new double[]{Double
-                                                                        .parseDouble(metricCounterTV.getText().toString()), Double.parseDouble(secondMetricTV.getText().toString()),
-                                                                        Double.parseDouble(firstMetricTV.getText().toString())};
+                                                                if (!firstMetricTV.getText().toString().isEmpty() && !secondMetricTV.getText().toString()
+                                                                        .isEmpty()) {
 
-                                                                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
-                                                                    valuesArray = new JSONArray(tempValuesArray);
-                                                                } else {
-                                                                    valuesArray = new JSONArray(Arrays.asList(tempValuesArray));
+                                                                    double[] tempValuesArray = new double[]{Double
+                                                                            .parseDouble(metricCounterTV.getText().toString()), Double.parseDouble(secondMetricTV.getText().toString()),
+                                                                            Double.parseDouble(firstMetricTV.getText().toString())};
+
+                                                                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+                                                                        valuesArray = new JSONArray(tempValuesArray);
+                                                                    } else {
+                                                                        valuesArray = new JSONArray(Arrays.asList(tempValuesArray));
+                                                                    }
+
+                                                                    jsonForRequest.put(Cons.REQUEST_PARAM_SLUG, slugsArray);
+                                                                    jsonForRequest.put(Cons.REQUEST_PARAM_VALUE, valuesArray);
+                                                                    jsonForRequest.put(Cons.REQUEST_PARAM_DATE, Helpers.getCalendarDate());
+
+                                                                    ApiHelper.runApiAsyncTask(getActivity(), Cons.API_NAME_ADD_METRIC, Cons.POST_REQUEST_TYPE, jsonForRequest, R.string
+                                                                            .syncing_up_dialog_title, R.string.syncing_up_dialog_message, null);
                                                                 }
-
-                                                                jsonForRequest.put(Cons.REQUEST_PARAM_SLUG, slugsArray);
-                                                                jsonForRequest.put(Cons.REQUEST_PARAM_VALUE, valuesArray);
-                                                                jsonForRequest.put(Cons.REQUEST_PARAM_DATE, Helpers.getCalendarDate());
-
-                                                                ApiHelper.runApiAsyncTask(getActivity(), Cons.API_NAME_ADD_METRIC, Cons.POST_REQUEST_TYPE, jsonForRequest, R.string
-                                                                        .syncing_up_dialog_title, R.string.syncing_up_dialog_message, null);
                                                             } catch (JSONException e) {
                                                                 e.printStackTrace();
                                                             }
-
                                                         } else {
                                                             Helpers.showNoInternetDialog(getActivity());
                                                         }
