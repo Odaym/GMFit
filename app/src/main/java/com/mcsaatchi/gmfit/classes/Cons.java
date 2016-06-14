@@ -42,9 +42,6 @@ public class Cons {
     public static final MediaType JSON_FORMAT_IDENTIFIER
             = MediaType.parse("application/json; charset=utf-8");
 
-    public static final String API_NAME_SIGN_OUT = "logout";
-    public static final String API_NAME_REGISTER = "register";
-    public static final String API_NAME_SIGN_IN = "login";
     public static final String API_NAME_USER_POLICY = "user-policy";
     public static final String API_NAME_EMERGENCY = "emergency";
     public static final String API_NAME_GET_PROFILE = "user/profile";
@@ -62,16 +59,6 @@ public class Cons {
     public static final String SLUG_VALUE_DISTANCE_TRAVELED = "distance-traveled";
     public static final String SLUG_VALUE_CYCLING_DISTANCE = "cycling-distance";
     public static final String SLUG_VALUE_ACTIVE_CALORIES = "active-calories";
-
-    public static final String REQUEST_PARAM_EMAIL = "email";
-    public static final String REQUEST_PARAM_PASSWORD = "password";
-    public static final String REQUEST_PARAM_NAME = "name";
-    public static final String REQUEST_PARAM_WEIGHT = "weight";
-    public static final String REQUEST_PARAM_HEIGHT = "height";
-    public static final String REQUEST_PARAM_BMI = "body_mass_index";
-    public static final String REQUEST_PARAM_BIRTHDAY = "birthday";
-    public static final String REQUEST_PARAM_BLOOD_TYPE = "blood_type";
-    public static final String REQUEST_PARAM_GENDER = "gender";
 
     public static final String EVENT_USER_FINALIZE_SETUP_PROFILE = "user_finalize_setup_profile";
     public static final String EVENT_CHART_METRICS_RECEIVED = "event_chart_metrics_received";
