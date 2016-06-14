@@ -1,9 +1,13 @@
 package com.mcsaatchi.gmfit.fragments;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,16 +22,22 @@ import com.mcsaatchi.gmfit.classes.Cons;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
 import com.mcsaatchi.gmfit.classes.Helpers;
+import com.mcsaatchi.gmfit.rest.AuthenticationResponse;
+import com.mcsaatchi.gmfit.rest.RestClient;
 import com.squareup.otto.Subscribe;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class Setup_Profile_3_Fragment extends Fragment implements CalendarDatePickerDialogFragment.OnDateSetListener {
 
@@ -49,7 +59,7 @@ public class Setup_Profile_3_Fragment extends Fragment implements CalendarDatePi
     Spinner bloodTypeSpinner;
     private SharedPreferences prefs;
     private ArrayList<FormEditText> allFields = new ArrayList<>();
-    private String finalDateOfBirth = "";
+    private String dateOfBirth = "";
 
     @Override
     public View onCreateView(LayoutInflater inflater,
@@ -93,7 +103,7 @@ public class Setup_Profile_3_Fragment extends Fragment implements CalendarDatePi
     public void onDateSet(CalendarDatePickerDialogFragment dialog, int year, int monthOfYear, int dayOfMonth) {
         Toast.makeText(getActivity(), "Date : " + dayOfMonth + " - " + monthOfYear + " " + year, Toast.LENGTH_SHORT).show();
         dateOfBirthBTN.setText(year + " / " + monthOfYear + " / " + dayOfMonth);
-        finalDateOfBirth = year + "-" + monthOfYear + "-" + dayOfMonth;
+        dateOfBirth = year + "-" + monthOfYear + "-" + dayOfMonth;
     }
 
     @Subscribe
@@ -103,23 +113,27 @@ public class Setup_Profile_3_Fragment extends Fragment implements CalendarDatePi
         switch (ebpMessage) {
             case Cons.EVENT_USER_FINALIZE_SETUP_PROFILE:
                 if (Helpers.validateFields(allFields)) {
-                    try {
-                        final JSONObject jsonForRequest = new JSONObject();
-                        jsonForRequest.put(Cons.REQUEST_PARAM_NAME, firstNameET.getText().toString() + " " + lastNameET.getText().toString());
-                        if (!finalDateOfBirth.isEmpty())
-                            jsonForRequest.put(Cons.REQUEST_PARAM_BIRTHDAY, finalDateOfBirth);
+                    String finalName = firstNameET.getText().toString() + " " + lastNameET.getText().toString();
 
-                        jsonForRequest.put(Cons.REQUEST_PARAM_BLOOD_TYPE, bloodTypeSpinner.getSelectedItem());
+                    int finalGender;
 
-                        boolean finalGender;
+                    if (genderSpinner.getSelectedItem().toString().equals("Male"))
+                        finalGender = 1;
+                    else
+                        finalGender = 0;
 
-                        finalGender = genderSpinner.getSelectedItem().toString().equals("Male");
+                    String finalDateOfBirth = null;
 
-                        jsonForRequest.put(Cons.REQUEST_PARAM_GENDER, finalGender);
-                        jsonForRequest.put(Cons.REQUEST_PARAM_HEIGHT, heightET.getText().toString());
-                        jsonForRequest.put(Cons.REQUEST_PARAM_WEIGHT, weightET.getText().toString());
-                        jsonForRequest.put(Cons.REQUEST_PARAM_BMI, calculateBMI(Double.parseDouble(weightET.getText().toString()), Double.parseDouble(heightET.getText().toString())));
+                    if (!dateOfBirth.isEmpty())
+                        finalDateOfBirth = dateOfBirth;
 
+                    double finalWeight = Double.parseDouble(weightET.getText().toString());
+                    double finalHeight = Double.parseDouble(heightET.getText().toString());
+
+                    String finalBloodType = bloodTypeSpinner.getSelectedItem().toString();
+
+                    setupUserProfile(finalName, finalDateOfBirth, finalBloodType, finalGender, finalHeight,
+                            finalWeight, calculateBMI(finalWeight, finalHeight));
 
 //                        ApiHelper.runApiAsyncTask(getActivity(), Cons.API_NAME_UPDATE_PROFILE, Cons.POST_REQUEST_TYPE, jsonForRequest, R.string
 //                                .setting_up_profile_dialog_title, R.string.setting_up_profile_dialog_message, new Callable<Void>() {
@@ -132,13 +146,83 @@ public class Setup_Profile_3_Fragment extends Fragment implements CalendarDatePi
 //                                return null;
 //                            }
 //                        });
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
                 }
 
                 break;
         }
+    }
+
+    private void setupUserProfile(String finalName, String finalDateOfBirth, String bloodType, int finalGender, double height, double weight, double BMI) {
+        final ProgressDialog waitingDialog = new ProgressDialog(getActivity());
+        waitingDialog.setTitle(getString(R.string.signing_up_dialog_title));
+        waitingDialog.setMessage(getString(R.string.signing_up_dialog_message));
+        waitingDialog.show();
+
+        final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+        alertDialog.setTitle(R.string.signing_up_dialog_title);
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+
+                        if (waitingDialog.isShowing())
+                            waitingDialog.dismiss();
+                    }
+                });
+
+        Call<AuthenticationResponse> registerUserCall = new RestClient().getGMFitService().updateUserProfile(prefs.getString(Cons.PREF_USER_ACCESS_TOKEN,
+                Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS), new UpdateProfileRequest(finalName, finalDateOfBirth, bloodType, finalGender, height, weight, BMI));
+
+        registerUserCall.enqueue(new Callback<AuthenticationResponse>() {
+            @Override
+            public void onResponse(Call<AuthenticationResponse> call, Response<AuthenticationResponse> response) {
+                if (response.body() != null) {
+                    switch (response.code()) {
+                        case Cons.API_REQUEST_SUCCEEDED_CODE:
+                            waitingDialog.dismiss();
+
+//                            prefs.edit().putString(Cons.PREF_USER_ACCESS_TOKEN, "Bearer " + response.body().getData().getBody().getToken()).apply();
+//
+//                            Intent intent = new Intent(getActivity(), GetStarted_Activity.class);
+//                            startActivity(intent);
+//                            getActivity().finish();
+
+                            Log.d(TAG, "onResponse: Request succeeded! " + response.body().getData().getBody());
+
+                            break;
+                        case Cons.LOGIN_API_WRONG_CREDENTIALS:
+                            alertDialog.setMessage(getString(R.string.login_failed_wrong_credentials));
+                            alertDialog.show();
+                            break;
+                    }
+                } else {
+                    waitingDialog.dismiss();
+
+                    //Handle the error
+                    try {
+
+                        Log.d(TAG, "onResponse: Response failed " + response.errorBody().string());
+
+                        JSONObject errorBody = new JSONObject(response.errorBody().string());
+                        JSONObject errorData = errorBody.getJSONObject("data");
+                        int errorCodeInData = errorData.getInt("code");
+
+                        if (errorCodeInData == Cons.API_RESPONSE_INVALID_PARAMETERS) {
+                            alertDialog.setMessage(getString(R.string.email_already_taken_api_response));
+                            alertDialog.show();
+                        }
+                    } catch (IOException | JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<AuthenticationResponse> call, Throwable t) {
+                alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
+                alertDialog.show();
+            }
+        });
     }
 
     private double calculateBMI(double weight, double height) {
@@ -152,5 +236,25 @@ public class Setup_Profile_3_Fragment extends Fragment implements CalendarDatePi
     public void onDestroy() {
         super.onDestroy();
         EventBus_Singleton.getInstance().unregister(this);
+    }
+
+    public class UpdateProfileRequest {
+        final String name;
+        final String birthday;
+        final String bloodType;
+        final int gender;
+        final double height;
+        final double weight;
+        final double BMI;
+
+        public UpdateProfileRequest(String name, String birthday, String bloodType, int gender, double height, double weight, double BMI) {
+            this.name = name;
+            this.birthday = birthday;
+            this.bloodType = bloodType;
+            this.gender = gender;
+            this.height = height;
+            this.weight = weight;
+            this.BMI = BMI;
+        }
     }
 }
