@@ -1,19 +1,14 @@
 package com.mcsaatchi.gmfit.classes;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.activities.GetStarted_Activity;
-import com.mcsaatchi.gmfit.activities.Main_Activity;
-import com.mcsaatchi.gmfit.activities.UserPolicy_Activity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -121,57 +116,57 @@ public class ApiHelper {
                             case Cons.API_REQUEST_SUCCEEDED_CODE:
                                 //If no successCallback was passed to this function, fall into this case where you filter out what you need and act
                                 if (successCallback == null) {
-                                    switch (ApiName) {
-                                        case Cons.API_NAME_REGISTER:
-                                            int registerOperationStatusCode = ApiHelper.parseAndSaveRegisterationToken(context, aResult);
-
-                                            switch (registerOperationStatusCode) {
-                                                case Cons.REGISTRATION_PROCESS_SUCCEEDED_TOKEN_SAVED:
-                                                    EventBus_Singleton.getInstance().post(new EventBus_Poster(Cons.EVENT_SIGNNED_UP_SUCCESSFULLY_CLOSE_LOGIN_ACTIVITY));
-
-                                                    Intent intent = new Intent(context, GetStarted_Activity.class);
-                                                    context.startActivity(intent);
-                                                    ((Activity) context).finish();
-                                                    break;
-                                                case Cons.API_RESPONSE_NOT_PARSED_CORRECTLY:
-                                                    alertDialog.setMessage(context.getString(R.string.error_response_from_server_incorrect));
-                                                    alertDialog.show();
-                                                    break;
-                                            }
-
-                                            break;
-                                        case Cons.API_NAME_SIGN_IN:
-                                            int loginOperationStatusCode = ApiHelper.parseAndSaveRegisterationToken(context, aResult);
-
-                                            switch (loginOperationStatusCode) {
-                                                case Cons.REGISTRATION_PROCESS_SUCCEEDED_TOKEN_SAVED:
-                                                    EventBus_Singleton.getInstance().post(new EventBus_Poster(Cons.EVENT_SIGNNED_UP_SUCCESSFULLY_CLOSE_LOGIN_ACTIVITY));
-
-                                                    Intent intent = new Intent(context, Main_Activity.class);
-                                                    context.startActivity(intent);
-                                                    ((Activity) context).finish();
-                                                    break;
-                                                case Cons.API_RESPONSE_NOT_PARSED_CORRECTLY:
-                                                    alertDialog.setMessage(context.getString(R.string.error_response_from_server_incorrect));
-                                                    alertDialog.show();
-                                                    break;
-                                            }
-
-                                            break;
-                                        case Cons.API_NAME_USER_POLICY:
-                                            String userPolicyString = ApiHelper.parseResponseForUserPolicy(context, aResult);
-
-                                            if (userPolicyString != null) {
-                                                Intent intent = new Intent(context, UserPolicy_Activity.class);
-                                                intent.putExtra(Cons.EXTRAS_USER_POLICY, userPolicyString);
-                                                context.startActivity(intent);
-                                            } else {
-                                                alertDialog.setMessage(context.getString(R.string.error_response_from_server_incorrect));
-                                                alertDialog.show();
-                                            }
-
-                                            break;
-                                    }
+//                                    switch (ApiName) {
+//                                        case Cons.API_NAME_REGISTER:
+//                                            int registerOperationStatusCode = ApiHelper.parseAndSaveRegisterationToken(context, aResult);
+//
+//                                            switch (registerOperationStatusCode) {
+//                                                case Cons.REGISTRATION_PROCESS_SUCCEEDED_TOKEN_SAVED:
+//                                                    EventBus_Singleton.getInstance().post(new EventBus_Poster(Cons.EVENT_SIGNNED_UP_SUCCESSFULLY_CLOSE_LOGIN_ACTIVITY));
+//
+//                                                    Intent intent = new Intent(context, GetStarted_Activity.class);
+//                                                    context.startActivity(intent);
+//                                                    ((Activity) context).finish();
+//                                                    break;
+//                                                case Cons.API_RESPONSE_NOT_PARSED_CORRECTLY:
+//                                                    alertDialog.setMessage(context.getString(R.string.error_response_from_server_incorrect));
+//                                                    alertDialog.show();
+//                                                    break;
+//                                            }
+//
+//                                            break;
+//                                        case Cons.API_NAME_SIGN_IN:
+//                                            int loginOperationStatusCode = ApiHelper.parseAndSaveRegisterationToken(context, aResult);
+//
+//                                            switch (loginOperationStatusCode) {
+//                                                case Cons.REGISTRATION_PROCESS_SUCCEEDED_TOKEN_SAVED:
+//                                                    EventBus_Singleton.getInstance().post(new EventBus_Poster(Cons.EVENT_SIGNNED_UP_SUCCESSFULLY_CLOSE_LOGIN_ACTIVITY));
+//
+//                                                    Intent intent = new Intent(context, Main_Activity.class);
+//                                                    context.startActivity(intent);
+//                                                    ((Activity) context).finish();
+//                                                    break;
+//                                                    case Cons.API_RESPONSE_NOT_PARSED_CORRECTLY:
+//                                                    alertDialog.setMessage(context.getString(R.string.error_response_from_server_incorrect));
+//                                                    alertDialog.show();
+//                                                    break;
+//                                            }
+//
+//                                            break;
+//                                        case Cons.API_NAME_USER_POLICY:
+//                                            String userPolicyString = ApiHelper.parseResponseForUserPolicy(context, aResult);
+//
+//                                            if (userPolicyString != null) {
+//                                                Intent intent = new Intent(context, UserPolicy_Activity.class);
+//                                                intent.putExtra(Cons.EXTRAS_USER_POLICY, userPolicyString);
+//                                                context.startActivity(intent);
+//                                            } else {
+//                                                alertDialog.setMessage(context.getString(R.string.error_response_from_server_incorrect));
+//                                                alertDialog.show();
+//                                            }
+//
+//                                            break;
+//                                    }
                                 } else {
                                     try {
                                         successCallback.call();
