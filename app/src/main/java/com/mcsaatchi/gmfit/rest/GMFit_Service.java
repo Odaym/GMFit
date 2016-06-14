@@ -23,6 +23,6 @@ public interface GMFit_Service {
     Call<DefaultGetResponse> signOutUser(@Header(Cons.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken);
 
     @POST("user/update-profile")
-    Call<AuthenticationResponse> updateUserProfile(@Header(Cons.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken, @Body Setup_Profile_3_Fragment
+    Call<DefaultGetResponse> updateUserProfile(@Header(Cons.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken, @Body Setup_Profile_3_Fragment
             .UpdateProfileRequest updateProfileRequest);
 }

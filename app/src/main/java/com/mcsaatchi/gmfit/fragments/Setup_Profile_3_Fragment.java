@@ -3,6 +3,7 @@ package com.mcsaatchi.gmfit.fragments;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -18,11 +19,12 @@ import android.widget.Toast;
 import com.andreabaccega.widget.FormEditText;
 import com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialogFragment;
 import com.mcsaatchi.gmfit.R;
+import com.mcsaatchi.gmfit.activities.Main_Activity;
 import com.mcsaatchi.gmfit.classes.Cons;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
 import com.mcsaatchi.gmfit.classes.Helpers;
-import com.mcsaatchi.gmfit.rest.AuthenticationResponse;
+import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.rest.RestClient;
 import com.squareup.otto.Subscribe;
 
@@ -117,10 +119,9 @@ public class Setup_Profile_3_Fragment extends Fragment implements CalendarDatePi
 
                     int finalGender;
 
-                    if (genderSpinner.getSelectedItem().toString().equals("Male"))
-                        finalGender = 1;
-                    else
-                        finalGender = 0;
+                    finalGender = genderSpinner.getSelectedItem().toString().equals("Male") ? 1 : 0;
+
+                    Log.d(TAG, "handle_BusEvents: finalGender is : " + finalGender);
 
                     String finalDateOfBirth = null;
 
@@ -134,18 +135,6 @@ public class Setup_Profile_3_Fragment extends Fragment implements CalendarDatePi
 
                     setupUserProfile(finalName, finalDateOfBirth, finalBloodType, finalGender, finalHeight,
                             finalWeight, calculateBMI(finalWeight, finalHeight));
-
-//                        ApiHelper.runApiAsyncTask(getActivity(), Cons.API_NAME_UPDATE_PROFILE, Cons.POST_REQUEST_TYPE, jsonForRequest, R.string
-//                                .setting_up_profile_dialog_title, R.string.setting_up_profile_dialog_message, new Callable<Void>() {
-//                            @Override
-//                            public Void call() throws Exception {
-//                                Intent intent = new Intent(getActivity(), Main_Activity.class);
-//                                startActivity(intent);
-//                                getActivity().finish();
-//
-//                                return null;
-//                            }
-//                        });
                 }
 
                 break;
@@ -170,24 +159,20 @@ public class Setup_Profile_3_Fragment extends Fragment implements CalendarDatePi
                     }
                 });
 
-        Call<AuthenticationResponse> registerUserCall = new RestClient().getGMFitService().updateUserProfile(prefs.getString(Cons.PREF_USER_ACCESS_TOKEN,
+        Call<DefaultGetResponse> registerUserCall = new RestClient().getGMFitService().updateUserProfile(prefs.getString(Cons.PREF_USER_ACCESS_TOKEN,
                 Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS), new UpdateProfileRequest(finalName, finalDateOfBirth, bloodType, finalGender, height, weight, BMI));
 
-        registerUserCall.enqueue(new Callback<AuthenticationResponse>() {
+        registerUserCall.enqueue(new Callback<DefaultGetResponse>() {
             @Override
-            public void onResponse(Call<AuthenticationResponse> call, Response<AuthenticationResponse> response) {
+            public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
                 if (response.body() != null) {
                     switch (response.code()) {
                         case Cons.API_REQUEST_SUCCEEDED_CODE:
                             waitingDialog.dismiss();
 
-//                            prefs.edit().putString(Cons.PREF_USER_ACCESS_TOKEN, "Bearer " + response.body().getData().getBody().getToken()).apply();
-//
-//                            Intent intent = new Intent(getActivity(), GetStarted_Activity.class);
-//                            startActivity(intent);
-//                            getActivity().finish();
-
-                            Log.d(TAG, "onResponse: Request succeeded! " + response.body().getData().getBody());
+                            Intent intent = new Intent(getActivity(), Main_Activity.class);
+                            startActivity(intent);
+                            getActivity().finish();
 
                             break;
                         case Cons.LOGIN_API_WRONG_CREDENTIALS:
@@ -200,17 +185,16 @@ public class Setup_Profile_3_Fragment extends Fragment implements CalendarDatePi
 
                     //Handle the error
                     try {
-
-                        Log.d(TAG, "onResponse: Response failed " + response.errorBody().string());
-
                         JSONObject errorBody = new JSONObject(response.errorBody().string());
                         JSONObject errorData = errorBody.getJSONObject("data");
                         int errorCodeInData = errorData.getInt("code");
 
-                        if (errorCodeInData == Cons.API_RESPONSE_INVALID_PARAMETERS) {
-                            alertDialog.setMessage(getString(R.string.email_already_taken_api_response));
-                            alertDialog.show();
-                        }
+                        Log.d(TAG, "onResponse: Response failed with this : " + errorBody.toString());
+
+//                        if (errorCodeInData == Cons.API_RESPONSE_INVALID_PARAMETERS) {
+//                            alertDialog.setMessage(getString(R.string.email_already_taken_api_response));
+//                            alertDialog.show();
+//                        }
                     } catch (IOException | JSONException e) {
                         e.printStackTrace();
                     }
@@ -218,7 +202,7 @@ public class Setup_Profile_3_Fragment extends Fragment implements CalendarDatePi
             }
 
             @Override
-            public void onFailure(Call<AuthenticationResponse> call, Throwable t) {
+            public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
                 alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
                 alertDialog.show();
             }
