@@ -1,37 +1,40 @@
 package com.mcsaatchi.gmfit.activities;
 
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.andreabaccega.widget.FormEditText;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.classes.Cons;
 import com.mcsaatchi.gmfit.classes.Helpers;
-import com.mcsaatchi.gmfit.rest.RegisterResponse;
+import com.mcsaatchi.gmfit.rest.AuthenticationResponse;
 import com.mcsaatchi.gmfit.rest.RestClient;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import rx.Observable;
-import rx.Subscriber;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class SignUp_Activity extends Base_Activity {
 
@@ -46,7 +49,8 @@ public class SignUp_Activity extends Base_Activity {
     @Bind(R.id.creatingAccountTOSTV)
     TextView creatingAccountTOSTV;
     private ArrayList<FormEditText> allFields = new ArrayList<>();
-    private static final String TAG = "SignUp_Activity";
+
+    private SharedPreferences prefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +59,8 @@ public class SignUp_Activity extends Base_Activity {
         setContentView(R.layout.activity_sign_up);
 
         ButterKnife.bind(this);
+
+        prefs = getSharedPreferences(Cons.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
 
         allFields.add(emailET);
         allFields.add(passwordET);
@@ -70,8 +76,6 @@ public class SignUp_Activity extends Base_Activity {
                         final JSONObject jsonForRequest = new JSONObject();
                         jsonForRequest.put(Cons.REQUEST_PARAM_EMAIL, emailET.getText().toString());
                         jsonForRequest.put(Cons.REQUEST_PARAM_PASSWORD, passwordET.getText().toString());
-//                        ApiHelper.runApiAsyncTask(SignUp_Activity.this, Cons.API_NAME_REGISTER, Cons.POST_REQUEST_TYPE, jsonForRequest, R.string
-//                                .setting_up_profile_dialog_title, R.string.setting_up_profile_dialog_message, null);
 
                         registerUser(emailET.getText().toString(), passwordET.getText().toString());
 
@@ -97,41 +101,73 @@ public class SignUp_Activity extends Base_Activity {
     }
 
     private void registerUser(String email, String password) {
-        Observable<RegisterResponse> registerUserObservable = new RestClient().getGMFitService().registerUser(new RegisterRequest(email, password));
+        final ProgressDialog waitingDialog = new ProgressDialog(this);
+        waitingDialog.setTitle(getString(R.string.signing_up_dialog_title));
+        waitingDialog.setMessage(getString(R.string.signing_up_dialog_message));
+        waitingDialog.show();
 
-        registerUserObservable.subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .unsubscribeOn(Schedulers.io())
-                .subscribe(new Subscriber<RegisterResponse>() {
-                    @Override
-                    public void onCompleted() {
-                        Toast.makeText(SignUp_Activity.this,
-                                "Completed",
-                                Toast.LENGTH_SHORT)
-                                .show();
-                    }
+        final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+        alertDialog.setTitle(R.string.signing_up_dialog_title);
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
 
-                    @Override
-                    public void onError(Throwable e) {
-                        Toast.makeText(SignUp_Activity.this,
-                                e.getMessage(),
-                                Toast.LENGTH_SHORT)
-                                .show();
-                    }
-
-                    @Override
-                    public void onNext(RegisterResponse response) {
-                        Log.d(TAG, "onResponse: Call succeeded, RESPONSE : " + response.getData().getBody());
-
-
-                        Log.d(TAG, "onResponse: Call succeeded, here's the response BODY : " + response.getData().getMessage());
-                        Log.d(TAG, "onResponse: Call succeeded, here's the response MESSAGE : " + response.getData().getMessage());
-                        Log.d(TAG, "onResponse: Call succeeded, here's the response CODE: " + response.getData().getCode());
+                        if (waitingDialog.isShowing())
+                            waitingDialog.dismiss();
                     }
                 });
+
+        Call<AuthenticationResponse> registerUserCall = new RestClient().getGMFitService().registerUser(new RegisterRequest(email, password));
+
+        registerUserCall.enqueue(new Callback<AuthenticationResponse>() {
+            @Override
+            public void onResponse(Call<AuthenticationResponse> call, Response<AuthenticationResponse> response) {
+                if (response.body() != null) {
+                    switch (response.code()) {
+                        case Cons.API_REQUEST_SUCCEEDED_CODE:
+                            waitingDialog.dismiss();
+
+                            prefs.edit().putString(Cons.PREF_USER_ACCESS_TOKEN, "Bearer " + response.body().getData().getBody().getToken()).apply();
+
+                            Intent intent = new Intent(SignUp_Activity.this, GetStarted_Activity.class);
+                            startActivity(intent);
+                            finish();
+
+                            break;
+                        case Cons.LOGIN_API_WRONG_CREDENTIALS:
+                            alertDialog.setMessage(getString(R.string.login_failed_wrong_credentials));
+                            alertDialog.show();
+                            break;
+                    }
+                } else {
+                    waitingDialog.dismiss();
+
+                    //Handle the error
+                    try {
+                        JSONObject errorBody = new JSONObject(response.errorBody().string());
+                        JSONObject errorData = errorBody.getJSONObject("data");
+                        int errorCodeInData = errorData.getInt("code");
+
+                        if (errorCodeInData == Cons.API_RESPONSE_INVALID_PARAMETERS) {
+                            alertDialog.setMessage(getString(R.string.email_already_taken_api_response));
+                            alertDialog.show();
+                        }
+                    } catch (IOException | JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<AuthenticationResponse> call, Throwable t) {
+                alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
+                alertDialog.show();
+            }
+        });
     }
 
-    public class RegisterRequest{
+    public class RegisterRequest {
         final String email;
         final String password;
 
