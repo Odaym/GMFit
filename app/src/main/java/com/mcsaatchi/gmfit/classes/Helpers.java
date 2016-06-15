@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.view.animation.BounceInterpolator;
 
 import com.andreabaccega.widget.FormEditText;
 import com.github.mikephil.charting.charts.BarChart;
@@ -14,9 +13,6 @@ import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
-import com.hookedonplay.decoviewlib.DecoView;
-import com.hookedonplay.decoviewlib.charts.SeriesItem;
-import com.hookedonplay.decoviewlib.events.DecoEvent;
 import com.mcsaatchi.gmfit.R;
 
 import java.util.ArrayList;
@@ -141,19 +137,6 @@ public class Helpers {
         chart.setData(data);
 
         chart.invalidate();
-    }
-
-    public static void setUpDecoViewArc(Context ctx, DecoView dynamicArc) {
-        SeriesItem seriesItem1 = new SeriesItem.Builder(ctx.getResources().getColor(android.R.color.holo_orange_dark))
-                .setRange(0, 100, 0)
-                .setSpinDuration(2500)
-                .setInterpolator(new BounceInterpolator())
-                .setLineWidth(35f)
-                .build();
-
-        int series1Index = dynamicArc.addSeries(seriesItem1);
-
-        dynamicArc.addEvent(new DecoEvent.Builder(75).setIndex(series1Index).build());
     }
 
     public static boolean isInternetAvailable(Context context) {
