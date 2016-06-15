@@ -21,7 +21,6 @@ import android.widget.Toast;
 import com.github.mikephil.charting.charts.BarChart;
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.vision.barcode.Barcode;
-import com.hookedonplay.decoviewlib.DecoView;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.activities.AddNewChart_Activity;
 import com.mcsaatchi.gmfit.activities.AddNewMealItem_Activity;
@@ -30,7 +29,6 @@ import com.mcsaatchi.gmfit.activities.CustomizeWidgetsAndCharts_Activity;
 import com.mcsaatchi.gmfit.classes.Cons;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
-import com.mcsaatchi.gmfit.classes.Helpers;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -106,8 +104,6 @@ public class Nutrition_Fragment extends Fragment {
     /**
      * TOP LAYOUT WITH WIDGETS
      */
-    @Bind(R.id.dynamicArcView)
-    DecoView dynamicArc;
     @Bind(R.id.firstMetricTitleTV)
     TextView firstMetricTitleTV;
     @Bind(R.id.firstMetricValueTV)
@@ -153,8 +149,6 @@ public class Nutrition_Fragment extends Fragment {
         prefs = getActivity().getSharedPreferences(Cons.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
 
         setHasOptionsMenu(true);
-
-        Helpers.setUpDecoViewArc(getActivity(), dynamicArc);
 
         addNewChartBTN.setOnClickListener(new View.OnClickListener() {
             @Override
