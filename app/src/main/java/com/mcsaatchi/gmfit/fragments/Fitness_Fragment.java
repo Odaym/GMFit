@@ -2,11 +2,12 @@ package com.mcsaatchi.gmfit.fragments;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.NestedScrollView;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.util.SparseArray;
@@ -26,9 +28,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
+import android.widget.GridView;
 import android.widget.LinearLayout;
-import android.widget.TextSwitcher;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
@@ -51,7 +52,6 @@ import com.google.android.gms.fitness.request.OnDataPointListener;
 import com.google.android.gms.fitness.request.SensorRequest;
 import com.google.android.gms.fitness.result.DailyTotalResult;
 import com.google.android.gms.fitness.result.DataSourcesResult;
-import com.hookedonplay.decoviewlib.DecoView;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.mcsaatchi.gmfit.BuildConfig;
 import com.mcsaatchi.gmfit.R;
@@ -59,22 +59,22 @@ import com.mcsaatchi.gmfit.activities.AddNewChart_Activity;
 import com.mcsaatchi.gmfit.activities.Base_Activity;
 import com.mcsaatchi.gmfit.activities.CustomizeWidgetsAndCharts_Activity;
 import com.mcsaatchi.gmfit.activities.Main_Activity;
-import com.mcsaatchi.gmfit.classes.ApiHelper;
+import com.mcsaatchi.gmfit.adapters.FitnessWidgets_GridAdapter;
 import com.mcsaatchi.gmfit.classes.Cons;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
 import com.mcsaatchi.gmfit.classes.Helpers;
 import com.mcsaatchi.gmfit.models.DataChart;
+import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
+import com.mcsaatchi.gmfit.rest.RestClient;
 import com.squareup.otto.Subscribe;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -82,38 +82,25 @@ import java.util.concurrent.TimeUnit;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class Fitness_Fragment extends Fragment {
 
     public static final String TAG = "GMFit";
     public static final int ADD_NEW_FITNESS_CHART_REQUEST_CODE = 1;
     private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
+    @Bind(R.id.widgetsGridView)
+    GridView widgetsGridView;
     @Bind(R.id.bar_chart)
     HorizontalBarChart defaultBarChart;
-    @Bind(R.id.dynamicArcView)
-    DecoView dynamicArc;
     @Bind(R.id.cards_container)
     LinearLayout cards_container;
     @Bind(R.id.addChartBTN)
     Button addNewBarChartBTN;
     @Bind(R.id.metricCounterTV)
     TextView metricCounterTV;
-    @Bind(R.id.firstMetricTV)
-    TextView firstMetricTV;
-    @Bind(R.id.firstMetricIMG)
-    ImageView firstMetricIMG;
-    @Bind(R.id.secondMetricTV)
-    TextView secondMetricTV;
-    @Bind(R.id.secondMetricIMG)
-    ImageView secondMetricIMG;
-    @Bind(R.id.thirdMetricTV)
-    TextSwitcher thirdMetricTV;
-    @Bind(R.id.thirdMetricIMG)
-    ImageView thirdMetricIMG;
-    @Bind(R.id.fourthMetricTV)
-    TextView fourthMetricTV;
-    @Bind(R.id.fourthMetricIMG)
-    ImageView fourthMetricIMG;
     private NestedScrollView parentScrollView;
     private List<DataChart> allDataCharts;
     private RuntimeExceptionDao<DataChart, Integer> dataChartDAO;
@@ -125,6 +112,9 @@ public class Fitness_Fragment extends Fragment {
     private SharedPreferences prefs;
     private String chartType;
     private String chartName;
+
+    private int[] widgetIcons = new int[]{R.drawable.walking, R.drawable.biking, R.drawable.calories, R.drawable.stairs};
+    private String[] widgetNames = new String[]{"Walking", "Biking", "Calories", "Stairs"};
 
     @Override
     public void onAttach(Context context) {
@@ -158,8 +148,6 @@ public class Fitness_Fragment extends Fragment {
 
         setHasOptionsMenu(true);
 
-        Helpers.setUpDecoViewArc(getActivity(), dynamicArc);
-
         Log.d(TAG, "onCreateView: Device info : " + Build.MANUFACTURER + " " + Build.MODEL + " (" + Build.DEVICE + ") - "
                 + Build.VERSION.RELEASE);
 
@@ -174,7 +162,9 @@ public class Fitness_Fragment extends Fragment {
             }
         });
 
-        setUpMetricCounterTextSwitcherAnimation();
+        setUpWidgetsGridView();
+
+//        setUpMetricCounterTextSwitcherAnimation();
 
 //        new Thread(new Runnable() {
 //            @Override
@@ -231,17 +221,21 @@ public class Fitness_Fragment extends Fragment {
         }, 500);
     }
 
-    private void setUpMetricCounterTextSwitcherAnimation() {
-        thirdMetricTV.setInAnimation(getActivity(), R.anim.fade_in);
-        thirdMetricTV.setOutAnimation(getActivity(), R.anim.fade_out);
-        TextView textView1 = new TextView(getActivity());
-        textView1.setTypeface(null, Typeface.BOLD);
-        TextView textView2 = new TextView(getActivity());
-        textView2.setTypeface(null, Typeface.BOLD);
-
-        thirdMetricTV.addView(textView1);
-        thirdMetricTV.addView(textView2);
+    private void setUpWidgetsGridView() {
+        widgetsGridView.setAdapter(new FitnessWidgets_GridAdapter(getActivity(), widgetNames, widgetIcons));
     }
+
+//    private void setUpMetricCounterTextSwitcherAnimation() {
+//        thirdMetricTV.setInAnimation(getActivity(), R.anim.fade_in);
+//        thirdMetricTV.setOutAnimation(getActivity(), R.anim.fade_out);
+//        TextView textView1 = new TextView(getActivity());
+//        textView1.setTypeface(null, Typeface.BOLD);
+//        TextView textView2 = new TextView(getActivity());
+//        textView2.setTypeface(null, Typeface.BOLD);
+//
+//        thirdMetricTV.addView(textView1);
+//        thirdMetricTV.addView(textView2);
+//    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -257,24 +251,6 @@ public class Fitness_Fragment extends Fragment {
 //                dataChartDAO.create(new DataChart(chartName, chartType, dataChartDAO.queryForAll().size() + 1, Cons.EXTRAS_FITNESS_FRAGMENT));
 
 //                ApiHelper.getChartMetricsByDate(getActivity(), chartType);
-
-//                Call<MetricsResponse> callSignOutUser = new RestClient().getGMFitService().getChartMetricsByDate(prefs.getString(Cons.PREF_USER_ACCESS_TOKEN, Cons
-//                        .NO_ACCESS_TOKEN_FOUND_IN_PREFS), "2016-05-07", "2016-06-07", "fitness", "fitness");
-//
-//                callSignOutUser.enqueue(new Callback<MetricsResponse>() {
-//                    @Override
-//                    public void onResponse(Call<MetricsResponse> call, Response<MetricsResponse> response) {
-//                        Log.d(TAG, "onResponse: Call succeeded, here's the response : " + response.body().getEmail());
-//                        Log.d(TAG, "onResponse: Call succeeded, here's the response : " + response.body().getPassword());
-//
-//                    }
-//
-//                    @Override
-//                    public void onFailure(Call<MetricsResponse> call, Throwable t) {
-//
-//                    }
-//                });
-
 
             } else if (requestCode == Main_Activity.USER_AUTHORISED_REQUEST_CODE && googleApiFitnessClient != null) {
                 googleApiFitnessClient.stopAutoManage(getActivity());
@@ -315,52 +291,27 @@ public class Fitness_Fragment extends Fragment {
                                             parentActivity.runOnUiThread(new Runnable() {
                                                 @Override
                                                 public void run() {
-                                                    firstMetricTV.setText(distanceCoveredToday);
-                                                    metricCounterTV.setText(stepCountToday);
-                                                    secondMetricTV.setText(caloriesToday);
-
-                                                    Log.d(TAG, "run: Prefs SYNCED METRICS is : " + prefs.getBoolean("SYNCED_METRICS", false));
-
-                                                    if (!prefs.getBoolean("SYNCED_METRICS", false)) {
-
-                                                        prefs.edit().putBoolean("SYNCED_METRICS", true).apply();
-
-                                                        Log.d(TAG, "run: NOT SYNCED, SYNCING NOW");
-
-                                                        if (Helpers.isInternetAvailable(getActivity())) {
-                                                            try {
-                                                                final JSONObject jsonForRequest = new JSONObject();
-
-                                                                final JSONArray slugsArray = new JSONArray(Arrays.asList(new String[]{"steps-count", "active-calories", "distance-traveled"}));
-                                                                final JSONArray valuesArray;
-
-                                                                if (!firstMetricTV.getText().toString().isEmpty() && !secondMetricTV.getText().toString()
-                                                                        .isEmpty()) {
-
-                                                                    double[] tempValuesArray = new double[]{Double
-                                                                            .parseDouble(metricCounterTV.getText().toString()), Double.parseDouble(secondMetricTV.getText().toString()),
-                                                                            Double.parseDouble(firstMetricTV.getText().toString())};
-
-                                                                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
-                                                                        valuesArray = new JSONArray(tempValuesArray);
-                                                                    } else {
-                                                                        valuesArray = new JSONArray(Arrays.asList(tempValuesArray));
-                                                                    }
-
-                                                                    jsonForRequest.put(Cons.REQUEST_PARAM_SLUG, slugsArray);
-                                                                    jsonForRequest.put(Cons.REQUEST_PARAM_VALUE, valuesArray);
-                                                                    jsonForRequest.put(Cons.REQUEST_PARAM_DATE, Helpers.getCalendarDate());
-
-                                                                    ApiHelper.runApiAsyncTask(getActivity(), Cons.API_NAME_ADD_METRIC, Cons.POST_REQUEST_TYPE, jsonForRequest, R.string
-                                                                            .syncing_up_dialog_title, R.string.syncing_up_dialog_message, null);
-                                                                }
-                                                            } catch (JSONException e) {
-                                                                e.printStackTrace();
-                                                            }
-                                                        } else {
-                                                            Helpers.showNoInternetDialog(getActivity());
-                                                        }
-                                                    }
+//                                                    firstMetricTV.setText(distanceCoveredToday);
+//                                                    metricCounterTV.setText(stepCountToday);
+//                                                    secondMetricTV.setText(caloriesToday);
+//
+//                                                    if (!prefs.getBoolean("SYNCED_METRICS", false)) {
+//
+//                                                        if (Helpers.isInternetAvailable(getActivity())) {
+//                                                            if (!firstMetricTV.getText().toString().isEmpty() && !secondMetricTV.getText().toString()
+//                                                                    .isEmpty()) {
+//
+//                                                                double[] valuesArray = new double[]{Double
+//                                                                        .parseDouble(metricCounterTV.getText().toString()), Double.parseDouble(secondMetricTV.getText().toString()),
+//                                                                        Double.parseDouble(firstMetricTV.getText().toString())};
+//
+//                                                                updateMetrics(new String[]{"steps-count", "active-calories",
+//                                                                        "distance-traveled"}, valuesArray, Helpers.getCalendarDate());
+//                                                            }
+//                                                        } else {
+//                                                            Helpers.showNoInternetDialog(getActivity());
+//                                                        }
+//                                                    }
                                                 }
                                             });
                                         }
@@ -398,6 +349,64 @@ public class Fitness_Fragment extends Fragment {
                     })
                     .build();
         }
+    }
+
+    private void updateMetrics(String[] slugsArray, double[] valuesArray, String date) {
+        final ProgressDialog waitingDialog = new ProgressDialog(getActivity());
+        waitingDialog.setTitle(getString(R.string.syncing_up_dialog_title));
+        waitingDialog.setMessage(getString(R.string.syncing_up_dialog_message));
+        waitingDialog.show();
+
+        final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+        alertDialog.setTitle(R.string.syncing_up_dialog_title);
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+
+                        if (waitingDialog.isShowing())
+                            waitingDialog.dismiss();
+                    }
+                });
+
+        Call<DefaultGetResponse> updateMetricsCall = new RestClient().getGMFitService().updateMetrics(prefs.getString(Cons
+                .PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS), new UpdateMetricsRequest(slugsArray, valuesArray, date));
+
+        updateMetricsCall.enqueue(new Callback<DefaultGetResponse>() {
+            @Override
+            public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
+                if (response.body() != null) {
+                    switch (response.code()) {
+                        case Cons.API_REQUEST_SUCCEEDED_CODE:
+                            waitingDialog.dismiss();
+
+                            prefs.edit().putBoolean("SYNCED_METRICS", true).apply();
+
+                            break;
+                    }
+                } else {
+                    waitingDialog.dismiss();
+
+                    //Handle the error
+                    try {
+                        JSONObject errorBody = new JSONObject(response.errorBody().string());
+                        JSONObject errorData = errorBody.getJSONObject("data");
+                        int errorCodeInData = errorData.getInt("code");
+
+                        Log.d(TAG, "updateMetrics onResponse: Body error : " + response.errorBody().string());
+
+                    } catch (IOException | JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+                alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
+                alertDialog.show();
+            }
+        });
     }
 
     private void findStepCountDataSource() {
@@ -444,7 +453,7 @@ public class Fitness_Fragment extends Fragment {
                     parentActivity.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            thirdMetricTV.setText(NumberFormat.getInstance().format(Double.parseDouble(val.toString())));
+//                            thirdMetricTV.setText(NumberFormat.getInstance().format(Double.parseDouble(val.toString())));
                         }
                     });
                 }
@@ -655,16 +664,16 @@ public class Fitness_Fragment extends Fragment {
                 if (ebp.getSparseArrayExtra() != null) {
                     SparseArray<String[]> widgetsMap = ebp.getSparseArrayExtra();
 
-                    firstMetricTV.setText(widgetsMap.get(0)[0].split(" ")[0]);
-//                    firstMetricIMG.setImageDrawable(getResources().getDrawable(R.drawable.walking));
-
-                    secondMetricTV.setText(widgetsMap.get(1)[0].split(" ")[0]);
-//                    secondMetricIMG.setImageDrawable(getResources().getDrawable(R.drawable.biking));
-
-                    thirdMetricTV.setText(widgetsMap.get(2)[0].split(" ")[0]);
-//                    thirdMetricIMG.setImageDrawable(getResources().getDrawable(R.drawable.calories));
-
-                    fourthMetricTV.setText(widgetsMap.get(3)[0].split(" ")[0]);
+//                    firstMetricTV.setText(widgetsMap.get(0)[0].split(" ")[0]);
+////                    firstMetricIMG.setImageDrawable(getResources().getDrawable(R.drawable.walking));
+//
+//                    secondMetricTV.setText(widgetsMap.get(1)[0].split(" ")[0]);
+////                    secondMetricIMG.setImageDrawable(getResources().getDrawable(R.drawable.biking));
+//
+//                    thirdMetricTV.setText(widgetsMap.get(2)[0].split(" ")[0]);
+////                    thirdMetricIMG.setImageDrawable(getResources().getDrawable(R.drawable.calories));
+//
+//                    fourthMetricTV.setText(widgetsMap.get(3)[0].split(" ")[0]);
 //                    fourthMetricIMG.setImageDrawable(getResources().getDrawable(R.drawable.stairs));
                 }
 
@@ -730,6 +739,18 @@ public class Fitness_Fragment extends Fragment {
         } else {
             Log.d(TAG, "onResume REACHED, client null, buildingClient");
             buildFitnessClient();
+        }
+    }
+
+    public class UpdateMetricsRequest {
+        final String[] slug;
+        final double[] value;
+        final String date;
+
+        public UpdateMetricsRequest(String[] slug, double[] value, String date) {
+            this.slug = slug;
+            this.value = value;
+            this.date = date;
         }
     }
 }
