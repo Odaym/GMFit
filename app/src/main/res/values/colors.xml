@@ -4,6 +4,16 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
 
+    <color name="directory_dark_purple">#4d50ec</color>
+    <color name="fitness_pink">#b077f8</color>
+    <color name="fitness_dark_blue">#4a5b9c</color>
+    <color name="fitness_teal">#5feadb</color>
+    <color name="health_green">#00cdac</color>
+    <color name="nutrition_red">#ff7054</color>
+    <color name="profile_blue">#67a3fd</color>
+
+    <color name="buttons_blue">#47589a</color>
+
     <color name="edittext_hint_color">#401E1E1E</color>
     <color name="light_gray">#D1D1D1</color>
 
