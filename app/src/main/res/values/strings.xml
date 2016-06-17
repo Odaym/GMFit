@@ -133,8 +133,9 @@
 
     <!-- FITNESS FRAGMENT -->
     <string name="syncing_up_dialog_title">Syncronising Fitness data</string>
-    <string name="syncing_up_dialog_message">Please wait...</string>
-
+    <string name="syncing_up_dialog_message">Please wait…</string>
+    <string name="drag_to_reorder_widgets">Drag to re-order your homescreen widgets</string>
+    <string name="drag_to_reorder_charts">Drag to re-order your homescreen charts</string>
 
     <!-- ADD NEW CHART -->
     <string name="add_new_chart_activity_title">Add New Chart</string>
