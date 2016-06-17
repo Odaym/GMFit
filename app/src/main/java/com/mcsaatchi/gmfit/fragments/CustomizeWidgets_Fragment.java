@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Parcelable;
+import android.support.design.internal.ParcelableSparseArray;
 import android.support.v4.app.Fragment;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
@@ -32,12 +34,7 @@ public class CustomizeWidgets_Fragment extends Fragment {
     private OneItemWithIcon_Sparse_ListAdapter customizeWidgetsAdapter;
     private SharedPreferences prefs;
     private SharedPreferences.Editor prefsEditor;
-    private SparseArray<String[]> fitnessItemsMap = new SparseArray<String[]>() {{
-        put(0, new String[]{"Walking and Running Distance"});
-        put(1, new String[]{"Distance Traveled"});
-        put(2, new String[]{"Flights Climbed"});
-        put(3, new String[]{"Active Calories"});
-    }};
+
     private SparseArray<String[]> nutritionItemsMap = new SparseArray<String[]>() {{
         put(0, new String[]{"Calories", "125", "kcal", "102%"});
         put(1, new String[]{"Biotin", "321", "mcg", "120%"});
@@ -49,12 +46,17 @@ public class CustomizeWidgets_Fragment extends Fragment {
         put(7, new String[]{"Copper", "301", "mg", "103%"});
         put(8, new String[]{"Dietary Cholesterol", "11", "mg", "2%"});
     }};
+
     private String PREFS_WIDGETS_ORDER_ARRAY_IDENTIFIER;
     private String WIDGETS_ORDER_ARRAY_CHANGED_EVENT;
     private Activity parentActivity;
-    private SparseArray<String[]> itemsMap = new SparseArray<>();
-    private SparseArray<String[]> orderedItemsMap = new SparseArray<>();
+
+    private ParcelableSparseArray itemsMap = new ParcelableSparseArray();
+
+    private ParcelableSparseArray orderedItemsMap = new ParcelableSparseArray();
+
     private List<Integer> itemIndeces = new ArrayList<>();
+
     private DragSortListView.DropListener onDrop =
             new DragSortListView.DropListener() {
                 @Override
@@ -69,19 +71,18 @@ public class CustomizeWidgets_Fragment extends Fragment {
                         str.append(itemIndeces.get(i)).append(",");
                     }
 
-                    prefsEditor = prefs.edit();
-                    prefsEditor.putString(PREFS_WIDGETS_ORDER_ARRAY_IDENTIFIER, str.toString());
-                    prefsEditor.apply();
+                    prefs.edit().putString(PREFS_WIDGETS_ORDER_ARRAY_IDENTIFIER, str.toString()).apply();
                 }
             };
+
     private DragSortListView.DragListener onDrag = new DragSortListView.DragListener() {
         @Override
         public void drag(int from, int to) {
             if (to < itemsMap.size() && from < itemsMap.size()) {
                 Collections.swap(itemIndeces, from, to);
 
-                String[] tempItem = itemsMap.get(from);
-                itemsMap.setValueAt(from, itemsMap.get(to));
+                Parcelable tempItem = itemsMap.valueAt(from);
+                itemsMap.setValueAt(from, itemsMap.valueAt(to));
                 itemsMap.setValueAt(to, tempItem);
             }
         }
@@ -113,12 +114,14 @@ public class CustomizeWidgets_Fragment extends Fragment {
             if (typeOfFragmentToCustomizeFor != null) {
                 switch (typeOfFragmentToCustomizeFor) {
                     case Cons.EXTRAS_FITNESS_FRAGMENT:
-                        itemsMap = fitnessItemsMap;
+                        itemsMap = fragmentBundle.getParcelable(Cons.BUNDLE_FITNESS_WIDGETS_MAP);
+
                         PREFS_WIDGETS_ORDER_ARRAY_IDENTIFIER = Cons.EXTRAS_FITNESS_WIDGETS_ORDER_ARRAY;
                         WIDGETS_ORDER_ARRAY_CHANGED_EVENT = Cons.EXTRAS_FITNESS_WIDGETS_ORDER_ARRAY_CHANGED;
+
                         break;
                     case Cons.EXTRAS_NUTRITION_FRAGMENT:
-                        itemsMap = nutritionItemsMap;
+//                        itemsMap = nutritionItemsMap;
                         PREFS_WIDGETS_ORDER_ARRAY_IDENTIFIER = Cons.EXTRAS_NUTRITION_WIDGETS_ORDER_ARRAY;
                         WIDGETS_ORDER_ARRAY_CHANGED_EVENT = Cons.EXTRAS_NUTRITION_WIDGETS_ORDER_ARRAY_CHANGED;
                         break;
@@ -132,7 +135,6 @@ public class CustomizeWidgets_Fragment extends Fragment {
             }
         }
 
-
         prefs = parentActivity.getSharedPreferences(Cons.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
 
         if (prefs.getString(PREFS_WIDGETS_ORDER_ARRAY_IDENTIFIER, null) != null) {
@@ -141,8 +143,9 @@ public class CustomizeWidgets_Fragment extends Fragment {
             StringTokenizer st = new StringTokenizer(savedString, ",");
             for (int i = 0; i < itemsMap.size(); i++) {
                 itemIndeces.add(Integer.parseInt(st.nextToken()));
-                orderedItemsMap.put(i, itemsMap.get(itemIndeces.get(i)));
+                orderedItemsMap.put(i, itemsMap.valueAt(itemIndeces.get(i)));
             }
+
             itemsMap = orderedItemsMap;
         } else {
             for (int i = 0; i < itemsMap.size(); i++) {
@@ -155,7 +158,7 @@ public class CustomizeWidgets_Fragment extends Fragment {
         return fragmentView;
     }
 
-    private void hookupListWithItems(SparseArray<String[]> items) {
+    private void hookupListWithItems(ParcelableSparseArray items) {
         widgetsListView.setDragListener(onDrag);
         widgetsListView.setDropListener(onDrop);
 
