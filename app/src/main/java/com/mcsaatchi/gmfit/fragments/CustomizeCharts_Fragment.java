@@ -2,18 +2,20 @@ package com.mcsaatchi.gmfit.fragments;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.Button;
 
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.stmt.Where;
 import com.mcsaatchi.gmfit.R;
+import com.mcsaatchi.gmfit.activities.AddNewChart_Activity;
 import com.mcsaatchi.gmfit.activities.Base_Activity;
 import com.mcsaatchi.gmfit.adapters.OneItemWithIcon_ListAdapter;
 import com.mcsaatchi.gmfit.classes.Cons;
@@ -31,11 +33,11 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class CustomizeCharts_Fragment extends Fragment {
+    public static final int ADD_NEW_FITNESS_CHART_REQUEST_CODE = 1;
     @Bind(R.id.chartsListView)
     DragSortListView chartsListView;
-    @Bind(R.id.noChartsYetTV)
-    TextView noChartsYetTV;
-
+    @Bind(R.id.addChartBTN)
+    Button addNewChartBTN;
     private OneItemWithIcon_ListAdapter customizeChartsAdapter;
 
     private RuntimeExceptionDao<DataChart, Integer> dataChartDAO;
@@ -48,6 +50,24 @@ public class CustomizeCharts_Fragment extends Fragment {
     private Activity parentActivity;
 
     private List<String> chartNames = new ArrayList<>();
+    private DragSortListView.DropListener onDrop =
+            new DragSortListView.DropListener() {
+                @Override
+                public void drop(int from, int to) {
+
+                    dataChartsMap = dataChartDAO.query(pq);
+
+                    EventBus_Singleton.getInstance().post(new EventBus_Poster(CHARTS_ORDER_ARRAY_CHANGED_EVENT, dataChartsMap));
+
+                    customizeChartsAdapter.notifyData();
+                }
+            };
+    private DragSortListView.DragListener onDrag = new DragSortListView.DragListener() {
+        @Override
+        public void drag(int from, int to) {
+            swap(from, to);
+        }
+    };
 
     @Override
     public void onAttach(Context context) {
@@ -69,6 +89,16 @@ public class CustomizeCharts_Fragment extends Fragment {
         ButterKnife.bind(this, fragmentView);
 
         Bundle fragmentBundle = getArguments();
+
+        addNewChartBTN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), AddNewChart_Activity.class);
+                intent.putExtra(Cons.EXTRAS_ADD_CHART_WHAT_TYPE, Cons.EXTRAS_ADD_FITNESS_CHART);
+                startActivityForResult(intent, ADD_NEW_FITNESS_CHART_REQUEST_CODE);
+
+            }
+        });
 
         if (fragmentBundle != null) {
             String typeOfFragmentToCustomizeFor = fragmentBundle.getString(Cons.EXTRAS_CUSTOMIZE_WIDGETS_FRAGMENT_TYPE);
@@ -99,11 +129,6 @@ public class CustomizeCharts_Fragment extends Fragment {
             chartNames.add(dataChart.getName());
         }
 
-        if (chartNames.isEmpty())
-            noChartsYetTV.setVisibility(View.VISIBLE);
-        else
-            noChartsYetTV.setVisibility(View.GONE);
-
         hookupListWithItems(chartNames);
 
         return fragmentView;
@@ -121,27 +146,6 @@ public class CustomizeCharts_Fragment extends Fragment {
             e.printStackTrace();
         }
     }
-
-
-    private DragSortListView.DropListener onDrop =
-            new DragSortListView.DropListener() {
-                @Override
-                public void drop(int from, int to) {
-
-                    dataChartsMap = dataChartDAO.query(pq);
-
-                    EventBus_Singleton.getInstance().post(new EventBus_Poster(CHARTS_ORDER_ARRAY_CHANGED_EVENT, dataChartsMap));
-
-                    customizeChartsAdapter.notifyData();
-                }
-            };
-
-    private DragSortListView.DragListener onDrag = new DragSortListView.DragListener() {
-        @Override
-        public void drag(int from, int to) {
-            swap(from, to);
-        }
-    };
 
     public void swap(int from, int to) {
         if (to < dataChartsMap.size() && from < dataChartsMap.size()) {
