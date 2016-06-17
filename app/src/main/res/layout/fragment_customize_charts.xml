@@ -2,24 +2,20 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_horizontal_margin"
-    android:paddingEnd="@dimen/activity_vertical_margin"
-    android:paddingStart="@dimen/activity_vertical_margin"
-    android:paddingTop="@dimen/activity_horizontal_margin">
+    android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/noChartsYetTV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:layout_centerInParent="true" android:text="No charts yet!"/>
+    <TextView android:layout_width="match_parent" android:layout_height="@dimen/drag_to_reorder_hint_height"
+              android:background="@color/fitness_pink"
+              android:gravity="center_vertical"
+              android:paddingStart="@dimen/activity_vertical_margin"
+              android:text="@string/drag_to_reorder_charts"
+              android:textColor="@android:color/white"/>
 
     <com.mcsaatchi.gmfit.reorderable_listview.DragSortListView
-        xmlns:dslv="http://schemas.android.com/apk/res-auto"
         android:id="@+id/chartsListView"
+        xmlns:dslv="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:choiceMode="singleChoice"
         android:dividerHeight="1.0sp"
@@ -30,4 +26,15 @@
         dslv:max_drag_scroll_speed="0.7"
         dslv:slide_shuffle_speed="0.1"/>
 
+    <Button
+        android:id="@+id/addChartBTN"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/chartsListView"
+        android:layout_marginEnd="@dimen/default_margin_4"
+        android:layout_marginStart="@dimen/default_margin_4"
+        android:layout_marginTop="@dimen/default_margin_4"
+        android:background="@color/fitness_dark_blue"
+        android:text="ADD NEW CHART"
+        android:textColor="@android:color/white"/>
 </RelativeLayout>
