@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -8,15 +8,32 @@
     android:orientation="vertical">
 
     <RelativeLayout
+        android:id="@+id/mainFitnessMetricDetail"
         android:layout_width="match_parent"
-        android:layout_height="200dp">
+        android:layout_height="200dp"
+        android:background="@drawable/fitness_background">
+
+        <ProgressBar
+            android:id="@+id/metricProgressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/metricCounterTV"
+            android:layout_centerHorizontal="true"
+            android:indeterminate="false"
+            android:maxHeight="10dip"
+            android:minHeight="10dip"
+            android:progress="70"
+            android:progressDrawable="@drawable/fitness_progress_bar"/>
 
         <TextView
             android:id="@+id/metricCounterTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:textSize="40sp"/>
+            android:text="2400"
+            android:textColor="@color/white"
+            android:textSize="60sp"/>
 
         <TextView
             android:id="@+id/metricCounterLabelTV"
@@ -30,19 +47,24 @@
     </RelativeLayout>
 
     <GridView android:id="@+id/widgetsGridView"
-              xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
-              android:layout_height="150dp"
-              android:columnWidth="90dp"
+              android:layout_height="@dimen/widgets_gridview_height"
+              android:layout_below="@+id/mainFitnessMetricDetail"
+              android:layout_marginBottom="@dimen/default_margin_2"
+              android:layout_marginEnd="@dimen/default_margin_2"
+              android:layout_marginStart="@dimen/default_margin_2"
+              android:layout_marginTop="@dimen/default_margin_2"
+              android:columnWidth="80dp"
               android:gravity="center"
-              android:horizontalSpacing="10dp"
+              android:horizontalSpacing="@dimen/default_margin_2"
               android:numColumns="2"
               android:stretchMode="columnWidth"
-              android:verticalSpacing="20dp"/>
+              android:verticalSpacing="@dimen/default_margin_2"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/widgetsGridView"
         android:orientation="vertical">
 
         <LinearLayout
@@ -73,7 +95,13 @@
             android:id="@+id/addChartBTN"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="ADD NEW CHART"/>
+            android:layout_marginBottom="@dimen/default_margin_2"
+            android:layout_marginEnd="@dimen/default_margin_2"
+            android:layout_marginStart="@dimen/default_margin_2"
+            android:layout_marginTop="@dimen/default_margin_2"
+            android:background="@color/fitness_dark_blue"
+            android:text="ADD NEW CHART"
+            android:textColor="@android:color/white"/>
     </LinearLayout>
 
-</LinearLayout>
+</RelativeLayout>
