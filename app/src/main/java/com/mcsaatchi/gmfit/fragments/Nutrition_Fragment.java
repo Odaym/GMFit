@@ -256,7 +256,7 @@ public class Nutrition_Fragment extends Fragment {
 
                 break;
             case Cons.EXTRAS_NUTRITION_WIDGETS_ORDER_ARRAY_CHANGED:
-                itemsMap = ebp.getSparseArrayExtra();
+//                itemsMap = ebp.getSparseArrayExtra();
 
                 //See the SparsArrays in CustomizeWidgets_Fragment to understand how these arrays are split up and which values are used, pretty straight-forward
 
