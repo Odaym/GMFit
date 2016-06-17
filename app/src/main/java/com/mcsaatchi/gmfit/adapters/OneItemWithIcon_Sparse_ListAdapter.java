@@ -1,7 +1,7 @@
 package com.mcsaatchi.gmfit.adapters;
 
 import android.content.Context;
-import android.util.SparseArray;
+import android.support.design.internal.ParcelableSparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,17 +10,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mcsaatchi.gmfit.R;
+import com.mcsaatchi.gmfit.classes.ParcelableString;
 
 public class OneItemWithIcon_Sparse_ListAdapter extends BaseAdapter {
 
     private Context context;
-    private SparseArray<String[]> listItems;
+    private ParcelableSparseArray widgetsMap;
     private int drawableResId;
 
-    public OneItemWithIcon_Sparse_ListAdapter(Context context, SparseArray<String[]> listItems, int drawableResId) {
+    public OneItemWithIcon_Sparse_ListAdapter(Context context, ParcelableSparseArray widgetsMap, int drawableResId) {
         super();
         this.context = context;
-        this.listItems = listItems;
+        this.widgetsMap = widgetsMap;
         this.drawableResId = drawableResId;
     }
 
@@ -30,12 +31,12 @@ public class OneItemWithIcon_Sparse_ListAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return listItems.size();
+        return widgetsMap.size();
     }
 
     @Override
-    public String[] getItem(int index) {
-        return listItems.get(index);
+    public Object getItem(int index) {
+        return null;
     }
 
     @Override
@@ -62,8 +63,9 @@ public class OneItemWithIcon_Sparse_ListAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.itemNameTV.setText(listItems.get(position)[0]);
         holder.itemIconRightIMG.setImageResource(drawableResId);
+
+        holder.itemNameTV.setText(((ParcelableString) widgetsMap.valueAt(position)).getValue());
 
         return convertView;
     }
