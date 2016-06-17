@@ -1,6 +1,7 @@
 package com.mcsaatchi.gmfit.adapters;
 
 import android.content.Context;
+import android.support.design.internal.ParcelableSparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,20 +10,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mcsaatchi.gmfit.R;
+import com.mcsaatchi.gmfit.classes.ParcelableString;
 
 public class FitnessWidgets_GridAdapter extends BaseAdapter {
     private Context context;
-    private String[] widgetNames;
-    private int[] widgetIcons;
+    private ParcelableSparseArray widgetsMap;
 
-    public FitnessWidgets_GridAdapter(Context context, String[] widgetNames, int[] widgetIcons) {
+    public FitnessWidgets_GridAdapter(Context context, ParcelableSparseArray widgetsMap) {
         this.context = context;
-        this.widgetNames = widgetNames;
-        this.widgetIcons = widgetIcons;
+        this.widgetsMap = widgetsMap;
     }
 
     public int getCount() {
-        return widgetIcons.length;
+        return widgetsMap.size();
     }
 
     public Object getItem(int position) {
@@ -53,9 +53,9 @@ public class FitnessWidgets_GridAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.metricIcon.setImageResource(widgetIcons[position]);
+        holder.metricTV.setText(((ParcelableString) widgetsMap.valueAt(position)).getValue());
 
-        holder.metricTV.setText(widgetNames[position]);
+        holder.metricIcon.setImageResource(((ParcelableString) widgetsMap.valueAt(position)).getKey());
 
         return convertView;
     }
