@@ -1,5 +1,6 @@
 package com.mcsaatchi.gmfit.classes;
 
+import android.support.design.internal.ParcelableSparseArray;
 import android.util.SparseArray;
 
 import com.mcsaatchi.gmfit.models.DataChart;
@@ -12,7 +13,8 @@ public class EventBus_Poster {
     private String message;
     private String stringExtra;
     private MealItem mealItem;
-    private SparseArray<String[]> sparseArrayExtra;
+    private ParcelableSparseArray parcelableSparseExtra;
+    private SparseArray<String> sparseArrayExtra;
     private ArrayList<Float> floatArrayExtra;
     private List<DataChart> dataChartsListExtra;
 
@@ -20,7 +22,12 @@ public class EventBus_Poster {
         this.message = message;
     }
 
-    public EventBus_Poster(String message, SparseArray<String[]> sparseArrayExtra) {
+    public EventBus_Poster(String message, ParcelableSparseArray parcelableSparseExtra) {
+        this.message = message;
+        this.parcelableSparseExtra = parcelableSparseExtra;
+    }
+
+    public EventBus_Poster(String message, SparseArray<String> sparseArrayExtra) {
         this.message = message;
         this.sparseArrayExtra = sparseArrayExtra;
     }
@@ -69,7 +76,11 @@ public class EventBus_Poster {
         return message;
     }
 
-    public SparseArray<String[]> getSparseArrayExtra() {
+    public ParcelableSparseArray getParcelableSparseExtra(){
+        return parcelableSparseExtra;
+    }
+
+    public SparseArray<String> getSparseArrayExtra() {
         return sparseArrayExtra;
     }
 
