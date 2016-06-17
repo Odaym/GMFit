@@ -38,22 +38,12 @@ public class Cons {
     public static final String EXTRAS_USER_POLICY = "user_policy";
     public static final String BUNDLE_ACTIVITY_TITLE = "activity_title";
     public static final String BUNDLE_ACTIVITY_BACK_BUTTON_ENABLED = "activity_back_button_enabled";
+    public static final String BUNDLE_FITNESS_WIDGETS_MAP = "fitness_widgets_map";
     public static final String BASE_URL_ADDRESS = "http://gmfit.mcsaatchi.me/api/v1/";
     public static final MediaType JSON_FORMAT_IDENTIFIER
             = MediaType.parse("application/json; charset=utf-8");
 
-    public static final String API_NAME_USER_POLICY = "user-policy";
-    public static final String API_NAME_EMERGENCY = "emergency";
-    public static final String API_NAME_GET_PROFILE = "user/profile";
-    public static final String API_NAME_UPDATE_PROFILE = "user/update-profile";
-    public static final String API_NAME_ADD_METRIC = "user/add-metric";
-
     public static final int POST_REQUEST_TYPE = 500;
-    public static final int GET_REQUEST_TYPE = 1000;
-
-    public static final String REQUEST_PARAM_SLUG = "slug";
-    public static final String REQUEST_PARAM_VALUE = "value";
-    public static final String REQUEST_PARAM_DATE = "date";
 
     public static final String SLUG_VALUE_STEPS_COUNT = "steps-count";
     public static final String SLUG_VALUE_DISTANCE_TRAVELED = "distance-traveled";
