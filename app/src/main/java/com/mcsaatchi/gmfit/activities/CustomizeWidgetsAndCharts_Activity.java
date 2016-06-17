@@ -2,6 +2,7 @@ package com.mcsaatchi.gmfit.activities;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.internal.ParcelableSparseArray;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -24,6 +25,7 @@ public class CustomizeWidgetsAndCharts_Activity extends Base_Activity {
     SlidingTabLayout tabs;
 
     private String typeOfFragmentToCustomizeFor;
+    private ParcelableSparseArray widgetsMapExtra;
 
     private String[] tabTitles = new String[]{
             "Widgets", "Charts"
@@ -37,7 +39,15 @@ public class CustomizeWidgetsAndCharts_Activity extends Base_Activity {
 
         ButterKnife.bind(this);
 
-        CustomizerViewPager_Adapter fragmentsPagerAdapter = new CustomizerViewPager_Adapter(getSupportFragmentManager(), tabTitles);
+        Bundle intentExtras = getIntent().getExtras();
+
+        //Grab the Fragment type from one of the three Fragments (Fitness, Nutrition, Health)
+        if (intentExtras != null) {
+            typeOfFragmentToCustomizeFor = intentExtras.getString(Cons.EXTRAS_CUSTOMIZE_WIDGETS_FRAGMENT_TYPE);
+            widgetsMapExtra = (ParcelableSparseArray) intentExtras.getSparseParcelableArray(Cons.BUNDLE_FITNESS_WIDGETS_MAP);
+        }
+
+        CustomizerViewPager_Adapter fragmentsPagerAdapter = new CustomizerViewPager_Adapter(getSupportFragmentManager(), tabTitles, widgetsMapExtra);
 
         tabs.setDistributeEvenly(true);
 
@@ -45,29 +55,25 @@ public class CustomizeWidgetsAndCharts_Activity extends Base_Activity {
         pager.setCurrentItem(0);
 
         tabs.setViewPager(pager);
-
-        Bundle intentExtras = getIntent().getExtras();
-
-        //Grab the Fragment type from one of the three Fragments (Fitness, Nutrition, Health)
-        if (intentExtras != null) {
-            typeOfFragmentToCustomizeFor = intentExtras.getString(Cons.EXTRAS_CUSTOMIZE_WIDGETS_FRAGMENT_TYPE);
-        }
     }
 
     public class CustomizerViewPager_Adapter extends FragmentStatePagerAdapter {
 
         private String[] tabTitles;
+        private ParcelableSparseArray widgetsMapExtra;
 
-        public CustomizerViewPager_Adapter(FragmentManager fm, String[] tabTitles) {
+        public CustomizerViewPager_Adapter(FragmentManager fm, String[] tabTitles, ParcelableSparseArray widgetsMapExtra) {
             super(fm);
 
             this.tabTitles = tabTitles;
+            this.widgetsMapExtra = widgetsMapExtra;
         }
 
         @Override
         public Fragment getItem(int position) {
             Bundle fragmentArguments = new Bundle();
             fragmentArguments.putString(Cons.EXTRAS_CUSTOMIZE_WIDGETS_FRAGMENT_TYPE, typeOfFragmentToCustomizeFor);
+            fragmentArguments.putParcelable(Cons.BUNDLE_FITNESS_WIDGETS_MAP, widgetsMapExtra);
 
             switch (position) {
                 case 0:
