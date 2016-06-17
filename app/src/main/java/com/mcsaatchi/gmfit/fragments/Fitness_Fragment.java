@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.internal.ParcelableSparseArray;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -22,7 +23,6 @@ import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.util.Log;
-import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -64,6 +64,7 @@ import com.mcsaatchi.gmfit.classes.Cons;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
 import com.mcsaatchi.gmfit.classes.Helpers;
+import com.mcsaatchi.gmfit.classes.ParcelableString;
 import com.mcsaatchi.gmfit.models.DataChart;
 import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.rest.RestClient;
@@ -78,6 +79,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.StringTokenizer;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.Bind;
@@ -98,9 +100,10 @@ public class Fitness_Fragment extends Fragment {
     @Bind(R.id.cards_container)
     LinearLayout cards_container;
     @Bind(R.id.addChartBTN)
-    Button addNewBarChartBTN;
+    Button addNewChartBTN;
     @Bind(R.id.metricCounterTV)
     TextView metricCounterTV;
+
     private NestedScrollView parentScrollView;
     private List<DataChart> allDataCharts;
     private RuntimeExceptionDao<DataChart, Integer> dataChartDAO;
@@ -113,8 +116,15 @@ public class Fitness_Fragment extends Fragment {
     private String chartType;
     private String chartName;
 
-    private int[] widgetIcons = new int[]{R.drawable.walking, R.drawable.biking, R.drawable.calories, R.drawable.stairs};
-    private String[] widgetNames = new String[]{"Walking", "Biking", "Calories", "Stairs"};
+    private ArrayList<Integer> itemIndeces = new ArrayList<>();
+    private ParcelableSparseArray orderedItemsMap = new ParcelableSparseArray();
+
+    private ParcelableSparseArray widgetsMap = new ParcelableSparseArray() {{
+        put(0, new ParcelableString(R.drawable.ic_running, "Walking"));
+        put(1, new ParcelableString(R.drawable.ic_biking, "Biking"));
+        put(2, new ParcelableString(R.drawable.ic_calories, "Calories"));
+        put(3, new ParcelableString(R.drawable.ic_steps, "Stairs"));
+    }};
 
     @Override
     public void onAttach(Context context) {
@@ -153,7 +163,7 @@ public class Fitness_Fragment extends Fragment {
 
         Helpers.temporarySetHorizontalChartData(defaultBarChart, 20, 20);
 
-        addNewBarChartBTN.setOnClickListener(new View.OnClickListener() {
+        addNewChartBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), AddNewChart_Activity.class);
@@ -162,7 +172,25 @@ public class Fitness_Fragment extends Fragment {
             }
         });
 
-        setUpWidgetsGridView();
+        if (prefs.getString(Cons.EXTRAS_FITNESS_WIDGETS_ORDER_ARRAY, null) != null) {
+            Log.d(TAG, "onCreateView: Pref does exist");
+            String savedString = prefs.getString(Cons.EXTRAS_FITNESS_WIDGETS_ORDER_ARRAY, null);
+
+            StringTokenizer st = new StringTokenizer(savedString, ",");
+            for (int i = 0; i < widgetsMap.size(); i++) {
+                itemIndeces.add(Integer.parseInt(st.nextToken()));
+
+                orderedItemsMap.put(i, widgetsMap.valueAt(itemIndeces.get(i)));
+                Log.d(TAG, "onCreateView: value is : " + widgetsMap.valueAt(itemIndeces.get(i)));
+            }
+
+            widgetsMap = orderedItemsMap;
+        } else {
+            Log.d(TAG, "onCreateView: Pref doesnt exist");
+
+        }
+
+        setUpWidgetsGridView(widgetsMap);
 
 //        setUpMetricCounterTextSwitcherAnimation();
 
@@ -221,8 +249,8 @@ public class Fitness_Fragment extends Fragment {
         }, 500);
     }
 
-    private void setUpWidgetsGridView() {
-        widgetsGridView.setAdapter(new FitnessWidgets_GridAdapter(getActivity(), widgetNames, widgetIcons));
+    private void setUpWidgetsGridView(ParcelableSparseArray widgetsMap) {
+        widgetsGridView.setAdapter(new FitnessWidgets_GridAdapter(getActivity(), widgetsMap));
     }
 
 //    private void setUpMetricCounterTextSwitcherAnimation() {
@@ -661,20 +689,8 @@ public class Fitness_Fragment extends Fragment {
 
         switch (ebpMessage) {
             case Cons.EXTRAS_FITNESS_WIDGETS_ORDER_ARRAY_CHANGED:
-                if (ebp.getSparseArrayExtra() != null) {
-                    SparseArray<String[]> widgetsMap = ebp.getSparseArrayExtra();
-
-//                    firstMetricTV.setText(widgetsMap.get(0)[0].split(" ")[0]);
-////                    firstMetricIMG.setImageDrawable(getResources().getDrawable(R.drawable.walking));
-//
-//                    secondMetricTV.setText(widgetsMap.get(1)[0].split(" ")[0]);
-////                    secondMetricIMG.setImageDrawable(getResources().getDrawable(R.drawable.biking));
-//
-//                    thirdMetricTV.setText(widgetsMap.get(2)[0].split(" ")[0]);
-////                    thirdMetricIMG.setImageDrawable(getResources().getDrawable(R.drawable.calories));
-//
-//                    fourthMetricTV.setText(widgetsMap.get(3)[0].split(" ")[0]);
-//                    fourthMetricIMG.setImageDrawable(getResources().getDrawable(R.drawable.stairs));
+                if (ebp.getParcelableSparseExtra() != null) {
+                    setUpWidgetsGridView(ebp.getParcelableSparseExtra());
                 }
 
                 break;
@@ -702,6 +718,7 @@ public class Fitness_Fragment extends Fragment {
             case R.id.settings:
                 Intent intent = new Intent(getActivity(), CustomizeWidgetsAndCharts_Activity.class);
                 intent.putExtra(Cons.EXTRAS_CUSTOMIZE_WIDGETS_FRAGMENT_TYPE, Cons.EXTRAS_FITNESS_FRAGMENT);
+                intent.putExtra(Cons.BUNDLE_FITNESS_WIDGETS_MAP, widgetsMap);
                 startActivity(intent);
 
                 break;
