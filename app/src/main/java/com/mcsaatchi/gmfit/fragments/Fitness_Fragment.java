@@ -80,7 +80,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.StringTokenizer;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.Bind;
@@ -175,25 +174,7 @@ public class Fitness_Fragment extends Fragment {
             }
         });
 
-        if (prefs.getString(Cons.EXTRAS_FITNESS_WIDGETS_ORDER_ARRAY, null) != null) {
-            Log.d(TAG, "onCreateView: Pref does exist");
-            String savedString = prefs.getString(Cons.EXTRAS_FITNESS_WIDGETS_ORDER_ARRAY, null);
-
-            StringTokenizer st = new StringTokenizer(savedString, ",");
-            for (int i = 0; i < widgetsMap.size(); i++) {
-                itemIndeces.add(Integer.parseInt(st.nextToken()));
-
-                orderedItemsMap.put(i, widgetsMap.valueAt(itemIndeces.get(i)));
-                Log.d(TAG, "onCreateView: value is : " + widgetsMap.valueAt(itemIndeces.get(i)));
-            }
-
-            widgetsMap = orderedItemsMap;
-        } else {
-            Log.d(TAG, "onCreateView: Pref doesnt exist");
-        }
-
         setUpWidgetsGridView(widgetsMap);
-
 
 //        new Thread(new Runnable() {
 //            @Override
@@ -289,10 +270,12 @@ public class Fitness_Fragment extends Fragment {
                 chartType = data.getStringExtra(Cons.EXTRAS_CHART_TYPE_SELECTED);
                 chartName = data.getStringExtra(Cons.EXTRAS_CHART_FULL_NAME);
 
+
                 //Add the chart entry to the database
 //                dataChartDAO.create(new DataChart(chartName, chartType, dataChartDAO.queryForAll().size() + 1, Cons.EXTRAS_FITNESS_FRAGMENT));
 
-//                ApiHelper.getChartMetricsByDate(getActivity(), chartType);
+                //Still pending
+//                getMetricsForChart();
 
             } else if (requestCode == Main_Activity.USER_AUTHORISED_REQUEST_CODE && googleApiFitnessClient != null) {
                 googleApiFitnessClient.stopAutoManage(getActivity());
@@ -414,6 +397,65 @@ public class Fitness_Fragment extends Fragment {
                     })
                     .build();
         }
+    }
+
+    private void getMetricsForChart() {
+        final ProgressDialog waitingDialog = new ProgressDialog(getActivity());
+        waitingDialog.setTitle(getString(R.string.syncing_up_dialog_title));
+        waitingDialog.setMessage(getString(R.string.syncing_up_dialog_message));
+//        waitingDialog.show();
+
+        final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+        alertDialog.setTitle(R.string.syncing_up_dialog_title);
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+
+                        if (waitingDialog.isShowing())
+                            waitingDialog.dismiss();
+                    }
+                });
+
+        Call<DefaultGetResponse> updateMetricsCall = new RestClient().getGMFitService().getMetricsForChart(prefs.getString(Cons
+                .PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS), "2016-06-01", "2016-06-20", "fitness", "");
+
+        updateMetricsCall.enqueue(new Callback<DefaultGetResponse>() {
+            @Override
+            public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
+                if (response.body() != null) {
+                    switch (response.code()) {
+                        case Cons.API_REQUEST_SUCCEEDED_CODE:
+//                            waitingDialog.dismiss();
+
+                            break;
+                    }
+                } else {
+                    if (isVisible()) {
+                        waitingDialog.dismiss();
+
+                        //Handle the error
+                        try {
+                            JSONObject errorBody = new JSONObject(response.errorBody().string());
+                            Log.d(TAG, "onResponse: ERROR IS : " + response.errorBody().string());
+                            JSONObject errorData = errorBody.getJSONObject("data");
+                            int errorCodeInData = errorData.getInt("code");
+
+                            Log.d(TAG, "updateMetrics onResponse: Body error : " + response.errorBody().string());
+
+                        } catch (IOException | JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+                alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
+                alertDialog.show();
+            }
+        });
     }
 
     private void updateMetrics(String[] slugsArray, double[] valuesArray, String date) {
@@ -735,6 +777,7 @@ public class Fitness_Fragment extends Fragment {
         switch (ebpMessage) {
             case Cons.EXTRAS_FITNESS_WIDGETS_ORDER_ARRAY_CHANGED:
                 if (ebp.getParcelableSparseExtra() != null) {
+                    widgetsMap = ebp.getParcelableSparseExtra();
                     setUpWidgetsGridView(ebp.getParcelableSparseExtra());
                 }
 
@@ -752,7 +795,6 @@ public class Fitness_Fragment extends Fragment {
                 break;
             case Cons.EVENT_CHART_METRICS_RECEIVED:
                 addNewBarChart(chartName, ebp.getFloatArrayExtra());
-
                 break;
         }
     }
@@ -764,6 +806,10 @@ public class Fitness_Fragment extends Fragment {
                 Intent intent = new Intent(getActivity(), CustomizeWidgetsAndCharts_Activity.class);
                 intent.putExtra(Cons.EXTRAS_CUSTOMIZE_WIDGETS_FRAGMENT_TYPE, Cons.EXTRAS_FITNESS_FRAGMENT);
                 intent.putExtra(Cons.BUNDLE_FITNESS_WIDGETS_MAP, widgetsMap);
+
+                for (int i = 0; i < widgetsMap.size(); i++) {
+                    Log.d("WIDGETS", "onOptionsItemSelected: WHEN OPTIONS SELECTED : " + ((ParcelableString) widgetsMap.valueAt(i)).getTitle());
+                }
                 startActivity(intent);
 
                 break;
