@@ -27,13 +27,13 @@
         android:layout_alignParentBottom="true"
         android:orientation="vertical">
 
-        <!--<com.facebook.login.widget.LoginButton-->
-            <!--android:id="@+id/loginFacebookBTN"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_gravity="center_horizontal"-->
-            <!--android:paddingBottom="15dp"-->
-            <!--android:paddingTop="15dp"/>-->
+        <com.facebook.login.widget.LoginButton
+            android:id="@+id/loginFacebookBTN"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:paddingBottom="15dp"
+            android:paddingTop="15dp"/>
 
         <com.google.android.gms.common.SignInButton
             android:id="@+id/loginGoogleBTN"

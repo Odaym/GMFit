@@ -25,6 +25,11 @@ import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -54,8 +59,8 @@ public class Login_Activity extends Base_Activity implements
     private static final String TAG = "Login_Activity";
     @Bind(R.id.viewpager)
     ViewPager viewPager;
-//    @Bind(R.id.loginFacebookBTN)
-//    LoginButton loginFacebookBTN;
+    @Bind(R.id.loginFacebookBTN)
+    LoginButton loginFacebookBTN;
     @Bind(R.id.loginGoogleBTN)
     SignInButton loginGoogleBTN;
     @Bind(R.id.signUpBTN)
@@ -73,8 +78,8 @@ public class Login_Activity extends Base_Activity implements
         super.onCreate(Helpers.createActivityBundleWithProperties(0, false));
         Fabric.with(this, new Crashlytics());
 
-//        FacebookSdk.sdkInitialize(this);
-//        callbackManager = CallbackManager.Factory.create();
+        FacebookSdk.sdkInitialize(this);
+        callbackManager = CallbackManager.Factory.create();
 
         setContentView(R.layout.activity_login);
 
@@ -118,7 +123,7 @@ public class Login_Activity extends Base_Activity implements
 
         hookUpAlreadySignedUpBTN();
 
-//        initializeFacebookLogin();
+        initializeFacebookLogin();
 
         setupViewPager();
     }
@@ -199,28 +204,28 @@ public class Login_Activity extends Base_Activity implements
         }
     }
 
-//    private void initializeFacebookLogin() {
-//        loginFacebookBTN.setReadPermissions("email", "public_profile", "user_friends");
-//        loginFacebookBTN.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-//            @Override
-//            public void onSuccess(LoginResult loginResult) {
-//                // App code
-//                Toast.makeText(Login_Activity.this, "Facebook logged in successfully", Toast.LENGTH_SHORT).show();
-//                Intent intent = new Intent(Login_Activity.this, Main_Activity.class);
-//                startActivity(intent);
-//            }
-//
-//            @Override
-//            public void onCancel() {
-//                // App code
-//            }
-//
-//            @Override
-//            public void onError(FacebookException exception) {
-//                // App code
-//            }
-//        });
-//    }
+    private void initializeFacebookLogin() {
+        loginFacebookBTN.setReadPermissions("email", "public_profile", "user_friends");
+        loginFacebookBTN.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                // App code
+                Toast.makeText(Login_Activity.this, "Facebook logged in successfully", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(Login_Activity.this, Main_Activity.class);
+                startActivity(intent);
+            }
+
+            @Override
+            public void onCancel() {
+                // App code
+            }
+
+            @Override
+            public void onError(FacebookException exception) {
+                // App code
+            }
+        });
+    }
 
     private void loginWithGoogle() {
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(googleApiClient);
@@ -230,7 +235,7 @@ public class Login_Activity extends Base_Activity implements
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-//        callbackManager.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
         if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             handleGoogleSignInResult(result);
