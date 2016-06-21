@@ -75,6 +75,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -104,6 +105,7 @@ public class Fitness_Fragment extends Fragment {
     @Bind(R.id.metricCounterTV)
     TextView metricCounterTV;
 
+    private Value lastKnownValueForStepCount;
     private NestedScrollView parentScrollView;
     private List<DataChart> allDataCharts;
     private RuntimeExceptionDao<DataChart, Integer> dataChartDAO;
@@ -118,12 +120,13 @@ public class Fitness_Fragment extends Fragment {
 
     private ArrayList<Integer> itemIndeces = new ArrayList<>();
     private ParcelableSparseArray orderedItemsMap = new ParcelableSparseArray();
+    private FitnessWidgets_GridAdapter fitnessWidgets_GridAdapter;
 
     private ParcelableSparseArray widgetsMap = new ParcelableSparseArray() {{
-        put(0, new ParcelableString(R.drawable.ic_running, "Walking"));
-        put(1, new ParcelableString(R.drawable.ic_biking, "Biking"));
-        put(2, new ParcelableString(R.drawable.ic_calories, "Calories"));
-        put(3, new ParcelableString(R.drawable.ic_steps, "Stairs"));
+        put(0, new ParcelableString(R.drawable.ic_running, 0.0, "Walking"));
+        put(1, new ParcelableString(R.drawable.ic_biking, 0.0, "Biking"));
+        put(2, new ParcelableString(R.drawable.ic_calories, 0.0, "Calories"));
+        put(3, new ParcelableString(R.drawable.ic_steps, 0.0, "Stairs"));
     }};
 
     @Override
@@ -187,12 +190,10 @@ public class Fitness_Fragment extends Fragment {
             widgetsMap = orderedItemsMap;
         } else {
             Log.d(TAG, "onCreateView: Pref doesnt exist");
-
         }
 
         setUpWidgetsGridView(widgetsMap);
 
-//        setUpMetricCounterTextSwitcherAnimation();
 
 //        new Thread(new Runnable() {
 //            @Override
@@ -250,20 +251,33 @@ public class Fitness_Fragment extends Fragment {
     }
 
     private void setUpWidgetsGridView(ParcelableSparseArray widgetsMap) {
-        widgetsGridView.setAdapter(new FitnessWidgets_GridAdapter(getActivity(), widgetsMap));
+        fitnessWidgets_GridAdapter = new FitnessWidgets_GridAdapter(getActivity(), widgetsMap);
+
+        widgetsGridView.setAdapter(fitnessWidgets_GridAdapter);
     }
 
-//    private void setUpMetricCounterTextSwitcherAnimation() {
-//        thirdMetricTV.setInAnimation(getActivity(), R.anim.fade_in);
-//        thirdMetricTV.setOutAnimation(getActivity(), R.anim.fade_out);
-//        TextView textView1 = new TextView(getActivity());
-//        textView1.setTypeface(null, Typeface.BOLD);
-//        TextView textView2 = new TextView(getActivity());
-//        textView2.setTypeface(null, Typeface.BOLD);
-//
-//        thirdMetricTV.addView(textView1);
-//        thirdMetricTV.addView(textView2);
-//    }
+    private TextView findFitnessWidgetInGrid() {
+        View fitnessWidgetView;
+        TextView stepCountTextView = null;
+
+        for (int i = 0; i < fitnessWidgets_GridAdapter.getCount(); i++) {
+            if (fitnessWidgets_GridAdapter.getItem(i).getTitle().equals("Stairs")) {
+                final int firstListItemPosition = widgetsGridView.getFirstVisiblePosition();
+                final int lastListItemPosition = firstListItemPosition + widgetsGridView.getChildCount() - 1;
+
+                if (i < firstListItemPosition || i > lastListItemPosition) {
+                    fitnessWidgetView = widgetsGridView.getAdapter().getView(i, null, widgetsGridView);
+                } else {
+                    final int childIndex = i - firstListItemPosition;
+                    fitnessWidgetView = widgetsGridView.getChildAt(childIndex);
+                }
+
+                stepCountTextView = (TextView) fitnessWidgetView.findViewById(R.id.metricTV);
+            }
+        }
+
+        return stepCountTextView;
+    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -292,7 +306,6 @@ public class Fitness_Fragment extends Fragment {
         if (!checkPermissions()) {
             requestPermissions();
         } else {
-
             googleApiFitnessClient = new GoogleApiClient.Builder(parentActivity)
                     .addApi(Fitness.SENSORS_API)
                     .addApi(Fitness.HISTORY_API)
@@ -307,11 +320,10 @@ public class Fitness_Fragment extends Fragment {
                                     Log.i(TAG, "Connected!!!");
                                     // Now you can make calls to the Fitness APIs.
 
-                                    findStepCountDataSource();
-
                                     new Thread(new Runnable() {
                                         @Override
                                         public void run() {
+
                                             final String caloriesToday = displayCaloriesDataForToday();
                                             final String stepCountToday = displayStepCountForToday();
                                             final String distanceCoveredToday = displayDistanceCoveredForToday();
@@ -319,27 +331,52 @@ public class Fitness_Fragment extends Fragment {
                                             parentActivity.runOnUiThread(new Runnable() {
                                                 @Override
                                                 public void run() {
-//                                                    firstMetricTV.setText(distanceCoveredToday);
-//                                                    metricCounterTV.setText(stepCountToday);
-//                                                    secondMetricTV.setText(caloriesToday);
-//
-//                                                    if (!prefs.getBoolean("SYNCED_METRICS", false)) {
-//
-//                                                        if (Helpers.isInternetAvailable(getActivity())) {
-//                                                            if (!firstMetricTV.getText().toString().isEmpty() && !secondMetricTV.getText().toString()
-//                                                                    .isEmpty()) {
-//
-//                                                                double[] valuesArray = new double[]{Double
-//                                                                        .parseDouble(metricCounterTV.getText().toString()), Double.parseDouble(secondMetricTV.getText().toString()),
-//                                                                        Double.parseDouble(firstMetricTV.getText().toString())};
-//
-//                                                                updateMetrics(new String[]{"steps-count", "active-calories",
-//                                                                        "distance-traveled"}, valuesArray, Helpers.getCalendarDate());
-//                                                            }
-//                                                        } else {
-//                                                            Helpers.showNoInternetDialog(getActivity());
-//                                                        }
-//                                                    }
+
+                                                    metricCounterTV.setText(NumberFormat.getInstance().format(Double.parseDouble(stepCountToday)));
+
+                                                    for (int i = 0; i < widgetsMap.size(); i++) {
+                                                        ParcelableString fitnessWidget = (ParcelableString) widgetsMap.valueAt(i);
+
+                                                        switch (fitnessWidget.getTitle()) {
+                                                            case "Walking":
+                                                                fitnessWidget.setValue(Double.parseDouble(distanceCoveredToday));
+                                                                break;
+                                                            case "Biking":
+                                                                break;
+                                                            case "Calories":
+                                                                fitnessWidget.setValue(Double.parseDouble(caloriesToday));
+                                                                break;
+                                                            case "Stairs":
+                                                                if (lastKnownValueForStepCount != null) {
+                                                                    Log.d(TAG, "run: Value is : " + Double.parseDouble(String.valueOf
+                                                                            (lastKnownValueForStepCount)));
+                                                                    fitnessWidget.setValue(Double.parseDouble(String.valueOf(lastKnownValueForStepCount)));
+                                                                }
+                                                                break;
+                                                        }
+
+                                                        fitnessWidgets_GridAdapter.notifyDataSetChanged();
+                                                    }
+
+                                                    findStepCounterDataSource();
+
+                                                    if (!prefs.getBoolean("SYNCED_METRICS", false)) {
+                                                        Log.d(TAG, "run: PREF DOESN'T EXIST, SYNCING METRICS NOW");
+
+                                                        if (Helpers.isInternetAvailable(getActivity())) {
+                                                            if (!stepCountToday.isEmpty() && !caloriesToday.isEmpty() && !distanceCoveredToday.isEmpty()) {
+
+                                                                double[] valuesArray = new double[]{Double
+                                                                        .parseDouble(stepCountToday), Double.parseDouble(caloriesToday),
+                                                                        Double.parseDouble(distanceCoveredToday)};
+
+                                                                updateMetrics(new String[]{"steps-count", "active-calories",
+                                                                        "distance-traveled"}, valuesArray, Helpers.getCalendarDate());
+                                                            }
+                                                        } else {
+                                                            Helpers.showNoInternetDialog(getActivity());
+                                                        }
+                                                    }
                                                 }
                                             });
                                         }
@@ -413,18 +450,21 @@ public class Fitness_Fragment extends Fragment {
                             break;
                     }
                 } else {
-                    waitingDialog.dismiss();
+                    if (isVisible()) {
+                        waitingDialog.dismiss();
 
-                    //Handle the error
-                    try {
-                        JSONObject errorBody = new JSONObject(response.errorBody().string());
-                        JSONObject errorData = errorBody.getJSONObject("data");
-                        int errorCodeInData = errorData.getInt("code");
+                        //Handle the error
+                        try {
+                            JSONObject errorBody = new JSONObject(response.errorBody().string());
+                            Log.d(TAG, "onResponse: ERROR IS : " + response.errorBody().string());
+                            JSONObject errorData = errorBody.getJSONObject("data");
+                            int errorCodeInData = errorData.getInt("code");
 
-                        Log.d(TAG, "updateMetrics onResponse: Body error : " + response.errorBody().string());
+                            Log.d(TAG, "updateMetrics onResponse: Body error : " + response.errorBody().string());
 
-                    } catch (IOException | JSONException e) {
-                        e.printStackTrace();
+                        } catch (IOException | JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }
@@ -437,7 +477,7 @@ public class Fitness_Fragment extends Fragment {
         });
     }
 
-    private void findStepCountDataSource() {
+    private void findStepCounterDataSource() {
         // Note: Fitness.SensorsApi.findDataSources() requires the ACCESS_FINE_LOCATION permission.
         Fitness.SensorsApi.findDataSources(googleApiFitnessClient, new DataSourcesRequest.Builder()
                 // At least one datatype must be specified.
@@ -473,15 +513,20 @@ public class Fitness_Fragment extends Fragment {
         mListener = new OnDataPointListener() {
             @Override
             public void onDataPoint(DataPoint dataPoint) {
-                for (Field field : dataPoint.getDataType().getFields()) {
+                for (final Field field : dataPoint.getDataType().getFields()) {
                     final Value val = dataPoint.getValue(field);
-                    Log.i(TAG, "Detected DataPoint field: " + field.getName());
-                    Log.i(TAG, "Detected DataPoint value: " + val);
 
                     parentActivity.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-//                            thirdMetricTV.setText(NumberFormat.getInstance().format(Double.parseDouble(val.toString())));
+                            lastKnownValueForStepCount = val;
+
+                            TextView stepCounterTextView = findFitnessWidgetInGrid();
+
+                            if (stepCounterTextView != null)
+                                stepCounterTextView.setText(NumberFormat.getInstance().format(Double.parseDouble(String.valueOf(val))));
+
+                            Log.i(TAG, "Found this field : " + field.getName() + " with value : " + val);
                         }
                     });
                 }
