@@ -96,7 +96,6 @@ public class CustomizeCharts_Fragment extends Fragment {
                 Intent intent = new Intent(getActivity(), AddNewChart_Activity.class);
                 intent.putExtra(Cons.EXTRAS_ADD_CHART_WHAT_TYPE, Cons.EXTRAS_ADD_FITNESS_CHART);
                 startActivityForResult(intent, ADD_NEW_FITNESS_CHART_REQUEST_CODE);
-
             }
         });
 
@@ -132,6 +131,23 @@ public class CustomizeCharts_Fragment extends Fragment {
         hookupListWithItems(chartNames);
 
         return fragmentView;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == ADD_NEW_FITNESS_CHART_REQUEST_CODE) {
+
+//                chartType = data.getStringExtra(Cons.EXTRAS_CHART_TYPE_SELECTED);
+//                chartName = data.getStringExtra(Cons.EXTRAS_CHART_FULL_NAME);
+
+                //Add the chart entry to the database
+//                dataChartDAO.create(new DataChart(chartName, chartType, dataChartDAO.queryForAll().size() + 1, Cons.EXTRAS_FITNESS_FRAGMENT));
+
+//                ApiHelper.getChartMetricsByDate(getActivity(), chartType);
+
+        }
     }
 
     public void prepareQueryForFragmentType(String fragmentType) {
