@@ -42,7 +42,13 @@
             android:layout_below="@id/metricCounterTV"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="5dp"
-            android:text="STEPS TODAY"/>
+            android:background="@drawable/rounded_view"
+            android:paddingBottom="5dp"
+            android:paddingEnd="@dimen/default_margin_2"
+            android:paddingStart="@dimen/default_margin_2"
+            android:paddingTop="5dp"
+            android:text="Steps Today"
+            android:textColor="@android:color/white"/>
 
     </RelativeLayout>
 
