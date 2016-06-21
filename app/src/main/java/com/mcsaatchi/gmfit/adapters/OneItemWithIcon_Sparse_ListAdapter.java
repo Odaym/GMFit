@@ -65,7 +65,7 @@ public class OneItemWithIcon_Sparse_ListAdapter extends BaseAdapter {
 
         holder.itemIconRightIMG.setImageResource(drawableResId);
 
-        holder.itemNameTV.setText(((ParcelableString) widgetsMap.valueAt(position)).getValue());
+        holder.itemNameTV.setText(((ParcelableString) widgetsMap.valueAt(position)).getTitle());
 
         return convertView;
     }
