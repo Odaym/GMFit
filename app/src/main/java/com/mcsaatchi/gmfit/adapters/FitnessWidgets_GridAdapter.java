@@ -12,6 +12,8 @@ import android.widget.TextView;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.classes.ParcelableString;
 
+import java.text.NumberFormat;
+
 public class FitnessWidgets_GridAdapter extends BaseAdapter {
     private Context context;
     private ParcelableSparseArray widgetsMap;
@@ -25,8 +27,8 @@ public class FitnessWidgets_GridAdapter extends BaseAdapter {
         return widgetsMap.size();
     }
 
-    public Object getItem(int position) {
-        return null;
+    public ParcelableString getItem(int position) {
+        return (ParcelableString) widgetsMap.valueAt(position);
     }
 
     public long getItemId(int position) {
@@ -53,7 +55,8 @@ public class FitnessWidgets_GridAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        holder.metricTV.setText(((ParcelableString) widgetsMap.valueAt(position)).getValue());
+        holder.metricTV.setText(NumberFormat.getInstance().format(Double.parseDouble(String.valueOf(((ParcelableString) widgetsMap.valueAt(position))
+                .getValue()))));
 
         holder.metricIcon.setImageResource(((ParcelableString) widgetsMap.valueAt(position)).getKey());
 
