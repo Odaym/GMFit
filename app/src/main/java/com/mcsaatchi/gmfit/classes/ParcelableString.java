@@ -13,27 +13,31 @@ public class ParcelableString implements Parcelable {
             return new ParcelableString[size];
         }
     };
-    String value;
+
+    double value;
     int key;
+    String title;
 
     public ParcelableString() {
     }
 
     public ParcelableString(Parcel in) {
         this.key = in.readInt();
-        this.value = in.readString();
+        this.value = in.readDouble();
+        this.title = in.readString();
     }
 
-    public ParcelableString(int key, String value) {
+    public ParcelableString(int key, double value, String title) {
         this.key = key;
         this.value = value;
+        this.title = title;
     }
 
-    public String getValue() {
+    public double getValue() {
         return value;
     }
 
-    public void setValue(String value) {
+    public void setValue(double value) {
         this.value = value;
     }
 
@@ -45,6 +49,14 @@ public class ParcelableString implements Parcelable {
         this.key = key;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -53,6 +65,7 @@ public class ParcelableString implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(key);
-        dest.writeString(value);
+        dest.writeDouble(value);
+        dest.writeString(title);
     }
 }
