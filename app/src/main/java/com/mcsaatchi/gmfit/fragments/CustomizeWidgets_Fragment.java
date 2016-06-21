@@ -20,9 +20,7 @@ import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
 import com.mcsaatchi.gmfit.reorderable_listview.DragSortListView;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.StringTokenizer;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -65,13 +63,6 @@ public class CustomizeWidgets_Fragment extends Fragment {
                     EventBus_Singleton.getInstance().post(new EventBus_Poster(WIDGETS_ORDER_ARRAY_CHANGED_EVENT, itemsMap));
 
                     customizeWidgetsAdapter.notifyData();
-
-                    StringBuilder str = new StringBuilder();
-                    for (int i = 0; i < itemsMap.size(); i++) {
-                        str.append(itemIndeces.get(i)).append(",");
-                    }
-
-                    prefs.edit().putString(PREFS_WIDGETS_ORDER_ARRAY_IDENTIFIER, str.toString()).apply();
                 }
             };
 
@@ -79,8 +70,6 @@ public class CustomizeWidgets_Fragment extends Fragment {
         @Override
         public void drag(int from, int to) {
             if (to < itemsMap.size() && from < itemsMap.size()) {
-                Collections.swap(itemIndeces, from, to);
-
                 Parcelable tempItem = itemsMap.valueAt(from);
                 itemsMap.setValueAt(from, itemsMap.valueAt(to));
                 itemsMap.setValueAt(to, tempItem);
@@ -132,24 +121,6 @@ public class CustomizeWidgets_Fragment extends Fragment {
                         WIDGETS_ORDER_ARRAY_CHANGED_EVENT = Cons.EXTRAS_HEALTH_WIDGETS_ORDER_ARRAY_CHANGED;
                         break;
                 }
-            }
-        }
-
-        prefs = parentActivity.getSharedPreferences(Cons.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
-
-        if (prefs.getString(PREFS_WIDGETS_ORDER_ARRAY_IDENTIFIER, null) != null) {
-            String savedString = prefs.getString(PREFS_WIDGETS_ORDER_ARRAY_IDENTIFIER, null);
-
-            StringTokenizer st = new StringTokenizer(savedString, ",");
-            for (int i = 0; i < itemsMap.size(); i++) {
-                itemIndeces.add(Integer.parseInt(st.nextToken()));
-                orderedItemsMap.put(i, itemsMap.valueAt(itemIndeces.get(i)));
-            }
-
-            itemsMap = orderedItemsMap;
-        } else {
-            for (int i = 0; i < itemsMap.size(); i++) {
-                itemIndeces.add(itemsMap.keyAt(i));
             }
         }
 
