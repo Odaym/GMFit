@@ -142,6 +142,8 @@ public class Nutrition_Fragment extends Fragment {
 
         EventBus_Singleton.getInstance().register(this);
 
+        getActivity().setTitle(R.string.nutrition_tab_title);
+
         parentScrollView = (NestedScrollView) getActivity().findViewById(R.id.myScrollingContent);
 
         ButterKnife.bind(this, fragmentView);

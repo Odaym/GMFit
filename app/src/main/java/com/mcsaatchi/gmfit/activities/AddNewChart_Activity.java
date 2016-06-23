@@ -3,15 +3,15 @@ package com.mcsaatchi.gmfit.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.Toolbar;
 import android.util.SparseArray;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.classes.Cons;
-import com.mcsaatchi.gmfit.classes.Helpers;
 import com.mcsaatchi.gmfit.adapters.TwoItem_Sparse_ListAdapter;
+import com.mcsaatchi.gmfit.classes.Cons;
 import com.mcsaatchi.gmfit.fragments.Fitness_Fragment;
 import com.mcsaatchi.gmfit.fragments.Nutrition_Fragment;
 
@@ -21,6 +21,8 @@ import butterknife.ButterKnife;
 public class AddNewChart_Activity extends Base_Activity {
     @Bind(R.id.chartsList)
     ListView chartsList;
+    @Bind(R.id.toolbar)
+    Toolbar toolbar;
 
     private SparseArray<String[]> fitnessItemsMap = new SparseArray<String[]>() {{
         put(0, new String[]{"Number of Steps", "Steps", "steps-count"});
@@ -45,11 +47,14 @@ public class AddNewChart_Activity extends Base_Activity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(Helpers.createActivityBundleWithProperties(R.string.add_new_chart_activity_title, true));
+        super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_add_new_chart);
 
         ButterKnife.bind(this);
+
+        toolbar.setTitle(R.string.add_new_chart_activity_title);
+        setSupportActionBar(toolbar);
 
         Bundle extras = getIntent().getExtras();
 

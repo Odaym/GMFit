@@ -1,20 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="@dimen/login_button_height"
+                android:background="@android:color/white">
     <TextView
         android:id="@+id/itemNameTV"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/login_button_height"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:gravity="center_vertical"
-        android:textColor="@android:color/holo_green_dark"/>
+        android:paddingStart="@dimen/activity_vertical_margin"
+        android:textColor="@android:color/black"/>
 
-    <TextView
-        android:id="@+id/itemHintTV"
-        android:layout_width="wrap_content"
-        android:layout_height="@dimen/login_button_height"
-        android:layout_alignParentEnd="true"
-        android:gravity="center_vertical"
-        android:textColor="@android:color/holo_blue_dark"/>
-
+    <RelativeLayout android:layout_width="@dimen/add_new_chart_list_item_edge_width"
+                    android:layout_height="@dimen/login_button_height"
+                    android:layout_alignParentEnd="true"
+                    android:background="@color/much_lighter_gray">
+        <TextView
+            android:id="@+id/itemHintTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textColor="@android:color/holo_blue_dark"/>
+    </RelativeLayout>
 </RelativeLayout>

@@ -31,7 +31,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="2400"
             android:textColor="@color/white"
             android:textSize="60sp"/>
 
@@ -52,62 +51,72 @@
 
     </RelativeLayout>
 
-    <GridView android:id="@+id/widgetsGridView"
-              android:layout_width="match_parent"
-              android:layout_height="@dimen/widgets_gridview_height"
-              android:layout_below="@+id/mainFitnessMetricDetail"
-              android:layout_marginBottom="@dimen/default_margin_2"
-              android:layout_marginEnd="@dimen/default_margin_2"
-              android:layout_marginStart="@dimen/default_margin_2"
-              android:layout_marginTop="@dimen/default_margin_2"
-              android:columnWidth="80dp"
-              android:gravity="center"
-              android:horizontalSpacing="@dimen/default_margin_2"
-              android:numColumns="2"
-              android:stretchMode="columnWidth"
-              android:verticalSpacing="@dimen/default_margin_2"/>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/widgetsGridView"
-        android:orientation="vertical">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent"
+                  android:layout_below="@+id/mainFitnessMetricDetail"
+                  android:background="@android:color/white"
+                  android:orientation="vertical">
 
         <LinearLayout
-            android:id="@+id/cards_container"
+            android:id="@+id/widgetsGridViewLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:animateLayoutChanges="true"
-            android:orientation="vertical">
+            android:layout_height="wrap_content">
 
-            <android.support.v7.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/chart_height"
-                android:layout_gravity="center"
-                android:layout_marginTop="5dp"
-                card_view:cardCornerRadius="@dimen/cardview_default_radius"
-                card_view:cardElevation="@dimen/cardview_default_elevation"
-                card_view:cardUseCompatPadding="true">
-
-                <com.github.mikephil.charting.charts.HorizontalBarChart
-                    android:id="@+id/bar_chart"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
-            </android.support.v7.widget.CardView>
-
+            <GridView android:id="@+id/widgetsGridView"
+                      android:layout_width="match_parent"
+                      android:layout_height="@dimen/widgets_gridview_height"
+                      android:layout_marginBottom="@dimen/default_margin_2"
+                      android:layout_marginEnd="@dimen/default_margin_2"
+                      android:layout_marginStart="@dimen/default_margin_2"
+                      android:layout_marginTop="@dimen/default_margin_2"
+                      android:columnWidth="80dp"
+                      android:gravity="center"
+                      android:horizontalSpacing="@dimen/default_margin_2"
+                      android:numColumns="2"
+                      android:stretchMode="columnWidth"
+                      android:verticalSpacing="@dimen/default_margin_2"/>
         </LinearLayout>
 
-        <Button
-            android:id="@+id/addChartBTN"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/default_margin_2"
-            android:layout_marginEnd="@dimen/default_margin_2"
-            android:layout_marginStart="@dimen/default_margin_2"
-            android:layout_marginTop="@dimen/default_margin_2"
-            android:background="@color/fitness_dark_blue"
-            android:text="ADD NEW CHART"
-            android:textColor="@android:color/white"/>
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/cards_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:animateLayoutChanges="true"
+                android:orientation="vertical">
+
+                <android.support.v7.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/chart_height"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="5dp"
+                    card_view:cardCornerRadius="@dimen/cardview_default_radius"
+                    card_view:cardElevation="@dimen/cardview_default_elevation"
+                    card_view:cardUseCompatPadding="true">
+
+                    <com.github.mikephil.charting.charts.HorizontalBarChart
+                        android:id="@+id/bar_chart"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"/>
+                </android.support.v7.widget.CardView>
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/addChartBTN"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/default_margin_2"
+                android:layout_marginEnd="@dimen/default_margin_2"
+                android:layout_marginStart="@dimen/default_margin_2"
+                android:layout_marginTop="@dimen/default_margin_2"
+                android:background="@color/fitness_dark_blue"
+                android:text="ADD NEW CHART"
+                android:textColor="@android:color/white"/>
+        </LinearLayout>
     </LinearLayout>
 
 </RelativeLayout>

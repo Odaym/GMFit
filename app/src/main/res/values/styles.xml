@@ -8,14 +8,21 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="No_ActionBar_Theme" parent="@style/Theme.AppCompat.Light">
+    <style name="No_Action_Bar_Theme" parent="@style/Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
+    <style name="No_Status_Or_Action_Bar_Theme" parent="@style/Theme.AppCompat.Light">
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowContentOverlay">@null</item>
     </style>
 
-    <style name="ToolBarStyle_Global" parent="AppTheme">
+    <style name="ToolBarStyle_Global" parent="No_Action_Bar_Theme">
         <item name="android:textColorPrimary">@android:color/white</item>
         <item name="android:textColorSecondary">@android:color/white</item>
         <item name="android:actionMenuTextColor">@android:color/white</item>
@@ -30,7 +37,6 @@
 
     <style name="Log" parent="AppTheme">
         <item name="android:typeface">monospace</item>
-
         <item name="android:padding">@dimen/margin_medium</item>
         <item name="android:textAppearance">?android:textAppearanceMedium</item>
         <item name="android:lineSpacingMultiplier">1.1</item>

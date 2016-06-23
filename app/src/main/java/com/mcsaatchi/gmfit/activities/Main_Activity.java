@@ -11,6 +11,7 @@ import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,6 +28,8 @@ import com.mcsaatchi.gmfit.rest.RestClient;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnMenuTabClickListener;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -34,15 +37,22 @@ import retrofit2.Response;
 public class Main_Activity extends Base_Activity {
 
     public static int USER_AUTHORISED_REQUEST_CODE = 5;
+    @Bind(R.id.toolbar)
+    Toolbar toolbar;
     private BottomBar bottomBar;
     private Fragment fragmentReplace;
     private SharedPreferences prefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(Helpers.createActivityBundleWithProperties(0, false));
+
+        super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
+
+        ButterKnife.bind(this);
+
+        setSupportActionBar(toolbar);
 
         prefs = getSharedPreferences(Cons.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
 

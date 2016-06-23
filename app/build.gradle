@@ -60,9 +60,9 @@ dependencies {
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-core:1.10.19'
 
+    androidTestCompile "com.android.support:support-annotations:$supportLibVersion"
     androidTestCompile 'com.android.support.test.uiautomator:uiautomator-v18:2.1.2'
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.1'
-    androidTestCompile "com.android.support:support-annotations:$supportLibVersion"
     androidTestCompile 'com.android.support.test:runner:0.4'
     androidTestCompile 'com.android.support.test:rules:0.4'
 
@@ -73,21 +73,23 @@ dependencies {
     compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
         transitive = true;
     }
+
     compile "com.google.android.gms:play-services-fitness:$playServicesVersion"
     compile "com.google.android.gms:play-services-vision:$playServicesVersion"
     compile "com.google.android.gms:play-services-auth:$playServicesVersion"
+    compile "com.android.support:recyclerview-v7:$supportLibVersion"
+    compile "com.squareup.retrofit2:adapter-rxjava:$retroFitVersion"
+    compile "com.squareup.retrofit2:converter-gson:$retroFitVersion"
     compile "com.android.support:appcompat-v7:$supportLibVersion"
     compile "com.android.support:cardview-v7:$supportLibVersion"
     compile 'com.andreabaccega:android-form-edittext:1.2.1@aar'
-    compile "com.squareup.retrofit2:adapter-rxjava:$retroFitVersion"
+    compile "com.squareup.retrofit2:retrofit:$retroFitVersion"
     compile 'com.facebook.android:facebook-android-sdk:(4,5]'
     compile "com.android.support:design:$supportLibVersion"
     compile 'com.code-troopers.betterpickers:library:2.5.3'
     compile 'com.github.florent37:materialtextfield:1.0.4'
     compile 'com.wrapp.floatlabelededittext:library:0.0.6'
-    compile "com.squareup.retrofit2:converter-gson:$retroFitVersion"
     compile 'com.github.PhilJay:MPAndroidChart:v2.2.4'
-    compile "com.squareup.retrofit2:retrofit:$retroFitVersion"
     compile 'dev.dworks.libs:astickyheader:0.1.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.squareup.okhttp3:okhttp:3.2.0'

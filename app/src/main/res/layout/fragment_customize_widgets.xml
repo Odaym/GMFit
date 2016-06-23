@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:background="@android:color/white"
     android:orientation="vertical">
 
-    <TextView android:layout_width="match_parent" android:layout_height="@dimen/drag_to_reorder_hint_height"
+    <TextView android:layout_width="match_parent" android:layout_height="@dimen/top_bar_tips_height"
               android:background="@color/fitness_pink"
               android:gravity="center_vertical"
+              android:paddingEnd="@dimen/activity_vertical_margin"
               android:paddingStart="@dimen/activity_vertical_margin"
               android:text="@string/drag_to_reorder_widgets"
               android:textColor="@android:color/white"/>
@@ -18,10 +19,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:choiceMode="singleChoice"
-        android:dividerHeight="1.0sp"
-        android:listSelector="@android:color/transparent"
-        android:paddingEnd="@dimen/activity_vertical_margin"
-        android:paddingStart="@dimen/activity_vertical_margin"
+        android:dividerHeight="0.5sp"
+        android:drawSelectorOnTop="true"
         dslv:drag_scroll_start="0.02"
         dslv:drag_start_mode="onLongPress"
         dslv:float_alpha="0.3"

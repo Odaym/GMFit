@@ -2,7 +2,6 @@ package com.mcsaatchi.gmfit.fragments;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.design.internal.ParcelableSparseArray;
@@ -19,19 +18,13 @@ import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
 import com.mcsaatchi.gmfit.reorderable_listview.DragSortListView;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class CustomizeWidgets_Fragment extends Fragment {
-    private static final String TAG = "CustomizeWidgets_Fragment";
     @Bind(R.id.widgetsListView)
     DragSortListView widgetsListView;
     private OneItemWithIcon_Sparse_ListAdapter customizeWidgetsAdapter;
-    private SharedPreferences prefs;
-    private SharedPreferences.Editor prefsEditor;
 
     private SparseArray<String[]> nutritionItemsMap = new SparseArray<String[]>() {{
         put(0, new String[]{"Calories", "125", "kcal", "102%"});
@@ -50,10 +43,6 @@ public class CustomizeWidgets_Fragment extends Fragment {
     private Activity parentActivity;
 
     private ParcelableSparseArray itemsMap = new ParcelableSparseArray();
-
-    private ParcelableSparseArray orderedItemsMap = new ParcelableSparseArray();
-
-    private List<Integer> itemIndeces = new ArrayList<>();
 
     private DragSortListView.DropListener onDrop =
             new DragSortListView.DropListener() {

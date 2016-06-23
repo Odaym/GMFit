@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView android:layout_width="match_parent" android:layout_height="@dimen/drag_to_reorder_hint_height"
+    <TextView android:layout_width="match_parent" android:layout_height="@dimen/top_bar_tips_height"
               android:background="@color/fitness_pink"
               android:gravity="center_vertical"
               android:paddingStart="@dimen/activity_vertical_margin"
@@ -18,8 +18,8 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:choiceMode="singleChoice"
-        android:dividerHeight="1.0sp"
-        android:listSelector="@android:color/transparent"
+        android:dividerHeight="0.5sp"
+        android:drawSelectorOnTop="true"
         dslv:drag_scroll_start="0.02"
         dslv:drag_start_mode="onLongPress"
         dslv:float_alpha="0.3"

@@ -143,6 +143,8 @@ public class Fitness_Fragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         EventBus_Singleton.getInstance().register(this);
+
+        getActivity().setTitle(R.string.fitness_tab_title);
     }
 
     @Override

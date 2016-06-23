@@ -2,14 +2,21 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:orientation="vertical"
+              android:background="@drawable/fitness_background"
+              android:orientation="vertical">
+
+    <include layout="@layout/app_toolbar"/>
+
+    <TextView android:layout_width="match_parent" android:layout_height="@dimen/top_bar_tips_height"
+              android:background="@color/fitness_pink"
+              android:gravity="center_vertical"
               android:paddingEnd="@dimen/activity_vertical_margin"
               android:paddingStart="@dimen/activity_vertical_margin"
-              android:paddingTop="@dimen/activity_horizontal_margin">
-
-    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-              android:text="@string/add_new_chart_prompt"/>
+              android:text="@string/add_new_chart_prompt"
+              android:textColor="@android:color/white"/>
 
     <ListView android:id="@+id/chartsList" android:layout_width="match_parent"
-              android:layout_height="wrap_content"/>
+              android:layout_height="match_parent"
+              android:background="@android:color/white"
+              android:drawSelectorOnTop="true"/>
 </LinearLayout>

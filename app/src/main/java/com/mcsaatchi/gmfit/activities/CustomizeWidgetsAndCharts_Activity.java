@@ -7,10 +7,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.Toolbar;
 
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.classes.Cons;
-import com.mcsaatchi.gmfit.classes.Helpers;
 import com.mcsaatchi.gmfit.classes.SlidingTabLayout;
 import com.mcsaatchi.gmfit.fragments.CustomizeCharts_Fragment;
 import com.mcsaatchi.gmfit.fragments.CustomizeWidgets_Fragment;
@@ -23,6 +23,8 @@ public class CustomizeWidgetsAndCharts_Activity extends Base_Activity {
     ViewPager pager;
     @Bind(R.id.tabs)
     SlidingTabLayout tabs;
+    @Bind(R.id.toolbar)
+    Toolbar toolbar;
 
     private String typeOfFragmentToCustomizeFor;
     private ParcelableSparseArray widgetsMapExtra;
@@ -33,11 +35,14 @@ public class CustomizeWidgetsAndCharts_Activity extends Base_Activity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(Helpers.createActivityBundleWithProperties(R.string.customize_widgets_and_charts_activity_title, true));
+        super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_customize_widgets_and_charts);
 
         ButterKnife.bind(this);
+
+        toolbar.setTitle(R.string.customize_widgets_and_charts_activity_title);
+        setSupportActionBar(toolbar);
 
         Bundle intentExtras = getIntent().getExtras();
 
@@ -50,6 +55,7 @@ public class CustomizeWidgetsAndCharts_Activity extends Base_Activity {
         CustomizerViewPager_Adapter fragmentsPagerAdapter = new CustomizerViewPager_Adapter(getSupportFragmentManager(), tabTitles, widgetsMapExtra);
 
         tabs.setDistributeEvenly(true);
+        tabs.setSelectedIndicatorColors(getResources().getColor(android.R.color.white));
 
         pager.setAdapter(fragmentsPagerAdapter);
         pager.setCurrentItem(0);
