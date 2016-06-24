@@ -3,14 +3,14 @@ package com.mcsaatchi.gmfit.classes;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class ParcelableString implements Parcelable {
+public class ParcelableFitnessString implements Parcelable {
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
-        public ParcelableString createFromParcel(Parcel in) {
-            return new ParcelableString(in);
+        public ParcelableFitnessString createFromParcel(Parcel in) {
+            return new ParcelableFitnessString(in);
         }
 
-        public ParcelableString[] newArray(int size) {
-            return new ParcelableString[size];
+        public ParcelableFitnessString[] newArray(int size) {
+            return new ParcelableFitnessString[size];
         }
     };
 
@@ -18,16 +18,16 @@ public class ParcelableString implements Parcelable {
     int key;
     String title;
 
-    public ParcelableString() {
+    public ParcelableFitnessString() {
     }
 
-    public ParcelableString(Parcel in) {
+    public ParcelableFitnessString(Parcel in) {
         this.key = in.readInt();
         this.value = in.readDouble();
         this.title = in.readString();
     }
 
-    public ParcelableString(int key, double value, String title) {
+    public ParcelableFitnessString(int key, double value, String title) {
         this.key = key;
         this.value = value;
         this.title = title;

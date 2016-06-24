@@ -59,12 +59,12 @@ import com.mcsaatchi.gmfit.activities.AddNewChart_Activity;
 import com.mcsaatchi.gmfit.activities.Base_Activity;
 import com.mcsaatchi.gmfit.activities.CustomizeWidgetsAndCharts_Activity;
 import com.mcsaatchi.gmfit.activities.Main_Activity;
-import com.mcsaatchi.gmfit.adapters.FitnessWidgets_GridAdapter;
+import com.mcsaatchi.gmfit.adapters.Widgets_GridAdapter;
 import com.mcsaatchi.gmfit.classes.Cons;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
 import com.mcsaatchi.gmfit.classes.Helpers;
-import com.mcsaatchi.gmfit.classes.ParcelableString;
+import com.mcsaatchi.gmfit.classes.ParcelableFitnessString;
 import com.mcsaatchi.gmfit.models.DataChart;
 import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.rest.RestClient;
@@ -119,13 +119,13 @@ public class Fitness_Fragment extends Fragment {
 
     private ArrayList<Integer> itemIndeces = new ArrayList<>();
     private ParcelableSparseArray orderedItemsMap = new ParcelableSparseArray();
-    private FitnessWidgets_GridAdapter fitnessWidgets_GridAdapter;
+    private Widgets_GridAdapter widgets_GridAdapter;
 
     private ParcelableSparseArray widgetsMap = new ParcelableSparseArray() {{
-        put(0, new ParcelableString(R.drawable.ic_running, 0.0, "Walking"));
-        put(1, new ParcelableString(R.drawable.ic_biking, 0.0, "Biking"));
-        put(2, new ParcelableString(R.drawable.ic_calories, 0.0, "Calories"));
-        put(3, new ParcelableString(R.drawable.ic_steps, 0.0, "Stairs"));
+        put(0, new ParcelableFitnessString(R.drawable.ic_running, 0.0, "Walking"));
+        put(1, new ParcelableFitnessString(R.drawable.ic_biking, 0.0, "Biking"));
+        put(2, new ParcelableFitnessString(R.drawable.ic_calories, 0.0, "Calories"));
+        put(3, new ParcelableFitnessString(R.drawable.ic_steps, 0.0, "Stairs"));
     }};
 
     @Override
@@ -234,17 +234,17 @@ public class Fitness_Fragment extends Fragment {
     }
 
     private void setUpWidgetsGridView(ParcelableSparseArray widgetsMap) {
-        fitnessWidgets_GridAdapter = new FitnessWidgets_GridAdapter(getActivity(), widgetsMap);
+        widgets_GridAdapter = new Widgets_GridAdapter(getActivity(), widgetsMap, R.layout.grid_item_fitness_widgets);
 
-        widgetsGridView.setAdapter(fitnessWidgets_GridAdapter);
+        widgetsGridView.setAdapter(widgets_GridAdapter);
     }
 
     private TextView findFitnessWidgetInGrid() {
         View fitnessWidgetView;
         TextView stepCountTextView = null;
 
-        for (int i = 0; i < fitnessWidgets_GridAdapter.getCount(); i++) {
-            if (fitnessWidgets_GridAdapter.getItem(i).getTitle().equals("Stairs")) {
+        for (int i = 0; i < widgets_GridAdapter.getCount(); i++) {
+            if (widgets_GridAdapter.getItem(i).getTitle().equals("Stairs")) {
                 final int firstListItemPosition = widgetsGridView.getFirstVisiblePosition();
                 final int lastListItemPosition = firstListItemPosition + widgetsGridView.getChildCount() - 1;
 
@@ -320,7 +320,7 @@ public class Fitness_Fragment extends Fragment {
                                                     metricCounterTV.setText(NumberFormat.getInstance().format(Double.parseDouble(stepCountToday)));
 
                                                     for (int i = 0; i < widgetsMap.size(); i++) {
-                                                        ParcelableString fitnessWidget = (ParcelableString) widgetsMap.valueAt(i);
+                                                        ParcelableFitnessString fitnessWidget = (ParcelableFitnessString) widgetsMap.valueAt(i);
 
                                                         switch (fitnessWidget.getTitle()) {
                                                             case "Walking":
@@ -340,7 +340,7 @@ public class Fitness_Fragment extends Fragment {
                                                                 break;
                                                         }
 
-                                                        fitnessWidgets_GridAdapter.notifyDataSetChanged();
+                                                        widgets_GridAdapter.notifyDataSetChanged();
                                                     }
 
                                                     findStepCounterDataSource();
@@ -810,7 +810,7 @@ public class Fitness_Fragment extends Fragment {
                 intent.putExtra(Cons.BUNDLE_FITNESS_WIDGETS_MAP, widgetsMap);
 
                 for (int i = 0; i < widgetsMap.size(); i++) {
-                    Log.d("WIDGETS", "onOptionsItemSelected: WHEN OPTIONS SELECTED : " + ((ParcelableString) widgetsMap.valueAt(i)).getTitle());
+                    Log.d("WIDGETS", "onOptionsItemSelected: WHEN OPTIONS SELECTED : " + ((ParcelableFitnessString) widgetsMap.valueAt(i)).getTitle());
                 }
                 startActivity(intent);
 

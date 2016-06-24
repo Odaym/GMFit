@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.classes.ParcelableString;
+import com.mcsaatchi.gmfit.classes.ParcelableFitnessString;
 
 public class OneItemWithIcon_Sparse_ListAdapter extends BaseAdapter {
 
@@ -65,7 +65,7 @@ public class OneItemWithIcon_Sparse_ListAdapter extends BaseAdapter {
 
         holder.itemIconRightIMG.setImageResource(drawableResId);
 
-        holder.itemNameTV.setText(((ParcelableString) widgetsMap.valueAt(position)).getTitle());
+        holder.itemNameTV.setText(((ParcelableFitnessString) widgetsMap.valueAt(position)).getTitle());
 
         return convertView;
     }
