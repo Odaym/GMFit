@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.design.internal.ParcelableSparseArray;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.CardView;
@@ -14,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,9 +28,11 @@ import com.mcsaatchi.gmfit.activities.AddNewChart_Activity;
 import com.mcsaatchi.gmfit.activities.AddNewMealItem_Activity;
 import com.mcsaatchi.gmfit.activities.BarcodeCapture_Activity;
 import com.mcsaatchi.gmfit.activities.CustomizeWidgetsAndCharts_Activity;
+import com.mcsaatchi.gmfit.adapters.Widgets_GridAdapter;
 import com.mcsaatchi.gmfit.classes.Cons;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
+import com.mcsaatchi.gmfit.classes.ParcelableNutritionString;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -47,6 +51,20 @@ public class Nutrition_Fragment extends Fragment {
     private final String chromiumChartType = "Chromium";
     private final String copperChartType = "Copper";
     private final String dietary_cholesterolChartType = "Dietary Cholesterol";
+
+    private Widgets_GridAdapter widgets_GridAdapter;
+
+    private ParcelableSparseArray widgetsMap = new ParcelableSparseArray() {{
+        put(0, new ParcelableNutritionString("PROTEIN", 152, "g", 17));
+        put(1, new ParcelableNutritionString("FAT", 87, "g", 29));
+        put(2, new ParcelableNutritionString("SODIUM", 200, "mg", 105));
+        put(3, new ParcelableNutritionString("SUGRA", 42, "g", 112));
+    }};
+
+
+    @Bind(R.id.widgetsGridView)
+    GridView widgetsGridView;
+
     /**
      * CHARTS
      */
@@ -104,30 +122,6 @@ public class Nutrition_Fragment extends Fragment {
     /**
      * TOP LAYOUT WITH WIDGETS
      */
-    @Bind(R.id.firstMetricTitleTV)
-    TextView firstMetricTitleTV;
-    @Bind(R.id.firstMetricValueTV)
-    TextView firstMetricValueTV;
-    @Bind(R.id.firstMetricPercentagesTV)
-    TextView firstMetricPercentagesTV;
-    @Bind(R.id.secondMetricTitleTV)
-    TextView secondMetricTitleTV;
-    @Bind(R.id.secondMetricValueTV)
-    TextView secondMetricValueTV;
-    @Bind(R.id.secondMetricPercentagesTV)
-    TextView secondMetricPercentagesTV;
-    @Bind(R.id.thirdMetricTitleTV)
-    TextView thirdMetricTitleTV;
-    @Bind(R.id.thirdMetricValueTV)
-    TextView thirdMetricValueTV;
-    @Bind(R.id.thirdMetricPercentagesTV)
-    TextView thirdMetricPercentagesTV;
-    @Bind(R.id.fourthMetricTitleTV)
-    TextView fourthMetricTitleTV;
-    @Bind(R.id.fourthMetricValueTV)
-    TextView fourthMetricValueTV;
-    @Bind(R.id.fourthMetricPercentagesTV)
-    TextView fourthMetricPercentagesTV;
     private NestedScrollView parentScrollView;
     private Activity parentActivity;
     private SparseArray<String[]> itemsMap;
@@ -151,6 +145,8 @@ public class Nutrition_Fragment extends Fragment {
         prefs = getActivity().getSharedPreferences(Cons.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
 
         setHasOptionsMenu(true);
+
+        setUpWidgetsGridView(widgetsMap);
 
         addNewChartBTN.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -233,6 +229,12 @@ public class Nutrition_Fragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
+    private void setUpWidgetsGridView(ParcelableSparseArray widgetsMap) {
+        widgets_GridAdapter = new Widgets_GridAdapter(getActivity(), widgetsMap, R.layout.grid_item_nutrition_widgets);
+
+        widgetsGridView.setAdapter(widgets_GridAdapter);
+    }
+
     @com.squareup.otto.Subscribe
     public void handle_BusEvents(EventBus_Poster ebp) {
         String ebpMessage = ebp.getMessage();
@@ -260,23 +262,6 @@ public class Nutrition_Fragment extends Fragment {
             case Cons.EXTRAS_NUTRITION_WIDGETS_ORDER_ARRAY_CHANGED:
 //                itemsMap = ebp.getSparseArrayExtra();
 
-                //See the SparsArrays in CustomizeWidgets_Fragment to understand how these arrays are split up and which values are used, pretty straight-forward
-
-                firstMetricTitleTV.setText(itemsMap.get(0)[0]);
-                firstMetricValueTV.setText(itemsMap.get(0)[1] + " " + itemsMap.get(0)[2]);
-                firstMetricPercentagesTV.setText(itemsMap.get(0)[3]);
-
-                secondMetricTitleTV.setText(itemsMap.get(1)[0]);
-                secondMetricValueTV.setText(itemsMap.get(1)[1] + " " + itemsMap.get(1)[2]);
-                secondMetricPercentagesTV.setText(itemsMap.get(1)[3]);
-
-                thirdMetricTitleTV.setText(itemsMap.get(2)[0]);
-                thirdMetricValueTV.setText(itemsMap.get(2)[1] + " " + itemsMap.get(2)[2]);
-                thirdMetricPercentagesTV.setText(itemsMap.get(2)[3]);
-
-                fourthMetricTitleTV.setText(itemsMap.get(3)[0]);
-                fourthMetricValueTV.setText(itemsMap.get(3)[1] + " " + itemsMap.get(3)[2]);
-                fourthMetricPercentagesTV.setText(itemsMap.get(3)[3]);
 
                 break;
         }
