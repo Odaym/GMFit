@@ -2,174 +2,71 @@
 
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
     <RelativeLayout
+        android:id="@+id/mainNutritionMetricDetail"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="@dimen/metric_header_section_height"
+        android:background="@drawable/nutrition_background">
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_centerInParent="true"
-            android:background="@android:color/black"/>
+        <ProgressBar
+            android:id="@+id/metricProgressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="@dimen/metric_header_progress_bar_width"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/metricCounterTV"
+            android:layout_centerHorizontal="true"
+            android:indeterminate="false"
+            android:maxHeight="10dip"
+            android:minHeight="10dip"
+            android:progress="70"
+            android:progressDrawable="@drawable/nutrition_progress_bar"/>
 
-        <View
-            android:layout_width="0.5dp"
-            android:layout_height="200dp"
-            android:layout_centerInParent="true"
-            android:background="@android:color/black"/>
-
-        <LinearLayout
+        <TextView
+            android:id="@+id/metricCounterTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:gravity="center"
-            android:orientation="vertical">
+            android:text="760"
+            android:textColor="@android:color/white"
+            android:textSize="@dimen/metric_header_nutrition_counter_font_size"/>
 
-            <TextView
-                android:id="@+id/metricCounterTV"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="760"
-                android:textAppearance="?android:textAppearanceLarge"/>
-
-            <TextView
-                android:id="@+id/metricCounterLabelTV"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:text="CALORIES TODAY"/>
-        </LinearLayout>
-
-        <LinearLayout
+        <TextView
+            android:id="@+id/metricCounterLabelTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:paddingEnd="@dimen/metric_cell_padding_horizontal"
-            android:paddingStart="@dimen/metric_cell_padding_horizontal"
-            android:paddingTop="@dimen/metric_cell_padding_horizontal">
+            android:layout_below="@id/metricCounterTV"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/rounded_view"
+            android:paddingBottom="5dp"
+            android:paddingEnd="@dimen/default_margin_2"
+            android:paddingStart="@dimen/default_margin_2"
+            android:paddingTop="5dp"
+            android:text="Calories Today"
+            android:textColor="@android:color/white"/>
 
-            <TextView
-                android:id="@+id/firstMetricTitleTV"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Protein"
-                android:textStyle="bold"/>
-
-            <TextView
-                android:id="@+id/firstMetricValueTV"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="152 g"/>
-
-            <TextView
-                android:id="@+id/firstMetricPercentagesTV"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="(17%)"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:paddingEnd="@dimen/metric_cell_padding_horizontal"
-            android:paddingStart="@dimen/metric_cell_padding_horizontal"
-            android:paddingTop="@dimen/metric_cell_padding_horizontal">
-
-            <TextView
-                android:id="@+id/secondMetricTitleTV"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Fat"
-                android:textStyle="bold"/>
-
-            <TextView
-                android:id="@+id/secondMetricValueTV"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="87 g"/>
-
-            <TextView
-                android:id="@+id/secondMetricPercentagesTV"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="(29%)"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:paddingBottom="@dimen/metric_cell_padding_horizontal_smaller"
-            android:paddingEnd="@dimen/metric_cell_padding_horizontal"
-            android:paddingStart="@dimen/metric_cell_padding_horizontal">
-
-            <TextView
-                android:id="@+id/thirdMetricTitleTV"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Sodium"
-                android:textStyle="bold"/>
-
-            <TextView
-                android:id="@+id/thirdMetricValueTV"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="200 mg"/>
-
-            <TextView
-                android:id="@+id/thirdMetricPercentagesTV"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="(105%)"/>
-
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:paddingBottom="@dimen/metric_cell_padding_horizontal_smaller"
-            android:paddingEnd="@dimen/metric_cell_padding_horizontal"
-            android:paddingStart="@dimen/metric_cell_padding_horizontal">
-
-            <TextView
-                android:id="@+id/fourthMetricTitleTV"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Calcium"
-                android:textStyle="bold"/>
-
-            <TextView
-                android:id="@+id/fourthMetricValueTV"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="345 mg"/>
-
-            <TextView
-                android:id="@+id/fourthMetricPercentagesTV"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="(89%)"/>
-
-        </LinearLayout>
     </RelativeLayout>
+
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content">
+        <GridView android:id="@+id/widgetsGridView"
+                  android:layout_width="match_parent"
+                  android:layout_height="@dimen/widgets_gridview_height"
+                  android:layout_marginBottom="@dimen/default_margin_2"
+                  android:layout_marginEnd="@dimen/default_margin_2"
+                  android:layout_marginStart="@dimen/default_margin_2"
+                  android:layout_marginTop="@dimen/default_margin_2"
+                  android:columnWidth="80dp"
+                  android:gravity="center"
+                  android:horizontalSpacing="@dimen/default_margin_2"
+                  android:numColumns="2"
+                  android:stretchMode="columnWidth"
+                  android:verticalSpacing="@dimen/default_margin_2"/>
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -184,33 +81,39 @@
             android:orientation="vertical">
 
             <android.support.v7.widget.CardView
-                android:id="@+id/cardLayoutContainer_BREAKFAST"
                 xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/cardLayoutContainer_BREAKFAST"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:elevation="@dimen/cardview_default_elevation"
-                app:cardCornerRadius="@dimen/cardview_default_radius" app:cardUseCompatPadding="true">
+                app:cardCornerRadius="@dimen/cardview_default_radius"
+                app:cardUseCompatPadding="true">
 
-                <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content">
-                    <LinearLayout android:id="@+id/chartTopBarLayout_BREAKFAST" android:layout_width="match_parent"
+                <RelativeLayout android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+                    <LinearLayout android:id="@+id/chartTopBarLayout_BREAKFAST"
+                                  android:layout_width="match_parent"
                                   android:layout_height="wrap_content"
                                   android:gravity="center_vertical"
                                   android:orientation="horizontal"
                                   android:paddingBottom="@dimen/metric_cell_padding_horizontal_smaller"
                                   android:paddingTop="@dimen/metric_cell_padding_horizontal_smaller">
 
-                        <TextView android:id="@+id/chartTitleTV_BREAKFAST" android:layout_width="0dp"
+                        <TextView android:id="@+id/chartTitleTV_BREAKFAST"
+                                  android:layout_width="0dp"
                                   android:layout_height="wrap_content"
                                   android:layout_weight="30"
                                   android:text="BREAKFAST"
                                   android:textAppearance="?android:textAppearanceLarge"/>
 
-                        <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        <LinearLayout android:layout_width="wrap_content"
+                                      android:layout_height="wrap_content"
                                       android:layout_weight="1"
                                       android:gravity="center_vertical">
 
-                            <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            <ImageView android:layout_width="wrap_content"
+                                       android:layout_height="wrap_content"
                                        android:src="@android:drawable/ic_input_add"/>
                             <Button
                                 android:id="@+id/addEntryBTN_BREAKFAST"
@@ -218,7 +121,8 @@
                                 android:layout_height="40dp"
                                 android:layout_weight="1" android:text="ADD"/>
 
-                            <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            <ImageView android:layout_width="wrap_content"
+                                       android:layout_height="wrap_content"
                                        android:src="@android:drawable/ic_input_add"/>
 
                             <Button
@@ -229,7 +133,8 @@
                         </LinearLayout>
                     </LinearLayout>
 
-                    <View android:id="@+id/separatorView_BREAKFAST" android:layout_width="match_parent"
+                    <View android:id="@+id/separatorView_BREAKFAST"
+                          android:layout_width="match_parent"
                           android:layout_height="1dp"
                           android:layout_below="@+id/chartTopBarLayout_BREAKFAST"
                           android:background="@color/light_gray"/>
@@ -251,16 +156,19 @@
             </android.support.v7.widget.CardView>
 
             <android.support.v7.widget.CardView
-                android:id="@+id/cardLayoutContainer_LUNCH"
                 xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/cardLayoutContainer_LUNCH"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:elevation="@dimen/cardview_default_elevation"
-                app:cardCornerRadius="@dimen/cardview_default_radius" app:cardUseCompatPadding="true">
+                app:cardCornerRadius="@dimen/cardview_default_radius"
+                app:cardUseCompatPadding="true">
 
-                <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content">
-                    <LinearLayout android:id="@+id/chartTopBarLayout_LUNCH" android:layout_width="match_parent"
+                <RelativeLayout android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+                    <LinearLayout android:id="@+id/chartTopBarLayout_LUNCH"
+                                  android:layout_width="match_parent"
                                   android:layout_height="wrap_content"
                                   android:gravity="center_vertical"
                                   android:orientation="horizontal"
@@ -273,11 +181,13 @@
                                   android:text="LUNCH"
                                   android:textAppearance="?android:textAppearanceLarge"/>
 
-                        <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        <LinearLayout android:layout_width="wrap_content"
+                                      android:layout_height="wrap_content"
                                       android:layout_weight="1"
                                       android:gravity="center_vertical">
 
-                            <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            <ImageView android:layout_width="wrap_content"
+                                       android:layout_height="wrap_content"
                                        android:src="@android:drawable/ic_input_add"/>
                             <Button
                                 android:id="@+id/addEntryBTN_LUNCH"
@@ -285,7 +195,8 @@
                                 android:layout_height="40dp"
                                 android:layout_weight="1" android:text="ADD"/>
 
-                            <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            <ImageView android:layout_width="wrap_content"
+                                       android:layout_height="wrap_content"
                                        android:src="@android:drawable/ic_input_add"/>
 
                             <Button
@@ -305,7 +216,8 @@
                         android:id="@+id/entriesContainerLayout_LUNCH"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/separatorView_LUNCH" android:orientation="vertical">
+                        android:layout_below="@+id/separatorView_LUNCH"
+                        android:orientation="vertical">
 
                         <!--<include layout="@layout/view_generic_chart_entry"/>-->
                         <!--<include layout="@layout/view_generic_chart_entry"/>-->
@@ -317,16 +229,19 @@
             </android.support.v7.widget.CardView>
 
             <android.support.v7.widget.CardView
-                android:id="@+id/cardLayoutContainer_DINNER"
                 xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/cardLayoutContainer_DINNER"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:elevation="@dimen/cardview_default_elevation"
-                app:cardCornerRadius="@dimen/cardview_default_radius" app:cardUseCompatPadding="true">
+                app:cardCornerRadius="@dimen/cardview_default_radius"
+                app:cardUseCompatPadding="true">
 
-                <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content">
-                    <LinearLayout android:id="@+id/chartTopBarLayout_DINNER" android:layout_width="match_parent"
+                <RelativeLayout android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+                    <LinearLayout android:id="@+id/chartTopBarLayout_DINNER"
+                                  android:layout_width="match_parent"
                                   android:layout_height="wrap_content"
                                   android:gravity="center_vertical"
                                   android:orientation="horizontal"
@@ -339,11 +254,13 @@
                                   android:text="DINNER"
                                   android:textAppearance="?android:textAppearanceLarge"/>
 
-                        <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        <LinearLayout android:layout_width="wrap_content"
+                                      android:layout_height="wrap_content"
                                       android:layout_weight="1"
                                       android:gravity="center_vertical">
 
-                            <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            <ImageView android:layout_width="wrap_content"
+                                       android:layout_height="wrap_content"
                                        android:src="@android:drawable/ic_input_add"/>
                             <Button
                                 android:id="@+id/addEntryBTN_DINNER"
@@ -351,7 +268,8 @@
                                 android:layout_height="40dp"
                                 android:layout_weight="1" android:text="ADD"/>
 
-                            <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            <ImageView android:layout_width="wrap_content"
+                                       android:layout_height="wrap_content"
                                        android:src="@android:drawable/ic_input_add"/>
 
                             <Button
@@ -371,7 +289,8 @@
                         android:id="@+id/entriesContainerLayout_DINNER"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/separatorView_DINNER" android:orientation="vertical">
+                        android:layout_below="@+id/separatorView_DINNER"
+                        android:orientation="vertical">
 
                         <!--<include layout="@layout/view_generic_chart_entry"/>-->
                         <!--<include layout="@layout/view_generic_chart_entry"/>-->
@@ -383,16 +302,19 @@
             </android.support.v7.widget.CardView>
 
             <android.support.v7.widget.CardView
-                android:id="@+id/cardLayoutContainer_SNACKS"
                 xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/cardLayoutContainer_SNACKS"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:elevation="@dimen/cardview_default_elevation"
-                app:cardCornerRadius="@dimen/cardview_default_radius" app:cardUseCompatPadding="true">
+                app:cardCornerRadius="@dimen/cardview_default_radius"
+                app:cardUseCompatPadding="true">
 
-                <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content">
-                    <LinearLayout android:id="@+id/chartTopBarLayout_SNACKS" android:layout_width="match_parent"
+                <RelativeLayout android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+                    <LinearLayout android:id="@+id/chartTopBarLayout_SNACKS"
+                                  android:layout_width="match_parent"
                                   android:layout_height="wrap_content"
                                   android:gravity="center_vertical"
                                   android:orientation="horizontal"
@@ -405,11 +327,13 @@
                                   android:text="SNACKS"
                                   android:textAppearance="?android:textAppearanceLarge"/>
 
-                        <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        <LinearLayout android:layout_width="wrap_content"
+                                      android:layout_height="wrap_content"
                                       android:layout_weight="1"
                                       android:gravity="center_vertical">
 
-                            <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            <ImageView android:layout_width="wrap_content"
+                                       android:layout_height="wrap_content"
                                        android:src="@android:drawable/ic_input_add"/>
                             <Button
                                 android:id="@+id/addEntryBTN_SNACKS"
@@ -417,7 +341,8 @@
                                 android:layout_height="40dp"
                                 android:layout_weight="1" android:text="ADD"/>
 
-                            <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            <ImageView android:layout_width="wrap_content"
+                                       android:layout_height="wrap_content"
                                        android:src="@android:drawable/ic_input_add"/>
 
                             <Button
@@ -437,7 +362,8 @@
                         android:id="@+id/entriesContainerLayout_SNACKS"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@+id/separatorView_SNACKS" android:orientation="vertical">
+                        android:layout_below="@+id/separatorView_SNACKS"
+                        android:orientation="vertical">
 
                         <!--<include layout="@layout/view_generic_chart_entry"/>-->
                         <!--<include layout="@layout/view_generic_chart_entry"/>-->
