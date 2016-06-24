@@ -10,13 +10,13 @@
     <RelativeLayout
         android:id="@+id/mainFitnessMetricDetail"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="@dimen/metric_header_section_height"
         android:background="@drawable/fitness_background">
 
         <ProgressBar
             android:id="@+id/metricProgressBar"
             style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="100dp"
+            android:layout_width="@dimen/metric_header_progress_bar_width"
             android:layout_height="wrap_content"
             android:layout_above="@+id/metricCounterTV"
             android:layout_centerHorizontal="true"
@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:textColor="@color/white"
-            android:textSize="60sp"/>
+            android:textSize="@dimen/metric_header_fitness_counter_font_size"/>
 
         <TextView
             android:id="@+id/metricCounterLabelTV"

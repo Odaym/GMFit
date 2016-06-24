@@ -11,6 +11,10 @@
     <dimen name="default_margin_4">40dp</dimen>
     <dimen name="default_margin_5">50dp</dimen>
 
+    <dimen name="metric_header_section_height">200dp</dimen>
+    <dimen name="metric_header_progress_bar_width">100dp</dimen>
+    <dimen name="widgets_main_metric_value_font_size">35sp</dimen>
+
     <!-- COUNTRY PICKER-->
     <dimen name="countrypicker_dialog_width">200dp</dimen>
     <dimen name="countrypicker_dialog_height">300dp</dimen>
@@ -32,6 +36,11 @@
     <dimen name="top_bar_tips_height">50dp</dimen>
     <dimen name="customize_widgets_reorder_list_item_edge_height_width">60dp</dimen>
     <dimen name="add_new_chart_list_item_edge_width">90dp</dimen>
+    <dimen name="metric_header_fitness_counter_font_size">60sp</dimen>
+
+    <!-- NUTRITION FRAGMENT -->
+    <dimen name="nutrition_metric_title_font_size">15sp</dimen>
+    <dimen name="metric_header_nutrition_counter_font_size">60sp</dimen>
 
     <!-- TOP OF DASHBOARD-->
     <dimen name="metric_cell_padding_horizontal">25dp</dimen>
