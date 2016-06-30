@@ -15,22 +15,25 @@ public class ParcelableFitnessString implements Parcelable {
     };
 
     double value;
-    int key;
+    int drawableResId;
     String title;
+    String measurementUnit;
 
     public ParcelableFitnessString() {
     }
 
     public ParcelableFitnessString(Parcel in) {
-        this.key = in.readInt();
+        this.drawableResId = in.readInt();
         this.value = in.readDouble();
         this.title = in.readString();
+        this.measurementUnit = in.readString();
     }
 
-    public ParcelableFitnessString(int key, double value, String title) {
-        this.key = key;
+    public ParcelableFitnessString(int drawableResId, double value, String title, String measurementUnit) {
         this.value = value;
+        this.drawableResId = drawableResId;
         this.title = title;
+        this.measurementUnit = measurementUnit;
     }
 
     public double getValue() {
@@ -41,12 +44,12 @@ public class ParcelableFitnessString implements Parcelable {
         this.value = value;
     }
 
-    public int getKey() {
-        return key;
+    public int getDrawableResId() {
+        return drawableResId;
     }
 
-    public void setKey(int key) {
-        this.key = key;
+    public void setDrawableResId(int drawableResId) {
+        this.drawableResId = drawableResId;
     }
 
     public String getTitle() {
@@ -57,6 +60,14 @@ public class ParcelableFitnessString implements Parcelable {
         this.title = title;
     }
 
+    public String getMeasurementUnit() {
+        return measurementUnit;
+    }
+
+    public void setMeasurementUnit(String measurementUnit) {
+        this.measurementUnit = measurementUnit;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -64,8 +75,9 @@ public class ParcelableFitnessString implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(key);
+        dest.writeInt(drawableResId);
         dest.writeDouble(value);
         dest.writeString(title);
+        dest.writeString(measurementUnit);
     }
 }

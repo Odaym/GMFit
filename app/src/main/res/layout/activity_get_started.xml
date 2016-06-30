@@ -3,18 +3,16 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/general_background"
     android:orientation="vertical"
-    android:paddingBottom="@dimen/activity_horizontal_margin"
-    android:paddingEnd="@dimen/activity_vertical_margin"
-    android:paddingStart="@dimen/activity_vertical_margin"
     android:paddingTop="@dimen/activity_horizontal_margin">
 
     <ImageView
         android:id="@+id/getStartedIMG"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"/>
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/default_margin_10"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -22,28 +20,34 @@
         android:layout_below="@+id/getStartedIMG"
         android:layout_marginTop="20dp"
         android:gravity="center_horizontal"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingEnd="@dimen/activity_vertical_margin"
+        android:paddingStart="@dimen/activity_vertical_margin">
 
         <TextView
             android:id="@+id/getStartedTaglineTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:textAppearanceMedium"
+            android:layout_gravity="center_horizontal"
             android:text="@string/get_started_tag_line"
-            android:layout_gravity="center_horizontal"/>
+            android:textAppearance="?android:textAppearanceMedium"
+            android:textColor="@android:color/white"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:gravity="center"
-            android:text="@string/get_started_message"/>
+            android:text="@string/get_started_message"
+            android:textColor="@android:color/white"/>
 
-        <Button
-            android:id="@+id/setup_profile_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="@string/setup_my_profile_button"/>
     </LinearLayout>
+
+    <Button
+        android:id="@+id/setup_profile_button"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/default_margin_5"
+        android:layout_alignParentBottom="true"
+        android:text="@string/setup_my_profile_button"/>
+
 </RelativeLayout>

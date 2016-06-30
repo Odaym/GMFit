@@ -3,24 +3,27 @@
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/fitness_widget_cell_height"
                 android:background="@color/fitness_dark_blue"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:paddingStart="@dimen/default_margin_1"
+                android:paddingTop="@dimen/default_margin_1">
 
-    <TextView
+    <com.mcsaatchi.gmfit.classes.FontTextView
         android:id="@+id/metricTitleTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:paddingEnd="@dimen/default_margin_1"
         android:textColor="@color/nutrition_red"
         android:textSize="@dimen/nutrition_metric_title_font_size"/>
 
-    <TextView
+    <com.mcsaatchi.gmfit.classes.FontTextView
         android:id="@+id/metricTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
+        android:layout_centerHorizontal="true"
         android:layout_toEndOf="@id/metricIMG"
         android:gravity="center_vertical"
         android:textColor="@android:color/white"
-        android:textSize="@dimen/widgets_main_metric_value_font_size"
+        android:textSize="@dimen/nutrition_widgets_main_metric_value_font_size"
         android:textStyle="bold"/>
 
     <TextView
@@ -29,7 +32,7 @@
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/metricTV"
         android:layout_below="@+id/metricTV"
-        android:layout_marginEnd="@dimen/default_margin_1"
+        android:layout_marginEnd="@dimen/default_margin_0"
         android:textColor="@android:color/white"/>
 
     <TextView

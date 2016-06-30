@@ -17,8 +17,8 @@
     </string>
 
     <string name="ok">OK</string>
-    <string name="finish">Finish</string>
-    <string name="next_page">Next</string>
+    <string name="finish_setup">Finish Setup</string>
+    <string name="next_step">Next Step</string>
     <string name="previous_page">Back</string>
     <string name="accept_ok">OK</string>
     <string name="decline_cancel">Cancel</string>
@@ -108,6 +108,8 @@
     <string name="connect_google_fit_learn">Learn more about Google Fit</string>
     <string name="choose_goal_hint">Choose your goal</string>
     <string name="choose_measurement_unit">Units of Measurement</string>
+    <string name="measurement_unit_metric">Metric</string>
+    <string name="measurement_unit_imperial">Imperial</string>
     <string name="goal_purpose_lose_weight">Lose Weight</string>
     <string name="goal_purpose_maintain_weight">Maintain Weight</string>
     <string name="goal_purpose_gain_weight">Gain Weight</string>
@@ -125,6 +127,13 @@
     <string name="error_first_name_not_valid">Names cannot contain numbers</string>
     <string name="setting_up_profile_dialog_title">Setting up your profile</string>
     <string name="setting_up_profile_dialog_message">Please wait…</string>
+    <string name="setup_profile_step_1_title">Step 1 of 3</string>
+    <string name="setup_profile_step_2_title">Step 2 of 3</string>
+    <string name="setup_profile_step_3_title">Step 3 of 3</string>
+    <string name="male_option">Male</string>
+    <string name="female_option">Female</string>
+    <string name="medical_conditions_hint">Do you have any medical conditions? (diabetes, etc.)</string>
+    <string name="add_medical_condition_button">+ Add Medical Conditions</string>
 
     <!-- CUSTOMIZE WIDGETS AND CHARTS ACTIVITY -->
     <string name="customize_widgets_and_charts_activity_title">Customize</string>
@@ -136,6 +145,15 @@
     <string name="syncing_up_dialog_message">Please wait…</string>
     <string name="drag_to_reorder_widgets">Drag to re-order your homescreen widgets</string>
     <string name="drag_to_reorder_charts">Drag to re-order your homescreen charts</string>
+    <string name="add_new_chart_button">+ Add New Chart</string>
+
+    <!-- NUTRITION FRAGMENT -->
+    <string name="add_new_meal">Add</string>
+    <string name="scan_new_meal">Scan</string>
+    <string name="meal_headline_title_breakfast">Breakfast</string>
+    <string name="meal_headline_title_lunch">Lunch</string>
+    <string name="meal_headline_title_dinner">Dinner</string>
+    <string name="meal_headline_title_snacks">Snacks</string>
 
     <!-- ADD NEW CHART -->
     <string name="add_new_chart_activity_title">Add New Chart</string>

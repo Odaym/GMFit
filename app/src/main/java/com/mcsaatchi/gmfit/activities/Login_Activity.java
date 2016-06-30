@@ -254,8 +254,9 @@ public class Login_Activity extends Base_Activity implements
 
                 user.setFull_name(acct.getDisplayName());
                 user.setEmail_address(acct.getEmail());
-                assert acct.getPhotoUrl() != null;
-                user.setPhoto_url(acct.getPhotoUrl().toString());
+
+                if (acct.getPhotoUrl() != null)
+                    user.setPhoto_url(acct.getPhotoUrl().toString());
 
                 Log.d(TAG, "handleGoogleSignInResult: Display Name " + acct.getDisplayName());
                 Log.d(TAG, "handleGoogleSignInResult: Email " + acct.getEmail());

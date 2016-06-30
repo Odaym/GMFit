@@ -1,29 +1,26 @@
 package com.mcsaatchi.gmfit.fragments;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.telephony.TelephonyManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.Spinner;
+import android.widget.Button;
+import android.widget.ImageView;
 
 import com.mcsaatchi.gmfit.R;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Locale;
+import com.mukesh.countrypicker.fragments.CountryPicker;
+import com.mukesh.countrypicker.interfaces.CountryPickerListener;
+import com.mukesh.countrypicker.models.Country;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class Setup_Profile_1_Fragment extends Fragment {
-    @Bind(R.id.countrySpinner)
-    Spinner citizenship;
-    @Bind(R.id.measurementsSpinner)
-    Spinner measurements;
+    @Bind(R.id.chooseCountryBTN)
+    Button chooseCountryBTN;
+    @Bind(R.id.countryFlagIV)
+    ImageView countryFlagIV;
 
     @Override
     public View onCreateView(LayoutInflater inflater,
@@ -34,41 +31,29 @@ public class Setup_Profile_1_Fragment extends Fragment {
 
         ButterKnife.bind(this, fragmentView);
 
-        setupCountriesSpinner(citizenship);
+        final CountryPicker picker = CountryPicker.newInstance(getString(R.string.choose_country_hint));
 
-        setupMeasurementsSpinner(measurements);
+        Country userCountry = picker.getUserCountryInfo(getActivity());
+
+        countryFlagIV.setImageResource(userCountry.getFlag());
+        chooseCountryBTN.setText(userCountry.getName());
+
+        chooseCountryBTN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                picker.show(getActivity().getSupportFragmentManager(), "COUNTRY_PICKER");
+                picker.setListener(new CountryPickerListener() {
+                    @Override
+                    public void onSelectCountry(String name, String code, String dialCode, int flagDrawableResID) {
+                        chooseCountryBTN.setText(name);
+                        countryFlagIV.setImageResource(flagDrawableResID);
+
+                        picker.dismiss();
+                    }
+                });
+            }
+        });
 
         return fragmentView;
-    }
-
-    private void setupCountriesSpinner(final Spinner countriesSpinner) {
-        TelephonyManager teleMgr = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
-        String localeCountry = new Locale("", teleMgr.getNetworkCountryIso()).getDisplayCountry();
-
-        Locale[] locale = Locale.getAvailableLocales();
-        ArrayList<String> countries = new ArrayList<String>();
-        String country;
-        for (Locale loc : locale) {
-            country = loc.getDisplayCountry();
-            if (country.length() > 0 && !countries.contains(country)) {
-                countries.add(country);
-            }
-        }
-
-        Collections.sort(countries, String.CASE_INSENSITIVE_ORDER);
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, countries);
-        countriesSpinner.setAdapter(adapter);
-
-        countriesSpinner.setSelection(countries.indexOf(localeCountry));
-    }
-
-    private void setupMeasurementsSpinner(Spinner measurementsSpinner) {
-        ArrayList<String> measurements = new ArrayList<String>();
-        measurements.add("Metric");
-        measurements.add("Imperial");
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_dropdown_item, measurements);
-        measurementsSpinner.setAdapter(adapter);
     }
 }

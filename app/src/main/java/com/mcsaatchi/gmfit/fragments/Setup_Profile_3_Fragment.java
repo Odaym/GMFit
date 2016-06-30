@@ -12,9 +12,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.andreabaccega.widget.FormEditText;
 import com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialogFragment;
@@ -47,18 +47,14 @@ public class Setup_Profile_3_Fragment extends Fragment implements CalendarDatePi
     private static final String TAG = "Setup_Profile_3_Fragment";
     @Bind(R.id.dateOfBirthBTN)
     Button dateOfBirthBTN;
-    @Bind(R.id.firstNameET)
-    FormEditText firstNameET;
-    @Bind(R.id.lastNameET)
-    FormEditText lastNameET;
-    @Bind(R.id.weightET)
-    FormEditText weightET;
-    @Bind(R.id.heightET)
-    FormEditText heightET;
-    @Bind(R.id.genderSpinner)
-    Spinner genderSpinner;
+    //    @Bind(R.id.weightET)
+//    FormEditText weightET;
+//    @Bind(R.id.heightET)
+//    FormEditText heightET;
     @Bind(R.id.bloodTypeSpinner)
     Spinner bloodTypeSpinner;
+    @Bind(R.id.genderSpinner)
+    Spinner genderSpinner;
     private SharedPreferences prefs;
     private ArrayList<FormEditText> allFields = new ArrayList<>();
     private String dateOfBirth = "";
@@ -78,12 +74,15 @@ public class Setup_Profile_3_Fragment extends Fragment implements CalendarDatePi
 
         }
 
+        setUpGenderSpinner();
+
+        setUpBloodTypeSpinner();
+
         prefs = getActivity().getSharedPreferences(Cons.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
 
-        allFields.add(firstNameET);
-        allFields.add(lastNameET);
-        allFields.add(weightET);
-        allFields.add(heightET);
+//        allFields.add(weightET);
+//        allFields.add(heightET);
+//
 
         dateOfBirthBTN.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,7 +92,7 @@ public class Setup_Profile_3_Fragment extends Fragment implements CalendarDatePi
                         .setFirstDayOfWeek(Calendar.MONDAY)
                         .setDoneText(getString(R.string.accept_ok))
                         .setCancelText(getString(R.string.decline_cancel))
-                        .setThemeDark(true);
+                        .setThemeLight();
                 cdp.show(getActivity().getSupportFragmentManager(), FRAG_TAG_DATE_PICKER);
             }
         });
@@ -103,9 +102,9 @@ public class Setup_Profile_3_Fragment extends Fragment implements CalendarDatePi
 
     @Override
     public void onDateSet(CalendarDatePickerDialogFragment dialog, int year, int monthOfYear, int dayOfMonth) {
-        Toast.makeText(getActivity(), "Date : " + dayOfMonth + " - " + monthOfYear + " " + year, Toast.LENGTH_SHORT).show();
-        dateOfBirthBTN.setText(year + " / " + monthOfYear + " / " + dayOfMonth);
-        dateOfBirth = year + "-" + monthOfYear + "-" + dayOfMonth;
+//        Toast.makeText(getActivity(), "Date : " + dayOfMonth + " - " + monthOfYear + " " + year, Toast.LENGTH_SHORT).show();
+//        dateOfBirthBTN.setText(year + " / " + monthOfYear + " / " + dayOfMonth);
+//        dateOfBirth = year + "-" + monthOfYear + "-" + dayOfMonth;
     }
 
     @Subscribe
@@ -115,30 +114,52 @@ public class Setup_Profile_3_Fragment extends Fragment implements CalendarDatePi
         switch (ebpMessage) {
             case Cons.EVENT_USER_FINALIZE_SETUP_PROFILE:
                 if (Helpers.validateFields(allFields)) {
-                    String finalName = firstNameET.getText().toString() + " " + lastNameET.getText().toString();
-
-                    int finalGender;
-
-                    finalGender = genderSpinner.getSelectedItem().toString().equals("Male") ? 1 : 0;
-
-                    Log.d(TAG, "handle_BusEvents: finalGender is : " + finalGender);
-
-                    String finalDateOfBirth = null;
-
-                    if (!dateOfBirth.isEmpty())
-                        finalDateOfBirth = dateOfBirth;
-
-                    double finalWeight = Double.parseDouble(weightET.getText().toString());
-                    double finalHeight = Double.parseDouble(heightET.getText().toString());
-
-                    String finalBloodType = bloodTypeSpinner.getSelectedItem().toString();
-
-                    setupUserProfile(finalName, finalDateOfBirth, finalBloodType, finalGender, finalHeight,
-                            finalWeight, calculateBMI(finalWeight, finalHeight));
+//                    String finalName = firstNameET.getText().toString() + " " + lastNameET.getText().toString();
+//
+//                    int finalGender;
+//
+//                    finalGender = genderSpinner.getSelectedItem().toString().equals("Male") ? 1 : 0;
+//
+//                    Log.d(TAG, "handle_BusEvents: finalGender is : " + finalGender);
+//
+//                    String finalDateOfBirth = null;
+//
+//                    if (!dateOfBirth.isEmpty())
+//                        finalDateOfBirth = dateOfBirth;
+//
+//                    double finalWeight = Double.parseDouble(weightET.getText().toString());
+//                    double finalHeight = Double.parseDouble(heightET.getText().toString());
+//
+//                    String finalBloodType = bloodTypeSpinner.getSelectedItem().toString();
+//
+//                    setupUserProfile(finalName, finalDateOfBirth, finalBloodType, finalGender, finalHeight,
+//                            finalWeight, calculateBMI(finalWeight, finalHeight));
                 }
 
                 break;
         }
+    }
+
+    private void setUpGenderSpinner() {
+        String[] genderItems = new String[]{getResources().getString(R.string
+                .male_option), getResources().getString(R.string.female_option)};
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), R.layout.spinner_item_measurement_spinner, genderItems);
+        genderSpinner.setAdapter(adapter);
+    }
+
+    private void setUpBloodTypeSpinner() {
+        String[] bloodTypeItems = new String[]{"O-",
+                "O+",
+                "A-",
+                "A+",
+                "B-",
+                "B+",
+                "AB-",
+                "AB+"};
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), R.layout.spinner_item_measurement_spinner, bloodTypeItems);
+        bloodTypeSpinner.setAdapter(adapter);
     }
 
     private void setupUserProfile(String finalName, String finalDateOfBirth, String bloodType, int finalGender, double height, double weight, double BMI) {

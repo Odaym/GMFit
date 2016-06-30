@@ -26,7 +26,7 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
 
     private static final String TAG = "DBHelper";
 
-    private String[] mealTypes = new String[]{"BREAKFAST", "LUNCH", "DINNER"};
+    private String[] mealTypes = new String[]{"Breakfast", "Lunch", "Dinner"};
 
     private String[] mealNames = new String[]{"Twice-Baked Broccoli-and-Kale-Stuffed Potatoes",
             "Zucchini Noodles With Leek-Tomato Sauce",
@@ -108,7 +108,7 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
             }
 
             for (int i = 0; i < snackNames.length; i++){
-                getMealItemDAO().create(new MealItem(snackNames[i], "SNACKS"));
+                getMealItemDAO().create(new MealItem(snackNames[i], "Snacks"));
             }
         } catch (SQLException e) {
             Log.e(DBHelper.class.getName(), "Can't create database", e);

@@ -33,7 +33,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.charts.HorizontalBarChart;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.Scopes;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -63,6 +62,7 @@ import com.mcsaatchi.gmfit.adapters.Widgets_GridAdapter;
 import com.mcsaatchi.gmfit.classes.Cons;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
+import com.mcsaatchi.gmfit.classes.FontTextView;
 import com.mcsaatchi.gmfit.classes.Helpers;
 import com.mcsaatchi.gmfit.classes.ParcelableFitnessString;
 import com.mcsaatchi.gmfit.models.DataChart;
@@ -90,21 +90,22 @@ import retrofit2.Response;
 
 public class Fitness_Fragment extends Fragment {
 
-    public static final String TAG = "GMFit";
+    public static final String TAG = "Fitness_Fragment";
     public static final int ADD_NEW_FITNESS_CHART_REQUEST_CODE = 1;
     private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
     @Bind(R.id.widgetsGridView)
     GridView widgetsGridView;
     @Bind(R.id.bar_chart)
-    HorizontalBarChart defaultBarChart;
+    BarChart defaultBarChart;
     @Bind(R.id.cards_container)
     LinearLayout cards_container;
     @Bind(R.id.addChartBTN)
     Button addNewChartBTN;
     @Bind(R.id.metricCounterTV)
-    TextView metricCounterTV;
+    FontTextView metricCounterTV;
 
     private Value lastKnownValueForStepCount;
+    private String lastKnownValueForCalories, lastKnownValueForDistanceCovered, lastKnownValueForStepCountToday;
     private NestedScrollView parentScrollView;
     private List<DataChart> allDataCharts;
     private RuntimeExceptionDao<DataChart, Integer> dataChartDAO;
@@ -122,10 +123,10 @@ public class Fitness_Fragment extends Fragment {
     private Widgets_GridAdapter widgets_GridAdapter;
 
     private ParcelableSparseArray widgetsMap = new ParcelableSparseArray() {{
-        put(0, new ParcelableFitnessString(R.drawable.ic_running, 0.0, "Walking"));
-        put(1, new ParcelableFitnessString(R.drawable.ic_biking, 0.0, "Biking"));
-        put(2, new ParcelableFitnessString(R.drawable.ic_calories, 0.0, "Calories"));
-        put(3, new ParcelableFitnessString(R.drawable.ic_steps, 0.0, "Stairs"));
+        put(0, new ParcelableFitnessString(R.drawable.ic_running, 1.39, "Walking", "Km"));
+        put(1, new ParcelableFitnessString(R.drawable.ic_biking, 3.2, "Biking", "Km"));
+        put(3, new ParcelableFitnessString(R.drawable.ic_steps, 2.4, "Stairs", "Km"));
+        put(2, new ParcelableFitnessString(R.drawable.ic_calories, 130, "Calories", "Calories"));
     }};
 
     @Override
@@ -317,19 +318,31 @@ public class Fitness_Fragment extends Fragment {
                                                 @Override
                                                 public void run() {
 
-                                                    metricCounterTV.setText(NumberFormat.getInstance().format(Double.parseDouble(stepCountToday)));
+                                                    if (stepCountToday != null) {
+                                                        lastKnownValueForStepCountToday = stepCountToday;
+                                                        metricCounterTV.setText(NumberFormat.getInstance().format(Double.parseDouble(stepCountToday)));
+                                                    } else if (lastKnownValueForStepCountToday != null)
+                                                        metricCounterTV.setText(NumberFormat.getInstance().format(Double.parseDouble(lastKnownValueForStepCountToday)));
 
                                                     for (int i = 0; i < widgetsMap.size(); i++) {
                                                         ParcelableFitnessString fitnessWidget = (ParcelableFitnessString) widgetsMap.valueAt(i);
 
                                                         switch (fitnessWidget.getTitle()) {
                                                             case "Walking":
-                                                                fitnessWidget.setValue(Double.parseDouble(distanceCoveredToday));
+                                                                if (distanceCoveredToday != null) {
+                                                                    lastKnownValueForDistanceCovered = distanceCoveredToday;
+                                                                    fitnessWidget.setValue(Double.parseDouble(distanceCoveredToday));
+                                                                } else if (lastKnownValueForCalories != null)
+                                                                    fitnessWidget.setValue(Double.parseDouble(String.valueOf(lastKnownValueForStepCount)));
                                                                 break;
                                                             case "Biking":
                                                                 break;
                                                             case "Calories":
-                                                                fitnessWidget.setValue(Double.parseDouble(caloriesToday));
+                                                                if (caloriesToday != null) {
+                                                                    lastKnownValueForCalories = caloriesToday;
+                                                                    fitnessWidget.setValue(Double.parseDouble(caloriesToday));
+                                                                } else if (lastKnownValueForCalories != null)
+                                                                    fitnessWidget.setValue(Double.parseDouble(lastKnownValueForCalories));
                                                                 break;
                                                             case "Stairs":
                                                                 if (lastKnownValueForStepCount != null) {
@@ -345,21 +358,24 @@ public class Fitness_Fragment extends Fragment {
 
                                                     findStepCounterDataSource();
 
-                                                    if (!prefs.getBoolean("SYNCED_METRICS", false)) {
-                                                        Log.d(TAG, "run: PREF DOESN'T EXIST, SYNCING METRICS NOW");
+                                                    if (isVisible()) {
+                                                        if (!prefs.getBoolean("SYNCED_METRICS", false)) {
+                                                            Log.d(TAG, "run: PREF DOESN'T EXIST, SYNCING METRICS NOW");
 
-                                                        if (Helpers.isInternetAvailable(getActivity())) {
-                                                            if (!stepCountToday.isEmpty() && !caloriesToday.isEmpty() && !distanceCoveredToday.isEmpty()) {
+                                                            if (Helpers.isInternetAvailable(getActivity())) {
+                                                                if (stepCountToday != null && caloriesToday != null &&
+                                                                        distanceCoveredToday != null) {
 
-                                                                double[] valuesArray = new double[]{Double
-                                                                        .parseDouble(stepCountToday), Double.parseDouble(caloriesToday),
-                                                                        Double.parseDouble(distanceCoveredToday)};
+                                                                    double[] valuesArray = new double[]{Double
+                                                                            .parseDouble(stepCountToday), Double.parseDouble(caloriesToday),
+                                                                            Double.parseDouble(distanceCoveredToday)};
 
-                                                                updateMetrics(new String[]{"steps-count", "active-calories",
-                                                                        "distance-traveled"}, valuesArray, Helpers.getCalendarDate());
+                                                                    updateMetrics(new String[]{"steps-count", "active-calories",
+                                                                            "distance-traveled"}, valuesArray, Helpers.getCalendarDate());
+                                                                }
+                                                            } else {
+                                                                Helpers.showNoInternetDialog(getActivity());
                                                             }
-                                                        } else {
-                                                            Helpers.showNoInternetDialog(getActivity());
                                                         }
                                                     }
                                                 }
@@ -381,23 +397,20 @@ public class Fitness_Fragment extends Fragment {
                                     }
                                 }
                             }
-                    )
-                    .addOnConnectionFailedListener(
+                    ).addOnConnectionFailedListener(
                             new GoogleApiClient.OnConnectionFailedListener() {
                                 @Override
                                 public void onConnectionFailed(ConnectionResult connectionResult) {
                                     Log.d(TAG, "Connection failed! " + connectionResult.getErrorMessage());
                                 }
                             }
-                    )
-                    .enableAutoManage((FragmentActivity) parentActivity, 0, new GoogleApiClient.OnConnectionFailedListener() {
+                    ).enableAutoManage((FragmentActivity) parentActivity, 0, new GoogleApiClient.OnConnectionFailedListener() {
                         @Override
                         public void onConnectionFailed(ConnectionResult result) {
                             Log.i(TAG, "Google Play services connection failed. Cause: " +
                                     result.toString());
                         }
-                    })
-                    .build();
+                    }).build();
         }
     }
 
@@ -488,6 +501,8 @@ public class Fitness_Fragment extends Fragment {
                     switch (response.code()) {
                         case Cons.API_REQUEST_SUCCEEDED_CODE:
                             waitingDialog.dismiss();
+
+                            Log.d(TAG, "onResponse: SYNCED Metrics successfully");
 
                             prefs.edit().putBoolean("SYNCED_METRICS", true).apply();
 
@@ -616,7 +631,7 @@ public class Fitness_Fragment extends Fragment {
                 TimeUnit.MILLISECONDS
         );
 
-        com.google.android.gms.common.api.Status heightInsertStatus =
+        Status heightInsertStatus =
                 Fitness.HistoryApi.insertData(googleApiFitnessClient, heightDataSet)
                         .await(1, TimeUnit.MINUTES);
     }
@@ -639,7 +654,7 @@ public class Fitness_Fragment extends Fragment {
                 TimeUnit.MILLISECONDS
         );
 
-        com.google.android.gms.common.api.Status weightInsertStatus =
+        Status weightInsertStatus =
                 Fitness.HistoryApi.insertData(googleApiFitnessClient, weightDataSet)
                         .await(1, TimeUnit.MINUTES);
     }
@@ -691,11 +706,11 @@ public class Fitness_Fragment extends Fragment {
         return showResultingDataPoints(resultingMetrics.getTotal());
     }
 
-    private String showResultingDataPoints(DataSet caloriesDataSet) {
+    private String showResultingDataPoints(DataSet result) {
         Value val;
         String finalValue = null;
 
-        for (DataPoint dp : caloriesDataSet.getDataPoints()) {
+        for (DataPoint dp : result.getDataPoints()) {
 
             for (Field field : dp.getDataType().getFields()) {
                 val = dp.getValue(field);
@@ -715,6 +730,7 @@ public class Fitness_Fragment extends Fragment {
     private boolean checkPermissions() {
         int permissionState = ActivityCompat.checkSelfPermission(parentActivity,
                 Manifest.permission.ACCESS_FINE_LOCATION);
+        Log.d(TAG, "checkPermissions: Permission false for ACCESS FINE LOCATION");
         return permissionState == PackageManager.PERMISSION_GRANTED;
     }
 
@@ -747,7 +763,6 @@ public class Fitness_Fragment extends Fragment {
             } else if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 buildFitnessClient();
                 googleApiFitnessClient.connect();
-
             } else {
                 Snackbar.make(
                         fragmentView.findViewById(R.id.main_activity_view),

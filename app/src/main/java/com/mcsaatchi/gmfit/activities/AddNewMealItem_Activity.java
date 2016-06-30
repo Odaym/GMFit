@@ -60,7 +60,7 @@ public class AddNewMealItem_Activity extends Base_Activity implements SearchView
             mealType = getIntent().getExtras().getString(Cons.EXTRAS_MAIN_MEAL_NAME);
         } else {
             actionBarTitle = getString(R.string.app_name);
-            mealType = "BREAKFAST";
+            mealType = getString(R.string.meal_headline_title_breakfast);
         }
 
         super.onCreate(Helpers.createActivityBundleWithProperties(actionBarTitle, true));
@@ -74,7 +74,9 @@ public class AddNewMealItem_Activity extends Base_Activity implements SearchView
         mHeaderPositions = new Integer[]{0, 7};
 
         prepareQueryForAllMealTypeItems(mealType);
+
         mealsList = getDBHelper().getMealItemDAO().query(pq);
+
         initMealsList();
         addListSections();
 

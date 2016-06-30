@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mcsaatchi.gmfit.R;
+import com.mcsaatchi.gmfit.classes.FontTextView;
 import com.mcsaatchi.gmfit.classes.ParcelableFitnessString;
 import com.mcsaatchi.gmfit.classes.ParcelableNutritionString;
 
@@ -52,14 +53,15 @@ public class Widgets_GridAdapter extends BaseAdapter {
 
             switch (layoutResourceId) {
                 case R.layout.grid_item_fitness_widgets:
-                    holder.metricTV = (TextView) convertView.findViewById(R.id.metricTV);
+                    holder.metricTV = (FontTextView) convertView.findViewById(R.id.metricTV);
                     holder.metricIcon = (ImageView) convertView.findViewById(R.id.metricIMG);
+                    holder.measurementUnitTV = (TextView) convertView.findViewById(R.id.measurementUnitTV);
                     break;
                 case R.layout.grid_item_nutrition_widgets:
-                    holder.metricTV = (TextView) convertView.findViewById(R.id.metricTV);
+                    holder.metricTV = (FontTextView) convertView.findViewById(R.id.metricTV);
                     holder.metricPercentageTV = (TextView) convertView.findViewById(R.id.metricPercentageTV);
                     holder.measurementUnitTV = (TextView) convertView.findViewById(R.id.measurementUnitTV);
-                    holder.metricTitleTV = (TextView) convertView.findViewById(R.id.metricTitleTV);
+                    holder.metricTitleTV = (FontTextView) convertView.findViewById(R.id.metricTitleTV);
                     break;
             }
 
@@ -73,7 +75,8 @@ public class Widgets_GridAdapter extends BaseAdapter {
                 holder.metricTV.setText(NumberFormat.getInstance().format(Double.parseDouble(String.valueOf(((ParcelableFitnessString) widgetsMap.valueAt(position))
                         .getValue()))));
 
-                holder.metricIcon.setImageResource(((ParcelableFitnessString) widgetsMap.valueAt(position)).getKey());
+                holder.metricIcon.setImageResource(((ParcelableFitnessString) widgetsMap.valueAt(position)).getDrawableResId());
+                holder.measurementUnitTV.setText(((ParcelableFitnessString) widgetsMap.valueAt(position)).getMeasurementUnit());
                 break;
             case R.layout.grid_item_nutrition_widgets:
                 holder.metricTV.setText(NumberFormat.getInstance().format(Double.parseDouble(String.valueOf(((ParcelableNutritionString) widgetsMap.valueAt(position))
@@ -91,9 +94,9 @@ public class Widgets_GridAdapter extends BaseAdapter {
 
     class ViewHolder {
         ImageView metricIcon;
-        TextView metricTV;
+        FontTextView metricTV;
         TextView measurementUnitTV;
         TextView metricPercentageTV;
-        TextView metricTitleTV;
+        FontTextView metricTitleTV;
     }
 }

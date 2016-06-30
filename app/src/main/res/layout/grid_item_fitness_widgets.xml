@@ -8,17 +8,24 @@
 
     <ImageView
         android:id="@+id/metricIMG"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginEnd="5dp"/>
+        android:layout_width="@dimen/metric_image_dimen"
+        android:layout_height="@dimen/metric_image_dimen"
+        android:layout_marginEnd="@dimen/default_margin_0"/>
 
-    <TextView
+    <com.mcsaatchi.gmfit.classes.FontTextView
         android:id="@+id/metricTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toEndOf="@id/metricIMG"
         android:gravity="center_vertical"
         android:textColor="@android:color/white"
-        android:textSize="20sp"/>
+        android:textSize="@dimen/fitness_widgets_main_metric_value_font_size"/>
 
+    <TextView
+        android:id="@+id/measurementUnitTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/metricTV"
+        android:layout_below="@+id/metricTV"
+        android:textColor="@android:color/white"/>
 </RelativeLayout>

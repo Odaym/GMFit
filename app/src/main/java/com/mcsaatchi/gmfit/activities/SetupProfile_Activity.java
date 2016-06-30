@@ -6,19 +6,18 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.classes.Cons;
-import com.mcsaatchi.gmfit.classes.DefaultIndicator_Controller;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
 import com.mcsaatchi.gmfit.classes.Helpers;
-import com.mcsaatchi.gmfit.classes.Indicator_Controller;
+import com.mcsaatchi.gmfit.classes.NonSwipeableViewPager;
 import com.mcsaatchi.gmfit.fragments.Setup_Profile_1_Fragment;
 import com.mcsaatchi.gmfit.fragments.Setup_Profile_2_Fragment;
 import com.mcsaatchi.gmfit.fragments.Setup_Profile_3_Fragment;
@@ -28,15 +27,11 @@ import butterknife.ButterKnife;
 
 public class SetupProfile_Activity extends Base_Activity {
     @Bind(R.id.viewpager)
-    ViewPager viewPager;
+    NonSwipeableViewPager viewPager;
     @Bind(R.id.nextPageBTN)
     Button nextPageBTN;
-    @Bind(R.id.previousPageBTN)
-    Button previousPageBTN;
-    @Bind(R.id.previousPageControllerLayout)
-    LinearLayout previousPageControllerLayout;
-
-    private Indicator_Controller indicatorController;
+    @Bind(R.id.toolbar)
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -46,16 +41,19 @@ public class SetupProfile_Activity extends Base_Activity {
 
         ButterKnife.bind(this);
 
+        toolbar.setTitle(R.string.setup_profile_step_1_title);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         setupViewPager();
     }
 
     private void setupViewPager() {
         viewPager.setAdapter(new SetupProfile_Adapter(getSupportFragmentManager()));
 
-        //Prevent this viewpager from swiping
         viewPager.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent event) {
+            public boolean onTouch(View view, MotionEvent motionEvent) {
                 return true;
             }
         });
@@ -68,7 +66,20 @@ public class SetupProfile_Activity extends Base_Activity {
 
             @Override
             public void onPageSelected(int position) {
-                indicatorController.selectPosition(position);
+                switch (position) {
+                    case 0:
+                        toolbar.setTitle(getString(R.string.setup_profile_step_1_title));
+                        nextPageBTN.setText(getString(R.string.next_step));
+                        break;
+                    case 1:
+                        toolbar.setTitle(getString(R.string.setup_profile_step_2_title));
+                        nextPageBTN.setText(getString(R.string.next_step));
+                        break;
+                    case 2:
+                        toolbar.setTitle(getString(R.string.setup_profile_step_3_title));
+                        nextPageBTN.setText(getString(R.string.finish_setup));
+                        break;
+                }
             }
 
             @Override
@@ -77,49 +88,32 @@ public class SetupProfile_Activity extends Base_Activity {
             }
         });
 
-        initController();
-
         nextPageBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (viewPager.getCurrentItem() + 1 > 0)
-                    previousPageControllerLayout.setVisibility(View.VISIBLE);
 
                 viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
 
                 // Time for submission
-                if (nextPageBTN.getText().toString().equals("Finish")){
+                if (nextPageBTN.getText().toString().equals(getString(R.string.finish_setup))) {
                     EventBus_Singleton.getInstance().post(new EventBus_Poster(Cons.EVENT_USER_FINALIZE_SETUP_PROFILE));
                 }
-
-                if (viewPager.getCurrentItem() == 2)
-                    nextPageBTN.setText(getString(R.string.finish));
-
-            }
-        });
-
-        previousPageBTN.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (viewPager.getCurrentItem() - 1 == 0)
-                    previousPageControllerLayout.setVisibility(View.INVISIBLE);
-
-                viewPager.setCurrentItem(viewPager.getCurrentItem() - 1);
-
-                if (viewPager.getCurrentItem() < 2)
-                    nextPageBTN.setText(getString(R.string.next_page));
             }
         });
     }
 
-    private void initController() {
-        if (indicatorController == null)
-            indicatorController = new DefaultIndicator_Controller();
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
 
-        FrameLayout indicatorContainer = (FrameLayout) findViewById(R.id.indicator_container);
-        indicatorContainer.addView(indicatorController.newInstance(this));
+        switch (item.getItemId()) {
+            case android.R.id.home:
 
-        indicatorController.initialize(3);
+                viewPager.setCurrentItem(viewPager.getCurrentItem() - 1);
+
+                break;
+        }
+
+        return false;
     }
 
     public class SetupProfile_Adapter extends FragmentPagerAdapter {

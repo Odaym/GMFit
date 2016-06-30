@@ -3,13 +3,12 @@ package com.mcsaatchi.gmfit.fragments;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.internal.ParcelableSparseArray;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.CardView;
-import android.util.SparseArray;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -51,20 +50,10 @@ public class Nutrition_Fragment extends Fragment {
     private final String chromiumChartType = "Chromium";
     private final String copperChartType = "Copper";
     private final String dietary_cholesterolChartType = "Dietary Cholesterol";
-
-    private Widgets_GridAdapter widgets_GridAdapter;
-
-    private ParcelableSparseArray widgetsMap = new ParcelableSparseArray() {{
-        put(0, new ParcelableNutritionString("PROTEIN", 152, "g", 17));
-        put(1, new ParcelableNutritionString("FAT", 87, "g", 29));
-        put(2, new ParcelableNutritionString("SODIUM", 200, "mg", 105));
-        put(3, new ParcelableNutritionString("SUGRA", 42, "g", 112));
-    }};
-
-
     @Bind(R.id.widgetsGridView)
     GridView widgetsGridView;
-
+    @Bind(R.id.metricCounterTV)
+    com.mcsaatchi.gmfit.classes.FontTextView metricCounterTV;
     /**
      * CHARTS
      */
@@ -119,13 +108,18 @@ public class Nutrition_Fragment extends Fragment {
      */
     @Bind(R.id.addChartBTN)
     Button addNewChartBTN;
+    private Widgets_GridAdapter widgets_GridAdapter;
+    private ParcelableSparseArray widgetsMap = new ParcelableSparseArray() {{
+        put(0, new ParcelableNutritionString("PROTEIN", 152, "g", 17));
+        put(1, new ParcelableNutritionString("FAT", 87, "g", 29));
+        put(2, new ParcelableNutritionString("SODIUM", 200, "mg", 105));
+        put(3, new ParcelableNutritionString("SUGAR", 42, "g", 112));
+    }};
     /**
      * TOP LAYOUT WITH WIDGETS
      */
     private NestedScrollView parentScrollView;
     private Activity parentActivity;
-    private SparseArray<String[]> itemsMap;
-    private SharedPreferences prefs;
 
     @Override
     public View onCreateView(LayoutInflater inflater,
@@ -141,8 +135,6 @@ public class Nutrition_Fragment extends Fragment {
         parentScrollView = (NestedScrollView) getActivity().findViewById(R.id.myScrollingContent);
 
         ButterKnife.bind(this, fragmentView);
-
-        prefs = getActivity().getSharedPreferences(Cons.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
 
         setHasOptionsMenu(true);
 
@@ -243,16 +235,16 @@ public class Nutrition_Fragment extends Fragment {
             case Cons.EXTRAS_PICKED_MEAL_ENTRY:
                 if (ebp.getMealItemExtra() != null) {
                     switch (ebp.getMealItemExtra().getType()) {
-                        case "BREAKFAST":
+                        case "Breakfast":
                             addMealEntryLayout(ebp.getMealItemExtra().getName(), entriesContainerLayout_BREAKFAST);
                             break;
-                        case "LUNCH":
+                        case "Lunch":
                             addMealEntryLayout(ebp.getMealItemExtra().getName(), entriesContainerLayout_LUNCH);
                             break;
-                        case "DINNER":
+                        case "Dinner":
                             addMealEntryLayout(ebp.getMealItemExtra().getName(), entriesContainerLayout_DINNER);
                             break;
-                        case "SNACKS":
+                        case "Snacks":
                             addMealEntryLayout(ebp.getMealItemExtra().getName(), entriesContainerLayout_SNACKS);
                             break;
                     }
@@ -305,11 +297,12 @@ public class Nutrition_Fragment extends Fragment {
     private void openMealEntryPickerActivity(String mainMealName) {
         Intent intent = new Intent(parentActivity, AddNewMealItem_Activity.class);
         intent.putExtra(Cons.EXTRAS_MAIN_MEAL_NAME, mainMealName);
+        Log.d(TAG, "openMealEntryPickerActivity: Meal Name when Adding " + mainMealName);
         startActivity(intent);
     }
 
     private void addMealEntryLayout(String mealTitle, LinearLayout targetLayoutForMeal) {
-        final View mealEntryLayout = parentActivity.getLayoutInflater().inflate(R.layout.view_generic_chart_entry, null);
+        final View mealEntryLayout = parentActivity.getLayoutInflater().inflate(R.layout.list_item_add_new_meal, null);
 
         TextView entryTitleTV = (TextView) mealEntryLayout.findViewById(R.id.entryTitleTV);
         TextView entryDescription = (TextView) mealEntryLayout.findViewById(R.id.entryDescriptionTV);
@@ -319,7 +312,6 @@ public class Nutrition_Fragment extends Fragment {
         entryDescription.setText("This is a description");
         entryUnitsTV.setText("400 mg");
 
-        mealEntryLayout.setPadding(0, 0, 0, 30);
         targetLayoutForMeal.addView(mealEntryLayout);
     }
 
