@@ -25,10 +25,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/default_button_height_1"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="-7dp"
-        android:layout_marginLeft="-5dp"
-        android:layout_marginRight="-5dp"
-        android:layout_marginTop="-5dp"
+        android:background="@android:color/white"
         android:text="@string/next_step"/>
 
 </RelativeLayout>
