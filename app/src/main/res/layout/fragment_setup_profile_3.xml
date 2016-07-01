@@ -5,24 +5,34 @@
     xmlns:validator="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent" android:layout_height="match_parent">
 
+
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"
                   android:orientation="vertical">
 
+        <TextView android:layout_width="match_parent" android:layout_height="match_parent"
+                  android:layout_marginBottom="@dimen/default_margin_2"
+                  android:paddingStart="@dimen/default_margin_2"
+                  android:text="@string/setup_profile_step_3_heading_hint"
+                  android:textAppearance="?android:textAppearanceSmall"
+                  android:textColor="@android:color/white"/>
+
         <LinearLayout android:layout_width="match_parent" android:layout_height="@dimen/radiobutton_row_height"
-                      android:layout_marginBottom="@dimen/default_margin_1"
+                      android:layout_marginBottom="@dimen/default_margin_0"
                       android:gravity="center_vertical"
                       android:orientation="horizontal">
 
             <TextView android:layout_width="@dimen/text_input_label_width" android:layout_height="match_parent"
-                      android:layout_marginEnd="@dimen/default_margin_1"
                       android:background="@color/color_primary_dark_transparent"
                       android:gravity="center_vertical|start"
                       android:paddingStart="@dimen/default_margin_2"
                       android:text="@string/gender_hint"
                       android:textAppearance="?android:textAppearanceSmall"
                       android:textColor="@android:color/white"/>
+
+            <View android:layout_width="1dp" android:layout_height="match_parent"
+                  android:background="@color/separator_gray"/>
 
             <Spinner
                 android:id="@+id/genderSpinner"
@@ -33,19 +43,21 @@
         </LinearLayout>
 
         <LinearLayout android:layout_width="match_parent" android:layout_height="@dimen/radiobutton_row_height"
-                      android:layout_marginBottom="@dimen/default_margin_1"
+                      android:layout_marginBottom="@dimen/default_margin_0"
                       android:gravity="center_vertical"
                       android:orientation="horizontal">
 
             <TextView
                 android:layout_width="@dimen/text_input_label_width" android:layout_height="match_parent"
-                android:layout_marginEnd="@dimen/default_margin_1"
                 android:background="@color/color_primary_dark_transparent"
                 android:gravity="center_vertical|start"
                 android:paddingStart="@dimen/default_margin_2"
                 android:text="@string/date_of_birth_hint"
                 android:textAppearance="?android:textAppearanceSmall"
                 android:textColor="@android:color/white"/>
+
+            <View android:layout_width="1dp" android:layout_height="match_parent"
+                  android:background="@color/separator_gray"/>
 
             <Button
                 android:id="@+id/dateOfBirthBTN"
@@ -56,19 +68,21 @@
 
 
         <LinearLayout android:layout_width="match_parent" android:layout_height="@dimen/radiobutton_row_height"
-                      android:layout_marginBottom="@dimen/default_margin_1"
+                      android:layout_marginBottom="@dimen/default_margin_0"
                       android:gravity="center_vertical"
                       android:orientation="horizontal">
 
             <TextView
                 android:layout_width="@dimen/text_input_label_width" android:layout_height="match_parent"
-                android:layout_marginEnd="@dimen/default_margin_1"
                 android:background="@color/color_primary_dark_transparent"
                 android:gravity="center_vertical|start"
                 android:paddingStart="@dimen/default_margin_2"
                 android:text="@string/blood_type_hint"
                 android:textAppearance="?android:textAppearanceSmall"
                 android:textColor="@android:color/white"/>
+
+            <View android:layout_width="1dp" android:layout_height="match_parent"
+                  android:background="@color/separator_gray"/>
 
             <Spinner
                 android:id="@+id/bloodTypeSpinner"
@@ -81,7 +95,7 @@
             android:id="@+id/weightETFloating"
             android:layout_width="match_parent"
             android:layout_height="@dimen/radiobutton_row_height"
-            android:layout_marginBottom="@dimen/default_margin_1"
+            android:layout_marginBottom="@dimen/default_margin_0"
             android:background="@color/color_primary_dark_transparent"
             app:fletTextAppearance="@style/FloatLabelHintStyle">
 
@@ -155,12 +169,14 @@
                   android:text="@string/medical_conditions_hint"
                   android:textColor="@android:color/white"/>
 
-        <Button android:layout_width="match_parent" android:layout_height="@dimen/default_button_height_1"
-                android:layout_marginBottom="@dimen/default_margin_5"
-                android:layout_marginEnd="@dimen/default_margin_2"
-                android:layout_marginStart="@dimen/default_margin_2"
-                android:background="@color/add_medical_conditions_button_green"
-                android:text="@string/add_medical_condition_button"
-                android:textColor="@android:color/white"/>
+        <Button
+            android:id="@+id/addMedicalConditionsBTN"
+            android:layout_width="match_parent" android:layout_height="@dimen/default_button_height_2"
+            android:layout_marginBottom="@dimen/default_margin_10"
+            android:layout_marginEnd="@dimen/default_margin_2"
+            android:layout_marginStart="@dimen/default_margin_2"
+            android:background="@color/add_medical_conditions_button_green"
+            android:text="@string/add_medical_condition_button"
+            android:textColor="@android:color/white"/>
     </LinearLayout>
 </ScrollView>

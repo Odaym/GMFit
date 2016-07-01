@@ -5,12 +5,13 @@
               android:orientation="vertical">
 
     <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-              android:layout_marginBottom="@dimen/default_margin_1"
-              android:layout_marginStart="@dimen/default_margin_1"
+              android:layout_marginBottom="@dimen/default_margin_2"
+              android:layout_marginStart="@dimen/default_margin_2"
               android:text="@string/choose_goal_hint"
               android:textColor="@android:color/white"/>
 
-    <RadioGroup android:layout_width="match_parent" android:layout_height="match_parent">
+    <RadioGroup android:layout_width="match_parent" android:layout_height="match_parent"
+                android:orientation="vertical">
 
         <RadioButton android:layout_width="match_parent" android:layout_height="@dimen/radiobutton_row_height"
                      android:layout_marginBottom="@dimen/default_margin_0"

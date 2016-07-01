@@ -5,7 +5,7 @@
               android:orientation="vertical">
 
     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-              android:layout_marginBottom="@dimen/default_margin_1"
+              android:layout_marginBottom="@dimen/default_margin_2"
               android:paddingStart="@dimen/default_margin_2"
               android:text="@string/choose_country_hint"
               android:textColor="@android:color/white"/>
@@ -31,10 +31,10 @@
             android:textAppearance="?android:textAppearanceMedium"
             android:textColor="@android:color/white"/>
 
-        <View android:layout_width="0.1dp" android:layout_height="match_parent"
+        <View android:layout_width="1dp" android:layout_height="match_parent"
               android:layout_marginEnd="@dimen/default_margin_2"
               android:layout_toStartOf="@+id/rightArrowIV"
-              android:background="@color/offwhite_background_gray"/>
+              android:background="@color/separator_gray"/>
 
         <ImageView
             android:id="@+id/rightArrowIV"

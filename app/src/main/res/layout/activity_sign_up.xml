@@ -1,42 +1,118 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:validator="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
-    android:paddingBottom="@dimen/activity_horizontal_margin"
-    android:paddingEnd="@dimen/activity_vertical_margin"
-    android:paddingStart="@dimen/activity_vertical_margin"
-    android:paddingTop="@dimen/activity_horizontal_margin"
-    android:scrollbars="none">
+    android:background="@drawable/general_background"
+    android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="match_parent" android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/radiobutton_row_height"
+            android:layout_marginBottom="@dimen/default_margin_0"
+            android:background="@color/color_primary_dark_transparent"
+            android:orientation="vertical">
+
+            <com.wrapp.floatlabelededittext.FloatLabeledEditText
+                android:id="@+id/firstNameETFloating"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/radiobutton_row_height"
+                android:layout_gravity="center_vertical"
+                android:layout_marginBottom="@dimen/default_margin_2"
+                android:background="@color/color_primary_dark_transparent"
+                app:fletTextAppearance="@style/FloatLabelHintStyle">
+
+                <com.andreabaccega.widget.FormEditText
+                    android:id="@+id/firstNameET"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/radiobutton_row_height"
+                    android:background="@android:color/transparent"
+                    android:hint="@string/first_name_hint"
+                    android:inputType="text"
+                    android:paddingStart="@dimen/default_margin_2"
+                    android:singleLine="true"
+                    android:textAppearance="?android:textAppearanceSmall"
+                    android:textColor="@android:color/white"
+                    android:textColorHint="@android:color/white"
+                    android:textCursorDrawable="@null"
+                    validator:emptyErrorString="@string/field_empty_error_message"
+                    validator:testErrorString="@string/error_first_name_not_valid"
+                    validator:testType="alpha"/>
+
+            </com.wrapp.floatlabelededittext.FloatLabeledEditText>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/radiobutton_row_height"
+            android:layout_marginBottom="@dimen/default_margin_0"
+            android:background="@color/color_primary_dark_transparent"
+            android:orientation="vertical">
+
+            <com.wrapp.floatlabelededittext.FloatLabeledEditText
+                android:id="@+id/lastNameETFloating"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/radiobutton_row_height"
+                android:layout_gravity="center_vertical"
+                android:layout_marginBottom="@dimen/default_margin_2"
+                android:background="@color/color_primary_dark_transparent"
+                app:fletTextAppearance="@style/FloatLabelHintStyle">
+
+                <com.andreabaccega.widget.FormEditText
+                    android:id="@+id/lastNameET"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/radiobutton_row_height"
+                    android:background="@android:color/transparent"
+                    android:hint="@string/last_name_hint"
+                    android:inputType="text"
+                    android:paddingStart="@dimen/default_margin_2"
+                    android:singleLine="true"
+                    android:textAppearance="?android:textAppearanceSmall"
+                    android:textColor="@android:color/white"
+                    android:textColorHint="@android:color/white"
+                    android:textCursorDrawable="@null"
+                    app:testType="alpha"
+                    validator:emptyErrorString="@string/field_empty_error_message"
+                    validator:testErrorString="@string/error_first_name_not_valid"/>
+
+            </com.wrapp.floatlabelededittext.FloatLabeledEditText>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/radiobutton_row_height"
+            android:layout_marginBottom="@dimen/default_margin_0"
+            android:background="@color/color_primary_dark_transparent"
             android:orientation="vertical">
 
             <com.wrapp.floatlabelededittext.FloatLabeledEditText
                 android:id="@+id/emailETFloating"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@null">
+                android:layout_height="@dimen/radiobutton_row_height"
+                android:layout_gravity="center_vertical"
+                android:layout_marginBottom="@dimen/default_margin_2"
+                android:background="@color/color_primary_dark_transparent"
+                app:fletTextAppearance="@style/FloatLabelHintStyle">
 
                 <com.andreabaccega.widget.FormEditText
                     android:id="@+id/emailET"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/radiobutton_row_height"
+                    android:background="@android:color/transparent"
                     android:hint="@string/email_address_hint"
                     android:inputType="textEmailAddress"
+                    android:paddingStart="@dimen/default_margin_2"
                     android:singleLine="true"
-                    android:textColor="@android:color/black"
-                    android:textColorHint="@color/edittext_hint_color"
+                    android:textAppearance="?android:textAppearanceSmall"
+                    android:textColor="@android:color/white"
+                    android:textColorHint="@android:color/white"
                     android:textCursorDrawable="@null"
                     validator:emptyErrorString="@string/field_empty_error_message"
                     validator:testErrorString="@string/error_email_address_not_valid"
@@ -47,22 +123,32 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/radiobutton_row_height"
+            android:layout_marginBottom="@dimen/default_margin_0"
+            android:background="@color/color_primary_dark_transparent"
             android:orientation="vertical">
 
             <com.wrapp.floatlabelededittext.FloatLabeledEditText
+                android:id="@+id/passwordETFloating"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="@dimen/radiobutton_row_height"
+                android:layout_gravity="center_vertical"
+                android:layout_marginBottom="@dimen/default_margin_2"
+                android:background="@color/color_primary_dark_transparent"
+                app:fletTextAppearance="@style/FloatLabelHintStyle">
 
                 <com.andreabaccega.widget.FormEditText
                     android:id="@+id/passwordET"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/radiobutton_row_height"
+                    android:background="@android:color/transparent"
                     android:hint="@string/password_hint"
                     android:inputType="textPassword"
+                    android:paddingStart="@dimen/default_margin_2"
                     android:singleLine="true"
-                    android:textColor="@android:color/black"
-                    android:textColorHint="@color/edittext_hint_color"
+                    android:textAppearance="?android:textAppearanceSmall"
+                    android:textColor="@android:color/white"
+                    android:textColorHint="@android:color/white"
                     android:textCursorDrawable="@null"
                     validator:emptyErrorString="@string/field_empty_error_message"
                     validator:testErrorString="@string/field_password_too_short_error"/>
@@ -72,22 +158,31 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/radiobutton_row_height"
+            android:background="@color/color_primary_dark_transparent"
             android:orientation="vertical">
 
             <com.wrapp.floatlabelededittext.FloatLabeledEditText
+                android:id="@+id/confirmPasswordETFloating"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="@dimen/radiobutton_row_height"
+                android:layout_gravity="center_vertical"
+                android:layout_marginBottom="@dimen/default_margin_2"
+                android:background="@color/color_primary_dark_transparent"
+                app:fletTextAppearance="@style/FloatLabelHintStyle">
 
                 <com.andreabaccega.widget.FormEditText
                     android:id="@+id/confirmPasswordET"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/radiobutton_row_height"
+                    android:background="@android:color/transparent"
                     android:hint="@string/confirm_password_hint"
                     android:inputType="textPassword"
+                    android:paddingStart="@dimen/default_margin_2"
                     android:singleLine="true"
-                    android:textColor="@android:color/black"
-                    android:textColorHint="@color/edittext_hint_color"
+                    android:textAppearance="?android:textAppearanceSmall"
+                    android:textColor="@android:color/white"
+                    android:textColorHint="@android:color/white"
                     android:textCursorDrawable="@null"
                     validator:emptyErrorString="@string/field_empty_error_message"
                     validator:testErrorString="@string/field_password_too_short_error"/>
@@ -95,19 +190,21 @@
             </com.wrapp.floatlabelededittext.FloatLabeledEditText>
         </LinearLayout>
 
-
-        <Button
-            android:id="@+id/createAccountBTN"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="@string/create_account_button"/>
-
         <TextView
             android:id="@+id/creatingAccountTOSTV"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:gravity="center"/>
+            android:gravity="center"
+            android:textColor="@android:color/white"/>
     </LinearLayout>
-</ScrollView>
+
+    <Button
+        android:id="@+id/createAccountBTN"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/default_button_height_1"
+        android:layout_alignParentBottom="true"
+        android:background="@android:color/white"
+        android:text="@string/create_account_button"/>
+
+</RelativeLayout>
