@@ -33,17 +33,24 @@
             android:name=".activities.Login_Activity"
             android:screenOrientation="portrait"
             android:theme="@style/No_Status_Or_Action_Bar_Theme">
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN"/>-->
+            <intent-filter>
+            <action android:name="android.intent.action.MAIN"/>
 
-                <!--<category android:name="android.intent.category.LAUNCHER"/>-->
-            <!--</intent-filter>-->
+            <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
         </activity>
 
         <activity
             android:name=".activities.SignUp_Activity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateVisible"/>
+            android:windowSoftInputMode="stateVisible">
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN"/>-->
+
+                <!--<category android:name="android.intent.category.LAUNCHER"/>-->
+            <!--</intent-filter>-->
+
+        </activity>
 
         <activity
             android:name=".activities.SignIn_Activity"
@@ -63,13 +70,13 @@
             android:name=".activities.GetStarted_Activity"
             android:screenOrientation="portrait"
             android:theme="@style/No_Status_Or_Action_Bar_Theme">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
 
         </activity>
+
+        <activity android:name=".activities.AddNewMedicalCondition_Activity"
+                  android:screenOrientation="portrait"
+                  android:theme="@style/No_Action_Bar_Theme"
+                  android:windowSoftInputMode="adjustResize"/>
 
         <activity android:name=".activities.SetupProfile_Activity"
                   android:screenOrientation="portrait"
