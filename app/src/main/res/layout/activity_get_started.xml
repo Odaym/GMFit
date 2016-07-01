@@ -46,8 +46,10 @@
     <Button
         android:id="@+id/setup_profile_button"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/default_margin_5"
+        android:layout_height="@dimen/default_button_height_1"
         android:layout_alignParentBottom="true"
+        android:background="@android:color/white"
+        android:gravity="center"
         android:text="@string/setup_my_profile_button"/>
 
 </RelativeLayout>
