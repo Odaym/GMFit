@@ -16,7 +16,6 @@ import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.classes.Cons;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
-import com.mcsaatchi.gmfit.classes.Helpers;
 import com.mcsaatchi.gmfit.classes.NonSwipeableViewPager;
 import com.mcsaatchi.gmfit.fragments.Setup_Profile_1_Fragment;
 import com.mcsaatchi.gmfit.fragments.Setup_Profile_2_Fragment;
@@ -35,7 +34,7 @@ public class SetupProfile_Activity extends Base_Activity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(Helpers.createActivityBundleWithProperties(R.string.setup_profile_activity_title, true));
+        super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_setup_profile);
 
