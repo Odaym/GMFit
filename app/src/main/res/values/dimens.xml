@@ -14,7 +14,8 @@
     <dimen name="default_margin_5">50dp</dimen>
     <dimen name="default_margin_10">100dp</dimen>
 
-    <dimen name="default_button_height_1">60dp</dimen>
+    <dimen name="default_button_height_1">65dp</dimen>
+    <dimen name="default_button_height_2">60dp</dimen>
 
     <dimen name="metric_header_section_height">210dp</dimen>
     <dimen name="metric_header_progress_bar_width">120dp</dimen>
@@ -59,7 +60,7 @@
     <dimen name="metric_cell_padding_vertical">45dp</dimen>
 
     <!-- SETUP PROFILE STEPS-->
-    <dimen name="radiobutton_row_height">60dp</dimen>
+    <dimen name="radiobutton_row_height">65dp</dimen>
     <dimen name="country_flag_image_dimen">50dp</dimen>
     <dimen name="text_input_label_width">150dp</dimen>
 
