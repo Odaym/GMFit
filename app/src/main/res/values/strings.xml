@@ -127,6 +127,7 @@
     <string name="error_first_name_not_valid">Names cannot contain numbers</string>
     <string name="setting_up_profile_dialog_title">Setting up your profile</string>
     <string name="setting_up_profile_dialog_message">Please wait…</string>
+    <string name="setup_profile_step_3_heading_hint">Tell us more about yourself</string>
     <string name="setup_profile_step_1_title">Step 1 of 3</string>
     <string name="setup_profile_step_2_title">Step 2 of 3</string>
     <string name="setup_profile_step_3_title">Step 3 of 3</string>
@@ -181,5 +182,8 @@
     <!-- USER POLICY ACTIVITY -->
     <string name="user_policy_activity_title">User Policy</string>
 
+    <!-- MEDICAL CONDITIONS -->
+    <string name="add_medical_condition_activity_title">Medical Conditions</string>
+    <string name="add_medical_conditions_hint">Choose one or more conditions from the list</string>
 
 </resources>
