@@ -19,6 +19,7 @@ import android.widget.Spinner;
 import com.andreabaccega.widget.FormEditText;
 import com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialogFragment;
 import com.mcsaatchi.gmfit.R;
+import com.mcsaatchi.gmfit.activities.AddNewMedicalCondition_Activity;
 import com.mcsaatchi.gmfit.activities.Main_Activity;
 import com.mcsaatchi.gmfit.classes.Cons;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
@@ -45,6 +46,8 @@ public class Setup_Profile_3_Fragment extends Fragment implements CalendarDatePi
 
     private static final String FRAG_TAG_DATE_PICKER = "fragment_date_picker_name";
     private static final String TAG = "Setup_Profile_3_Fragment";
+    @Bind(R.id.addMedicalConditionsBTN)
+    Button addMedicalConditionsBTN;
     @Bind(R.id.dateOfBirthBTN)
     Button dateOfBirthBTN;
     //    @Bind(R.id.weightET)
@@ -83,6 +86,14 @@ public class Setup_Profile_3_Fragment extends Fragment implements CalendarDatePi
 //        allFields.add(weightET);
 //        allFields.add(heightET);
 //
+
+        addMedicalConditionsBTN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), AddNewMedicalCondition_Activity.class);
+                startActivity(intent);
+            }
+        });
 
         dateOfBirthBTN.setOnClickListener(new View.OnClickListener() {
             @Override
