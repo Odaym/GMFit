@@ -1,10 +1,12 @@
 package com.mcsaatchi.gmfit.activities;
 
+import android.annotation.TargetApi;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.design.widget.CoordinatorLayout;
@@ -53,6 +55,7 @@ public class Main_Activity extends Base_Activity {
         ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);
+        setupToolbar(toolbar);
 
         prefs = getSharedPreferences(Cons.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
 
@@ -104,6 +107,13 @@ public class Main_Activity extends Base_Activity {
         bottomBar.mapColorForTab(2, "#FF5252");
 //        bottomBar.mapColorForTab(3, "#FF5252");
 //        bottomBar.mapColorForTab(4, ContextCompat.getColor(this, android.R.color.holo_green_dark));
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private void setupToolbar(Toolbar toolbar){
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar.setNavigationIcon(getDrawable(R.drawable.ic_arrow_left));
+        toolbar.setTitleTextAppearance(this, R.style.Toolbar_TitleTextStyle);
     }
 
     @Override

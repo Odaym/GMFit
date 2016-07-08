@@ -6,13 +6,16 @@
     <dimen name="margin_medium">16dp</dimen>
 
     <dimen name="default_margin_0">5dp</dimen>
-
     <dimen name="default_margin_1">10dp</dimen>
+    <dimen name="default_margin_1_5">15dp</dimen>
     <dimen name="default_margin_2">20dp</dimen>
+    <dimen name="default_margin_2_5">25dp</dimen>
     <dimen name="default_margin_3">30dp</dimen>
     <dimen name="default_margin_4">40dp</dimen>
     <dimen name="default_margin_5">50dp</dimen>
     <dimen name="default_margin_10">100dp</dimen>
+
+    <dimen name="navigation_icon_size">24dp</dimen>
 
     <dimen name="default_button_height_1">65dp</dimen>
     <dimen name="default_button_height_2">60dp</dimen>

@@ -42,7 +42,7 @@
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:paddingEnd="@dimen/default_margin_2"
-            android:src="@drawable/ic_keyboard_arrow_right_white_24dp"/>
+            android:src="@drawable/ic_arrow_right"/>
     </RelativeLayout>
 
 

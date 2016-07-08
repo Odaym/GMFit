@@ -70,7 +70,8 @@
 
     <!-- FORGOT PASSWORD ACTIVITY -->
     <string name="forgot_password_activity_title">Forgot Password</string>
-    <string name="didnt_receive_forgot_password_email">Didn\'t receive an email yet? Let us know!</string>
+    <string name="forgot_password_reset_hint">Please enter your email address below and we will send you instructions on how to reset your
+        password.</string>
 
     <!-- TERMS OF USAGE ACTIVITY -->
     <string name="tos_activity_title">Terms of Use</string>

@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:validator="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:validator="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                  android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:orientation="vertical">
-
-        <TextView android:layout_width="match_parent" android:layout_height="match_parent"
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
                   android:layout_marginBottom="@dimen/default_margin_2"
                   android:paddingStart="@dimen/default_margin_2"
                   android:text="@string/setup_profile_step_3_heading_hint"
@@ -38,17 +37,17 @@
                 android:id="@+id/genderSpinner"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:entries="@array/gender"/>
+                android:background="@drawable/setup_profile_spinners"
+                android:paddingEnd="@dimen/default_margin_1"/>
 
         </LinearLayout>
 
-        <LinearLayout android:layout_width="match_parent" android:layout_height="@dimen/radiobutton_row_height"
-                      android:layout_marginBottom="@dimen/default_margin_0"
-                      android:gravity="center_vertical"
-                      android:orientation="horizontal">
+        <RelativeLayout android:layout_width="match_parent" android:layout_height="@dimen/radiobutton_row_height"
+                        android:layout_marginBottom="@dimen/default_margin_0">
 
             <TextView
-                android:layout_width="@dimen/text_input_label_width" android:layout_height="match_parent"
+                android:id="@+id/dateOfBirthHintTV" android:layout_width="@dimen/text_input_label_width"
+                android:layout_height="match_parent"
                 android:background="@color/color_primary_dark_transparent"
                 android:gravity="center_vertical|start"
                 android:paddingStart="@dimen/default_margin_2"
@@ -56,15 +55,28 @@
                 android:textAppearance="?android:textAppearanceSmall"
                 android:textColor="@android:color/white"/>
 
-            <View android:layout_width="1dp" android:layout_height="match_parent"
+            <View android:id="@+id/viewSeparator" android:layout_width="1dp"
+                  android:layout_height="match_parent"
+                  android:layout_toEndOf="@+id/dateOfBirthHintTV"
                   android:background="@color/separator_gray"/>
 
-            <Button
-                android:id="@+id/dateOfBirthBTN"
+            <TextView
+                android:id="@+id/dateOfBirthTV"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/color_primary_dark_transparent"/>
-        </LinearLayout>
+                android:layout_toEndOf="@+id/viewSeparator"
+                android:background="@color/color_primary_dark_transparent"
+                android:gravity="center_vertical"
+                android:paddingStart="@dimen/default_margin_2"
+                android:text="24 November 1989"
+                android:textColor="@android:color/white"/>
+
+            <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                       android:layout_alignParentEnd="true"
+                       android:layout_centerVertical="true"
+                       android:paddingEnd="@dimen/default_margin_1_5"
+                       android:src="@drawable/ic_arrow_down"/>
+        </RelativeLayout>
 
 
         <LinearLayout android:layout_width="match_parent" android:layout_height="@dimen/radiobutton_row_height"
@@ -88,8 +100,15 @@
                 android:id="@+id/bloodTypeSpinner"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:entries="@array/blood_types"/>
+                android:background="@drawable/setup_profile_spinners"
+                android:entries="@array/blood_types"
+                android:paddingEnd="@dimen/default_margin_1"/>
         </LinearLayout>
+
+        <!--<RelativeLayout android:layout_width="match_parent"-->
+        <!--android:layout_height="@dimen/radiobutton_row_height"-->
+        <!--android:layout_marginBottom="@dimen/default_margin_0"-->
+        <!--android:background="@color/color_primary_dark_transparent">-->
 
         <com.wrapp.floatlabelededittext.FloatLabeledEditText
             android:id="@+id/weightETFloating"
@@ -97,23 +116,19 @@
             android:layout_height="@dimen/radiobutton_row_height"
             android:layout_marginBottom="@dimen/default_margin_0"
             android:background="@color/color_primary_dark_transparent"
-            app:fletTextAppearance="@style/FloatLabelHintStyle">
-
-            <TextView android:id="@+id/weightMetricLabel" android:layout_width="wrap_content"
-                      android:layout_height="@dimen/radiobutton_row_height"
-                      android:layout_gravity="end"
-                      android:gravity="center_vertical"
-                      android:paddingEnd="@dimen/default_margin_2"
-                      android:text="kg"
-                      android:textColor="@android:color/white"/>
+            android:paddingBottom="@dimen/default_margin_0"
+            app:fletPaddingLeft="@dimen/default_margin_2"
+            app:fletPaddingTop="@dimen/default_margin_0"
+            app:fletTextAppearance="@style/TextAppearence.App.TextInputLayout">
 
             <com.andreabaccega.widget.FormEditText
                 android:id="@+id/weightET"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/radiobutton_row_height"
+                android:layout_height="match_parent"
                 android:background="@android:color/transparent"
                 android:hint="@string/weight_hint"
                 android:inputType="numberDecimal"
+                android:paddingBottom="@dimen/default_margin_1"
                 android:paddingStart="@dimen/default_margin_2"
                 android:singleLine="true"
                 android:textAppearance="?android:textAppearanceSmall"
@@ -130,27 +145,21 @@
             android:id="@+id/heightETFloating"
             android:layout_width="match_parent"
             android:layout_height="@dimen/radiobutton_row_height"
-            android:layout_gravity="center_vertical"
-            android:layout_marginBottom="@dimen/default_margin_2"
+            android:layout_marginBottom="@dimen/default_margin_0"
             android:background="@color/color_primary_dark_transparent"
-            app:fletTextAppearance="@style/FloatLabelHintStyle">
-
-            <TextView
-                android:id="@+id/heightMetricLabel"
-                android:layout_width="wrap_content" android:layout_height="@dimen/radiobutton_row_height"
-                android:layout_gravity="end"
-                android:gravity="center_vertical"
-                android:paddingEnd="@dimen/default_margin_2"
-                android:text="cm"
-                android:textColor="@android:color/white"/>
+            android:paddingBottom="@dimen/default_margin_0"
+            app:fletPaddingLeft="@dimen/default_margin_2"
+            app:fletPaddingTop="@dimen/default_margin_0"
+            app:fletTextAppearance="@style/TextAppearence.App.TextInputLayout">
 
             <com.andreabaccega.widget.FormEditText
                 android:id="@+id/heightET"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/radiobutton_row_height"
+                android:layout_height="match_parent"
                 android:background="@android:color/transparent"
                 android:hint="@string/height_hint"
                 android:inputType="numberDecimal"
+                android:paddingBottom="@dimen/default_margin_1"
                 android:paddingStart="@dimen/default_margin_2"
                 android:singleLine="true"
                 android:textAppearance="?android:textAppearanceSmall"
@@ -160,23 +169,23 @@
                 validator:emptyErrorString="@string/field_empty_error_message"
                 validator:testErrorString="@string/error_only_numeric_digits_allowed"
                 validator:testType="numeric"/>
-
         </com.wrapp.floatlabelededittext.FloatLabeledEditText>
 
         <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-                  android:layout_marginBottom="@dimen/default_margin_2"
+                  android:layout_marginBottom="@dimen/default_margin_2_5"
+                  android:layout_marginTop="@dimen/default_margin_2"
                   android:gravity="center"
                   android:text="@string/medical_conditions_hint"
                   android:textColor="@android:color/white"/>
 
         <Button
             android:id="@+id/addMedicalConditionsBTN"
-            android:layout_width="match_parent" android:layout_height="@dimen/default_button_height_2"
+            style="?android:attr/borderlessButtonStyle" android:layout_width="match_parent"
+            android:layout_height="@dimen/default_button_height_2"
             android:layout_marginBottom="@dimen/default_margin_10"
             android:layout_marginEnd="@dimen/default_margin_2"
             android:layout_marginStart="@dimen/default_margin_2"
             android:background="@color/add_medical_conditions_button_green"
-            android:text="@string/add_medical_condition_button"
             android:textColor="@android:color/white"/>
     </LinearLayout>
 </ScrollView>

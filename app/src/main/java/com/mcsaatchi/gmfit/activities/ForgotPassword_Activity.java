@@ -1,14 +1,11 @@
 package com.mcsaatchi.gmfit.activities;
 
-import android.graphics.Color;
+import android.annotation.TargetApi;
+import android.os.Build;
 import android.os.Bundle;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.method.LinkMovementMethod;
-import android.text.style.ClickableSpan;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 
 import com.andreabaccega.widget.FormEditText;
 import com.mcsaatchi.gmfit.R;
@@ -26,19 +23,23 @@ public class ForgotPassword_Activity extends Base_Activity {
     FormEditText emailET;
     @Bind(R.id.submitForgotPasswordEmailBTN)
     Button submitForgotPasswordEmailBTN;
-    @Bind(R.id.didntReceivePasswordEmailTV)
-    TextView didntReceivePasswordEmailTV;
+    @Bind(R.id.toolbar)
+    Toolbar toolbar;
 
     private ArrayList<FormEditText> allFields = new ArrayList<>();
     private Helpers helpers = Helpers.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(Helpers.createActivityBundleWithProperties(R.string.forgot_password_activity_title, true));
+        super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_forgot_password);
 
         ButterKnife.bind(this);
+
+        toolbar.setTitle(R.string.forgot_password_activity_title);
+        setSupportActionBar(toolbar);
+        setupToolbar(toolbar);
 
         allFields.add(emailET);
 
@@ -50,19 +51,12 @@ public class ForgotPassword_Activity extends Base_Activity {
                 }
             }
         });
+    }
 
-        SpannableString ss = new SpannableString(getString(R.string.didnt_receive_forgot_password_email));
-        ClickableSpan clickableSpan = new ClickableSpan() {
-            @Override
-            public void onClick(View textView) {
-                Log.toaster(ForgotPassword_Activity.this, "Handle forgot password logic");
-            }
-        };
-
-        ss.setSpan(clickableSpan, 29, ss.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-        didntReceivePasswordEmailTV.setText(ss);
-        didntReceivePasswordEmailTV.setMovementMethod(LinkMovementMethod.getInstance());
-        didntReceivePasswordEmailTV.setHighlightColor(Color.BLUE);
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private void setupToolbar(Toolbar toolbar){
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar.setNavigationIcon(getDrawable(R.drawable.ic_arrow_left));
+        toolbar.setTitleTextAppearance(this, R.style.Toolbar_TitleTextStyle);
     }
 }

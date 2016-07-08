@@ -1,20 +1,30 @@
 package com.mcsaatchi.gmfit.fragments;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
+import android.widget.TextView;
 
 import com.andreabaccega.widget.FormEditText;
 import com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialogFragment;
@@ -24,7 +34,6 @@ import com.mcsaatchi.gmfit.activities.Main_Activity;
 import com.mcsaatchi.gmfit.classes.Cons;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
-import com.mcsaatchi.gmfit.classes.Helpers;
 import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.rest.RestClient;
 import com.squareup.otto.Subscribe;
@@ -48,12 +57,12 @@ public class Setup_Profile_3_Fragment extends Fragment implements CalendarDatePi
     private static final String TAG = "Setup_Profile_3_Fragment";
     @Bind(R.id.addMedicalConditionsBTN)
     Button addMedicalConditionsBTN;
-    @Bind(R.id.dateOfBirthBTN)
-    Button dateOfBirthBTN;
-    //    @Bind(R.id.weightET)
-//    FormEditText weightET;
-//    @Bind(R.id.heightET)
-//    FormEditText heightET;
+    @Bind(R.id.dateOfBirthTV)
+    TextView dateOfBirthTV;
+    @Bind(R.id.weightET)
+    FormEditText weightET;
+    @Bind(R.id.heightET)
+    FormEditText heightET;
     @Bind(R.id.bloodTypeSpinner)
     Spinner bloodTypeSpinner;
     @Bind(R.id.genderSpinner)
@@ -61,6 +70,24 @@ public class Setup_Profile_3_Fragment extends Fragment implements CalendarDatePi
     private SharedPreferences prefs;
     private ArrayList<FormEditText> allFields = new ArrayList<>();
     private String dateOfBirth = "";
+
+    private InputMethodManager inputMethodManager;
+
+    private ArrayList<String> bloodTypeItems = new ArrayList<String>() {{
+        add("O-");
+        add("O+");
+        add("A-");
+        add("A+");
+        add("B-");
+        add("B+");
+        add("AB-");
+        add("AB+");
+    }};
+
+    private ArrayList<String> genderItems = new ArrayList<String>() {{
+        add("Male");
+        add("Female");
+    }};
 
     @Override
     public View onCreateView(LayoutInflater inflater,
@@ -74,18 +101,19 @@ public class Setup_Profile_3_Fragment extends Fragment implements CalendarDatePi
         try {
             EventBus_Singleton.getInstance().register(this);
         } catch (IllegalArgumentException ignored) {
-
         }
 
-        setUpGenderSpinner();
+        initCustomSpinner(genderItems, genderSpinner);
 
-        setUpBloodTypeSpinner();
+        initCustomSpinner(bloodTypeItems, bloodTypeSpinner);
 
         prefs = getActivity().getSharedPreferences(Cons.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
 
+        inputMethodManager = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
+
+
 //        allFields.add(weightET);
 //        allFields.add(heightET);
-//
 
         addMedicalConditionsBTN.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,7 +123,7 @@ public class Setup_Profile_3_Fragment extends Fragment implements CalendarDatePi
             }
         });
 
-        dateOfBirthBTN.setOnClickListener(new View.OnClickListener() {
+        dateOfBirthTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 CalendarDatePickerDialogFragment cdp = new CalendarDatePickerDialogFragment()
@@ -107,6 +135,21 @@ public class Setup_Profile_3_Fragment extends Fragment implements CalendarDatePi
                 cdp.show(getActivity().getSupportFragmentManager(), FRAG_TAG_DATE_PICKER);
             }
         });
+
+
+//        Typeface fontRegular = Typeface.create("sans-serif", Typeface.NORMAL);
+//        Typeface fontLight = Typeface.create("sans-serif-light", Typeface.NORMAL);
+
+        SpannableStringBuilder SS = new SpannableStringBuilder(getString(R.string.add_medical_condition_button));
+        SS.setSpan(Typeface.create("sans-serif-light", Typeface.NORMAL), 0, 5, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
+//        SS.setSpan (new CustomTypefaceSpan("sans-serif", fontRegular), 6, getString(R.string.add_medical_condition_button).length(),Spanned
+//                .SPAN_EXCLUSIVE_INCLUSIVE);
+//        wordtoSpan.setSpan(fontRegular, 5, getString(R.string.add_medical_condition_button).length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        addMedicalConditionsBTN.setText(SS);
+
+//        addMedicalConditionsBTN.setTypeface(Typeface.create("sans-serif-light", Typeface.NORMAL));
+//        addMedicalConditionsBTN.setText(getString(R.string.add_medical_condition_button));
 
         return fragmentView;
     }
@@ -124,7 +167,7 @@ public class Setup_Profile_3_Fragment extends Fragment implements CalendarDatePi
 
         switch (ebpMessage) {
             case Cons.EVENT_USER_FINALIZE_SETUP_PROFILE:
-                if (Helpers.validateFields(allFields)) {
+//                if (Helpers.validateFields(allFields)) {
 //                    String finalName = firstNameET.getText().toString() + " " + lastNameET.getText().toString();
 //
 //                    int finalGender;
@@ -145,32 +188,10 @@ public class Setup_Profile_3_Fragment extends Fragment implements CalendarDatePi
 //
 //                    setupUserProfile(finalName, finalDateOfBirth, finalBloodType, finalGender, finalHeight,
 //                            finalWeight, calculateBMI(finalWeight, finalHeight));
-                }
+//                }
 
                 break;
         }
-    }
-
-    private void setUpGenderSpinner() {
-        String[] genderItems = new String[]{getResources().getString(R.string
-                .male_option), getResources().getString(R.string.female_option)};
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), R.layout.spinner_item_measurement_spinner, genderItems);
-        genderSpinner.setAdapter(adapter);
-    }
-
-    private void setUpBloodTypeSpinner() {
-        String[] bloodTypeItems = new String[]{"O-",
-                "O+",
-                "A-",
-                "A+",
-                "B-",
-                "B+",
-                "AB-",
-                "AB+"};
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), R.layout.spinner_item_measurement_spinner, bloodTypeItems);
-        bloodTypeSpinner.setAdapter(adapter);
     }
 
     private void setupUserProfile(String finalName, String finalDateOfBirth, String bloodType, int finalGender, double height, double weight, double BMI) {
@@ -248,10 +269,83 @@ public class Setup_Profile_3_Fragment extends Fragment implements CalendarDatePi
         return weight / (finalHeight * finalHeight);
     }
 
+    private void initCustomSpinner(ArrayList<String> listItems, Spinner spinner) {
+        CustomSpinnerAdapter customSpinnerAdapter = new CustomSpinnerAdapter(getActivity(), listItems);
+        spinner.setAdapter(customSpinnerAdapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                String item = parent.getItemAtPosition(position).toString();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        spinner.setOnTouchListener(new View.OnTouchListener() {
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                inputMethodManager.hideSoftInputFromWindow(weightET.getWindowToken(), 0);
+
+                return false;
+            }
+        });
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
         EventBus_Singleton.getInstance().unregister(this);
+    }
+
+    public class CustomSpinnerAdapter extends BaseAdapter implements SpinnerAdapter {
+
+        private final Context activity;
+        private ArrayList<String> listItems;
+
+        public CustomSpinnerAdapter(Context context, ArrayList<String> listItems) {
+            this.listItems = listItems;
+            activity = context;
+        }
+
+
+        public int getCount() {
+            return listItems.size();
+        }
+
+        public Object getItem(int i) {
+            return listItems.get(i);
+        }
+
+        public long getItemId(int i) {
+            return (long) i;
+        }
+
+
+        @Override
+        public View getDropDownView(int position, View convertView, ViewGroup parent) {
+            TextView txt = new TextView(activity);
+            txt.setPadding(getResources().getDimensionPixelSize(R.dimen.default_margin_2), 16, 16, 16);
+            txt.setGravity(Gravity.CENTER_VERTICAL);
+            txt.setText(listItems.get(position));
+            txt.setTextColor(getResources().getColor(android.R.color.black));
+            return txt;
+        }
+
+        public View getView(int i, View view, ViewGroup viewgroup) {
+            TextView txt = new TextView(activity);
+            txt.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
+            txt.setPadding(getResources().getDimensionPixelSize(R.dimen.default_margin_2), 16, 16, 16);
+            txt.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_arrow_down, 0);
+            txt.setText(listItems.get(i));
+            txt.setTextColor(getResources().getColor(android.R.color.white));
+            return txt;
+        }
+
     }
 
     public class UpdateProfileRequest {

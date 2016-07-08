@@ -5,13 +5,15 @@
 
     <FrameLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                  android:fitsSystemWindows="true">
+
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@android:color/transparent"
-            android:elevation="4dp"
-            android:theme="@style/ToolBarStyle_Global"/>
+            android:layout_height="wrap_content"
+            app:theme="@style/TransparentToolbar"/>
+
     </FrameLayout>
 
     <android.support.design.widget.CoordinatorLayout

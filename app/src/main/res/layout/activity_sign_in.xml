@@ -1,87 +1,103 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:validator="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_horizontal_margin"
-    android:paddingEnd="@dimen/activity_vertical_margin"
-    android:paddingStart="@dimen/activity_vertical_margin"
-    android:paddingTop="@dimen/activity_horizontal_margin"
-    android:scrollbars="none">
+    android:background="@drawable/general_background"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:theme="@style/TransparentToolbar"/>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar" android:orientation="vertical">
 
-        <LinearLayout
+        <com.wrapp.floatlabelededittext.FloatLabeledEditText
+            android:id="@+id/emailETFloating"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="@dimen/radiobutton_row_height"
+            android:layout_marginBottom="@dimen/default_margin_0"
+            android:background="@color/color_primary_dark_transparent"
+            android:paddingBottom="@dimen/default_margin_0"
+            app:fletPaddingLeft="@dimen/default_margin_2"
+            app:fletPaddingTop="@dimen/default_margin_0"
+            app:fletTextAppearance="@style/TextAppearence.App.TextInputLayout">
 
-            <com.wrapp.floatlabelededittext.FloatLabeledEditText
-                android:id="@+id/emailETFloating"
+            <com.andreabaccega.widget.FormEditText
+                android:id="@+id/emailET"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"
+                android:hint="@string/email_address_hint"
+                android:inputType="textEmailAddress"
+                android:paddingBottom="@dimen/default_margin_1"
+                android:paddingStart="@dimen/default_margin_2"
+                android:singleLine="true"
+                android:text="oday@maleh.com"
+                android:textAppearance="?android:textAppearanceSmall"
+                android:textColor="@android:color/white"
+                android:textColorHint="@android:color/white"
+                android:textCursorDrawable="@null"
+                validator:emptyErrorString="@string/field_empty_error_message"
+                validator:testErrorString="@string/error_email_address_not_valid"
+                validator:testType="email"/>
 
-                <com.andreabaccega.widget.FormEditText
-                    android:id="@+id/emailET"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/email_address_hint"
-                    android:inputType="textEmailAddress"
-                    android:singleLine="true"
-                    android:textColor="@android:color/black"
-                    android:text="oday@maleh.com"
-                    android:textColorHint="@color/edittext_hint_color"
-                    android:textCursorDrawable="@null"
-                    validator:emptyErrorString="@string/field_empty_error_message"
-                    validator:testErrorString="@string/error_email_address_not_valid"
-                    validator:testType="email"/>
+        </com.wrapp.floatlabelededittext.FloatLabeledEditText>
 
-            </com.wrapp.floatlabelededittext.FloatLabeledEditText>
-        </LinearLayout>
-
-        <LinearLayout
+        <com.wrapp.floatlabelededittext.FloatLabeledEditText
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="@dimen/radiobutton_row_height"
+            android:background="@color/color_primary_dark_transparent"
+            android:paddingBottom="@dimen/default_margin_0"
+            app:fletPaddingLeft="@dimen/default_margin_2"
+            app:fletPaddingTop="@dimen/default_margin_0"
+            app:fletTextAppearance="@style/TextAppearence.App.TextInputLayout">
 
-            <com.wrapp.floatlabelededittext.FloatLabeledEditText
+            <com.andreabaccega.widget.FormEditText
+                android:id="@+id/passwordET"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="match_parent"
+                android:background="@android:color/transparent"
+                android:hint="@string/existing_password_hint"
+                android:inputType="textPassword"
+                android:paddingBottom="@dimen/default_margin_1"
+                android:paddingStart="@dimen/default_margin_2"
+                android:singleLine="true"
+                android:text="odayoday"
+                android:textAppearance="?android:textAppearanceSmall"
+                android:textColor="@android:color/white"
+                android:textColorHint="@android:color/white"
+                android:textCursorDrawable="@null"
+                validator:emptyErrorString="@string/field_empty_error_message"
+                validator:testErrorString="@string/field_password_too_short_error"/>
 
-                <com.andreabaccega.widget.FormEditText
-                    android:id="@+id/passwordET"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/existing_password_hint"
-                    android:inputType="textPassword"
-                    android:singleLine="true"
-                    android:textColor="@android:color/black"
-                    android:textColorHint="@color/edittext_hint_color"
-                    android:text="odayoday"
-                    android:textCursorDrawable="@null"
-                    validator:emptyErrorString="@string/field_empty_error_message"
-                    validator:testErrorString="@string/field_password_too_short_error"/>
-
-            </com.wrapp.floatlabelededittext.FloatLabeledEditText>
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/signInBTN"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="@string/sign_in_button"/>
+        </com.wrapp.floatlabelededittext.FloatLabeledEditText>
 
         <TextView
             android:id="@+id/forgotPasswordTV"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/default_margin_2"
             android:layout_marginTop="20dp"
-            android:gravity="center"
             android:text="@string/forgot_password_button"/>
+
     </LinearLayout>
-</ScrollView>
+
+    <Button
+        android:id="@+id/signInBTN"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/default_button_height_1"
+        android:layout_alignParentBottom="true"
+        android:background="@android:color/white"
+        android:text="@string/sign_in_button"/>
+</RelativeLayout>

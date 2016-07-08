@@ -1,5 +1,7 @@
 package com.mcsaatchi.gmfit.activities;
 
+import android.annotation.TargetApi;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
@@ -31,7 +33,7 @@ public class AddNewMedicalCondition_Activity extends Base_Activity {
 
         toolbar.setTitle(getString(R.string.add_medical_condition_activity_title));
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        setupToolbar(toolbar);
 
         for (int i = 0; i < medicalConditions.length; i++) {
             RadioButton radioButtonView = (RadioButton) getLayoutInflater().inflate(R.layout.radio_button_list_item_add_medical_condition, null);
@@ -46,4 +48,12 @@ public class AddNewMedicalCondition_Activity extends Base_Activity {
             medicalConditionsRadioGroup.addView(radioButtonView);
         }
     }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private void setupToolbar(Toolbar toolbar){
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar.setNavigationIcon(getDrawable(R.drawable.ic_arrow_left));
+        toolbar.setTitleTextAppearance(this, R.style.Toolbar_TitleTextStyle);
+    }
+
 }

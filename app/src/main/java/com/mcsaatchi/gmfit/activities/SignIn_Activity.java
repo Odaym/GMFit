@@ -1,5 +1,6 @@
 package com.mcsaatchi.gmfit.activities;
 
+import android.annotation.TargetApi;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -7,8 +8,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
@@ -40,6 +43,8 @@ import retrofit2.Response;
 
 public class SignIn_Activity extends Base_Activity {
 
+    @Bind(R.id.toolbar)
+    Toolbar toolbar;
     @Bind(R.id.emailET)
     FormEditText emailET;
     @Bind(R.id.passwordET)
@@ -48,17 +53,22 @@ public class SignIn_Activity extends Base_Activity {
     Button signInBTN;
     @Bind(R.id.forgotPasswordTV)
     TextView forgotPasswordTV;
+
     private ArrayList<FormEditText> allFields = new ArrayList<>();
 
     private SharedPreferences prefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(Helpers.createActivityBundleWithProperties(R.string.sign_in_activity_title, true));
+        super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_sign_in);
 
         ButterKnife.bind(this);
+
+        toolbar.setTitle(R.string.sign_in_activity_title);
+        setSupportActionBar(toolbar);
+        setupToolbar(toolbar);
 
         prefs = getSharedPreferences(Cons.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
 
@@ -91,6 +101,13 @@ public class SignIn_Activity extends Base_Activity {
         forgotPasswordTV.setText(ss);
         forgotPasswordTV.setMovementMethod(LinkMovementMethod.getInstance());
         forgotPasswordTV.setHighlightColor(Color.BLUE);
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private void setupToolbar(Toolbar toolbar){
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        toolbar.setNavigationIcon(getDrawable(R.drawable.ic_arrow_left));
+        toolbar.setTitleTextAppearance(this, R.style.Toolbar_TitleTextStyle);
     }
 
     private void signInUser(String email, String password) {

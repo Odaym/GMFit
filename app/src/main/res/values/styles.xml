@@ -17,8 +17,13 @@
 
     <style name="TransparentToolbar" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
         <item name="android:windowActionBarOverlay">true</item>
-        <!-- Support library compatibility -->
         <item name="windowActionBarOverlay">true</item>
+        <item name="android:titleTextStyle">@style/Toolbar.TitleTextStyle</item>
+    </style>
+
+    <style name="Toolbar.TitleTextStyle" parent="@style/TransparentToolbar">
+        <item name="android:textStyle">normal</item>
+        <item name="android:fontFamily">sans-serif-light</item>
     </style>
 
     <style name="No_Status_Or_Action_Bar_Theme" parent="@style/Theme.AppCompat.Light">
@@ -52,14 +57,10 @@
         <item name="android:textColor">@android:color/white</item>
         <item name="android:paddingStart">@dimen/default_margin_0</item>
     </style>
-    
-    <style name="customtheme" parent="@android:style/Theme.Light">
-        <item name="android:spinnerItemStyle">@style/SpinnerItem</item>
-    </style>
 
-    <style name="SpinnerItem">
-        <item name="android:textColor">#993399</item>
-        <item name="android:drawable">@drawable/ic_keyboard_arrow_down_white_24dp</item>
+    <style name="TextAppearence.App.TextInputLayout" parent="@android:style/TextAppearance">
+        <item name="android:textColor">@color/offwhite_transparent</item>
+        <item name="android:textSize">10sp</item>
     </style>
 
 </resources>
