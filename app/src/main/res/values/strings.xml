@@ -136,6 +136,7 @@
     <string name="female_option">Female</string>
     <string name="medical_conditions_hint">Do you have any medical conditions? (diabetes, etc.)</string>
     <string name="add_medical_condition_button">+ Add Medical Conditions</string>
+    <string name="you_can_change_this_setting_hint">You can change these settings at any time from the preferences</string>
 
     <!-- CUSTOMIZE WIDGETS AND CHARTS ACTIVITY -->
     <string name="customize_widgets_and_charts_activity_title">Customize</string>

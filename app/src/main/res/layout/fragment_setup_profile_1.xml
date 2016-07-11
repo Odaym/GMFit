@@ -52,7 +52,7 @@
               android:text="@string/choose_measurement_unit"
               android:textColor="@android:color/white"/>
 
-    <RadioGroup android:layout_width="match_parent" android:layout_height="match_parent"
+    <RadioGroup android:layout_width="match_parent" android:layout_height="wrap_content"
                 android:paddingStart="@dimen/default_margin_2">
         <RadioButton android:layout_width="wrap_content" android:layout_height="@dimen/radiobutton_row_height"
                      android:buttonTint="@android:color/white"
@@ -66,5 +66,13 @@
                      android:text="@string/measurement_unit_imperial"
                      android:textColor="@android:color/white"/>
     </RadioGroup>
+
+    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+              android:layout_below="@+id/goalRadioButtonsGroup"
+              android:layout_marginTop="@dimen/default_margin_2"
+              android:paddingStart="@dimen/default_margin_2"
+              android:text="@string/you_can_change_this_setting_hint"
+              android:textColor="@color/offwhite_transparent"/>
+
 
 </LinearLayout>
