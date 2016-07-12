@@ -1,12 +1,10 @@
 package com.mcsaatchi.gmfit.activities;
 
-import android.annotation.TargetApi;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.design.widget.CoordinatorLayout;
@@ -18,6 +16,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.LinearLayout;
 
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.classes.Cons;
@@ -41,6 +40,8 @@ public class Main_Activity extends Base_Activity {
     public static int USER_AUTHORISED_REQUEST_CODE = 5;
     @Bind(R.id.toolbar)
     Toolbar toolbar;
+    @Bind(R.id.mainContentLayout)
+    LinearLayout mainContentLayout;
 
     private BottomBar bottomBar;
     private Fragment fragmentReplace;
@@ -66,8 +67,7 @@ public class Main_Activity extends Base_Activity {
 
         bottomBar.noTopOffset();
 //        bottomBar.noNavBarGoodness();
-//        bottomBar.setActiveTabColor(ContextCompat.getColor(this, R.color.colorAccent));
-        bottomBar.ignoreNightMode();
+        bottomBar.setActiveTabColor(ContextCompat.getColor(this, R.color.colorAccent));
         bottomBar.useFixedMode();
 
         bottomBar.setItemsFromMenu(R.menu.bottom_navigation, new OnMenuTabClickListener() {
@@ -78,9 +78,11 @@ public class Main_Activity extends Base_Activity {
                 switch (menuItemId) {
                     case R.id.item_one:
                         fragmentReplace = new Fitness_Fragment();
+                        mainContentLayout.setBackground(getResources().getDrawable(R.drawable.fitness_background));
                         break;
                     case R.id.item_two:
                         fragmentReplace = new Nutrition_Fragment();
+                        mainContentLayout.setBackground(getResources().getDrawable(R.drawable.nutrition_background));
                         break;
 //                    case R.id.item_three:
 //                        fragmentReplace = new Nutrition_Fragment();
@@ -107,13 +109,6 @@ public class Main_Activity extends Base_Activity {
         bottomBar.mapColorForTab(2, "#FF5252");
 //        bottomBar.mapColorForTab(3, "#FF5252");
 //        bottomBar.mapColorForTab(4, ContextCompat.getColor(this, android.R.color.holo_green_dark));
-    }
-
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private void setupToolbar(Toolbar toolbar){
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        toolbar.setNavigationIcon(getDrawable(R.drawable.ic_arrow_left));
-        toolbar.setTitleTextAppearance(this, R.style.Toolbar_TitleTextStyle);
     }
 
     @Override
