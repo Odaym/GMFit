@@ -1,40 +1,32 @@
 package com.mcsaatchi.gmfit.activities;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.classes.Cons;
 import com.mcsaatchi.gmfit.classes.DBHelper;
 
 public class Base_Activity extends AppCompatActivity {
     private DBHelper dbHelper = null;
 
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void setupToolbar(Toolbar toolbar, int toolbarTitleResId, boolean backEnabled) {
+        if (toolbarTitleResId == 0)
+            toolbar.setTitle(R.string.app_name);
+        else
+            toolbar.setTitle(toolbarTitleResId);
 
-        if (getSupportActionBar() != null && savedInstanceState != null) {
-            if (savedInstanceState.get(Cons.BUNDLE_ACTIVITY_TITLE) != null && savedInstanceState.get(Cons.BUNDLE_ACTIVITY_TITLE) instanceof String) {
-                //String was passed
-                getSupportActionBar().setTitle(savedInstanceState.getString(Cons.BUNDLE_ACTIVITY_TITLE));
-            } else if (savedInstanceState.get(Cons.BUNDLE_ACTIVITY_TITLE) != null) {
-                //Integer was passed
-                getSupportActionBar().setTitle(getString(savedInstanceState.getInt(Cons.BUNDLE_ACTIVITY_TITLE)));
-            } else {
-                //Null was passed
-                getSupportActionBar().setTitle(getString(R.string.app_name));
-            }
+        setSupportActionBar(toolbar);
 
-            //Set back button only on applicable activities
-            if (savedInstanceState.get(Cons.BUNDLE_ACTIVITY_BACK_BUTTON_ENABLED) != null && savedInstanceState.getBoolean(Cons.BUNDLE_ACTIVITY_BACK_BUTTON_ENABLED)) {
-                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            }
+        if (backEnabled) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_arrow_left));
         }
+
+        toolbar.setTitleTextAppearance(this, R.style.Toolbar_TitleTextStyle);
     }
 
     @Override
