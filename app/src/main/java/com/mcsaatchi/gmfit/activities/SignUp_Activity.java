@@ -43,8 +43,6 @@ public class SignUp_Activity extends Base_Activity {
     FormEditText emailET;
     @Bind(R.id.passwordET)
     FormEditText passwordET;
-    @Bind(R.id.confirmPasswordET)
-    FormEditText confirmPasswordET;
     @Bind(R.id.createAccountBTN)
     Button createAccountBTN;
     @Bind(R.id.creatingAccountTOSTV)
@@ -73,7 +71,6 @@ public class SignUp_Activity extends Base_Activity {
         allFields.add(passwordET);
 
         passwordET.setTypeface(Typeface.DEFAULT);
-        confirmPasswordET.setTypeface(Typeface.DEFAULT);
 
         createAccountBTN.setOnClickListener(new View.OnClickListener() {
             @Override
