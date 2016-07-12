@@ -1,7 +1,5 @@
 package com.mcsaatchi.gmfit.activities;
 
-import android.annotation.TargetApi;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
@@ -37,18 +35,21 @@ public class AddNewMedicalCondition_Activity extends Base_Activity {
 
         ButterKnife.bind(this);
 
-        toolbar.setTitle(getString(R.string.add_medical_condition_activity_title));
-        setSupportActionBar(toolbar);
-        setupToolbar(toolbar);
+        setupToolbar(toolbar, R.string.add_medical_condition_activity_title, true);
 
         for (String medicalCondition : medicalConditions) {
             RelativeLayout radioButtonView = (RelativeLayout) getLayoutInflater().inflate(R.layout.radio_button_list_item_add_medical_condition, null);
+
 
             final RadioButton actualRadioBTN = (RadioButton) radioButtonView.findViewById(R.id.actualRadioBTN);
 
             actualRadioBTN.setText(medicalCondition);
 
             radioButtonView.setPadding(0, 0, 0, getResources().getDimensionPixelSize(R.dimen.default_margin_0));
+
+            radioButtonView.setLayoutParams(new RelativeLayout.LayoutParams(
+                    RelativeLayout.LayoutParams.WRAP_CONTENT,
+                    RelativeLayout.LayoutParams.WRAP_CONTENT));
 
             medicalConditionsRadioGroup.addView(radioButtonView);
 
@@ -66,12 +67,4 @@ public class AddNewMedicalCondition_Activity extends Base_Activity {
             radioButtonsList.add(actualRadioBTN);
         }
     }
-
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private void setupToolbar(Toolbar toolbar) {
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        toolbar.setNavigationIcon(getDrawable(R.drawable.ic_arrow_left));
-        toolbar.setTitleTextAppearance(this, R.style.Toolbar_TitleTextStyle);
-    }
-
 }
