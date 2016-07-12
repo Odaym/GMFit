@@ -40,7 +40,8 @@
 
     <!-- LOGIN ACTIVITY -->
     <string name="login_with_facebook">LOGIN WITH FACEBOOK</string>
-    <string name="sign_up_email">SIGN UP</string>
+    <string name="sign_in_button">SIGN IN</string>
+    <string name="sign_up_button">SIGN UP</string>
     <string name="already_signed_up">Already a user? Sign in</string>
 
     <!-- SIGN UP ACTIVITY -->
@@ -59,7 +60,6 @@
     <string name="signup_failed_alert_dialog_title">Registeration failed</string>
 
     <!-- SIGN IN ACTIVITY -->
-    <string name="sign_in_button">SIGN IN</string>
     <string name="existing_password_hint">Password</string>
     <string name="sign_in_activity_title">Sign In</string>
     <string name="forgot_password_button">Forgot Password?</string>
@@ -95,7 +95,7 @@
     </string>
 
     <!-- GET STARTED ACTIVITY -->
-    <string name="get_started_tag_line">Let\'s get started</string>
+    <string name="get_started_title">Let\'s get started</string>
     <string name="get_started_message">Lorem ipsum dolor sit amet, accumsan praesent vulputate has ad, vel ne liber zril. Ea qui audire suavitate, ut stet
         debitis complectitur nec. Ex vim wisi mutat denique, his sint congue ne.
     </string>
@@ -137,6 +137,10 @@
     <string name="medical_conditions_hint">Do you have any medical conditions? (diabetes, etc.)</string>
     <string name="add_medical_condition_button">+ Add Medical Conditions</string>
     <string name="you_can_change_this_setting_hint">You can change these settings at any time from the preferences</string>
+    <string name="adding_medical_conditions_carefully_hint">Adding one or more medical conditions will affect the behavior and recommendations within the app
+        .\n\nPlease choose conditions accurately</string>
+    <string name="add_medical_condition_activity_title">Medical Conditions</string>
+    <string name="add_medical_conditions_title_hint">Choose one or more conditions from the list</string>
 
     <!-- CUSTOMIZE WIDGETS AND CHARTS ACTIVITY -->
     <string name="customize_widgets_and_charts_activity_title">Customize</string>
@@ -183,9 +187,5 @@
 
     <!-- USER POLICY ACTIVITY -->
     <string name="user_policy_activity_title">User Policy</string>
-
-    <!-- MEDICAL CONDITIONS -->
-    <string name="add_medical_condition_activity_title">Medical Conditions</string>
-    <string name="add_medical_conditions_hint">Choose one or more conditions from the list</string>
 
 </resources>
