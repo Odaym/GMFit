@@ -2,10 +2,9 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:gravity="center_vertical">
+    android:layout_height="wrap_content">
 
-    <View android:layout_width="match_parent" android:layout_height="@dimen/radiobutton_row_height"
+    <View android:layout_width="match_parent" android:layout_height="@dimen/radiobutton_row_height_smaller"
           android:background="@color/color_primary_dark_transparent"/>
 
     <RadioButton
