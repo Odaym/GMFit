@@ -9,7 +9,6 @@ import android.widget.ImageView;
 
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.classes.CircleTransform;
-import com.mcsaatchi.gmfit.classes.Helpers;
 import com.squareup.picasso.Picasso;
 
 import butterknife.Bind;
@@ -24,7 +23,7 @@ public class GetStarted_Activity extends Base_Activity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(Helpers.createActivityBundleWithProperties(0, false));
+        super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_get_started);
 
