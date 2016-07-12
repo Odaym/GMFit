@@ -29,7 +29,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="@string/get_started_tag_line"
+            android:text="@string/get_started_title"
             android:textAppearance="?android:textAppearanceMedium"
             android:textColor="@android:color/white"/>
 
