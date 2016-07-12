@@ -27,7 +27,6 @@ public class ForgotPassword_Activity extends Base_Activity {
     Toolbar toolbar;
 
     private ArrayList<FormEditText> allFields = new ArrayList<>();
-    private Helpers helpers = Helpers.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,16 +36,14 @@ public class ForgotPassword_Activity extends Base_Activity {
 
         ButterKnife.bind(this);
 
-        toolbar.setTitle(R.string.forgot_password_activity_title);
-        setSupportActionBar(toolbar);
-        setupToolbar(toolbar);
+        setupToolbar(toolbar, R.string.forgot_password_activity_title, true);
 
         allFields.add(emailET);
 
         submitForgotPasswordEmailBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (helpers.validateFields(allFields)) {
+                if (Helpers.validateFields(allFields)) {
                     Log.toaster(ForgotPassword_Activity.this, "All fields check out!");
                 }
             }
@@ -54,7 +51,7 @@ public class ForgotPassword_Activity extends Base_Activity {
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private void setupToolbar(Toolbar toolbar){
+    private void setupToolbar(Toolbar toolbar) {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationIcon(getDrawable(R.drawable.ic_arrow_left));
         toolbar.setTitleTextAppearance(this, R.style.Toolbar_TitleTextStyle);

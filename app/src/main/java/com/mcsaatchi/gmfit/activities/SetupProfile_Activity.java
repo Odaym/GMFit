@@ -1,7 +1,5 @@
 package com.mcsaatchi.gmfit.activities;
 
-import android.annotation.TargetApi;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -42,18 +40,9 @@ public class SetupProfile_Activity extends Base_Activity {
 
         ButterKnife.bind(this);
 
-        toolbar.setTitle(R.string.setup_profile_step_1_title);
-        setSupportActionBar(toolbar);
-        setupToolbar(toolbar);
+        setupToolbar(toolbar, R.string.setup_profile_step_1_title, true);
 
         setupViewPager();
-    }
-
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private void setupToolbar(Toolbar toolbar){
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        toolbar.setNavigationIcon(getDrawable(R.drawable.ic_arrow_left));
-        toolbar.setTitleTextAppearance(this, R.style.Toolbar_TitleTextStyle);
     }
 
     private void setupViewPager() {

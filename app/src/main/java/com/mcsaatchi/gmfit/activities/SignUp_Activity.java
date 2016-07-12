@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
@@ -48,17 +49,23 @@ public class SignUp_Activity extends Base_Activity {
     Button createAccountBTN;
     @Bind(R.id.creatingAccountTOSTV)
     TextView creatingAccountTOSTV;
+
+    @Bind(R.id.toolbar)
+    Toolbar toolbar;
+
     private ArrayList<FormEditText> allFields = new ArrayList<>();
 
     private SharedPreferences prefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(Helpers.createActivityBundleWithProperties(R.string.sign_up_activity_title, true));
+        super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_sign_up);
 
         ButterKnife.bind(this);
+
+        setupToolbar(toolbar, R.string.sign_up_activity_title, true);
 
         prefs = getSharedPreferences(Cons.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
 
@@ -88,6 +95,7 @@ public class SignUp_Activity extends Base_Activity {
 
         creatingAccountTOSTV.setText(ss);
         creatingAccountTOSTV.setMovementMethod(LinkMovementMethod.getInstance());
+        creatingAccountTOSTV.setTextColor(getResources().getColor(R.color.offwhite_transparent));
         creatingAccountTOSTV.setHighlightColor(Color.BLUE);
     }
 

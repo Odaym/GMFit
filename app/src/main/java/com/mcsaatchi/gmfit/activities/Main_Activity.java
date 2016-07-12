@@ -41,6 +41,7 @@ public class Main_Activity extends Base_Activity {
     public static int USER_AUTHORISED_REQUEST_CODE = 5;
     @Bind(R.id.toolbar)
     Toolbar toolbar;
+
     private BottomBar bottomBar;
     private Fragment fragmentReplace;
     private SharedPreferences prefs;
@@ -54,8 +55,7 @@ public class Main_Activity extends Base_Activity {
 
         ButterKnife.bind(this);
 
-        setSupportActionBar(toolbar);
-        setupToolbar(toolbar);
+        setupToolbar(toolbar, R.string.app_name, false);
 
         prefs = getSharedPreferences(Cons.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
 
