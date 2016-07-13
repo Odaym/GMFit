@@ -29,6 +29,19 @@ public class Base_Activity extends AppCompatActivity {
         toolbar.setTitleTextAppearance(this, R.style.Toolbar_TitleTextStyle);
     }
 
+    public void addTopPaddingToolbar(Toolbar toolbar){
+        toolbar.setPadding(0, getStatusBarHeight(), 0, 0);
+    }
+
+    public int getStatusBarHeight() {
+        int result = 0;
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
+    }
+
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
