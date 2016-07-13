@@ -37,6 +37,7 @@ public class ForgotPassword_Activity extends Base_Activity {
         ButterKnife.bind(this);
 
         setupToolbar(toolbar, R.string.forgot_password_activity_title, true);
+        addTopPaddingToolbar(toolbar);
 
         allFields.add(emailET);
 

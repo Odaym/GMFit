@@ -41,6 +41,7 @@ public class SetupProfile_Activity extends Base_Activity {
         ButterKnife.bind(this);
 
         setupToolbar(toolbar, R.string.setup_profile_step_1_title, true);
+        addTopPaddingToolbar(toolbar);
 
         setupViewPager();
     }

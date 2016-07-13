@@ -65,6 +65,7 @@ public class SignIn_Activity extends Base_Activity {
         ButterKnife.bind(this);
 
         setupToolbar(toolbar, R.string.sign_in_activity_title, true);
+        addTopPaddingToolbar(toolbar);
 
         prefs = getSharedPreferences(Cons.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
 
