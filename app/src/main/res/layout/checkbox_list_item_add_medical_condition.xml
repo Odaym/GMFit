@@ -7,8 +7,8 @@
     <View android:layout_width="match_parent" android:layout_height="@dimen/radiobutton_row_height_smaller"
           android:background="@color/color_primary_dark_transparent"/>
 
-    <RadioButton
-        android:id="@+id/actualRadioBTN"
+    <CheckBox
+        android:id="@+id/actualCheckBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
@@ -18,5 +18,5 @@
         android:paddingStart="@dimen/default_margin_1"
         android:textColor="@android:color/white">
 
-    </RadioButton>
+    </CheckBox>
 </RelativeLayout>
