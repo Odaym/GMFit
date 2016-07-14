@@ -16,16 +16,14 @@ import java.util.List;
 
 public class DefaultIndicator_Controller implements Indicator_Controller {
     public final static int DEFAULT_COLOR = 1;
-
+    private static final int FIRST_PAGE_NUM = 0;
+    int selectedDotColor = DEFAULT_COLOR;
+    int unselectedDotColor = DEFAULT_COLOR;
+    int mCurrentposition;
     private Context mContext;
     private LinearLayout mDotLayout;
     private List<ImageView> mDots;
     private int mSlideCount;
-    int selectedDotColor = DEFAULT_COLOR;
-    int unselectedDotColor = DEFAULT_COLOR;
-    int mCurrentposition;
-
-    private static final int FIRST_PAGE_NUM = 0;
 
     @Override
     public View newInstance(@NonNull Context context) {
@@ -49,6 +47,8 @@ public class DefaultIndicator_Controller implements Indicator_Controller {
                     LinearLayout.LayoutParams.WRAP_CONTENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT
             );
+
+            dot.setPadding(0, 0, 20, 0);
 
             mDotLayout.addView(dot, params);
             mDots.add(dot);
