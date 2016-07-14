@@ -34,6 +34,7 @@ import com.mcsaatchi.gmfit.activities.Main_Activity;
 import com.mcsaatchi.gmfit.classes.Cons;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
+import com.mcsaatchi.gmfit.classes.Helpers;
 import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.rest.RestClient;
 import com.squareup.otto.Subscribe;
@@ -111,9 +112,8 @@ public class Setup_Profile_3_Fragment extends Fragment implements CalendarDatePi
 
         inputMethodManager = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
 
-
-//        allFields.add(weightET);
-//        allFields.add(heightET);
+        allFields.add(weightET);
+        allFields.add(heightET);
 
         addMedicalConditionsBTN.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -167,34 +167,36 @@ public class Setup_Profile_3_Fragment extends Fragment implements CalendarDatePi
 
         switch (ebpMessage) {
             case Cons.EVENT_USER_FINALIZE_SETUP_PROFILE:
-//                if (Helpers.validateFields(allFields)) {
-//                    String finalName = firstNameET.getText().toString() + " " + lastNameET.getText().toString();
-//
-//                    int finalGender;
-//
-//                    finalGender = genderSpinner.getSelectedItem().toString().equals("Male") ? 1 : 0;
-//
-//                    Log.d(TAG, "handle_BusEvents: finalGender is : " + finalGender);
-//
-//                    String finalDateOfBirth = null;
-//
-//                    if (!dateOfBirth.isEmpty())
-//                        finalDateOfBirth = dateOfBirth;
-//
-//                    double finalWeight = Double.parseDouble(weightET.getText().toString());
-//                    double finalHeight = Double.parseDouble(heightET.getText().toString());
-//
-//                    String finalBloodType = bloodTypeSpinner.getSelectedItem().toString();
-//
-//                    setupUserProfile(finalName, finalDateOfBirth, finalBloodType, finalGender, finalHeight,
-//                            finalWeight, calculateBMI(finalWeight, finalHeight));
-//                }
+                if (Helpers.validateFields(allFields)) {
+
+                    double weight = Double.parseDouble(weightET.getText().toString());
+                    double height = Double.parseDouble(heightET.getText().toString());
+
+                    int finalGender;
+
+                    finalGender = genderSpinner.getSelectedItem().toString().equals("Male") ? 1 : 0;
+
+                    Log.d(TAG, "handle_BusEvents: finalGender is : " + finalGender);
+
+                    String finalDateOfBirth = null;
+
+                    if (!dateOfBirth.isEmpty())
+                        finalDateOfBirth = dateOfBirth;
+
+                    double finalWeight = Double.parseDouble(weightET.getText().toString());
+                    double finalHeight = Double.parseDouble(heightET.getText().toString());
+
+                    String finalBloodType = bloodTypeSpinner.getSelectedItem().toString();
+
+                    setupUserProfile(finalDateOfBirth, finalBloodType, finalGender, finalHeight,
+                            finalWeight, calculateBMI(finalWeight, finalHeight));
+                }
 
                 break;
         }
     }
 
-    private void setupUserProfile(String finalName, String finalDateOfBirth, String bloodType, int finalGender, double height, double weight, double BMI) {
+    private void setupUserProfile(String finalDateOfBirth, String bloodType, int finalGender, double height, double weight, double BMI) {
         final ProgressDialog waitingDialog = new ProgressDialog(getActivity());
         waitingDialog.setTitle(getString(R.string.signing_up_dialog_title));
         waitingDialog.setMessage(getString(R.string.signing_up_dialog_message));
@@ -213,7 +215,7 @@ public class Setup_Profile_3_Fragment extends Fragment implements CalendarDatePi
                 });
 
         Call<DefaultGetResponse> registerUserCall = new RestClient().getGMFitService().updateUserProfile(prefs.getString(Cons.PREF_USER_ACCESS_TOKEN,
-                Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS), new UpdateProfileRequest(finalName, finalDateOfBirth, bloodType, finalGender, height, weight, BMI));
+                Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS), new UpdateProfileRequest(finalDateOfBirth, bloodType, finalGender, height, weight, BMI));
 
         registerUserCall.enqueue(new Callback<DefaultGetResponse>() {
             @Override
@@ -349,7 +351,6 @@ public class Setup_Profile_3_Fragment extends Fragment implements CalendarDatePi
     }
 
     public class UpdateProfileRequest {
-        final String name;
         final String birthday;
         final String bloodType;
         final int gender;
@@ -357,8 +358,7 @@ public class Setup_Profile_3_Fragment extends Fragment implements CalendarDatePi
         final double weight;
         final double BMI;
 
-        public UpdateProfileRequest(String name, String birthday, String bloodType, int gender, double height, double weight, double BMI) {
-            this.name = name;
+        public UpdateProfileRequest(String birthday, String bloodType, int gender, double height, double weight, double BMI) {
             this.birthday = birthday;
             this.bloodType = bloodType;
             this.gender = gender;
