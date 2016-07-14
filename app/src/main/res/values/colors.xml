@@ -2,7 +2,7 @@
 <resources>
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">@color/nutrition_red</color>
+    <color name="colorAccent">@color/white</color>
 
     <color name="color_primary_dark_transparent">#99474ae6</color>
 
@@ -24,5 +24,5 @@
     <color name="much_lighter_gray">#F9F9F9</color>
     <color name="lighter_gray">#F2F2F2</color>
     <color name="light_gray">#D1D1D1</color>
-
+    <color name="buttons_text_color">#4C5269</color>
 </resources>

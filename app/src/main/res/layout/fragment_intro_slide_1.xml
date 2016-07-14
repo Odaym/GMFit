@@ -26,6 +26,6 @@
         android:layout_marginTop="@dimen/default_margin_2"
         android:gravity="center_horizontal"
         android:text="This is the FIRST fragment"
-        android:textColor="@android:color/white"/>
+        android:textColor="@color/offwhite_transparent"/>
 
 </LinearLayout>
