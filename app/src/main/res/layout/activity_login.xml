@@ -29,7 +29,8 @@
         android:layout_marginStart="@dimen/default_margin_2"
         android:layout_marginTop="@dimen/default_margin_2"
         android:paddingBottom="@dimen/default_margin_2"
-        android:paddingTop="@dimen/default_margin_2"/>
+        android:paddingTop="@dimen/default_margin_2"
+        android:textColor="@android:color/white"/>
 
     <LinearLayout
         android:id="@+id/signInButtonsLayout"
@@ -45,14 +46,18 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@color/lighter_gray"
-            android:text="@string/sign_in_button"/>
+            android:fontFamily="sans-serif"
+            android:text="@string/sign_in_button"
+            android:textAllCaps="false"
+            android:textColor="@color/buttons_text_color"
+            android:textSize="@dimen/default_button_text_size"/>
 
         <Button
             android:id="@+id/signUpBTN"
+            style="@style/BottomButton"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@android:color/white"
             android:text="@string/sign_up_button"/>
 
         <TextView

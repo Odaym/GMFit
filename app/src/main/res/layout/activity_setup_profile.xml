@@ -22,10 +22,10 @@
 
     <Button
         android:id="@+id/nextPageBTN"
+        style="@style/BottomButton"
         android:layout_width="match_parent"
         android:layout_height="@dimen/default_button_height_1"
         android:layout_alignParentBottom="true"
-        android:background="@android:color/white"
         android:text="@string/next_step"/>
 
 </RelativeLayout>

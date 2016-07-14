@@ -6,6 +6,7 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
     </style>
 
     <style name="TransparentToolbar" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
@@ -18,4 +19,5 @@
         <item name="android:textStyle">normal</item>
         <item name="android:fontFamily">sans-serif-light</item>
     </style>
+
 </resources>

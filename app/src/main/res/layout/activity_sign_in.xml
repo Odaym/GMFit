@@ -81,6 +81,14 @@
                 validator:emptyErrorString="@string/field_empty_error_message"
                 validator:testErrorString="@string/field_password_too_short_error"/>
 
+            <TextView android:id="@+id/showPasswordTV" android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_gravity="center_vertical|end"
+                      android:paddingEnd="@dimen/default_margin_2"
+                      android:text="@string/show_password"
+                      android:textAppearance="?android:textAppearanceSmall"
+                      android:textColor="@color/offwhite_transparent"/>
+
         </com.wrapp.floatlabelededittext.FloatLabeledEditText>
 
         <TextView
@@ -95,9 +103,9 @@
 
     <Button
         android:id="@+id/signInBTN"
+        style="@style/BottomButton"
         android:layout_width="match_parent"
         android:layout_height="@dimen/default_button_height_1"
         android:layout_alignParentBottom="true"
-        android:background="@android:color/white"
         android:text="@string/sign_in_button"/>
 </RelativeLayout>
