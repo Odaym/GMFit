@@ -153,6 +153,8 @@ public class Login_Activity extends Base_Activity {
 
     private void initializeFacebookLogin() {
         loginFacebookBTN.setReadPermissions("email", "public_profile", "user_friends");
+        loginFacebookBTN.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+        loginFacebookBTN.setCompoundDrawablePadding(0);
         loginFacebookBTN.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
