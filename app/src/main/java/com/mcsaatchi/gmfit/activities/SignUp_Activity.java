@@ -13,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.text.style.ClickableSpan;
 import android.view.View;
 import android.widget.Button;
@@ -43,13 +44,16 @@ public class SignUp_Activity extends Base_Activity {
     FormEditText emailET;
     @Bind(R.id.passwordET)
     FormEditText passwordET;
+    @Bind(R.id.showPasswordTV)
+    TextView showPasswordTV;
     @Bind(R.id.createAccountBTN)
     Button createAccountBTN;
     @Bind(R.id.creatingAccountTOSTV)
     TextView creatingAccountTOSTV;
-
     @Bind(R.id.toolbar)
     Toolbar toolbar;
+
+    private boolean passwordShowing = false;
 
     private ArrayList<FormEditText> allFields = new ArrayList<>();
 
@@ -89,12 +93,27 @@ public class SignUp_Activity extends Base_Activity {
                 startActivity(new Intent(SignUp_Activity.this, TOS_Activity.class));
             }
         };
-        ss.setSpan(clickableSpan, 41, ss.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        ss.setSpan(clickableSpan, 41, ss.length() - 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         creatingAccountTOSTV.setText(ss);
         creatingAccountTOSTV.setMovementMethod(LinkMovementMethod.getInstance());
         creatingAccountTOSTV.setTextColor(getResources().getColor(R.color.offwhite_transparent));
         creatingAccountTOSTV.setHighlightColor(Color.BLUE);
+
+        showPasswordTV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (passwordShowing) {
+                    passwordET.setTransformationMethod(new PasswordTransformationMethod());
+                    showPasswordTV.setText(R.string.show_password);
+                } else {
+                    passwordET.setTransformationMethod(null);
+                    showPasswordTV.setText(R.string.hide_password);
+                }
+
+                passwordShowing = !passwordShowing;
+            }
+        });
     }
 
     private void registerUser(String email, String password) {

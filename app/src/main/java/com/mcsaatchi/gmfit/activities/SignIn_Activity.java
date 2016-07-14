@@ -13,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.text.style.ClickableSpan;
 import android.view.View;
 import android.widget.Button;
@@ -51,6 +52,10 @@ public class SignIn_Activity extends Base_Activity {
     Button signInBTN;
     @Bind(R.id.forgotPasswordTV)
     TextView forgotPasswordTV;
+    @Bind(R.id.showPasswordTV)
+    TextView showPasswordTV;
+
+    private boolean passwordShowing = false;
 
     private ArrayList<FormEditText> allFields = new ArrayList<>();
 
@@ -98,6 +103,21 @@ public class SignIn_Activity extends Base_Activity {
         forgotPasswordTV.setText(ss);
         forgotPasswordTV.setMovementMethod(LinkMovementMethod.getInstance());
         forgotPasswordTV.setHighlightColor(Color.BLUE);
+
+        showPasswordTV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (passwordShowing) {
+                    passwordET.setTransformationMethod(new PasswordTransformationMethod());
+                    showPasswordTV.setText(R.string.show_password);
+                } else {
+                    passwordET.setTransformationMethod(null);
+                    showPasswordTV.setText(R.string.hide_password);
+                }
+
+                passwordShowing = !passwordShowing;
+            }
+        });
     }
 
     private void signInUser(String email, String password) {
