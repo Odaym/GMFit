@@ -79,6 +79,8 @@ public class SignIn_Activity extends Base_Activity {
         allFields.add(emailET);
         allFields.add(passwordET);
 
+        emailET.setSelection(emailET.getText().length());
+        
         signInBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
