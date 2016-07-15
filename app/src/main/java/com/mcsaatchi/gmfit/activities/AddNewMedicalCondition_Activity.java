@@ -3,7 +3,7 @@ package com.mcsaatchi.gmfit.activities;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
-import android.widget.CheckBox;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 
@@ -33,12 +33,12 @@ public class AddNewMedicalCondition_Activity extends Base_Activity {
         addTopPaddingToolbar(toolbar);
 
         for (String medicalCondition : medicalConditions) {
-            RelativeLayout checkBoxView = (RelativeLayout) getLayoutInflater().inflate(R.layout.checkbox_list_item_add_medical_condition, null);
+            RelativeLayout checkBoxView = (RelativeLayout) getLayoutInflater().inflate(R.layout.radiobutton_list_item_add_medical_condition, null);
 
 
-            final CheckBox actualCheckBox = (CheckBox) checkBoxView.findViewById(R.id.actualCheckBox);
+            final RadioButton actualRadioButton = (RadioButton) checkBoxView.findViewById(R.id.actualRadioButton);
 
-            actualCheckBox.setText(medicalCondition);
+            actualRadioButton.setText(medicalCondition);
 
             checkBoxView.setPadding(0, 0, 0, getResources().getDimensionPixelSize(R.dimen.default_margin_0));
 
