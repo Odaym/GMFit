@@ -21,6 +21,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -145,7 +146,7 @@ public class Fitness_Fragment extends Fragment {
 
         EventBus_Singleton.getInstance().register(this);
 
-        getActivity().setTitle(R.string.fitness_tab_title);
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.fitness_tab_title);
     }
 
     @Override
