@@ -115,7 +115,7 @@
                 android:background="@color/color_primary_dark_transparent"
                 android:paddingBottom="@dimen/default_margin_0"
                 app:fletPaddingLeft="@dimen/default_margin_2"
-                app:fletPaddingTop="@dimen/default_margin_0"
+                app:fletPaddingTop="@dimen/default_margin_1"
                 app:fletTextAppearance="@style/TextAppearence.App.TextInputLayout">
 
                 <com.andreabaccega.widget.FormEditText
@@ -154,7 +154,7 @@
                 android:background="@color/color_primary_dark_transparent"
                 android:paddingBottom="@dimen/default_margin_0"
                 app:fletPaddingLeft="@dimen/default_margin_2"
-                app:fletPaddingTop="@dimen/default_margin_0"
+                app:fletPaddingTop="@dimen/default_margin_1"
                 app:fletTextAppearance="@style/TextAppearence.App.TextInputLayout">
 
                 <com.andreabaccega.widget.FormEditText

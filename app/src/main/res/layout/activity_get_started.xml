@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:text="@string/get_started_title"
-            android:textAppearance="?android:textAppearanceMedium"
+            android:textAppearance="?android:textAppearanceLarge"
             android:textColor="@android:color/white"/>
 
         <TextView
@@ -39,16 +39,16 @@
             android:layout_marginTop="@dimen/default_margin_1"
             android:gravity="center"
             android:text="@string/get_started_message"
-            android:textColor="@android:color/white"/>
+            android:textColor="@color/offwhite_transparent"/>
 
     </LinearLayout>
 
     <Button
         android:id="@+id/setup_profile_button"
+        style="@style/BottomButton"
         android:layout_width="match_parent"
         android:layout_height="@dimen/default_button_height_1"
         android:layout_alignParentBottom="true"
-        android:background="@android:color/white"
         android:gravity="center"
         android:text="@string/setup_my_profile_button"/>
 

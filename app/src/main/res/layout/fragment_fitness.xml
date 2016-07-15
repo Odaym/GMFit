@@ -11,7 +11,7 @@
         android:id="@+id/mainFitnessMetricDetail"
         android:layout_width="match_parent"
         android:layout_height="@dimen/metric_header_section_height"
-        android:background="@drawable/fitness_background">
+        android:background="@android:color/transparent">
 
         <ProgressBar
             android:id="@+id/metricProgressBar"
@@ -121,6 +121,7 @@
 
         <Button
             android:id="@+id/addChartBTN"
+            style="?android:attr/borderlessButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/default_margin_2"

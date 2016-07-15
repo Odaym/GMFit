@@ -105,11 +105,6 @@
                 android:paddingEnd="@dimen/default_margin_1"/>
         </LinearLayout>
 
-        <!--<RelativeLayout android:layout_width="match_parent"-->
-        <!--android:layout_height="@dimen/radiobutton_row_height"-->
-        <!--android:layout_marginBottom="@dimen/default_margin_0"-->
-        <!--android:background="@color/color_primary_dark_transparent">-->
-
         <com.wrapp.floatlabelededittext.FloatLabeledEditText
             android:id="@+id/weightETFloating"
             android:layout_width="match_parent"
@@ -118,7 +113,7 @@
             android:background="@color/color_primary_dark_transparent"
             android:paddingBottom="@dimen/default_margin_0"
             app:fletPaddingLeft="@dimen/default_margin_2"
-            app:fletPaddingTop="@dimen/default_margin_0"
+            app:fletPaddingTop="@dimen/default_margin_1"
             app:fletTextAppearance="@style/TextAppearence.App.TextInputLayout">
 
             <com.andreabaccega.widget.FormEditText
@@ -139,6 +134,14 @@
                 validator:testErrorString="@string/error_only_numeric_digits_allowed"
                 validator:testType="numeric"/>
 
+            <TextView android:id="@+id/weightMetricHintETC" android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_gravity="center_vertical|end"
+                      android:paddingEnd="@dimen/default_margin_2"
+                      android:text="kg"
+                      android:textAppearance="?android:textAppearanceSmall"
+                      android:textColor="@color/offwhite_transparent"/>
+
         </com.wrapp.floatlabelededittext.FloatLabeledEditText>
 
         <com.wrapp.floatlabelededittext.FloatLabeledEditText
@@ -149,7 +152,7 @@
             android:background="@color/color_primary_dark_transparent"
             android:paddingBottom="@dimen/default_margin_0"
             app:fletPaddingLeft="@dimen/default_margin_2"
-            app:fletPaddingTop="@dimen/default_margin_0"
+            app:fletPaddingTop="@dimen/default_margin_1"
             app:fletTextAppearance="@style/TextAppearence.App.TextInputLayout">
 
             <com.andreabaccega.widget.FormEditText
@@ -169,6 +172,14 @@
                 validator:emptyErrorString="@string/field_empty_error_message"
                 validator:testErrorString="@string/error_only_numeric_digits_allowed"
                 validator:testType="numeric"/>
+
+            <TextView android:id="@+id/heightMetricHintETC" android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_gravity="center_vertical|end"
+                      android:paddingEnd="@dimen/default_margin_2"
+                      android:text="cm"
+                      android:textAppearance="?android:textAppearanceSmall"
+                      android:textColor="@color/offwhite_transparent"/>
         </com.wrapp.floatlabelededittext.FloatLabeledEditText>
 
         <TextView android:layout_width="match_parent" android:layout_height="wrap_content"

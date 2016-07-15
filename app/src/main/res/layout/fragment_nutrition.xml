@@ -10,7 +10,7 @@
         android:id="@+id/mainNutritionMetricDetail"
         android:layout_width="match_parent"
         android:layout_height="@dimen/metric_header_section_height"
-        android:background="@drawable/nutrition_background">
+        android:background="@android:color/transparent">
 
         <ProgressBar
             android:id="@+id/metricProgressBar"
@@ -53,7 +53,9 @@
 
     </RelativeLayout>
 
-    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                  android:background="@android:color/white">
+
         <GridView android:id="@+id/widgetsGridView"
                   android:layout_width="match_parent"
                   android:layout_height="@dimen/widgets_gridview_height"
@@ -73,6 +75,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@android:color/white"
         android:orientation="vertical">
 
         <LinearLayout

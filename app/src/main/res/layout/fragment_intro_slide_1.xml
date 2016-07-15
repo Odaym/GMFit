@@ -23,7 +23,7 @@
         android:id="@+id/introTV"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/default_margin_2"
+        android:layout_marginTop="@dimen/default_margin_1"
         android:gravity="center_horizontal"
         android:text="This is the FIRST fragment"
         android:textColor="@color/offwhite_transparent"/>
