@@ -129,8 +129,14 @@ public class Helpers {
         xVals.add("M");
         xVals.add("T");
         xVals.add("W");
+        xVals.add("W");
         xVals.add("Th");
         xVals.add("F");
+        xVals.add("F");
+        xVals.add("F");
+        xVals.add("GH");
+        xVals.add("Q");
+        xVals.add("YL");
 
         BarData data = new BarData(xVals, dataSets);
 
