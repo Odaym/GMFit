@@ -222,8 +222,10 @@ public class Fitness_Fragment extends Fragment {
             }
         });
 
-        barChartLayout_NEW_CHART.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, getResources().getDimensionPixelSize(R.dimen
-                .chart_height)));
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, getResources().getDimensionPixelSize(R
+                .dimen.chart_height_2));
+        lp.topMargin = getResources().getDimensionPixelSize(R.dimen.default_margin_1);
+        barChartLayout_NEW_CHART.setLayoutParams(lp);
 
         cards_container.addView(barChartLayout_NEW_CHART);
 
@@ -280,6 +282,22 @@ public class Fitness_Fragment extends Fragment {
 
                 //Still pending
 //                getMetricsForChart();
+
+                addNewBarChart(chartName, new ArrayList<Float>() {{
+                    add(0, 200f);
+                    add(1, 2041f);
+                    add(2, 20f);
+                    add(3, 1200f);
+                    add(4, 50f);
+                    add(5, 600f);
+                    add(6, 61f);
+                    add(7, 66f);
+                    add(8, 13f);
+                    add(9, 95f);
+                    add(10, 17f);
+                    add(11, 2309f);
+
+                }});
 
             } else if (requestCode == Main_Activity.USER_AUTHORISED_REQUEST_CODE && googleApiFitnessClient != null) {
                 googleApiFitnessClient.stopAutoManage(getActivity());
