@@ -67,7 +67,7 @@ public class Main_Activity extends Base_Activity {
 
         bottomBar.noTopOffset();
 //        bottomBar.noNavBarGoodness();
-        bottomBar.setActiveTabColor(ContextCompat.getColor(this, R.color.colorAccent));
+        bottomBar.setActiveTabColor(ContextCompat.getColor(this, R.color.bpDarker_blue));
         bottomBar.useFixedMode();
 
         bottomBar.setItemsFromMenu(R.menu.bottom_navigation, new OnMenuTabClickListener() {
