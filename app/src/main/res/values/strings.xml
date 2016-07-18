@@ -75,6 +75,14 @@
     <string name="forgot_password_reset_hint">Please enter your email address below and we will send you instructions on how to reset your
         password.</string>
 
+    <!-- VERIFY ACCOUNT ACTIVITY -->
+    <string name="verify_account_hint">We\'ve just sent a verification code to your email address, please enter that code below to complete the
+        registration process.</string>
+    <string name="verification_code_hint">0 0 0 0</string>
+    <string name="wrong_verification_code">The code you provided is incorrect.</string>
+    <string name="verifying_email_dialog_title">Verifying email address</string>
+    <string name="verifying_email_dialog_message">Please wait…</string>
+
     <!-- TERMS OF USAGE ACTIVITY -->
     <string name="tos_activity_title">Terms of Use</string>
     <string name="terms_of_use_value">Lorem ipsum dolor sit amet, accumsan praesent vulputate has ad, vel ne liber zril. Ea qui audire suavitate, ut stet
