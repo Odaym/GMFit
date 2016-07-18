@@ -59,34 +59,4 @@ public class Cons {
     public static final String PREF_USER_ACCESS_TOKEN = "user_access_token";
     public static final String USER_ACCESS_TOKEN_HEADER_PARAMETER = "Authorization";
     public static final int REGISTRATION_PROCESS_SUCCEEDED_TOKEN_SAVED = 120;
-    public static final int API_REQUEST_SUCCEEDED_CODE = 200;
-    public static final int API_RESPONSE_INVALID_PARAMETERS = 449;
-    public static final int LOGIN_API_WRONG_CREDENTIALS = 401;
-    public static final int API_RESPONSE_NOT_PARSED_CORRECTLY = -1;
-
-    public static enum ChartTypes {
-
-        BARCHART_CHART_TYPE(1),
-        BARLINECHARTBASE_CHART_TYPE(2),
-        BUBBLECHART_CHART_TYPE(3),
-        CANDLESTICKCHART_CHART_TYPE(4),
-        CHART_CHART_TYPE(5),
-        COMBINEDCHART_CHART_TYPE(6),
-        HORIZONTALBARCHART_CHART_TYPE(7),
-        LINECHART_CHART_TYPE(8),
-        PIECHART_CHART_TYPE(9),
-        PIERADARCHARTBASE_CHART_TYPE(10),
-        RADARCHART_CHART_TYPE(11),
-        SCATTERCHART_CHART_TYPE(12);
-
-        public int chart_type;
-
-        private ChartTypes(int chart_type) {
-            this.chart_type = chart_type;
-        }
-
-        public int getChart_type(){
-            return this.chart_type;
-        }
-    }
 }
