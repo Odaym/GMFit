@@ -30,9 +30,6 @@ import com.mcsaatchi.gmfit.classes.Helpers;
 import com.mcsaatchi.gmfit.rest.RestClient;
 import com.mcsaatchi.gmfit.rest.UserPolicyResponse;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -148,41 +145,18 @@ public class MainProfile_Fragment extends Fragment {
         registerUserCall.enqueue(new Callback<UserPolicyResponse>() {
             @Override
             public void onResponse(Call<UserPolicyResponse> call, Response<UserPolicyResponse> response) {
-                Log.d(TAG, "onResponse: Request sent");
+                switch (response.code()) {
+                    case 200:
+                        waitingDialog.dismiss();
 
-                if (response.body() != null) {
-                    switch (response.code()) {
-                        case Cons.API_REQUEST_SUCCEEDED_CODE:
-                            waitingDialog.dismiss();
+                        String userPolicyString = response.body().getData().getBody().getUserPolicy();
 
-//                            Log.d(TAG, "onResponse: Response succeeded, it was : " + response.body().getData().getBody().toString());
-                            String userPolicyString = response.body().getData().getBody().getUserPolicy();
-
-                            Intent intent = new Intent(getActivity(), UserPolicy_Activity.class);
-                            intent.putExtra(Cons.EXTRAS_USER_POLICY, userPolicyString);
-                            startActivity(intent);
-                            break;
-//                        case Cons.LOGIN_API_WRONG_CREDENTIALS:
-//                            alertDialog.setMessage(getString(R.string.login_failed_wrong_credentials));
-//                            alertDialog.show();
-//                            break;
-                    }
-                } else {
-                    waitingDialog.dismiss();
-
-                    //Handle the error
-                    try {
-                        JSONObject errorBody = new JSONObject(response.errorBody().string());
-                        JSONObject errorData = errorBody.getJSONObject("data");
-                        int errorCodeInData = errorData.getInt("code");
-
-//                        if (errorCodeInData == Cons.LOGIN_API_WRONG_CREDENTIALS) {
-//                            alertDialog.setMessage(getString(R.string.login_failed_wrong_credentials));
-//                            alertDialog.show();
-//                        }
-                    } catch (IOException | JSONException e) {
-                        e.printStackTrace();
-                    }
+                        Intent intent = new Intent(getActivity(), UserPolicy_Activity.class);
+                        intent.putExtra(Cons.EXTRAS_USER_POLICY, userPolicyString);
+                        startActivity(intent);
+                        break;
+                    case 401:
+                        break;
                 }
             }
 

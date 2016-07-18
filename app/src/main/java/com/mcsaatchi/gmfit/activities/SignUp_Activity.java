@@ -26,10 +26,6 @@ import com.mcsaatchi.gmfit.classes.Helpers;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponse;
 import com.mcsaatchi.gmfit.rest.RestClient;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
 import java.util.ArrayList;
 
 import butterknife.Bind;
@@ -139,9 +135,8 @@ public class SignUp_Activity extends Base_Activity {
         registerUserCall.enqueue(new Callback<AuthenticationResponse>() {
             @Override
             public void onResponse(Call<AuthenticationResponse> call, Response<AuthenticationResponse> response) {
-                if (response.body() != null) {
                     switch (response.code()) {
-                        case Cons.API_REQUEST_SUCCEEDED_CODE:
+                        case 200:
                             waitingDialog.dismiss();
 
                             prefs.edit().putString(Cons.PREF_USER_ACCESS_TOKEN, "Bearer " + response.body().getData().getBody().getToken()).apply();
@@ -149,30 +144,11 @@ public class SignUp_Activity extends Base_Activity {
                             Intent intent = new Intent(SignUp_Activity.this, GetStarted_Activity.class);
                             startActivity(intent);
                             finish();
-
-                            break;
-                        case Cons.LOGIN_API_WRONG_CREDENTIALS:
-                            alertDialog.setMessage(getString(R.string.login_failed_wrong_credentials));
-                            alertDialog.show();
-                            break;
-                    }
-                } else {
-                    waitingDialog.dismiss();
-
-                    //Handle the error
-                    try {
-                        JSONObject errorBody = new JSONObject(response.errorBody().string());
-                        JSONObject errorData = errorBody.getJSONObject("data");
-                        int errorCodeInData = errorData.getInt("code");
-
-                        if (errorCodeInData == Cons.API_RESPONSE_INVALID_PARAMETERS) {
+                        case 449:
                             alertDialog.setMessage(getString(R.string.email_already_taken_api_response));
                             alertDialog.show();
-                        }
-                    } catch (IOException | JSONException e) {
-                        e.printStackTrace();
+                            break;
                     }
-                }
             }
 
             @Override

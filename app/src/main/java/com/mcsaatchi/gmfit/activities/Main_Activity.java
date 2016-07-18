@@ -167,7 +167,7 @@ public class Main_Activity extends Base_Activity {
             public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
                 if (response.body() != null) {
                     switch (response.code()) {
-                        case Cons.API_REQUEST_SUCCEEDED_CODE:
+                        case 200:
                             waitingDialog.dismiss();
 
                             prefs.edit().putString(Cons.PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS).apply();

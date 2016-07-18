@@ -459,7 +459,7 @@ public class Fitness_Fragment extends Fragment {
             public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
                 if (response.body() != null) {
                     switch (response.code()) {
-                        case Cons.API_REQUEST_SUCCEEDED_CODE:
+                        case 200:
 //                            waitingDialog.dismiss();
 
                             break;
@@ -516,9 +516,8 @@ public class Fitness_Fragment extends Fragment {
         updateMetricsCall.enqueue(new Callback<DefaultGetResponse>() {
             @Override
             public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
-                if (response.body() != null) {
                     switch (response.code()) {
-                        case Cons.API_REQUEST_SUCCEEDED_CODE:
+                        case 200:
                             waitingDialog.dismiss();
 
                             Log.d(TAG, "onResponse: SYNCED Metrics successfully");
@@ -526,25 +525,11 @@ public class Fitness_Fragment extends Fragment {
                             prefs.edit().putBoolean("SYNCED_METRICS", true).apply();
 
                             break;
+
+                        //TODO:
+//                        case error code:
+//                            break;
                     }
-                } else {
-                    if (isVisible()) {
-                        waitingDialog.dismiss();
-
-                        //Handle the error
-                        try {
-                            JSONObject errorBody = new JSONObject(response.errorBody().string());
-                            Log.d(TAG, "onResponse: ERROR IS : " + response.errorBody().string());
-                            JSONObject errorData = errorBody.getJSONObject("data");
-                            int errorCodeInData = errorData.getInt("code");
-
-                            Log.d(TAG, "updateMetrics onResponse: Body error : " + response.errorBody().string());
-
-                        } catch (IOException | JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
             }
 
             @Override

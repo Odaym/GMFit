@@ -39,10 +39,6 @@ import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.rest.RestClient;
 import com.squareup.otto.Subscribe;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -220,39 +216,19 @@ public class Setup_Profile_3_Fragment extends Fragment implements CalendarDatePi
         registerUserCall.enqueue(new Callback<DefaultGetResponse>() {
             @Override
             public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
-                if (response.body() != null) {
-                    switch (response.code()) {
-                        case Cons.API_REQUEST_SUCCEEDED_CODE:
-                            waitingDialog.dismiss();
+                switch (response.code()) {
+                    case 200:
+                        waitingDialog.dismiss();
 
-                            Intent intent = new Intent(getActivity(), Main_Activity.class);
-                            startActivity(intent);
-                            getActivity().finish();
+                        Intent intent = new Intent(getActivity(), Main_Activity.class);
+                        startActivity(intent);
+                        getActivity().finish();
 
-                            break;
-                        case Cons.LOGIN_API_WRONG_CREDENTIALS:
-                            alertDialog.setMessage(getString(R.string.login_failed_wrong_credentials));
-                            alertDialog.show();
-                            break;
-                    }
-                } else {
-                    waitingDialog.dismiss();
-
-                    //Handle the error
-                    try {
-                        JSONObject errorBody = new JSONObject(response.errorBody().string());
-                        JSONObject errorData = errorBody.getJSONObject("data");
-                        int errorCodeInData = errorData.getInt("code");
-
-                        Log.d(TAG, "onResponse: Response failed with this : " + errorBody.toString());
-
-//                        if (errorCodeInData == Cons.API_RESPONSE_INVALID_PARAMETERS) {
-//                            alertDialog.setMessage(getString(R.string.email_already_taken_api_response));
-//                            alertDialog.show();
-//                        }
-                    } catch (IOException | JSONException e) {
-                        e.printStackTrace();
-                    }
+                        break;
+                    case 401:
+                        alertDialog.setMessage(getString(R.string.login_failed_wrong_credentials));
+                        alertDialog.show();
+                        break;
                 }
             }
 

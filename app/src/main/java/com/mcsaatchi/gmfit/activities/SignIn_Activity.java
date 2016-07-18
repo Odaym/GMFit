@@ -28,10 +28,6 @@ import com.mcsaatchi.gmfit.classes.Helpers;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponse;
 import com.mcsaatchi.gmfit.rest.RestClient;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
 import java.util.ArrayList;
 
 import butterknife.Bind;
@@ -80,7 +76,7 @@ public class SignIn_Activity extends Base_Activity {
         allFields.add(passwordET);
 
         emailET.setSelection(emailET.getText().length());
-        
+
         signInBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -140,47 +136,30 @@ public class SignIn_Activity extends Base_Activity {
                     }
                 });
 
-        Call<AuthenticationResponse> registerUserCall = new RestClient().getGMFitService().signInUser(new SignInRequest(email,
+        Call<AuthenticationResponse> signInUserCall = new RestClient().getGMFitService().signInUser(new SignInRequest(email,
                 password));
 
-        registerUserCall.enqueue(new Callback<AuthenticationResponse>() {
+        signInUserCall.enqueue(new Callback<AuthenticationResponse>() {
             @Override
             public void onResponse(Call<AuthenticationResponse> call, Response<AuthenticationResponse> response) {
-                if (response.body() != null) {
-                    switch (response.code()) {
-                        case Cons.API_REQUEST_SUCCEEDED_CODE:
-                            waitingDialog.dismiss();
+                switch (response.code()) {
+                    case 200:
+                        waitingDialog.dismiss();
 
-                            prefs.edit().putString(Cons.PREF_USER_ACCESS_TOKEN, "Bearer " + response.body().getData().getBody().getToken()).apply();
+                        //Refreshes access token
+                        prefs.edit().putString(Cons.PREF_USER_ACCESS_TOKEN, "Bearer " + response.body().getData().getBody().getToken()).apply();
 
-                            EventBus_Singleton.getInstance().post(new EventBus_Poster(Cons.EVENT_SIGNNED_UP_SUCCESSFULLY_CLOSE_LOGIN_ACTIVITY));
+                        EventBus_Singleton.getInstance().post(new EventBus_Poster(Cons.EVENT_SIGNNED_UP_SUCCESSFULLY_CLOSE_LOGIN_ACTIVITY));
 
-                            Intent intent = new Intent(SignIn_Activity.this, Main_Activity.class);
-                            startActivity(intent);
-                            finish();
+                        Intent intent = new Intent(SignIn_Activity.this, Main_Activity.class);
+                        startActivity(intent);
+                        finish();
 
-                            break;
-                        case Cons.LOGIN_API_WRONG_CREDENTIALS:
-                            alertDialog.setMessage(getString(R.string.login_failed_wrong_credentials));
-                            alertDialog.show();
-                            break;
-                    }
-                } else {
-                    waitingDialog.dismiss();
-
-                    //Handle the error
-                    try {
-                        JSONObject errorBody = new JSONObject(response.errorBody().string());
-                        JSONObject errorData = errorBody.getJSONObject("data");
-                        int errorCodeInData = errorData.getInt("code");
-
-                        if (errorCodeInData == Cons.LOGIN_API_WRONG_CREDENTIALS) {
-                            alertDialog.setMessage(getString(R.string.login_failed_wrong_credentials));
-                            alertDialog.show();
-                        }
-                    } catch (IOException | JSONException e) {
-                        e.printStackTrace();
-                    }
+                        break;
+                    case 401:
+                        alertDialog.setMessage(getString(R.string.login_failed_wrong_credentials));
+                        alertDialog.show();
+                        break;
                 }
             }
 
