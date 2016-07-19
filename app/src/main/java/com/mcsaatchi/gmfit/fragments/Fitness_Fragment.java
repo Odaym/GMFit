@@ -205,7 +205,6 @@ public class Fitness_Fragment extends Fragment {
     public void addNewBarChart(String chartTitle, ArrayList<Float> floatArrayExtra) {
         final View barChartLayout_NEW_CHART = getActivity().getLayoutInflater().inflate(R.layout.view_barchart_container, null);
 
-        Button removeChartBTN_NEW_CHART = (Button) barChartLayout_NEW_CHART.findViewById(R.id.removeChartBTN);
         final CardView cardLayout_NEW_CHART = (CardView) barChartLayout_NEW_CHART.findViewById(R.id.cardLayoutContainer);
         TextView chartTitleTV_NEW_CHART = (TextView) barChartLayout_NEW_CHART.findViewById(R.id.chartTitleTV);
         BarChart barChart_NEW_CHART = (BarChart) barChartLayout_NEW_CHART.findViewById(R.id.barChart);
@@ -214,13 +213,6 @@ public class Fitness_Fragment extends Fragment {
             chartTitleTV_NEW_CHART.setText(chartTitle);
 
         Helpers.setBarChartData(barChart_NEW_CHART, floatArrayExtra);
-
-        removeChartBTN_NEW_CHART.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                cards_container.removeView(cardLayout_NEW_CHART);
-            }
-        });
 
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, getResources().getDimensionPixelSize(R
                 .dimen.chart_height_2));

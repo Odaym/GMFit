@@ -107,6 +107,8 @@ public class SignUp_Activity extends Base_Activity {
                     showPasswordTV.setText(R.string.hide_password);
                 }
 
+                passwordET.setSelection(passwordET.getText().length());
+
                 passwordShowing = !passwordShowing;
             }
         });
@@ -145,8 +147,8 @@ public class SignUp_Activity extends Base_Activity {
                             startActivity(intent);
                             finish();
                         case 449:
-                            alertDialog.setMessage(getString(R.string.email_already_taken_api_response));
-                            alertDialog.show();
+//                            alertDialog.setMessage(getString(R.string.email_already_taken_api_response));
+//                            alertDialog.show();
                             break;
                     }
             }

@@ -43,7 +43,6 @@ public class CustomizeWidgetsAndCharts_Activity extends Base_Activity {
 
         setupToolbar(toolbar, R.string.customize_widgets_and_charts_activity_title, true);
 
-
         Bundle intentExtras = getIntent().getExtras();
 
         //Grab the Fragment type from one of the three Fragments (Fitness, Nutrition, Health)

@@ -113,6 +113,8 @@ public class SignIn_Activity extends Base_Activity {
                     showPasswordTV.setText(R.string.hide_password);
                 }
 
+                passwordET.setSelection(passwordET.getText().length());
+
                 passwordShowing = !passwordShowing;
             }
         });

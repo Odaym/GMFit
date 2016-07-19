@@ -1,91 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/general_background"
-        android:orientation="vertical"
-        android:paddingTop="@dimen/activity_horizontal_margin">
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/general_background"
+    android:paddingTop="@dimen/activity_horizontal_margin">
+
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:gravity="center_horizontal"
+                  android:orientation="vertical">
 
         <ImageView
             android:id="@+id/getStartedIMG"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="@dimen/default_margin_3"/>
+            android:layout_width="120dp"
+            android:layout_height="120dp"/>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/getStartedIMG"
-            android:layout_marginTop="@dimen/default_margin_2"
-            android:gravity="center_horizontal"
-            android:orientation="vertical"
-            android:paddingEnd="@dimen/activity_vertical_margin"
-            android:paddingStart="@dimen/activity_vertical_margin">
+        <TextView
+            android:id="@+id/getStartedTaglineTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/get_started_title"
+            android:textAppearance="?android:textAppearanceLarge"
+            android:textColor="@android:color/white"/>
 
-            <TextView
-                android:id="@+id/getStartedTaglineTV"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:text="@string/get_started_title"
-                android:textAppearance="?android:textAppearanceLarge"
-                android:textColor="@android:color/white"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/default_margin_1"
-                android:gravity="center"
-                android:text="@string/get_started_message"
-                android:textColor="@color/offwhite_transparent"/>
-
-            <com.wrapp.floatlabelededittext.FloatLabeledEditText
-                android:id="@+id/verifyCodeETFloating"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/radiobutton_row_height"
-                android:layout_marginBottom="@dimen/default_margin_0"
-                android:layout_marginTop="@dimen/default_margin_2"
-                android:background="@color/color_primary_dark_transparent"
-                android:paddingEnd="@dimen/default_margin_2"
-                app:fletPaddingLeft="@dimen/default_margin_2"
-                app:fletPaddingTop="@dimen/default_margin_1"
-                app:fletTextAppearance="@style/TextAppearence.App.TextInputLayout">
-
-                <com.andreabaccega.widget.FormEditText
-                    android:id="@+id/verifyCodeET"
-                    xmlns:validator="http://schemas.android.com/apk/res-auto"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@android:color/transparent"
-                    android:gravity="center"
-                    android:hint="@string/verification_code_hint"
-                    android:paddingBottom="@dimen/default_margin_1_5"
-                    android:paddingStart="@dimen/default_margin_2"
-                    android:singleLine="true"
-                    android:textAppearance="?android:textAppearanceLarge"
-                    android:textColor="@android:color/white"
-                    android:textColorHint="@android:color/white"
-                    android:textCursorDrawable="@null"
-                    validator:emptyErrorString="@string/field_empty_error_message"
-                    validator:testType="alphaNumeric"/>
-
-            </com.wrapp.floatlabelededittext.FloatLabeledEditText>
-
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/setup_profile_button"
-            style="@style/BottomButton"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/default_button_height_1"
-            android:layout_alignParentBottom="true"
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/default_margin_1"
             android:gravity="center"
-            android:text="@string/setup_my_profile_button"/>
+            android:text="@string/get_started_message"
+            android:textColor="@color/offwhite_transparent"/>
 
-    </RelativeLayout>
-</ScrollView>
+        <com.wrapp.floatlabelededittext.FloatLabeledEditText
+            android:id="@+id/verifyCodeETFloating"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/radiobutton_row_height"
+            android:layout_marginBottom="@dimen/default_margin_0"
+            android:layout_marginTop="@dimen/default_margin_2"
+            android:background="@color/color_primary_dark_transparent"
+            android:paddingEnd="@dimen/default_margin_2"
+            app:fletPaddingLeft="@dimen/default_margin_2"
+            app:fletPaddingTop="@dimen/default_margin_1"
+            app:fletTextAppearance="@style/TextAppearence.App.TextInputLayout">
+
+            <com.andreabaccega.widget.FormEditText
+                android:id="@+id/verifyCodeET"
+                xmlns:validator="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:gravity="center"
+                android:paddingBottom="@dimen/default_margin_1_5"
+                android:paddingStart="@dimen/default_margin_2"
+                android:singleLine="true"
+                android:textAppearance="?android:textAppearanceLarge"
+                android:hint="code"
+                android:textColor="@android:color/white"
+                android:textColorHint="@android:color/white"
+                android:textCursorDrawable="@null"
+                validator:emptyErrorString="@string/field_empty_error_message"
+                validator:testType="alphaNumeric"/>
+
+        </com.wrapp.floatlabelededittext.FloatLabeledEditText>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/setup_profile_button"
+        style="@style/BottomButton"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/default_button_height_1"
+        android:layout_alignParentBottom="true"
+        android:gravity="center"
+        android:text="@string/setup_my_profile_button"/>
+</RelativeLayout>

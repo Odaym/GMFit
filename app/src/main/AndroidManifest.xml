@@ -36,10 +36,10 @@
             android:theme="@style/No_Status_Or_Action_Bar_Theme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-
+                <!---->
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
-
+            <!---->
         </activity>
 
         <activity
@@ -68,7 +68,8 @@
         <activity
             android:name=".activities.GetStarted_Activity"
             android:screenOrientation="portrait"
-            android:theme="@style/No_Status_Or_Action_Bar_Theme">
+            android:theme="@style/No_Status_Or_Action_Bar_Theme"
+            android:windowSoftInputMode="stateVisible|adjustPan">
 
             <!--<intent-filter>-->
             <!--<action android:name="android.intent.action.MAIN"/>-->
@@ -78,14 +79,15 @@
 
         </activity>
 
-        <activity android:name=".activities.AddNewMedicalCondition_Activity"
-                  android:screenOrientation="portrait"
-                  android:theme="@style/No_Action_Bar_Theme"
-                  android:windowSoftInputMode="adjustResize"/>
-
         <activity android:name=".activities.SetupProfile_Activity"
                   android:screenOrientation="portrait"
-                  android:theme="@style/No_Action_Bar_Theme"/>
+                  android:theme="@style/No_Action_Bar_Theme">
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN"/>-->
+<!---->
+                <!--<category android:name="android.intent.category.LAUNCHER"/>-->
+            <!--</intent-filter>-->
+        </activity>
 
         <activity android:name=".activities.CustomizeWidgetsAndCharts_Activity"
                   android:screenOrientation="portrait"

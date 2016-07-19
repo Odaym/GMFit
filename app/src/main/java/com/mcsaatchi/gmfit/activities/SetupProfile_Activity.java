@@ -66,7 +66,6 @@ public class SetupProfile_Activity extends Base_Activity {
             public void onPageSelected(int position) {
                 switch (position) {
                     case 0:
-                        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
                         toolbar.setTitle(getString(R.string.setup_profile_step_1_title));
                         nextPageBTN.setText(getString(R.string.next_step));
                         break;

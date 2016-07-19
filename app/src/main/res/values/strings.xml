@@ -58,6 +58,8 @@
     <string name="signing_up_dialog_message">Please wait…</string>
     <string name="email_already_taken_api_response">Email already in use, please choose a different email.</string>
     <string name="signup_failed_alert_dialog_title">Registeration failed</string>
+    <string name="first_name_hint">First Name</string>
+    <string name="last_name_hint">Last Name</string>
 
     <!-- SIGN IN ACTIVITY -->
     <string name="existing_password_hint">Password</string>
@@ -128,8 +130,6 @@
     <string name="enable_notifications_location_hint">To further improve your GlobeMed Fit experience, we would like to send you push notifications and
     access your location</string>
     <string name="enable_notifications_location_permissions">Enable Notifications &amp; Location</string>
-    <string name="first_name_hint">First Name</string>
-    <string name="last_name_hint">Last Name</string>
     <string name="gender_hint">Gender</string>
     <string name="date_of_birth_hint">Date of Birth</string>
     <string name="blood_type_hint">Blood Type</string>
@@ -144,13 +144,8 @@
     <string name="setup_profile_step_3_title">Step 3 of 3</string>
     <string name="male_option">Male</string>
     <string name="female_option">Female</string>
-    <string name="medical_conditions_hint">Do you have any medical conditions? (diabetes, etc.)</string>
-    <string name="add_medical_condition_button">+ Add Medical Conditions</string>
     <string name="you_can_change_this_setting_hint">You can change these settings at any time from the preferences</string>
-    <string name="adding_medical_conditions_carefully_hint">Adding one or more medical conditions will affect the behavior and recommendations within the app
-        .\n\nPlease choose conditions accurately</string>
-    <string name="add_medical_condition_activity_title">Medical Conditions</string>
-    <string name="add_medical_conditions_title_hint">Choose one or more conditions from the list</string>
+    <string name="medical_conditions_hint">Medical Condition\n(if any)</string>
 
     <!-- CUSTOMIZE WIDGETS AND CHARTS ACTIVITY -->
     <string name="customize_widgets_and_charts_activity_title">Customize</string>

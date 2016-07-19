@@ -54,13 +54,13 @@
 
     <RadioGroup android:layout_width="match_parent" android:layout_height="wrap_content"
                 android:paddingStart="@dimen/default_margin_2">
-        <RadioButton android:layout_width="wrap_content" android:layout_height="@dimen/radiobutton_row_height"
+        <RadioButton android:layout_width="match_parent" android:layout_height="@dimen/radiobutton_row_height"
                      android:buttonTint="@android:color/white"
                      android:paddingStart="@dimen/default_margin_1"
                      android:text="@string/measurement_unit_metric"
                      android:textColor="@android:color/white"/>
 
-        <RadioButton android:layout_width="wrap_content" android:layout_height="@dimen/radiobutton_row_height"
+        <RadioButton android:layout_width="match_parent" android:layout_height="@dimen/radiobutton_row_height"
                      android:buttonTint="@android:color/white"
                      android:paddingStart="@dimen/default_margin_1"
                      android:text="@string/measurement_unit_imperial"

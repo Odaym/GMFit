@@ -319,7 +319,6 @@ public class Nutrition_Fragment extends Fragment {
     private void addNewBarChart(String chartTitle) {
         final View barChartLayout = parentActivity.getLayoutInflater().inflate(R.layout.view_barchart_container, null);
 
-        Button removeChartBTN = (Button) barChartLayout.findViewById(R.id.removeChartBTN);
         final CardView cardLayout = (CardView) barChartLayout.findViewById(R.id.cardLayoutContainer);
         TextView chartTitleTV = (TextView) barChartLayout.findViewById(R.id.chartTitleTV);
         BarChart barChart = (BarChart) barChartLayout.findViewById(R.id.barChart);
@@ -328,13 +327,6 @@ public class Nutrition_Fragment extends Fragment {
             chartTitleTV.setText(chartTitle);
 
         //TODO: apply the same change you did here as in the Fitness Fragment
-
-        removeChartBTN.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                cards_container.removeView(cardLayout);
-            }
-        });
 
         barChartLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, getResources().getDimensionPixelSize(R.dimen.chart_height)));
 

@@ -43,4 +43,8 @@ public interface GMFit_Service {
     @POST("verify")
     Call<DefaultGetResponse> verifyRegistrationCode(@Header(Cons.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken, @Body GetStarted_Activity.VerificationRequest
             verificationRequest);
+
+    @GET("medical-conditions")
+    Call<MedicalConditionsResponse> getMedicalConditions(@Header(Cons.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken);
+
 }

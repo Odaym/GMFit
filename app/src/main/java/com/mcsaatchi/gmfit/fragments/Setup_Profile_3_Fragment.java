@@ -6,12 +6,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
-import android.text.SpannableStringBuilder;
-import android.text.Spanned;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -21,7 +18,6 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
@@ -29,16 +25,17 @@ import android.widget.TextView;
 import com.andreabaccega.widget.FormEditText;
 import com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialogFragment;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.activities.AddNewMedicalCondition_Activity;
 import com.mcsaatchi.gmfit.activities.Main_Activity;
 import com.mcsaatchi.gmfit.classes.Cons;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
-import com.mcsaatchi.gmfit.classes.Helpers;
 import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
+import com.mcsaatchi.gmfit.rest.MedicalConditionsResponse;
+import com.mcsaatchi.gmfit.rest.MedicalConditionsResponseDatum;
 import com.mcsaatchi.gmfit.rest.RestClient;
 import com.squareup.otto.Subscribe;
 
+import java.text.DateFormatSymbols;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -52,8 +49,7 @@ public class Setup_Profile_3_Fragment extends Fragment implements CalendarDatePi
 
     private static final String FRAG_TAG_DATE_PICKER = "fragment_date_picker_name";
     private static final String TAG = "Setup_Profile_3_Fragment";
-    @Bind(R.id.addMedicalConditionsBTN)
-    Button addMedicalConditionsBTN;
+
     @Bind(R.id.dateOfBirthTV)
     TextView dateOfBirthTV;
     @Bind(R.id.weightET)
@@ -64,6 +60,9 @@ public class Setup_Profile_3_Fragment extends Fragment implements CalendarDatePi
     Spinner bloodTypeSpinner;
     @Bind(R.id.genderSpinner)
     Spinner genderSpinner;
+    @Bind(R.id.medicalConditionsSpinner)
+    Spinner medicalConditionsSpinner;
+
     private SharedPreferences prefs;
     private ArrayList<FormEditText> allFields = new ArrayList<>();
     private String dateOfBirth = "";
@@ -106,18 +105,15 @@ public class Setup_Profile_3_Fragment extends Fragment implements CalendarDatePi
 
         prefs = getActivity().getSharedPreferences(Cons.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
 
+        Log.d(TAG, "onCreateView: here");
+        getAndPopulateMedicalConditions();
+
+        Log.d(TAG, "onCreateView: and here");
+
         inputMethodManager = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
 
         allFields.add(weightET);
         allFields.add(heightET);
-
-        addMedicalConditionsBTN.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), AddNewMedicalCondition_Activity.class);
-                startActivity(intent);
-            }
-        });
 
         dateOfBirthTV.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -132,29 +128,12 @@ public class Setup_Profile_3_Fragment extends Fragment implements CalendarDatePi
             }
         });
 
-
-//        Typeface fontRegular = Typeface.create("sans-serif", Typeface.NORMAL);
-//        Typeface fontLight = Typeface.create("sans-serif-light", Typeface.NORMAL);
-
-        SpannableStringBuilder SS = new SpannableStringBuilder(getString(R.string.add_medical_condition_button));
-        SS.setSpan(Typeface.create("sans-serif-light", Typeface.NORMAL), 0, 5, Spanned.SPAN_EXCLUSIVE_INCLUSIVE);
-//        SS.setSpan (new CustomTypefaceSpan("sans-serif", fontRegular), 6, getString(R.string.add_medical_condition_button).length(),Spanned
-//                .SPAN_EXCLUSIVE_INCLUSIVE);
-//        wordtoSpan.setSpan(fontRegular, 5, getString(R.string.add_medical_condition_button).length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-        addMedicalConditionsBTN.setText(SS);
-
-//        addMedicalConditionsBTN.setTypeface(Typeface.create("sans-serif-light", Typeface.NORMAL));
-//        addMedicalConditionsBTN.setText(getString(R.string.add_medical_condition_button));
-
         return fragmentView;
     }
 
     @Override
     public void onDateSet(CalendarDatePickerDialogFragment dialog, int year, int monthOfYear, int dayOfMonth) {
-//        Toast.makeText(getActivity(), "Date : " + dayOfMonth + " - " + monthOfYear + " " + year, Toast.LENGTH_SHORT).show();
-//        dateOfBirthBTN.setText(year + " / " + monthOfYear + " / " + dayOfMonth);
-//        dateOfBirth = year + "-" + monthOfYear + "-" + dayOfMonth;
+        dateOfBirthTV.setText(dayOfMonth + " " + new DateFormatSymbols().getMonths()[monthOfYear-1] + " " + year);
     }
 
     @Subscribe
@@ -163,16 +142,13 @@ public class Setup_Profile_3_Fragment extends Fragment implements CalendarDatePi
 
         switch (ebpMessage) {
             case Cons.EVENT_USER_FINALIZE_SETUP_PROFILE:
-                if (Helpers.validateFields(allFields)) {
-
+                if (!weightET.getText().toString().isEmpty() && !heightET.getText().toString().isEmpty()) {
                     double weight = Double.parseDouble(weightET.getText().toString());
                     double height = Double.parseDouble(heightET.getText().toString());
 
                     int finalGender;
 
                     finalGender = genderSpinner.getSelectedItem().toString().equals("Male") ? 1 : 0;
-
-                    Log.d(TAG, "handle_BusEvents: finalGender is : " + finalGender);
 
                     String finalDateOfBirth = null;
 
@@ -190,6 +166,46 @@ public class Setup_Profile_3_Fragment extends Fragment implements CalendarDatePi
 
                 break;
         }
+    }
+
+    private void getAndPopulateMedicalConditions() {
+        Call<MedicalConditionsResponse> getMedicalConditionsCall = new RestClient().getGMFitService().getMedicalConditions(prefs.getString(Cons
+                .PREF_USER_ACCESS_TOKEN,
+                Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS));
+
+        getMedicalConditionsCall.enqueue(new Callback<MedicalConditionsResponse>() {
+            @Override
+            public void onResponse(Call<MedicalConditionsResponse> call, Response<MedicalConditionsResponse> response) {
+                Log.d(TAG, "onResponse: Response code is : " + response.code());
+
+                switch (response.code()) {
+                    case 200:
+
+                        ArrayList<MedicalConditionsResponseDatum> allMedicalData = (ArrayList<MedicalConditionsResponseDatum>) response.body().getData().getBody().getData();
+
+                        ArrayList<String> medicalConditions = new ArrayList<>();
+
+                        Log.d(TAG, "onResponse: Results size : " + allMedicalData.size());
+
+
+                        for (int i = 0; i < allMedicalData.size(); i++) {
+                            medicalConditions.add(allMedicalData.get(i).getName());
+                        }
+
+                        initCustomSpinner(medicalConditions, medicalConditionsSpinner);
+
+                        break;
+                    case 401:
+
+                        break;
+                }
+            }
+
+            @Override
+            public void onFailure(Call<MedicalConditionsResponse> call, Throwable t) {
+            }
+        });
+
     }
 
     private void setupUserProfile(String finalDateOfBirth, String bloodType, int finalGender, double height, double weight, double BMI) {

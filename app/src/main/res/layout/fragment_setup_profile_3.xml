@@ -78,7 +78,6 @@
                        android:src="@drawable/ic_arrow_down"/>
         </RelativeLayout>
 
-
         <LinearLayout android:layout_width="match_parent" android:layout_height="@dimen/radiobutton_row_height"
                       android:layout_marginBottom="@dimen/default_margin_0"
                       android:gravity="center_vertical"
@@ -102,6 +101,31 @@
                 android:layout_height="match_parent"
                 android:background="@drawable/setup_profile_spinners"
                 android:entries="@array/blood_types"
+                android:paddingEnd="@dimen/default_margin_1"/>
+        </LinearLayout>
+
+        <LinearLayout android:layout_width="match_parent" android:layout_height="@dimen/radiobutton_row_height"
+                      android:layout_marginBottom="@dimen/default_margin_0"
+                      android:gravity="center_vertical"
+                      android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="@dimen/text_input_label_width" android:layout_height="match_parent"
+                android:background="@color/color_primary_dark_transparent"
+                android:gravity="center_vertical|start"
+                android:paddingStart="@dimen/default_margin_2"
+                android:text="@string/medical_conditions_hint"
+                android:textAppearance="?android:textAppearanceSmall"
+                android:textColor="@android:color/white"/>
+
+            <View android:layout_width="1dp" android:layout_height="match_parent"
+                  android:background="@color/separator_gray"/>
+
+            <Spinner
+                android:id="@+id/medicalConditionsSpinner"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/setup_profile_spinners"
                 android:paddingEnd="@dimen/default_margin_1"/>
         </LinearLayout>
 
@@ -188,15 +212,5 @@
                   android:gravity="center"
                   android:text="@string/medical_conditions_hint"
                   android:textColor="@android:color/white"/>
-
-        <Button
-            android:id="@+id/addMedicalConditionsBTN"
-            style="?android:attr/borderlessButtonStyle" android:layout_width="match_parent"
-            android:layout_height="@dimen/default_button_height_2"
-            android:layout_marginBottom="@dimen/default_margin_10"
-            android:layout_marginEnd="@dimen/default_margin_2"
-            android:layout_marginStart="@dimen/default_margin_2"
-            android:background="@color/add_medical_conditions_button_green"
-            android:textColor="@android:color/white"/>
     </LinearLayout>
 </ScrollView>

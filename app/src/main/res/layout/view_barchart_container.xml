@@ -23,12 +23,5 @@
             android:layout_below="@id/chartTitleTV"
             android:layout_marginTop="@dimen/default_margin_1"/>
 
-        <Button
-            android:id="@+id/removeChartBTN"
-            android:layout_width="@dimen/remove_chart_button_dimens"
-            android:layout_height="@dimen/remove_chart_button_dimens"
-            android:layout_alignParentEnd="true"
-            android:layout_marginTop="@dimen/default_margin_1"
-            android:text="x"/>
     </RelativeLayout>
 </android.support.v7.widget.CardView>

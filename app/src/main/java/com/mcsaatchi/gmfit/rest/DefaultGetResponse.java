@@ -7,19 +7,19 @@ public class DefaultGetResponse {
 
     @SerializedName("data")
     @Expose
-    private DataGetResponseData data;
+    private DefaultGetResponseData data;
 
     /**
      * @return The data
      */
-    public DataGetResponseData getData() {
+    public DefaultGetResponseData getData() {
         return data;
     }
 
     /**
      * @param data The data
      */
-    public void setData(DataGetResponseData data) {
+    public void setData(DefaultGetResponseData data) {
         this.data = data;
     }
 }
