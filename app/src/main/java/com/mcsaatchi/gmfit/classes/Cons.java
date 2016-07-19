@@ -6,6 +6,13 @@ public class Cons {
     public static final String SHARED_PREFS_TITLE = "GMFIT_PREFS";
     public static final String TAG = "GMFIT_DEBUG";
 
+    public static final String EXTRAS_USER_LOGGED_IN = "user_logged_in";
+    public static final String EXTRAS_USER_FULL_NAME = "user_full_name";
+    public static final String EXTRAS_USER_EMAIL = "user_email_address";
+    public static final String EXTRAS_USER_DISPLAY_PHOTO = "user_display_photo";
+    public static final String EXTRAS_USER_POLICY = "user_policy";
+    public static final String EXTRAS_USER_FACEBOOK_TOKEN = "user_facebook_token";
+
     public static final String EXTRAS_FITNESS_FRAGMENT = "FITNESS";
     public static final String EXTRAS_NUTRITION_FRAGMENT = "NUTRITION";
     public static final String EXTRAS_HEALTH_FRAGMENT = "HEALTH";
@@ -31,11 +38,6 @@ public class Cons {
     public static final String EXTRAS_ADD_NUTRIITION_CHART = "add_nutrition_chart";
     public static final String EXTRAS_MAIN_MEAL_NAME = "main_meal_name";
     public static final String EXTRAS_PICKED_MEAL_ENTRY = "picked_meal_entry";
-    public static final String EXTRAS_USER_LOGGED_IN = "user_logged_in";
-    public static final String EXTRAS_USER_FULL_NAME = "user_full_name";
-    public static final String EXTRAS_USER_EMAIL = "user_email_address";
-    public static final String EXTRAS_USER_DISPLAY_PHOTO = "user_display_photo";
-    public static final String EXTRAS_USER_POLICY = "user_policy";
     public static final String BUNDLE_ACTIVITY_TITLE = "activity_title";
     public static final String BUNDLE_ACTIVITY_BACK_BUTTON_ENABLED = "activity_back_button_enabled";
     public static final String BUNDLE_FITNESS_WIDGETS_MAP = "fitness_widgets_map";

@@ -1,6 +1,7 @@
 package com.mcsaatchi.gmfit.rest;
 
 import com.mcsaatchi.gmfit.activities.GetStarted_Activity;
+import com.mcsaatchi.gmfit.activities.Login_Activity;
 import com.mcsaatchi.gmfit.activities.SignIn_Activity;
 import com.mcsaatchi.gmfit.activities.SignUp_Activity;
 import com.mcsaatchi.gmfit.classes.Cons;
@@ -46,5 +47,9 @@ public interface GMFit_Service {
 
     @GET("medical-conditions")
     Call<MedicalConditionsResponse> getMedicalConditions(@Header(Cons.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken);
+
+    @POST("facebook")
+    Call<AuthenticationResponse> registerUserFacebook(@Body Login_Activity.RegisterFacebookRequest registerFacebookRequest);
+
 
 }

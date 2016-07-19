@@ -71,10 +71,6 @@ import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.rest.RestClient;
 import com.squareup.otto.Subscribe;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -369,26 +365,26 @@ public class Fitness_Fragment extends Fragment {
 
                                                     findStepCounterDataSource();
 
-                                                    if (isVisible()) {
-                                                        if (!prefs.getBoolean("SYNCED_METRICS", false)) {
-                                                            Log.d(TAG, "run: PREF DOESN'T EXIST, SYNCING METRICS NOW");
-
-                                                            if (Helpers.isInternetAvailable(getActivity())) {
-                                                                if (stepCountToday != null && caloriesToday != null &&
-                                                                        distanceCoveredToday != null) {
-
-                                                                    double[] valuesArray = new double[]{Double
-                                                                            .parseDouble(stepCountToday), Double.parseDouble(caloriesToday),
-                                                                            Double.parseDouble(distanceCoveredToday)};
-
-                                                                    updateMetrics(new String[]{"steps-count", "active-calories",
-                                                                            "distance-traveled"}, valuesArray, Helpers.getCalendarDate());
-                                                                }
-                                                            } else {
-                                                                Helpers.showNoInternetDialog(getActivity());
-                                                            }
-                                                        }
-                                                    }
+//                                                    if (isVisible()) {
+//                                                        if (!prefs.getBoolean("SYNCED_METRICS", false)) {
+//                                                            Log.d(TAG, "run: PREF DOESN'T EXIST, SYNCING METRICS NOW");
+//
+//                                                            if (Helpers.isInternetAvailable(getActivity())) {
+//                                                                if (stepCountToday != null && caloriesToday != null &&
+//                                                                        distanceCoveredToday != null) {
+//
+//                                                                    double[] valuesArray = new double[]{Double
+//                                                                            .parseDouble(stepCountToday), Double.parseDouble(caloriesToday),
+//                                                                            Double.parseDouble(distanceCoveredToday)};
+//
+//                                                                    updateMetrics(new String[]{"steps-count", "active-calories",
+//                                                                            "distance-traveled"}, valuesArray, Helpers.getCalendarDate());
+//                                                                }
+//                                                            } else {
+//                                                                Helpers.showNoInternetDialog(getActivity());
+//                                                            }
+//                                                        }
+//                                                    }
                                                 }
                                             });
                                         }
@@ -449,30 +445,11 @@ public class Fitness_Fragment extends Fragment {
         updateMetricsCall.enqueue(new Callback<DefaultGetResponse>() {
             @Override
             public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
-                if (response.body() != null) {
-                    switch (response.code()) {
-                        case 200:
+                switch (response.code()) {
+                    case 200:
 //                            waitingDialog.dismiss();
 
-                            break;
-                    }
-                } else {
-                    if (isVisible()) {
-                        waitingDialog.dismiss();
-
-                        //Handle the error
-                        try {
-                            JSONObject errorBody = new JSONObject(response.errorBody().string());
-                            Log.d(TAG, "onResponse: ERROR IS : " + response.errorBody().string());
-                            JSONObject errorData = errorBody.getJSONObject("data");
-                            int errorCodeInData = errorData.getInt("code");
-
-                            Log.d(TAG, "updateMetrics onResponse: Body error : " + response.errorBody().string());
-
-                        } catch (IOException | JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
+                        break;
                 }
             }
 
@@ -508,20 +485,20 @@ public class Fitness_Fragment extends Fragment {
         updateMetricsCall.enqueue(new Callback<DefaultGetResponse>() {
             @Override
             public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
-                    switch (response.code()) {
-                        case 200:
-                            waitingDialog.dismiss();
+                switch (response.code()) {
+                    case 200:
+                        waitingDialog.dismiss();
 
-                            Log.d(TAG, "onResponse: SYNCED Metrics successfully");
+                        Log.d(TAG, "onResponse: SYNCED Metrics successfully");
 
-                            prefs.edit().putBoolean("SYNCED_METRICS", true).apply();
+                        prefs.edit().putBoolean("SYNCED_METRICS", true).apply();
 
-                            break;
+                        break;
 
-                        //TODO:
+                    //TODO:
 //                        case error code:
 //                            break;
-                    }
+                }
             }
 
             @Override
