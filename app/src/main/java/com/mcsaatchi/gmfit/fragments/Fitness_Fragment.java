@@ -322,7 +322,7 @@ public class Fitness_Fragment extends Fragment {
                                                 @Override
                                                 public void run() {
 
-                                                    if (!stepCountToday.isEmpty())
+                                                    if (stepCountToday != null && !stepCountToday.isEmpty())
                                                         metricCounterTV.setText(NumberFormat.getInstance().format(Double.parseDouble(stepCountToday)));
 
                                                     for (int i = 0; i < widgetsMap.size(); i++) {
