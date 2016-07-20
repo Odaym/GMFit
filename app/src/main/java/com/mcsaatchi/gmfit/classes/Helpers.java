@@ -2,6 +2,7 @@ package com.mcsaatchi.gmfit.classes;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -116,7 +117,7 @@ public class Helpers {
 
         BarDataSet set1;
         set1 = new BarDataSet(valsMetrics, "Legend");
-        set1.setColors(ColorTemplate.VORDIPLOM_COLORS);
+        set1.setColor(Color.BLACK);
         set1.setBarShadowColor(R.color.bpblack);
         set1.setDrawValues(false);
 

@@ -17,10 +17,10 @@
             android:id="@+id/metricProgressBar"
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="@dimen/metric_header_progress_bar_width"
+            android:paddingBottom="@dimen/default_margin_1_5"
             android:layout_height="wrap_content"
             android:layout_above="@+id/metricCounterTV"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="@dimen/default_margin_1"
             android:indeterminate="false"
             android:maxHeight="10dip"
             android:minHeight="10dip"
@@ -32,7 +32,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="2345"
+            android:text="0.0"
             android:textColor="@color/white"
             android:textSize="@dimen/metric_header_fitness_counter_font_size"/>
 

@@ -47,12 +47,10 @@ import com.google.android.gms.fitness.data.DataSource;
 import com.google.android.gms.fitness.data.DataType;
 import com.google.android.gms.fitness.data.Field;
 import com.google.android.gms.fitness.data.Value;
-import com.google.android.gms.fitness.request.DataReadRequest;
 import com.google.android.gms.fitness.request.DataSourcesRequest;
 import com.google.android.gms.fitness.request.OnDataPointListener;
 import com.google.android.gms.fitness.request.SensorRequest;
 import com.google.android.gms.fitness.result.DailyTotalResult;
-import com.google.android.gms.fitness.result.DataReadResult;
 import com.google.android.gms.fitness.result.DataSourcesResult;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.mcsaatchi.gmfit.BuildConfig;
@@ -75,14 +73,9 @@ import com.squareup.otto.Subscribe;
 
 import net.danlew.android.joda.JodaTimeAndroid;
 
-import org.joda.time.DateTime;
-import org.joda.time.Duration;
-
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -178,42 +171,25 @@ public class Fitness_Fragment extends Fragment {
             }
         });
 
-        if (prefs.contains("calories") || prefs.contains("distance")) {
+        metricCounterTV.setText(NumberFormat.getInstance().format(Double.parseDouble(prefs.getString("steps", ""))));
+
+        if (prefs.contains("distance")) {
             widgetsMap = new ParcelableSparseArray() {{
                 put(0, new ParcelableFitnessString(R.drawable.ic_running, Double.parseDouble(prefs.getString("distance", "0.0")), "Walking", "m"));
                 put(1, new ParcelableFitnessString(R.drawable.ic_biking, 0.0, "Biking", "Km"));
-                put(3, new ParcelableFitnessString(R.drawable.ic_steps, Double.parseDouble(prefs.getString("steps", "0.0")), "Stairs", "m"));
-                put(2, new ParcelableFitnessString(R.drawable.ic_calories, Double.parseDouble(prefs.getString("calories", "0.0")), "Calories", "kcal"));
+                put(3, new ParcelableFitnessString(R.drawable.ic_steps, 0, "Stairs", "stairs"));
+                put(2, new ParcelableFitnessString(R.drawable.ic_calories, 15.2, "Calories", "kcal"));
             }};
         } else {
             widgetsMap = new ParcelableSparseArray() {{
-                put(0, new ParcelableFitnessString(R.drawable.ic_running, 1.39, "Walking", "m"));
+                put(0, new ParcelableFitnessString(R.drawable.ic_running, 0.0, "Walking", "m"));
                 put(1, new ParcelableFitnessString(R.drawable.ic_biking, 0.0, "Biking", "Km"));
-                put(3, new ParcelableFitnessString(R.drawable.ic_steps, 2.4, "Stairs", "m"));
-                put(2, new ParcelableFitnessString(R.drawable.ic_calories, 130, "Calories", "Calories"));
+                put(3, new ParcelableFitnessString(R.drawable.ic_steps, 0.0, "Stairs", "stairs"));
+                put(2, new ParcelableFitnessString(R.drawable.ic_calories, 0.0, "Calories", "Calories"));
             }};
         }
 
         setUpWidgetsGridView(widgetsMap);
-
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                allDataCharts = dataChartDAO.queryForAll();
-//
-//                if (!allDataCharts.isEmpty()) {
-//                    parentActivity.runOnUiThread(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            for (DataChart chart :
-//                                    allDataCharts) {
-//                                addNewBarChart(chart.getName(), ebp.getFloatArrayExtra()());
-//                            }
-//                        }
-//                    });
-//                }
-//            }
-//        }).start();
 
         return fragmentView;
     }
@@ -346,38 +322,24 @@ public class Fitness_Fragment extends Fragment {
                                                 @Override
                                                 public void run() {
 
-                                                    if (stepCountToday != null) {
-                                                        lastKnownValueForStepCountToday = stepCountToday;
+                                                    if (!stepCountToday.isEmpty())
                                                         metricCounterTV.setText(NumberFormat.getInstance().format(Double.parseDouble(stepCountToday)));
-                                                    } else if (lastKnownValueForStepCountToday != null)
-                                                        metricCounterTV.setText(NumberFormat.getInstance().format(Double.parseDouble(lastKnownValueForStepCountToday)));
 
                                                     for (int i = 0; i < widgetsMap.size(); i++) {
                                                         ParcelableFitnessString fitnessWidget = (ParcelableFitnessString) widgetsMap.valueAt(i);
 
                                                         switch (fitnessWidget.getTitle()) {
                                                             case "Walking":
-                                                                if (distanceCoveredToday != null) {
-                                                                    lastKnownValueForDistanceCovered = distanceCoveredToday;
+                                                                if (distanceCoveredToday != null & !distanceCoveredToday.isEmpty())
                                                                     fitnessWidget.setValue(Double.parseDouble(distanceCoveredToday));
-                                                                } else if (lastKnownValueForCalories != null)
-                                                                    fitnessWidget.setValue(Double.parseDouble(String.valueOf(lastKnownValueForStepCount)));
                                                                 break;
                                                             case "Biking":
                                                                 break;
                                                             case "Calories":
-                                                                if (caloriesToday != null) {
-//                                                                    lastKnownValueForCalories = caloriesToday;
-//                                                                    fitnessWidget.setValue(Double.parseDouble(caloriesToday));
-                                                                } else if (lastKnownValueForCalories != null)
-//                                                                    fitnessWidget.setValue(Double.parseDouble(lastKnownValueForCalories));
-                                                                break;
+                                                                    fitnessWidget.setValue(20.1);
+                                                                    break;
                                                             case "Stairs":
-                                                                if (lastKnownValueForStepCount != null) {
-                                                                    Log.d(TAG, "run: Value is : " + Double.parseDouble(String.valueOf
-                                                                            (lastKnownValueForStepCount)));
-                                                                    fitnessWidget.setValue(Double.parseDouble(String.valueOf(lastKnownValueForStepCount)));
-                                                                }
+                                                                    fitnessWidget.setValue(0);
                                                                 break;
                                                         }
 
@@ -534,9 +496,9 @@ public class Fitness_Fragment extends Fragment {
         // Note: Fitness.SensorsApi.findDataSources() requires the ACCESS_FINE_LOCATION permission.
         Fitness.SensorsApi.findDataSources(googleApiFitnessClient, new DataSourcesRequest.Builder()
                 // At least one datatype must be specified.
-                .setDataTypes(DataType.AGGREGATE_STEP_COUNT_DELTA)
+                .setDataTypes(DataType.TYPE_STEP_COUNT_DELTA)
                 // Can specify whether data type is raw or derived.
-                .setDataSourceTypes(DataSource.TYPE_RAW)
+                .setDataSourceTypes(DataSource.TYPE_DERIVED)
                 .build())
                 .setResultCallback(new ResultCallback<DataSourcesResult>() {
                     @Override
@@ -547,11 +509,11 @@ public class Fitness_Fragment extends Fragment {
                             Log.i(TAG, "Data Source type: " + dataSource.getDataType().getName());
 
                             //Let's register a listener to receive Activity data!
-                            if (dataSource.getDataType().equals(DataType.AGGREGATE_STEP_COUNT_DELTA)
+                            if (dataSource.getDataType().equals(DataType.TYPE_STEP_COUNT_DELTA)
                                     && mListener == null) {
                                 Log.i(TAG, "Data source for " + dataSource.getDataType() + " found!  Registering.");
                                 registerStepCountDataSource(dataSource,
-                                        DataType.AGGREGATE_STEP_COUNT_DELTA);
+                                        DataType.TYPE_STEP_COUNT_DELTA);
                             }
                         }
                     }
@@ -572,14 +534,16 @@ public class Fitness_Fragment extends Fragment {
                     parentActivity.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            lastKnownValueForStepCount = val;
 
                             TextView stepCounterTextView = findFitnessWidgetInGrid();
 
-                            if (stepCounterTextView != null)
-                                stepCounterTextView.setText(NumberFormat.getInstance().format(Double.parseDouble(String.valueOf(val))));
+                            if (stepCounterTextView != null) {
+                                int flightsClimbed = Integer.parseInt(stepCounterTextView.getText().toString()) + val.asInt();
 
-                            Log.i(TAG, "Found this field : " + field.getName() + " with value : " + val);
+                                stepCounterTextView.setText(String.valueOf(flightsClimbed));
+
+                                prefs.edit().putString("step_counter", String.valueOf(flightsClimbed)).apply();
+                            }
                         }
                     });
                 }
@@ -590,7 +554,7 @@ public class Fitness_Fragment extends Fragment {
                 googleApiFitnessClient,
                 new SensorRequest.Builder()
                         .setDataSource(dataSource) // Optional but recommended for custom data sets.
-                        .setDataType(DataType.AGGREGATE_STEP_COUNT_DELTA) // Can't be omitted.
+                        .setDataType(DataType.TYPE_STEP_COUNT_DELTA) // Can't be omitted.
                         .setSamplingRate(1, TimeUnit.SECONDS)
                         .build(),
                 mListener)
@@ -606,138 +570,36 @@ public class Fitness_Fragment extends Fragment {
                 });
     }
 
-    public void saveUserHeight(int heightCentimiters) {
-        // to post data
-        float height = ((float) heightCentimiters) / 100.0f;
-        Calendar cal = Calendar.getInstance();
-        Date now = new Date();
-        cal.setTime(now);
-        long endTime = cal.getTimeInMillis();
-        cal.add(Calendar.DAY_OF_YEAR, -1);
-        long startTime = cal.getTimeInMillis();
-
-        DataSet heightDataSet = createDataForRequest(
-                DataType.TYPE_HEIGHT,
-                DataSource.TYPE_RAW,
-                height,
-                startTime,
-                endTime,
-                TimeUnit.MILLISECONDS
-        );
-
-        Status heightInsertStatus =
-                Fitness.HistoryApi.insertData(googleApiFitnessClient, heightDataSet)
-                        .await(1, TimeUnit.MINUTES);
-    }
-
-    public void saveUserWeight(float weight) {
-        // to post data
-        Calendar cal = Calendar.getInstance();
-        Date now = new Date();
-        cal.setTime(now);
-        long endTime = cal.getTimeInMillis();
-        cal.add(Calendar.DAY_OF_YEAR, -1);
-        long startTime = cal.getTimeInMillis();
-
-        DataSet weightDataSet = createDataForRequest(
-                DataType.TYPE_WEIGHT,
-                DataSource.TYPE_RAW,
-                weight,
-                startTime,
-                endTime,
-                TimeUnit.MILLISECONDS
-        );
-
-        Status weightInsertStatus =
-                Fitness.HistoryApi.insertData(googleApiFitnessClient, weightDataSet)
-                        .await(1, TimeUnit.MINUTES);
-    }
-
-    public DataSet createDataForRequest(DataType dataType,
-                                        int dataSourceType,
-                                        Object values,
-                                        long startTime,
-                                        long endTime,
-                                        TimeUnit timeUnit) {
-        DataSource dataSource = new DataSource.Builder()
-                .setAppPackageName(getActivity())
-                .setDataType(dataType)
-                .setType(dataSourceType)
-                .build();
-
-        DataSet dataSet = DataSet.create(dataSource);
-        DataPoint dataPoint = dataSet.createDataPoint().setTimeInterval(startTime, endTime, timeUnit);
-
-        if (values instanceof Integer) {
-            dataPoint = dataPoint.setIntValues((Integer) values);
-        } else {
-            dataPoint = dataPoint.setFloatValues((Float) values);
-        }
-
-        dataSet.add(dataPoint);
-
-        return dataSet;
-    }
-
     public String displayCaloriesDataForToday() {
-//        saveUserHeight(180);
-//        saveUserWeight(79);
+        DailyTotalResult resultingMetrics = Fitness.HistoryApi.readDailyTotal(googleApiFitnessClient, DataType.TYPE_CALORIES_EXPENDED).await();
 
-//        Calendar cal = Calendar.getInstance();
-//        Date now = new Date();
+//        final DataReadRequest readRequest = new DataReadRequest.Builder()
+//                .read(DataType.TYPE_CYCLING_PEDALING_CUMULATIVE)
+//                .setTimeRange(midnight.getMillis(), now.getMillis(), TimeUnit.MILLISECONDS)
+//                .build();
+////
+//        DataReadResult dataReadResult =
+//                Fitness.HistoryApi.readData(googleApiFitnessClient, readRequest).await(1, TimeUnit.SECONDS);
+////
+//        DataSet stepData = dataReadResult.getDataSet(DataType.TYPE_CYCLING_PEDALING_CUMULATIVE);
 //
-//        cal.setTime(now);
-//        long endTime = cal.getTimeInMillis();
-//        Log.d(TAG, "displayCaloriesDataForToday: End time is " + cal.getTime());
+//        float totalSteps = 0;
 //
-//        cal.add(Calendar.DAY_OF_YEAR, -1);
-//        Log.d(TAG, "displayCaloriesDataForToday: Start time is " + cal.getTime());
-//        long startTime = cal.getTimeInMillis();
+//        for (DataPoint dp : stepData.getDataPoints()) {
+//            for (Field field : dp.getDataType().getFields()) {
+//                float steps = dp.getValue(field).asFloat();
 //
-//        DailyTotalResult resultingMetrics = Fitness.HistoryApi.readDailyTotal(googleApiFitnessClient, DataType.TYPE_CALORIES_EXPENDED).await();
-
-        /*
-
-
-         */
-
-        DateTime now = new DateTime();
-        DateTime midnight = now.withTimeAtStartOfDay();
-        Duration duration = new Duration(midnight, now);
-        int seconds = duration.toStandardSeconds().getSeconds();
-
-        Log.d(TAG, "displayCaloriesDataForToday: Date now is : " + now.toDateTime());
-
-        Log.d(TAG, "displayCaloriesDataForToday: Date midnight is : " + midnight.toDateTime());
-
-        final DataReadRequest readRequest = new DataReadRequest.Builder()
-                .read(DataType.TYPE_STEP_COUNT_CUMULATIVE)
-                .setTimeRange(midnight.getMillis(), now.getMillis(), TimeUnit.MILLISECONDS)
-                .build();
+//                totalSteps += steps;
+////
+//                Value val = dp.getValue(field);
 //
-        DataReadResult dataReadResult =
-                Fitness.HistoryApi.readData(googleApiFitnessClient, readRequest).await(1, TimeUnit.SECONDS);
-//
-        DataSet stepData = dataReadResult.getDataSet(DataType.TYPE_STEP_COUNT_CUMULATIVE);
-
-        float totalSteps = 0;
-
-        for (DataPoint dp : stepData.getDataPoints()) {
-            for (Field field : dp.getDataType().getFields()) {
-                float steps = dp.getValue(field).asFloat();
-
-                totalSteps += steps;
-//
-                Value val = dp.getValue(field);
-
-//                Log.d(TAG, "displayCaloriesDataForToday: Value for metric " + val.asString());
-            }
-        }
-//
-        Log.d("METRIC", "displayCaloriesDataForToday: Total Calories is : " + totalSteps);
-//
-//        return showResultingDataPoints("");
-        return ""     ;
+////                Log.d(TAG, "displayCaloriesDataForToday: Value for metric " + val.asString());
+//            }
+//        }
+////
+//        Log.d("METRIC", "displayCaloriesDataForToday: Total Calories is : " + totalSteps);
+////
+        return showResultingDataPoints(resultingMetrics.getTotal());
     }
 
     public String displayStepCountForToday() {
@@ -763,9 +625,10 @@ public class Fitness_Fragment extends Fragment {
                 Log.i(TAG, "Detected " + dp.getDataType() + " DataPoint field: " + field.getName());
                 Log.i(TAG, "Detected " + dp.getDataType() + " DataPoint value: " + val);
 
-                prefs.edit().putString(field.getName(), String.valueOf(dp.getValue(field))).apply();
 
                 finalValue = dFormat.format(Double.parseDouble(val != null ? val.toString() : null));
+
+                prefs.edit().putString(field.getName(), finalValue).apply();
             }
         }
 
