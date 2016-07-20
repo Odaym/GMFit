@@ -330,7 +330,7 @@ public class Fitness_Fragment extends Fragment {
 
                                                         switch (fitnessWidget.getTitle()) {
                                                             case "Walking":
-                                                                if (distanceCoveredToday != null & !distanceCoveredToday.isEmpty())
+                                                                if (distanceCoveredToday != null && !distanceCoveredToday.isEmpty())
                                                                     fitnessWidget.setValue(Double.parseDouble(distanceCoveredToday));
                                                                 break;
                                                             case "Biking":
