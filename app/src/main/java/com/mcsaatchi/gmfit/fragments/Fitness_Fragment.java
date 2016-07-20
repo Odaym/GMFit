@@ -47,10 +47,12 @@ import com.google.android.gms.fitness.data.DataSource;
 import com.google.android.gms.fitness.data.DataType;
 import com.google.android.gms.fitness.data.Field;
 import com.google.android.gms.fitness.data.Value;
+import com.google.android.gms.fitness.request.DataReadRequest;
 import com.google.android.gms.fitness.request.DataSourcesRequest;
 import com.google.android.gms.fitness.request.OnDataPointListener;
 import com.google.android.gms.fitness.request.SensorRequest;
 import com.google.android.gms.fitness.result.DailyTotalResult;
+import com.google.android.gms.fitness.result.DataReadResult;
 import com.google.android.gms.fitness.result.DataSourcesResult;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.mcsaatchi.gmfit.BuildConfig;
@@ -365,10 +367,10 @@ public class Fitness_Fragment extends Fragment {
                                                                 break;
                                                             case "Calories":
                                                                 if (caloriesToday != null) {
-                                                                    lastKnownValueForCalories = caloriesToday;
-                                                                    fitnessWidget.setValue(Double.parseDouble(caloriesToday));
+//                                                                    lastKnownValueForCalories = caloriesToday;
+//                                                                    fitnessWidget.setValue(Double.parseDouble(caloriesToday));
                                                                 } else if (lastKnownValueForCalories != null)
-                                                                    fitnessWidget.setValue(Double.parseDouble(lastKnownValueForCalories));
+//                                                                    fitnessWidget.setValue(Double.parseDouble(lastKnownValueForCalories));
                                                                 break;
                                                             case "Stairs":
                                                                 if (lastKnownValueForStepCount != null) {
@@ -708,32 +710,32 @@ public class Fitness_Fragment extends Fragment {
 
         Log.d(TAG, "displayCaloriesDataForToday: Date midnight is : " + midnight.toDateTime());
 
-//        final DataReadRequest readRequest = new DataReadRequest.Builder()
-//                .read(DataType.TYPE_CALORIES_EXPENDED)
-//                .setTimeRange(startTime, endTime, TimeUnit.MILLISECONDS)
-//                .build();
+        final DataReadRequest readRequest = new DataReadRequest.Builder()
+                .read(DataType.TYPE_STEP_COUNT_CUMULATIVE)
+                .setTimeRange(midnight.getMillis(), now.getMillis(), TimeUnit.MILLISECONDS)
+                .build();
 //
-//        DataReadResult dataReadResult =
-//                Fitness.HistoryApi.readData(googleApiFitnessClient, readRequest).await(1, TimeUnit.SECONDS);
+        DataReadResult dataReadResult =
+                Fitness.HistoryApi.readData(googleApiFitnessClient, readRequest).await(1, TimeUnit.SECONDS);
 //
-//        DataSet stepData = dataReadResult.getDataSet(DataType.TYPE_CALORIES_EXPENDED);
-//
-//        float totalSteps = 0;
-//
-//        for (DataPoint dp : stepData.getDataPoints()) {
-//            for (Field field : dp.getDataType().getFields()) {
-//                float steps = dp.getValue(field).asFloat();
-//
-//                totalSteps += steps;
-////
-//                Value val = dp.getValue(field);
-//
-////                Log.d(TAG, "displayCaloriesDataForToday: Value for metric " + val.asString());
-//            }
-//        }
+        DataSet stepData = dataReadResult.getDataSet(DataType.TYPE_STEP_COUNT_CUMULATIVE);
 
-//        Log.d("METRIC", "displayCaloriesDataForToday: Total Calories is : " + totalSteps);
+        float totalSteps = 0;
 
+        for (DataPoint dp : stepData.getDataPoints()) {
+            for (Field field : dp.getDataType().getFields()) {
+                float steps = dp.getValue(field).asFloat();
+
+                totalSteps += steps;
+//
+                Value val = dp.getValue(field);
+
+//                Log.d(TAG, "displayCaloriesDataForToday: Value for metric " + val.asString());
+            }
+        }
+//
+        Log.d("METRIC", "displayCaloriesDataForToday: Total Calories is : " + totalSteps);
+//
 //        return showResultingDataPoints("");
         return ""     ;
     }
