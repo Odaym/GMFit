@@ -146,9 +146,10 @@ public class SignUp_Activity extends Base_Activity {
                             Intent intent = new Intent(SignUp_Activity.this, GetStarted_Activity.class);
                             startActivity(intent);
                             finish();
+                            break;
                         case 449:
-//                            alertDialog.setMessage(getString(R.string.email_already_taken_api_response));
-//                            alertDialog.show();
+                            alertDialog.setMessage(getString(R.string.email_already_taken_api_response));
+                            alertDialog.show();
                             break;
                     }
             }

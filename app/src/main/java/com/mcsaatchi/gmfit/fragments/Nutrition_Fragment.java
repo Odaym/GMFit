@@ -32,7 +32,10 @@ import com.mcsaatchi.gmfit.adapters.Widgets_GridAdapter;
 import com.mcsaatchi.gmfit.classes.Cons;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
+import com.mcsaatchi.gmfit.classes.Helpers;
 import com.mcsaatchi.gmfit.classes.ParcelableNutritionString;
+
+import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -277,7 +280,7 @@ public class Nutrition_Fragment extends Fragment {
         switch (requestCode) {
             case ADD_NEW_NUTRITION_CHART_REQUEST:
                 if (data != null) {
-                    addNewBarChart(data.getStringExtra(Cons.EXTRAS_CHART_TYPE_SELECTED));
+                    addNewBarChart(data.getStringExtra(Cons.EXTRAS_CHART_FULL_NAME));
                 }
                 break;
             case BARCODE_CAPTURE_RC:
@@ -322,6 +325,21 @@ public class Nutrition_Fragment extends Fragment {
         final CardView cardLayout = (CardView) barChartLayout.findViewById(R.id.cardLayoutContainer);
         TextView chartTitleTV = (TextView) barChartLayout.findViewById(R.id.chartTitleTV);
         BarChart barChart = (BarChart) barChartLayout.findViewById(R.id.barChart);
+
+        Helpers.setBarChartData(barChart, new ArrayList<Float>() {{
+            add(0, 90f);
+            add(1, 491f);
+            add(2, 20f);
+            add(3, 100f);
+            add(4, 12f);
+            add(5, 12f);
+            add(6, 600f);
+            add(7, 589f);
+            add(8, 66f);
+            add(9, 233f);
+            add(10, 95f);
+            add(11, 44f);
+        }});
 
         if (chartTitle != null)
             chartTitleTV.setText(chartTitle);

@@ -92,7 +92,7 @@ public class Helpers {
 
         BarDataSet set1;
         set1 = new BarDataSet(yVals1, "Legend");
-        set1.setColors(ColorTemplate.VORDIPLOM_COLORS);
+        set1.setColors(ColorTemplate.PASTEL_COLORS);
         set1.setBarShadowColor(R.color.bpblack);
         set1.setDrawValues(false);
 

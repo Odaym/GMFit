@@ -82,7 +82,6 @@ public class AddNewChart_Activity extends Base_Activity {
                             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                                 Intent intent = new Intent();
                                 intent.putExtra(Cons.EXTRAS_CHART_FULL_NAME, nutritionItemsMap.get(position)[0]);
-                                intent.putExtra(Cons.EXTRAS_CHART_TYPE_SELECTED, nutritionItemsMap.get(position)[2]);
                                 setResult(Nutrition_Fragment.ADD_NEW_NUTRITION_CHART_REQUEST, intent);
                                 finish();
                             }

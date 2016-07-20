@@ -52,7 +52,7 @@
     <dimen name="customize_widgets_reorder_list_item_edge_height_width">60dp</dimen>
     <dimen name="add_new_chart_list_item_edge_width">90dp</dimen>
     <dimen name="metric_header_fitness_counter_font_size">90sp</dimen>
-    <dimen name="metric_image_dimen">40dp</dimen>
+    <dimen name="metric_image_dimen">55dp</dimen>
     <dimen name="chart_title_headline_bar_height">50dp</dimen>
 
     <!-- NUTRITION FRAGMENT -->

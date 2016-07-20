@@ -50,10 +50,6 @@ android {
     repositories {
         maven { url "https://jitpack.io" }
     }
-
-    dataBinding {
-        enabled = true
-    }
 }
 
 dependencies {
@@ -94,6 +90,7 @@ dependencies {
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.squareup.okhttp3:okhttp:3.2.0'
     compile 'com.jakewharton:butterknife:7.0.1'
+    compile 'net.danlew:android.joda:2.9.4.1'
     compile 'com.mukesh:countrypicker:1.1.4'
     compile 'com.google.code.gson:gson:2.4'
     compile 'com.roughike:bottom-bar:1.3.4'

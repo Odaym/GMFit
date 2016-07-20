@@ -52,16 +52,17 @@
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
                 android:gravity="center"
+                android:hint="code"
+                android:inputType="number"
                 android:paddingBottom="@dimen/default_margin_1_5"
                 android:paddingStart="@dimen/default_margin_2"
                 android:singleLine="true"
                 android:textAppearance="?android:textAppearanceLarge"
-                android:hint="code"
                 android:textColor="@android:color/white"
-                android:textColorHint="@android:color/white"
+                android:textColorHint="@color/offwhite_transparent"
                 android:textCursorDrawable="@null"
                 validator:emptyErrorString="@string/field_empty_error_message"
-                validator:testType="alphaNumeric"/>
+                validator:testType="numeric"/>
 
         </com.wrapp.floatlabelededittext.FloatLabeledEditText>
     </LinearLayout>
