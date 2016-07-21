@@ -2,7 +2,6 @@ package com.mcsaatchi.gmfit.classes;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -13,7 +12,6 @@ import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
-import com.github.mikephil.charting.utils.ColorTemplate;
 import com.mcsaatchi.gmfit.R;
 
 import java.util.ArrayList;
@@ -93,8 +91,8 @@ public class Helpers {
 
         BarDataSet set1;
         set1 = new BarDataSet(yVals1, "Legend");
-        set1.setColors(ColorTemplate.PASTEL_COLORS);
-        set1.setBarShadowColor(R.color.bpblack);
+        set1.setColors(new int[]{R.color.fitness_teal});
+        set1.setHighLightAlpha(1);
         set1.setDrawValues(false);
 
         ArrayList<IBarDataSet> dataSets = new ArrayList<>();
@@ -102,7 +100,8 @@ public class Helpers {
 
         BarData data = new BarData(xVals, dataSets);
 
-        chart.setDescription("");
+        chart.setDescription(null);
+        chart.setDrawBarShadow(false);
         chart.setData(data);
         chart.invalidate();
     }
@@ -117,8 +116,9 @@ public class Helpers {
 
         BarDataSet set1;
         set1 = new BarDataSet(valsMetrics, "Legend");
-        set1.setColor(Color.BLACK);
-        set1.setBarShadowColor(R.color.bpblack);
+        set1.setColors(new int[]{R.color.fitness_dark_blue});
+        set1.setHighLightAlpha(1);
+        set1.setBarShadowColor(0);
         set1.setDrawValues(false);
 
         ArrayList<IBarDataSet> dataSets = new ArrayList<>();
@@ -133,16 +133,17 @@ public class Helpers {
         xVals.add("W");
         xVals.add("Th");
         xVals.add("F");
+        xVals.add("M");
+        xVals.add("T");
+        xVals.add("W");
+        xVals.add("Th");
         xVals.add("F");
-        xVals.add("F");
-        xVals.add("GH");
-        xVals.add("Q");
-        xVals.add("YL");
 
         BarData data = new BarData(xVals, dataSets);
 
+        chart.setDescription(null);
+        chart.setDrawBarShadow(false);
         chart.setData(data);
-
         chart.invalidate();
     }
 
