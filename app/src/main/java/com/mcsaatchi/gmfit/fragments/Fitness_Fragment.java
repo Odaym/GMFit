@@ -171,14 +171,16 @@ public class Fitness_Fragment extends Fragment {
             }
         });
 
-        metricCounterTV.setText(NumberFormat.getInstance().format(Double.parseDouble(prefs.getString("steps", ""))));
+        if (!prefs.getString("steps", "").isEmpty())
+            metricCounterTV.setText(NumberFormat.getInstance().format(Double.parseDouble(prefs.getString("steps", ""))));
 
         if (prefs.contains("distance")) {
             widgetsMap = new ParcelableSparseArray() {{
-                put(0, new ParcelableFitnessString(R.drawable.ic_running, Double.parseDouble(prefs.getString("distance", "0.0")), "Walking", "m"));
+                put(0, new ParcelableFitnessString(R.drawable.ic_running, Double.parseDouble(new DecimalFormat("#.#").format(Double.parseDouble
+                        (prefs.getString("distance", "0.0")) / 1000)), "Walking", "Km"));
                 put(1, new ParcelableFitnessString(R.drawable.ic_biking, 0.0, "Biking", "Km"));
                 put(3, new ParcelableFitnessString(R.drawable.ic_steps, 0, "Stairs", "stairs"));
-                put(2, new ParcelableFitnessString(R.drawable.ic_calories, 15.2, "Calories", "kcal"));
+                put(2, new ParcelableFitnessString(R.drawable.ic_calories, 38.1, "Calories", "kcal"));
             }};
         } else {
             widgetsMap = new ParcelableSparseArray() {{
@@ -271,16 +273,17 @@ public class Fitness_Fragment extends Fragment {
                 addNewBarChart(chartName, new ArrayList<Float>() {{
                     add(0, 200f);
                     add(1, 201f);
-                    add(2, 20f);
+                    add(2, 120f);
                     add(3, 100f);
                     add(4, 50f);
-                    add(5, 600f);
+                    add(5, 200f);
                     add(6, 61f);
                     add(7, 66f);
-                    add(8, 13f);
-                    add(9, 95f);
-                    add(10, 17f);
+                    add(8, 140f);
+                    add(9, 195f);
+                    add(10, 60f);
                     add(11, 209f);
+                    add(11, 109f);
 
                 }});
 
@@ -330,16 +333,20 @@ public class Fitness_Fragment extends Fragment {
 
                                                         switch (fitnessWidget.getTitle()) {
                                                             case "Walking":
-                                                                if (distanceCoveredToday != null && !distanceCoveredToday.isEmpty())
-                                                                    fitnessWidget.setValue(Double.parseDouble(distanceCoveredToday));
+                                                                if (distanceCoveredToday != null && !distanceCoveredToday.isEmpty()) {
+                                                                   double finalDoubleValue = Double.valueOf(new DecimalFormat("#.#").format(Double.parseDouble
+                                                                            (distanceCoveredToday) / 1000));
+
+                                                                    fitnessWidget.setValue(finalDoubleValue);
+                                                                }
                                                                 break;
                                                             case "Biking":
                                                                 break;
                                                             case "Calories":
-                                                                    fitnessWidget.setValue(20.1);
-                                                                    break;
+                                                                fitnessWidget.setValue(38.1);
+                                                                break;
                                                             case "Stairs":
-                                                                    fitnessWidget.setValue(0);
+                                                                fitnessWidget.setValue(0);
                                                                 break;
                                                         }
 
@@ -573,6 +580,25 @@ public class Fitness_Fragment extends Fragment {
     public String displayCaloriesDataForToday() {
         DailyTotalResult resultingMetrics = Fitness.HistoryApi.readDailyTotal(googleApiFitnessClient, DataType.TYPE_CALORIES_EXPENDED).await();
 
+        //use this to test the MBR, once Google has decided to fix it
+//        java.util.Calendar cal = java.util.Calendar.getInstance();
+//        Date now = new Date();
+//        cal.setTime(now);
+//        long endTime = cal.getTimeInMillis();
+//        cal.add(Calendar.DAY_OF_MONTH, -1);
+//        long startTime = cal.getTimeInMillis();
+//        DataReadRequest rrr = new DataReadRequest.Builder()
+//                .aggregate(DataType.TYPE_BASAL_METABOLIC_RATE, DataType.AGGREGATE_BASAL_METABOLIC_RATE_SUMMARY)
+//                .bucketByTime(1, TimeUnit.DAYS)
+//                .setTimeRange(startTime, endTime, TimeUnit.MILLISECONDS)
+//                .build();
+//        DataReadResult resss = Fitness.HistoryApi.readData(googleApiFitnessClient, rrr).await(1, TimeUnit.MINUTES);
+//
+//
+//        DataSet BMR = resss.getDataSet(DataType.AGGREGATE_BASAL_METABOLIC_RATE_SUMMARY);
+//
+//        Log.d(TAG, "displayCaloriesDataForToday: BMR IS : " + BMR.getDataPoints().get(0).getValue(Field.FIELD_CALORIES));
+
 //        final DataReadRequest readRequest = new DataReadRequest.Builder()
 //                .read(DataType.TYPE_CYCLING_PEDALING_CUMULATIVE)
 //                .setTimeRange(midnight.getMillis(), now.getMillis(), TimeUnit.MILLISECONDS)
@@ -624,7 +650,6 @@ public class Fitness_Fragment extends Fragment {
                 val = dp.getValue(field);
                 Log.i(TAG, "Detected " + dp.getDataType() + " DataPoint field: " + field.getName());
                 Log.i(TAG, "Detected " + dp.getDataType() + " DataPoint value: " + val);
-
 
                 finalValue = dFormat.format(Double.parseDouble(val != null ? val.toString() : null));
 
