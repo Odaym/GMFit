@@ -62,9 +62,7 @@ dependencies {
         transitive = true;
     }
 
-    compile "com.google.android.gms:play-services-fitness:$playServicesVersion"
     compile "com.google.android.gms:play-services-vision:$playServicesVersion"
-    compile "com.google.android.gms:play-services-auth:$playServicesVersion"
     compile "com.android.support:recyclerview-v7:$supportLibVersion"
     compile "com.squareup.retrofit2:adapter-rxjava:$retroFitVersion"
     compile "com.squareup.retrofit2:converter-gson:$retroFitVersion"
@@ -80,6 +78,7 @@ dependencies {
     compile 'com.github.PhilJay:MPAndroidChart:v2.2.4'
     compile 'dev.dworks.libs:astickyheader:0.1.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.robinhood.ticker:ticker:1.0.1'
     compile 'com.squareup.okhttp3:okhttp:3.2.0'
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'net.danlew:android.joda:2.9.4.1'

@@ -72,8 +72,11 @@ public class Widgets_GridAdapter extends BaseAdapter {
 
         switch(layoutResourceId){
             case R.layout.grid_item_fitness_widgets:
-                holder.metricTV.setText(NumberFormat.getInstance().format(Double.parseDouble(String.valueOf(((ParcelableFitnessString) widgetsMap.valueAt(position))
-                        .getValue()))));
+//                holder.metricTV.setText(NumberFormat.getInstance().format(Double.parseDouble(String.valueOf(((ParcelableFitnessString) widgetsMap.valueAt(position))
+//                        .getValue()))));
+
+                holder.metricTV.setText((String.valueOf(((ParcelableFitnessString) widgetsMap.valueAt(position))
+                        .getValue())));
 
                 holder.metricIcon.setImageResource(((ParcelableFitnessString) widgetsMap.valueAt(position)).getDrawableResId());
                 holder.measurementUnitTV.setText(((ParcelableFitnessString) widgetsMap.valueAt(position)).getMeasurementUnit());

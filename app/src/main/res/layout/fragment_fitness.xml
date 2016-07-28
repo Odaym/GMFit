@@ -17,9 +17,8 @@
             android:id="@+id/metricProgressBar"
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="@dimen/metric_header_progress_bar_width"
-            android:paddingBottom="@dimen/default_margin_1_5"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/metricCounterTV"
+            android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:indeterminate="false"
             android:maxHeight="10dip"
@@ -27,11 +26,12 @@
             android:progress="70"
             android:progressDrawable="@drawable/fitness_progress_bar"/>
 
-        <com.mcsaatchi.gmfit.classes.FontTextView
+        <TextView
             android:id="@+id/metricCounterTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
+            android:layout_below="@id/metricProgressBar"
+            android:layout_centerHorizontal="true"
             android:text="0.0"
             android:textColor="@color/white"
             android:textSize="@dimen/metric_header_fitness_counter_font_size"/>
@@ -42,7 +42,6 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/metricCounterTV"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="5dp"
             android:background="@drawable/rounded_view"
             android:paddingBottom="5dp"
             android:paddingEnd="@dimen/default_margin_2"
