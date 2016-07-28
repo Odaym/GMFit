@@ -221,47 +221,18 @@ public class StepService extends Service {
 
     public void registerCallback(ICallback cb) {
         mCallback = cb;
-        //mStepDisplayer.passValue();
-        //mPaceListener.passValue();
-    }
-
-    private int mDesiredPace;
-    private float mDesiredSpeed;
-
-    /**
-     * Called by activity to pass the desired pace value,
-     * whenever it is modified by the user.
-     *
-     * @param desiredPace
-     */
-    public void setDesiredPace(int desiredPace) {
-        mDesiredPace = desiredPace;
-        if (mPaceNotifier != null) {
-            mPaceNotifier.setDesiredPace(mDesiredPace);
-        }
-    }
-
-    /**
-     * Called by activity to pass the desired speed value,
-     * whenever it is modified by the user.
-     *
-     * @param desiredSpeed
-     */
-    public void setDesiredSpeed(float desiredSpeed) {
-        mDesiredSpeed = desiredSpeed;
-        if (mSpeedNotifier != null) {
-            mSpeedNotifier.setDesiredSpeed(mDesiredSpeed);
-        }
+        mStepDisplayer.passValue();
+        mPaceListener.passValue();
     }
 
     public void reloadSettings() {
         mSettings = PreferenceManager.getDefaultSharedPreferences(this);
-
-        if (mStepDetector != null) {
-            mStepDetector.setSensitivity(
-                    Float.valueOf(mSettings.getString("sensitivity", "10"))
-            );
-        }
+//
+//        if (mStepDetector != null) {
+//            mStepDetector.setSensitivity(
+//                    Float.valueOf(mSettings.getString("sensitivity", "37"))
+//            );
+//        }
 
         if (mStepDisplayer != null) mStepDisplayer.reloadSettings();
         if (mPaceNotifier != null) mPaceNotifier.reloadSettings();

@@ -22,7 +22,6 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -33,9 +32,9 @@ import java.util.ArrayList;
 public class StepDetector implements SensorEventListener {
     private final static String TAG = "StepDetector";
 
-    private float mLimit = 50.62f; // 1.97  2.96  4.44  6.66  10.00  15.00  22.50  33.75  50.62
+    private float mLimit = 36.75f; // 1.97  2.96  4.44  6.66  10.00  15.00  22.50  33.75  50.62
 
-    private static final int arrays_size = 1;
+    private static final int arrays_size = 6;
 
     private float lastValue;
 
@@ -55,7 +54,7 @@ public class StepDetector implements SensorEventListener {
     private ArrayList<StepListener> mStepListeners = new ArrayList<StepListener>();
 
     public StepDetector() {
-        mYOffset = 1;
+        mYOffset = 480;
 //        mScale[0] = -(h * 0.5f * (1.0f / (SensorManager.STANDARD_GRAVITY * 2)));
         mScale[1] = -(mYOffset * 0.5f * (1.0f / (SensorManager.MAGNETIC_FIELD_EARTH_MAX)));
     }
@@ -74,11 +73,6 @@ public class StepDetector implements SensorEventListener {
             int sensorType = (sensor.getType() == Sensor.TYPE_ACCELEROMETER) ? 1 : 0;
 
             if (sensorType == 1) {
-
-//                for (int i = 0; i < event.values.length; i++) {
-//                    Log.d(TAG, "onSensorChanged: Event " + i + " : " + event.values[i]);
-//                }
-
                 float sensorValuesSum = 0;
 
                 for (int i = 0; i < 3; i++) {
@@ -90,43 +84,15 @@ public class StepDetector implements SensorEventListener {
 
                 float sensorValuesAverage = sensorValuesSum / 3;
 
-                Log.d(TAG, "onSensorChanged: Last Value " + lastValue);
-
-                float direction;
-
-                if (sensorValuesAverage > lastValue) {
-                    direction = 1;
-                    Log.d(TAG, "onSensorChanged: Direction = 1");
-                } else if (sensorValuesAverage < lastValue) {
-                    direction = -1;
-                    Log.d(TAG, "onSensorChanged: Direction = -1");
-                } else {
-                    direction = 0;
-                    Log.d(TAG, "onSensorChanged: Direction = 0");
-                }
-
-                Log.d(TAG, "-lastDirection is : " + (-lastDirection));
+                float direction = (sensorValuesAverage > lastValue ? 1 : (sensorValuesAverage < lastValue ? -1 : 0));
 
                 if (direction == -lastDirection) {
 
-                    Log.d(TAG, "onSensorChanged: Direction changed");
-
-                    int extType;
-
-                    if (direction > 0)
-                        extType = 0;
-                    else
-                        extType = 1;
-
-                    Log.d(TAG, "onSensorChanged: ExtType is : " + extType);
-
-                    Log.d(TAG, "onSensorChanged: lastValue is : " + lastValue);
+                    int extType = (direction > 0 ? 0 : 1);
 
                     mLastExtremes[extType][k] = lastValue;
 
                     float diff = Math.abs(mLastExtremes[extType][k] - mLastExtremes[1 - extType][k]);
-
-                    Log.d(TAG, "onSensorChanged: diff is : " + diff);
 
                     if (diff > mLimit) {
 
@@ -135,9 +101,6 @@ public class StepDetector implements SensorEventListener {
                         boolean isNotContra = (lastMatch != 1 - extType);
 
                         if (isAlmostAsLargeAsPrevious && isPreviousLargeEnough && isNotContra) {
-
-                            Log.i(TAG, "step");
-
 
                             for (StepListener stepListener : mStepListeners) {
                                 stepListener.onStep();

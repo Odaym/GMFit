@@ -43,7 +43,7 @@ public class PedometerSettings {
 
     public float getStepLength() {
         try {
-            return Float.valueOf(mSettings.getString("step_length", "20").trim());
+            return Float.valueOf(mSettings.getString("step_length", "7").trim());
         } catch (NumberFormatException e) {
             // TODO: reset value, & notify user somehow
             return 0f;
@@ -71,10 +71,6 @@ public class PedometerSettings {
     // Desired pace & speed: 
     // these can not be set in the preference activity, only on the main
     // screen if "maintain" is set to "pace" or "speed" 
-
-    public int getDesiredPace() {
-        return mSettings.getInt("desired_pace", 180); // steps/minute
-    }
 
     public float getDesiredSpeed() {
         return mSettings.getFloat("desired_speed", 4f); // km/h or mph

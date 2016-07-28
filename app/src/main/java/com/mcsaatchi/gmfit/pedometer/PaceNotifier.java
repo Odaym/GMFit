@@ -46,25 +46,9 @@ public class PaceNotifier implements StepListener {
     PedometerSettings mSettings;
     Utils mUtils;
 
-    /**
-     * Desired pace, adjusted by the user
-     */
-    int mDesiredPace;
-
-    /**
-     * Should we speak?
-     */
-    boolean mShouldTellFasterslower;
-
-    /**
-     * When did the TTS speak last time
-     */
-    private long mSpokenAt = 0;
-
     public PaceNotifier(PedometerSettings settings, Utils utils) {
         mUtils = utils;
         mSettings = settings;
-        mDesiredPace = mSettings.getDesiredPace();
         reloadSettings();
     }
 
@@ -83,10 +67,6 @@ public class PaceNotifier implements StepListener {
 
     public void addListener(Listener l) {
         mListeners.add(l);
-    }
-
-    public void setDesiredPace(int desiredPace) {
-        mDesiredPace = desiredPace;
     }
 
     public void onStep() {
