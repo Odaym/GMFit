@@ -1,21 +1,3 @@
-/*
- *  Pedometer - Android App
- *  Copyright (C) 2009 Levente Bagi
- *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package com.mcsaatchi.gmfit.pedometer;
 
 import android.app.Notification;
@@ -52,8 +34,9 @@ import com.mcsaatchi.gmfit.activities.Main_Activity;
  * interact with the user, rather than doing something more disruptive such as
  * calling startActivity().
  */
+
 public class StepService extends Service {
-    private static final String TAG = "name.bagi.levente.pedometer.StepService";
+    private static final String TAG = "com.mcsaatchi.me.StepService";
     private SharedPreferences mSettings;
     private PedometerSettings mPedometerSettings;
     private SharedPreferences mState;
@@ -165,7 +148,7 @@ public class StepService extends Service {
         mStateEditor.putFloat("distance", mDistance);
         mStateEditor.putFloat("speed", mSpeed);
         mStateEditor.putFloat("calories", mCalories);
-        mStateEditor.commit();
+        mStateEditor.apply();
 
         mNM.cancel(R.string.app_name);
 

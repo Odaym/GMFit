@@ -25,8 +25,8 @@ package com.mcsaatchi.gmfit.pedometer;
  * <p/>
  * Uses {@link PaceNotifier}, calculates speed as product of pace and step length.
  *
- * @author Levente Bagi
  */
+
 public class SpeedNotifier implements PaceNotifier.Listener {
 
     public interface Listener {

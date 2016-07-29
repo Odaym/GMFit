@@ -23,8 +23,6 @@ public class Utils {
         mService = service;
     }
 
-    /********** Time **********/
-    
     public static long currentTimeInMillis() {
         Time time = new Time();
         time.setToNow();

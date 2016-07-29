@@ -23,8 +23,8 @@ import android.content.SharedPreferences;
 /**
  * Wrapper for {@link SharedPreferences}, handles preferences-related tasks.
  *
- * @author Levente Bagi
  */
+
 public class PedometerSettings {
 
     SharedPreferences mSettings;

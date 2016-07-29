@@ -235,7 +235,6 @@ public class Fitness_Fragment extends Fragment {
         }
     };
 
-    // TODO: unite all into 1 type of message
     private StepService.ICallback mCallback = new StepService.ICallback() {
         public void stepsChanged(int value) {
             mHandler.sendMessage(mHandler.obtainMessage(STEPS_MSG, value, 0));
