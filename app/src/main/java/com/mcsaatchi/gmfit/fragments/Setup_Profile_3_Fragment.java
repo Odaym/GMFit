@@ -29,6 +29,7 @@ import com.mcsaatchi.gmfit.activities.Main_Activity;
 import com.mcsaatchi.gmfit.classes.Cons;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
+import com.mcsaatchi.gmfit.classes.Profile;
 import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.rest.MedicalConditionsResponse;
 import com.mcsaatchi.gmfit.rest.MedicalConditionsResponseDatum;
@@ -94,6 +95,7 @@ public class Setup_Profile_3_Fragment extends Fragment implements CalendarDatePi
 
         ButterKnife.bind(this, fragmentView);
 
+        //When going back and forth within the 3 Setup Profile fragments, don't reregister the Eventbus
         try {
             EventBus_Singleton.getInstance().register(this);
         } catch (IllegalArgumentException ignored) {
@@ -105,10 +107,7 @@ public class Setup_Profile_3_Fragment extends Fragment implements CalendarDatePi
 
         prefs = getActivity().getSharedPreferences(Cons.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
 
-        Log.d(TAG, "onCreateView: here");
         getAndPopulateMedicalConditions();
-
-        Log.d(TAG, "onCreateView: and here");
 
         inputMethodManager = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
 
@@ -133,7 +132,7 @@ public class Setup_Profile_3_Fragment extends Fragment implements CalendarDatePi
 
     @Override
     public void onDateSet(CalendarDatePickerDialogFragment dialog, int year, int monthOfYear, int dayOfMonth) {
-        dateOfBirthTV.setText(dayOfMonth + " " + new DateFormatSymbols().getMonths()[monthOfYear-1] + " " + year);
+        dateOfBirthTV.setText(dayOfMonth + " " + new DateFormatSymbols().getMonths()[monthOfYear - 1] + " " + year);
     }
 
     @Subscribe
@@ -170,7 +169,7 @@ public class Setup_Profile_3_Fragment extends Fragment implements CalendarDatePi
 
     private void getAndPopulateMedicalConditions() {
         Call<MedicalConditionsResponse> getMedicalConditionsCall = new RestClient().getGMFitService().getMedicalConditions(prefs.getString(Cons
-                .PREF_USER_ACCESS_TOKEN,
+                        .PREF_USER_ACCESS_TOKEN,
                 Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS));
 
         getMedicalConditionsCall.enqueue(new Callback<MedicalConditionsResponse>() {
@@ -227,7 +226,7 @@ public class Setup_Profile_3_Fragment extends Fragment implements CalendarDatePi
                 });
 
         Call<DefaultGetResponse> registerUserCall = new RestClient().getGMFitService().updateUserProfile(prefs.getString(Cons.PREF_USER_ACCESS_TOKEN,
-                Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS), new UpdateProfileRequest(finalDateOfBirth, bloodType, finalGender, height, weight, BMI));
+                Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS), new UpdateProfileRequest(new Profile()));
 
         registerUserCall.enqueue(new Callback<DefaultGetResponse>() {
             @Override
@@ -345,18 +344,24 @@ public class Setup_Profile_3_Fragment extends Fragment implements CalendarDatePi
     public class UpdateProfileRequest {
         final String birthday;
         final String bloodType;
+        final String nationality;
+        final String measurementSystem;
+        final String goal;
         final int gender;
         final double height;
         final double weight;
         final double BMI;
 
-        public UpdateProfileRequest(String birthday, String bloodType, int gender, double height, double weight, double BMI) {
-            this.birthday = birthday;
-            this.bloodType = bloodType;
-            this.gender = gender;
-            this.height = height;
-            this.weight = weight;
-            this.BMI = BMI;
+        public UpdateProfileRequest(Profile profile) {
+            this.birthday = profile.getBirthday();
+            this.bloodType = profile.getBloodType();
+            this.gender = profile.getGender();
+            this.height = profile.getHeight();
+            this.weight = profile.getWeight();
+            this.BMI = profile.getBMI();
+            this.nationality = profile.getNationality();
+            this.measurementSystem = profile.getMeasurementSystem();
+            this.goal = profile.getGoal();
         }
     }
 }

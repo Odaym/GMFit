@@ -58,6 +58,11 @@ public class Fitness_Fragment extends Fragment {
 
     public static final String TAG = "Fitness_Fragment";
     public static final int ADD_NEW_FITNESS_CHART_REQUEST_CODE = 1;
+    private static final int STEPS_MSG = 1;
+    private static final int PACE_MSG = 2;
+    private static final int DISTANCE_MSG = 3;
+    private static final int SPEED_MSG = 4;
+    private static final int CALORIES_MSG = 5;
     @Bind(R.id.widgetsGridView)
     GridView widgetsGridView;
     @Bind(R.id.bar_chart)
@@ -68,7 +73,6 @@ public class Fitness_Fragment extends Fragment {
     Button addNewChartBTN;
     @Bind(R.id.metricCounterTV)
     TextView metricCounterTV;
-
     private NestedScrollView parentScrollView;
     private List<DataChart> allDataCharts;
     private RuntimeExceptionDao<DataChart, Integer> dataChartDAO;
@@ -78,21 +82,94 @@ public class Fitness_Fragment extends Fragment {
     private SharedPreferences prefs;
     private String chartType;
     private String chartName;
-
     private boolean isServiceBound = false;
-
     private ArrayList<Integer> itemIndeces = new ArrayList<>();
     private ParcelableSparseArray orderedItemsMap = new ParcelableSparseArray();
     private Widgets_GridAdapter widgets_GridAdapter;
-
     private ParcelableSparseArray widgetsMap;
-
-    private SharedPreferences mSettings;
-
+    private StepService stepService;
+    private SharedPreferences pedometerSettings;
     private PedometerSettings mPedometerSettings;
-
     private boolean mIsRunning;
+    private int stepsValue;
+    private int paceValue;
+    private float distanceValue;
+    private float speedValue;
+    private int caloriesValue;
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            TextView widgetTextView;
 
+            switch (msg.what) {
+                case STEPS_MSG:
+                    stepsValue = msg.arg1;
+                    Log.d(TAG, "handleMessage: Steps is now " + stepsValue);
+                    metricCounterTV.setText(String.valueOf(stepsValue));
+                    break;
+                case PACE_MSG:
+                    paceValue = msg.arg1;
+                    Log.d(TAG, "handleMessage: Pace is now " + paceValue);
+                    widgetTextView = findWidgetInGrid("Stairs");
+                    widgetTextView.setText(String.valueOf(paceValue));
+                    break;
+                case DISTANCE_MSG:
+                    distanceValue = msg.arg1;
+                    Log.d(TAG, "handleMessage: Distance is now " + distanceValue);
+                    widgetTextView = findWidgetInGrid("Biking");
+                    widgetTextView.setText(String.valueOf((int) distanceValue));
+                    break;
+                case SPEED_MSG:
+                    speedValue = msg.arg1 / 1000f;
+                    Log.d(TAG, "handleMessage: Speed is now " + speedValue);
+                    widgetTextView = findWidgetInGrid("Walking");
+                    widgetTextView.setText(String.valueOf((int) speedValue));
+                    break;
+                case CALORIES_MSG:
+                    caloriesValue = msg.arg1;
+                    widgetTextView = findWidgetInGrid("Calories");
+                    Log.d(TAG, "handleMessage: Calories is now : " + caloriesValue);
+                    widgetTextView.setText(String.valueOf(caloriesValue));
+                    break;
+                default:
+                    super.handleMessage(msg);
+            }
+        }
+    };
+    private StepService.ICallback mCallback = new StepService.ICallback() {
+        public void stepsChanged(int value) {
+            mHandler.sendMessage(mHandler.obtainMessage(STEPS_MSG, value, 0));
+        }
+
+        public void paceChanged(int value) {
+            mHandler.sendMessage(mHandler.obtainMessage(PACE_MSG, value, 0));
+        }
+
+        public void distanceChanged(float value) {
+            mHandler.sendMessage(mHandler.obtainMessage(DISTANCE_MSG, (int) (value * 1000), 0));
+        }
+
+        public void speedChanged(float value) {
+            mHandler.sendMessage(mHandler.obtainMessage(SPEED_MSG, (int) (value * 1000), 0));
+        }
+
+        public void caloriesChanged(float value) {
+            mHandler.sendMessage(mHandler.obtainMessage(CALORIES_MSG, (int) (value), 0));
+        }
+    };
+    private ServiceConnection mConnection = new ServiceConnection() {
+        public void onServiceConnected(ComponentName className, IBinder service) {
+            stepService = ((StepService.StepBinder) service).getService();
+
+            stepService.registerCallback(mCallback);
+            stepService.reloadSettings();
+
+        }
+
+        public void onServiceDisconnected(ComponentName className) {
+            stepService = null;
+        }
+    };
 
     @Override
     public void onAttach(Context context) {
@@ -155,9 +232,9 @@ public class Fitness_Fragment extends Fragment {
 
         setUpWidgetsGridView(widgetsMap);
 
-        mSettings = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        pedometerSettings = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
-        mPedometerSettings = new PedometerSettings(mSettings);
+        mPedometerSettings = new PedometerSettings(pedometerSettings);
 
         mIsRunning = mPedometerSettings.isServiceRunning();
 
@@ -172,18 +249,6 @@ public class Fitness_Fragment extends Fragment {
         return fragmentView;
     }
 
-    @Override
-    public void onPause() {
-        Log.i(TAG, "[ACTIVITY] onPause");
-        if (mIsRunning) {
-            unbindStepService();
-        } else {
-            mPedometerSettings.saveServiceRunningWithTimestamp(mIsRunning);
-        }
-
-        super.onPause();
-    }
-
     private void startStepService() {
         if (!mIsRunning) {
             Log.i(TAG, "[SERVICE] Start");
@@ -191,6 +256,16 @@ public class Fitness_Fragment extends Fragment {
             parentActivity.startService(new Intent(getActivity(),
                     StepService.class));
         }
+    }
+
+    private void stopStepService() {
+        Log.i(TAG, "[SERVICE] Stop");
+        if (stepService != null) {
+            Log.i(TAG, "[SERVICE] stopService");
+            parentActivity.stopService(new Intent(getActivity(),
+                    StepService.class));
+        }
+        mIsRunning = false;
     }
 
     private void bindStepService() {
@@ -208,109 +283,6 @@ public class Fitness_Fragment extends Fragment {
             isServiceBound = false;
         }
     }
-
-    private void stopStepService() {
-        Log.i(TAG, "[SERVICE] Stop");
-        if (mService != null) {
-            Log.i(TAG, "[SERVICE] stopService");
-            parentActivity.stopService(new Intent(getActivity(),
-                    StepService.class));
-        }
-        mIsRunning = false;
-    }
-
-    private StepService mService;
-
-    private ServiceConnection mConnection = new ServiceConnection() {
-        public void onServiceConnected(ComponentName className, IBinder service) {
-            mService = ((StepService.StepBinder) service).getService();
-
-            mService.registerCallback(mCallback);
-            mService.reloadSettings();
-
-        }
-
-        public void onServiceDisconnected(ComponentName className) {
-            mService = null;
-        }
-    };
-
-    private StepService.ICallback mCallback = new StepService.ICallback() {
-        public void stepsChanged(int value) {
-            mHandler.sendMessage(mHandler.obtainMessage(STEPS_MSG, value, 0));
-        }
-
-        public void paceChanged(int value) {
-            mHandler.sendMessage(mHandler.obtainMessage(PACE_MSG, value, 0));
-        }
-
-        public void distanceChanged(float value) {
-            mHandler.sendMessage(mHandler.obtainMessage(DISTANCE_MSG, (int) (value * 1000), 0));
-        }
-
-        public void speedChanged(float value) {
-            mHandler.sendMessage(mHandler.obtainMessage(SPEED_MSG, (int) (value * 1000), 0));
-        }
-
-        public void caloriesChanged(float value) {
-            mHandler.sendMessage(mHandler.obtainMessage(CALORIES_MSG, (int) (value), 0));
-        }
-    };
-
-
-    private static final int STEPS_MSG = 1;
-    private static final int PACE_MSG = 2;
-    private static final int DISTANCE_MSG = 3;
-    private static final int SPEED_MSG = 4;
-    private static final int CALORIES_MSG = 5;
-
-    private int mStepValue;
-    private int mPaceValue;
-    private float mDistanceValue;
-    private float mSpeedValue;
-    private int mCaloriesValue;
-
-    private Handler mHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            TextView widgetTextView;
-
-            switch (msg.what) {
-                case STEPS_MSG:
-                    mStepValue = msg.arg1;
-                    Log.d(TAG, "handleMessage: Steps is now " + mStepValue);
-                    metricCounterTV.setText(String.valueOf(mStepValue));
-                    break;
-                case PACE_MSG:
-                    mPaceValue = msg.arg1;
-                    Log.d(TAG, "handleMessage: Pace is now " + mPaceValue);
-                    widgetTextView = findWidgetInGrid("Stairs");
-                    widgetTextView.setText(String.valueOf(mPaceValue));
-                    break;
-                case DISTANCE_MSG:
-                    mDistanceValue = msg.arg1;
-                    Log.d(TAG, "handleMessage: Distance is now " + mDistanceValue);
-                    widgetTextView = findWidgetInGrid("Biking");
-                    widgetTextView.setText(String.valueOf((int) mDistanceValue));
-                    break;
-                case SPEED_MSG:
-                    mSpeedValue = msg.arg1 / 1000f;
-                    Log.d(TAG, "handleMessage: Speed is now " + mSpeedValue);
-                    widgetTextView = findWidgetInGrid("Walking");
-                    widgetTextView.setText(String.valueOf((int) mSpeedValue));
-                    break;
-                case CALORIES_MSG:
-                    mCaloriesValue = msg.arg1;
-                    widgetTextView = findWidgetInGrid("Calories");
-                    Log.d(TAG, "handleMessage: Calories is now : " + mCaloriesValue);
-                    widgetTextView.setText(String.valueOf(mCaloriesValue));
-                    break;
-                default:
-                    super.handleMessage(msg);
-            }
-        }
-    };
-
 
     public void addNewBarChart(String chartTitle, ArrayList<Float> floatArrayExtra) {
         final View barChartLayout_NEW_CHART = getActivity().getLayoutInflater().inflate(R.layout.view_barchart_container, null);
@@ -441,10 +413,6 @@ public class Fitness_Fragment extends Fragment {
                 Intent intent = new Intent(getActivity(), CustomizeWidgetsAndCharts_Activity.class);
                 intent.putExtra(Cons.EXTRAS_CUSTOMIZE_WIDGETS_FRAGMENT_TYPE, Cons.EXTRAS_FITNESS_FRAGMENT);
                 intent.putExtra(Cons.BUNDLE_FITNESS_WIDGETS_MAP, widgetsMap);
-
-//                for (int i = 0; i < widgetsMap.size(); i++) {
-//                    Log.d("WIDGETS", "onOptionsItemSelected: WHEN OPTIONS SELECTED : " + ((ParcelableFitnessString) widgetsMap.valueAt(i)).getTitle());
-//                }
                 startActivity(intent);
 
                 break;

@@ -53,6 +53,9 @@ public class Cons {
     public static final String SLUG_VALUE_ACTIVE_CALORIES = "active-calories";
 
     public static final String EVENT_USER_FINALIZE_SETUP_PROFILE = "user_finalize_setup_profile";
+    public static final String EVENT_USER_SETUP_PROFILE_STEP_1 = "user_setup_profile_step_1";
+    public static final String EVENT_USER_SETUP_PROFILE_STEP_2 = "user_setup_profile_step_2";
+
     public static final String EVENT_CHART_METRICS_RECEIVED = "event_chart_metrics_received";
     public static final String EVENT_SIGNNED_UP_SUCCESSFULLY_CLOSE_LOGIN_ACTIVITY = "signned_up_successfully_close_login_activity";
 

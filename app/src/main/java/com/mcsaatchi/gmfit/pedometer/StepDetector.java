@@ -13,11 +13,8 @@ import java.util.ArrayList;
 
 public class StepDetector implements SensorEventListener {
     private final static String TAG = "StepDetector";
-
-    private float mLimit = 36.75f; // 1.97  2.96  4.44  6.66  10.00  15.00  22.50  33.75  50.62
-
     private static final int arrays_size = 6;
-
+    private float mLimit = 36.75f; // 1.97  2.96  4.44  6.66  10.00  15.00  22.50  33.75  50.62
     private float lastValue;
 
     private float lastDirection;
@@ -82,7 +79,7 @@ public class StepDetector implements SensorEventListener {
                         boolean isPreviousLargeEnough = lastDiff[k] > (diff / 3);
                         boolean isNotContra = (lastMatch != 1 - extType);
 
-                        if (isAlmostAsLargeAsPrevious && isPreviousLargeEnough && isNotContra) {
+                        if (isAlmostAsLargeAsPrevious && isPreviousLargeEnough) {
 
                             for (StepListener stepListener : mStepListeners) {
                                 stepListener.onStep();

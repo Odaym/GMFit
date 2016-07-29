@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -17,6 +18,7 @@ import com.mcsaatchi.gmfit.classes.Cons;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
 import com.mcsaatchi.gmfit.classes.NonSwipeableViewPager;
+import com.mcsaatchi.gmfit.classes.Profile;
 import com.mcsaatchi.gmfit.fragments.Setup_Profile_1_Fragment;
 import com.mcsaatchi.gmfit.fragments.Setup_Profile_2_Fragment;
 import com.mcsaatchi.gmfit.fragments.Setup_Profile_3_Fragment;
@@ -31,6 +33,8 @@ public class SetupProfile_Activity extends Base_Activity {
     Button nextPageBTN;
     @Bind(R.id.toolbar)
     Toolbar toolbar;
+
+    private Profile userProfile;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -89,6 +93,13 @@ public class SetupProfile_Activity extends Base_Activity {
         nextPageBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (viewPager.getCurrentItem() == 0) {
+                    Log.d("TAGTAG", "onClick: Viewpager current item is : " + viewPager.getCurrentItem());
+//                    EventBus_Singleton.getInstance().post(new EventBus_Poster(Cons.EVENT_USER_SETUP_PROFILE_STEP_1));
+                } else if (viewPager.getCurrentItem() == 1) {
+                    Log.d("TAGTAG", "onClick: Viewpager current item is : " + viewPager.getCurrentItem());
+//                    EventBus_Singleton.getInstance().post(new EventBus_Poster(Cons.EVENT_USER_SETUP_PROFILE_STEP_2));
+                }
 
                 viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
 
@@ -99,6 +110,17 @@ public class SetupProfile_Activity extends Base_Activity {
             }
         });
     }
+
+    public void updateProfileFromFragment_1(String nationality, String measurementSystem){
+
+        Log.d("TAGTAG", "updateProfileFromFragment_1: Nationality " + nationality);
+        Log.d("TAGTAG", "updateProfileFromFragment_1: measurementSystem " + measurementSystem);
+
+
+    }
+//
+//    public void updateProfileFromFragment_2();
+//    public void updateProfileFromFragment_3();
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
