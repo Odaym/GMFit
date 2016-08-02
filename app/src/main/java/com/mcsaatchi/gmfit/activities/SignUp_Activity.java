@@ -18,15 +18,22 @@ import android.text.style.ClickableSpan;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.andreabaccega.widget.FormEditText;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.classes.Cons;
+import com.mcsaatchi.gmfit.classes.EventBus_Poster;
+import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
 import com.mcsaatchi.gmfit.classes.Helpers;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponse;
+import com.mcsaatchi.gmfit.rest.AuthenticationResponseChart;
+import com.mcsaatchi.gmfit.rest.AuthenticationResponseInnerBody;
+import com.mcsaatchi.gmfit.rest.AuthenticationResponseWidget;
 import com.mcsaatchi.gmfit.rest.RestClient;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -137,21 +144,35 @@ public class SignUp_Activity extends Base_Activity {
         registerUserCall.enqueue(new Callback<AuthenticationResponse>() {
             @Override
             public void onResponse(Call<AuthenticationResponse> call, Response<AuthenticationResponse> response) {
-                    switch (response.code()) {
-                        case 200:
-                            waitingDialog.dismiss();
+                switch (response.code()) {
+                    case 200:
+                        waitingDialog.dismiss();
 
-                            prefs.edit().putString(Cons.PREF_USER_ACCESS_TOKEN, "Bearer " + response.body().getData().getBody().getToken()).apply();
+                        AuthenticationResponseInnerBody responseBody = response.body().getData().getBody();
 
-                            Intent intent = new Intent(SignUp_Activity.this, GetStarted_Activity.class);
-                            startActivity(intent);
-                            finish();
-                            break;
-                        case 449:
-                            alertDialog.setMessage(getString(R.string.email_already_taken_api_response));
-                            alertDialog.show();
-                            break;
-                    }
+                        //Refreshes access token
+                        prefs.edit().putString(Cons.PREF_USER_ACCESS_TOKEN, "Bearer " + responseBody.getToken()).apply();
+
+                        List<AuthenticationResponseWidget> widgetsMap = responseBody.getWidgets();
+                        List<AuthenticationResponseChart> chartsMap = responseBody.getCharts();
+
+                        EventBus_Singleton.getInstance().post(new EventBus_Poster(Cons.EVENT_SIGNNED_UP_SUCCESSFULLY_CLOSE_LOGIN_ACTIVITY));
+
+                        Intent intent = new Intent(SignUp_Activity.this, Main_Activity.class);
+                        intent.putParcelableArrayListExtra("widgets", (ArrayList<AuthenticationResponseWidget>) widgetsMap);
+                        intent.putParcelableArrayListExtra("charts", (ArrayList<AuthenticationResponseChart>) chartsMap);
+                        startActivity(intent);
+
+                        Toast.makeText(SignUp_Activity.this, "Grabbed Widgets and Charts from server : " + widgetsMap.size() + " by " + chartsMap.size(), Toast.LENGTH_SHORT).show();
+
+                        finish();
+
+                        break;
+                    case 449:
+                        alertDialog.setMessage(getString(R.string.email_already_taken_api_response));
+                        alertDialog.show();
+                        break;
+                }
             }
 
             @Override

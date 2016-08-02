@@ -18,6 +18,7 @@ import android.text.style.ClickableSpan;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.andreabaccega.widget.FormEditText;
 import com.mcsaatchi.gmfit.R;
@@ -26,9 +27,13 @@ import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
 import com.mcsaatchi.gmfit.classes.Helpers;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponse;
+import com.mcsaatchi.gmfit.rest.AuthenticationResponseChart;
+import com.mcsaatchi.gmfit.rest.AuthenticationResponseInnerBody;
+import com.mcsaatchi.gmfit.rest.AuthenticationResponseWidget;
 import com.mcsaatchi.gmfit.rest.RestClient;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -51,11 +56,10 @@ public class SignIn_Activity extends Base_Activity {
     @Bind(R.id.showPasswordTV)
     TextView showPasswordTV;
 
+    private SharedPreferences prefs;
     private boolean passwordShowing = false;
 
     private ArrayList<FormEditText> allFields = new ArrayList<>();
-
-    private SharedPreferences prefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,11 +74,10 @@ public class SignIn_Activity extends Base_Activity {
 
         prefs = getSharedPreferences(Cons.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
 
-        passwordET.setTypeface(Typeface.DEFAULT);
-
         allFields.add(emailET);
         allFields.add(passwordET);
 
+        passwordET.setTypeface(Typeface.DEFAULT);
         emailET.setSelection(emailET.getText().length());
 
         signInBTN.setOnClickListener(new View.OnClickListener() {
@@ -148,13 +151,24 @@ public class SignIn_Activity extends Base_Activity {
                     case 200:
                         waitingDialog.dismiss();
 
+                        AuthenticationResponseInnerBody responseBody = response.body().getData().getBody();
+
                         //Refreshes access token
-                        prefs.edit().putString(Cons.PREF_USER_ACCESS_TOKEN, "Bearer " + response.body().getData().getBody().getToken()).apply();
+                        prefs.edit().putString(Cons.PREF_USER_ACCESS_TOKEN, "Bearer " + responseBody.getToken()).apply();
+
+                        List<AuthenticationResponseWidget> widgetsMap = responseBody.getWidgets();
+                        List<AuthenticationResponseChart> chartsMap = responseBody.getCharts();
 
                         EventBus_Singleton.getInstance().post(new EventBus_Poster(Cons.EVENT_SIGNNED_UP_SUCCESSFULLY_CLOSE_LOGIN_ACTIVITY));
 
                         Intent intent = new Intent(SignIn_Activity.this, Main_Activity.class);
+                        intent.putParcelableArrayListExtra("widgets", (ArrayList<AuthenticationResponseWidget>) widgetsMap);
+                        intent.putParcelableArrayListExtra("charts", (ArrayList<AuthenticationResponseChart>) chartsMap);
                         startActivity(intent);
+
+                        Toast.makeText(SignIn_Activity.this, "Grabbed Widgets and Charts from server : " + widgetsMap.size() + " by " + chartsMap.size(), Toast
+                                .LENGTH_SHORT).show();
+
                         finish();
 
                         break;

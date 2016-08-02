@@ -35,11 +35,17 @@ import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
 import com.mcsaatchi.gmfit.classes.Helpers;
 import com.mcsaatchi.gmfit.fragments.IntroSlider_Fragment;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponse;
+import com.mcsaatchi.gmfit.rest.AuthenticationResponseChart;
+import com.mcsaatchi.gmfit.rest.AuthenticationResponseInnerBody;
+import com.mcsaatchi.gmfit.rest.AuthenticationResponseWidget;
 import com.mcsaatchi.gmfit.rest.RestClient;
 import com.squareup.otto.Subscribe;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -191,7 +197,6 @@ public class Login_Activity extends Base_Activity {
                             public void onCompleted(
                                     JSONObject object,
                                     GraphResponse response) {
-
                                 try {
 
                                     String userID = (String) object.get("id");
@@ -209,10 +214,6 @@ public class Login_Activity extends Base_Activity {
                                     prefsEditor.apply();
 
                                     registerUserWithFacebook(accessToken.getToken());
-//                                    Intent intent = new Intent(Login_Activity.this, Main_Activity.class);
-//                                    startActivity(intent);
-//
-//                                    finish();
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
@@ -225,7 +226,6 @@ public class Login_Activity extends Base_Activity {
                 request.executeAsync();
 
                 Toast.makeText(Login_Activity.this, "Facebook logged in successfully", Toast.LENGTH_SHORT).show();
-
             }
 
             @Override
@@ -268,11 +268,24 @@ public class Login_Activity extends Base_Activity {
                     case 200:
                         waitingDialog.dismiss();
 
+                        AuthenticationResponseInnerBody responseBody = response.body().getData().getBody();
+
                         //Refreshes access token
-                        prefs.edit().putString(Cons.PREF_USER_ACCESS_TOKEN, "Bearer " + response.body().getData().getBody().getToken()).apply();
+                        prefs.edit().putString(Cons.PREF_USER_ACCESS_TOKEN, "Bearer " + responseBody.getToken()).apply();
+
+                        List<AuthenticationResponseWidget> widgetsMap = responseBody.getWidgets();
+                        List<AuthenticationResponseChart> chartsMap = responseBody.getCharts();
+
+                        EventBus_Singleton.getInstance().post(new EventBus_Poster(Cons.EVENT_SIGNNED_UP_SUCCESSFULLY_CLOSE_LOGIN_ACTIVITY));
 
                         Intent intent = new Intent(Login_Activity.this, Main_Activity.class);
+                        intent.putParcelableArrayListExtra("widgets", (ArrayList<AuthenticationResponseWidget>) widgetsMap);
+                        intent.putParcelableArrayListExtra("charts", (ArrayList<AuthenticationResponseChart>) chartsMap);
                         startActivity(intent);
+
+                        Toast.makeText(Login_Activity.this, "Grabbed Widgets and Charts from server : " + widgetsMap.size() + " by " + chartsMap.size(), Toast
+                                .LENGTH_SHORT).show();
+
                         finish();
 
                         break;
