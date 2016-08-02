@@ -10,7 +10,7 @@ public class AuthenticationResponseData {
     private String message;
     @SerializedName("body")
     @Expose
-    private AuthenticationResponseBody body;
+    private AuthenticationResponseInnerBody body;
     @SerializedName("code")
     @Expose
     private Integer code;
@@ -38,7 +38,7 @@ public class AuthenticationResponseData {
      * @return
      * The body
      */
-    public AuthenticationResponseBody getBody() {
+    public AuthenticationResponseInnerBody getBody() {
         return body;
     }
 
@@ -47,7 +47,7 @@ public class AuthenticationResponseData {
      * @param body
      * The body
      */
-    public void setBody(AuthenticationResponseBody body) {
+    public void setBody(AuthenticationResponseInnerBody body) {
         this.body = body;
     }
 
