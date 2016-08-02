@@ -13,6 +13,10 @@ public class Cons {
     public static final String EXTRAS_USER_POLICY = "user_policy";
     public static final String EXTRAS_USER_FACEBOOK_TOKEN = "user_facebook_token";
 
+    public static final String EXTRAS_USER_PROFILE_MEASUREMENT_SYSTEM = "user_profile_measurement_system";
+    public static final String EXTRAS_USER_PROFILE_NATIONALITY = "user_profile_nationality";
+    public static final String EXTRAS_USER_PROFILE_GOAL = "user_profile_goal";
+
     public static final String EXTRAS_FITNESS_FRAGMENT = "FITNESS";
     public static final String EXTRAS_NUTRITION_FRAGMENT = "NUTRITION";
     public static final String EXTRAS_HEALTH_FRAGMENT = "HEALTH";

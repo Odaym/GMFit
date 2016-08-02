@@ -52,12 +52,15 @@
               android:text="@string/choose_measurement_unit"
               android:textColor="@android:color/white"/>
 
-    <RadioGroup android:layout_width="match_parent" android:layout_height="wrap_content"
-                android:paddingStart="@dimen/default_margin_2">
+    <RadioGroup
+        android:id="@+id/measurementRadioGroup"
+        android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:paddingStart="@dimen/default_margin_2">
 
         <RadioButton android:id="@+id/metricRdBTN" android:layout_width="match_parent"
                      android:layout_height="@dimen/radiobutton_row_height"
                      android:buttonTint="@android:color/white"
+                     android:checked="true"
                      android:paddingStart="@dimen/default_margin_1"
                      android:text="@string/measurement_unit_metric"
                      android:textColor="@android:color/white"/>

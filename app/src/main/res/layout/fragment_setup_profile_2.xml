@@ -40,6 +40,7 @@
                      android:layout_height="@dimen/radiobutton_row_height"
                      android:layout_marginBottom="@dimen/default_margin_0"
                      android:buttonTint="@android:color/white"
+                     android:checked="true"
                      android:paddingStart="@dimen/default_margin_1"
                      android:text="@string/goal_purpose_lose_weight"
                      android:textColor="@android:color/white"/>

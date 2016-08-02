@@ -1,8 +1,10 @@
 package com.mcsaatchi.gmfit.fragments;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
@@ -16,6 +18,7 @@ import android.support.annotation.Nullable;
 import android.support.design.internal.ParcelableSparseArray;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.NestedScrollView;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.util.Log;
@@ -43,6 +46,8 @@ import com.mcsaatchi.gmfit.classes.ParcelableFitnessString;
 import com.mcsaatchi.gmfit.models.DataChart;
 import com.mcsaatchi.gmfit.pedometer.PedometerSettings;
 import com.mcsaatchi.gmfit.pedometer.StepService;
+import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
+import com.mcsaatchi.gmfit.rest.RestClient;
 import com.squareup.otto.Subscribe;
 
 import net.danlew.android.joda.JodaTimeAndroid;
@@ -53,16 +58,22 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class Fitness_Fragment extends Fragment {
 
     public static final String TAG = "Fitness_Fragment";
+
     public static final int ADD_NEW_FITNESS_CHART_REQUEST_CODE = 1;
+
     private static final int STEPS_MSG = 1;
     private static final int PACE_MSG = 2;
     private static final int DISTANCE_MSG = 3;
     private static final int SPEED_MSG = 4;
     private static final int CALORIES_MSG = 5;
+
     @Bind(R.id.widgetsGridView)
     GridView widgetsGridView;
     @Bind(R.id.bar_chart)
@@ -73,6 +84,9 @@ public class Fitness_Fragment extends Fragment {
     Button addNewChartBTN;
     @Bind(R.id.metricCounterTV)
     TextView metricCounterTV;
+
+    private int numberOfMetricsGathered = 0;
+
     private NestedScrollView parentScrollView;
     private List<DataChart> allDataCharts;
     private RuntimeExceptionDao<DataChart, Integer> dataChartDAO;
@@ -91,11 +105,13 @@ public class Fitness_Fragment extends Fragment {
     private SharedPreferences pedometerSettings;
     private PedometerSettings mPedometerSettings;
     private boolean mIsRunning;
+
     private int stepsValue;
     private int paceValue;
     private float distanceValue;
     private float speedValue;
     private int caloriesValue;
+
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -134,8 +150,19 @@ public class Fitness_Fragment extends Fragment {
                 default:
                     super.handleMessage(msg);
             }
+
+            if (numberOfMetricsGathered == 5) {
+                String[] slugsArray = new String[]{"steps-count", "active-calories",
+                        "distance-traveled"};
+                double[] valuesArray = new double[]{stepsValue, caloriesValue, distanceValue};
+
+                updateMetrics(slugsArray, valuesArray, Helpers.getCalendarDate());
+            }
+
+            numberOfMetricsGathered++;
         }
     };
+
     private StepService.ICallback mCallback = new StepService.ICallback() {
         public void stepsChanged(int value) {
             mHandler.sendMessage(mHandler.obtainMessage(STEPS_MSG, value, 0));
@@ -157,6 +184,7 @@ public class Fitness_Fragment extends Fragment {
             mHandler.sendMessage(mHandler.obtainMessage(CALORIES_MSG, (int) (value), 0));
         }
     };
+
     private ServiceConnection mConnection = new ServiceConnection() {
         public void onServiceConnected(ComponentName className, IBinder service) {
             stepService = ((StepService.StepBinder) service).getService();
@@ -258,16 +286,6 @@ public class Fitness_Fragment extends Fragment {
         }
     }
 
-    private void stopStepService() {
-        Log.i(TAG, "[SERVICE] Stop");
-        if (stepService != null) {
-            Log.i(TAG, "[SERVICE] stopService");
-            parentActivity.stopService(new Intent(getActivity(),
-                    StepService.class));
-        }
-        mIsRunning = false;
-    }
-
     private void bindStepService() {
         isServiceBound = parentActivity.bindService(new Intent(getActivity(),
                 StepService.class), mConnection, Context.BIND_AUTO_CREATE + Context.BIND_DEBUG_UNBIND);
@@ -275,13 +293,46 @@ public class Fitness_Fragment extends Fragment {
         Log.i(TAG, "[SERVICE] Bind " + isServiceBound);
     }
 
-    private void unbindStepService() {
-        Log.i(TAG, "[SERVICE] Unbind " + isServiceBound);
+    private void updateMetrics(String[] slugsArray, double[] valuesArray, String date) {
+        final ProgressDialog waitingDialog = new ProgressDialog(getActivity());
+        waitingDialog.setTitle(getString(R.string.syncing_up_dialog_title));
+        waitingDialog.setMessage(getString(R.string.syncing_up_dialog_message));
+        waitingDialog.show();
 
-        if (isServiceBound) {
-            parentActivity.unbindService(mConnection);
-            isServiceBound = false;
-        }
+        final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+        alertDialog.setTitle(R.string.syncing_up_dialog_title);
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+
+                        if (waitingDialog.isShowing())
+                            waitingDialog.dismiss();
+                    }
+                });
+
+        Call<DefaultGetResponse> updateMetricsCall = new RestClient().getGMFitService().updateMetrics(prefs.getString(Cons
+                .PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS), new UpdateMetricsRequest(slugsArray, valuesArray, date));
+
+        updateMetricsCall.enqueue(new Callback<DefaultGetResponse>() {
+            @Override
+            public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
+                switch (response.code()) {
+                    case 200:
+                        waitingDialog.dismiss();
+
+                        Log.d(TAG, "onResponse: SYNCED Metrics successfully");
+
+                        break;
+                }
+            }
+
+            @Override
+            public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+                alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
+                alertDialog.show();
+            }
+        });
     }
 
     public void addNewBarChart(String chartTitle, ArrayList<Float> floatArrayExtra) {
