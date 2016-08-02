@@ -24,10 +24,13 @@ import com.mcsaatchi.gmfit.classes.Helpers;
 import com.mcsaatchi.gmfit.fragments.Fitness_Fragment;
 import com.mcsaatchi.gmfit.fragments.MainProfile_Fragment;
 import com.mcsaatchi.gmfit.fragments.Nutrition_Fragment;
+import com.mcsaatchi.gmfit.rest.AuthenticationResponseWidget;
 import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.rest.RestClient;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnMenuTabClickListener;
+
+import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -47,6 +50,8 @@ public class Main_Activity extends Base_Activity {
     private Fragment fragmentReplace;
     private SharedPreferences prefs;
 
+    private ArrayList<AuthenticationResponseWidget> widgetsMap;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -62,6 +67,13 @@ public class Main_Activity extends Base_Activity {
 
         Log.d("USER_ACCESS_TOKEN", "onCreate: User access token is : " + prefs.getString(Cons.PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS));
 
+        /**
+         * Fetch Extras from Intent
+         */
+        if (getIntent().getExtras() != null) {
+            widgetsMap = getIntent().getExtras().getParcelableArrayList("widgets");
+        }
+
         bottomBar = BottomBar.attachShy((CoordinatorLayout) findViewById(R.id.myCoordinator),
                 findViewById(R.id.myScrollingContent), savedInstanceState);
 
@@ -73,11 +85,15 @@ public class Main_Activity extends Base_Activity {
         bottomBar.setItemsFromMenu(R.menu.bottom_navigation, new OnMenuTabClickListener() {
             @Override
             public void onMenuTabSelected(@IdRes int menuItemId) {
+                Bundle bundle = new Bundle();
+
                 fragmentReplace = null;
 
                 switch (menuItemId) {
                     case R.id.item_one:
                         fragmentReplace = new Fitness_Fragment();
+                        bundle.putParcelableArrayList("widgets", widgetsMap);
+                        fragmentReplace.setArguments(bundle);
                         mainContentLayout.setBackground(getResources().getDrawable(R.drawable.fitness_background));
                         break;
                     case R.id.item_two:
