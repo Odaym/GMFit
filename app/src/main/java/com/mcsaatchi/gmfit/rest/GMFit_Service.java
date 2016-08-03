@@ -5,8 +5,8 @@ import com.mcsaatchi.gmfit.activities.Login_Activity;
 import com.mcsaatchi.gmfit.activities.SignIn_Activity;
 import com.mcsaatchi.gmfit.activities.SignUp_Activity;
 import com.mcsaatchi.gmfit.classes.Cons;
-import com.mcsaatchi.gmfit.fragments.Fitness_Fragment;
 import com.mcsaatchi.gmfit.fragments.Setup_Profile_3_Fragment;
+import com.mcsaatchi.gmfit.pedometer.StepService;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -34,7 +34,7 @@ public interface GMFit_Service {
     Call<UserPolicyResponse> getUserPolicy(@Header(Cons.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken);
 
     @POST("user/add-metric")
-    Call<DefaultGetResponse> updateMetrics(@Header(Cons.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken, @Body Fitness_Fragment.UpdateMetricsRequest
+    Call<DefaultGetResponse> updateMetrics(@Header(Cons.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken, @Body StepService.UpdateMetricsRequest
             updateMetricsRequest);
 
     @GET("user/metrics")

@@ -13,6 +13,12 @@ public class Cons {
     public static final String EXTRAS_USER_POLICY = "user_policy";
     public static final String EXTRAS_USER_FACEBOOK_TOKEN = "user_facebook_token";
 
+    public static final String EXTRAS_USER_DISTANCE_TRAVELED = "user_distance_traveled";
+    public static final String EXTRAS_USER_STEPS_COUNT = "user_steps_count";
+    public static final String EXTRAS_USER_ACTIVE_CALORIES = "user_active_calories";
+
+    public static final int WAIT_TIME_BEFORE_SERVER_SYNC = 2000;
+
     public static final String EXTRAS_USER_PROFILE_MEASUREMENT_SYSTEM = "user_profile_measurement_system";
     public static final String EXTRAS_USER_PROFILE_NATIONALITY = "user_profile_nationality";
     public static final String EXTRAS_USER_PROFILE_GOAL = "user_profile_goal";
@@ -22,11 +28,9 @@ public class Cons {
     public static final String EXTRAS_HEALTH_FRAGMENT = "HEALTH";
 
     public static final String EXTRAS_ADD_CHART_WHAT_TYPE = "add_chart_what_type";
-    public static final String EXTRAS_ADD_CHART_WHAT_NAME = "add_chart_what_name";
     public static final String EXTRAS_CHART_TYPE_SELECTED = "chart_type_selected";
     public static final String EXTRAS_CHART_FULL_NAME = "chart_full_name";
 
-    public static final int BarChart_CHART_TYPE = 1;
     public static final String EXTRAS_FITNESS_WIDGETS_ORDER_ARRAY = "fitness_widgets_order_array";
     public static final String EXTRAS_FITNESS_WIDGETS_ORDER_ARRAY_CHANGED = "fitness_widgets_order_array_changed";
     public static final String EXTRAS_NUTRITION_WIDGETS_ORDER_ARRAY = "nutrition_widgets_order_array";
@@ -49,16 +53,7 @@ public class Cons {
     public static final MediaType JSON_FORMAT_IDENTIFIER
             = MediaType.parse("application/json; charset=utf-8");
 
-    public static final int POST_REQUEST_TYPE = 500;
-
-    public static final String SLUG_VALUE_STEPS_COUNT = "steps-count";
-    public static final String SLUG_VALUE_DISTANCE_TRAVELED = "distance-traveled";
-    public static final String SLUG_VALUE_CYCLING_DISTANCE = "cycling-distance";
-    public static final String SLUG_VALUE_ACTIVE_CALORIES = "active-calories";
-
     public static final String EVENT_USER_FINALIZE_SETUP_PROFILE = "user_finalize_setup_profile";
-    public static final String EVENT_USER_SETUP_PROFILE_STEP_1 = "user_setup_profile_step_1";
-    public static final String EVENT_USER_SETUP_PROFILE_STEP_2 = "user_setup_profile_step_2";
 
     public static final String EVENT_CHART_METRICS_RECEIVED = "event_chart_metrics_received";
     public static final String EVENT_SIGNNED_UP_SUCCESSFULLY_CLOSE_LOGIN_ACTIVITY = "signned_up_successfully_close_login_activity";
@@ -67,5 +62,4 @@ public class Cons {
     public static final String NO_ACCESS_TOKEN_FOUND_IN_PREFS = "no_access_token_in_prefs";
     public static final String PREF_USER_ACCESS_TOKEN = "user_access_token";
     public static final String USER_ACCESS_TOKEN_HEADER_PARAMETER = "Authorization";
-    public static final int REGISTRATION_PROCESS_SUCCEEDED_TOKEN_SAVED = 120;
 }

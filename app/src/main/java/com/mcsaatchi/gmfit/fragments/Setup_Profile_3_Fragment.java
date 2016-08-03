@@ -186,7 +186,6 @@ public class Setup_Profile_3_Fragment extends Fragment implements CalendarDatePi
 
                         Log.d(TAG, "onResponse: Results size : " + allMedicalData.size());
 
-
                         for (int i = 0; i < allMedicalData.size(); i++) {
                             medicalConditions.add(allMedicalData.get(i).getName());
                         }
@@ -346,19 +345,20 @@ public class Setup_Profile_3_Fragment extends Fragment implements CalendarDatePi
     public class UpdateProfileRequest {
         final String birthday;
         final String bloodType;
-        final String nationality;
-        final String measurementSystem;
+        final String country;
+        final String metric_system;
         final String goal;
         final int gender;
         final double height;
         final double weight;
         final double BMI;
 
-        public UpdateProfileRequest(String birthday, String bloodType, String nationality, String measurementSystem, String goal, int gender, double height, double weight, double BMI) {
+        public UpdateProfileRequest(String birthday, String bloodType, String country, String metric_system, String goal, int gender, double height, double
+                weight, double BMI) {
             this.birthday = birthday;
             this.bloodType = bloodType;
-            this.nationality = nationality;
-            this.measurementSystem = measurementSystem;
+            this.country = country;
+            this.metric_system = metric_system;
             this.goal = goal;
             this.gender = gender;
             this.height = height;

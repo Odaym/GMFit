@@ -149,8 +149,6 @@ public class SignIn_Activity extends Base_Activity {
             public void onResponse(Call<AuthenticationResponse> call, Response<AuthenticationResponse> response) {
                 switch (response.code()) {
                     case 200:
-                        waitingDialog.dismiss();
-
                         AuthenticationResponseInnerBody responseBody = response.body().getData().getBody();
 
                         //Refreshes access token
@@ -166,8 +164,10 @@ public class SignIn_Activity extends Base_Activity {
                         intent.putParcelableArrayListExtra("charts", (ArrayList<AuthenticationResponseChart>) chartsMap);
                         startActivity(intent);
 
+                        waitingDialog.dismiss();
+
                         Toast.makeText(SignIn_Activity.this, "Grabbed Widgets and Charts from server : " + widgetsMap.size() + " by " + chartsMap.size(), Toast
-                                .LENGTH_SHORT).show();
+                                   .LENGTH_SHORT).show();
 
                         finish();
 

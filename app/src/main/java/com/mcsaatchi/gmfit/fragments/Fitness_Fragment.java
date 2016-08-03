@@ -1,10 +1,8 @@
 package com.mcsaatchi.gmfit.fragments;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
@@ -18,7 +16,6 @@ import android.support.annotation.Nullable;
 import android.support.design.internal.ParcelableSparseArray;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.NestedScrollView;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.util.Log;
@@ -32,10 +29,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
-import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.activities.AddNewChart_Activity;
-import com.mcsaatchi.gmfit.activities.Base_Activity;
 import com.mcsaatchi.gmfit.activities.CustomizeWidgetsAndCharts_Activity;
 import com.mcsaatchi.gmfit.adapters.Widgets_GridAdapter;
 import com.mcsaatchi.gmfit.classes.Cons;
@@ -46,21 +41,16 @@ import com.mcsaatchi.gmfit.classes.ParcelableFitnessString;
 import com.mcsaatchi.gmfit.models.DataChart;
 import com.mcsaatchi.gmfit.pedometer.PedometerSettings;
 import com.mcsaatchi.gmfit.pedometer.StepService;
-import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
-import com.mcsaatchi.gmfit.rest.RestClient;
+import com.mcsaatchi.gmfit.rest.AuthenticationResponseWidget;
 import com.squareup.otto.Subscribe;
 
 import net.danlew.android.joda.JodaTimeAndroid;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class Fitness_Fragment extends Fragment {
 
@@ -85,26 +75,17 @@ public class Fitness_Fragment extends Fragment {
     @Bind(R.id.metricCounterTV)
     TextView metricCounterTV;
 
-    private int numberOfMetricsGathered = 0;
+    private List<AuthenticationResponseWidget> widgetsFromServer;
 
     private NestedScrollView parentScrollView;
-    private List<DataChart> allDataCharts;
-    private RuntimeExceptionDao<DataChart, Integer> dataChartDAO;
     private Activity parentActivity;
-    private View fragmentView;
-    private DecimalFormat dFormat = new DecimalFormat("#.00");
     private SharedPreferences prefs;
-    private String chartType;
-    private String chartName;
-    private boolean isServiceBound = false;
-    private ArrayList<Integer> itemIndeces = new ArrayList<>();
-    private ParcelableSparseArray orderedItemsMap = new ParcelableSparseArray();
     private Widgets_GridAdapter widgets_GridAdapter;
     private ParcelableSparseArray widgetsMap;
     private StepService stepService;
-    private SharedPreferences pedometerSettings;
-    private PedometerSettings mPedometerSettings;
     private boolean mIsRunning;
+    private String chartName;
+    private String chartType;
 
     private int stepsValue;
     private int paceValue;
@@ -120,46 +101,31 @@ public class Fitness_Fragment extends Fragment {
             switch (msg.what) {
                 case STEPS_MSG:
                     stepsValue = msg.arg1;
-                    Log.d(TAG, "handleMessage: Steps is now " + stepsValue);
                     metricCounterTV.setText(String.valueOf(stepsValue));
                     break;
                 case PACE_MSG:
                     paceValue = msg.arg1;
-                    Log.d(TAG, "handleMessage: Pace is now " + paceValue);
                     widgetTextView = findWidgetInGrid("Stairs");
                     widgetTextView.setText(String.valueOf(paceValue));
                     break;
                 case DISTANCE_MSG:
                     distanceValue = msg.arg1;
-                    Log.d(TAG, "handleMessage: Distance is now " + distanceValue);
                     widgetTextView = findWidgetInGrid("Biking");
                     widgetTextView.setText(String.valueOf((int) distanceValue));
                     break;
                 case SPEED_MSG:
                     speedValue = msg.arg1 / 1000f;
-                    Log.d(TAG, "handleMessage: Speed is now " + speedValue);
                     widgetTextView = findWidgetInGrid("Walking");
                     widgetTextView.setText(String.valueOf((int) speedValue));
                     break;
                 case CALORIES_MSG:
                     caloriesValue = msg.arg1;
                     widgetTextView = findWidgetInGrid("Calories");
-                    Log.d(TAG, "handleMessage: Calories is now : " + caloriesValue);
                     widgetTextView.setText(String.valueOf(caloriesValue));
                     break;
                 default:
                     super.handleMessage(msg);
             }
-
-            if (numberOfMetricsGathered == 5) {
-                String[] slugsArray = new String[]{"steps-count", "active-calories",
-                        "distance-traveled"};
-                double[] valuesArray = new double[]{stepsValue, caloriesValue, distanceValue};
-
-                updateMetrics(slugsArray, valuesArray, Helpers.getCalendarDate());
-            }
-
-            numberOfMetricsGathered++;
         }
     };
 
@@ -188,10 +154,8 @@ public class Fitness_Fragment extends Fragment {
     private ServiceConnection mConnection = new ServiceConnection() {
         public void onServiceConnected(ComponentName className, IBinder service) {
             stepService = ((StepService.StepBinder) service).getService();
-
             stepService.registerCallback(mCallback);
             stepService.reloadSettings();
-
         }
 
         public void onServiceDisconnected(ComponentName className) {
@@ -205,7 +169,6 @@ public class Fitness_Fragment extends Fragment {
 
         if (context instanceof Activity) {
             parentActivity = (Activity) context;
-            dataChartDAO = ((Base_Activity) parentActivity).getDBHelper().getDataChartDAO();
         }
     }
 
@@ -217,7 +180,8 @@ public class Fitness_Fragment extends Fragment {
 
         EventBus_Singleton.getInstance().register(this);
 
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.fitness_tab_title);
+        if (((AppCompatActivity) getActivity()).getSupportActionBar() != null)
+            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.fitness_tab_title);
     }
 
     @Override
@@ -225,15 +189,30 @@ public class Fitness_Fragment extends Fragment {
                              ViewGroup container,
                              Bundle savedInstanceState) {
 
-        fragmentView = inflater.inflate(R.layout.fragment_fitness, container, false);
+        View fragmentView = inflater.inflate(R.layout.fragment_fitness, container, false);
 
         parentScrollView = (NestedScrollView) getActivity().findViewById(R.id.myScrollingContent);
 
         ButterKnife.bind(this, fragmentView);
 
-        prefs = getActivity().getSharedPreferences(Cons.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
-
         setHasOptionsMenu(true);
+
+        if (getArguments() != null) {
+            widgetsFromServer = getArguments().getParcelableArrayList("widgets");
+
+            Log.d(TAG, "Got widgets from Main Activity ");
+
+            if (widgetsFromServer != null) {
+                Log.d(TAG, "onCreateView: Widgets from Server (from Main Activity, from SignIn Activity have size : " + widgetsFromServer.size());
+
+                for (int i = 0; i < widgetsFromServer.size(); i++) {
+                    Log.d(TAG, "onCreateView: Widget " + widgetsFromServer.get(i).getWidgetId() + " position " +
+                            widgetsFromServer.get(i).getPosition() + " Name " + widgetsFromServer.get(i).getName());
+                }
+            }
+        } else {
+            Log.d(TAG, "onCreateView: Bundle is null");
+        }
 
         Log.d(TAG, "onCreateView: Device info : " + Build.MANUFACTURER + " " + Build.MODEL + " (" + Build.DEVICE + ") - "
                 + Build.VERSION.RELEASE);
@@ -249,20 +228,25 @@ public class Fitness_Fragment extends Fragment {
             }
         });
 
-        metricCounterTV.setText("" + 0);
+        prefs = getActivity().getSharedPreferences(Cons.SHARED_PREFS_TITLE
+                , Context.MODE_PRIVATE);
+
+        metricCounterTV.setText((int) prefs.getFloat(Cons.EXTRAS_USER_STEPS_COUNT, 0) + "");
 
         widgetsMap = new ParcelableSparseArray() {{
             put(0, new ParcelableFitnessString(R.drawable.ic_running, 0.0, "Walking", "Km/hour"));
-            put(1, new ParcelableFitnessString(R.drawable.ic_biking, 0.0, "Biking", "meters"));
+            put(1, new ParcelableFitnessString(R.drawable.ic_biking, Double.parseDouble(prefs.getFloat(Cons.EXTRAS_USER_DISTANCE_TRAVELED, 0) + ""), "Biking",
+                    "meters"));
             put(3, new ParcelableFitnessString(R.drawable.ic_steps, 0.0, "Stairs", "steps/minute"));
-            put(2, new ParcelableFitnessString(R.drawable.ic_calories, 0.0, "Calories", "Calories"));
+            put(2, new ParcelableFitnessString(R.drawable.ic_calories, Double.parseDouble(prefs.getFloat(Cons.EXTRAS_USER_ACTIVE_CALORIES, 0) + ""), "Calories",
+                    "Calories"));
         }};
 
         setUpWidgetsGridView(widgetsMap);
 
-        pedometerSettings = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        SharedPreferences pedometerPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
-        mPedometerSettings = new PedometerSettings(pedometerSettings);
+        PedometerSettings mPedometerSettings = new PedometerSettings(pedometerPreferences);
 
         mIsRunning = mPedometerSettings.isServiceRunning();
 
@@ -287,52 +271,10 @@ public class Fitness_Fragment extends Fragment {
     }
 
     private void bindStepService() {
-        isServiceBound = parentActivity.bindService(new Intent(getActivity(),
+        boolean isServiceBound = parentActivity.bindService(new Intent(getActivity(),
                 StepService.class), mConnection, Context.BIND_AUTO_CREATE + Context.BIND_DEBUG_UNBIND);
 
         Log.i(TAG, "[SERVICE] Bind " + isServiceBound);
-    }
-
-    private void updateMetrics(String[] slugsArray, double[] valuesArray, String date) {
-        final ProgressDialog waitingDialog = new ProgressDialog(getActivity());
-        waitingDialog.setTitle(getString(R.string.syncing_up_dialog_title));
-        waitingDialog.setMessage(getString(R.string.syncing_up_dialog_message));
-        waitingDialog.show();
-
-        final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
-        alertDialog.setTitle(R.string.syncing_up_dialog_title);
-        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-
-                        if (waitingDialog.isShowing())
-                            waitingDialog.dismiss();
-                    }
-                });
-
-        Call<DefaultGetResponse> updateMetricsCall = new RestClient().getGMFitService().updateMetrics(prefs.getString(Cons
-                .PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS), new UpdateMetricsRequest(slugsArray, valuesArray, date));
-
-        updateMetricsCall.enqueue(new Callback<DefaultGetResponse>() {
-            @Override
-            public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
-                switch (response.code()) {
-                    case 200:
-                        waitingDialog.dismiss();
-
-                        Log.d(TAG, "onResponse: SYNCED Metrics successfully");
-
-                        break;
-                }
-            }
-
-            @Override
-            public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
-                alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
-                alertDialog.show();
-            }
-        });
     }
 
     public void addNewBarChart(String chartTitle, ArrayList<Float> floatArrayExtra) {
@@ -441,7 +383,7 @@ public class Fitness_Fragment extends Fragment {
 
                 break;
             case Cons.EXTRAS_FITNESS_CHARTS_ORDER_ARRAY_CHANGED:
-                allDataCharts = ebp.getDataChartsListExtra();
+                List<DataChart> allDataCharts = ebp.getDataChartsListExtra();
 
                 cards_container.removeAllViews();
 
@@ -465,7 +407,6 @@ public class Fitness_Fragment extends Fragment {
                 intent.putExtra(Cons.EXTRAS_CUSTOMIZE_WIDGETS_FRAGMENT_TYPE, Cons.EXTRAS_FITNESS_FRAGMENT);
                 intent.putExtra(Cons.BUNDLE_FITNESS_WIDGETS_MAP, widgetsMap);
                 startActivity(intent);
-
                 break;
         }
 
@@ -486,17 +427,5 @@ public class Fitness_Fragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-    }
-
-    public class UpdateMetricsRequest {
-        final String[] slug;
-        final double[] value;
-        final String date;
-
-        public UpdateMetricsRequest(String[] slug, double[] value, String date) {
-            this.slug = slug;
-            this.value = value;
-            this.date = date;
-        }
     }
 }

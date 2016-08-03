@@ -18,7 +18,6 @@ import android.text.style.ClickableSpan;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.andreabaccega.widget.FormEditText;
 import com.mcsaatchi.gmfit.R;
@@ -158,12 +157,12 @@ public class SignUp_Activity extends Base_Activity {
 
                         EventBus_Singleton.getInstance().post(new EventBus_Poster(Cons.EVENT_SIGNNED_UP_SUCCESSFULLY_CLOSE_LOGIN_ACTIVITY));
 
-                        Intent intent = new Intent(SignUp_Activity.this, Main_Activity.class);
+                        Intent intent = new Intent(SignUp_Activity.this, .class);
                         intent.putParcelableArrayListExtra("widgets", (ArrayList<AuthenticationResponseWidget>) widgetsMap);
                         intent.putParcelableArrayListExtra("charts", (ArrayList<AuthenticationResponseChart>) chartsMap);
                         startActivity(intent);
 
-                        Toast.makeText(SignUp_Activity.this, "Grabbed Widgets and Charts from server : " + widgetsMap.size() + " by " + chartsMap.size(), Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(SignUp_Activity.this, "Grabbed Widgets and Charts from server : " + widgetsMap.size() + " by " + chartsMap.size(), Toast.LENGTH_SHORT).show();
 
                         finish();
 
