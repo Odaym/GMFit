@@ -79,7 +79,7 @@ public class StepDetector implements SensorEventListener {
                         boolean isPreviousLargeEnough = lastDiff[k] > (diff / 3);
                         boolean isNotContra = (lastMatch != 1 - extType);
 
-                        if (isAlmostAsLargeAsPrevious && isPreviousLargeEnough) {
+                        if (isAlmostAsLargeAsPrevious && isPreviousLargeEnough && isNotContra) {
 
                             for (StepListener stepListener : mStepListeners) {
                                 stepListener.onStep();
