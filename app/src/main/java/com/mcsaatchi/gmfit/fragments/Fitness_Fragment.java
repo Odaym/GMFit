@@ -44,8 +44,6 @@ import com.mcsaatchi.gmfit.pedometer.StepService;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponseWidget;
 import com.squareup.otto.Subscribe;
 
-import net.danlew.android.joda.JodaTimeAndroid;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -87,11 +85,10 @@ public class Fitness_Fragment extends Fragment {
     private String chartName;
     private String chartType;
 
-    private int stepsValue;
-    private int paceValue;
-    private float distanceValue;
+    private int stepsValue, paceValue, distanceValue, caloriesValue;
     private float speedValue;
-    private int caloriesValue;
+
+    private int accumulatingDistance, accumulatingCalories;
 
     private Handler mHandler = new Handler() {
         @Override
@@ -101,7 +98,13 @@ public class Fitness_Fragment extends Fragment {
             switch (msg.what) {
                 case STEPS_MSG:
                     stepsValue = msg.arg1;
-                    metricCounterTV.setText(String.valueOf(stepsValue));
+
+                    prefs.edit().putInt(Cons.EXTRAS_USER_STEPS_COUNT, prefs.getInt(Cons.EXTRAS_USER_STEPS_COUNT, 0) + 1).apply();
+
+                    int stepsFromPrefs = prefs.getInt(Cons.EXTRAS_USER_STEPS_COUNT, 0);
+
+                    metricCounterTV.setText(String.valueOf(stepsFromPrefs));
+
                     break;
                 case PACE_MSG:
                     paceValue = msg.arg1;
@@ -109,9 +112,25 @@ public class Fitness_Fragment extends Fragment {
                     widgetTextView.setText(String.valueOf(paceValue));
                     break;
                 case DISTANCE_MSG:
+                    //Current value for Distance in prefs
+                    int distanceFromPrefs = prefs.getInt(Cons.EXTRAS_USER_DISTANCE_TRAVELED, 0);
+
+                    //Store the new value of Distance
                     distanceValue = msg.arg1;
+
+                    //If the new and old values differ, this means there was an increase
+                    if (accumulatingDistance != distanceValue) {
+                        //Increment the current value for Distance in prefs by 1!
+                        prefs.edit().putInt(Cons.EXTRAS_USER_DISTANCE_TRAVELED, distanceFromPrefs + 1).apply();
+                    }
+
+                    //Save the old value of Distance
+                    accumulatingDistance = distanceValue;
+
                     widgetTextView = findWidgetInGrid("Biking");
-                    widgetTextView.setText(String.valueOf((int) distanceValue));
+
+                    widgetTextView.setText(String.valueOf(prefs.getInt(Cons.EXTRAS_USER_DISTANCE_TRAVELED, 0)));
+
                     break;
                 case SPEED_MSG:
                     speedValue = msg.arg1 / 1000f;
@@ -119,9 +138,29 @@ public class Fitness_Fragment extends Fragment {
                     widgetTextView.setText(String.valueOf((int) speedValue));
                     break;
                 case CALORIES_MSG:
+                    //Current value for Calories in prefs
+                    int caloriesFromPrefs = prefs.getInt(Cons.EXTRAS_USER_ACTIVE_CALORIES, 0);
+
+                    //Store the new value of Calories
                     caloriesValue = msg.arg1;
+
+                    Log.d(TAG, "handleMessage: Calories raw value : " + caloriesValue);
+
+                    //If the new and old values differ, this means there was an increase
+                    if (accumulatingCalories != caloriesValue) {
+                        //Increment the current value for Calories in prefs by 1!
+                        prefs.edit().putInt(Cons.EXTRAS_USER_ACTIVE_CALORIES, caloriesFromPrefs + 1).apply();
+                        Log.d(TAG, "handleMessage: They have differed! increment caloriesFromPrefs to become : " + prefs.getInt(Cons.EXTRAS_USER_ACTIVE_CALORIES, 0));
+                    }
+
+                    Log.d(TAG, "handleMessage: Calories accumulated value : " + accumulatingCalories);
+                    //Save the old value of Calories
+                    accumulatingCalories = caloriesValue;
+
                     widgetTextView = findWidgetInGrid("Calories");
-                    widgetTextView.setText(String.valueOf(caloriesValue));
+
+                    widgetTextView.setText(String.valueOf(prefs.getInt(Cons.EXTRAS_USER_ACTIVE_CALORIES, 0)));
+
                     break;
                 default:
                     super.handleMessage(msg);
@@ -155,7 +194,6 @@ public class Fitness_Fragment extends Fragment {
         public void onServiceConnected(ComponentName className, IBinder service) {
             stepService = ((StepService.StepBinder) service).getService();
             stepService.registerCallback(mCallback);
-            stepService.reloadSettings();
         }
 
         public void onServiceDisconnected(ComponentName className) {
@@ -176,8 +214,6 @@ public class Fitness_Fragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        JodaTimeAndroid.init(getActivity());
-
         EventBus_Singleton.getInstance().register(this);
 
         if (((AppCompatActivity) getActivity()).getSupportActionBar() != null)
@@ -197,22 +233,22 @@ public class Fitness_Fragment extends Fragment {
 
         setHasOptionsMenu(true);
 
-        if (getArguments() != null) {
-            widgetsFromServer = getArguments().getParcelableArrayList("widgets");
-
-            Log.d(TAG, "Got widgets from Main Activity ");
-
-            if (widgetsFromServer != null) {
-                Log.d(TAG, "onCreateView: Widgets from Server (from Main Activity, from SignIn Activity have size : " + widgetsFromServer.size());
-
-                for (int i = 0; i < widgetsFromServer.size(); i++) {
-                    Log.d(TAG, "onCreateView: Widget " + widgetsFromServer.get(i).getWidgetId() + " position " +
-                            widgetsFromServer.get(i).getPosition() + " Name " + widgetsFromServer.get(i).getName());
-                }
-            }
-        } else {
-            Log.d(TAG, "onCreateView: Bundle is null");
-        }
+//        if (getArguments() != null) {
+//            widgetsFromServer = getArguments().getParcelableArrayList("widgets");
+//
+//            Log.d(TAG, "Got widgets from Main Activity ");
+//
+//            if (widgetsFromServer != null) {
+//                Log.d(TAG, "onCreateView: Widgets from Server (from Main Activity, from SignIn Activity have size : " + widgetsFromServer.size());
+//
+//                for (int i = 0; i < widgetsFromServer.size(); i++) {
+//                    Log.d(TAG, "onCreateView: Widget " + widgetsFromServer.get(i).getWidgetId() + " position " +
+//                            widgetsFromServer.get(i).getPosition() + " Name " + widgetsFromServer.get(i).getName());
+//                }
+//            }
+//        } else {
+//            Log.d(TAG, "onCreateView: Bundle is null");
+//        }
 
         Log.d(TAG, "onCreateView: Device info : " + Build.MANUFACTURER + " " + Build.MODEL + " (" + Build.DEVICE + ") - "
                 + Build.VERSION.RELEASE);
@@ -231,14 +267,14 @@ public class Fitness_Fragment extends Fragment {
         prefs = getActivity().getSharedPreferences(Cons.SHARED_PREFS_TITLE
                 , Context.MODE_PRIVATE);
 
-        metricCounterTV.setText((int) prefs.getFloat(Cons.EXTRAS_USER_STEPS_COUNT, 0) + "");
+        metricCounterTV.setText(String.valueOf(prefs.getInt(Cons.EXTRAS_USER_STEPS_COUNT, 0)));
 
         widgetsMap = new ParcelableSparseArray() {{
             put(0, new ParcelableFitnessString(R.drawable.ic_running, 0.0, "Walking", "Km/hour"));
-            put(1, new ParcelableFitnessString(R.drawable.ic_biking, Double.parseDouble(prefs.getFloat(Cons.EXTRAS_USER_DISTANCE_TRAVELED, 0) + ""), "Biking",
+            put(1, new ParcelableFitnessString(R.drawable.ic_biking, prefs.getInt(Cons.EXTRAS_USER_DISTANCE_TRAVELED, 0), "Biking",
                     "meters"));
             put(3, new ParcelableFitnessString(R.drawable.ic_steps, 0.0, "Stairs", "steps/minute"));
-            put(2, new ParcelableFitnessString(R.drawable.ic_calories, Double.parseDouble(prefs.getFloat(Cons.EXTRAS_USER_ACTIVE_CALORIES, 0) + ""), "Calories",
+            put(2, new ParcelableFitnessString(R.drawable.ic_calories, prefs.getInt(Cons.EXTRAS_USER_ACTIVE_CALORIES, 0), "Calories",
                     "Calories"));
         }};
 
@@ -422,6 +458,8 @@ public class Fitness_Fragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
+
+        stepService.resetValues();
     }
 
     @Override
