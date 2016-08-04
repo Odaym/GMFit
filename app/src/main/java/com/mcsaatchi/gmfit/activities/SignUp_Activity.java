@@ -157,7 +157,7 @@ public class SignUp_Activity extends Base_Activity {
 
                         EventBus_Singleton.getInstance().post(new EventBus_Poster(Cons.EVENT_SIGNNED_UP_SUCCESSFULLY_CLOSE_LOGIN_ACTIVITY));
 
-                        Intent intent = new Intent(SignUp_Activity.this, .class);
+                        Intent intent = new Intent(SignUp_Activity.this, GetStarted_Activity.class);
                         intent.putParcelableArrayListExtra("widgets", (ArrayList<AuthenticationResponseWidget>) widgetsMap);
                         intent.putParcelableArrayListExtra("charts", (ArrayList<AuthenticationResponseChart>) chartsMap);
                         startActivity(intent);
