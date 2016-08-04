@@ -30,11 +30,10 @@ public class StepDetector implements SensorEventListener {
 
     private int lastMatch = -1;
 
-    private ArrayList<StepListener> mStepListeners = new ArrayList<StepListener>();
+    private ArrayList<StepListener> mStepListeners = new ArrayList<>();
 
     public StepDetector() {
         mYOffset = 480;
-//        mScale[0] = -(h * 0.5f * (1.0f / (SensorManager.STANDARD_GRAVITY * 2)));
         mScale[1] = -(mYOffset * 0.5f * (1.0f / (SensorManager.MAGNETIC_FIELD_EARTH_MAX)));
     }
 
