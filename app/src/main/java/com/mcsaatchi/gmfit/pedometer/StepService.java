@@ -216,64 +216,88 @@ public class StepService extends Service {
         // mStepDetector.addStepListener(mStepBuzzer);
 
         // Start voice
-        reloadSettings();
+//        reloadSettings();
+        mSettings = PreferenceManager.getDefaultSharedPreferences(this);
 
         // Tell the user we started.
         Toast.makeText(this, "Service Started", Toast.LENGTH_SHORT).show();
 
-        TimerTask doAsynchronousTask = new TimerTask() {
-            @Override
-            public void run() {
-                handler.post(new Runnable() {
-                    @SuppressWarnings("unchecked")
-                    public void run() {
+//        TimerTask doAsynchronousTask = new TimerTask() {
+//            @Override
+//            public void run() {
+//                handler.post(new Runnable() {
+//                    @SuppressWarnings("unchecked")
+//                    public void run() {
+//
+////                        double currentDistanceTraveled;
+////                        double currentStepsCount;
+////                        double currentCaloriesSpent;
+//
+//                        Log.d(TAG, "run: current values from if statement are -- Calories : " + (int) mCalories + " -- Steps Count : " +
+//                                mSteps + " -- Distance Traveled : " + (int) mDistance * 1000);
+//
+////                        if (mDistance == 0)
+////                            currentDistanceTraveled = prefs.getFloat(Cons.EXTRAS_USER_DISTANCE_TRAVELED, 0);
+////                        else
+////                            currentDistanceTraveled = mDistance;
+////
+////                        if (mSteps == 0)
+////                            currentStepsCount = prefs.getFloat(Cons.EXTRAS_USER_STEPS_COUNT, 0);
+////                        else
+////                            currentStepsCount = mSteps;
+////
+////                        if (mCalories == 0)
+////                            currentCaloriesSpent = prefs.getFloat(Cons.EXTRAS_USER_ACTIVE_CALORIES, 0);
+////                        else
+////                            currentCaloriesSpent = mCalories;
+//
+////                            = (mDistance == 0) ?  : mDistance;
+////                            = (mSteps == 0) ? prefs.getFloat(Cons.EXTRAS_USER_STEPS_COUNT, 0) : mSteps;
+////                            = (mCalories == 0) ? prefs.getFloat(Cons.EXTRAS_USER_ACTIVE_CALORIES, 0) : mCalories;
+//
+//
+//                        final double distanceTraveled = mDistance;
+//                        final double caloriesSpent = mCalories;
+//                        final double stepsCount = mSteps;
+//
+//                        String[] slugsArray = new String[]{"steps-count", "active-calories",
+//                                "distance-traveled"};
+//
+//                        double[] valuesArray = new double[]{stepsCount, (int) caloriesSpent, (int) distanceTraveled};
+//
+//                        Call<DefaultGetResponse> updateMetricsCall = new RestClient().getGMFitService().updateMetrics(prefs.getString(Cons
+//                                .PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS), new UpdateMetricsRequest(slugsArray, valuesArray, Helpers.getCalendarDate()));
+//
+//                        updateMetricsCall.enqueue(new Callback<DefaultGetResponse>() {
+//                            @Override
+//                            public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
+//                                switch (response.code()) {
+//                                    case 200:
+//
+//                                        Log.d(TAG, "onResponse: SYNCED Metrics successfully");
+//
+////                                        Log.d(TAG, "run: mDistance : " + ((int) distanceTraveled * 1000));
+////                                        Log.d(TAG, "run: mCalories : " + ((int) caloriesSpent));
+////                                        Log.d(TAG, "run: mSteps : " + (int) stepsCount);
+//
+//                                        prefs.edit().putFloat(Cons.EXTRAS_USER_DISTANCE_TRAVELED, (int) distanceTraveled).apply();
+//                                        prefs.edit().putFloat(Cons.EXTRAS_USER_ACTIVE_CALORIES, (int) caloriesSpent).apply();
+//                                        prefs.edit().putFloat(Cons.EXTRAS_USER_STEPS_COUNT, (int) stepsCount).apply();
+//
+//                                        break;
+//                                }
+//                            }
+//
+//                            @Override
+//                            public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+//                            }
+//                        });
+//                    }
+//                });
+//            }
+//        };
 
-                        double currentDistanceTraveled = (mDistance == 0) ? prefs.getFloat(Cons.EXTRAS_USER_DISTANCE_TRAVELED, 0) : mDistance;
-                        double currentStepsCount = (mSteps == 0) ? prefs.getFloat(Cons.EXTRAS_USER_STEPS_COUNT, 0) : mSteps;
-                        double currentCaloriesSpent = (mCalories == 0) ? prefs.getFloat(Cons.EXTRAS_USER_ACTIVE_CALORIES, 0) : mCalories;
-
-                        final double distanceTraveled = currentDistanceTraveled;
-                        final double caloriesSpent = currentCaloriesSpent;
-                        final double stepsCount = currentStepsCount;
-
-                        String[] slugsArray = new String[]{"steps-count", "active-calories",
-                                "distance-traveled"};
-
-                        double[] valuesArray = new double[]{stepsCount, (int) caloriesSpent, (int) distanceTraveled * 1000};
-
-                        Call<DefaultGetResponse> updateMetricsCall = new RestClient().getGMFitService().updateMetrics(prefs.getString(Cons
-                                .PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS), new UpdateMetricsRequest(slugsArray, valuesArray, Helpers.getCalendarDate()));
-
-                        updateMetricsCall.enqueue(new Callback<DefaultGetResponse>() {
-                            @Override
-                            public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
-                                switch (response.code()) {
-                                    case 200:
-
-                                        Log.d(TAG, "onResponse: SYNCED Metrics successfully");
-
-                                        Log.d(TAG, "run: mDistance : " + ((int) distanceTraveled * 1000));
-                                        Log.d(TAG, "run: mCalories : " + ((int) caloriesSpent));
-                                        Log.d(TAG, "run: mSteps : " + (int) stepsCount);
-
-                                        prefs.edit().putFloat(Cons.EXTRAS_USER_DISTANCE_TRAVELED, (int) distanceTraveled * 1000).apply();
-                                        prefs.edit().putFloat(Cons.EXTRAS_USER_ACTIVE_CALORIES, (int) caloriesSpent).apply();
-                                        prefs.edit().putFloat(Cons.EXTRAS_USER_STEPS_COUNT, (int) stepsCount).apply();
-
-                                        break;
-                                }
-                            }
-
-                            @Override
-                            public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
-                            }
-                        });
-                    }
-                });
-            }
-        };
-
-        timer.schedule(doAsynchronousTask, 0, Cons.WAIT_TIME_BEFORE_SERVER_SYNC);
+//        timer.schedule(doAsynchronousTask, 0, Cons.WAIT_TIME_BEFORE_SERVER_SYNC);
     }
 
     @Override
@@ -338,14 +362,6 @@ public class StepService extends Service {
     }
 
     public void reloadSettings() {
-        mSettings = PreferenceManager.getDefaultSharedPreferences(this);
-//
-//        if (mStepDetector != null) {
-//            mStepDetector.setSensitivity(
-//                    Float.valueOf(mSettings.getString("sensitivity", "37"))
-//            );
-//        }
-
         if (mStepDisplayer != null) mStepDisplayer.reloadSettings();
         if (mPaceNotifier != null) mPaceNotifier.reloadSettings();
         if (mDistanceNotifier != null) mDistanceNotifier.reloadSettings();
@@ -360,6 +376,7 @@ public class StepService extends Service {
         mSpeedNotifier.setSpeed(0);
         mCaloriesNotifier.setCalories(0);
     }
+
     public interface ICallback {
         public void stepsChanged(int value);
 
@@ -371,6 +388,7 @@ public class StepService extends Service {
 
         public void caloriesChanged(float value);
     }
+
 
     /**
      * Class for clients to access.  Because we know this service always
