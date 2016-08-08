@@ -275,10 +275,12 @@ public class Fitness_Fragment extends Fragment {
     }
 
     private void bindStepService() {
-        boolean isServiceBound = parentActivity.bindService(new Intent(getActivity(),
-                StepService.class), mConnection, Context.BIND_AUTO_CREATE + Context.BIND_DEBUG_UNBIND);
+        if (!mIsRunning) {
+            boolean isServiceBound = parentActivity.bindService(new Intent(getActivity(),
+                    StepService.class), mConnection, Context.BIND_AUTO_CREATE + Context.BIND_DEBUG_UNBIND);
 
-        Log.i(TAG, "[SERVICE] Bind " + isServiceBound);
+            Log.i(TAG, "[SERVICE] Bind " + isServiceBound);
+        }
     }
 
     public void addNewBarChart(String chartTitle, ArrayList<Float> floatArrayExtra) {
@@ -426,8 +428,6 @@ public class Fitness_Fragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
-
-//        stepService.resetValues();
     }
 
     @Override

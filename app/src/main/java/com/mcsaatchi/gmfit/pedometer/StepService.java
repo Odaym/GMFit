@@ -239,6 +239,27 @@ public class StepService extends Service {
                         Log.d(TAG, "run: current values from if statement are -- Calories : " + prefs.getInt(Cons.EXTRAS_USER_ACTIVE_CALORIES, 0) + " -- Steps Count : " +
                                 prefs.getInt(Cons.EXTRAS_USER_STEPS_COUNT, 0) + " -- Distance Traveled : " + prefs.getInt(Cons.EXTRAS_USER_DISTANCE_TRAVELED, 0));
 
+
+                        LocalDate dt = new LocalDate();
+
+                        String todayDate = dt.toString();
+                        String yesterdayDate = dt.minusDays(1).toString();
+
+                        Log.d("TAGTAG", "run: Today's date : " + todayDate);
+                        Log.d("TAGTAG", "run: Yesterday's date (TODAY MINUS 1): " + yesterdayDate);
+
+                        /**
+                         * Doesn't contain today's date as a key, but DOES contain yesterday's day as a key
+                         */
+                        if (!prefs.contains(todayDate) && prefs.contains(yesterdayDate)) {
+                            Log.d(TAG, "run: Doesn't contain today's date as a key, but DOES contain yesterday's day as a key");
+                            prefs.edit().remove(yesterdayDate).apply();
+                            resetValues();
+
+                        }
+
+                        prefs.edit().putString(todayDate, "").apply();
+
                         /**
                          * Steps Calculation
                          */
@@ -301,23 +322,6 @@ public class StepService extends Service {
                 handler.post(new Runnable() {
                     @SuppressWarnings("unchecked")
                     public void run() {
-
-                        LocalDate dt = new LocalDate();
-
-                        String todayDate = dt.toString();
-                        String yesterdayDate = dt.minusDays(1).toString();
-
-                        /**
-                         * Doesn't contain today's date as a key, but DOES contain yesterday's day as a key
-                         */
-                        if (!prefs.contains(todayDate) && prefs.contains(yesterdayDate)) {
-                            Log.d(TAG, "run: Doesn't contain today's date as a key, but DOES contain yesterday's day as a key");
-                            prefs.edit().remove(yesterdayDate).apply();
-                            resetValues();
-
-                        }
-
-                        prefs.edit().putString(todayDate, "").apply();
 
                         String[] slugsArray = new String[]{"steps-count", "active-calories",
                                 "distance-traveled"};
