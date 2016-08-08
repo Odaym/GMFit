@@ -13,11 +13,16 @@ public class Cons {
     public static final String EXTRAS_USER_POLICY = "user_policy";
     public static final String EXTRAS_USER_FACEBOOK_TOKEN = "user_facebook_token";
 
+    public static final String EXTRAS_ACCUMULATING_DISTANCE = "ACCUMULATING_DISTANCE";
+    public static final String EXTRAS_ACCUMULATING_CALORIES = "ACCUMULATING_CALORIES";
+    public static final String EXTRAS_ACCUMULATING_STEPS = "ACCUMULATING_STEPS";
+
     public static final String EXTRAS_USER_DISTANCE_TRAVELED = "user_distance_traveled";
     public static final String EXTRAS_USER_STEPS_COUNT = "user_steps_count";
     public static final String EXTRAS_USER_ACTIVE_CALORIES = "user_active_calories";
 
-    public static final int WAIT_TIME_BEFORE_SERVER_SYNC = 2000;
+    public static final int WAIT_TIME_BEFORE_CHECKING_METRICS_SERVICE = 200;
+    public static final int WAIT_TIME_BEFORE_SERVER_SYNC = 60000;
 
     public static final String EXTRAS_USER_PROFILE_MEASUREMENT_SYSTEM = "user_profile_measurement_system";
     public static final String EXTRAS_USER_PROFILE_NATIONALITY = "user_profile_nationality";

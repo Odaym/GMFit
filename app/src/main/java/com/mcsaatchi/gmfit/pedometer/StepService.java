@@ -1,11 +1,9 @@
 package com.mcsaatchi.gmfit.pedometer;
 
 import android.app.NotificationManager;
-import android.app.ProgressDialog;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -16,15 +14,16 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.classes.Cons;
 import com.mcsaatchi.gmfit.classes.Helpers;
 import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.rest.RestClient;
+
+import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -76,6 +75,7 @@ public class StepService extends Service {
     private Timer timer = new Timer();
     private SharedPreferences prefs;
     private ICallback mCallback;
+
     /**
      * Forwards pace values from PaceNotifier to the activity.
      */
@@ -91,6 +91,7 @@ public class StepService extends Service {
             }
         }
     };
+
     /**
      * Forwards pace values from PaceNotifier to the activity.
      */
@@ -106,6 +107,7 @@ public class StepService extends Service {
             }
         }
     };
+
     /**
      * Forwards distance values from DistanceNotifier to the activity.
      */
@@ -118,9 +120,11 @@ public class StepService extends Service {
         public void passValue() {
             if (mCallback != null) {
                 mCallback.distanceChanged(mDistance);
+                Log.d(TAG, "passValue: Distance value changed!");
             }
         }
     };
+
     /**
      * Forwards speed values from SpeedNotifier to the activity.
      */
@@ -136,6 +140,7 @@ public class StepService extends Service {
             }
         }
     };
+
     /**
      * Forwards calories values from CaloriesNotifier to the activity.
      */
@@ -151,7 +156,7 @@ public class StepService extends Service {
             }
         }
     };
-    // BroadcastReceiver for handling ACTION_SCREEN_OFF.
+
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -160,6 +165,10 @@ public class StepService extends Service {
                 // Unregisters the listener and registers it again.
                 StepService.this.unregisterDetector();
                 StepService.this.registerDetector();
+//                if (mPedometerSettings.wakeAggressively()) {
+                wakeLock.release();
+                acquireWakeLock();
+//                }
             }
         }
     };
@@ -211,93 +220,137 @@ public class StepService extends Service {
         mCaloriesNotifier.setCalories(mCalories = mState.getFloat("calories", 0));
         mStepDetector.addStepListener(mCaloriesNotifier);
 
-        // Used when debugging:
-        // mStepBuzzer = new StepBuzzer(this);
-        // mStepDetector.addStepListener(mStepBuzzer);
-
-        // Start voice
-//        reloadSettings();
         mSettings = PreferenceManager.getDefaultSharedPreferences(this);
 
         // Tell the user we started.
         Toast.makeText(this, "Service Started", Toast.LENGTH_SHORT).show();
 
-//        TimerTask doAsynchronousTask = new TimerTask() {
-//            @Override
-//            public void run() {
-//                handler.post(new Runnable() {
-//                    @SuppressWarnings("unchecked")
-//                    public void run() {
-//
-////                        double currentDistanceTraveled;
-////                        double currentStepsCount;
-////                        double currentCaloriesSpent;
-//
-//                        Log.d(TAG, "run: current values from if statement are -- Calories : " + (int) mCalories + " -- Steps Count : " +
-//                                mSteps + " -- Distance Traveled : " + (int) mDistance * 1000);
-//
-////                        if (mDistance == 0)
-////                            currentDistanceTraveled = prefs.getFloat(Cons.EXTRAS_USER_DISTANCE_TRAVELED, 0);
-////                        else
-////                            currentDistanceTraveled = mDistance;
-////
-////                        if (mSteps == 0)
-////                            currentStepsCount = prefs.getFloat(Cons.EXTRAS_USER_STEPS_COUNT, 0);
-////                        else
-////                            currentStepsCount = mSteps;
-////
-////                        if (mCalories == 0)
-////                            currentCaloriesSpent = prefs.getFloat(Cons.EXTRAS_USER_ACTIVE_CALORIES, 0);
-////                        else
-////                            currentCaloriesSpent = mCalories;
-//
-////                            = (mDistance == 0) ?  : mDistance;
-////                            = (mSteps == 0) ? prefs.getFloat(Cons.EXTRAS_USER_STEPS_COUNT, 0) : mSteps;
-////                            = (mCalories == 0) ? prefs.getFloat(Cons.EXTRAS_USER_ACTIVE_CALORIES, 0) : mCalories;
-//
-//
-//                        final double distanceTraveled = mDistance;
-//                        final double caloriesSpent = mCalories;
-//                        final double stepsCount = mSteps;
-//
-//                        String[] slugsArray = new String[]{"steps-count", "active-calories",
-//                                "distance-traveled"};
-//
-//                        double[] valuesArray = new double[]{stepsCount, (int) caloriesSpent, (int) distanceTraveled};
-//
-//                        Call<DefaultGetResponse> updateMetricsCall = new RestClient().getGMFitService().updateMetrics(prefs.getString(Cons
-//                                .PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS), new UpdateMetricsRequest(slugsArray, valuesArray, Helpers.getCalendarDate()));
-//
-//                        updateMetricsCall.enqueue(new Callback<DefaultGetResponse>() {
-//                            @Override
-//                            public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
-//                                switch (response.code()) {
-//                                    case 200:
-//
-//                                        Log.d(TAG, "onResponse: SYNCED Metrics successfully");
-//
-////                                        Log.d(TAG, "run: mDistance : " + ((int) distanceTraveled * 1000));
-////                                        Log.d(TAG, "run: mCalories : " + ((int) caloriesSpent));
-////                                        Log.d(TAG, "run: mSteps : " + (int) stepsCount);
-//
-//                                        prefs.edit().putFloat(Cons.EXTRAS_USER_DISTANCE_TRAVELED, (int) distanceTraveled).apply();
-//                                        prefs.edit().putFloat(Cons.EXTRAS_USER_ACTIVE_CALORIES, (int) caloriesSpent).apply();
-//                                        prefs.edit().putFloat(Cons.EXTRAS_USER_STEPS_COUNT, (int) stepsCount).apply();
-//
-//                                        break;
-//                                }
-//                            }
-//
-//                            @Override
-//                            public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
-//                            }
-//                        });
-//                    }
-//                });
-//            }
-//        };
+        /**
+         * Timer Task for calculating metrics as the phone is active
+         */
+        TimerTask doAsynchronousTask = new TimerTask() {
+            @Override
+            public void run() {
 
-//        timer.schedule(doAsynchronousTask, 0, Cons.WAIT_TIME_BEFORE_SERVER_SYNC);
+                handler.post(new Runnable() {
+                    @SuppressWarnings("unchecked")
+                    public void run() {
+
+                        Log.d(TAG, "run: current values from if statement are -- Calories : " + prefs.getInt(Cons.EXTRAS_USER_ACTIVE_CALORIES, 0) + " -- Steps Count : " +
+                                prefs.getInt(Cons.EXTRAS_USER_STEPS_COUNT, 0) + " -- Distance Traveled : " + prefs.getInt(Cons.EXTRAS_USER_DISTANCE_TRAVELED, 0));
+
+                        /**
+                         * Steps Calculation
+                         */
+                        int accumulatingSteps = prefs.getInt(Cons.EXTRAS_ACCUMULATING_STEPS, 0);
+
+                        int finalStepsValue = mSteps;
+
+                        if (accumulatingSteps != mSteps) {
+                            int stepsFromPrefs = prefs.getInt(Cons.EXTRAS_USER_STEPS_COUNT, 0);
+                            prefs.edit().putInt(Cons.EXTRAS_USER_STEPS_COUNT, stepsFromPrefs + 1).apply();
+                        }
+
+                        prefs.edit().putInt(Cons.EXTRAS_ACCUMULATING_STEPS, finalStepsValue).apply();
+                        /****/
+
+                        /**
+                         * Distance calculation
+                         */
+                        int accumulatingDistance = prefs.getInt(Cons.EXTRAS_ACCUMULATING_DISTANCE, 0);
+
+                        int finalDistanceValue = (int) (mDistance * 1000);
+
+                        if (accumulatingDistance != finalDistanceValue) {
+                            int distanceFromPrefs = prefs.getInt(Cons.EXTRAS_USER_DISTANCE_TRAVELED, 0);
+                            prefs.edit().putInt(Cons.EXTRAS_USER_DISTANCE_TRAVELED, distanceFromPrefs + 1).apply();
+                        }
+
+                        prefs.edit().putInt(Cons.EXTRAS_ACCUMULATING_DISTANCE, finalDistanceValue).apply();
+                        /****/
+
+                        /**
+                         * Calories calculation
+                         */
+                        int accumulatingCalories = prefs.getInt(Cons.EXTRAS_ACCUMULATING_CALORIES, 0);
+
+                        int finalCaloriesValue = (int) mCalories;
+
+                        //If the new and old values differ, this means there was an increase
+                        if (accumulatingCalories != finalCaloriesValue) {
+                            //Increment the current value for Calories in prefs by 1!
+                            prefs.edit().putInt(Cons.EXTRAS_USER_ACTIVE_CALORIES, accumulatingCalories + 1).apply();
+                        }
+
+                        prefs.edit().putInt(Cons.EXTRAS_ACCUMULATING_CALORIES, finalCaloriesValue).apply();
+                        /****/
+                    }
+                });
+            }
+        };
+
+        timer.schedule(doAsynchronousTask, 0, Cons.WAIT_TIME_BEFORE_CHECKING_METRICS_SERVICE);
+
+        /**
+         * Timer Task for synchronising metrics with the server
+         */
+        TimerTask syncMetricsWithServerTask = new TimerTask() {
+            @Override
+            public void run() {
+
+                handler.post(new Runnable() {
+                    @SuppressWarnings("unchecked")
+                    public void run() {
+
+                        LocalDate dt = new LocalDate();
+
+                        String todayDate = dt.toString();
+                        String yesterdayDate = dt.minusDays(1).toString();
+
+                        /**
+                         * Doesn't contain today's date as a key, but DOES contain yesterday's day as a key
+                         */
+                        if (!prefs.contains(todayDate) && prefs.contains(yesterdayDate)) {
+                            Log.d(TAG, "run: Doesn't contain today's date as a key, but DOES contain yesterday's day as a key");
+                            prefs.edit().remove(yesterdayDate).apply();
+                            resetValues();
+
+                        }
+
+                        prefs.edit().putString(todayDate, "").apply();
+
+                        String[] slugsArray = new String[]{"steps-count", "active-calories",
+                                "distance-traveled"};
+
+                        int[] valuesArray = new int[]{prefs.getInt(Cons.EXTRAS_USER_STEPS_COUNT, 0), prefs.getInt(Cons.EXTRAS_USER_ACTIVE_CALORIES, 0), prefs
+                                .getInt(Cons.EXTRAS_USER_DISTANCE_TRAVELED, 0)};
+
+                        Call<DefaultGetResponse> updateMetricsCall = new RestClient().getGMFitService().updateMetrics(prefs.getString(Cons
+                                .PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS), new UpdateMetricsRequest(slugsArray, valuesArray, Helpers.getCalendarDate()));
+
+                        updateMetricsCall.enqueue(new Callback<DefaultGetResponse>() {
+                            @Override
+                            public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
+                                switch (response.code()) {
+                                    case 200:
+
+                                        Log.d(TAG, "onResponse: SYNCED Metrics successfully");
+
+                                        break;
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+                            }
+                        });
+                    }
+                });
+            }
+        };
+
+        timer.schedule(syncMetricsWithServerTask, 0, Cons.WAIT_TIME_BEFORE_SERVER_SYNC);
+
     }
 
     @Override
@@ -322,8 +375,6 @@ public class StepService extends Service {
         mStateEditor.putFloat("calories", mCalories);
         mStateEditor.apply();
 
-        mNM.cancel(R.string.app_name);
-
         wakeLock.release();
 
         super.onDestroy();
@@ -332,7 +383,7 @@ public class StepService extends Service {
         mSensorManager.unregisterListener(mStepDetector);
 
         // Tell the user we stopped.
-        Toast.makeText(this, "Service Started", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Service Stopped", Toast.LENGTH_SHORT).show();
     }
 
     private void registerDetector() {
@@ -370,12 +421,32 @@ public class StepService extends Service {
     }
 
     public void resetValues() {
+        prefs.edit().putInt(Cons.EXTRAS_USER_DISTANCE_TRAVELED, 0).apply();
+        prefs.edit().putInt(Cons.EXTRAS_USER_ACTIVE_CALORIES, 0).apply();
+        prefs.edit().putInt(Cons.EXTRAS_USER_STEPS_COUNT, 0).apply();
+
         mStepDisplayer.setSteps(0);
         mPaceNotifier.setPace(0);
         mDistanceNotifier.setDistance(0);
         mSpeedNotifier.setSpeed(0);
         mCaloriesNotifier.setCalories(0);
     }
+
+    private void acquireWakeLock() {
+        PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+        int wakeFlags;
+//        if (mPedometerSettings.wakeAggressively()) {
+//            wakeFlags = PowerManager.SCREEN_DIM_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP;
+//        } else if (mPedometerSettings.keepScreenOn()) {
+        wakeFlags = PowerManager.SCREEN_DIM_WAKE_LOCK;
+//        } else {
+//            wakeFlags = PowerManager.PARTIAL_WAKE_LOCK;
+//        }
+
+        wakeLock = pm.newWakeLock(wakeFlags, TAG);
+        wakeLock.acquire();
+    }
+
 
     public interface ICallback {
         public void stepsChanged(int value);
@@ -388,7 +459,6 @@ public class StepService extends Service {
 
         public void caloriesChanged(float value);
     }
-
 
     /**
      * Class for clients to access.  Because we know this service always
@@ -403,28 +473,14 @@ public class StepService extends Service {
 
     public class UpdateMetricsRequest {
         final String[] slug;
-        final double[] value;
+        final int[] value;
         final String date;
 
-        public UpdateMetricsRequest(String[] slug, double[] value, String date) {
+        public UpdateMetricsRequest(String[] slug, int[] value, String date) {
             this.slug = slug;
             this.value = value;
             this.date = date;
         }
     }
-
-//    private void acquireWakeLock() {
-//        PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-//        int wakeFlags;
-//        if (mPedometerSettings.wakeAggressively()) {
-//            wakeFlags = PowerManager.SCREEN_DIM_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP;
-//        } else if (mPedometerSettings.keepScreenOn()) {
-//            wakeFlags = PowerManager.SCREEN_DIM_WAKE_LOCK;
-//        } else {
-//            wakeFlags = PowerManager.PARTIAL_WAKE_LOCK;
-//        }
-//        wakeLock = pm.newWakeLock(wakeFlags, TAG);
-//        wakeLock.acquire();
-//    }
 }
 

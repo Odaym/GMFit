@@ -72,9 +72,8 @@ public class Fitness_Fragment extends Fragment {
     Button addNewChartBTN;
     @Bind(R.id.metricCounterTV)
     TextView metricCounterTV;
-
+    double paceValue, speedValue;
     private List<AuthenticationResponseWidget> widgetsFromServer;
-
     private NestedScrollView parentScrollView;
     private Activity parentActivity;
     private SharedPreferences prefs;
@@ -84,12 +83,6 @@ public class Fitness_Fragment extends Fragment {
     private boolean mIsRunning;
     private String chartName;
     private String chartType;
-
-    private int stepsValue, paceValue, distanceValue, caloriesValue;
-    private float speedValue;
-
-    private int accumulatingDistance, accumulatingCalories;
-
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -97,9 +90,7 @@ public class Fitness_Fragment extends Fragment {
 
             switch (msg.what) {
                 case STEPS_MSG:
-                    stepsValue = msg.arg1;
-
-                    prefs.edit().putInt(Cons.EXTRAS_USER_STEPS_COUNT, prefs.getInt(Cons.EXTRAS_USER_STEPS_COUNT, 0) + 1).apply();
+//                    Log.d(TAG, "handleMessage: Steps count changed");
 
                     int stepsFromPrefs = prefs.getInt(Cons.EXTRAS_USER_STEPS_COUNT, 0);
 
@@ -107,55 +98,32 @@ public class Fitness_Fragment extends Fragment {
 
                     break;
                 case PACE_MSG:
+//                    Log.d(TAG, "handleMessage: Pace changed");
+
                     paceValue = msg.arg1;
                     widgetTextView = findWidgetInGrid("Stairs");
                     widgetTextView.setText(String.valueOf(paceValue));
                     break;
                 case DISTANCE_MSG:
-                    //Current value for Distance in prefs
-                    int distanceFromPrefs = prefs.getInt(Cons.EXTRAS_USER_DISTANCE_TRAVELED, 0);
-
-                    //Store the new value of Distance
-                    distanceValue = msg.arg1;
-
-                    //If the new and old values differ, this means there was an increase
-                    if (accumulatingDistance != distanceValue) {
-                        //Increment the current value for Distance in prefs by 1!
-                        prefs.edit().putInt(Cons.EXTRAS_USER_DISTANCE_TRAVELED, distanceFromPrefs + 1).apply();
-                    }
-
-                    //Save the old value of Distance
-                    accumulatingDistance = distanceValue;
+//                    Log.d(TAG, "handleMessage: Distance changed");
 
                     widgetTextView = findWidgetInGrid("Biking");
 
-                    widgetTextView.setText(String.valueOf(prefs.getInt(Cons.EXTRAS_USER_DISTANCE_TRAVELED, 0)));
+                    int distanceFromprefs = prefs.getInt(Cons.EXTRAS_USER_DISTANCE_TRAVELED, 0);
 
+                    widgetTextView.setText(String.valueOf(distanceFromprefs));
                     break;
                 case SPEED_MSG:
+//                    Log.d(TAG, "handleMessage: Speed changed");
+
                     speedValue = msg.arg1 / 1000f;
                     widgetTextView = findWidgetInGrid("Walking");
                     widgetTextView.setText(String.valueOf((int) speedValue));
                     break;
                 case CALORIES_MSG:
+//                    Log.d(TAG, "handleMessage: Calories changed");
+
                     //Current value for Calories in prefs
-                    int caloriesFromPrefs = prefs.getInt(Cons.EXTRAS_USER_ACTIVE_CALORIES, 0);
-
-                    //Store the new value of Calories
-                    caloriesValue = msg.arg1;
-
-                    Log.d(TAG, "handleMessage: Calories raw value : " + caloriesValue);
-
-                    //If the new and old values differ, this means there was an increase
-                    if (accumulatingCalories != caloriesValue) {
-                        //Increment the current value for Calories in prefs by 1!
-                        prefs.edit().putInt(Cons.EXTRAS_USER_ACTIVE_CALORIES, caloriesFromPrefs + 1).apply();
-                        Log.d(TAG, "handleMessage: They have differed! increment caloriesFromPrefs to become : " + prefs.getInt(Cons.EXTRAS_USER_ACTIVE_CALORIES, 0));
-                    }
-
-                    Log.d(TAG, "handleMessage: Calories accumulated value : " + accumulatingCalories);
-                    //Save the old value of Calories
-                    accumulatingCalories = caloriesValue;
 
                     widgetTextView = findWidgetInGrid("Calories");
 
@@ -459,7 +427,7 @@ public class Fitness_Fragment extends Fragment {
     public void onStop() {
         super.onStop();
 
-        stepService.resetValues();
+//        stepService.resetValues();
     }
 
     @Override

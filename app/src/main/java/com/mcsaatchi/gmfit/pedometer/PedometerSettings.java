@@ -1,21 +1,3 @@
-/*
- *  Pedometer - Android App
- *  Copyright (C) 2009 Levente Bagi
- *
- *  This program is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
-
 package com.mcsaatchi.gmfit.pedometer;
 
 import android.content.SharedPreferences;
@@ -27,11 +9,10 @@ import android.content.SharedPreferences;
 
 public class PedometerSettings {
 
-    SharedPreferences mSettings;
-
     public static int M_NONE = 1;
     public static int M_PACE = 2;
     public static int M_SPEED = 3;
+    SharedPreferences mSettings;
 
     public PedometerSettings(SharedPreferences settings) {
         mSettings = settings;
@@ -61,6 +42,10 @@ public class PedometerSettings {
 
     public void setBodyWeight(float weight) {
         mSettings.edit().putString("body_weight", "77").apply();
+    }
+
+    public boolean wakeAggressively() {
+        return mSettings.getString("operation_level", "run_in_background").equals("wake_up");
     }
 
     public boolean isRunning() {
