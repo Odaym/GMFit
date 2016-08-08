@@ -236,17 +236,17 @@ public class StepService extends Service {
                     @SuppressWarnings("unchecked")
                     public void run() {
 
-                        Log.d(TAG, "run: current values from if statement are -- Calories : " + prefs.getInt(Cons.EXTRAS_USER_ACTIVE_CALORIES, 0) + " -- Steps Count : " +
-                                prefs.getInt(Cons.EXTRAS_USER_STEPS_COUNT, 0) + " -- Distance Traveled : " + prefs.getInt(Cons.EXTRAS_USER_DISTANCE_TRAVELED, 0));
-
+//                        Log.d(TAG, "run: current values from if statement are -- Calories : " + prefs.getInt(Cons.EXTRAS_USER_ACTIVE_CALORIES, 0) + " -- Steps Count : " +
+//                                prefs.getInt(Cons.EXTRAS_USER_STEPS_COUNT, 0) + " -- Distance Traveled : " + prefs.getInt(Cons.EXTRAS_USER_DISTANCE_TRAVELED, 0));
+//
 
                         LocalDate dt = new LocalDate();
 
                         String todayDate = dt.toString();
                         String yesterdayDate = dt.minusDays(1).toString();
 
-                        Log.d("TAGTAG", "run: Today's date : " + todayDate);
-                        Log.d("TAGTAG", "run: Yesterday's date (TODAY MINUS 1): " + yesterdayDate);
+//                        Log.d("TAGTAG", "run: Today's date : " + todayDate);
+//                        Log.d("TAGTAG", "run: Yesterday's date (TODAY MINUS 1): " + yesterdayDate);
 
                         /**
                          * Doesn't contain today's date as a key, but DOES contain yesterday's day as a key
