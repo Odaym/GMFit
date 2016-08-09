@@ -165,10 +165,11 @@ public class StepService extends Service {
                 // Unregisters the listener and registers it again.
                 StepService.this.unregisterDetector();
                 StepService.this.registerDetector();
-//                if (mPedometerSettings.wakeAggressively()) {
-                wakeLock.release();
+
+                if (wakeLock != null)
+                    wakeLock.release();
+
                 acquireWakeLock();
-//                }
             }
         }
     };
