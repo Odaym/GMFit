@@ -10,7 +10,6 @@ import android.widget.Button;
 import com.andreabaccega.widget.FormEditText;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.classes.Helpers;
-import com.mcsaatchi.gmfit.logger.Log;
 
 import java.util.ArrayList;
 
@@ -45,7 +44,6 @@ public class ForgotPassword_Activity extends Base_Activity {
             @Override
             public void onClick(View v) {
                 if (Helpers.validateFields(allFields)) {
-                    Log.toaster(ForgotPassword_Activity.this, "All fields check out!");
                 }
             }
         });

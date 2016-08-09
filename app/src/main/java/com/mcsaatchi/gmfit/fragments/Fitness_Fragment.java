@@ -1,17 +1,17 @@
 package com.mcsaatchi.gmfit.fragments;
 
 import android.app.Activity;
-import android.content.ComponentName;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.content.SharedPreferences;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.IBinder;
-import android.os.Message;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.internal.ParcelableSparseArray;
 import android.support.v4.app.Fragment;
@@ -39,8 +39,6 @@ import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
 import com.mcsaatchi.gmfit.classes.Helpers;
 import com.mcsaatchi.gmfit.classes.ParcelableFitnessString;
 import com.mcsaatchi.gmfit.models.DataChart;
-import com.mcsaatchi.gmfit.pedometer.PedometerSettings;
-import com.mcsaatchi.gmfit.pedometer.StepService;
 import com.squareup.otto.Subscribe;
 
 import net.danlew.android.joda.JodaTimeAndroid;
@@ -51,17 +49,11 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class Fitness_Fragment extends Fragment {
+public class Fitness_Fragment extends Fragment implements SensorEventListener {
 
     public static final String TAG = "Fitness_Fragment";
 
     public static final int ADD_NEW_FITNESS_CHART_REQUEST_CODE = 1;
-
-    private static final int STEPS_MSG = 1;
-    private static final int PACE_MSG = 2;
-    private static final int DISTANCE_MSG = 3;
-    private static final int SPEED_MSG = 4;
-    private static final int CALORIES_MSG = 5;
 
     @Bind(R.id.widgetsGridView)
     GridView widgetsGridView;
@@ -73,101 +65,14 @@ public class Fitness_Fragment extends Fragment {
     Button addNewChartBTN;
     @Bind(R.id.metricCounterTV)
     TextView metricCounterTV;
-    double paceValue, speedValue;
+
     private NestedScrollView parentScrollView;
     private Activity parentActivity;
     private SharedPreferences prefs;
     private Widgets_GridAdapter widgets_GridAdapter;
     private ParcelableSparseArray widgetsMap;
-    private StepService stepService;
-    private boolean mIsRunning;
     private String chartName;
     private String chartType;
-    private Handler mHandler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            TextView widgetTextView;
-
-            switch (msg.what) {
-                case STEPS_MSG:
-//                    Log.d(TAG, "handleMessage: Steps count changed");
-
-                    int stepsFromPrefs = prefs.getInt(Cons.EXTRAS_USER_STEPS_COUNT, 0);
-
-                    metricCounterTV.setText(String.valueOf(stepsFromPrefs));
-
-                    break;
-                case PACE_MSG:
-//                    Log.d(TAG, "handleMessage: Pace changed");
-
-                    paceValue = msg.arg1;
-                    widgetTextView = findWidgetInGrid("Stairs");
-                    widgetTextView.setText(String.valueOf(paceValue));
-                    break;
-                case DISTANCE_MSG:
-//                    Log.d(TAG, "handleMessage: Distance changed");
-
-                    widgetTextView = findWidgetInGrid("Biking");
-
-                    int distanceFromprefs = prefs.getInt(Cons.EXTRAS_USER_DISTANCE_TRAVELED, 0);
-
-                    widgetTextView.setText(String.valueOf(distanceFromprefs));
-                    break;
-                case SPEED_MSG:
-//                    Log.d(TAG, "handleMessage: Speed changed");
-
-                    speedValue = msg.arg1 / 1000f;
-                    widgetTextView = findWidgetInGrid("Walking");
-                    widgetTextView.setText(String.valueOf((int) speedValue));
-                    break;
-                case CALORIES_MSG:
-//                    Log.d(TAG, "handleMessage: Calories changed");
-
-                    //Current value for Calories in prefs
-
-                    widgetTextView = findWidgetInGrid("Calories");
-
-                    widgetTextView.setText(String.valueOf(prefs.getInt(Cons.EXTRAS_USER_ACTIVE_CALORIES, 0)));
-
-                    break;
-                default:
-                    super.handleMessage(msg);
-            }
-        }
-    };
-
-    private StepService.ICallback mCallback = new StepService.ICallback() {
-        public void stepsChanged(int value) {
-            mHandler.sendMessage(mHandler.obtainMessage(STEPS_MSG, value, 0));
-        }
-
-        public void paceChanged(int value) {
-            mHandler.sendMessage(mHandler.obtainMessage(PACE_MSG, value, 0));
-        }
-
-        public void distanceChanged(float value) {
-            mHandler.sendMessage(mHandler.obtainMessage(DISTANCE_MSG, (int) (value * 1000), 0));
-        }
-
-        public void speedChanged(float value) {
-            mHandler.sendMessage(mHandler.obtainMessage(SPEED_MSG, (int) (value * 1000), 0));
-        }
-
-        public void caloriesChanged(float value) {
-            mHandler.sendMessage(mHandler.obtainMessage(CALORIES_MSG, (int) (value), 0));
-        }
-    };
-
-    private ServiceConnection mConnection = new ServiceConnection() {
-        public void onServiceConnected(ComponentName className, IBinder service) {
-            stepService = ((StepService.StepBinder) service).getService();
-            stepService.registerCallback(mCallback);
-        }
-
-        public void onServiceDisconnected(ComponentName className) {
-            stepService = null;
-        }
-    };
 
     @Override
     public void onAttach(Context context) {
@@ -186,6 +91,28 @@ public class Fitness_Fragment extends Fragment {
 
         JodaTimeAndroid.init(getActivity());
 
+        SensorManager sm =
+                (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
+        Sensor sensor = sm.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
+        if (sensor == null) {
+            new AlertDialog.Builder(getActivity()).setTitle("Oh crap!")
+                    .setMessage("You ain't got no sensor!")
+                    .setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(final DialogInterface dialogInterface) {
+                            getActivity().finish();
+                        }
+                    }).setNeutralButton(android.R.string.ok,
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(final DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                        }
+                    }).create().show();
+        } else {
+            sm.registerListener(this, sensor, SensorManager.SENSOR_DELAY_UI, 0);
+        }
+
         if (((AppCompatActivity) getActivity()).getSupportActionBar() != null)
             ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.fitness_tab_title);
     }
@@ -202,23 +129,6 @@ public class Fitness_Fragment extends Fragment {
         ButterKnife.bind(this, fragmentView);
 
         setHasOptionsMenu(true);
-
-//        if (getArguments() != null) {
-//            widgetsFromServer = getArguments().getParcelableArrayList("widgets");
-//
-//            Log.d(TAG, "Got widgets from Main Activity ");
-//
-//            if (widgetsFromServer != null) {
-//                Log.d(TAG, "onCreateView: Widgets from Server (from Main Activity, from SignIn Activity have size : " + widgetsFromServer.size());
-//
-//                for (int i = 0; i < widgetsFromServer.size(); i++) {
-//                    Log.d(TAG, "onCreateView: Widget " + widgetsFromServer.get(i).getWidgetId() + " position " +
-//                            widgetsFromServer.get(i).getPosition() + " Name " + widgetsFromServer.get(i).getName());
-//                }
-//            }
-//        } else {
-//            Log.d(TAG, "onCreateView: Bundle is null");
-//        }
 
         Log.d(TAG, "onCreateView: Device info : " + Build.MANUFACTURER + " " + Build.MODEL + " (" + Build.DEVICE + ") - "
                 + Build.VERSION.RELEASE);
@@ -250,37 +160,7 @@ public class Fitness_Fragment extends Fragment {
 
         setUpWidgetsGridView(widgetsMap);
 
-        SharedPreferences pedometerPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-
-        PedometerSettings mPedometerSettings = new PedometerSettings(pedometerPreferences);
-
-        mIsRunning = mPedometerSettings.isServiceRunning();
-
-        // Start the service if this is considered to be an application start (last onPause was long ago)
-        if (!mIsRunning && mPedometerSettings.isNewStart()) {
-            startStepService();
-            bindStepService();
-        } else if (mIsRunning) {
-            bindStepService();
-        }
-
         return fragmentView;
-    }
-
-    private void startStepService() {
-        if (!mIsRunning) {
-            Log.i(TAG, "[SERVICE] Start");
-            mIsRunning = true;
-            parentActivity.startService(new Intent(getActivity(),
-                    StepService.class));
-        }
-    }
-
-    private void bindStepService() {
-        boolean isServiceBound = parentActivity.bindService(new Intent(getActivity(),
-                StepService.class), mConnection, Context.BIND_AUTO_CREATE + Context.BIND_DEBUG_UNBIND);
-
-        Log.i(TAG, "[SERVICE] Bind " + isServiceBound);
     }
 
     public void addNewBarChart(String chartTitle, ArrayList<Float> floatArrayExtra) {
@@ -428,12 +308,37 @@ public class Fitness_Fragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
-
-//        stepService.resetValues();
     }
 
     @Override
     public void onResume() {
         super.onResume();
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent sensorEvent) {
+        Log.d("SERVICE_TAG", "UI - sensorChanged " + " since boot: " + sensorEvent.values[0]);
+
+        metricCounterTV.setText(String.valueOf(sensorEvent.values[0]));
+
+//        if (sensorEvent.values[0] > Integer.MAX_VALUE || sensorEvent.values[0] == 0) {
+//            return;
+//        }
+//        if (todayOffset == Integer.MIN_VALUE) {
+//            // no values for today
+//            // we dont know when the reboot was, so set todays steps to 0 by
+//            // initializing them with -STEPS_SINCE_BOOT
+//            todayOffset = -(int) sensorEvent.values[0];
+////            Database db = Database.getInstance(getActivity());
+////            db.insertNewDay(Util.getToday(), (int) sensorEvent.values[0]);
+////            db.close();
+//        }
+//
+//        since_boot = (int) sensorEvent.values[0];
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int i) {
+
     }
 }
