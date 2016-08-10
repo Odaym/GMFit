@@ -24,6 +24,7 @@ import com.mcsaatchi.gmfit.classes.Helpers;
 import com.mcsaatchi.gmfit.fragments.Fitness_Fragment;
 import com.mcsaatchi.gmfit.fragments.MainProfile_Fragment;
 import com.mcsaatchi.gmfit.fragments.Nutrition_Fragment;
+import com.mcsaatchi.gmfit.pedometer.SensorListener;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponseWidget;
 import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.rest.RestClient;
@@ -58,6 +59,8 @@ public class Main_Activity extends Base_Activity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
+
+        startService(new Intent(this, SensorListener.class));
 
         ButterKnife.bind(this);
 

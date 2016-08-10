@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.permission.INTERNET"/>
 
@@ -108,6 +109,13 @@
         <activity android:name=".activities.UserPolicy_Activity"
                   android:screenOrientation="portrait"/>
 
+        <service
+            android:name=".pedometer.SensorListener"/>
+
+        <uses-feature
+            android:name="android.hardware.sensor.stepcounter"
+            android:required="true"/>
+
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id"/>
@@ -122,8 +130,6 @@
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="36e136351325660be3ac92f428de565fcbdc3033"/>
-
-        <service android:name=".pedometer.StepService"/>
 
     </application>
 </manifest>
