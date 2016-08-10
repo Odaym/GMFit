@@ -1,7 +1,6 @@
 package com.mcsaatchi.gmfit.fragments;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -16,6 +15,7 @@ import android.support.annotation.Nullable;
 import android.support.design.internal.ParcelableSparseArray;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.NestedScrollView;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.util.Log;
@@ -95,8 +95,8 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
                 (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
         Sensor sensor = sm.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
         if (sensor == null) {
-            new AlertDialog.Builder(getActivity()).setTitle("Oh crap!")
-                    .setMessage("You ain't got no sensor!")
+            new AlertDialog.Builder(getActivity()).setTitle("Cannot count steps")
+                    .setMessage("Your device isn't equipped with this sensor")
                     .setOnDismissListener(new DialogInterface.OnDismissListener() {
                         @Override
                         public void onDismiss(final DialogInterface dialogInterface) {
@@ -317,24 +317,7 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
-        Log.d("SERVICE_TAG", "UI - sensorChanged " + " since boot: " + sensorEvent.values[0]);
-
-        metricCounterTV.setText(String.valueOf(sensorEvent.values[0]));
-
-//        if (sensorEvent.values[0] > Integer.MAX_VALUE || sensorEvent.values[0] == 0) {
-//            return;
-//        }
-//        if (todayOffset == Integer.MIN_VALUE) {
-//            // no values for today
-//            // we dont know when the reboot was, so set todays steps to 0 by
-//            // initializing them with -STEPS_SINCE_BOOT
-//            todayOffset = -(int) sensorEvent.values[0];
-////            Database db = Database.getInstance(getActivity());
-////            db.insertNewDay(Util.getToday(), (int) sensorEvent.values[0]);
-////            db.close();
-//        }
-//
-//        since_boot = (int) sensorEvent.values[0];
+        metricCounterTV.setText(String.valueOf((int) sensorEvent.values[0]));
     }
 
     @Override
