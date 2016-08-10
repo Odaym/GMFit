@@ -41,8 +41,9 @@ import com.mcsaatchi.gmfit.classes.ParcelableFitnessString;
 import com.mcsaatchi.gmfit.models.DataChart;
 import com.mcsaatchi.gmfit.pedometer.PedometerSettings;
 import com.mcsaatchi.gmfit.pedometer.StepService;
-import com.mcsaatchi.gmfit.rest.AuthenticationResponseWidget;
 import com.squareup.otto.Subscribe;
+
+import net.danlew.android.joda.JodaTimeAndroid;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,7 +74,6 @@ public class Fitness_Fragment extends Fragment {
     @Bind(R.id.metricCounterTV)
     TextView metricCounterTV;
     double paceValue, speedValue;
-    private List<AuthenticationResponseWidget> widgetsFromServer;
     private NestedScrollView parentScrollView;
     private Activity parentActivity;
     private SharedPreferences prefs;
@@ -183,6 +183,8 @@ public class Fitness_Fragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         EventBus_Singleton.getInstance().register(this);
+
+        JodaTimeAndroid.init(getActivity());
 
         if (((AppCompatActivity) getActivity()).getSupportActionBar() != null)
             ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.fitness_tab_title);
