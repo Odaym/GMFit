@@ -10,11 +10,26 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
 
 import com.mcsaatchi.gmfit.BuildConfig;
 import com.mcsaatchi.gmfit.classes.Cons;
+import com.mcsaatchi.gmfit.classes.EventBus_Poster;
+import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
+import com.mcsaatchi.gmfit.classes.Helpers;
+import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
+import com.mcsaatchi.gmfit.rest.RestClient;
+
+import org.joda.time.LocalDate;
+
+import java.util.Timer;
+import java.util.TimerTask;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Background service which keeps the step-sensor listener alive to always get
@@ -26,9 +41,15 @@ import com.mcsaatchi.gmfit.classes.Cons;
 public class SensorListener extends Service implements SensorEventListener {
 
     private final static int MICROSECONDS_IN_ONE_MINUTE = 60000000;
-
+    private static final String TAG = "SensorListener";
+    private static double METRIC_RUNNING_FACTOR = 1.02784823;
     private static int steps;
+    private final Handler handler = new Handler();
+    private Timer timer = new Timer();
     private SharedPreferences prefs;
+    private LocalDate dt = new LocalDate();
+    private String todayDate = dt.toString();
+    private String yesterdayDate = dt.minusDays(1).toString();
 
     @Override
     public void onAccuracyChanged(final Sensor sensor, int accuracy) {
@@ -39,14 +60,35 @@ public class SensorListener extends Service implements SensorEventListener {
 
     @Override
     public void onSensorChanged(final SensorEvent event) {
-        Log.d("TAG", "onSensorChanged: sensor changed");
         if (event.values[0] > Integer.MAX_VALUE) {
             if (BuildConfig.DEBUG) Log.d("SERVICE_TAG", "probably not a real value: " + event.values[0]);
             return;
         } else {
             steps = (int) event.values[0];
 
-            prefs.edit().putInt(Cons.EXTRAS_USER_STEPS_COUNT, steps).apply();
+            Log.d("TAGTAG", "onSensorChanged: STEPS FROM SERVICE ARE : " + steps);
+            Log.d("TAGTAG", "onSensorChanged: Steps in prefs are : " + prefs.getInt(todayDate, 0));
+
+            int sensorStepsFromPrefs = prefs.getInt(Cons.EXTRAS_USER_STEPS_COUNT_FROM_SENSOR, 0);
+            int todayStepsFromPrefs = prefs.getInt(todayDate, 0);
+
+            if (prefs.getBoolean(Cons.EXTRAS_FIRST_APP_LAUNCH, true)) {
+                prefs.edit().putInt(todayDate, 0).apply();
+                prefs.edit().putBoolean(Cons.EXTRAS_FIRST_APP_LAUNCH, false).apply();
+            } else if (sensorStepsFromPrefs != steps) {
+                prefs.edit().putInt(todayDate, todayStepsFromPrefs + 1).apply();
+                prefs.edit().putInt(Cons.EXTRAS_USER_STEPS_COUNT_FROM_SENSOR, steps).apply();
+            }
+
+//            if (steps != 0) {
+//                Log.d(TAG, "onCreate: Stored the steps from Sensor into prefs : " + steps);
+//            }
+
+            Log.d("TAGTAG", "onSensorChanged: Steps in prefs are : " + prefs.getInt(todayDate, 0));
+
+            EventBus_Singleton.getInstance().post(new EventBus_Poster(Cons.EVENT_STEP_COUNTER_INCREMENTED));
+
+            Log.d(TAG, "onSensorChanged: Calories are " + (70 * METRIC_RUNNING_FACTOR * 7 / 100000.0));
         }
     }
 
@@ -69,9 +111,115 @@ public class SensorListener extends Service implements SensorEventListener {
     @Override
     public void onCreate() {
         super.onCreate();
+
         if (BuildConfig.DEBUG) Log.d("SERVICE_TAG", "SensorListener onCreate");
+
         reRegisterSensor();
+
         prefs = getApplicationContext().getSharedPreferences(Cons.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
+
+        /**
+         * Timer Task for calculating metrics as the phone is active
+         */
+        TimerTask doAsynchronousTask = new TimerTask() {
+            @Override
+            public void run() {
+
+                handler.post(new Runnable() {
+                    @SuppressWarnings("unchecked")
+                    public void run() {
+
+//                        Log.d("TAGTAG", "run: Toda y's date : " + todayDate);
+//                        Log.d("TAGTAG", "run: Yesterday's date (TODAY MINUS 1): " + yesterdayDate);
+
+                        /**
+                         * Doesn't contain today's date as a key, but DOES contain yesterday's day as a key
+                         */
+                        if (!prefs.contains(todayDate) && prefs.contains(yesterdayDate)) {
+                            Log.d("TAGTAG", "run: Doesn't contain today's date as a key, but DOES contain yesterday's day as a key");
+                            prefs.edit().remove(yesterdayDate).apply();
+                            prefs.edit().putInt(todayDate, 0).apply();
+                            EventBus_Singleton.getInstance().post(new EventBus_Poster(Cons.EVENT_STEP_COUNTER_INCREMENTED));
+                        }
+
+
+                        String[] slugsArray = new String[]{"steps-count", "active-calories",
+                                "distance-traveled"};
+
+                        int[] valuesArray = new int[]{prefs.getInt(todayDate, 0), prefs.getInt(Cons.EXTRAS_USER_ACTIVE_CALORIES, 0), prefs
+                                .getInt(Cons.EXTRAS_USER_DISTANCE_TRAVELED, 0)};
+
+                        Call<DefaultGetResponse> updateMetricsCall = new RestClient().getGMFitService().updateMetrics(prefs.getString(Cons
+                                .PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS), new UpdateMetricsRequest(slugsArray, valuesArray, Helpers.getCalendarDate()));
+
+                        updateMetricsCall.enqueue(new Callback<DefaultGetResponse>() {
+                            @Override
+                            public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
+                                Log.d(TAG, "onResponse: Response is : " + response.code());
+                                switch (response.code()) {
+                                    case 200:
+
+                                        Log.d(TAG, "onResponse: SYNCED Metrics successfully");
+
+                                        break;
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+                            }
+                        });
+//                        /**
+//                         * Steps Calculation
+//                         */
+//                        int accumulatingSteps = prefs.getInt(Cons.EXTRAS_ACCUMULATING_STEPS, 0);
+//
+//                        int finalStepsValue = mSteps;
+//
+//                        if (accumulatingSteps != mSteps) {
+//                            int stepsFromPrefs = prefs.getInt(Cons.EXTRAS_USER_STEPS_COUNT, 0);
+//                            prefs.edit().putInt(Cons.EXTRAS_USER_STEPS_COUNT, stepsFromPrefs + 1).apply();
+//                        }
+//
+//                        prefs.edit().putInt(Cons.EXTRAS_ACCUMULATING_STEPS, finalStepsValue).apply();
+//                        /****/
+//
+//                        /**
+//                         * Distance calculation
+//                         */
+//                        int accumulatingDistance = prefs.getInt(Cons.EXTRAS_ACCUMULATING_DISTANCE, 0);
+//
+//                        int finalDistanceValue = (int) (mDistance * 1000);
+//
+//                        if (accumulatingDistance != finalDistanceValue) {
+//                            int distanceFromPrefs = prefs.getInt(Cons.EXTRAS_USER_DISTANCE_TRAVELED, 0);
+//                            prefs.edit().putInt(Cons.EXTRAS_USER_DISTANCE_TRAVELED, distanceFromPrefs + 1).apply();
+//                        }
+//
+//                        prefs.edit().putInt(Cons.EXTRAS_ACCUMULATING_DISTANCE, finalDistanceValue).apply();
+//                        /****/
+//
+//                        /**
+//                         * Calories calculation
+//                         */
+//                        int accumulatingCalories = prefs.getInt(Cons.EXTRAS_ACCUMULATING_CALORIES, 0);
+//
+//                        int finalCaloriesValue = (int) mCalories;
+//
+//                        //If the new and old values differ, this means there was an increase
+//                        if (accumulatingCalories != finalCaloriesValue) {
+//                            //Increment the current value for Calories in prefs by 1!
+//                            prefs.edit().putInt(Cons.EXTRAS_USER_ACTIVE_CALORIES, accumulatingCalories + 1).apply();
+//                        }
+//
+//                        prefs.edit().putInt(Cons.EXTRAS_ACCUMULATING_CALORIES, finalCaloriesValue).apply();
+//                        /****/
+                    }
+                });
+            }
+        };
+
+        timer.schedule(doAsynchronousTask, 0, Cons.WAIT_TIME_BEFORE_CHECKING_METRICS_SERVICE);
     }
 
     @Override
@@ -109,12 +257,25 @@ public class SensorListener extends Service implements SensorEventListener {
 
         if (BuildConfig.DEBUG) {
             Log.d("SERVICE_TAG", "step sensors: " + sm.getSensorList(Sensor.TYPE_STEP_COUNTER).size());
-            if (sm.getSensorList(Sensor.TYPE_STEP_COUNTER).size() < 1) return; // emulator
+            if (sm.getSensorList(Sensor.TYPE_STEP_COUNTER).size() < 1)
+                return; // emulator
             Log.d("SERVICE_TAG", "default: " + sm.getDefaultSensor(Sensor.TYPE_STEP_COUNTER).getName());
         }
 
         // enable batching with delay of max 5 min
         sm.registerListener(this, sm.getDefaultSensor(Sensor.TYPE_STEP_COUNTER),
                 SensorManager.SENSOR_DELAY_NORMAL, 5 * MICROSECONDS_IN_ONE_MINUTE);
+    }
+
+    public class UpdateMetricsRequest {
+        final String[] slug;
+        final int[] value;
+        final String date;
+
+        public UpdateMetricsRequest(String[] slug, int[] value, String date) {
+            this.slug = slug;
+            this.value = value;
+            this.date = date;
+        }
     }
 }
