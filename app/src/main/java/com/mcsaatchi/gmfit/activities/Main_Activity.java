@@ -24,6 +24,7 @@ import com.mcsaatchi.gmfit.classes.Helpers;
 import com.mcsaatchi.gmfit.fragments.Fitness_Fragment;
 import com.mcsaatchi.gmfit.fragments.MainProfile_Fragment;
 import com.mcsaatchi.gmfit.fragments.Nutrition_Fragment;
+import com.mcsaatchi.gmfit.pedometer.SensorListener;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponseWidget;
 import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.rest.RestClient;
@@ -59,7 +60,7 @@ public class Main_Activity extends Base_Activity {
 
         setContentView(R.layout.activity_main);
 
-//        startService(new Intent(this, SensorListener.class));
+        startService(new Intent(this, SensorListener.class));
 
         ButterKnife.bind(this);
 
@@ -183,18 +184,18 @@ public class Main_Activity extends Base_Activity {
         signOutUserCall.enqueue(new Callback<DefaultGetResponse>() {
             @Override
             public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
-                if (response.body() != null) {
-                    switch (response.code()) {
-                        case 200:
-                            waitingDialog.dismiss();
+                Log.d("TAG", "onResponse: Response code is : " + response.code());
+                switch (response.code()) {
+                    case 200:
+                        waitingDialog.dismiss();
 
-                            prefs.edit().putString(Cons.PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS).apply();
+                        prefs.edit().putString(Cons.PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS).apply();
+                        prefs.edit().putBoolean(Cons.EXTRAS_USER_LOGGED_IN, false).apply();
 
-                            Intent intent = new Intent(Main_Activity.this, Login_Activity.class);
-                            startActivity(intent);
-                            finish();
-                            break;
-                    }
+                        Intent intent = new Intent(Main_Activity.this, Login_Activity.class);
+                        startActivity(intent);
+                        finish();
+                        break;
                 }
             }
 
