@@ -43,6 +43,8 @@ import com.squareup.otto.Subscribe;
 
 import net.danlew.android.joda.JodaTimeAndroid;
 
+import org.joda.time.LocalDate;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,6 +75,9 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
     private ParcelableSparseArray widgetsMap;
     private String chartName;
     private String chartType;
+
+    private LocalDate dt = new LocalDate();
+    private String todayDate = dt.toString();
 
     @Override
     public void onAttach(Context context) {
@@ -147,7 +152,7 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
         prefs = getActivity().getSharedPreferences(Cons.SHARED_PREFS_TITLE
                 , Context.MODE_PRIVATE);
 
-        metricCounterTV.setText(String.valueOf(prefs.getInt(Cons.EXTRAS_USER_STEPS_COUNT, 0)));
+        metricCounterTV.setText(String.valueOf(prefs.getInt(todayDate, 0)));
 
         widgetsMap = new ParcelableSparseArray() {{
             put(0, new ParcelableFitnessString(R.drawable.ic_running, 0.0, "Walking", "Km/hour"));
@@ -282,6 +287,9 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
             case Cons.EVENT_CHART_METRICS_RECEIVED:
                 addNewBarChart(chartName, ebp.getFloatArrayExtra());
                 break;
+            case Cons.EVENT_STEP_COUNTER_INCREMENTED:
+                metricCounterTV.setText(String.valueOf(prefs.getInt(todayDate, 0)));
+                break;
         }
     }
 
@@ -317,7 +325,6 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
 
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
-        metricCounterTV.setText(String.valueOf((int) sensorEvent.values[0]));
     }
 
     @Override
