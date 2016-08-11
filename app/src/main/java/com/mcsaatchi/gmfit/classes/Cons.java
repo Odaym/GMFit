@@ -9,6 +9,7 @@ public class Cons {
     public static final String EXTRAS_USER_LOGGED_IN = "user_logged_in";
     public static final String EXTRAS_USER_FULL_NAME = "user_full_name";
     public static final String EXTRAS_USER_EMAIL = "user_email_address";
+    public static final String EXTRAS_USER_PASSWORD = "user_password";
     public static final String EXTRAS_USER_DISPLAY_PHOTO = "user_display_photo";
     public static final String EXTRAS_USER_POLICY = "user_policy";
     public static final String EXTRAS_USER_FACEBOOK_TOKEN = "user_facebook_token";
@@ -17,11 +18,13 @@ public class Cons {
     public static final String EXTRAS_ACCUMULATING_CALORIES = "ACCUMULATING_CALORIES";
     public static final String EXTRAS_ACCUMULATING_STEPS = "ACCUMULATING_STEPS";
 
+    public static final String EXTRAS_FIRST_APP_LAUNCH = "first_app_launch";
+
     public static final String EXTRAS_USER_DISTANCE_TRAVELED = "user_distance_traveled";
-    public static final String EXTRAS_USER_STEPS_COUNT = "user_steps_count";
+    public static final String EXTRAS_USER_STEPS_COUNT_FROM_SENSOR = "user_steps_count_from_sensor";
     public static final String EXTRAS_USER_ACTIVE_CALORIES = "user_active_calories";
 
-    public static final int WAIT_TIME_BEFORE_CHECKING_METRICS_SERVICE = 200;
+    public static final int WAIT_TIME_BEFORE_CHECKING_METRICS_SERVICE = 60000;
     public static final int WAIT_TIME_BEFORE_SERVER_SYNC = 60000;
 
     public static final String EXTRAS_USER_PROFILE_MEASUREMENT_SYSTEM = "user_profile_measurement_system";
@@ -59,6 +62,7 @@ public class Cons {
             = MediaType.parse("application/json; charset=utf-8");
 
     public static final String EVENT_USER_FINALIZE_SETUP_PROFILE = "user_finalize_setup_profile";
+    public static final String EVENT_STEP_COUNTER_INCREMENTED = "step_counter_incremented";
 
     public static final String EVENT_CHART_METRICS_RECEIVED = "event_chart_metrics_received";
     public static final String EVENT_SIGNNED_UP_SUCCESSFULLY_CLOSE_LOGIN_ACTIVITY = "signned_up_successfully_close_login_activity";
