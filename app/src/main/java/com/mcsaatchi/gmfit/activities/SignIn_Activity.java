@@ -18,7 +18,6 @@ import android.text.style.ClickableSpan;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.andreabaccega.widget.FormEditText;
 import com.mcsaatchi.gmfit.R;
@@ -123,7 +122,7 @@ public class SignIn_Activity extends Base_Activity {
         });
     }
 
-    private void signInUser(String email, String password) {
+    public void signInUser(final String email, final String password) {
         final ProgressDialog waitingDialog = new ProgressDialog(this);
         waitingDialog.setTitle(getString(R.string.signing_in_dialog_title));
         waitingDialog.setMessage(getString(R.string.signing_in_dialog_message));
@@ -153,6 +152,9 @@ public class SignIn_Activity extends Base_Activity {
 
                         //Refreshes access token
                         prefs.edit().putString(Cons.PREF_USER_ACCESS_TOKEN, "Bearer " + responseBody.getToken()).apply();
+                        prefs.edit().putString(Cons.EXTRAS_USER_EMAIL, email).apply();
+                        prefs.edit().putString(Cons.EXTRAS_USER_PASSWORD, password).apply();
+                        prefs.edit().putBoolean(Cons.EXTRAS_USER_LOGGED_IN, true).apply();
 
                         List<AuthenticationResponseWidget> widgetsMap = responseBody.getWidgets();
                         List<AuthenticationResponseChart> chartsMap = responseBody.getCharts();
@@ -165,9 +167,6 @@ public class SignIn_Activity extends Base_Activity {
                         startActivity(intent);
 
                         waitingDialog.dismiss();
-
-                        Toast.makeText(SignIn_Activity.this, "Grabbed Widgets and Charts from server : " + widgetsMap.size() + " by " + chartsMap.size(), Toast
-                                   .LENGTH_SHORT).show();
 
                         finish();
 
