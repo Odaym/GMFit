@@ -39,6 +39,8 @@ import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
 import com.mcsaatchi.gmfit.classes.Helpers;
 import com.mcsaatchi.gmfit.classes.ParcelableFitnessString;
 import com.mcsaatchi.gmfit.models.DataChart;
+import com.mcsaatchi.gmfit.rest.AuthenticationResponseChart;
+import com.mcsaatchi.gmfit.rest.AuthenticationResponseWidget;
 import com.squareup.otto.Subscribe;
 
 import net.danlew.android.joda.JodaTimeAndroid;
@@ -72,12 +74,15 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
     private Activity parentActivity;
     private SharedPreferences prefs;
     private Widgets_GridAdapter widgets_GridAdapter;
-    private ParcelableSparseArray widgetsMap;
     private String chartName;
     private String chartType;
 
-    private LocalDate dt = new LocalDate();
-    private String todayDate = dt.toString();
+    private ParcelableSparseArray widgetsMap2;
+
+    private ArrayList<AuthenticationResponseWidget> widgetsMap;
+    private ArrayList<AuthenticationResponseChart> chartsMap;
+
+    private String todayDate;
 
     @Override
     public void onAttach(Context context) {
@@ -94,7 +99,12 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
 
         EventBus_Singleton.getInstance().register(this);
 
+        /**
+         * Initialize JodaTime
+         */
         JodaTimeAndroid.init(getActivity());
+        LocalDate dt = new LocalDate();
+        todayDate = dt.toString();
 
         SensorManager sm =
                 (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
@@ -120,6 +130,14 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
 
         if (((AppCompatActivity) getActivity()).getSupportActionBar() != null)
             ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.fitness_tab_title);
+
+        prefs = getActivity().getSharedPreferences(Cons.SHARED_PREFS_TITLE
+                , Context.MODE_PRIVATE);
+
+        if (getArguments() != null) {
+            widgetsMap = getArguments().getParcelableArrayList("widgets");
+            chartsMap = getArguments().getParcelableArrayList("charts");
+        }
     }
 
     @Override
@@ -138,7 +156,8 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
         Log.d(TAG, "onCreateView: Device info : " + Build.MANUFACTURER + " " + Build.MODEL + " (" + Build.DEVICE + ") - "
                 + Build.VERSION.RELEASE);
 
-        Helpers.temporarySetHorizontalChartData(defaultBarChart, 20, 20);
+
+        Helpers.setBarChartData(defaultBarChart, chartsMap.get(0).getData());
 
         addNewChartBTN.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -149,12 +168,9 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
             }
         });
 
-        prefs = getActivity().getSharedPreferences(Cons.SHARED_PREFS_TITLE
-                , Context.MODE_PRIVATE);
-
         metricCounterTV.setText(String.valueOf(prefs.getInt(todayDate, 0)));
 
-        widgetsMap = new ParcelableSparseArray() {{
+        widgetsMap2 = new ParcelableSparseArray() {{
             put(0, new ParcelableFitnessString(R.drawable.ic_running, 0.0, "Walking", "Km/hour"));
             put(1, new ParcelableFitnessString(R.drawable.ic_biking, prefs.getInt(Cons.EXTRAS_USER_DISTANCE_TRAVELED, 0), "Biking",
                     "meters"));
@@ -163,12 +179,12 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
                     "Calories"));
         }};
 
-        setUpWidgetsGridView(widgetsMap);
+        setUpWidgetsGridView(widgetsMap2);
 
         return fragmentView;
     }
 
-    public void addNewBarChart(String chartTitle, ArrayList<Float> floatArrayExtra) {
+    public void addNewBarChart(String chartTitle, String chartType) {
         final View barChartLayout_NEW_CHART = getActivity().getLayoutInflater().inflate(R.layout.view_barchart_container, null);
 
         final CardView cardLayout_NEW_CHART = (CardView) barChartLayout_NEW_CHART.findViewById(R.id.cardLayoutContainer);
@@ -178,7 +194,17 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
         if (chartTitle != null)
             chartTitleTV_NEW_CHART.setText(chartTitle);
 
-        Helpers.setBarChartData(barChart_NEW_CHART, floatArrayExtra);
+        switch(chartType){
+            case "steps-count":
+                Helpers.setBarChartData(barChart_NEW_CHART, chartsMap.get(0).getData());
+                break;
+            case "active-calories":
+                Helpers.setBarChartData(barChart_NEW_CHART, chartsMap.get(1).getData());
+                break;
+            case "distance-traveled":
+                Helpers.setBarChartData(barChart_NEW_CHART, chartsMap.get(2).getData());
+                break;
+        }
 
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, getResources().getDimensionPixelSize(R
                 .dimen.chart_height_2));
@@ -195,16 +221,16 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
         }, 500);
     }
 
-    private void setUpWidgetsGridView(ParcelableSparseArray widgetsMap) {
+    private void setUpWidgetsGridView(ParcelableSparseArray widgetsMap2) {
 
-        widgets_GridAdapter = new Widgets_GridAdapter(getActivity(), widgetsMap, R.layout.grid_item_fitness_widgets);
+        widgets_GridAdapter = new Widgets_GridAdapter(getActivity(), widgetsMap2, R.layout.grid_item_fitness_widgets);
 
         widgetsGridView.setAdapter(widgets_GridAdapter);
     }
 
     private TextView findWidgetInGrid(String widgetName) {
         View fitnessWidgetView;
-        TextView stepCountTextView = null;
+        TextView metricCountTextView = null;
 
         for (int i = 0; i < widgets_GridAdapter.getCount(); i++) {
             if (widgets_GridAdapter.getItem(i).getTitle().equals(widgetName)) {
@@ -218,11 +244,11 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
                     fitnessWidgetView = widgetsGridView.getChildAt(childIndex);
                 }
 
-                stepCountTextView = (TextView) fitnessWidgetView.findViewById(R.id.metricTV);
+                metricCountTextView = (TextView) fitnessWidgetView.findViewById(R.id.metricTV);
             }
         }
 
-        return stepCountTextView;
+        return metricCountTextView;
     }
 
     @Override
@@ -235,28 +261,7 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
                 chartType = data.getStringExtra(Cons.EXTRAS_CHART_TYPE_SELECTED);
                 chartName = data.getStringExtra(Cons.EXTRAS_CHART_FULL_NAME);
 
-
-                //Add the chart entry to the database
-//                dataChartDAO.create(new DataChart(chartName, chartType, dataChartDAO.queryForAll().size() + 1, Cons.EXTRAS_FITNESS_FRAGMENT));
-
-                //Still pending
-//                getMetricsForChart();
-
-                addNewBarChart(chartName, new ArrayList<Float>() {{
-                    add(0, 200f);
-                    add(1, 201f);
-                    add(2, 120f);
-                    add(3, 100f);
-                    add(4, 50f);
-                    add(5, 200f);
-                    add(6, 61f);
-                    add(7, 66f);
-                    add(8, 140f);
-                    add(9, 195f);
-                    add(10, 60f);
-                    add(11, 209f);
-                    add(11, 109f);
-                }});
+                addNewBarChart(chartName, chartType);
             }
         }
     }
@@ -268,7 +273,7 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
         switch (ebpMessage) {
             case Cons.EXTRAS_FITNESS_WIDGETS_ORDER_ARRAY_CHANGED:
                 if (ebp.getParcelableSparseExtra() != null) {
-                    widgetsMap = ebp.getParcelableSparseExtra();
+                    widgetsMap2 = ebp.getParcelableSparseExtra();
                     setUpWidgetsGridView(ebp.getParcelableSparseExtra());
                 }
 
@@ -278,17 +283,21 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
 
                 cards_container.removeAllViews();
 
-                for (DataChart chart :
-                        allDataCharts) {
-                    addNewBarChart(chart.getName(), ebp.getFloatArrayExtra());
-                }
+//                for (DataChart chart :
+//                        allDataCharts) {
+//                    addNewBarChart(chart.getName(), ebp.getFloatArrayExtra());
+//                }
 
                 break;
             case Cons.EVENT_CHART_METRICS_RECEIVED:
-                addNewBarChart(chartName, ebp.getFloatArrayExtra());
+//                addNewBarChart(chartName, ebp.getFloatArrayExtra());
                 break;
             case Cons.EVENT_STEP_COUNTER_INCREMENTED:
                 metricCounterTV.setText(String.valueOf(prefs.getInt(todayDate, 0)));
+                break;
+            case Cons.EVENT_CHART_ADDED_FROM_SETTINGS:
+                String[] chartDetails = ebp.getStringsExtra();
+                addNewBarChart(chartDetails[0], chartDetails[1]);
                 break;
         }
     }
@@ -299,7 +308,7 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
             case R.id.settings:
                 Intent intent = new Intent(getActivity(), CustomizeWidgetsAndCharts_Activity.class);
                 intent.putExtra(Cons.EXTRAS_CUSTOMIZE_WIDGETS_FRAGMENT_TYPE, Cons.EXTRAS_FITNESS_FRAGMENT);
-                intent.putExtra(Cons.BUNDLE_FITNESS_WIDGETS_MAP, widgetsMap);
+                intent.putExtra(Cons.BUNDLE_FITNESS_WIDGETS_MAP, widgetsMap2);
                 startActivity(intent);
                 break;
         }
