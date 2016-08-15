@@ -24,7 +24,7 @@ public class Cons {
     public static final String EXTRAS_USER_STEPS_COUNT_FROM_SENSOR = "user_steps_count_from_sensor";
     public static final String EXTRAS_USER_ACTIVE_CALORIES = "user_active_calories";
 
-    public static final int WAIT_TIME_BEFORE_CHECKING_METRICS_SERVICE = 60000;
+    public static final int WAIT_TIME_BEFORE_CHECKING_METRICS_SERVICE = 3600000;
     public static final int WAIT_TIME_BEFORE_SERVER_SYNC = 60000;
 
     public static final String EXTRAS_USER_PROFILE_MEASUREMENT_SYSTEM = "user_profile_measurement_system";
@@ -64,6 +64,7 @@ public class Cons {
     public static final String EVENT_USER_FINALIZE_SETUP_PROFILE = "user_finalize_setup_profile";
     public static final String EVENT_STEP_COUNTER_INCREMENTED = "step_counter_incremented";
 
+    public static final String EVENT_CHART_ADDED_FROM_SETTINGS = "event_chart_added_from_settings";
     public static final String EVENT_CHART_METRICS_RECEIVED = "event_chart_metrics_received";
     public static final String EVENT_SIGNNED_UP_SUCCESSFULLY_CLOSE_LOGIN_ACTIVITY = "signned_up_successfully_close_login_activity";
 
