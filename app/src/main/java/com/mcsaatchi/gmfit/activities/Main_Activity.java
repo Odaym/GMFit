@@ -25,6 +25,7 @@ import com.mcsaatchi.gmfit.fragments.Fitness_Fragment;
 import com.mcsaatchi.gmfit.fragments.MainProfile_Fragment;
 import com.mcsaatchi.gmfit.fragments.Nutrition_Fragment;
 import com.mcsaatchi.gmfit.pedometer.SensorListener;
+import com.mcsaatchi.gmfit.rest.AuthenticationResponseChart;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponseWidget;
 import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.rest.RestClient;
@@ -52,6 +53,7 @@ public class Main_Activity extends Base_Activity {
     private SharedPreferences prefs;
 
     private ArrayList<AuthenticationResponseWidget> widgetsMap;
+    private ArrayList<AuthenticationResponseChart> chartsMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +76,8 @@ public class Main_Activity extends Base_Activity {
          * Fetch Extras from Intent
          */
         if (getIntent().getExtras() != null) {
-            widgetsMap = getIntent().getExtras().getParcelableArrayList("widgets");
+//            widgetsMap = getIntent().getExtras().getParcelableArrayList("widgets");
+            chartsMap = getIntent().getExtras().getParcelableArrayList("charts");
         }
 
         bottomBar = BottomBar.attachShy((CoordinatorLayout) findViewById(R.id.myCoordinator),
@@ -96,6 +99,7 @@ public class Main_Activity extends Base_Activity {
                     case R.id.item_one:
                         fragmentReplace = new Fitness_Fragment();
                         bundle.putParcelableArrayList("widgets", widgetsMap);
+                        bundle.putParcelableArrayList("charts", chartsMap);
                         fragmentReplace.setArguments(bundle);
                         mainContentLayout.setBackground(getResources().getDrawable(R.drawable.fitness_background));
                         break;
