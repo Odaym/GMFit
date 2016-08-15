@@ -82,7 +82,6 @@ public class Splash_Activity extends AppCompatActivity {
                         List<AuthenticationResponseChart> chartsMap = responseBody.getCharts();
 
                         Intent intent = new Intent(Splash_Activity.this, Main_Activity.class);
-                        intent.putParcelableArrayListExtra("widgets", (ArrayList<AuthenticationResponseWidget>) widgetsMap);
                         intent.putParcelableArrayListExtra("charts", (ArrayList<AuthenticationResponseChart>) chartsMap);
                         startActivity(intent);
 
