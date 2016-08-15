@@ -137,38 +137,39 @@ public class SensorListener extends Service implements SensorEventListener {
                          */
                         if (!prefs.contains(todayDate) && prefs.contains(yesterdayDate)) {
                             Log.d("TAGTAG", "run: Doesn't contain today's date as a key, but DOES contain yesterday's day as a key");
+
+                            String[] slugsArray = new String[]{"steps-count", "active-calories",
+                                    "distance-traveled"};
+
+                            int[] valuesArray = new int[]{prefs.getInt(todayDate, 0), prefs.getInt(Cons.EXTRAS_USER_ACTIVE_CALORIES, 0), prefs
+                                    .getInt(Cons.EXTRAS_USER_DISTANCE_TRAVELED, 0)};
+
+                            Call<DefaultGetResponse> updateMetricsCall = new RestClient().getGMFitService().updateMetrics(prefs.getString(Cons
+                                    .PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS), new UpdateMetricsRequest(slugsArray, valuesArray, Helpers.getCalendarDate()));
+
+                            updateMetricsCall.enqueue(new Callback<DefaultGetResponse>() {
+                                @Override
+                                public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
+                                    Log.d(TAG, "onResponse: Response is : " + response.code());
+                                    switch (response.code()) {
+                                        case 200:
+
+                                            Log.d(TAG, "onResponse: SYNCED Metrics successfully");
+
+                                            break;
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+                                }
+                            });
+
                             prefs.edit().remove(yesterdayDate).apply();
                             prefs.edit().putInt(todayDate, 0).apply();
                             EventBus_Singleton.getInstance().post(new EventBus_Poster(Cons.EVENT_STEP_COUNTER_INCREMENTED));
                         }
 
-
-                        String[] slugsArray = new String[]{"steps-count", "active-calories",
-                                "distance-traveled"};
-
-                        int[] valuesArray = new int[]{prefs.getInt(todayDate, 0), prefs.getInt(Cons.EXTRAS_USER_ACTIVE_CALORIES, 0), prefs
-                                .getInt(Cons.EXTRAS_USER_DISTANCE_TRAVELED, 0)};
-
-                        Call<DefaultGetResponse> updateMetricsCall = new RestClient().getGMFitService().updateMetrics(prefs.getString(Cons
-                                .PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS), new UpdateMetricsRequest(slugsArray, valuesArray, Helpers.getCalendarDate()));
-
-                        updateMetricsCall.enqueue(new Callback<DefaultGetResponse>() {
-                            @Override
-                            public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
-                                Log.d(TAG, "onResponse: Response is : " + response.code());
-                                switch (response.code()) {
-                                    case 200:
-
-                                        Log.d(TAG, "onResponse: SYNCED Metrics successfully");
-
-                                        break;
-                                }
-                            }
-
-                            @Override
-                            public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
-                            }
-                        });
 //                        /**
 //                         * Steps Calculation
 //                         */
