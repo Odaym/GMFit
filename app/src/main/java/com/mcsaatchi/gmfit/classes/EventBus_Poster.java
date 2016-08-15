@@ -12,6 +12,7 @@ import java.util.List;
 public class EventBus_Poster {
     private String message;
     private String stringExtra;
+    private String[] stringsExtra;
     private MealItem mealItem;
     private ParcelableSparseArray parcelableSparseExtra;
     private SparseArray<String> sparseArrayExtra;
@@ -47,6 +48,11 @@ public class EventBus_Poster {
         this.stringExtra = stringExtra;
     }
 
+    public EventBus_Poster(String message, String[] stringsExtra) {
+        this.message = message;
+        this.stringsExtra = stringsExtra;
+    }
+
     public EventBus_Poster(String message, List<DataChart> dataChartsListExtra) {
         this.message = message;
         this.dataChartsListExtra = dataChartsListExtra;
@@ -70,6 +76,10 @@ public class EventBus_Poster {
 
     public void setStringExtra(String stringExtra) {
         this.stringExtra = stringExtra;
+    }
+
+    public String[] getStringsExtra() {
+        return stringsExtra;
     }
 
     public String getMessage() {
