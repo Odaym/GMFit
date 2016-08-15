@@ -13,10 +13,14 @@ import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.mcsaatchi.gmfit.R;
+import com.mcsaatchi.gmfit.rest.AuthenticationResponseChartData;
+
+import org.joda.time.LocalDate;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 public class Helpers {
 
@@ -106,38 +110,31 @@ public class Helpers {
         chart.invalidate();
     }
 
-    public static void setBarChartData(BarChart chart, ArrayList<Float> metricsArray) {
+    public static void setBarChartData(BarChart chart, List<AuthenticationResponseChartData> chartData) {
         ArrayList<BarEntry> valsMetrics = new ArrayList<>();
+        ArrayList<String> xVals = new ArrayList<>();
 
-        for (int i = 0; i < metricsArray.size(); i++) {
-            BarEntry val1 = new BarEntry(metricsArray.get(i), i);
+        int k = 0;
+
+        for (int i = chartData.size() - 1; i > 4; i--) {
+            LocalDate date = LocalDate.parse(chartData.get(i).getDate());
+            int dow = date.getDayOfWeek();
+
+            BarEntry val1 = new BarEntry(Float.parseFloat(chartData.get(i).getValue()), k);
             valsMetrics.add(val1);
+
+            k++;
+
+            xVals.add(getDayofWeekString(dow));
         }
 
         BarDataSet set1;
         set1 = new BarDataSet(valsMetrics, "Legend");
-        set1.setColors(new int[]{R.color.fitness_dark_blue});
+        set1.setColor(R.color.fitness_dark_blue);
         set1.setHighLightAlpha(1);
-        set1.setBarShadowColor(0);
-        set1.setDrawValues(false);
 
         ArrayList<IBarDataSet> dataSets = new ArrayList<>();
         dataSets.add(set1);
-
-        ArrayList<String> xVals = new ArrayList<>();
-        xVals.add("S");
-        xVals.add("S");
-        xVals.add("M");
-        xVals.add("T");
-        xVals.add("W");
-        xVals.add("W");
-        xVals.add("Th");
-        xVals.add("F");
-        xVals.add("M");
-        xVals.add("T");
-        xVals.add("W");
-        xVals.add("Th");
-        xVals.add("F");
 
         BarData data = new BarData(xVals, dataSets);
 
@@ -145,6 +142,27 @@ public class Helpers {
         chart.setDrawBarShadow(false);
         chart.setData(data);
         chart.invalidate();
+    }
+
+    public static String getDayofWeekString(int dayOfWeek) {
+        switch (dayOfWeek) {
+            case 1:
+                return "Mon";
+            case 2:
+                return "Tue";
+            case 3:
+                return "Wed";
+            case 4:
+                return "Thu";
+            case 5:
+                return "Fri";
+            case 6:
+                return "Sat";
+            case 7:
+                return "Sun";
+        }
+
+        return "";
     }
 
     public static boolean isInternetAvailable(Context context) {
