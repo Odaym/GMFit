@@ -11,17 +11,6 @@ import java.util.List;
 
 public class AuthenticationResponseChart implements Parcelable {
 
-    public static final Creator<AuthenticationResponseChart> CREATOR = new Creator<AuthenticationResponseChart>() {
-        @Override
-        public AuthenticationResponseChart createFromParcel(Parcel in) {
-            return new AuthenticationResponseChart(in);
-        }
-
-        @Override
-        public AuthenticationResponseChart[] newArray(int size) {
-            return new AuthenticationResponseChart[size];
-        }
-    };
     @SerializedName("chart_id")
     @Expose
     private Integer chartId;
@@ -39,11 +28,33 @@ public class AuthenticationResponseChart implements Parcelable {
     private List<AuthenticationResponseChartData> data = new ArrayList<>();
 
     protected AuthenticationResponseChart(Parcel in) {
+        chartId = in.readInt();
         name = in.readString();
         slug = in.readString();
         position = in.readString();
         data = in.createTypedArrayList(AuthenticationResponseChartData.CREATOR);
     }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(chartId);
+        dest.writeString(name);
+        dest.writeString(slug);
+        dest.writeString(position);
+        dest.writeTypedList(data);
+    }
+
+    public static final Creator<AuthenticationResponseChart> CREATOR = new Creator<AuthenticationResponseChart>() {
+        @Override
+        public AuthenticationResponseChart createFromParcel(Parcel in) {
+            return new AuthenticationResponseChart(in);
+        }
+
+        @Override
+        public AuthenticationResponseChart[] newArray(int size) {
+            return new AuthenticationResponseChart[size];
+        }
+    };
 
     /**
      * @return The chartId
@@ -120,11 +131,4 @@ public class AuthenticationResponseChart implements Parcelable {
         return 0;
     }
 
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeInt(chartId);
-        parcel.writeString(name);
-        parcel.writeString(slug);
-        parcel.writeString(position);
-    }
 }
