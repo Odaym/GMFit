@@ -138,15 +138,14 @@ public class CustomizeCharts_Fragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == ADD_NEW_FITNESS_CHART_REQUEST_CODE) {
+            if (data != null) {
+                String chartType = data.getStringExtra(Cons.EXTRAS_CHART_TYPE_SELECTED);
+                String chartName = data.getStringExtra(Cons.EXTRAS_CHART_FULL_NAME);
 
-//                chartType = data.getStringExtra(Cons.EXTRAS_CHART_TYPE_SELECTED);
-//                chartName = data.getStringExtra(Cons.EXTRAS_CHART_FULL_NAME);
+                EventBus_Singleton.getInstance().post(new EventBus_Poster(Cons.EVENT_CHART_ADDED_FROM_SETTINGS, new String[]{chartName, chartType}));
 
-                //Add the chart entry to the database
-//                dataChartDAO.create(new DataChart(chartName, chartType, dataChartDAO.queryForAll().size() + 1, Cons.EXTRAS_FITNESS_FRAGMENT));
-
-//                ApiHelper.getChartMetricsByDate(getActivity(), chartType);
-
+                getActivity().finish();
+            }
         }
     }
 
