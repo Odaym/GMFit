@@ -1,5 +1,6 @@
 package com.mcsaatchi.gmfit.pedometer;
 
+import android.annotation.TargetApi;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -10,6 +11,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
@@ -42,6 +44,7 @@ public class SensorListener extends Service implements SensorEventListener {
 
     private final static int MICROSECONDS_IN_ONE_MINUTE = 60000000;
     private static final String TAG = "SensorListener";
+    private static final float STEP_LENGTH = 20;
     private static double METRIC_RUNNING_FACTOR = 1.02784823;
     private static int steps;
     private final Handler handler = new Handler();
@@ -66,29 +69,29 @@ public class SensorListener extends Service implements SensorEventListener {
         } else {
             steps = (int) event.values[0];
 
-            Log.d("TAGTAG", "onSensorChanged: STEPS FROM SERVICE ARE : " + steps);
-            Log.d("TAGTAG", "onSensorChanged: Steps in prefs are : " + prefs.getInt(todayDate, 0));
-
             int sensorStepsFromPrefs = prefs.getInt(Cons.EXTRAS_USER_STEPS_COUNT_FROM_SENSOR, 0);
-            int todayStepsFromPrefs = prefs.getInt(todayDate, 0);
+            int todayStepsFromPrefs = prefs.getInt(todayDate + "_steps", 0);
 
             if (prefs.getBoolean(Cons.EXTRAS_FIRST_APP_LAUNCH, true)) {
-                prefs.edit().putInt(todayDate, 0).apply();
                 prefs.edit().putBoolean(Cons.EXTRAS_FIRST_APP_LAUNCH, false).apply();
+
+                prefs.edit().putInt(todayDate + "_steps", 0).apply();
+                prefs.edit().putFloat(todayDate + "_calories", 0).apply();
+                prefs.edit().putFloat(todayDate + "_distance", 0).apply();
             } else if (sensorStepsFromPrefs != steps) {
-                prefs.edit().putInt(todayDate, todayStepsFromPrefs + 1).apply();
+                float calculatedCalories = (float) (prefs.getFloat(Cons.EXTRAS_USER_PROFILE_WEIGHT, 70) * METRIC_RUNNING_FACTOR * STEP_LENGTH / 100000.0);
+                float calculatedDistance = (float) (STEP_LENGTH / 100000.0);
+
+                prefs.edit().putInt(todayDate + "_steps", todayStepsFromPrefs + 1).apply();
+                prefs.edit().putFloat(todayDate + "_calories", calculatedCalories + prefs.getFloat(todayDate + "_calories", 0)).apply();
+                prefs.edit().putFloat(todayDate + "_distance", calculatedDistance + prefs.getFloat(todayDate + "_distance", 0)).apply();
+
                 prefs.edit().putInt(Cons.EXTRAS_USER_STEPS_COUNT_FROM_SENSOR, steps).apply();
             }
 
-//            if (steps != 0) {
-//                Log.d(TAG, "onCreate: Stored the steps from Sensor into prefs : " + steps);
-//            }
-
-            Log.d("TAGTAG", "onSensorChanged: Steps in prefs are : " + prefs.getInt(todayDate, 0));
-
             EventBus_Singleton.getInstance().post(new EventBus_Poster(Cons.EVENT_STEP_COUNTER_INCREMENTED));
-
-            Log.d(TAG, "onSensorChanged: Calories are " + (70 * METRIC_RUNNING_FACTOR * 7 / 100000.0));
+            EventBus_Singleton.getInstance().post(new EventBus_Poster(Cons.EVENT_CALORIES_COUNTER_INCREMENTED));
+            EventBus_Singleton.getInstance().post(new EventBus_Poster(Cons.EVENT_DISTANCE_COUNTER_INCREMENTED));
         }
     }
 
@@ -129,92 +132,49 @@ public class SensorListener extends Service implements SensorEventListener {
                     @SuppressWarnings("unchecked")
                     public void run() {
 
-//                        Log.d("TAGTAG", "run: Toda y's date : " + todayDate);
-//                        Log.d("TAGTAG", "run: Yesterday's date (TODAY MINUS 1): " + yesterdayDate);
+                        String[] slugsArray = new String[]{"steps-count", "active-calories",
+                                "distance-traveled"};
+
+                        int[] valuesArray = new int[]{prefs.getInt(todayDate + "_steps", 0), (int) prefs.getFloat(todayDate + "_calories", 0),
+                                (int) prefs.getFloat(todayDate + "_distance", 0)};
+
+                        Call<DefaultGetResponse> updateMetricsCall = new RestClient().getGMFitService().updateMetrics(prefs.getString(Cons
+                                .PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS), new UpdateMetricsRequest(slugsArray, valuesArray, Helpers.getCalendarDate()));
+
+                        updateMetricsCall.enqueue(new Callback<DefaultGetResponse>() {
+                            @Override
+                            public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
+                                switch (response.code()) {
+                                    case 200:
+                                        Log.d(TAG, "onResponse: SYNCED Metrics successfully");
+
+                                        break;
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+                            }
+                        });
 
                         /**
                          * Doesn't contain today's date as a key, but DOES contain yesterday's day as a key
                          */
-                        if (!prefs.contains(todayDate) && prefs.contains(yesterdayDate)) {
+                        if (!prefs.contains(todayDate + "_steps") && prefs.contains(yesterdayDate)) {
                             Log.d("TAGTAG", "run: Doesn't contain today's date as a key, but DOES contain yesterday's day as a key");
 
-                            String[] slugsArray = new String[]{"steps-count", "active-calories",
-                                    "distance-traveled"};
+                            prefs.edit().remove(yesterdayDate + "_steps").apply();
+                            prefs.edit().remove(yesterdayDate + "_distance").apply();
+                            prefs.edit().remove(yesterdayDate + "_calories").apply();
 
-                            int[] valuesArray = new int[]{prefs.getInt(todayDate, 0), prefs.getInt(Cons.EXTRAS_USER_ACTIVE_CALORIES, 0), prefs
-                                    .getInt(Cons.EXTRAS_USER_DISTANCE_TRAVELED, 0)};
+                            prefs.edit().putInt(todayDate + "_steps", 0).apply();
+                            prefs.edit().putFloat(todayDate + "_calories", 0).apply();
+                            prefs.edit().putFloat(todayDate + "_distance", 0).apply();
 
-                            Call<DefaultGetResponse> updateMetricsCall = new RestClient().getGMFitService().updateMetrics(prefs.getString(Cons
-                                    .PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS), new UpdateMetricsRequest(slugsArray, valuesArray, Helpers.getCalendarDate()));
-
-                            updateMetricsCall.enqueue(new Callback<DefaultGetResponse>() {
-                                @Override
-                                public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
-                                    Log.d(TAG, "onResponse: Response is : " + response.code());
-                                    switch (response.code()) {
-                                        case 200:
-
-                                            Log.d(TAG, "onResponse: SYNCED Metrics successfully");
-
-                                            break;
-                                    }
-                                }
-
-                                @Override
-                                public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
-                                }
-                            });
-
-                            prefs.edit().remove(yesterdayDate).apply();
-                            prefs.edit().putInt(todayDate, 0).apply();
                             EventBus_Singleton.getInstance().post(new EventBus_Poster(Cons.EVENT_STEP_COUNTER_INCREMENTED));
+                            EventBus_Singleton.getInstance().post(new EventBus_Poster(Cons.EVENT_CALORIES_COUNTER_INCREMENTED));
+                            EventBus_Singleton.getInstance().post(new EventBus_Poster(Cons.EVENT_DISTANCE_COUNTER_INCREMENTED));
                         }
-
-//                        /**
-//                         * Steps Calculation
-//                         */
-//                        int accumulatingSteps = prefs.getInt(Cons.EXTRAS_ACCUMULATING_STEPS, 0);
-//
-//                        int finalStepsValue = mSteps;
-//
-//                        if (accumulatingSteps != mSteps) {
-//                            int stepsFromPrefs = prefs.getInt(Cons.EXTRAS_USER_STEPS_COUNT, 0);
-//                            prefs.edit().putInt(Cons.EXTRAS_USER_STEPS_COUNT, stepsFromPrefs + 1).apply();
-//                        }
-//
-//                        prefs.edit().putInt(Cons.EXTRAS_ACCUMULATING_STEPS, finalStepsValue).apply();
-//                        /****/
-//
-//                        /**
-//                         * Distance calculation
-//                         */
-//                        int accumulatingDistance = prefs.getInt(Cons.EXTRAS_ACCUMULATING_DISTANCE, 0);
-//
-//                        int finalDistanceValue = (int) (mDistance * 1000);
-//
-//                        if (accumulatingDistance != finalDistanceValue) {
-//                            int distanceFromPrefs = prefs.getInt(Cons.EXTRAS_USER_DISTANCE_TRAVELED, 0);
-//                            prefs.edit().putInt(Cons.EXTRAS_USER_DISTANCE_TRAVELED, distanceFromPrefs + 1).apply();
-//                        }
-//
-//                        prefs.edit().putInt(Cons.EXTRAS_ACCUMULATING_DISTANCE, finalDistanceValue).apply();
-//                        /****/
-//
-//                        /**
-//                         * Calories calculation
-//                         */
-//                        int accumulatingCalories = prefs.getInt(Cons.EXTRAS_ACCUMULATING_CALORIES, 0);
-//
-//                        int finalCaloriesValue = (int) mCalories;
-//
-//                        //If the new and old values differ, this means there was an increase
-//                        if (accumulatingCalories != finalCaloriesValue) {
-//                            //Increment the current value for Calories in prefs by 1!
-//                            prefs.edit().putInt(Cons.EXTRAS_USER_ACTIVE_CALORIES, accumulatingCalories + 1).apply();
-//                        }
-//
-//                        prefs.edit().putInt(Cons.EXTRAS_ACCUMULATING_CALORIES, finalCaloriesValue).apply();
-//                        /****/
                     }
                 });
             }
@@ -246,6 +206,7 @@ public class SensorListener extends Service implements SensorEventListener {
         }
     }
 
+    @TargetApi(Build.VERSION_CODES.KITKAT)
     private void reRegisterSensor() {
         if (BuildConfig.DEBUG) Log.d("SERVICE_TAG", "re-register sensor listener");
         SensorManager sm = (SensorManager) getSystemService(SENSOR_SERVICE);
