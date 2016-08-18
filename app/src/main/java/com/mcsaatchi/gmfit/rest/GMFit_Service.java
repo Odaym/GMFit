@@ -1,7 +1,9 @@
 package com.mcsaatchi.gmfit.rest;
 
+import com.mcsaatchi.gmfit.activities.ForgotPassword_Activity;
 import com.mcsaatchi.gmfit.activities.GetStarted_Activity;
 import com.mcsaatchi.gmfit.activities.Login_Activity;
+import com.mcsaatchi.gmfit.activities.ResetPassword_Activity;
 import com.mcsaatchi.gmfit.activities.SignIn_Activity;
 import com.mcsaatchi.gmfit.activities.SignUp_Activity;
 import com.mcsaatchi.gmfit.activities.Splash_Activity;
@@ -55,5 +57,11 @@ public interface GMFit_Service {
     @POST("facebook")
     Call<AuthenticationResponse> registerUserFacebook(@Body Login_Activity.RegisterFacebookRequest registerFacebookRequest);
 
+    @POST("forgot-password")
+    Call<DefaultGetResponse> sendResetPasswordLink(@Header(Cons.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken, @Body ForgotPassword_Activity
+            .ForgotPasswordRequest sendResetPasswordLinkRequest);
+
+    @POST("forgot-password-change")
+    Call<DefaultGetResponse> finalizeResetPassword(@Body ResetPassword_Activity.ResetPasswordRequest resetPasswordRequest);
 
 }
