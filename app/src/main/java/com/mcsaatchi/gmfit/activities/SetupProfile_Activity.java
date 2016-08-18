@@ -18,6 +18,7 @@ import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.classes.Cons;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
+import com.mcsaatchi.gmfit.classes.Helpers;
 import com.mcsaatchi.gmfit.classes.NonSwipeableViewPager;
 import com.mcsaatchi.gmfit.fragments.Setup_Profile_1_Fragment;
 import com.mcsaatchi.gmfit.fragments.Setup_Profile_2_Fragment;
@@ -102,7 +103,11 @@ public class SetupProfile_Activity extends Base_Activity {
 
                 // Time for submission
                 if (nextPageBTN.getText().toString().equals(getString(R.string.finish_setup))) {
-                    EventBus_Singleton.getInstance().post(new EventBus_Poster(Cons.EVENT_USER_FINALIZE_SETUP_PROFILE));
+                    if (Helpers.isInternetAvailable(SetupProfile_Activity.this)) {
+                        EventBus_Singleton.getInstance().post(new EventBus_Poster(Cons.EVENT_USER_FINALIZE_SETUP_PROFILE));
+                    } else {
+                        Helpers.showNoInternetDialog(SetupProfile_Activity.this);
+                    }
                 }
             }
         });
