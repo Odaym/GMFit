@@ -14,7 +14,7 @@ public class ParcelableFitnessString implements Parcelable {
         }
     };
 
-    double value;
+    int value;
     int drawableResId;
     String title;
     String measurementUnit;
@@ -24,23 +24,23 @@ public class ParcelableFitnessString implements Parcelable {
 
     public ParcelableFitnessString(Parcel in) {
         this.drawableResId = in.readInt();
-        this.value = in.readDouble();
+        this.value = in.readInt();
         this.title = in.readString();
         this.measurementUnit = in.readString();
     }
 
-    public ParcelableFitnessString(int drawableResId, double value, String title, String measurementUnit) {
+    public ParcelableFitnessString(int drawableResId, int value, String title, String measurementUnit) {
         this.value = value;
         this.drawableResId = drawableResId;
         this.title = title;
         this.measurementUnit = measurementUnit;
     }
 
-    public double getValue() {
+    public int getValue() {
         return value;
     }
 
-    public void setValue(double value) {
+    public void setValue(int value) {
         this.value = value;
     }
 
@@ -76,7 +76,7 @@ public class ParcelableFitnessString implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(drawableResId);
-        dest.writeDouble(value);
+        dest.writeInt(value);
         dest.writeString(title);
         dest.writeString(measurementUnit);
     }
