@@ -175,6 +175,10 @@ public class SignIn_Activity extends Base_Activity {
                         alertDialog.setMessage(getString(R.string.login_failed_wrong_credentials));
                         alertDialog.show();
                         break;
+                    case 500:
+                        alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
+                        alertDialog.show();
+                        break;
                 }
             }
 
