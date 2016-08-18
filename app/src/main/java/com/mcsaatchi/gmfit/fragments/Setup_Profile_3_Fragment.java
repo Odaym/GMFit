@@ -29,6 +29,7 @@ import com.mcsaatchi.gmfit.activities.Main_Activity;
 import com.mcsaatchi.gmfit.classes.Cons;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
+import com.mcsaatchi.gmfit.classes.Helpers;
 import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.rest.MedicalConditionsResponse;
 import com.mcsaatchi.gmfit.rest.MedicalConditionsResponseDatum;
@@ -131,7 +132,7 @@ public class Setup_Profile_3_Fragment extends Fragment implements CalendarDatePi
 
     @Override
     public void onDateSet(CalendarDatePickerDialogFragment dialog, int year, int monthOfYear, int dayOfMonth) {
-        dateOfBirthTV.setText(dayOfMonth + " " + new DateFormatSymbols().getMonths()[monthOfYear - 1] + " " + year);
+        dateOfBirthTV.setText(year + "-" + new DateFormatSymbols().getMonths()[monthOfYear - 1] + "-" + dayOfMonth);
     }
 
     @Subscribe
@@ -140,27 +141,34 @@ public class Setup_Profile_3_Fragment extends Fragment implements CalendarDatePi
 
         switch (ebpMessage) {
             case Cons.EVENT_USER_FINALIZE_SETUP_PROFILE:
-                if (!weightET.getText().toString().isEmpty() && !heightET.getText().toString().isEmpty()) {
-                    int finalGender;
+                if (Helpers.validateFields(allFields)) {
+                    if (!weightET.getText().toString().isEmpty() && !heightET.getText().toString().isEmpty()) {
+                        int finalGender;
 
-                    finalGender = genderSpinner.getSelectedItem().toString().equals("Male") ? 1 : 0;
+                        finalGender = genderSpinner.getSelectedItem().toString().equals("Male") ? 1 : 0;
 
-                    String finalDateOfBirth = null;
+                        String finalDateOfBirth = null;
 
-                    if (!dateOfBirth.isEmpty())
-                        finalDateOfBirth = dateOfBirth;
+                        if (!dateOfBirth.isEmpty())
+                            finalDateOfBirth = dateOfBirth;
+                        else
+                            finalDateOfBirth = "1990-01-01";
 
-                    double finalWeight = Double.parseDouble(weightET.getText().toString());
-                    double finalHeight = Double.parseDouble(heightET.getText().toString());
+                        double finalWeight = Double.parseDouble(weightET.getText().toString());
+                        double finalHeight = Double.parseDouble(heightET.getText().toString());
 
-                    String finalBloodType = bloodTypeSpinner.getSelectedItem().toString();
+                        String finalBloodType = bloodTypeSpinner.getSelectedItem().toString();
 
-                    String nationality = prefs.getString(Cons.EXTRAS_USER_PROFILE_NATIONALITY, "");
-                    String measurementSystem = prefs.getString(Cons.EXTRAS_USER_PROFILE_MEASUREMENT_SYSTEM, "");
-                    String goal = prefs.getString(Cons.EXTRAS_USER_PROFILE_GOAL, "");
+                        String nationality = prefs.getString(Cons.EXTRAS_USER_PROFILE_NATIONALITY, "");
+                        String measurementSystem = prefs.getString(Cons.EXTRAS_USER_PROFILE_MEASUREMENT_SYSTEM, "");
+                        String goal = prefs.getString(Cons.EXTRAS_USER_PROFILE_GOAL, "");
 
-                    setupUserProfile(finalDateOfBirth, finalBloodType, nationality, measurementSystem, goal, finalGender, finalHeight,
-                            finalWeight, calculateBMI(finalWeight, finalHeight));
+                        Log.d(TAG, "handle_BusEvents: " + finalDateOfBirth + " " + finalBloodType + " " + nationality + " " + measurementSystem + " " + goal
+                                + " " + finalGender + " " + finalHeight + " " + finalWeight + " " + calculateBMI(finalWeight, finalHeight));
+
+                        setupUserProfile(finalDateOfBirth, finalBloodType, nationality, measurementSystem, goal, finalGender, finalHeight,
+                                finalWeight, calculateBMI(finalWeight, finalHeight));
+                    }
                 }
 
                 break;
@@ -175,8 +183,6 @@ public class Setup_Profile_3_Fragment extends Fragment implements CalendarDatePi
         getMedicalConditionsCall.enqueue(new Callback<MedicalConditionsResponse>() {
             @Override
             public void onResponse(Call<MedicalConditionsResponse> call, Response<MedicalConditionsResponse> response) {
-                Log.d(TAG, "onResponse: Response code is : " + response.code());
-
                 switch (response.code()) {
                     case 200:
 
@@ -184,7 +190,7 @@ public class Setup_Profile_3_Fragment extends Fragment implements CalendarDatePi
 
                         ArrayList<String> medicalConditions = new ArrayList<>();
 
-                        Log.d(TAG, "onResponse: Results size : " + allMedicalData.size());
+                        medicalConditions.add("None");
 
                         for (int i = 0; i < allMedicalData.size(); i++) {
                             medicalConditions.add(allMedicalData.get(i).getName());
@@ -206,8 +212,9 @@ public class Setup_Profile_3_Fragment extends Fragment implements CalendarDatePi
 
     }
 
-    private void setupUserProfile(String finalDateOfBirth, String bloodType, String nationality, String measurementSystem, String goal, int finalGender, double
-            height, double weight, double BMI) {
+    private void setupUserProfile(String finalDateOfBirth, String bloodType, String nationality, int medical_condition, String measurementSystem, String goal,
+                                  int finalGender, double height, double weight, double BMI) {
+
         final ProgressDialog waitingDialog = new ProgressDialog(getActivity());
         waitingDialog.setTitle(getString(R.string.signing_up_dialog_title));
         waitingDialog.setMessage(getString(R.string.signing_up_dialog_message));
@@ -226,12 +233,15 @@ public class Setup_Profile_3_Fragment extends Fragment implements CalendarDatePi
                 });
 
         Call<DefaultGetResponse> registerUserCall = new RestClient().getGMFitService().updateUserProfile(prefs.getString(Cons.PREF_USER_ACCESS_TOKEN,
-                Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS), new UpdateProfileRequest(finalDateOfBirth, bloodType, nationality, measurementSystem, goal,
-                finalGender, height, weight, BMI));
+                Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS), new UpdateProfileRequest(finalDateOfBirth, bloodType, nationality, medical_condition, measurementSystem,
+                goal, finalGender, height, weight, BMI));
 
         registerUserCall.enqueue(new Callback<DefaultGetResponse>() {
             @Override
             public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
+
+                Log.d(TAG, "onResponse: Response code was : " + response.code());
+
                 switch (response.code()) {
                     case 200:
                         waitingDialog.dismiss();
@@ -343,22 +353,24 @@ public class Setup_Profile_3_Fragment extends Fragment implements CalendarDatePi
     }
 
     public class UpdateProfileRequest {
-        final String birthday;
-        final String bloodType;
+        final String date_of_birth;
+        final String blood_type;
         final String country;
         final String metric_system;
+        final String medical_condition;
         final String goal;
         final int gender;
         final double height;
         final double weight;
         final double BMI;
 
-        public UpdateProfileRequest(String birthday, String bloodType, String country, String metric_system, String goal, int gender, double height, double
-                weight, double BMI) {
-            this.birthday = birthday;
-            this.bloodType = bloodType;
+        public UpdateProfileRequest(String date_of_birth, String blood_type, String country, String medical_condition, String metric_system, String goal, int
+                gender, double height, double weight, double BMI) {
+            this.date_of_birth = date_of_birth;
+            this.blood_type = blood_type;
             this.country = country;
             this.metric_system = metric_system;
+            this.medical_condition = medical_condition;
             this.goal = goal;
             this.gender = gender;
             this.height = height;
