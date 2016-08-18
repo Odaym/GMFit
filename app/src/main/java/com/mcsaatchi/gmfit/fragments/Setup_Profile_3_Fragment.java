@@ -158,10 +158,15 @@ public class Setup_Profile_3_Fragment extends Fragment implements CalendarDatePi
                         else
                             finalDateOfBirth = "1990-01-01";
 
-                        double finalWeight = Double.parseDouble(weightET.getText().toString());
-                        double finalHeight = Double.parseDouble(heightET.getText().toString());
+                        float finalWeight = Float.parseFloat(weightET.getText().toString());
+                        float finalHeight = Float.parseFloat(heightET.getText().toString());
 
                         String finalBloodType = bloodTypeSpinner.getSelectedItem().toString();
+
+                        prefs.edit().putString(Cons.EXTRAS_USER_PROFILE_DATE_OF_BIRTH, finalDateOfBirth).apply();
+                        prefs.edit().putFloat(Cons.EXTRAS_USER_PROFILE_WEIGHT, finalWeight).apply();
+                        prefs.edit().putFloat(Cons.EXTRAS_USER_PROFILE_HEIGHT, finalHeight).apply();
+                        prefs.edit().putString(Cons.EXTRAS_USER_PROFILE_BLOOD_TYPE, finalBloodType).apply();
 
                         String nationality = prefs.getString(Cons.EXTRAS_USER_PROFILE_NATIONALITY, "");
                         String measurementSystem = prefs.getString(Cons.EXTRAS_USER_PROFILE_MEASUREMENT_SYSTEM, "");
