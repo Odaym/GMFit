@@ -1,20 +1,33 @@
 package com.mcsaatchi.gmfit.activities;
 
 import android.annotation.TargetApi;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.andreabaccega.widget.FormEditText;
 import com.mcsaatchi.gmfit.R;
+import com.mcsaatchi.gmfit.classes.Cons;
 import com.mcsaatchi.gmfit.classes.Helpers;
+import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
+import com.mcsaatchi.gmfit.rest.RestClient;
 
 import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ForgotPassword_Activity extends Base_Activity {
 
@@ -24,6 +37,8 @@ public class ForgotPassword_Activity extends Base_Activity {
     Button submitForgotPasswordEmailBTN;
     @Bind(R.id.toolbar)
     Toolbar toolbar;
+
+    private SharedPreferences prefs;
 
     private ArrayList<FormEditText> allFields = new ArrayList<>();
 
@@ -35,6 +50,8 @@ public class ForgotPassword_Activity extends Base_Activity {
 
         ButterKnife.bind(this);
 
+        prefs = getSharedPreferences(Cons.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
+
         setupToolbar(toolbar, R.string.forgot_password_activity_title, true);
         addTopPaddingToolbar(toolbar);
 
@@ -44,7 +61,55 @@ public class ForgotPassword_Activity extends Base_Activity {
             @Override
             public void onClick(View v) {
                 if (Helpers.validateFields(allFields)) {
+                    forgotPasswordSendToken(emailET.getText().toString());
                 }
+            }
+        });
+    }
+
+    private void forgotPasswordSendToken(String email) {
+        final ProgressDialog waitingDialog = new ProgressDialog(this);
+        waitingDialog.setTitle(getString(R.string.sending_reset_password_dialog_title));
+        waitingDialog.setMessage(getString(R.string.sending_reset_password_dialog_message));
+        waitingDialog.show();
+
+        final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+        alertDialog.setTitle(R.string.sending_reset_password_dialog_title);
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+
+                        if (waitingDialog.isShowing())
+                            waitingDialog.dismiss();
+                    }
+                });
+
+        Call<DefaultGetResponse> sendResetPasswordCall = new RestClient().getGMFitService().sendResetPasswordLink(prefs.getString(Cons.PREF_USER_ACCESS_TOKEN, Cons
+                .NO_ACCESS_TOKEN_FOUND_IN_PREFS), new ForgotPasswordRequest(email));
+
+        sendResetPasswordCall.enqueue(new Callback<DefaultGetResponse>() {
+            @Override
+            public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
+                switch (response.code()) {
+                    case 200:
+                        waitingDialog.dismiss();
+
+                        Intent intent = new Intent(ForgotPassword_Activity.this, ResetPassword_Activity.class);
+                        startActivity(intent);
+
+                        Toast.makeText(ForgotPassword_Activity.this, R.string.password_change_successful, Toast.LENGTH_SHORT).show();
+
+                        finish();
+
+                        break;
+                }
+            }
+
+            @Override
+            public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+                alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
+                alertDialog.show();
             }
         });
     }
@@ -54,5 +119,13 @@ public class ForgotPassword_Activity extends Base_Activity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationIcon(getDrawable(R.drawable.ic_arrow_left));
         toolbar.setTitleTextAppearance(this, R.style.Toolbar_TitleTextStyle);
+    }
+
+    public class ForgotPasswordRequest {
+        final String email;
+
+        public ForgotPasswordRequest(String email) {
+            this.email = email;
+        }
     }
 }
