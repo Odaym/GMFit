@@ -116,7 +116,7 @@ public class Helpers {
 
         int k = 0;
 
-        for (int i = chartData.size() - 1; i > 4; i--) {
+        for (int i = 0; i < chartData.size(); i++) {
             LocalDate date = LocalDate.parse(chartData.get(i).getDate());
             int dow = date.getDayOfWeek();
 
