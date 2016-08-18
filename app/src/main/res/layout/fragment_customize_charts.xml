@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <TextView android:layout_width="match_parent" android:layout_height="@dimen/top_bar_tips_height"
               android:background="@color/fitness_pink"
@@ -16,7 +17,6 @@
         xmlns:dslv="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
         android:choiceMode="singleChoice"
         android:dividerHeight="0.5sp"
         android:drawSelectorOnTop="true"
@@ -30,11 +30,10 @@
         android:id="@+id/addChartBTN"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/chartsListView"
         android:layout_marginEnd="@dimen/default_margin_4"
         android:layout_marginStart="@dimen/default_margin_4"
         android:layout_marginTop="@dimen/default_margin_4"
         android:background="@color/fitness_dark_blue"
         android:text="ADD NEW CHART"
         android:textColor="@android:color/white"/>
-</RelativeLayout>
+</LinearLayout>
