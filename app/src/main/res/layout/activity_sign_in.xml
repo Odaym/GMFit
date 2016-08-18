@@ -46,7 +46,7 @@
                 android:text="oday.maleh@gmail.com"
                 android:textAppearance="?android:textAppearanceSmall"
                 android:textColor="@android:color/white"
-                android:textColorHint="@android:color/white"
+                android:textColorHint="@color/offwhite_transparent"
                 android:textCursorDrawable="@null"
                 validator:emptyErrorString="@string/field_empty_error_message"
                 validator:testErrorString="@string/error_email_address_not_valid"
@@ -76,7 +76,7 @@
                 android:text="oday123"
                 android:textAppearance="?android:textAppearanceSmall"
                 android:textColor="@android:color/white"
-                android:textColorHint="@android:color/white"
+                android:textColorHint="@color/offwhite_transparent"
                 android:textCursorDrawable="@null"
                 validator:emptyErrorString="@string/field_empty_error_message"
                 validator:testErrorString="@string/field_password_too_short_error"/>
