@@ -73,7 +73,7 @@
                 android:paddingBottom="@dimen/default_margin_1"
                 android:paddingStart="@dimen/default_margin_2"
                 android:singleLine="true"
-                android:text="oday123"
+                android:text="odayoday"
                 android:textAppearance="?android:textAppearanceSmall"
                 android:textColor="@android:color/white"
                 android:textColorHint="@color/offwhite_transparent"
