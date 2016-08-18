@@ -54,14 +54,14 @@ public class Setup_Profile_1_Fragment extends Fragment {
         /**
          * The defaults are set here
          */
-        prefs.edit().putString(Cons.EXTRAS_USER_PROFILE_MEASUREMENT_SYSTEM, "Metric").apply();
+        prefs.edit().putString(Cons.EXTRAS_USER_PROFILE_MEASUREMENT_SYSTEM, "metric").apply();
         prefs.edit().putString(Cons.EXTRAS_USER_PROFILE_NATIONALITY, chooseCountryBTN.getText().toString()).apply();
 
         metricRdBTN.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
                 if (checked)
-                    prefs.edit().putString(Cons.EXTRAS_USER_PROFILE_MEASUREMENT_SYSTEM, "Metric").apply();
+                    prefs.edit().putString(Cons.EXTRAS_USER_PROFILE_MEASUREMENT_SYSTEM, "metric").apply();
             }
         });
 
@@ -69,7 +69,7 @@ public class Setup_Profile_1_Fragment extends Fragment {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
                 if (checked)
-                    prefs.edit().putString(Cons.EXTRAS_USER_PROFILE_MEASUREMENT_SYSTEM, "Imperial").apply();
+                    prefs.edit().putString(Cons.EXTRAS_USER_PROFILE_MEASUREMENT_SYSTEM, "imperial").apply();
             }
         });
 
