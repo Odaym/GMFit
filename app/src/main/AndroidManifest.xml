@@ -68,6 +68,12 @@
             android:windowSoftInputMode="stateVisible"/>
 
         <activity
+            android:name=".activities.ResetPassword_Activity"
+            android:screenOrientation="portrait"
+            android:theme="@style/No_Action_Bar_Theme"
+            android:windowSoftInputMode="stateVisible"/>
+
+        <activity
             android:name=".activities.TOS_Activity"
             android:screenOrientation="portrait"
             android:theme="@style/No_Action_Bar_Theme"/>
