@@ -24,12 +24,16 @@ public class Cons {
     public static final String EXTRAS_USER_STEPS_COUNT_FROM_SENSOR = "user_steps_count_from_sensor";
     public static final String EXTRAS_USER_ACTIVE_CALORIES = "user_active_calories";
 
-    public static final int WAIT_TIME_BEFORE_CHECKING_METRICS_SERVICE = 3600000;
+    public static final int WAIT_TIME_BEFORE_CHECKING_METRICS_SERVICE = 5000;
     public static final int WAIT_TIME_BEFORE_SERVER_SYNC = 60000;
 
     public static final String EXTRAS_USER_PROFILE_MEASUREMENT_SYSTEM = "user_profile_measurement_system";
     public static final String EXTRAS_USER_PROFILE_NATIONALITY = "user_profile_nationality";
     public static final String EXTRAS_USER_PROFILE_GOAL = "user_profile_goal";
+    public static final String EXTRAS_USER_PROFILE_DATE_OF_BIRTH = "user_profile_date_of_birth";
+    public static final String EXTRAS_USER_PROFILE_WEIGHT = "user_profile_weight";
+    public static final String EXTRAS_USER_PROFILE_HEIGHT = "user_profile_height";
+    public static final String EXTRAS_USER_PROFILE_BLOOD_TYPE = "user_profile_blood_type";
 
     public static final String EXTRAS_FITNESS_FRAGMENT = "FITNESS";
     public static final String EXTRAS_NUTRITION_FRAGMENT = "NUTRITION";
@@ -63,6 +67,8 @@ public class Cons {
 
     public static final String EVENT_USER_FINALIZE_SETUP_PROFILE = "user_finalize_setup_profile";
     public static final String EVENT_STEP_COUNTER_INCREMENTED = "step_counter_incremented";
+    public static final String EVENT_CALORIES_COUNTER_INCREMENTED = "calories_counter_incremented";
+    public static final String EVENT_DISTANCE_COUNTER_INCREMENTED = "distance_counter_incremented";
 
     public static final String EVENT_CHART_ADDED_FROM_SETTINGS = "event_chart_added_from_settings";
     public static final String EVENT_CHART_METRICS_RECEIVED = "event_chart_metrics_received";
