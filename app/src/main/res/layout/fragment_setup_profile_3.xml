@@ -68,7 +68,7 @@
                 android:background="@color/color_primary_dark_transparent"
                 android:gravity="center_vertical"
                 android:paddingStart="@dimen/default_margin_2"
-                android:text="24 November 1989"
+                android:text="January 1, 1990"
                 android:textColor="@android:color/white"/>
 
             <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content"

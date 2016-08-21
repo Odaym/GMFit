@@ -126,6 +126,7 @@ public class Setup_Profile_3_Fragment extends Fragment implements CalendarDatePi
                         .setFirstDayOfWeek(Calendar.MONDAY)
                         .setDoneText(getString(R.string.accept_ok))
                         .setCancelText(getString(R.string.decline_cancel))
+                        .setPreselectedDate(2000, 0, 1)
                         .setThemeLight();
                 cdp.show(getActivity().getSupportFragmentManager(), FRAG_TAG_DATE_PICKER);
             }
@@ -136,7 +137,7 @@ public class Setup_Profile_3_Fragment extends Fragment implements CalendarDatePi
 
     @Override
     public void onDateSet(CalendarDatePickerDialogFragment dialog, int year, int monthOfYear, int dayOfMonth) {
-        dateOfBirthTV.setText(year + "-" + new DateFormatSymbols().getMonths()[monthOfYear - 1] + "-" + dayOfMonth);
+        dateOfBirthTV.setText(new DateFormatSymbols().getMonths()[monthOfYear] + " " + dayOfMonth + ", " + year);
     }
 
     @Subscribe
