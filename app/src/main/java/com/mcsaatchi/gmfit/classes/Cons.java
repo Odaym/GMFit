@@ -24,7 +24,7 @@ public class Cons {
     public static final String EXTRAS_USER_STEPS_COUNT_FROM_SENSOR = "user_steps_count_from_sensor";
     public static final String EXTRAS_USER_ACTIVE_CALORIES = "user_active_calories";
 
-    public static final int WAIT_TIME_BEFORE_CHECKING_METRICS_SERVICE = 5000;
+    public static final int WAIT_TIME_BEFORE_CHECKING_METRICS_SERVICE = 1200000;
     public static final int WAIT_TIME_BEFORE_SERVER_SYNC = 60000;
 
     public static final String EXTRAS_USER_PROFILE_MEASUREMENT_SYSTEM = "user_profile_measurement_system";

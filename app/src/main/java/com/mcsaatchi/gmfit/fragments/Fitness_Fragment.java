@@ -111,8 +111,6 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
          * Initialize JodaTime
          */
         JodaTimeAndroid.init(getActivity());
-        LocalDate dt = new LocalDate();
-        todayDate = dt.toString();
 
         SensorManager sm =
                 (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
@@ -289,6 +287,10 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
     public void handle_BusEvents(EventBus_Poster ebp) {
         String ebpMessage = ebp.getMessage();
         TextView fitnessWidget;
+
+        LocalDate dt = new LocalDate();
+
+        todayDate = dt.toString();
 
         switch (ebpMessage) {
             case Cons.EXTRAS_FITNESS_WIDGETS_ORDER_ARRAY_CHANGED:

@@ -50,9 +50,8 @@ public class SensorListener extends Service implements SensorEventListener {
     private final Handler handler = new Handler();
     private Timer timer = new Timer();
     private SharedPreferences prefs;
-    private LocalDate dt = new LocalDate();
-    private String todayDate = dt.toString();
-    private String yesterdayDate = dt.minusDays(1).toString();
+    private String todayDate;
+    private String yesterdayDate;
 
     @Override
     public void onAccuracyChanged(final Sensor sensor, int accuracy) {
@@ -69,7 +68,11 @@ public class SensorListener extends Service implements SensorEventListener {
         } else {
             steps = (int) event.values[0];
 
-            int sensorStepsFromPrefs = prefs.getInt(Cons.EXTRAS_USER_STEPS_COUNT_FROM_SENSOR, 0);
+            LocalDate dt = new LocalDate();
+
+            todayDate = dt.toString();
+            yesterdayDate = dt.minusDays(1).toString();
+
             int todayStepsFromPrefs = prefs.getInt(todayDate + "_steps", 0);
 
             if (prefs.getBoolean(Cons.EXTRAS_FIRST_APP_LAUNCH, true)) {
@@ -78,15 +81,13 @@ public class SensorListener extends Service implements SensorEventListener {
                 prefs.edit().putInt(todayDate + "_steps", 0).apply();
                 prefs.edit().putFloat(todayDate + "_calories", 0).apply();
                 prefs.edit().putFloat(todayDate + "_distance", 0).apply();
-            } else if (sensorStepsFromPrefs != steps) {
+            } else {
                 float calculatedCalories = (float) (prefs.getFloat(Cons.EXTRAS_USER_PROFILE_WEIGHT, 70) * METRIC_RUNNING_FACTOR * STEP_LENGTH / 100000.0);
                 float calculatedDistance = (float) (STEP_LENGTH / 100000.0);
 
                 prefs.edit().putInt(todayDate + "_steps", todayStepsFromPrefs + 1).apply();
                 prefs.edit().putFloat(todayDate + "_calories", calculatedCalories + prefs.getFloat(todayDate + "_calories", 0)).apply();
                 prefs.edit().putFloat(todayDate + "_distance", calculatedDistance + prefs.getFloat(todayDate + "_distance", 0)).apply();
-
-                prefs.edit().putInt(Cons.EXTRAS_USER_STEPS_COUNT_FROM_SENSOR, steps).apply();
             }
 
             EventBus_Singleton.getInstance().post(new EventBus_Poster(Cons.EVENT_STEP_COUNTER_INCREMENTED));
