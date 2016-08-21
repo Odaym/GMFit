@@ -183,9 +183,7 @@ public class Setup_Profile_3_Fragment extends Fragment implements CalendarDatePi
     }
 
     private void getAndPopulateMedicalConditions() {
-        Call<MedicalConditionsResponse> getMedicalConditionsCall = new RestClient().getGMFitService().getMedicalConditions(prefs.getString(Cons
-                        .PREF_USER_ACCESS_TOKEN,
-                Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS));
+        Call<MedicalConditionsResponse> getMedicalConditionsCall = new RestClient().getGMFitService().getMedicalConditions(prefs.getString(Cons.PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS));
 
         getMedicalConditionsCall.enqueue(new Callback<MedicalConditionsResponse>() {
             @Override
@@ -240,8 +238,7 @@ public class Setup_Profile_3_Fragment extends Fragment implements CalendarDatePi
                 });
 
         Call<DefaultGetResponse> registerUserCall = new RestClient().getGMFitService().updateUserProfile(prefs.getString(Cons.PREF_USER_ACCESS_TOKEN,
-                Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS), new UpdateProfileRequest(finalDateOfBirth, bloodType, nationality, medical_condition, measurementSystem,
-                goal, finalGender, height, weight, BMI));
+                Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS), new UpdateProfileRequest(finalDateOfBirth, bloodType, nationality, medical_condition, measurementSystem, goal, finalGender, height, weight, BMI));
 
         registerUserCall.enqueue(new Callback<DefaultGetResponse>() {
             @Override
@@ -278,6 +275,9 @@ public class Setup_Profile_3_Fragment extends Fragment implements CalendarDatePi
                 switch (response.code()) {
                     case 200:
                         waitingDialog.dismiss();
+
+                        prefs.edit().putBoolean(Cons.EXTRAS_USER_LOGGED_IN, true).apply();
+                        prefs.edit().putBoolean(prefs.getString(Cons.EXTRAS_USER_EMAIL, "") + "_" + Cons.EVENT_FINISHED_SETTING_UP_PROFILE_SUCCESSFULLY, true).apply();
 
                         List<AuthenticationResponseWidget> widgetsMap = response.body().getData().getBody().getWidgets();
                         List<AuthenticationResponseChart> chartsMap = response.body().getData().getBody().getCharts();

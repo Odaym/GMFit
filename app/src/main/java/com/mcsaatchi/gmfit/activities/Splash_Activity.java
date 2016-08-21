@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.classes.Cons;
@@ -38,9 +39,39 @@ public class Splash_Activity extends AppCompatActivity {
         int SPLASH_TIME_OUT = 1000;
         int NO_INTERNET_DIALOG_TIMEOUT = 3000;
 
-        if (prefs.getBoolean(Cons.EXTRAS_USER_LOGGED_IN, false)) {
+        Log.d("TAGTAG", "onCreate outside if : " + prefs.getBoolean(prefs.getString(Cons.EXTRAS_USER_EMAIL, "") + "_" + Cons.EVENT_FINISHED_SETTING_UP_PROFILE_SUCCESSFULLY, false));
 
+        /**
+         * User is not logged in
+         */
+        if (!prefs.getBoolean(Cons.EXTRAS_USER_LOGGED_IN, false)) {
+            Log.d("TAGTAG", "User not logged in");
+
+            new Handler().postDelayed(new Runnable() {
+
+                @Override
+                public void run() {
+                    intent = new Intent(Splash_Activity.this, Login_Activity.class);
+                    startActivity(intent);
+                }
+            }, SPLASH_TIME_OUT);
+
+            /**
+             * User did not finish setting up profile
+             */
+        } else if (!prefs.getBoolean(prefs.getString(Cons.EXTRAS_USER_EMAIL, "") + "_" + Cons.EVENT_FINISHED_SETTING_UP_PROFILE_SUCCESSFULLY, false)) {
+
+            Log.d("TAGTAG", "onCreate: user has not yet finished setup profile process");
+            intent = new Intent(Splash_Activity.this, SetupProfile_Activity.class);
+            startActivity(intent);
+
+            /**
+             * User is logged in and they did finish setting up their profile
+             */
+        } else if (prefs.getBoolean(Cons.EXTRAS_USER_LOGGED_IN, false)) {
             if (Helpers.isInternetAvailable(Splash_Activity.this)) {
+                Log.d("TAGTAG", "onCreate: signing the user in silently now");
+
                 signInUserSilently(prefs.getString(Cons.EXTRAS_USER_EMAIL, ""), prefs.getString(Cons.EXTRAS_USER_PASSWORD, ""));
             } else {
                 Helpers.showNoInternetDialog(Splash_Activity.this);
@@ -51,16 +82,6 @@ public class Splash_Activity extends AppCompatActivity {
                     }
                 }, NO_INTERNET_DIALOG_TIMEOUT);
             }
-
-        } else {
-            new Handler().postDelayed(new Runnable() {
-
-                @Override
-                public void run() {
-                    intent = new Intent(Splash_Activity.this, Login_Activity.class);
-                    startActivity(intent);
-                }
-            }, SPLASH_TIME_OUT);
         }
     }
 

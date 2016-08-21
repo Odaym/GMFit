@@ -120,7 +120,7 @@ public class SignUp_Activity extends Base_Activity {
         });
     }
 
-    private void registerUser(String email, String password) {
+    private void registerUser(final String email, final String password) {
         final ProgressDialog waitingDialog = new ProgressDialog(this);
         waitingDialog.setTitle(getString(R.string.signing_up_dialog_title));
         waitingDialog.setMessage(getString(R.string.signing_up_dialog_message));
@@ -151,6 +151,8 @@ public class SignUp_Activity extends Base_Activity {
 
                         //Refreshes access token
                         prefs.edit().putString(Cons.PREF_USER_ACCESS_TOKEN, "Bearer " + responseBody.getToken()).apply();
+                        prefs.edit().putString(Cons.EXTRAS_USER_EMAIL, email).apply();
+                        prefs.edit().putString(Cons.EXTRAS_USER_PASSWORD, password).apply();
 
                         List<AuthenticationResponseWidget> widgetsMap = responseBody.getWidgets();
                         List<AuthenticationResponseChart> chartsMap = responseBody.getCharts();
@@ -161,8 +163,6 @@ public class SignUp_Activity extends Base_Activity {
                         intent.putParcelableArrayListExtra("widgets", (ArrayList<AuthenticationResponseWidget>) widgetsMap);
                         intent.putParcelableArrayListExtra("charts", (ArrayList<AuthenticationResponseChart>) chartsMap);
                         startActivity(intent);
-
-//                        Toast.makeText(SignUp_Activity.this, "Grabbed Widgets and Charts from server : " + widgetsMap.size() + " by " + chartsMap.size(), Toast.LENGTH_SHORT).show();
 
                         finish();
 

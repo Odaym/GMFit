@@ -99,6 +99,8 @@ public class GetStarted_Activity extends Base_Activity {
                     case 200:
                         waitingDialog.dismiss();
 
+                        prefs.edit().putBoolean(Cons.EXTRAS_USER_LOGGED_IN, true).apply();
+
                         Intent intent = new Intent(GetStarted_Activity.this, SetupProfile_Activity.class);
                         startActivity(intent);
                         finish();

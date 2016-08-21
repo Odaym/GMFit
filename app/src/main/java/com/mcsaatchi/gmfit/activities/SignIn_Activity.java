@@ -156,6 +156,12 @@ public class SignIn_Activity extends Base_Activity {
                         prefs.edit().putString(Cons.EXTRAS_USER_PASSWORD, password).apply();
                         prefs.edit().putBoolean(Cons.EXTRAS_USER_LOGGED_IN, true).apply();
 
+                        /**
+                         * Case where the user already has an account and they just logged in with it on a new installation
+                         * Cannot happen otherwise
+                         */
+                        prefs.edit().putBoolean(prefs.getString(Cons.EXTRAS_USER_EMAIL, "") + "_" + Cons.EVENT_FINISHED_SETTING_UP_PROFILE_SUCCESSFULLY, true).apply();
+
                         List<AuthenticationResponseWidget> widgetsMap = responseBody.getWidgets();
                         List<AuthenticationResponseChart> chartsMap = responseBody.getCharts();
 

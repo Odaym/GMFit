@@ -14,15 +14,7 @@ public class Cons {
     public static final String EXTRAS_USER_POLICY = "user_policy";
     public static final String EXTRAS_USER_FACEBOOK_TOKEN = "user_facebook_token";
 
-    public static final String EXTRAS_ACCUMULATING_DISTANCE = "ACCUMULATING_DISTANCE";
-    public static final String EXTRAS_ACCUMULATING_CALORIES = "ACCUMULATING_CALORIES";
-    public static final String EXTRAS_ACCUMULATING_STEPS = "ACCUMULATING_STEPS";
-
     public static final String EXTRAS_FIRST_APP_LAUNCH = "first_app_launch";
-
-    public static final String EXTRAS_USER_DISTANCE_TRAVELED = "user_distance_traveled";
-    public static final String EXTRAS_USER_STEPS_COUNT_FROM_SENSOR = "user_steps_count_from_sensor";
-    public static final String EXTRAS_USER_ACTIVE_CALORIES = "user_active_calories";
 
     public static final int WAIT_TIME_BEFORE_CHECKING_METRICS_SERVICE = 1200000;
     public static final int WAIT_TIME_BEFORE_SERVER_SYNC = 60000;
@@ -69,6 +61,7 @@ public class Cons {
     public static final String EVENT_STEP_COUNTER_INCREMENTED = "step_counter_incremented";
     public static final String EVENT_CALORIES_COUNTER_INCREMENTED = "calories_counter_incremented";
     public static final String EVENT_DISTANCE_COUNTER_INCREMENTED = "distance_counter_incremented";
+    public static final String EVENT_FINISHED_SETTING_UP_PROFILE_SUCCESSFULLY = "finished_setting_up_profile_successfully";
 
     public static final String EVENT_CHART_ADDED_FROM_SETTINGS = "event_chart_added_from_settings";
     public static final String EVENT_CHART_METRICS_RECEIVED = "event_chart_metrics_received";
