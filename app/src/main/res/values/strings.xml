@@ -171,7 +171,7 @@
     <string name="add_new_chart_button">+ Add New Chart</string>
 
     <!-- NUTRITION FRAGMENT -->
-    <string name="add_new_meal">Add</string>
+    <string name="add_new_meal">+ Add</string>
     <string name="scan_new_meal">Scan</string>
     <string name="meal_headline_title_breakfast">Breakfast</string>
     <string name="meal_headline_title_lunch">Lunch</string>

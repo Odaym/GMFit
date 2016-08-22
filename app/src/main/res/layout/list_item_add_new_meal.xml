@@ -4,18 +4,23 @@
                 android:layout_height="@dimen/add_meal_item_layout_height"
                 android:paddingStart="@dimen/default_margin_1">
 
-    <TextView android:id="@+id/entryTitleTV" android:layout_width="350dp"
+    <TextView android:id="@+id/entryTitleTV"
+              android:layout_width="@dimen/meal_item_name_width"
               android:layout_height="wrap_content"
               android:ellipsize="end"
               android:paddingTop="@dimen/default_margin_1"
-              android:textAppearance="?android:textAppearanceSmall"
-              android:textStyle="bold"/>
+              android:singleLine="true"/>
 
-    <TextView android:id="@+id/entryDescriptionTV" android:layout_width="wrap_content"
+    <TextView android:id="@+id/entryDescriptionTV"
+              android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-              android:layout_below="@+id/entryTitleTV"/>
+              android:layout_below="@+id/entryTitleTV"
+              android:ellipsize="end"
+              android:textAppearance="?android:textAppearanceSmall"
+              android:textColor="@color/fitness_pink"/>
 
-    <TextView android:id="@+id/entryUnitsTV" android:layout_width="@dimen/customize_widgets_reorder_list_item_edge_height_width"
+    <TextView android:id="@+id/entryUnitsTV"
+              android:layout_width="@dimen/customize_widgets_reorder_list_item_edge_height_width"
               android:layout_height="@dimen/customize_widgets_reorder_list_item_edge_height_width"
               android:layout_alignParentEnd="true"
               android:layout_centerVertical="true"

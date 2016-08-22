@@ -17,12 +17,11 @@
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="@dimen/metric_header_progress_bar_width"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/metricCounterTV"
+            android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="@dimen/default_margin_1"
             android:indeterminate="false"
-            android:maxHeight="10dip"
-            android:minHeight="10dip"
+            android:maxHeight="@dimen/sections_progress_bar_height"
+            android:minHeight="@dimen/sections_progress_bar_height"
             android:progress="70"
             android:progressDrawable="@drawable/nutrition_progress_bar"/>
 
@@ -30,11 +29,11 @@
             android:id="@+id/metricCounterTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
+            android:layout_below="@+id/metricProgressBar"
+            android:layout_centerHorizontal="true"
             android:text="760"
             android:textColor="@android:color/white"
-            android:textSize="@dimen/metric_header_nutrition_counter_font_size"
-            android:textStyle="bold"/>
+            android:textSize="@dimen/metric_counter_font_size"/>
 
         <TextView
             android:id="@+id/metricCounterLabelTV"
@@ -42,7 +41,6 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/metricCounterTV"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="5dp"
             android:background="@drawable/rounded_view"
             android:paddingBottom="5dp"
             android:paddingEnd="@dimen/default_margin_2"
@@ -78,6 +76,9 @@
         android:background="@android:color/white"
         android:orientation="vertical">
 
+        <!---->
+        <!-- MEAL BARS START HERE -->
+        <!---->
         <LinearLayout
             android:id="@+id/cards_container"
             android:layout_width="match_parent"
@@ -85,346 +86,286 @@
             android:animateLayoutChanges="true"
             android:orientation="vertical">
 
-            <android.support.v7.widget.CardView
-                android:id="@+id/cardLayoutContainer_BREAKFAST"
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+            <!---->
+            <!-- BREAKFAST MEAL BAR -->
+            <!---->
+            <LinearLayout android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:orientation="vertical">
 
-                <RelativeLayout android:layout_width="match_parent"
-                                android:layout_height="wrap_content">
-                    <LinearLayout android:id="@+id/chartTopBarLayout_BREAKFAST"
-                                  android:layout_width="match_parent"
-                                  android:layout_height="wrap_content"
-                                  android:background="@color/nutrition_red"
-                                  android:gravity="center_vertical"
-                                  android:orientation="horizontal">
+                <LinearLayout android:id="@+id/chartTopBarLayout_BREAKFAST"
+                              android:layout_width="match_parent"
+                              android:layout_height="@dimen/add_meal_item_layout_height"
+                              android:background="@color/nutrition_meal_bars_orange"
+                              android:gravity="center_vertical"
+                              android:orientation="horizontal"
+                              android:paddingEnd="@dimen/activity_vertical_margin"
+                              android:paddingStart="@dimen/activity_vertical_margin">
 
-                        <TextView android:id="@+id/chartTitleTV_BREAKFAST"
-                                  android:layout_width="0dp"
-                                  android:layout_height="wrap_content"
-                                  android:layout_weight="30"
-                                  android:paddingBottom="@dimen/metric_cell_padding_horizontal_smaller"
-                                  android:paddingStart="@dimen/activity_vertical_margin"
-                                  android:paddingTop="@dimen/metric_cell_padding_horizontal_smaller"
-                                  android:text="Breakfast"
-                                  android:textAppearance="?android:textAppearanceLarge"
-                                  android:textColor="@android:color/white"/>
+                    <TextView android:id="@+id/chartTitleTV_BREAKFAST"
+                              android:layout_width="0dp"
+                              android:layout_height="wrap_content"
+                              android:layout_weight="30"
+                              android:text="Breakfast"
+                              android:textAppearance="?android:textAppearanceMedium"
+                              android:textColor="@android:color/white"/>
 
-                        <LinearLayout android:layout_width="wrap_content"
-                                      android:layout_height="wrap_content"
-                                      android:gravity="center_vertical"
-                                      android:paddingEnd="@dimen/activity_vertical_margin">
-
-                            <ImageView android:layout_width="wrap_content"
-                                       android:layout_height="wrap_content"
-                                       android:paddingBottom="@dimen/metric_cell_padding_horizontal_smaller"
-                                       android:paddingTop="@dimen/metric_cell_padding_horizontal_smaller"
-                                       android:src="@android:drawable/ic_input_add"/>
-                            <Button
-                                android:id="@+id/addEntryBTN_BREAKFAST"
-                                android:layout_width="@dimen/add_meal_button_width"
-                                android:layout_height="@dimen/add_meal_button_height"
-                                android:paddingBottom="@dimen/metric_cell_padding_horizontal_smaller"
-                                android:paddingTop="@dimen/metric_cell_padding_horizontal_smaller"
-                                android:text="@string/add_new_meal"/>
-
-                            <View android:layout_width="0.5dp"
+                    <LinearLayout android:layout_width="wrap_content"
                                   android:layout_height="match_parent"
-                                  android:layout_marginStart="@dimen/default_margin_1"
-                                  android:background="@android:color/white"/>
+                                  android:gravity="center_vertical">
 
-                            <ImageView android:layout_width="wrap_content"
-                                       android:layout_height="wrap_content"
-                                       android:paddingBottom="@dimen/metric_cell_padding_horizontal_smaller"
-                                       android:paddingTop="@dimen/metric_cell_padding_horizontal_smaller"
-                                       android:src="@android:drawable/ic_input_add"/>
+                        <TextView
+                            android:id="@+id/addEntryBTN_BREAKFAST"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="@string/add_new_meal"
+                            android:textColor="@android:color/white"/>
 
-                            <Button
-                                android:id="@+id/scanEntryBTN_BREAKFAST"
-                                android:layout_width="@dimen/add_meal_button_width"
-                                android:layout_height="@dimen/add_meal_button_height"
-                                android:paddingBottom="@dimen/metric_cell_padding_horizontal_smaller"
-                                android:paddingTop="@dimen/metric_cell_padding_horizontal_smaller"
-                                android:text="@string/scan_new_meal"/>
-                        </LinearLayout>
+                        <View android:layout_width="1dp"
+                              android:layout_height="match_parent"
+                              android:layout_marginEnd="@dimen/default_margin_1"
+                              android:layout_marginStart="@dimen/default_margin_1"
+                              android:background="@color/nutrition_orange_faded_transparent"/>
+
+                        <ImageView android:layout_width="@dimen/add_and_scan_icons_dimens"
+                                   android:layout_height="@dimen/add_and_scan_icons_dimens"
+                                   android:layout_marginEnd="@dimen/default_margin_1"
+                                   android:src="@drawable/ic_scan_meal"/>
+
+                        <TextView
+                            android:id="@+id/scanEntryBTN_BREAKFAST"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="@string/scan_new_meal"
+                            android:textColor="@android:color/white"/>
                     </LinearLayout>
+                </LinearLayout>
 
-                    <View android:id="@+id/separatorView_BREAKFAST"
-                          android:layout_width="match_parent"
-                          android:layout_height="1dp"
-                          android:layout_below="@+id/chartTopBarLayout_BREAKFAST"
-                          android:background="@color/light_gray"/>
+                <LinearLayout
+                    android:id="@+id/entriesContainerLayout_BREAKFAST"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
-                    <LinearLayout
-                        android:id="@+id/entriesContainerLayout_BREAKFAST"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/separatorView_BREAKFAST"
-                        android:animateLayoutChanges="true" android:orientation="vertical">
+                </LinearLayout>
+            </LinearLayout>
 
-                    </LinearLayout>
-                </RelativeLayout>
+            <!---->
+            <!-- LUNCH MEAL BAR -->
+            <!---->
+            <LinearLayout android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:layout_marginTop="@dimen/default_margin_2"
+                          android:orientation="vertical">
 
-            </android.support.v7.widget.CardView>
+                <LinearLayout android:id="@+id/chartTopBarLayout_LUNCH"
+                              android:layout_width="match_parent"
+                              android:layout_height="@dimen/add_meal_item_layout_height"
+                              android:background="@color/nutrition_meal_bars_orange"
+                              android:gravity="center_vertical"
+                              android:orientation="horizontal"
+                              android:paddingEnd="@dimen/activity_vertical_margin"
+                              android:paddingStart="@dimen/activity_vertical_margin">
 
-            <android.support.v7.widget.CardView
-                android:id="@+id/cardLayoutContainer_LUNCH"
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/default_margin_2"
-                android:elevation="@dimen/cardview_default_elevation">
+                    <TextView android:id="@+id/chartTitleTV_LUNCH"
+                              android:layout_width="0dp"
+                              android:layout_height="wrap_content"
+                              android:layout_weight="30"
+                              android:text="Lunch"
+                              android:textAppearance="?android:textAppearanceMedium"
+                              android:textColor="@android:color/white"/>
 
-                <RelativeLayout android:layout_width="match_parent"
-                                android:layout_height="wrap_content">
-                    <LinearLayout android:id="@+id/chartTopBarLayout_LUNCH"
-                                  android:layout_width="match_parent"
-                                  android:layout_height="wrap_content"
-                                  android:background="@color/nutrition_red"
-                                  android:gravity="center_vertical"
-                                  android:orientation="horizontal">
-
-                        <TextView android:id="@+id/chartTitleTV_LUNCH" android:layout_width="0dp"
-                                  android:layout_height="wrap_content"
-                                  android:layout_weight="30"
-                                  android:paddingBottom="@dimen/metric_cell_padding_horizontal_smaller"
-                                  android:paddingStart="@dimen/activity_vertical_margin"
-                                  android:paddingTop="@dimen/metric_cell_padding_horizontal_smaller"
-                                  android:text="Lunch"
-                                  android:textAppearance="?android:textAppearanceLarge"
-                                  android:textColor="@android:color/white"/>
-
-                        <LinearLayout android:layout_width="wrap_content"
-                                      android:layout_height="wrap_content"
-                                      android:gravity="center_vertical"
-                                      android:paddingEnd="@dimen/activity_vertical_margin">
-
-                            <ImageView android:layout_width="wrap_content"
-                                       android:layout_height="wrap_content"
-                                       android:paddingBottom="@dimen/metric_cell_padding_horizontal_smaller"
-                                       android:paddingTop="@dimen/metric_cell_padding_horizontal_smaller"
-                                       android:src="@android:drawable/ic_input_add"/>
-                            <Button
-                                android:id="@+id/addEntryBTN_LUNCH"
-                                android:layout_width="@dimen/add_meal_button_width"
-                                android:layout_height="@dimen/add_meal_button_height"
-                                android:paddingBottom="@dimen/metric_cell_padding_horizontal_smaller"
-                                android:paddingTop="@dimen/metric_cell_padding_horizontal_smaller"
-                                android:text="@string/add_new_meal"/>
-
-                            <View android:layout_width="0.5dp"
+                    <LinearLayout android:layout_width="wrap_content"
                                   android:layout_height="match_parent"
-                                  android:layout_marginStart="@dimen/default_margin_1"
-                                  android:background="@android:color/white"/>
+                                  android:gravity="center_vertical">
 
-                            <ImageView android:layout_width="wrap_content"
-                                       android:layout_height="wrap_content"
-                                       android:paddingBottom="@dimen/metric_cell_padding_horizontal_smaller"
-                                       android:paddingTop="@dimen/metric_cell_padding_horizontal_smaller"
-                                       android:src="@android:drawable/ic_input_add"/>
+                        <TextView
+                            android:id="@+id/addEntryBTN_LUNCH"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="@string/add_new_meal"
+                            android:textColor="@android:color/white"/>
 
-                            <Button
-                                android:id="@+id/scanEntryBTN_LUNCH"
-                                android:layout_width="@dimen/add_meal_button_width"
-                                android:layout_height="@dimen/add_meal_button_height"
-                                android:paddingBottom="@dimen/metric_cell_padding_horizontal_smaller"
-                                android:paddingTop="@dimen/metric_cell_padding_horizontal_smaller"
-                                android:text="@string/scan_new_meal"/>
-                        </LinearLayout>
+                        <View android:layout_width="1dp"
+                              android:layout_height="match_parent"
+                              android:layout_marginEnd="@dimen/default_margin_1"
+                              android:layout_marginStart="@dimen/default_margin_1"
+                              android:background="@color/nutrition_orange_faded_transparent"/>
+
+                        <ImageView android:layout_width="@dimen/add_and_scan_icons_dimens"
+                                   android:layout_height="@dimen/add_and_scan_icons_dimens"
+                                   android:layout_marginEnd="@dimen/default_margin_1"
+                                   android:src="@drawable/ic_scan_meal"/>
+
+                        <TextView
+                            android:id="@+id/scanEntryBTN_LUNCH"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="@string/scan_new_meal"
+                            android:textColor="@android:color/white"/>
                     </LinearLayout>
+                </LinearLayout>
 
-                    <View android:id="@+id/separatorView_LUNCH" android:layout_width="match_parent"
-                          android:layout_height="1dp"
-                          android:layout_below="@+id/chartTopBarLayout_LUNCH"
-                          android:background="@color/light_gray"/>
+                <LinearLayout
+                    android:id="@+id/entriesContainerLayout_LUNCH"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
-                    <LinearLayout
-                        android:id="@+id/entriesContainerLayout_LUNCH"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/separatorView_LUNCH"
-                        android:orientation="vertical">
+                </LinearLayout>
+            </LinearLayout>
 
-                    </LinearLayout>
-                </RelativeLayout>
+            <!---->
+            <!-- DINNER MEAL BAR -->
+            <!---->
+            <LinearLayout android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:layout_marginTop="@dimen/default_margin_2"
+                          android:orientation="vertical">
 
-            </android.support.v7.widget.CardView>
+                <LinearLayout android:id="@+id/chartTopBarLayout_DINNER"
+                              android:layout_width="match_parent"
+                              android:layout_height="@dimen/add_meal_item_layout_height"
+                              android:background="@color/nutrition_meal_bars_orange"
+                              android:gravity="center_vertical"
+                              android:orientation="horizontal"
+                              android:paddingEnd="@dimen/activity_vertical_margin"
+                              android:paddingStart="@dimen/activity_vertical_margin">
 
-            <android.support.v7.widget.CardView
-                android:id="@+id/cardLayoutContainer_DINNER"
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/default_margin_2"
-                android:elevation="@dimen/cardview_default_elevation">
+                    <TextView android:id="@+id/chartTitleTV_DINNER"
+                              android:layout_width="0dp"
+                              android:layout_height="wrap_content"
+                              android:layout_weight="30"
+                              android:text="Dinner"
+                              android:textAppearance="?android:textAppearanceMedium"
+                              android:textColor="@android:color/white"/>
 
-                <RelativeLayout android:layout_width="match_parent"
-                                android:layout_height="wrap_content">
-                    <LinearLayout android:id="@+id/chartTopBarLayout_DINNER"
-                                  android:layout_width="match_parent"
-                                  android:layout_height="wrap_content"
-                                  android:background="@color/nutrition_red"
-                                  android:gravity="center_vertical"
-                                  android:orientation="horizontal">
-
-                        <TextView android:id="@+id/chartTitleTV_DINNER" android:layout_width="0dp"
-                                  android:layout_height="wrap_content"
-                                  android:layout_weight="30"
-                                  android:paddingBottom="@dimen/metric_cell_padding_horizontal_smaller"
-                                  android:paddingStart="@dimen/activity_vertical_margin"
-                                  android:paddingTop="@dimen/metric_cell_padding_horizontal_smaller"
-                                  android:text="Dinner"
-                                  android:textAppearance="?android:textAppearanceLarge"
-                                  android:textColor="@android:color/white"/>
-
-                        <LinearLayout android:layout_width="wrap_content"
-                                      android:layout_height="wrap_content"
-                                      android:gravity="center_vertical"
-                                      android:paddingEnd="@dimen/activity_vertical_margin">
-
-                            <ImageView android:layout_width="wrap_content"
-                                       android:layout_height="wrap_content"
-                                       android:paddingBottom="@dimen/metric_cell_padding_horizontal_smaller"
-                                       android:paddingTop="@dimen/metric_cell_padding_horizontal_smaller"
-                                       android:src="@android:drawable/ic_input_add"/>
-                            <Button
-                                android:id="@+id/addEntryBTN_DINNER"
-                                android:layout_width="@dimen/add_meal_button_width"
-                                android:layout_height="@dimen/add_meal_button_height"
-                                android:paddingBottom="@dimen/metric_cell_padding_horizontal_smaller"
-                                android:paddingTop="@dimen/metric_cell_padding_horizontal_smaller"
-                                android:text="@string/add_new_meal"/>
-
-                            <View android:layout_width="0.5dp"
+                    <LinearLayout android:layout_width="wrap_content"
                                   android:layout_height="match_parent"
-                                  android:layout_marginStart="@dimen/default_margin_1"
-                                  android:background="@android:color/white"/>
+                                  android:gravity="center_vertical">
 
-                            <ImageView android:layout_width="wrap_content"
-                                       android:layout_height="wrap_content"
-                                       android:paddingBottom="@dimen/metric_cell_padding_horizontal_smaller"
-                                       android:paddingTop="@dimen/metric_cell_padding_horizontal_smaller"
-                                       android:src="@android:drawable/ic_input_add"/>
+                        <TextView
+                            android:id="@+id/addEntryBTN_DINNER"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="@string/add_new_meal"
+                            android:textColor="@android:color/white"/>
 
-                            <Button
-                                android:id="@+id/scanEntryBTN_DINNER"
-                                android:layout_width="@dimen/add_meal_button_width"
-                                android:layout_height="@dimen/add_meal_button_height"
-                                android:paddingBottom="@dimen/metric_cell_padding_horizontal_smaller"
-                                android:paddingTop="@dimen/metric_cell_padding_horizontal_smaller"
-                                android:text="@string/scan_new_meal"/>
-                        </LinearLayout>
+                        <View android:layout_width="1dp"
+                              android:layout_height="match_parent"
+                              android:layout_marginEnd="@dimen/default_margin_1"
+                              android:layout_marginStart="@dimen/default_margin_1"
+                              android:background="@color/nutrition_orange_faded_transparent"/>
+
+                        <ImageView android:layout_width="@dimen/add_and_scan_icons_dimens"
+                                   android:layout_height="@dimen/add_and_scan_icons_dimens"
+                                   android:layout_marginEnd="@dimen/default_margin_1"
+                                   android:src="@drawable/ic_scan_meal"/>
+
+                        <TextView
+                            android:id="@+id/scanEntryBTN_DINNER"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="@string/scan_new_meal"
+                            android:textColor="@android:color/white"/>
                     </LinearLayout>
+                </LinearLayout>
 
-                    <View android:id="@+id/separatorView_DINNER" android:layout_width="match_parent"
-                          android:layout_height="1dp"
-                          android:layout_below="@+id/chartTopBarLayout_DINNER"
-                          android:background="@color/light_gray"/>
+                <LinearLayout
+                    android:id="@+id/entriesContainerLayout_DINNER"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                </LinearLayout>
+            </LinearLayout>
 
-                    <LinearLayout
-                        android:id="@+id/entriesContainerLayout_DINNER"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/separatorView_DINNER"
-                        android:orientation="vertical">
-                    </LinearLayout>
-                </RelativeLayout>
+            <!---->
+            <!-- SNACKS MEAL BAR -->
+            <!---->
+            <LinearLayout android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:layout_marginTop="@dimen/default_margin_2"
+                          android:orientation="vertical">
 
-            </android.support.v7.widget.CardView>
+                <LinearLayout android:id="@+id/chartTopBarLayout_SNACKS"
+                              android:layout_width="match_parent"
+                              android:layout_height="@dimen/add_meal_item_layout_height"
+                              android:background="@color/nutrition_meal_bars_orange"
+                              android:gravity="center_vertical"
+                              android:orientation="horizontal"
+                              android:paddingEnd="@dimen/activity_vertical_margin"
+                              android:paddingStart="@dimen/activity_vertical_margin">
 
-            <android.support.v7.widget.CardView
-                android:id="@+id/cardLayoutContainer_SNACKS"
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/default_margin_2"
-                android:elevation="@dimen/cardview_default_elevation">
+                    <TextView android:id="@+id/chartTitleTV_SNACKS"
+                              android:layout_width="0dp"
+                              android:layout_height="wrap_content"
+                              android:layout_weight="30"
+                              android:text="Snacks"
+                              android:textAppearance="?android:textAppearanceMedium"
+                              android:textColor="@android:color/white"/>
 
-                <RelativeLayout android:layout_width="match_parent"
-                                android:layout_height="wrap_content">
-                    <LinearLayout android:id="@+id/chartTopBarLayout_SNACKS"
-                                  android:layout_width="match_parent"
-                                  android:layout_height="wrap_content"
-                                  android:background="@color/nutrition_red"
-                                  android:gravity="center_vertical"
-                                  android:orientation="horizontal">
-
-                        <TextView android:id="@+id/chartTitleTV_SNACKS" android:layout_width="0dp"
-                                  android:layout_height="wrap_content"
-                                  android:layout_weight="30"
-                                  android:paddingBottom="@dimen/metric_cell_padding_horizontal_smaller"
-                                  android:paddingStart="@dimen/activity_vertical_margin"
-                                  android:paddingTop="@dimen/metric_cell_padding_horizontal_smaller"
-                                  android:text="Snacks"
-                                  android:textAppearance="?android:textAppearanceLarge"
-                                  android:textColor="@android:color/white"/>
-
-                        <LinearLayout android:layout_width="wrap_content"
-                                      android:layout_height="wrap_content"
-                                      android:gravity="center_vertical"
-                                      android:paddingEnd="@dimen/activity_vertical_margin">
-
-                            <ImageView android:layout_width="wrap_content"
-                                       android:layout_height="wrap_content"
-                                       android:paddingBottom="@dimen/metric_cell_padding_horizontal_smaller"
-                                       android:paddingTop="@dimen/metric_cell_padding_horizontal_smaller"
-                                       android:src="@android:drawable/ic_input_add"/>
-                            <Button
-                                android:id="@+id/addEntryBTN_SNACKS"
-                                android:layout_width="@dimen/add_meal_button_width"
-                                android:layout_height="@dimen/add_meal_button_height"
-                                android:paddingBottom="@dimen/metric_cell_padding_horizontal_smaller"
-                                android:paddingTop="@dimen/metric_cell_padding_horizontal_smaller"
-                                android:text="@string/add_new_meal"/>
-
-                            <View android:layout_width="0.5dp"
+                    <LinearLayout android:layout_width="wrap_content"
                                   android:layout_height="match_parent"
-                                  android:layout_marginStart="@dimen/default_margin_1"
-                                  android:background="@android:color/white"/>
+                                  android:gravity="center_vertical">
 
-                            <ImageView android:layout_width="wrap_content"
-                                       android:layout_height="wrap_content"
-                                       android:paddingBottom="@dimen/metric_cell_padding_horizontal_smaller"
-                                       android:paddingTop="@dimen/metric_cell_padding_horizontal_smaller"
-                                       android:src="@android:drawable/ic_input_add"/>
+                        <TextView
+                            android:id="@+id/addEntryBTN_SNACKS"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="@string/add_new_meal"
+                            android:textColor="@android:color/white"/>
 
-                            <Button
-                                android:id="@+id/scanEntryBTN_SNACKS"
-                                android:layout_width="@dimen/add_meal_button_width"
-                                android:layout_height="@dimen/add_meal_button_height"
-                                android:paddingBottom="@dimen/metric_cell_padding_horizontal_smaller"
-                                android:paddingTop="@dimen/metric_cell_padding_horizontal_smaller"
-                                android:text="@string/scan_new_meal"/>
-                        </LinearLayout>
+                        <View android:layout_width="1dp"
+                              android:layout_height="match_parent"
+                              android:layout_marginEnd="@dimen/default_margin_1"
+                              android:layout_marginStart="@dimen/default_margin_1"
+                              android:background="@color/nutrition_orange_faded_transparent"/>
+
+                        <ImageView android:layout_width="@dimen/add_and_scan_icons_dimens"
+                                   android:layout_height="@dimen/add_and_scan_icons_dimens"
+                                   android:layout_marginEnd="@dimen/default_margin_1"
+                                   android:src="@drawable/ic_scan_meal"/>
+
+                        <TextView
+                            android:id="@+id/scanEntryBTN_SNACKS"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="@string/scan_new_meal"
+                            android:textColor="@android:color/white"/>
                     </LinearLayout>
+                </LinearLayout>
 
-                    <View android:id="@+id/separatorView_SNACKS" android:layout_width="match_parent"
-                          android:layout_height="1dp"
-                          android:layout_below="@+id/chartTopBarLayout_SNACKS"
-                          android:background="@color/light_gray"/>
+                <LinearLayout
+                    android:id="@+id/entriesContainerLayout_SNACKS"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
-                    <LinearLayout
-                        android:id="@+id/entriesContainerLayout_SNACKS"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/separatorView_SNACKS"
-                        android:orientation="vertical">
-
-                    </LinearLayout>
-                </RelativeLayout>
-            </android.support.v7.widget.CardView>
+                </LinearLayout>
+            </LinearLayout>
         </LinearLayout>
+        <!---->
+        <!-- MEAL BARS END HERE -->
+        <!---->
 
         <Button
             android:id="@+id/addChartBTN"
+            style="?android:attr/borderlessButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/default_margin_2"
             android:layout_marginEnd="@dimen/activity_vertical_margin"
             android:layout_marginStart="@dimen/activity_vertical_margin"
             android:layout_marginTop="@dimen/default_margin_2"
-            android:background="@color/buttons_blue"
+            android:background="@color/fitness_dark_blue"
             android:text="@string/add_new_chart_button"
             android:textColor="@android:color/white"/>
     </LinearLayout>

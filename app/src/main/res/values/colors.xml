@@ -11,11 +11,14 @@
     <color name="fitness_dark_blue">#4a5b9c</color>
     <color name="fitness_teal">#5feadb</color>
     <color name="health_green">#00cdac</color>
-    <color name="nutrition_red">#ff7054</color>
+    <color name="nutrition_red">#FF7054</color>
+    <color name="nutrition_meal_bars_orange">#FF7055</color>
     <color name="profile_blue">#67a3fd</color>
     <color name="add_medical_conditions_button_green">#1ED4A8</color>
 
     <color name="buttons_blue">#47589a</color>
+
+    <color name="nutrition_orange_faded_transparent">#FE826D</color>
 
     <color name="offwhite_transparent">#80FFFFFF</color>
     <color name="separator_gray">#806a6cff</color>
