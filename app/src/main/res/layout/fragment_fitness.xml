@@ -21,8 +21,8 @@
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:indeterminate="false"
-            android:maxHeight="10dip"
-            android:minHeight="10dip"
+            android:maxHeight="7dip"
+            android:minHeight="7dip"
             android:progress="70"
             android:progressDrawable="@drawable/fitness_progress_bar"/>
 
