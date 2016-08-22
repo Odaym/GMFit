@@ -39,6 +39,7 @@ import com.mcsaatchi.gmfit.adapters.Widgets_GridAdapter;
 import com.mcsaatchi.gmfit.classes.Cons;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
+import com.mcsaatchi.gmfit.classes.FontTextView;
 import com.mcsaatchi.gmfit.classes.Helpers;
 import com.mcsaatchi.gmfit.classes.ParcelableFitnessString;
 import com.mcsaatchi.gmfit.models.DataChart;
@@ -71,7 +72,7 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
     @Bind(R.id.addChartBTN)
     Button addNewChartBTN;
     @Bind(R.id.metricCounterTV)
-    TextView metricCounterTV;
+    FontTextView metricCounterTV;
 
     private NestedScrollView parentScrollView;
     private Activity parentActivity;
