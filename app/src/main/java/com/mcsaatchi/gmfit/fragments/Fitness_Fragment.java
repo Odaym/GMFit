@@ -159,6 +159,9 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
 
         setHasOptionsMenu(true);
 
+        LocalDate dt = new LocalDate();
+        todayDate = dt.toString();
+
         Log.d(TAG, "onCreateView: Device info : " + Build.MANUFACTURER + " " + Build.MODEL + " (" + Build.DEVICE + ") - "
                 + Build.VERSION.RELEASE);
 
