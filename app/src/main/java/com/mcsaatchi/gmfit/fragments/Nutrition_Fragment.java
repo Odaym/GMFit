@@ -66,9 +66,9 @@ public class Nutrition_Fragment extends Fragment {
     @Bind(R.id.chartTitleTV_BREAKFAST)
     TextView chartTitleTV_BREAKFAST;
     @Bind(R.id.addEntryBTN_BREAKFAST)
-    Button addNewEntryBTN_BREAKFAST;
+    TextView addNewEntryBTN_BREAKFAST;
     @Bind(R.id.scanEntryBTN_BREAKFAST)
-    Button scanEntryBTN_BREAKFAST;
+    TextView scanEntryBTN_BREAKFAST;
     @Bind(R.id.entriesContainerLayout_BREAKFAST)
     LinearLayout entriesContainerLayout_BREAKFAST;
     /**
@@ -77,9 +77,9 @@ public class Nutrition_Fragment extends Fragment {
     @Bind(R.id.chartTitleTV_LUNCH)
     TextView chartTitleTV_LUNCH;
     @Bind(R.id.addEntryBTN_LUNCH)
-    Button addNewEntryBTN_LUNCH;
+    TextView addNewEntryBTN_LUNCH;
     @Bind(R.id.scanEntryBTN_LUNCH)
-    Button scanEntryBTN_LUNCH;
+    TextView scanEntryBTN_LUNCH;
     @Bind(R.id.entriesContainerLayout_LUNCH)
     LinearLayout entriesContainerLayout_LUNCH;
     /**
@@ -88,9 +88,9 @@ public class Nutrition_Fragment extends Fragment {
     @Bind(R.id.chartTitleTV_DINNER)
     TextView chartTitleTV_DINNER;
     @Bind(R.id.addEntryBTN_DINNER)
-    Button addNewEntryBTN_DINNER;
+    TextView addNewEntryBTN_DINNER;
     @Bind(R.id.scanEntryBTN_DINNER)
-    Button scanEntryBTN_DINNER;
+    TextView scanEntryBTN_DINNER;
     @Bind(R.id.entriesContainerLayout_DINNER)
     LinearLayout entriesContainerLayout_DINNER;
     /**
@@ -99,9 +99,9 @@ public class Nutrition_Fragment extends Fragment {
     @Bind(R.id.chartTitleTV_SNACKS)
     TextView chartTitleTV_SNACKS;
     @Bind(R.id.addEntryBTN_SNACKS)
-    Button addNewEntryBTN_SNACKS;
+    TextView addNewEntryBTN_SNACKS;
     @Bind(R.id.scanEntryBTN_SNACKS)
-    Button scanEntryBTN_SNACKS;
+    TextView scanEntryBTN_SNACKS;
     @Bind(R.id.entriesContainerLayout_SNACKS)
     LinearLayout entriesContainerLayout_SNACKS;
     /**
