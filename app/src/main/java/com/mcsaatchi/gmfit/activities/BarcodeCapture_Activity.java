@@ -59,19 +59,15 @@ import java.io.IOException;
  * size, and ID of each barcode.
  */
 public final class BarcodeCapture_Activity extends Base_Activity {
-    private static final String TAG = "Barcode-reader";
-
-    // intent request code to handle updating play services if needed.
-    private static final int RC_HANDLE_GMS = 9001;
-
-    // permission request codes need to be < 256
-    private static final int RC_HANDLE_CAMERA_PERM = 2;
-
     // constants used to pass extra data in the intent
     public static final String AutoFocus = "AutoFocus";
     public static final String UseFlash = "UseFlash";
     public static final String BarcodeObject = "Barcode";
-
+    private static final String TAG = "Barcode-reader";
+    // intent request code to handle updating play services if needed.
+    private static final int RC_HANDLE_GMS = 9001;
+    // permission request codes need to be < 256
+    private static final int RC_HANDLE_CAMERA_PERM = 2;
     private CameraSource mCameraSource;
     private CameraSourcePreview mPreview;
     private GraphicOverlay<BarcodeGraphic> mGraphicOverlay;
@@ -98,9 +94,12 @@ public final class BarcodeCapture_Activity extends Base_Activity {
         // Check for the camera permission before accessing the camera.  If the
         // permission is not granted yet, request permission.
         int rc = ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
+
         if (rc == PackageManager.PERMISSION_GRANTED) {
+            Log.d(TAG, "onCreate: Permission was granted");
             createCameraSource(autoFocus, useFlash);
         } else {
+            Log.d(TAG, "onCreate: Permission was DENIED");
             requestCameraPermission();
         }
 
@@ -122,7 +121,7 @@ public final class BarcodeCapture_Activity extends Base_Activity {
 
         final String[] permissions = new String[]{Manifest.permission.CAMERA};
 
-        if (!ActivityCompat.shouldShowRequestPermissionRationale(this,
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                 Manifest.permission.CAMERA)) {
             ActivityCompat.requestPermissions(this, permissions, RC_HANDLE_CAMERA_PERM);
             return;
