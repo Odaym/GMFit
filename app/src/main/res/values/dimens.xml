@@ -60,6 +60,9 @@
     <dimen name="metric_image_dimen">55dp</dimen>
     <dimen name="chart_title_headline_bar_height">50dp</dimen>
 
+    <!-- BREAKDOWN ACTIVITY -->
+    <dimen name="slug_breakdown_value_box_width">80dp</dimen>
+
     <!-- NUTRITION FRAGMENT -->
     <dimen name="nutrition_metric_title_font_size">15sp</dimen>
     <dimen name="add_meal_item_layout_height">60dp</dimen>
