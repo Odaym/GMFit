@@ -68,4 +68,6 @@ public interface GMFit_Service {
     @POST("forgot-password-change")
     Call<DefaultGetResponse> finalizeResetPassword(@Body ResetPassword_Activity.ResetPasswordRequest resetPasswordRequest);
 
+    @GET
+    Call<SlugBreakdownResponse> getBreakdownForSlug(@Url String finalURL, @Header(Cons.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken);
 }
