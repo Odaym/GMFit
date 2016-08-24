@@ -137,7 +137,7 @@ public class SensorListener extends Service implements SensorEventListener {
                                 "distance-traveled"};
 
                         int[] valuesArray = new int[]{prefs.getInt(todayDate + "_steps", 0), (int) prefs.getFloat(todayDate + "_calories", 0),
-                                (int) prefs.getFloat(todayDate + "_distance", 0)};
+                                (int) (prefs.getFloat(todayDate + "_distance", 0) * 1000)};
 
                         Call<DefaultGetResponse> updateMetricsCall = new RestClient().getGMFitService().updateMetrics(prefs.getString(Cons
                                 .PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS), new UpdateMetricsRequest(slugsArray, valuesArray, Helpers.getCalendarDate()));
