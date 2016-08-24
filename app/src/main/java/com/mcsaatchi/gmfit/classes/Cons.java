@@ -50,9 +50,16 @@ public class Cons {
     public static final String EXTRAS_ADD_NUTRIITION_CHART = "add_nutrition_chart";
     public static final String EXTRAS_MAIN_MEAL_NAME = "main_meal_name";
     public static final String EXTRAS_PICKED_MEAL_ENTRY = "picked_meal_entry";
+
     public static final String BUNDLE_ACTIVITY_TITLE = "activity_title";
     public static final String BUNDLE_ACTIVITY_BACK_BUTTON_ENABLED = "activity_back_button_enabled";
     public static final String BUNDLE_FITNESS_WIDGETS_MAP = "fitness_widgets_map";
+
+    public static final String BUNDLE_SLUG_BREAKDOWN_DATA = "slug_breakdown_data";
+    public static final String BUNDLE_SLUG_BREAKDOWN_DATA_DAILY = "slug_breakdown_data_daily";
+    public static final String BUNDLE_SLUG_BREAKDOWN_DATA_MONTHLY = "slug_breakdown_data_monthly";
+    public static final String BUNDLE_SLUG_BREAKDOWN_DATA_YEARLY = "slug_breakdown_data_yearly";
+
     public static final String BASE_URL_ADDRESS = "http://gmfit.mcsaatchi.me/api/v1/";
     public static final MediaType JSON_FORMAT_IDENTIFIER
             = MediaType.parse("application/json; charset=utf-8");
