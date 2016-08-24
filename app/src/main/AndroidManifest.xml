@@ -41,8 +41,7 @@
         <activity
             android:name=".activities.Login_Activity"
             android:screenOrientation="portrait"
-            android:theme="@style/No_Status_Or_Action_Bar_Theme">
-        </activity>
+            android:theme="@style/No_Status_Or_Action_Bar_Theme"/>
 
         <activity
             android:name=".activities.SignUp_Activity"
@@ -81,9 +80,7 @@
 
         <activity android:name=".activities.SetupProfile_Activity"
                   android:screenOrientation="portrait"
-                  android:theme="@style/No_Action_Bar_Theme">
-
-        </activity>
+                  android:theme="@style/No_Action_Bar_Theme"/>
 
         <activity android:name=".activities.CustomizeWidgetsAndCharts_Activity"
                   android:screenOrientation="portrait"
@@ -112,6 +109,10 @@
 
         <activity android:name=".activities.UserPolicy_Activity"
                   android:screenOrientation="portrait"/>
+
+        <activity android:name=".activities.SlugBreakdown_Activity"
+                  android:screenOrientation="portrait"
+                  android:theme="@style/No_Action_Bar_Theme"/>
 
         <receiver android:name=".pedometer.BootReceiver">
             <intent-filter>
