@@ -2,6 +2,7 @@ package com.mcsaatchi.gmfit.fragments;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -35,6 +36,7 @@ import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.activities.AddNewChart_Activity;
 import com.mcsaatchi.gmfit.activities.Base_Activity;
 import com.mcsaatchi.gmfit.activities.CustomizeWidgetsAndCharts_Activity;
+import com.mcsaatchi.gmfit.activities.SlugBreakdown_Activity;
 import com.mcsaatchi.gmfit.adapters.Widgets_GridAdapter;
 import com.mcsaatchi.gmfit.classes.Cons;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
@@ -45,6 +47,8 @@ import com.mcsaatchi.gmfit.classes.ParcelableFitnessString;
 import com.mcsaatchi.gmfit.models.DataChart;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponseChart;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponseWidget;
+import com.mcsaatchi.gmfit.rest.RestClient;
+import com.mcsaatchi.gmfit.rest.SlugBreakdownResponse;
 import com.squareup.otto.Subscribe;
 
 import net.danlew.android.joda.JodaTimeAndroid;
@@ -56,6 +60,9 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class Fitness_Fragment extends Fragment implements SensorEventListener {
 
@@ -202,7 +209,7 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
         return fragmentView;
     }
 
-    public void addNewBarChart(String chartTitle, String chartType, boolean appJustLaunched) {
+    public void addNewBarChart(String chartTitle, final String chartType, boolean appJustLaunched) {
         final View barChartLayout_NEW_CHART = getActivity().getLayoutInflater().inflate(R.layout.view_barchart_container, null);
 
         final CardView cardLayout_NEW_CHART = (CardView) barChartLayout_NEW_CHART.findViewById(R.id.cardLayoutContainer);
@@ -230,6 +237,13 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
         barChartLayout_NEW_CHART.setLayoutParams(lp);
 
         cards_container.addView(barChartLayout_NEW_CHART);
+
+        chartTitleTV_NEW_CHART.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getSlugBreakdownForChart(chartType);
+            }
+        });
 
         if (!appJustLaunched)
             parentScrollView.postDelayed(new Runnable() {
@@ -338,6 +352,52 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
                 dataChartDAO.create(new DataChart(chartDetails[0], chartDetails[1], dataChartDAO.queryForAll().size() + 1, Cons.EXTRAS_FITNESS_FRAGMENT));
                 break;
         }
+    }
+
+    public void getSlugBreakdownForChart(String slugValue) {
+        final ProgressDialog waitingDialog = new ProgressDialog(getActivity());
+        waitingDialog.setTitle(getString(R.string.grabbing_breakdown_data_dialog_title));
+        waitingDialog.setMessage(getString(R.string.grabbing_breakdown_data_dialog_message));
+        waitingDialog.show();
+
+        final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+        alertDialog.setTitle(R.string.grabbing_breakdown_data_dialog_title);
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+
+                        if (waitingDialog.isShowing())
+                            waitingDialog.dismiss();
+                    }
+                });
+
+        Call<SlugBreakdownResponse> breakdownForSlugCall = new RestClient().getGMFitService().getBreakdownForSlug(Cons.BASE_URL_ADDRESS +
+                "user/metrics/breakdown?slug=" + slugValue, prefs.getString(Cons.PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS));
+
+        breakdownForSlugCall.enqueue(new Callback<SlugBreakdownResponse>() {
+            @Override
+            public void onResponse(Call<SlugBreakdownResponse> call, Response<SlugBreakdownResponse> response) {
+                switch (response.code()) {
+                    case 200:
+
+                        waitingDialog.dismiss();
+
+                        Intent intent = new Intent(getActivity(), SlugBreakdown_Activity.class);
+                        intent.putExtra(Cons.EXTRAS_CUSTOMIZE_WIDGETS_FRAGMENT_TYPE, Cons.EXTRAS_FITNESS_FRAGMENT);
+                        intent.putExtra(Cons.BUNDLE_SLUG_BREAKDOWN_DATA, response.body().getData().getBody().getData());
+                        startActivity(intent);
+
+                        break;
+                }
+            }
+
+            @Override
+            public void onFailure(Call<SlugBreakdownResponse> call, Throwable t) {
+                alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
+                alertDialog.show();
+            }
+        });
     }
 
     @Override
