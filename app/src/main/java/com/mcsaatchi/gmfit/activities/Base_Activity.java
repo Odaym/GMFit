@@ -29,6 +29,23 @@ public class Base_Activity extends AppCompatActivity {
         toolbar.setTitleTextAppearance(this, R.style.Toolbar_TitleTextStyle);
     }
 
+    public void setupToolbar(Toolbar toolbar, String toolbarTitle, boolean backEnabled) {
+        if (toolbarTitle == null)
+            toolbar.setTitle(R.string.app_name);
+        else
+            toolbar.setTitle(toolbarTitle);
+
+        setSupportActionBar(toolbar);
+
+        if (backEnabled) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_arrow_left));
+        }
+
+        toolbar.setTitleTextAppearance(this, R.style.Toolbar_TitleTextStyle);
+    }
+
+
     public void addTopPaddingToolbar(Toolbar toolbar){
         toolbar.setPadding(0, getStatusBarHeight(), 0, 0);
     }
