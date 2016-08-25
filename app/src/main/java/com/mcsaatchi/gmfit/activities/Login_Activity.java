@@ -263,7 +263,6 @@ public class Login_Activity extends Base_Activity {
         signInUserCall.enqueue(new Callback<AuthenticationResponse>() {
             @Override
             public void onResponse(Call<AuthenticationResponse> call, Response<AuthenticationResponse> response) {
-                Log.d("TAGTAG", "onResponse: Response code is : " + response.code());
                 switch (response.code()) {
                     case 200:
                         waitingDialog.dismiss();
@@ -282,9 +281,6 @@ public class Login_Activity extends Base_Activity {
                         intent.putParcelableArrayListExtra("widgets", (ArrayList<AuthenticationResponseWidget>) widgetsMap);
                         intent.putParcelableArrayListExtra("charts", (ArrayList<AuthenticationResponseChart>) chartsMap);
                         startActivity(intent);
-
-                        Toast.makeText(Login_Activity.this, "Grabbed Widgets and Charts from server : " + widgetsMap.size() + " by " + chartsMap.size(), Toast
-                                .LENGTH_SHORT).show();
 
                         finish();
 
