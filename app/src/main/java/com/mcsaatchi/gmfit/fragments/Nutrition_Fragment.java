@@ -8,7 +8,6 @@ import android.support.design.internal.ParcelableSparseArray;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -319,31 +318,18 @@ public class Nutrition_Fragment extends Fragment {
     private void addNewBarChart(String chartTitle) {
         final View barChartLayout = parentActivity.getLayoutInflater().inflate(R.layout.view_barchart_container, null);
 
-        final CardView cardLayout = (CardView) barChartLayout.findViewById(R.id.cardLayoutContainer);
         TextView chartTitleTV = (TextView) barChartLayout.findViewById(R.id.chartTitleTV);
         BarChart barChart = (BarChart) barChartLayout.findViewById(R.id.barChart);
-
-//        Helpers.setBarChartData(barChart, new ArrayList<Float>() {{
-//            add(0, 90f);
-//            add(1, 491f);
-//            add(2, 20f);
-//            add(3, 100f);
-//            add(4, 12f);
-//            add(5, 12f);
-//            add(6, 600f);
-//            add(7, 589f);
-//            add(8, 66f);
-//            add(9, 233f);
-//            add(10, 95f);
-//            add(11, 44f);
-//        }});
 
         if (chartTitle != null)
             chartTitleTV.setText(chartTitle);
 
         //TODO: apply the same change you did here as in the Fitness Fragment
 
-        barChartLayout.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, getResources().getDimensionPixelSize(R.dimen.chart_height)));
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, getResources().getDimensionPixelSize(R
+                .dimen.chart_height_2));
+        lp.topMargin = getResources().getDimensionPixelSize(R.dimen.default_margin_2);
+        barChartLayout.setLayoutParams(lp);
 
         cards_container.addView(barChartLayout);
 
