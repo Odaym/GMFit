@@ -23,6 +23,10 @@ import butterknife.ButterKnife;
 public class SlugBreakdown_Fragment_Monthly extends Fragment {
     @Bind(R.id.slugBreakdownListView)
     ListView slugBreakdownListView;
+    @Bind(R.id.allTimeValueTV)
+    TextView allTimeValueTV;
+
+    private String measurementUnitForMetric;
 
     @Override
     public void onAttach(Context context) {
@@ -43,15 +47,19 @@ public class SlugBreakdown_Fragment_Monthly extends Fragment {
         if (fragmentBundle != null) {
             ArrayList<Parcelable> slugBreakdownData = fragmentBundle.getParcelableArrayList(Cons.BUNDLE_SLUG_BREAKDOWN_DATA_MONTHLY);
 
-            hookupListWithItems(slugBreakdownData);
-        }
+            measurementUnitForMetric = fragmentBundle.getString(Cons.BUNDLE_SLUG_BREAKDOWN_MEASUREMENT_UNIT, "");
 
+            float slugBreakdownYearlyTotal =  fragmentBundle.getFloat(Cons.BUNDLE_SLUG_BREAKDOWN_YEARLY_TOTAL, 0);
+            allTimeValueTV.setText(String.valueOf(slugBreakdownYearlyTotal) + " " + measurementUnitForMetric);
+
+            hookupListWithItems(slugBreakdownData, measurementUnitForMetric);
+        }
 
         return fragmentView;
     }
 
-    private void hookupListWithItems(ArrayList<Parcelable> items) {
-        SlugBreakdown_ListAdapter slugBreakdownListAdapter = new SlugBreakdown_ListAdapter(getActivity(), items);
+    private void hookupListWithItems(ArrayList<Parcelable> items, String measurementUnit) {
+        SlugBreakdown_ListAdapter slugBreakdownListAdapter = new SlugBreakdown_ListAdapter(getActivity(), items, measurementUnit);
         slugBreakdownListView.setAdapter(slugBreakdownListAdapter);
     }
 
@@ -59,11 +67,13 @@ public class SlugBreakdown_Fragment_Monthly extends Fragment {
 
         private ArrayList<Parcelable> slugBreakdownData;
         private Context context;
+        private String measurementUnit;
 
-        public SlugBreakdown_ListAdapter(Context context, ArrayList<Parcelable> slugBreakdownData) {
+        public SlugBreakdown_ListAdapter(Context context, ArrayList<Parcelable> slugBreakdownData, String measurementUnit) {
             super();
             this.context = context;
             this.slugBreakdownData = slugBreakdownData;
+            this.measurementUnit = measurementUnit;
         }
 
         @Override
@@ -101,7 +111,7 @@ public class SlugBreakdown_Fragment_Monthly extends Fragment {
             }
 
             holder.slugDateTV.setText(getItem(position).getDate());
-            holder.slugTotalTV.setText(getItem(position).getTotal());
+            holder.slugTotalTV.setText(getItem(position).getTotal() + " " + measurementUnit);
 
             return convertView;
         }

@@ -59,6 +59,8 @@ public class Cons {
     public static final String BUNDLE_SLUG_BREAKDOWN_DATA_DAILY = "slug_breakdown_data_daily";
     public static final String BUNDLE_SLUG_BREAKDOWN_DATA_MONTHLY = "slug_breakdown_data_monthly";
     public static final String BUNDLE_SLUG_BREAKDOWN_DATA_YEARLY = "slug_breakdown_data_yearly";
+    public static final String BUNDLE_SLUG_BREAKDOWN_YEARLY_TOTAL = "slug_breakdown_yearly_total";
+    public static final String BUNDLE_SLUG_BREAKDOWN_MEASUREMENT_UNIT = "slug_breakdown_measurement_unit";
 
     public static final String BASE_URL_ADDRESS = "http://gmfit.mcsaatchi.me/api/v1/";
     public static final MediaType JSON_FORMAT_IDENTIFIER
