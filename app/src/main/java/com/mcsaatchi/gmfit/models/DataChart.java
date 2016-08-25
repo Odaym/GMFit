@@ -13,6 +13,8 @@ public class DataChart {
     String type;
     @DatabaseField
     int order;
+    @DatabaseField
+    String username;
 
     /**
      * 1 = FITNESS
@@ -25,11 +27,12 @@ public class DataChart {
     public DataChart() {
     }
 
-    public DataChart(String name, String type, int order, String whichFragment) {
+    public DataChart(String name, String type, int order, String whichFragment, String username) {
         this.name = name;
         this.type = type;
         this.order = order;
         this.whichFragment = whichFragment;
+        this.username = username;
     }
 
     public String getName() {
@@ -62,5 +65,13 @@ public class DataChart {
 
     public void setWhichFragment(String whichFragment) {
         this.whichFragment = whichFragment;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }
