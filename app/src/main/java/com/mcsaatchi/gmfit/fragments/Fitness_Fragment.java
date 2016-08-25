@@ -180,7 +180,8 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
         Log.d(TAG, "onCreateView: Device info : " + Build.MANUFACTURER + " " + Build.MODEL + " (" + Build.DEVICE + ") - "
                 + Build.VERSION.RELEASE);
 
-        Helpers.setBarChartData(defaultBarChart, chartsMap.get(0).getData());
+        if (chartsMap != null && chartsMap.size() > 0)
+            Helpers.setBarChartData(defaultBarChart, chartsMap.get(0).getData());
 
         defaultBarChart.setOnClickListener(new View.OnClickListener() {
             @Override
