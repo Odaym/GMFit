@@ -213,7 +213,7 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
         final View barChartLayout_NEW_CHART = getActivity().getLayoutInflater().inflate(R.layout.view_barchart_container, null);
 
         final CardView cardLayout_NEW_CHART = (CardView) barChartLayout_NEW_CHART.findViewById(R.id.cardLayoutContainer);
-        TextView chartTitleTV_NEW_CHART = (TextView) barChartLayout_NEW_CHART.findViewById(R.id.chartTitleTV);
+        final TextView chartTitleTV_NEW_CHART = (TextView) barChartLayout_NEW_CHART.findViewById(R.id.chartTitleTV);
         BarChart barChart_NEW_CHART = (BarChart) barChartLayout_NEW_CHART.findViewById(R.id.barChart);
 
         if (chartTitle != null)
@@ -241,7 +241,7 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
         chartTitleTV_NEW_CHART.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getSlugBreakdownForChart(chartType);
+                getSlugBreakdownForChart(chartTitleTV_NEW_CHART.getText().toString(), chartType);
             }
         });
 
@@ -354,7 +354,7 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
         }
     }
 
-    public void getSlugBreakdownForChart(String slugValue) {
+    public void getSlugBreakdownForChart(final String chartTitle, final String chartType) {
         final ProgressDialog waitingDialog = new ProgressDialog(getActivity());
         waitingDialog.setTitle(getString(R.string.grabbing_breakdown_data_dialog_title));
         waitingDialog.setMessage(getString(R.string.grabbing_breakdown_data_dialog_message));
@@ -373,7 +373,7 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
                 });
 
         Call<SlugBreakdownResponse> breakdownForSlugCall = new RestClient().getGMFitService().getBreakdownForSlug(Cons.BASE_URL_ADDRESS +
-                "user/metrics/breakdown?slug=" + slugValue, prefs.getString(Cons.PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS));
+                "user/metrics/breakdown?slug=" + chartType, prefs.getString(Cons.PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS));
 
         breakdownForSlugCall.enqueue(new Callback<SlugBreakdownResponse>() {
             @Override
@@ -385,6 +385,8 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
 
                         Intent intent = new Intent(getActivity(), SlugBreakdown_Activity.class);
                         intent.putExtra(Cons.EXTRAS_CUSTOMIZE_WIDGETS_FRAGMENT_TYPE, Cons.EXTRAS_FITNESS_FRAGMENT);
+                        intent.putExtra(Cons.EXTRAS_CHART_FULL_NAME, chartTitle);
+                        intent.putExtra(Cons.EXTRAS_CHART_TYPE_SELECTED, chartType);
                         intent.putExtra(Cons.BUNDLE_SLUG_BREAKDOWN_DATA, response.body().getData().getBody().getData());
                         startActivity(intent);
 
