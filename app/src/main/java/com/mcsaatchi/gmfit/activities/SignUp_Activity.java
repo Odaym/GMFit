@@ -26,13 +26,10 @@ import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
 import com.mcsaatchi.gmfit.classes.Helpers;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponse;
-import com.mcsaatchi.gmfit.rest.AuthenticationResponseChart;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponseInnerBody;
-import com.mcsaatchi.gmfit.rest.AuthenticationResponseWidget;
 import com.mcsaatchi.gmfit.rest.RestClient;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -154,14 +151,9 @@ public class SignUp_Activity extends Base_Activity {
                         prefs.edit().putString(Cons.EXTRAS_USER_EMAIL, email).apply();
                         prefs.edit().putString(Cons.EXTRAS_USER_PASSWORD, password).apply();
 
-                        List<AuthenticationResponseWidget> widgetsMap = responseBody.getWidgets();
-                        List<AuthenticationResponseChart> chartsMap = responseBody.getCharts();
-
                         EventBus_Singleton.getInstance().post(new EventBus_Poster(Cons.EVENT_SIGNNED_UP_SUCCESSFULLY_CLOSE_LOGIN_ACTIVITY));
 
                         Intent intent = new Intent(SignUp_Activity.this, GetStarted_Activity.class);
-                        intent.putParcelableArrayListExtra("widgets", (ArrayList<AuthenticationResponseWidget>) widgetsMap);
-                        intent.putParcelableArrayListExtra("charts", (ArrayList<AuthenticationResponseChart>) chartsMap);
                         startActivity(intent);
 
                         finish();

@@ -178,8 +178,18 @@ public class SignIn_Activity extends Base_Activity {
 
                         break;
                     case 401:
+                        waitingDialog.dismiss();
+
                         alertDialog.setMessage(getString(R.string.login_failed_wrong_credentials));
                         alertDialog.show();
+                        break;
+                    case 403:
+                        waitingDialog.dismiss();
+
+                        Intent userNotVerifiedIntent = new Intent(SignIn_Activity.this, GetStarted_Activity.class);
+                        startActivity(userNotVerifiedIntent);
+
+                        finish();
                         break;
                     case 500:
                         alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
