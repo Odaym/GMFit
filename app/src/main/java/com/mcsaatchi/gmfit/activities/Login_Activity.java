@@ -150,28 +150,6 @@ public class Login_Activity extends Base_Activity {
         initController();
     }
 
-//    private void hookUpAlreadySignedUpBTN() {
-//        SpannableString ss = new SpannableString(getString(R.string.already_signed_up));
-//        ClickableSpan clickableSpan = new ClickableSpan() {
-//            @Override
-//            public void onClick(View textView) {
-//                startActivity(new Intent(Login_Activity.this, SignIn_Activity.class));
-//            }
-//
-//            @Override
-//            public void updateDrawState(TextPaint ds) {
-//                super.updateDrawState(ds);
-//                ds.setUnderlineText(false);
-//            }
-//        };
-//
-//        ss.setSpan(clickableSpan, 16, ss.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-//
-//        alreadySignedUpTV.setText(ss);
-//        alreadySignedUpTV.setMovementMethod(LinkMovementMethod.getInstance());
-//        alreadySignedUpTV.setHighlightColor(Color.TRANSPARENT);
-//    }
-
     private void initializeFacebookLogin() {
         loginFacebookBTN.setReadPermissions("email", "public_profile", "user_friends");
         loginFacebookBTN.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
@@ -179,11 +157,6 @@ public class Login_Activity extends Base_Activity {
         loginFacebookBTN.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-//                // App code
-//                Toast.makeText(Login_Activity.this, "Facebook logged in successfully", Toast.LENGTH_SHORT).show();
-//                Intent intent = new Intent(Login_Activity.this, Main_Activity.class);
-//                startActivity(intent);
-
                 final AccessToken accessToken = loginResult.getAccessToken();
 
                 Log.d("TAGTAG", "onSuccess: FACEBOOK ACCESS TOKEN IS : " + accessToken.getToken());
