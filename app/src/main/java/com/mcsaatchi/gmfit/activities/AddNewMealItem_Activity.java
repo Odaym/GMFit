@@ -103,7 +103,7 @@ public class AddNewMealItem_Activity extends Base_Activity implements SearchView
             mealNames.add(meal.getName());
         }
         oneItem_ListAdapter = new OneItemWithIcon_ListAdapter(this,
-                mealNames, R.drawable.ic_chevron_right_black_24dp);
+                mealNames, R.drawable.ic_arrow_right_pink);
         simpleSectionedListAdapter = new SimpleSectionedListAdapter(this, oneItem_ListAdapter,
                 R.layout.view_header_add_new_meal_item_list, R.id.header);
 
