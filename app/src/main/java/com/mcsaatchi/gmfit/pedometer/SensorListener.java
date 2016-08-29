@@ -21,6 +21,7 @@ import com.mcsaatchi.gmfit.classes.Cons;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
 import com.mcsaatchi.gmfit.classes.Helpers;
+import com.mcsaatchi.gmfit.rest.AuthenticationResponse;
 import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.rest.RestClient;
 
@@ -133,49 +134,74 @@ public class SensorListener extends Service implements SensorEventListener {
                     @SuppressWarnings("unchecked")
                     public void run() {
 
-                        String[] slugsArray = new String[]{"steps-count", "active-calories",
-                                "distance-traveled"};
+                        Call<AuthenticationResponse> refreshAccessTokenCall = new RestClient().getGMFitService().refreshAccessToken(prefs.getString(Cons
+                                .PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS));
 
-                        int[] valuesArray = new int[]{prefs.getInt(todayDate + "_steps", 0), (int) prefs.getFloat(todayDate + "_calories", 0),
-                                (int) (prefs.getFloat(todayDate + "_distance", 0) * 1000)};
-
-                        Call<DefaultGetResponse> updateMetricsCall = new RestClient().getGMFitService().updateMetrics(prefs.getString(Cons
-                                .PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS), new UpdateMetricsRequest(slugsArray, valuesArray, Helpers.getCalendarDate()));
-
-                        updateMetricsCall.enqueue(new Callback<DefaultGetResponse>() {
+                        refreshAccessTokenCall.enqueue(new Callback<AuthenticationResponse>() {
                             @Override
-                            public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
+                            public void onResponse(Call<AuthenticationResponse> call, Response<AuthenticationResponse> response) {
+                                Log.d("SYNC_SERVER", "onResponse: Refresh Access Token response was " + response.code());
                                 switch (response.code()) {
                                     case 200:
-                                        Log.d(TAG, "onResponse: SYNCED Metrics successfully");
+
+                                        prefs.edit().putString(Cons.PREF_USER_ACCESS_TOKEN, "Bearer " + response.body().getData().getBody().getToken()).apply();
+
+                                        String[] slugsArray = new String[]{"steps-count", "active-calories",
+                                                "distance-traveled"};
+
+                                        int[] valuesArray = new int[]{prefs.getInt(todayDate + "_steps", 0), (int) prefs.getFloat(todayDate + "_calories", 0),
+                                                (int) (prefs.getFloat(todayDate + "_distance", 0) * 1000)};
+
+                                        Call<DefaultGetResponse> updateMetricsCall = new RestClient().getGMFitService().updateMetrics(prefs.getString(Cons
+                                                .PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS), new UpdateMetricsRequest(slugsArray, valuesArray, Helpers.getCalendarDate()));
+
+                                        updateMetricsCall.enqueue(new Callback<DefaultGetResponse>() {
+                                            @Override
+                                            public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
+
+                                                Log.d("SYNC_SERVER", "onResponse: Update Metrics Call response was " + response.code());
+
+                                                switch (response.code()) {
+                                                    case 200:
+                                                        Log.d(TAG, "onResponse: SYNCED Metrics successfully");
+
+                                                        break;
+                                                }
+                                            }
+
+                                            @Override
+                                            public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+                                            }
+                                        });
+
+                                        /**
+                                         * Doesn't contain today's date as a key, but DOES contain yesterday's day as a key
+                                         */
+                                        if (!prefs.contains(todayDate + "_steps") && prefs.contains(yesterdayDate)) {
+                                            Log.d("TAGTAG", "run: Doesn't contain today's date as a key, but DOES contain yesterday's day as a key");
+
+                                            prefs.edit().remove(yesterdayDate + "_steps").apply();
+                                            prefs.edit().remove(yesterdayDate + "_distance").apply();
+                                            prefs.edit().remove(yesterdayDate + "_calories").apply();
+
+                                            prefs.edit().putInt(todayDate + "_steps", 0).apply();
+                                            prefs.edit().putFloat(todayDate + "_calories", 0).apply();
+                                            prefs.edit().putFloat(todayDate + "_distance", 0).apply();
+
+                                            EventBus_Singleton.getInstance().post(new EventBus_Poster(Cons.EVENT_STEP_COUNTER_INCREMENTED));
+                                            EventBus_Singleton.getInstance().post(new EventBus_Poster(Cons.EVENT_CALORIES_COUNTER_INCREMENTED));
+                                            EventBus_Singleton.getInstance().post(new EventBus_Poster(Cons.EVENT_DISTANCE_COUNTER_INCREMENTED));
+                                        }
 
                                         break;
                                 }
                             }
 
                             @Override
-                            public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+                            public void onFailure(Call<AuthenticationResponse> call, Throwable t) {
                             }
                         });
 
-                        /**
-                         * Doesn't contain today's date as a key, but DOES contain yesterday's day as a key
-                         */
-                        if (!prefs.contains(todayDate + "_steps") && prefs.contains(yesterdayDate)) {
-                            Log.d("TAGTAG", "run: Doesn't contain today's date as a key, but DOES contain yesterday's day as a key");
-
-                            prefs.edit().remove(yesterdayDate + "_steps").apply();
-                            prefs.edit().remove(yesterdayDate + "_distance").apply();
-                            prefs.edit().remove(yesterdayDate + "_calories").apply();
-
-                            prefs.edit().putInt(todayDate + "_steps", 0).apply();
-                            prefs.edit().putFloat(todayDate + "_calories", 0).apply();
-                            prefs.edit().putFloat(todayDate + "_distance", 0).apply();
-
-                            EventBus_Singleton.getInstance().post(new EventBus_Poster(Cons.EVENT_STEP_COUNTER_INCREMENTED));
-                            EventBus_Singleton.getInstance().post(new EventBus_Poster(Cons.EVENT_CALORIES_COUNTER_INCREMENTED));
-                            EventBus_Singleton.getInstance().post(new EventBus_Poster(Cons.EVENT_DISTANCE_COUNTER_INCREMENTED));
-                        }
                     }
                 });
             }
