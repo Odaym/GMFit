@@ -56,9 +56,9 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/separatorView" android:orientation="vertical">
 
-            <include layout="@layout/list_item_add_new_meal"/>
-            <include layout="@layout/list_item_add_new_meal"/>
-            <include layout="@layout/list_item_add_new_meal"/>
+            <include layout="@layout/list_item_new_meal_entry"/>
+            <include layout="@layout/list_item_new_meal_entry"/>
+            <include layout="@layout/list_item_new_meal_entry"/>
 
         </LinearLayout>
     </RelativeLayout>

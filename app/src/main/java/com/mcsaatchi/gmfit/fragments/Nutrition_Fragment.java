@@ -302,7 +302,7 @@ public class Nutrition_Fragment extends Fragment {
     }
 
     private void addMealEntryLayout(String mealTitle, LinearLayout targetLayoutForMeal) {
-        final View mealEntryLayout = parentActivity.getLayoutInflater().inflate(R.layout.list_item_add_new_meal, null);
+        final View mealEntryLayout = parentActivity.getLayoutInflater().inflate(R.layout.list_item_new_meal_entry, null);
 
         TextView entryTitleTV = (TextView) mealEntryLayout.findViewById(R.id.entryTitleTV);
         TextView entryDescription = (TextView) mealEntryLayout.findViewById(R.id.entryDescriptionTV);
