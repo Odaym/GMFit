@@ -43,6 +43,9 @@ public interface GMFit_Service {
     @GET("user-policy")
     Call<UserPolicyResponse> getUserPolicy(@Header(Cons.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken);
 
+    @GET("refresh-token")
+    Call<AuthenticationResponse> refreshAccessToken(@Header(Cons.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken);
+
     @POST("user/add-metric")
     Call<DefaultGetResponse> updateMetrics(@Header(Cons.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken, @Body SensorListener.UpdateMetricsRequest
             updateMetricsRequest);
