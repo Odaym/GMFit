@@ -3,20 +3,24 @@ package com.mcsaatchi.gmfit.fragments;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Parcelable;
-import android.support.design.internal.ParcelableSparseArray;
 import android.support.v4.app.Fragment;
-import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.adapters.OneItemWithIcon_Sparse_ListAdapter;
+import com.mcsaatchi.gmfit.activities.Base_Activity;
+import com.mcsaatchi.gmfit.adapters.OneItemWithIcon_Fitness_ListAdapter;
+import com.mcsaatchi.gmfit.adapters.OneItemWithIcon_Nutrition_ListAdapter;
 import com.mcsaatchi.gmfit.classes.Cons;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
+import com.mcsaatchi.gmfit.models.FitnessWidget;
+import com.mcsaatchi.gmfit.models.NutritionWidget;
 import com.mcsaatchi.gmfit.reorderable_listview.DragSortListView;
+
+import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -24,44 +28,78 @@ import butterknife.ButterKnife;
 public class CustomizeWidgets_Fragment extends Fragment {
     @Bind(R.id.widgetsListView)
     DragSortListView widgetsListView;
-    private OneItemWithIcon_Sparse_ListAdapter customizeWidgetsAdapter;
 
-    private SparseArray<String[]> nutritionItemsMap = new SparseArray<String[]>() {{
-        put(0, new String[]{"Calories", "125", "kcal", "102%"});
-        put(1, new String[]{"Biotin", "321", "mcg", "120%"});
-        put(2, new String[]{"Caffeine", "913", "mg", "39%"});
-        put(3, new String[]{"Calcium", "1092", "mg", "40%"});
-        put(4, new String[]{"Carbohydrates", "129", "g", "92%"});
-        put(5, new String[]{"Chloride", "923", "mg", "41%"});
-        put(6, new String[]{"Chromium", "12,903", "mcg", "59%"});
-        put(7, new String[]{"Copper", "301", "mg", "103%"});
-        put(8, new String[]{"Dietary Cholesterol", "11", "mg", "2%"});
-    }};
+    private OneItemWithIcon_Fitness_ListAdapter customizeFitnessWidgetsAdapter;
+    private OneItemWithIcon_Nutrition_ListAdapter customizeNutritionWidgetsAdapter;
 
-    private String PREFS_WIDGETS_ORDER_ARRAY_IDENTIFIER;
     private String WIDGETS_ORDER_ARRAY_CHANGED_EVENT;
     private Activity parentActivity;
+    private String typeOfFragmentToCustomiseFor;
 
-    private ParcelableSparseArray itemsMap = new ParcelableSparseArray();
+    private ArrayList<FitnessWidget> itemsMapFitness = new ArrayList<>();
+    private ArrayList<NutritionWidget> itemsMapNutrition = new ArrayList<>();
 
-    private DragSortListView.DropListener onDrop =
+    private RuntimeExceptionDao<FitnessWidget, Integer> fitnessWidgetsDAO;
+
+    private DragSortListView.DropListener onDropFitnessItems =
             new DragSortListView.DropListener() {
                 @Override
                 public void drop(int from, int to) {
 
-                    EventBus_Singleton.getInstance().post(new EventBus_Poster(WIDGETS_ORDER_ARRAY_CHANGED_EVENT, itemsMap));
+                    EventBus_Poster ebp = new EventBus_Poster(WIDGETS_ORDER_ARRAY_CHANGED_EVENT);
+                    ebp.setWidgetsMapFitness(itemsMapFitness);
+                    EventBus_Singleton.getInstance().post(ebp);
 
-                    customizeWidgetsAdapter.notifyData();
+                    customizeFitnessWidgetsAdapter.notifyData();
+
+                    for (int i = 0; i < itemsMapFitness.size(); i++) {
+                        fitnessWidgetsDAO.update(itemsMapFitness.get(i));
+                    }
                 }
             };
 
-    private DragSortListView.DragListener onDrag = new DragSortListView.DragListener() {
+    private DragSortListView.DropListener onDropNutritionItems =
+            new DragSortListView.DropListener() {
+                @Override
+                public void drop(int from, int to) {
+
+                    EventBus_Poster ebp = new EventBus_Poster(WIDGETS_ORDER_ARRAY_CHANGED_EVENT);
+                    ebp.setWidgetsMapNutrition(itemsMapNutrition);
+                    EventBus_Singleton.getInstance().post(ebp);
+
+                    customizeNutritionWidgetsAdapter.notifyData();
+                }
+            };
+
+    private DragSortListView.DragListener onDragFitnessItems = new DragSortListView.DragListener() {
         @Override
         public void drag(int from, int to) {
-            if (to < itemsMap.size() && from < itemsMap.size()) {
-                Parcelable tempItem = itemsMap.valueAt(from);
-                itemsMap.setValueAt(from, itemsMap.valueAt(to));
-                itemsMap.setValueAt(to, tempItem);
+            if (to < itemsMapFitness.size() && from < itemsMapFitness.size()) {
+
+                FitnessWidget tempItem = itemsMapFitness.get(from);
+
+                int toPosition = itemsMapFitness.get(to).getPosition();
+
+                tempItem.setPosition(toPosition);
+
+                itemsMapFitness.set(from, itemsMapFitness.get(to));
+
+                itemsMapFitness.get(to).setPosition(from);
+
+                itemsMapFitness.set(to, tempItem);
+            }
+        }
+    };
+
+    private DragSortListView.DragListener onDragNutritionItems = new DragSortListView.DragListener() {
+        @Override
+        public void drag(int from, int to) {
+            if (to < itemsMapNutrition.size() && from < itemsMapNutrition.size()) {
+                NutritionWidget tempItem = itemsMapNutrition.get(from);
+                itemsMapNutrition.set(from, itemsMapNutrition.get(to));
+                itemsMapNutrition.set(to, tempItem);
+
+                //TODO: Reflect changes in DB
             }
         }
     };
@@ -72,6 +110,7 @@ public class CustomizeWidgets_Fragment extends Fragment {
 
         if (context instanceof Activity) {
             parentActivity = (Activity) context;
+            fitnessWidgetsDAO = ((Base_Activity) parentActivity).getDBHelper().getFitnessWidgetsDAO();
         }
     }
 
@@ -87,42 +126,44 @@ public class CustomizeWidgets_Fragment extends Fragment {
         Bundle fragmentBundle = getArguments();
 
         if (fragmentBundle != null) {
-            String typeOfFragmentToCustomizeFor = fragmentBundle.getString(Cons.EXTRAS_CUSTOMIZE_WIDGETS_FRAGMENT_TYPE);
+            typeOfFragmentToCustomiseFor = fragmentBundle.getString(Cons.EXTRAS_CUSTOMIZE_WIDGETS_CHARTS_FRAGMENT_TYPE);
 
-            if (typeOfFragmentToCustomizeFor != null) {
-                switch (typeOfFragmentToCustomizeFor) {
+            if (typeOfFragmentToCustomiseFor != null) {
+                switch (typeOfFragmentToCustomiseFor) {
                     case Cons.EXTRAS_FITNESS_FRAGMENT:
-                        itemsMap = fragmentBundle.getParcelable(Cons.BUNDLE_FITNESS_WIDGETS_MAP);
-
-                        PREFS_WIDGETS_ORDER_ARRAY_IDENTIFIER = Cons.EXTRAS_FITNESS_WIDGETS_ORDER_ARRAY;
+                        itemsMapFitness = fragmentBundle.getParcelableArrayList(Cons.BUNDLE_FITNESS_WIDGETS_MAP);
                         WIDGETS_ORDER_ARRAY_CHANGED_EVENT = Cons.EXTRAS_FITNESS_WIDGETS_ORDER_ARRAY_CHANGED;
-
+                        hookUpListWithFitnessItems(itemsMapFitness);
                         break;
                     case Cons.EXTRAS_NUTRITION_FRAGMENT:
-//                        itemsMap = nutritionItemsMap;
-                        PREFS_WIDGETS_ORDER_ARRAY_IDENTIFIER = Cons.EXTRAS_NUTRITION_WIDGETS_ORDER_ARRAY;
+                        itemsMapNutrition = fragmentBundle.getParcelableArrayList(Cons.BUNDLE_NUTRITION_WIDGETS_MAP);
                         WIDGETS_ORDER_ARRAY_CHANGED_EVENT = Cons.EXTRAS_NUTRITION_WIDGETS_ORDER_ARRAY_CHANGED;
+                        hookUpListWithNutritionItems(itemsMapNutrition);
                         break;
                     case Cons.EXTRAS_HEALTH_FRAGMENT:
-                        //TODO
-//                        itemsMap = healthItemsMap;
-                        PREFS_WIDGETS_ORDER_ARRAY_IDENTIFIER = Cons.EXTRAS_HEALTH_WIDGETS_ORDER_ARRAY;
                         WIDGETS_ORDER_ARRAY_CHANGED_EVENT = Cons.EXTRAS_HEALTH_WIDGETS_ORDER_ARRAY_CHANGED;
                         break;
                 }
             }
         }
 
-        hookupListWithItems(itemsMap);
 
         return fragmentView;
     }
 
-    private void hookupListWithItems(ParcelableSparseArray items) {
-        widgetsListView.setDragListener(onDrag);
-        widgetsListView.setDropListener(onDrop);
+    private void hookUpListWithFitnessItems(ArrayList<FitnessWidget> fitnessItems) {
+        widgetsListView.setDragListener(onDragFitnessItems);
+        widgetsListView.setDropListener(onDropFitnessItems);
 
-        customizeWidgetsAdapter = new OneItemWithIcon_Sparse_ListAdapter(parentActivity, items, R.drawable.ic_menu_black_24dp);
-        widgetsListView.setAdapter(customizeWidgetsAdapter);
+        customizeFitnessWidgetsAdapter = new OneItemWithIcon_Fitness_ListAdapter(parentActivity, fitnessItems, R.drawable.ic_menu_black_24dp);
+        widgetsListView.setAdapter(customizeFitnessWidgetsAdapter);
+    }
+
+    private void hookUpListWithNutritionItems(ArrayList<NutritionWidget> itemsMapNutrition) {
+        widgetsListView.setDragListener(onDragNutritionItems);
+        widgetsListView.setDropListener(onDropNutritionItems);
+
+        customizeNutritionWidgetsAdapter = new OneItemWithIcon_Nutrition_ListAdapter(parentActivity, itemsMapNutrition, R.drawable.ic_menu_black_24dp);
+        widgetsListView.setAdapter(customizeNutritionWidgetsAdapter);
     }
 }
