@@ -14,7 +14,6 @@ import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.internal.ParcelableSparseArray;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AlertDialog;
@@ -37,23 +36,20 @@ import com.mcsaatchi.gmfit.activities.AddNewChart_Activity;
 import com.mcsaatchi.gmfit.activities.Base_Activity;
 import com.mcsaatchi.gmfit.activities.CustomizeWidgetsAndCharts_Activity;
 import com.mcsaatchi.gmfit.activities.SlugBreakdown_Activity;
-import com.mcsaatchi.gmfit.adapters.Widgets_GridAdapter;
+import com.mcsaatchi.gmfit.adapters.FitnessWidgets_GridAdapter;
 import com.mcsaatchi.gmfit.classes.Cons;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
 import com.mcsaatchi.gmfit.classes.FontTextView;
 import com.mcsaatchi.gmfit.classes.Helpers;
-import com.mcsaatchi.gmfit.classes.ParcelableFitnessString;
 import com.mcsaatchi.gmfit.models.DataChart;
+import com.mcsaatchi.gmfit.models.FitnessWidget;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponseChart;
-import com.mcsaatchi.gmfit.rest.AuthenticationResponseWidget;
 import com.mcsaatchi.gmfit.rest.RestClient;
 import com.mcsaatchi.gmfit.rest.SlugBreakdownResponse;
 import com.squareup.otto.Subscribe;
 
 import net.danlew.android.joda.JodaTimeAndroid;
-
-import org.joda.time.LocalDate;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -85,22 +81,20 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
     private NestedScrollView parentScrollView;
     private Activity parentActivity;
     private SharedPreferences prefs;
-    private Widgets_GridAdapter widgets_GridAdapter;
+    private FitnessWidgets_GridAdapter widgets_GridAdapter;
     private String chartName;
     private String chartType;
 
-    private ParcelableSparseArray widgetsMap2;
-
+    private RuntimeExceptionDao<FitnessWidget, Integer> fitnessWidgetsDAO;
+    private QueryBuilder<FitnessWidget, Integer> fitnessQB;
     private RuntimeExceptionDao<DataChart, Integer> dataChartDAO;
     private QueryBuilder<DataChart, Integer> dataChartQB;
     private List<DataChart> allDataCharts;
 
-    private ArrayList<AuthenticationResponseWidget> widgetsMap;
+    private ArrayList<FitnessWidget> widgetsMap;
     private ArrayList<AuthenticationResponseChart> chartsMap;
 
     private String userEmail;
-
-    private String todayDate;
 
     @Override
     public void onAttach(Context context) {
@@ -108,6 +102,8 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
 
         if (context instanceof Activity) {
             parentActivity = (Activity) context;
+            fitnessWidgetsDAO = ((Base_Activity) parentActivity).getDBHelper().getFitnessWidgetsDAO();
+            fitnessQB = fitnessWidgetsDAO.queryBuilder();
             dataChartDAO = ((Base_Activity) parentActivity).getDBHelper().getDataChartDAO();
             dataChartQB = dataChartDAO.queryBuilder();
         }
@@ -156,7 +152,11 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
         userEmail = prefs.getString(Cons.EXTRAS_USER_EMAIL, "");
 
         if (getArguments() != null) {
-            widgetsMap = getArguments().getParcelableArrayList("widgets");
+            try {
+                widgetsMap = (ArrayList<FitnessWidget>) fitnessQB.orderBy("position", true).query();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
             chartsMap = getArguments().getParcelableArrayList("charts");
         }
     }
@@ -173,9 +173,6 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
         ButterKnife.bind(this, fragmentView);
 
         setHasOptionsMenu(true);
-
-        LocalDate dt = new LocalDate();
-        todayDate = dt.toString();
 
         Log.d(TAG, "onCreateView: Device info : " + Build.MANUFACTURER + " " + Build.MODEL + " (" + Build.DEVICE + ") - "
                 + Build.VERSION.RELEASE);
@@ -199,25 +196,23 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
             }
         });
 
-        metricCounterTV.setText(String.valueOf(prefs.getInt(todayDate + "_steps", 0)));
+        metricCounterTV.setText(String.valueOf(prefs.getInt(Helpers.getTodayDate() + "_steps", 0)));
 
-        widgetsMap2 = new ParcelableSparseArray() {{
-            put(0, new ParcelableFitnessString(R.drawable.ic_running, 0, "Walking", "Km/hour"));
-            put(1, new ParcelableFitnessString(R.drawable.ic_biking, (int) (prefs.getFloat(todayDate + "_distance", 0) * 1000), "Biking",
-                    "meters"));
-            put(3, new ParcelableFitnessString(R.drawable.ic_steps, 0, "Stairs", "steps"));
-            put(2, new ParcelableFitnessString(R.drawable.ic_calories, (int) prefs.getFloat(todayDate + "_calories", 0), "Calories",
-                    "Calories"));
-        }};
+        setUpWidgetsGridView(widgetsMap);
 
-        setUpWidgetsGridView(widgetsMap2);
-
+        /**
+         * Show all the charts that exist in the database
+         */
         try {
-            allDataCharts = dataChartQB.where().eq("username", userEmail).query();
+            allDataCharts = dataChartQB.orderBy("order", true).where().eq("username", userEmail).query();
 
             if (!allDataCharts.isEmpty()) {
                 for (DataChart chart :
                         allDataCharts) {
+                    /**
+                     * For each chart, send over its name and type.
+                     * According to the type, the data for that chart will be selected from the data fetched from the API for all charts.
+                     */
                     addNewBarChart(chart.getName(), chart.getType(), true);
                 }
             }
@@ -272,9 +267,9 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
             }, 500);
     }
 
-    private void setUpWidgetsGridView(ParcelableSparseArray widgetsMap2) {
+    private void setUpWidgetsGridView(ArrayList<FitnessWidget> widgetsMap) {
 
-        widgets_GridAdapter = new Widgets_GridAdapter(getActivity(), widgetsMap2, R.layout.grid_item_fitness_widgets);
+        widgets_GridAdapter = new FitnessWidgets_GridAdapter(getActivity(), widgetsMap, R.layout.grid_item_fitness_widgets);
 
         widgetsGridView.setAdapter(widgets_GridAdapter);
     }
@@ -324,15 +319,11 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
         String ebpMessage = ebp.getMessage();
         TextView fitnessWidget;
 
-        LocalDate dt = new LocalDate();
-
-        todayDate = dt.toString();
-
         switch (ebpMessage) {
             case Cons.EXTRAS_FITNESS_WIDGETS_ORDER_ARRAY_CHANGED:
-                if (ebp.getParcelableSparseExtra() != null) {
-                    widgetsMap2 = ebp.getParcelableSparseExtra();
-                    setUpWidgetsGridView(ebp.getParcelableSparseExtra());
+                if (ebp.getFitnessWidgetsMap() != null) {
+                    widgetsMap = ebp.getFitnessWidgetsMap();
+                    setUpWidgetsGridView(widgetsMap);
                 }
 
                 break;
@@ -353,15 +344,15 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
 //                addNewBarChart(chartName, ebp.getFloatArrayExtra());
                 break;
             case Cons.EVENT_STEP_COUNTER_INCREMENTED:
-                metricCounterTV.setText(String.valueOf(prefs.getInt(todayDate + "_steps", 0)));
+                metricCounterTV.setText(String.valueOf(prefs.getInt(Helpers.getTodayDate() + "_steps", 0)));
                 break;
             case Cons.EVENT_CALORIES_COUNTER_INCREMENTED:
                 fitnessWidget = findWidgetInGrid("Calories");
-                fitnessWidget.setText(String.valueOf((int) prefs.getFloat(todayDate + "_calories", 0)));
+                fitnessWidget.setText(String.valueOf((int) prefs.getFloat(Helpers.getTodayDate() + "_calories", 0)));
                 break;
             case Cons.EVENT_DISTANCE_COUNTER_INCREMENTED:
                 fitnessWidget = findWidgetInGrid("Biking");
-                fitnessWidget.setText(String.valueOf((int) (prefs.getFloat(todayDate + "_distance", 0) * 1000)));
+                fitnessWidget.setText(String.valueOf((int) (prefs.getFloat(Helpers.getTodayDate() + "_distance", 0) * 1000)));
                 break;
             case Cons.EVENT_CHART_ADDED_FROM_SETTINGS:
                 String[] chartDetails = ebp.getStringsExtra();
@@ -402,7 +393,7 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
                         waitingDialog.dismiss();
 
                         Intent intent = new Intent(getActivity(), SlugBreakdown_Activity.class);
-                        intent.putExtra(Cons.EXTRAS_CUSTOMIZE_WIDGETS_FRAGMENT_TYPE, Cons.EXTRAS_FITNESS_FRAGMENT);
+                        intent.putExtra(Cons.EXTRAS_CUSTOMIZE_WIDGETS_CHARTS_FRAGMENT_TYPE, Cons.EXTRAS_FITNESS_FRAGMENT);
                         intent.putExtra(Cons.EXTRAS_CHART_FULL_NAME, chartTitle);
                         intent.putExtra(Cons.EXTRAS_CHART_TYPE_SELECTED, chartType);
                         intent.putExtra(Cons.BUNDLE_SLUG_BREAKDOWN_DATA, response.body().getData().getBody().getData());
@@ -425,8 +416,8 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
         switch (item.getItemId()) {
             case R.id.settings:
                 Intent intent = new Intent(getActivity(), CustomizeWidgetsAndCharts_Activity.class);
-                intent.putExtra(Cons.EXTRAS_CUSTOMIZE_WIDGETS_FRAGMENT_TYPE, Cons.EXTRAS_FITNESS_FRAGMENT);
-                intent.putExtra(Cons.BUNDLE_FITNESS_WIDGETS_MAP, widgetsMap2);
+                intent.putExtra(Cons.EXTRAS_CUSTOMIZE_WIDGETS_CHARTS_FRAGMENT_TYPE, Cons.EXTRAS_FITNESS_FRAGMENT);
+                intent.putExtra(Cons.BUNDLE_FITNESS_WIDGETS_MAP, widgetsMap);
                 startActivity(intent);
                 break;
         }
