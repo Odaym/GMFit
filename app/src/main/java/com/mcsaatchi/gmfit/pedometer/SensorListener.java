@@ -16,17 +16,22 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
 
+import com.j256.ormlite.android.apptools.OpenHelperManager;
+import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.mcsaatchi.gmfit.BuildConfig;
 import com.mcsaatchi.gmfit.classes.Cons;
+import com.mcsaatchi.gmfit.classes.DBHelper;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
 import com.mcsaatchi.gmfit.classes.Helpers;
+import com.mcsaatchi.gmfit.models.FitnessWidget;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponse;
 import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.rest.RestClient;
 
 import org.joda.time.LocalDate;
 
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -53,6 +58,9 @@ public class SensorListener extends Service implements SensorEventListener {
     private SharedPreferences prefs;
     private String todayDate;
     private String yesterdayDate;
+
+    private RuntimeExceptionDao<FitnessWidget, Integer> fitnessWidgetsDAO;
+    private DBHelper dbHelper = null;
 
     @Override
     public void onAccuracyChanged(final Sensor sensor, int accuracy) {
@@ -89,6 +97,21 @@ public class SensorListener extends Service implements SensorEventListener {
                 prefs.edit().putInt(todayDate + "_steps", todayStepsFromPrefs + 1).apply();
                 prefs.edit().putFloat(todayDate + "_calories", calculatedCalories + prefs.getFloat(todayDate + "_calories", 0)).apply();
                 prefs.edit().putFloat(todayDate + "_distance", calculatedDistance + prefs.getFloat(todayDate + "_distance", 0)).apply();
+
+                List<FitnessWidget> fitnessWidgets = fitnessWidgetsDAO.queryForAll();
+
+                for (int i = 0; i < fitnessWidgets.size(); i++) {
+                    switch (fitnessWidgets.get(i).getTitle()) {
+                        case "Biking":
+                            fitnessWidgets.get(i).setValue((int) (calculatedDistance + prefs.getFloat(todayDate + "_distance", 0) * 1000));
+                            break;
+                        case "Calories":
+                            fitnessWidgets.get(i).setValue((int) (calculatedCalories + prefs.getFloat(todayDate + "_calories", 0)));
+                            break;
+                    }
+
+                    fitnessWidgetsDAO.update(fitnessWidgets.get(i));
+                }
             }
 
             EventBus_Singleton.getInstance().post(new EventBus_Poster(Cons.EVENT_STEP_COUNTER_INCREMENTED));
@@ -122,6 +145,8 @@ public class SensorListener extends Service implements SensorEventListener {
         reRegisterSensor();
 
         prefs = getApplicationContext().getSharedPreferences(Cons.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
+
+        fitnessWidgetsDAO = getDBHelper().getFitnessWidgetsDAO();
 
         /**
          * Timer Task for calculating metrics as the phone is active
@@ -184,13 +209,13 @@ public class SensorListener extends Service implements SensorEventListener {
                                             prefs.edit().remove(yesterdayDate + "_distance").apply();
                                             prefs.edit().remove(yesterdayDate + "_calories").apply();
 
-                                            prefs.edit().putInt(todayDate + "_steps", 0).apply();
-                                            prefs.edit().putFloat(todayDate + "_calories", 0).apply();
-                                            prefs.edit().putFloat(todayDate + "_distance", 0).apply();
+                                            List<FitnessWidget> fitnessWidgets = fitnessWidgetsDAO.queryForAll();
 
-                                            EventBus_Singleton.getInstance().post(new EventBus_Poster(Cons.EVENT_STEP_COUNTER_INCREMENTED));
-                                            EventBus_Singleton.getInstance().post(new EventBus_Poster(Cons.EVENT_CALORIES_COUNTER_INCREMENTED));
-                                            EventBus_Singleton.getInstance().post(new EventBus_Poster(Cons.EVENT_DISTANCE_COUNTER_INCREMENTED));
+                                            for (int i = 0; i < fitnessWidgets.size(); i++) {
+                                                fitnessWidgets.get(i).setValue(0);
+
+                                                fitnessWidgetsDAO.update(fitnessWidgets.get(i));
+                                            }
                                         }
 
                                         break;
@@ -254,6 +279,14 @@ public class SensorListener extends Service implements SensorEventListener {
         // enable batching with delay of max 5 min
         sm.registerListener(this, sm.getDefaultSensor(Sensor.TYPE_STEP_COUNTER),
                 SensorManager.SENSOR_DELAY_NORMAL, 5 * MICROSECONDS_IN_ONE_MINUTE);
+    }
+
+    public DBHelper getDBHelper() {
+        if (dbHelper == null) {
+            dbHelper =
+                    OpenHelperManager.getHelper(getApplicationContext(), DBHelper.class);
+        }
+        return dbHelper;
     }
 
     public class UpdateMetricsRequest {
