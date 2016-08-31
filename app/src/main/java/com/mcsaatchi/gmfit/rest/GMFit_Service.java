@@ -3,6 +3,7 @@ package com.mcsaatchi.gmfit.rest;
 import com.mcsaatchi.gmfit.activities.ForgotPassword_Activity;
 import com.mcsaatchi.gmfit.activities.GetStarted_Activity;
 import com.mcsaatchi.gmfit.activities.Login_Activity;
+import com.mcsaatchi.gmfit.activities.Main_Activity;
 import com.mcsaatchi.gmfit.activities.ResetPassword_Activity;
 import com.mcsaatchi.gmfit.activities.SignIn_Activity;
 import com.mcsaatchi.gmfit.activities.SignUp_Activity;
@@ -73,4 +74,7 @@ public interface GMFit_Service {
 
     @GET
     Call<SlugBreakdownResponse> getBreakdownForSlug(@Url String finalURL, @Header(Cons.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken);
+
+    @POST("/user/widgets/update")
+    Call<DefaultGetResponse> updateUserWidgets(@Header(Cons.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken, @Body Main_Activity.UpdateWidgetsRequest updateWidgetsRequest);
 }
