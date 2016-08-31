@@ -99,6 +99,9 @@ public class Splash_Activity extends AppCompatActivity {
                         //Refreshes access token
                         prefs.edit().putString(Cons.PREF_USER_ACCESS_TOKEN, "Bearer " + responseBody.getToken()).apply();
 
+                        /**
+                         * Don't send the widgets over to the Main Activity here
+                         */
                         List<AuthenticationResponseWidget> widgetsMap = responseBody.getWidgets();
                         List<AuthenticationResponseChart> chartsMap = responseBody.getCharts();
 
