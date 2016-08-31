@@ -44,7 +44,7 @@ public class Cons {
     public static final String EXTRAS_FITNESS_CHARTS_ORDER_ARRAY_CHANGED = "fitness_charts_order_array_changed";
     public static final String EXTRAS_NUTRITION_CHARTS_ORDER_ARRAY_CHANGED = "nutrition_charts_order_array_changed";
     public static final String EXTRAS_HEALTH_CHARTS_ORDER_ARRAY_CHANGED = "health_charts_order_array_changed";
-    public static final String EXTRAS_CUSTOMIZE_WIDGETS_FRAGMENT_TYPE = "customize_widgets_type";
+    public static final String EXTRAS_CUSTOMIZE_WIDGETS_CHARTS_FRAGMENT_TYPE = "customize_widgets_charts_fragment_type";
     public static final String EXTRAS_ALL_DATA_CHARTS = "all_data_charts";
     public static final String EXTRAS_ADD_FITNESS_CHART = "add_fitness_chart";
     public static final String EXTRAS_ADD_NUTRIITION_CHART = "add_nutrition_chart";
@@ -54,6 +54,7 @@ public class Cons {
     public static final String BUNDLE_ACTIVITY_TITLE = "activity_title";
     public static final String BUNDLE_ACTIVITY_BACK_BUTTON_ENABLED = "activity_back_button_enabled";
     public static final String BUNDLE_FITNESS_WIDGETS_MAP = "fitness_widgets_map";
+    public static final String BUNDLE_NUTRITION_WIDGETS_MAP = "nutrition_widgets_map";
 
     public static final String BUNDLE_SLUG_BREAKDOWN_DATA = "slug_breakdown_data";
     public static final String BUNDLE_SLUG_BREAKDOWN_DATA_DAILY = "slug_breakdown_data_daily";
