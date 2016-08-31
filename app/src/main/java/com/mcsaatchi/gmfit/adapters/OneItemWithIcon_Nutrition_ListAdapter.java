@@ -1,7 +1,6 @@
 package com.mcsaatchi.gmfit.adapters;
 
 import android.content.Context;
-import android.support.design.internal.ParcelableSparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,15 +9,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.classes.ParcelableFitnessString;
+import com.mcsaatchi.gmfit.models.NutritionWidget;
 
-public class OneItemWithIcon_Sparse_ListAdapter extends BaseAdapter {
+import java.util.ArrayList;
+
+public class OneItemWithIcon_Nutrition_ListAdapter extends BaseAdapter {
 
     private Context context;
-    private ParcelableSparseArray widgetsMap;
+    private ArrayList<NutritionWidget> widgetsMap;
     private int drawableResId;
 
-    public OneItemWithIcon_Sparse_ListAdapter(Context context, ParcelableSparseArray widgetsMap, int drawableResId) {
+    public OneItemWithIcon_Nutrition_ListAdapter(Context context, ArrayList<NutritionWidget> widgetsMap, int drawableResId) {
         super();
         this.context = context;
         this.widgetsMap = widgetsMap;
@@ -64,8 +65,7 @@ public class OneItemWithIcon_Sparse_ListAdapter extends BaseAdapter {
         }
 
         holder.itemIconRightIMG.setImageResource(drawableResId);
-
-        holder.itemNameTV.setText(((ParcelableFitnessString) widgetsMap.valueAt(position)).getTitle());
+        holder.itemNameTV.setText((widgetsMap.get(position)).getTitle());
 
         return convertView;
     }
