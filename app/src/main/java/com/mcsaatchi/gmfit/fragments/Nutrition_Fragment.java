@@ -3,12 +3,11 @@ package com.mcsaatchi.gmfit.fragments;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.design.internal.ParcelableSparseArray;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,16 +21,21 @@ import android.widget.Toast;
 import com.github.mikephil.charting.charts.BarChart;
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.vision.barcode.Barcode;
+import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.activities.AddNewChart_Activity;
 import com.mcsaatchi.gmfit.activities.AddNewMealItem_Activity;
 import com.mcsaatchi.gmfit.activities.BarcodeCapture_Activity;
+import com.mcsaatchi.gmfit.activities.Base_Activity;
 import com.mcsaatchi.gmfit.activities.CustomizeWidgetsAndCharts_Activity;
-import com.mcsaatchi.gmfit.adapters.Widgets_GridAdapter;
+import com.mcsaatchi.gmfit.adapters.NutritionWidgets_GridAdapter;
 import com.mcsaatchi.gmfit.classes.Cons;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
-import com.mcsaatchi.gmfit.classes.ParcelableNutritionString;
+import com.mcsaatchi.gmfit.classes.Helpers;
+import com.mcsaatchi.gmfit.models.NutritionWidget;
+
+import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -108,18 +112,27 @@ public class Nutrition_Fragment extends Fragment {
      */
     @Bind(R.id.addChartBTN)
     Button addNewChartBTN;
-    private Widgets_GridAdapter widgets_GridAdapter;
-    private ParcelableSparseArray widgetsMap = new ParcelableSparseArray() {{
-        put(0, new ParcelableNutritionString("PROTEIN", 152, "g", 17));
-        put(1, new ParcelableNutritionString("FAT", 87, "g", 29));
-        put(2, new ParcelableNutritionString("SODIUM", 200, "mg", 105));
-        put(3, new ParcelableNutritionString("SUGAR", 42, "g", 112));
-    }};
+
+    private NutritionWidgets_GridAdapter nutritionWidgets_GridAdapter;
+    private RuntimeExceptionDao<NutritionWidget, Integer> nutritionWidgetsDAO;
+
+    private ArrayList<NutritionWidget> widgetsMap;
+
+    private SharedPreferences prefs;
+
     /**
      * TOP LAYOUT WITH WIDGETS
      */
     private NestedScrollView parentScrollView;
     private Activity parentActivity;
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        parentActivity = (Activity) context;
+        nutritionWidgetsDAO = ((Base_Activity) parentActivity).getDBHelper().getNutritionWidgetsDAO();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater,
@@ -136,7 +149,11 @@ public class Nutrition_Fragment extends Fragment {
 
         ButterKnife.bind(this, fragmentView);
 
+        prefs = getActivity().getSharedPreferences(Cons.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
+
         setHasOptionsMenu(true);
+
+        widgetsMap = (ArrayList<NutritionWidget>) nutritionWidgetsDAO.queryForAll();
 
         setUpWidgetsGridView(widgetsMap);
 
@@ -149,6 +166,8 @@ public class Nutrition_Fragment extends Fragment {
                         ADD_NEW_NUTRITION_CHART_REQUEST);
             }
         });
+
+        metricCounterTV.setText(String.valueOf((int) prefs.getFloat(Helpers.getTodayDate() + "_calories", 0)));
 
         addNewEntryBTN_BREAKFAST.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -205,26 +224,21 @@ public class Nutrition_Fragment extends Fragment {
         return fragmentView;
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-
-        parentActivity = (Activity) context;
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent intent = new Intent(getActivity(), CustomizeWidgetsAndCharts_Activity.class);
-        intent.putExtra(Cons.EXTRAS_CUSTOMIZE_WIDGETS_FRAGMENT_TYPE, "NUTRITION");
+        intent.putExtra(Cons.EXTRAS_CUSTOMIZE_WIDGETS_CHARTS_FRAGMENT_TYPE, Cons.EXTRAS_NUTRITION_FRAGMENT);
+        intent.putParcelableArrayListExtra(Cons.BUNDLE_NUTRITION_WIDGETS_MAP, widgetsMap);
         startActivity(intent);
 
         return super.onOptionsItemSelected(item);
     }
 
-    private void setUpWidgetsGridView(ParcelableSparseArray widgetsMap) {
-        widgets_GridAdapter = new Widgets_GridAdapter(getActivity(), widgetsMap, R.layout.grid_item_nutrition_widgets);
+    private void setUpWidgetsGridView(ArrayList<NutritionWidget> widgetsMap) {
+        nutritionWidgets_GridAdapter = new NutritionWidgets_GridAdapter(getActivity(), widgetsMap, R.layout.grid_item_nutrition_widgets);
 
-        widgetsGridView.setAdapter(widgets_GridAdapter);
+        widgetsGridView.setAdapter(nutritionWidgets_GridAdapter);
     }
 
     @com.squareup.otto.Subscribe
@@ -252,12 +266,55 @@ public class Nutrition_Fragment extends Fragment {
 
                 break;
             case Cons.EXTRAS_NUTRITION_WIDGETS_ORDER_ARRAY_CHANGED:
-//                itemsMap = ebp.getSparseArrayExtra();
+                if (ebp.getNutritionWidgetsMap() != null) {
+                    widgetsMap = ebp.getNutritionWidgetsMap();
+                    setUpWidgetsGridView(ebp.getNutritionWidgetsMap());
+                }
 
-
+//                int[] widgets = new int[0], positions = new int[0];
+//
+//                for (int i = 0; i < widgetsMap.size(); i++) {
+//                    widgets[i] = ((ParcelableNutritionString) widgetsMap.get(i)).get;
+//                    positions[i] = i;
+//                }
                 break;
         }
     }
+
+//    private void updateUserWidgets() {
+//
+//        Call<UiResponse> getUiForSectionCall = new RestClient().getGMFitService().updateUserWidgets(prefs.getString(Cons.PREF_USER_ACCESS_TOKEN,
+//                Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS), );
+//
+//        getUiForSectionCall.enqueue(new Callback<UiResponse>() {
+//            @Override
+//            public void onResponse(Call<UiResponse> call, Response<UiResponse> response) {
+//
+//                switch (response.code()) {
+//                    case 200:
+//                        prefs.edit().putBoolean(Cons.EXTRAS_USER_LOGGED_IN, true).apply();
+//                        prefs.edit().putBoolean(prefs.getString(Cons.EXTRAS_USER_EMAIL, "") + "_" + Cons.EVENT_FINISHED_SETTING_UP_PROFILE_SUCCESSFULLY, true).apply();
+//
+//                        List<AuthenticationResponseWidget> widgetsMap = response.body().getData().getBody().getWidgets();
+//                        List<AuthenticationResponseChart> chartsMap = response.body().getData().getBody().getCharts();
+//
+//                        Intent intent = new Intent(getActivity(), Main_Activity.class);
+//                        intent.putParcelableArrayListExtra("widgets", (ArrayList<AuthenticationResponseWidget>) widgetsMap);
+//                        intent.putParcelableArrayListExtra("charts", (ArrayList<AuthenticationResponseChart>) chartsMap);
+//                        startActivity(intent);
+//
+//                        getActivity().finish();
+//
+//                        break;
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<UiResponse> call, Throwable t) {
+//                Log.d(TAG, "onFailure: Failed");
+//            }
+//        });
+//    }
 
     public void handleScanMealEntry() {
         Intent intent = new Intent(getActivity(), BarcodeCapture_Activity.class);
@@ -297,7 +354,6 @@ public class Nutrition_Fragment extends Fragment {
     private void openMealEntryPickerActivity(String mainMealName) {
         Intent intent = new Intent(parentActivity, AddNewMealItem_Activity.class);
         intent.putExtra(Cons.EXTRAS_MAIN_MEAL_NAME, mainMealName);
-        Log.d(TAG, "openMealEntryPickerActivity: Meal Name when Adding " + mainMealName);
         startActivity(intent);
     }
 
