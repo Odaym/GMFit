@@ -56,7 +56,7 @@ public class SlugBreakdown_Activity extends Base_Activity {
         if (intentExtras != null) {
             setupToolbar(toolbar, intentExtras.getString(Cons.EXTRAS_CHART_FULL_NAME), true);
 
-            typeOfFragmentToCustomizeFor = intentExtras.getString(Cons.EXTRAS_CUSTOMIZE_WIDGETS_FRAGMENT_TYPE);
+            typeOfFragmentToCustomizeFor = intentExtras.getString(Cons.EXTRAS_CUSTOMIZE_WIDGETS_CHARTS_FRAGMENT_TYPE);
             slugBreakdownData = intentExtras.getParcelable(Cons.BUNDLE_SLUG_BREAKDOWN_DATA);
             chartType = intentExtras.getString(Cons.EXTRAS_CHART_TYPE_SELECTED, "");
 
@@ -115,7 +115,7 @@ public class SlugBreakdown_Activity extends Base_Activity {
         @Override
         public Fragment getItem(int position) {
             Bundle fragmentArguments = new Bundle();
-//            fragmentArguments.putString(Cons.EXTRAS_CUSTOMIZE_WIDGETS_FRAGMENT_TYPE, typeOfFragmentToCustomizeFor);
+//            fragmentArguments.putString(Cons.EXTRAS_CUSTOMIZE_WIDGETS_CHARTS_FRAGMENT_TYPE, typeOfFragmentToCustomizeFor);
 
             Fragment slugBreakdownFragment;
 

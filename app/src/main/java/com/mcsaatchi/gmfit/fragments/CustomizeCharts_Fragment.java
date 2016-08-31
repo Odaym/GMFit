@@ -62,6 +62,7 @@ public class CustomizeCharts_Fragment extends Fragment {
                     customizeChartsAdapter.notifyData();
                 }
             };
+
     private DragSortListView.DragListener onDrag = new DragSortListView.DragListener() {
         @Override
         public void drag(int from, int to) {
@@ -100,7 +101,7 @@ public class CustomizeCharts_Fragment extends Fragment {
         });
 
         if (fragmentBundle != null) {
-            String typeOfFragmentToCustomizeFor = fragmentBundle.getString(Cons.EXTRAS_CUSTOMIZE_WIDGETS_FRAGMENT_TYPE);
+            String typeOfFragmentToCustomizeFor = fragmentBundle.getString(Cons.EXTRAS_CUSTOMIZE_WIDGETS_CHARTS_FRAGMENT_TYPE);
 
             if (typeOfFragmentToCustomizeFor != null) {
                 switch (typeOfFragmentToCustomizeFor) {
