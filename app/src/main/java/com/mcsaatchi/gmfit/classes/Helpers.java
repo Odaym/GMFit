@@ -47,6 +47,11 @@ public class Helpers {
         return allValid;
     }
 
+    public static String getTodayDate(){
+        LocalDate dt = new LocalDate();
+        return dt.toString();
+    }
+
     public static String getCalendarDate() {
         Calendar cal = Calendar.getInstance();
         Date now = new Date();
