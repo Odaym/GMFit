@@ -72,11 +72,7 @@ public class Main_Activity extends Base_Activity {
 
         Log.d("USER_ACCESS_TOKEN", "onCreate: User access token is : " + prefs.getString(Cons.PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS));
 
-        /**
-         * Fetch Extras from Intent
-         */
         if (getIntent().getExtras() != null) {
-//            widgetsMap = getIntent().getExtras().getParcelableArrayList("widgets");
             chartsMap = getIntent().getExtras().getParcelableArrayList("charts");
         }
 
@@ -98,23 +94,20 @@ public class Main_Activity extends Base_Activity {
                 switch (menuItemId) {
                     case R.id.item_one:
                         fragmentReplace = new Fitness_Fragment();
-                        bundle.putParcelableArrayList("widgets", widgetsMap);
                         bundle.putParcelableArrayList("charts", chartsMap);
                         fragmentReplace.setArguments(bundle);
+
                         mainContentLayout.setBackground(getResources().getDrawable(R.drawable.fitness_background));
                         break;
                     case R.id.item_two:
+                        //TODO: Grab the UI for the Nutrition fragment and send it over along with this fragment
                         fragmentReplace = new Nutrition_Fragment();
+
                         mainContentLayout.setBackground(getResources().getDrawable(R.drawable.nutrition_background));
                         break;
-//                    case R.id.item_three:
-//                        fragmentReplace = new Nutrition_Fragment();
-//                        break;
-//                    case R.id.item_four:
-//                        fragmentReplace = new Nutrition_Fragment();
-//                        break;
                     case R.id.item_five:
                         fragmentReplace = new MainProfile_Fragment();
+
                         break;
                 }
 
@@ -215,5 +208,15 @@ public class Main_Activity extends Base_Activity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         bottomBar.onSaveInstanceState(outState);
+    }
+
+    public class UpdateWidgetsRequest {
+        final int[] widgets;
+        final int[] positions;
+
+        public UpdateWidgetsRequest(int[] widgets, int[] positions) {
+            this.widgets = widgets;
+            this.positions = positions;
+        }
     }
 }
