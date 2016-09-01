@@ -31,16 +31,10 @@ public class NutritionWidget implements Parcelable {
     double percentage;
     @DatabaseField
     int position;
+    @DatabaseField
+    int widget_id;
 
     public NutritionWidget() {
-    }
-
-    public NutritionWidget(double value, String title, String measurementUnit, double percentage, int position) {
-        this.value = value;
-        this.title = title;
-        this.measurementUnit = measurementUnit;
-        this.percentage = percentage;
-        this.position = position;
     }
 
     protected NutritionWidget(Parcel in) {
@@ -50,6 +44,7 @@ public class NutritionWidget implements Parcelable {
         this.measurementUnit = in.readString();
         this.percentage = in.readDouble();
         this.position = in.readInt();
+        this.widget_id = in.readInt();
     }
 
     public int getId() {
@@ -100,6 +95,14 @@ public class NutritionWidget implements Parcelable {
         this.position = position;
     }
 
+    public int getWidget_id() {
+        return widget_id;
+    }
+
+    public void setWidget_id(int widget_id) {
+        this.widget_id = widget_id;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -113,5 +116,6 @@ public class NutritionWidget implements Parcelable {
         dest.writeString(this.measurementUnit);
         dest.writeDouble(this.percentage);
         dest.writeInt(this.position);
+        dest.writeInt(this.widget_id);
     }
 }

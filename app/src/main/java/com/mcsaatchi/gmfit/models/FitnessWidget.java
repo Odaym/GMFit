@@ -7,7 +7,7 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 @DatabaseTable(tableName = "FitnessWidget")
-public class FitnessWidget implements Parcelable{
+public class FitnessWidget implements Parcelable {
     public static final Creator<FitnessWidget> CREATOR = new Creator<FitnessWidget>() {
         @Override
         public FitnessWidget createFromParcel(Parcel source) {
@@ -31,6 +31,8 @@ public class FitnessWidget implements Parcelable{
     int metricIconDrawableId;
     @DatabaseField
     int position;
+    @DatabaseField
+    int widget_id;
 
     public FitnessWidget() {
     }
@@ -50,6 +52,7 @@ public class FitnessWidget implements Parcelable{
         this.value = in.readInt();
         this.metricIconDrawableId = in.readInt();
         this.position = in.readInt();
+        this.widget_id = in.readInt();
     }
 
     public int getId() {
@@ -100,6 +103,14 @@ public class FitnessWidget implements Parcelable{
         this.position = position;
     }
 
+    public int getWidget_id() {
+        return widget_id;
+    }
+
+    public void setWidget_id(int widget_id) {
+        this.widget_id = widget_id;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -113,5 +124,6 @@ public class FitnessWidget implements Parcelable{
         dest.writeInt(this.value);
         dest.writeInt(this.metricIconDrawableId);
         dest.writeInt(this.position);
+        dest.writeInt(this.widget_id);
     }
 }
