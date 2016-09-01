@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,6 +23,8 @@ import com.github.mikephil.charting.charts.BarChart;
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
+import com.j256.ormlite.stmt.PreparedQuery;
+import com.j256.ormlite.stmt.QueryBuilder;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.activities.AddNewChart_Activity;
 import com.mcsaatchi.gmfit.activities.AddNewMealItem_Activity;
@@ -34,11 +37,20 @@ import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
 import com.mcsaatchi.gmfit.classes.Helpers;
 import com.mcsaatchi.gmfit.models.NutritionWidget;
+import com.mcsaatchi.gmfit.rest.AuthenticationResponseChart;
+import com.mcsaatchi.gmfit.rest.AuthenticationResponseWidget;
+import com.mcsaatchi.gmfit.rest.RestClient;
+import com.mcsaatchi.gmfit.rest.UiResponse;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class Nutrition_Fragment extends Fragment {
 
@@ -114,7 +126,10 @@ public class Nutrition_Fragment extends Fragment {
     Button addNewChartBTN;
 
     private NutritionWidgets_GridAdapter nutritionWidgets_GridAdapter;
+
     private RuntimeExceptionDao<NutritionWidget, Integer> nutritionWidgetsDAO;
+    private QueryBuilder<NutritionWidget, Integer> nutritionWidgetsQB;
+    private PreparedQuery<NutritionWidget> nutritionPQ;
 
     private ArrayList<NutritionWidget> widgetsMap;
 
@@ -132,6 +147,7 @@ public class Nutrition_Fragment extends Fragment {
 
         parentActivity = (Activity) context;
         nutritionWidgetsDAO = ((Base_Activity) parentActivity).getDBHelper().getNutritionWidgetsDAO();
+        nutritionWidgetsQB = nutritionWidgetsDAO.queryBuilder();
     }
 
     @Override
@@ -153,9 +169,21 @@ public class Nutrition_Fragment extends Fragment {
 
         setHasOptionsMenu(true);
 
-        widgetsMap = (ArrayList<NutritionWidget>) nutritionWidgetsDAO.queryForAll();
+        try {
+            widgetsMap = (ArrayList<NutritionWidget>) nutritionWidgetsQB.orderBy("position", true).query();
 
-        setUpWidgetsGridView(widgetsMap);
+            if (widgetsMap.isEmpty()) {
+                getUiForSection("nutrition");
+            } else {
+                ArrayList<NutritionWidget> subNutritionWidgetsList = new ArrayList<>(widgetsMap.subList(0, 4));
+
+                widgetsMap = subNutritionWidgetsList;
+
+                setUpWidgetsGridView(subNutritionWidgetsList);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
         addNewChartBTN.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -224,6 +252,88 @@ public class Nutrition_Fragment extends Fragment {
         return fragmentView;
     }
 
+    private void getUiForSection(String section) {
+        Call<UiResponse> getUiForSectionCall = new RestClient().getGMFitService().getUiForSection(prefs.getString(Cons.PREF_USER_ACCESS_TOKEN,
+                Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS), "http://gmfit.mcsaatchi.me/api/v1/user/ui?section=" + section);
+
+        getUiForSectionCall.enqueue(new Callback<UiResponse>() {
+            @Override
+            public void onResponse(Call<UiResponse> call, Response<UiResponse> response) {
+
+                switch (response.code()) {
+                    case 200:
+                        List<AuthenticationResponseWidget> widgetsMapFromAPI = response.body().getData().getBody().getWidgets();
+                        List<AuthenticationResponseChart> chartsMapFromAPI = response.body().getData().getBody().getCharts();
+
+                        /**
+                         * Stuff already exists in DB
+                         */
+                        for (int i = 0; i < widgetsMapFromAPI.size(); i++) {
+                            NutritionWidget nutritionWidget = new NutritionWidget();
+                            nutritionWidget.setTitle(widgetsMapFromAPI.get(i).getName());
+                            nutritionWidget.setPosition(Integer.parseInt(widgetsMapFromAPI.get(i).getPosition()));
+                            nutritionWidget.setMeasurementUnit(widgetsMapFromAPI.get(i).getUnit());
+                            nutritionWidget.setWidget_id(widgetsMapFromAPI.get(i).getWidgetId());
+                            nutritionWidget.setValue(Double.parseDouble(widgetsMapFromAPI.get(i).getTotal()));
+
+                            if (checkIfFieldExists(widgetsMapFromAPI.get(i).getWidgetId())) {
+                                Log.d(TAG, "onResponse: ID exists, updating");
+                                nutritionWidgetsDAO.update(nutritionWidget);
+                            } else {
+                                Log.d(TAG, "onResponse: ID DOES NOT exist, creating");
+                                nutritionWidgetsDAO.create(nutritionWidget);
+                            }
+                        }
+
+                        try {
+                            /**
+                             * Refresh the query builder
+                             */
+                            nutritionWidgetsQB = nutritionWidgetsDAO.queryBuilder();
+
+                            /**
+                             * Grab the newly created/updated Nutrition widgets from DB
+                             */
+                            ArrayList<NutritionWidget> widgetsFromDB = (ArrayList<NutritionWidget>) nutritionWidgetsQB.orderBy("position", true).query();
+
+                            /**
+                             * Get the sublist from the above list
+                             */
+                            ArrayList<NutritionWidget> subNutritionWidgetsList = new ArrayList<>(widgetsFromDB.subList(0, 4));
+
+                            /**
+                             * Assign to the original widgetsMap to be used when accessing the Options menu to re-order widgets
+                             */
+                            widgetsMap = subNutritionWidgetsList;
+
+                            setUpWidgetsGridView(subNutritionWidgetsList);
+
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                        }
+
+                        break;
+                }
+            }
+
+            @Override
+            public void onFailure(Call<UiResponse> call, Throwable t) {
+                Log.d(TAG, "onFailure: Failed");
+            }
+        });
+    }
+
+    private boolean checkIfFieldExists(int widget_id) {
+        try {
+            List<NutritionWidget> nw = nutritionWidgetsQB.where().eq("widget_id", widget_id).query();
+
+            return !nw.isEmpty();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
