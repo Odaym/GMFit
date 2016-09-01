@@ -153,10 +153,18 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
 
         if (getArguments() != null) {
             try {
+
+                /**
+                 * Get the widgets map from DB
+                 */
                 widgetsMap = (ArrayList<FitnessWidget>) fitnessQB.orderBy("position", true).query();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
+
+            /**
+             * Get the charts only from arguments
+             */
             chartsMap = getArguments().getParcelableArrayList("charts");
         }
     }
