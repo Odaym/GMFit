@@ -40,6 +40,7 @@ public class CustomizeWidgets_Fragment extends Fragment {
     private ArrayList<NutritionWidget> itemsMapNutrition = new ArrayList<>();
 
     private RuntimeExceptionDao<FitnessWidget, Integer> fitnessWidgetsDAO;
+    private RuntimeExceptionDao<NutritionWidget, Integer> nutritionWidgetsDAO;
 
     private DragSortListView.DropListener onDropFitnessItems =
             new DragSortListView.DropListener() {
@@ -68,6 +69,10 @@ public class CustomizeWidgets_Fragment extends Fragment {
                     EventBus_Singleton.getInstance().post(ebp);
 
                     customizeNutritionWidgetsAdapter.notifyData();
+
+                    for (int i = 0; i < itemsMapNutrition.size(); i++) {
+                        nutritionWidgetsDAO.update(itemsMapNutrition.get(i));
+                    }
                 }
             };
 
@@ -95,11 +100,18 @@ public class CustomizeWidgets_Fragment extends Fragment {
         @Override
         public void drag(int from, int to) {
             if (to < itemsMapNutrition.size() && from < itemsMapNutrition.size()) {
-                NutritionWidget tempItem = itemsMapNutrition.get(from);
-                itemsMapNutrition.set(from, itemsMapNutrition.get(to));
-                itemsMapNutrition.set(to, tempItem);
 
-                //TODO: Reflect changes in DB
+                NutritionWidget tempItem = itemsMapNutrition.get(from);
+
+                int toPosition = itemsMapNutrition.get(to).getPosition();
+
+                tempItem.setPosition(toPosition);
+
+                itemsMapNutrition.set(from, itemsMapNutrition.get(to));
+
+                itemsMapNutrition.get(to).setPosition(from);
+
+                itemsMapNutrition.set(to, tempItem);
             }
         }
     };
@@ -111,6 +123,7 @@ public class CustomizeWidgets_Fragment extends Fragment {
         if (context instanceof Activity) {
             parentActivity = (Activity) context;
             fitnessWidgetsDAO = ((Base_Activity) parentActivity).getDBHelper().getFitnessWidgetsDAO();
+            nutritionWidgetsDAO = ((Base_Activity) parentActivity).getDBHelper().getNutritionWidgetsDAO();
         }
     }
 
