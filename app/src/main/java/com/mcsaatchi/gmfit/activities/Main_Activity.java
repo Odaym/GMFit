@@ -8,7 +8,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
@@ -49,7 +48,9 @@ public class Main_Activity extends Base_Activity {
     LinearLayout mainContentLayout;
 
     private BottomBar bottomBar;
-    private Fragment fragmentReplace;
+    private Fitness_Fragment fitnessFragment;
+    private Nutrition_Fragment nutritionFragment;
+    private MainProfile_Fragment mainProfileFragment;
     private SharedPreferences prefs;
 
     private ArrayList<AuthenticationResponseWidget> widgetsMap;
@@ -79,40 +80,37 @@ public class Main_Activity extends Base_Activity {
         bottomBar = BottomBar.attachShy((CoordinatorLayout) findViewById(R.id.myCoordinator),
                 findViewById(R.id.myScrollingContent), savedInstanceState);
 
+        fitnessFragment = new Fitness_Fragment();
+        nutritionFragment = new Nutrition_Fragment();
+        mainProfileFragment = new MainProfile_Fragment();
+
         bottomBar.noTopOffset();
-//        bottomBar.noNavBarGoodness();
         bottomBar.setActiveTabColor(ContextCompat.getColor(this, R.color.bpDarker_blue));
         bottomBar.useFixedMode();
 
         bottomBar.setItemsFromMenu(R.menu.bottom_navigation, new OnMenuTabClickListener() {
             @Override
             public void onMenuTabSelected(@IdRes int menuItemId) {
-                Bundle bundle = new Bundle();
-
-                fragmentReplace = null;
 
                 switch (menuItemId) {
                     case R.id.item_one:
-                        fragmentReplace = new Fitness_Fragment();
+                        Bundle bundle = new Bundle();
                         bundle.putParcelableArrayList("charts", chartsMap);
-                        fragmentReplace.setArguments(bundle);
 
+                        fitnessFragment.setArguments(bundle);
+
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fitnessFragment).commit();
                         mainContentLayout.setBackground(getResources().getDrawable(R.drawable.fitness_background));
                         break;
                     case R.id.item_two:
-                        //TODO: Grab the UI for the Nutrition fragment and send it over along with this fragment
-                        fragmentReplace = new Nutrition_Fragment();
-
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, nutritionFragment).commit();
                         mainContentLayout.setBackground(getResources().getDrawable(R.drawable.nutrition_background));
                         break;
                     case R.id.item_five:
-                        fragmentReplace = new MainProfile_Fragment();
-
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, mainProfileFragment).commit();
                         break;
                 }
 
-                getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.fade_in, R.anim.fade_out)
-                        .replace(R.id.fragment_container, fragmentReplace).commit();
             }
 
             @Override
@@ -131,7 +129,7 @@ public class Main_Activity extends Base_Activity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        fragmentReplace.onActivityResult(USER_AUTHORISED_REQUEST_CODE, resultCode, data);
+        fitnessFragment.onActivityResult(USER_AUTHORISED_REQUEST_CODE, resultCode, data);
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {

@@ -157,8 +157,6 @@ public class Nutrition_Fragment extends Fragment {
 
         View fragmentView = inflater.inflate(R.layout.fragment_nutrition, container, false);
 
-        EventBus_Singleton.getInstance().register(this);
-
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.nutrition_tab_title);
 
         parentScrollView = (NestedScrollView) getActivity().findViewById(R.id.myScrollingContent);
@@ -252,6 +250,18 @@ public class Nutrition_Fragment extends Fragment {
         return fragmentView;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        EventBus_Singleton.getInstance().register(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        EventBus_Singleton.getInstance().unregister(this);
+    }
+
     private void getUiForSection(String section) {
         Call<UiResponse> getUiForSectionCall = new RestClient().getGMFitService().getUiForSection(prefs.getString(Cons.PREF_USER_ACCESS_TOKEN,
                 Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS), "http://gmfit.mcsaatchi.me/api/v1/user/ui?section=" + section);
@@ -277,10 +287,8 @@ public class Nutrition_Fragment extends Fragment {
                             nutritionWidget.setValue(Double.parseDouble(widgetsMapFromAPI.get(i).getTotal()));
 
                             if (checkIfFieldExists(widgetsMapFromAPI.get(i).getWidgetId())) {
-                                Log.d(TAG, "onResponse: ID exists, updating");
                                 nutritionWidgetsDAO.update(nutritionWidget);
                             } else {
-                                Log.d(TAG, "onResponse: ID DOES NOT exist, creating");
                                 nutritionWidgetsDAO.create(nutritionWidget);
                             }
                         }
