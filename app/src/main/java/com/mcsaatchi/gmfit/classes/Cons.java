@@ -31,9 +31,12 @@ public class Cons {
     public static final String EXTRAS_NUTRITION_FRAGMENT = "NUTRITION";
     public static final String EXTRAS_HEALTH_FRAGMENT = "HEALTH";
 
+    public static final String EVENTBUS_NUTRITION_ALREADY_REGISTERED = "eventbus_nutrition_already_registered";
+
     public static final String EXTRAS_ADD_CHART_WHAT_TYPE = "add_chart_what_type";
     public static final String EXTRAS_CHART_TYPE_SELECTED = "chart_type_selected";
     public static final String EXTRAS_CHART_FULL_NAME = "chart_full_name";
+    public static final String EXTRAS_CHART_OBJECT = "chart_object";
 
     public static final String EXTRAS_FITNESS_WIDGETS_ORDER_ARRAY = "fitness_widgets_order_array";
     public static final String EXTRAS_FITNESS_WIDGETS_ORDER_ARRAY_CHANGED = "fitness_widgets_order_array_changed";
