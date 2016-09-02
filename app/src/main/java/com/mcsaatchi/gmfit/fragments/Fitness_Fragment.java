@@ -212,7 +212,7 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
          * Show all the charts that exist in the database
          */
         try {
-            allDataCharts = dataChartQB.orderBy("order", true).where().eq("username", userEmail).query();
+            allDataCharts = dataChartQB.orderBy("position", true).where().eq("username", userEmail).query();
 
             if (!allDataCharts.isEmpty()) {
                 for (DataChart chart :
@@ -221,7 +221,7 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
                      * For each chart, send over its name and type.
                      * According to the type, the data for that chart will be selected from the data fetched from the API for all charts.
                      */
-                    addNewBarChart(chart.getName(), chart.getType(), true);
+                    addNewBarChart(chart.getName(), chart.getType());
                 }
             }
         } catch (SQLException e) {
@@ -231,7 +231,7 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
         return fragmentView;
     }
 
-    public void addNewBarChart(String chartTitle, final String chartType, boolean appJustLaunched) {
+    public void addNewBarChart(String chartTitle, final String chartType) {
         final View barChartLayout = getActivity().getLayoutInflater().inflate(R.layout.view_barchart_container, null);
 
         final TextView chartTitleTV_NEW_CHART = (TextView) barChartLayout.findViewById(R.id.chartTitleTV);
@@ -265,14 +265,6 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
                 getSlugBreakdownForChart(chartTitleTV_NEW_CHART.getText().toString(), chartType);
             }
         });
-
-        if (!appJustLaunched)
-            parentScrollView.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    parentScrollView.fullScroll(View.FOCUS_DOWN);
-                }
-            }, 500);
     }
 
     private void setUpWidgetsGridView(ArrayList<FitnessWidget> widgetsMap) {
@@ -315,9 +307,9 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
                 chartType = data.getStringExtra(Cons.EXTRAS_CHART_TYPE_SELECTED);
                 chartName = data.getStringExtra(Cons.EXTRAS_CHART_FULL_NAME);
 
-                addNewBarChart(chartName, chartType, false);
+                addNewBarChart(chartName, chartType);
 
-                dataChartDAO.create(new DataChart(chartName, chartType, dataChartDAO.queryForAll().size() + 1, Cons.EXTRAS_FITNESS_FRAGMENT, userEmail));
+                dataChartDAO.create(new DataChart(chartName, chartType, dataChartDAO.queryForAll().size() + 1, userEmail, Cons.EXTRAS_FITNESS_FRAGMENT));
             }
         }
     }
@@ -340,11 +332,11 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
 
                 cards_container.removeAllViews();
 
-                addNewBarChart("Number Of Steps", "steps-count", false);
+                addNewBarChart("Number Of Steps", "steps-count");
 
                 for (DataChart chart :
                         allDataCharts) {
-                    addNewBarChart(chart.getName(), chart.getType(), false);
+                    addNewBarChart(chart.getName(), chart.getType());
                 }
 
                 break;
@@ -364,9 +356,15 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
                 break;
             case Cons.EVENT_CHART_ADDED_FROM_SETTINGS:
                 String[] chartDetails = ebp.getStringsExtra();
-                addNewBarChart(chartDetails[0], chartDetails[1], false);
+                addNewBarChart(chartDetails[0], chartDetails[1]);
 
-                dataChartDAO.create(new DataChart(chartDetails[0], chartDetails[1], dataChartDAO.queryForAll().size() + 1, Cons.EXTRAS_FITNESS_FRAGMENT, userEmail));
+                //TODO:
+                /**
+                 * If you want this line to include adding the chart data, then the http request at Main Activity which gets Charts and Widgets must also
+                 * implement the same logic as within the Nutrition Fragment (if there is DB stuff, dont go to request, else go and fetch and then save in DB)
+                 */
+                dataChartDAO.create(new DataChart(chartDetails[0], chartDetails[1], dataChartDAO.queryForAll().size() + 1, userEmail, Cons.EXTRAS_FITNESS_FRAGMENT));
+
                 break;
         }
     }
