@@ -13,7 +13,6 @@ import android.widget.Button;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.QueryBuilder;
-import com.j256.ormlite.stmt.Where;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.activities.AddNewChart_Activity;
 import com.mcsaatchi.gmfit.activities.Base_Activity;
@@ -55,11 +54,13 @@ public class CustomizeCharts_Fragment extends Fragment {
                 @Override
                 public void drop(int from, int to) {
 
-                    dataChartsMap = dataChartDAO.query(pq);
-
                     EventBus_Singleton.getInstance().post(new EventBus_Poster(CHARTS_ORDER_ARRAY_CHANGED_EVENT, dataChartsMap));
 
                     customizeChartsAdapter.notifyData();
+
+                    for (int i = 0; i < dataChartsMap.size(); i++) {
+                        dataChartDAO.update(dataChartsMap.get(i));
+                    }
                 }
             };
 
@@ -154,9 +155,7 @@ public class CustomizeCharts_Fragment extends Fragment {
         try {
             QueryBuilder<DataChart, Integer> chartsQueryBuilder = dataChartDAO.queryBuilder();
 
-            Where where = chartsQueryBuilder.where();
-            where.eq("whichFragment", fragmentType);
-            chartsQueryBuilder.orderBy("order", true);
+            chartsQueryBuilder.orderBy("position", true).where().eq("whichFragment", fragmentType);
             pq = chartsQueryBuilder.prepare();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -167,11 +166,9 @@ public class CustomizeCharts_Fragment extends Fragment {
         if (to < dataChartsMap.size() && from < dataChartsMap.size()) {
             Collections.swap(chartNames, from, to);
             Collections.swap(dataChartsMap, from, to);
-            int tempNumber = dataChartsMap.get(from).getOrder();
-            dataChartsMap.get(from).setOrder(dataChartsMap.get(to).getOrder());
-            dataChartsMap.get(to).setOrder(tempNumber);
-            dataChartDAO.update(dataChartsMap.get(from));
-            dataChartDAO.update(dataChartsMap.get(to));
+            int tempNumber = dataChartsMap.get(from).getPosition();
+            dataChartsMap.get(from).setPosition(dataChartsMap.get(to).getPosition());
+            dataChartsMap.get(to).setPosition(tempNumber);
         }
     }
 
