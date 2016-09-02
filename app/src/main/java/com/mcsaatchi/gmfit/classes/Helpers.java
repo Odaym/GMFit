@@ -84,37 +84,6 @@ public class Helpers {
         return bundle;
     }
 
-    public static void temporarySetHorizontalChartData(BarChart chart, int xLimits, int yLimits) {
-        ArrayList<BarEntry> yVals1 = new ArrayList<>();
-
-        for (int i = 0; i < yLimits + 1; i++) {
-            float mult = (yLimits + 1);
-            float val1 = (float) (Math.random() * mult) + mult / 3;
-            yVals1.add(new BarEntry((int) val1, i));
-        }
-
-        ArrayList<String> xVals = new ArrayList<>();
-        for (int i = 0; i < xLimits + 1; i++) {
-            xVals.add((int) yVals1.get(i).getVal() + "");
-        }
-
-        BarDataSet set1;
-        set1 = new BarDataSet(yVals1, "Legend");
-        set1.setColors(new int[]{R.color.fitness_teal});
-        set1.setHighLightAlpha(1);
-        set1.setDrawValues(false);
-
-        ArrayList<IBarDataSet> dataSets = new ArrayList<>();
-        dataSets.add(set1);
-
-        BarData data = new BarData(xVals, dataSets);
-
-        chart.setDescription(null);
-        chart.setDrawBarShadow(false);
-        chart.setData(data);
-        chart.invalidate();
-    }
-
     public static void setBarChartData(BarChart chart, List<AuthenticationResponseChartData> chartData) {
         ArrayList<BarEntry> valsMetrics = new ArrayList<>();
         ArrayList<String> xVals = new ArrayList<>();
