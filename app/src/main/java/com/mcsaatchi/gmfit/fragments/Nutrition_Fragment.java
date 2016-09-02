@@ -23,7 +23,6 @@ import com.github.mikephil.charting.charts.BarChart;
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
-import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.activities.AddNewChart_Activity;
@@ -36,8 +35,10 @@ import com.mcsaatchi.gmfit.classes.Cons;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
 import com.mcsaatchi.gmfit.classes.Helpers;
+import com.mcsaatchi.gmfit.models.DataChart;
 import com.mcsaatchi.gmfit.models.NutritionWidget;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponseChart;
+import com.mcsaatchi.gmfit.rest.AuthenticationResponseChartData;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponseWidget;
 import com.mcsaatchi.gmfit.rest.RestClient;
 import com.mcsaatchi.gmfit.rest.UiResponse;
@@ -129,9 +130,13 @@ public class Nutrition_Fragment extends Fragment {
 
     private RuntimeExceptionDao<NutritionWidget, Integer> nutritionWidgetsDAO;
     private QueryBuilder<NutritionWidget, Integer> nutritionWidgetsQB;
-    private PreparedQuery<NutritionWidget> nutritionPQ;
+//    private PreparedQuery<NutritionWidget> nutritioWidgetsnPQ;
+
+    private RuntimeExceptionDao<DataChart, Integer> dataChartDAO;
+    private QueryBuilder<DataChart, Integer> dataChartQB;
 
     private ArrayList<NutritionWidget> widgetsMap;
+    private ArrayList<DataChart> chartsMap;
 
     private SharedPreferences prefs;
 
@@ -146,8 +151,12 @@ public class Nutrition_Fragment extends Fragment {
         super.onAttach(context);
 
         parentActivity = (Activity) context;
+
         nutritionWidgetsDAO = ((Base_Activity) parentActivity).getDBHelper().getNutritionWidgetsDAO();
         nutritionWidgetsQB = nutritionWidgetsDAO.queryBuilder();
+
+        dataChartDAO = ((Base_Activity) parentActivity).getDBHelper().getDataChartDAO();
+        dataChartQB = dataChartDAO.queryBuilder();
     }
 
     @Override
@@ -165,19 +174,25 @@ public class Nutrition_Fragment extends Fragment {
 
         prefs = getActivity().getSharedPreferences(Cons.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
 
+        if (!prefs.getBoolean(Cons.EVENTBUS_NUTRITION_ALREADY_REGISTERED, false)) {
+            EventBus_Singleton.getInstance().register(this);
+            prefs.edit().putBoolean(Cons.EVENTBUS_NUTRITION_ALREADY_REGISTERED, true).apply();
+        }
+
         setHasOptionsMenu(true);
 
         try {
             widgetsMap = (ArrayList<NutritionWidget>) nutritionWidgetsQB.orderBy("position", true).query();
+            chartsMap = (ArrayList<DataChart>) dataChartQB.orderBy("position", true).query();
 
             if (widgetsMap.isEmpty()) {
+                Log.d(TAG, "onCreateView: Widgets map is empty");
                 getUiForSection("nutrition");
             } else {
-                ArrayList<NutritionWidget> subNutritionWidgetsList = new ArrayList<>(widgetsMap.subList(0, 4));
+                Log.d(TAG, "onCreateView: Widgets map is not empty, fetching and setting up widgets and charts");
+                fetchWidgetsAndSetupViews();
 
-                widgetsMap = subNutritionWidgetsList;
-
-                setUpWidgetsGridView(subNutritionWidgetsList);
+                fetchChartsAndSetupViews();
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -250,18 +265,6 @@ public class Nutrition_Fragment extends Fragment {
         return fragmentView;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        EventBus_Singleton.getInstance().register(this);
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        EventBus_Singleton.getInstance().unregister(this);
-    }
-
     private void getUiForSection(String section) {
         Call<UiResponse> getUiForSectionCall = new RestClient().getGMFitService().getUiForSection(prefs.getString(Cons.PREF_USER_ACCESS_TOKEN,
                 Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS), "http://gmfit.mcsaatchi.me/api/v1/user/ui?section=" + section);
@@ -276,7 +279,7 @@ public class Nutrition_Fragment extends Fragment {
                         List<AuthenticationResponseChart> chartsMapFromAPI = response.body().getData().getBody().getCharts();
 
                         /**
-                         * Stuff already exists in DB
+                         * Update or create widgets and datacharts into the DB
                          */
                         for (int i = 0; i < widgetsMapFromAPI.size(); i++) {
                             NutritionWidget nutritionWidget = new NutritionWidget();
@@ -286,39 +289,35 @@ public class Nutrition_Fragment extends Fragment {
                             nutritionWidget.setWidget_id(widgetsMapFromAPI.get(i).getWidgetId());
                             nutritionWidget.setValue(Double.parseDouble(widgetsMapFromAPI.get(i).getTotal()));
 
-                            if (checkIfFieldExists(widgetsMapFromAPI.get(i).getWidgetId())) {
+                            if (checkIfWidgetExistsInDB(widgetsMapFromAPI.get(i).getWidgetId())) {
                                 nutritionWidgetsDAO.update(nutritionWidget);
                             } else {
                                 nutritionWidgetsDAO.create(nutritionWidget);
                             }
                         }
 
-                        try {
-                            /**
-                             * Refresh the query builder
-                             */
-                            nutritionWidgetsQB = nutritionWidgetsDAO.queryBuilder();
+                        for (int i = 0; i < chartsMapFromAPI.size(); i++) {
+                            DataChart nutritionDataChart = new DataChart();
+                            nutritionDataChart.setName(chartsMapFromAPI.get(i).getName());
+                            nutritionDataChart.setPosition(Integer.parseInt(chartsMapFromAPI.get(i).getPosition()));
+                            nutritionDataChart.setType(chartsMapFromAPI.get(i).getSlug());
+                            nutritionDataChart.setUsername(chartsMapFromAPI.get(i).getSlug());
+                            nutritionDataChart.setChart_id(chartsMapFromAPI.get(i).getChartId());
+                            nutritionDataChart.setChartData((ArrayList<AuthenticationResponseChartData>) chartsMapFromAPI.get(i).getData());
 
-                            /**
-                             * Grab the newly created/updated Nutrition widgets from DB
-                             */
-                            ArrayList<NutritionWidget> widgetsFromDB = (ArrayList<NutritionWidget>) nutritionWidgetsQB.orderBy("position", true).query();
-
-                            /**
-                             * Get the sublist from the above list
-                             */
-                            ArrayList<NutritionWidget> subNutritionWidgetsList = new ArrayList<>(widgetsFromDB.subList(0, 4));
-
-                            /**
-                             * Assign to the original widgetsMap to be used when accessing the Options menu to re-order widgets
-                             */
-                            widgetsMap = subNutritionWidgetsList;
-
-                            setUpWidgetsGridView(subNutritionWidgetsList);
-
-                        } catch (SQLException e) {
-                            e.printStackTrace();
+                            if (checkIfChartExistsInDB(chartsMapFromAPI.get(i).getChartId())) {
+                                dataChartDAO.update(nutritionDataChart);
+                            } else {
+                                dataChartDAO.create(nutritionDataChart);
+                            }
                         }
+
+                        /**
+                         * Now get the data back and use it to load the views
+                         */
+                        fetchWidgetsAndSetupViews();
+
+                        fetchChartsAndSetupViews();
 
                         break;
                 }
@@ -331,11 +330,68 @@ public class Nutrition_Fragment extends Fragment {
         });
     }
 
-    private boolean checkIfFieldExists(int widget_id) {
+    private void fetchWidgetsAndSetupViews() {
+        try {
+            /**
+             * Refresh the query builder
+             */
+            nutritionWidgetsQB = nutritionWidgetsDAO.queryBuilder();
+
+            /**
+             * Grab the newly created/updated Nutrition widgets from DB
+             */
+            ArrayList<NutritionWidget> widgetsFromDB = (ArrayList<NutritionWidget>) nutritionWidgetsQB.orderBy("position", true).query();
+
+            /**
+             * Get the sublist from the above list
+             */
+            widgetsMap = new ArrayList<>(widgetsFromDB.subList(0, 4));
+
+            setUpWidgetsGridView(widgetsMap);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void fetchChartsAndSetupViews() {
+        try {
+            /**
+             * Refresh the query builder
+             */
+            dataChartQB = dataChartDAO.queryBuilder();
+
+            /**
+             * Grab the newly created/updated Nutrition widgets from DB
+             */
+            ArrayList<DataChart> chartsFromDB = (ArrayList<DataChart>) dataChartQB.orderBy("position", true).query();
+
+            for (int i = 0; i < chartsFromDB.size(); i++) {
+                addNewBarChart(chartsFromDB.get(i));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private boolean checkIfWidgetExistsInDB(int widget_id) {
         try {
             List<NutritionWidget> nw = nutritionWidgetsQB.where().eq("widget_id", widget_id).query();
 
             return !nw.isEmpty();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    private boolean checkIfChartExistsInDB(int chart_id) {
+        try {
+            List<DataChart> dc = dataChartQB.where().eq("chart_id", chart_id).query();
+
+            return !dc.isEmpty();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -451,7 +507,7 @@ public class Nutrition_Fragment extends Fragment {
         switch (requestCode) {
             case ADD_NEW_NUTRITION_CHART_REQUEST:
                 if (data != null) {
-                    addNewBarChart(data.getStringExtra(Cons.EXTRAS_CHART_FULL_NAME));
+//                    addNewBarChart(data.getStringExtra(Cons.EXTRAS_CHART_FULL_NAME));
                 }
                 break;
             case BARCODE_CAPTURE_RC:
@@ -489,30 +545,27 @@ public class Nutrition_Fragment extends Fragment {
         targetLayoutForMeal.addView(mealEntryLayout);
     }
 
-    private void addNewBarChart(String chartTitle) {
-        final View barChartLayout = parentActivity.getLayoutInflater().inflate(R.layout.view_barchart_container, null);
+    public void addNewBarChart(DataChart chartObject) {
+        final View barChartLayout = getActivity().getLayoutInflater().inflate(R.layout.view_barchart_container, null);
 
-        TextView chartTitleTV = (TextView) barChartLayout.findViewById(R.id.chartTitleTV);
+        final TextView chartTitleTV_NEW_CHART = (TextView) barChartLayout.findViewById(R.id.chartTitleTV);
         BarChart barChart = (BarChart) barChartLayout.findViewById(R.id.barChart);
 
-        if (chartTitle != null)
-            chartTitleTV.setText(chartTitle);
+        chartTitleTV_NEW_CHART.setText(chartObject.getName());
 
-        //TODO: apply the same change you did here as in the Fitness Fragment
+        Helpers.setBarChartData(barChart, chartObject.getChartData());
 
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, getResources().getDimensionPixelSize(R
                 .dimen.chart_height_2));
-        lp.topMargin = getResources().getDimensionPixelSize(R.dimen.default_margin_2);
+        lp.topMargin = getResources().getDimensionPixelSize(R.dimen.default_margin_1);
         barChartLayout.setLayoutParams(lp);
 
         cards_container.addView(barChartLayout);
-
-        parentScrollView.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                parentScrollView.fullScroll(View.FOCUS_DOWN);
-            }
-        }, 500);
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        prefs.edit().putBoolean(Cons.EVENTBUS_NUTRITION_ALREADY_REGISTERED, false).apply();
+    }
 }
