@@ -117,7 +117,7 @@
                         <TextView
                             android:id="@+id/addEntryBTN_BREAKFAST"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:gravity="center"
                             android:text="@string/add_new_meal"
                             android:textColor="@android:color/white"/>
@@ -184,7 +184,7 @@
                         <TextView
                             android:id="@+id/addEntryBTN_LUNCH"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:gravity="center"
                             android:text="@string/add_new_meal"
                             android:textColor="@android:color/white"/>
@@ -251,7 +251,7 @@
                         <TextView
                             android:id="@+id/addEntryBTN_DINNER"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:gravity="center"
                             android:text="@string/add_new_meal"
                             android:textColor="@android:color/white"/>
@@ -317,7 +317,7 @@
                         <TextView
                             android:id="@+id/addEntryBTN_SNACKS"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:gravity="center"
                             android:text="@string/add_new_meal"
                             android:textColor="@android:color/white"/>
