@@ -126,6 +126,12 @@ public class Main_Activity extends Base_Activity {
     }
 
     @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        bottomBar.onSaveInstanceState(outState);
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -179,7 +185,6 @@ public class Main_Activity extends Base_Activity {
         signOutUserCall.enqueue(new Callback<DefaultGetResponse>() {
             @Override
             public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
-                Log.d("TAG", "onResponse: Response code is : " + response.code());
                 switch (response.code()) {
                     case 200:
                         waitingDialog.dismiss();
@@ -200,21 +205,5 @@ public class Main_Activity extends Base_Activity {
                 alertDialog.show();
             }
         });
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        bottomBar.onSaveInstanceState(outState);
-    }
-
-    public class UpdateWidgetsRequest {
-        final int[] widgets;
-        final int[] positions;
-
-        public UpdateWidgetsRequest(int[] widgets, int[] positions) {
-            this.widgets = widgets;
-            this.positions = positions;
-        }
     }
 }
