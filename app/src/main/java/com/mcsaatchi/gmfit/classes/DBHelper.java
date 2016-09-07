@@ -17,7 +17,6 @@ import com.mcsaatchi.gmfit.models.NutritionWidget;
 import com.mcsaatchi.gmfit.models.User;
 
 import java.sql.SQLException;
-import java.util.Random;
 
 /**
  * Database helper class used to manage the creation and upgrading of your database. This class also usually provides
@@ -30,61 +29,6 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
     private static final String TAG = "DBHelper";
     private Context context;
     private String[] mealTypes = new String[]{"Breakfast", "Lunch", "Dinner"};
-
-    private String[] mealNames = new String[]{"Twice-Baked Broccoli-and-Kale-Stuffed Potatoes",
-            "Zucchini Noodles With Leek-Tomato Sauce",
-            "Mushroom-Stuffed Cabbage Rolls",
-            "Quick and Easy Veggie Chili",
-            "Butternut Squash, Chickpea, and Kale Curry",
-            "Kale, Red Pepper, and Broccoli Spread Rollup",
-            "Cheesy Stuffed Tomatoes",
-            "Lentil and Goat Cheese Casserole",
-            "Lentils with Roasted Beets and Carrots",
-            "Quinoa with Broccoli-Avocado Pesto",
-            "Mexican-Style Sweet Potatoes",
-            "Whole-Wheat Rigatoni With Greens",
-            "Kelp Noodles With Almond-Ginger Dressing",
-            "Whole-Wheat Linguine With Asparagus and Lemon",
-            "Pesto Cheese Pizza",
-            "Fresh Fig and Onion Flatbread Pizza",
-            "Meat-Free Mushroom Bolognese",
-            "Vegetable and Goat Cheese Quesadilla",
-            "Veggie-Stuffed Zucchini",
-            "Black Bean and Quinoa Burgers",
-            "Cauliflower Crust Pizza",
-            "Baked Chickpea Burgers",
-            "Creamy Avocado Pasta",
-            "Quinoa Puttanesca",
-            "Mushroom and Olive Veggie Burgers",
-            "Basil Quinoa Cakes",
-            "Quinoa and Sweet Potato Stuffed Mushrooms",
-            "Pizza Margherita",
-            "Spanish Potato and Onion Tortilla",
-            "Roasted Vegetable Pizza",
-            "Open-Faced Egg and Veggie Sammie",
-            "Lentil and Goat Cheese Stuffed Zucchini",
-            "Mushroom Risotto",
-            "Spaghetti Squash Casserole",
-            "Butternut Squash With Tortellini",
-            "Light Spinach Pesto",
-            "Stuffed Squash",
-            "Easy Sesame Salmon",
-            "Chicken Fajitas",
-            "Sesame Chicken Bowl",
-            "Turkey, Brie, and Cranberry Sandwich",
-            "Baked Salmon With Avocado-Dill Yogurt",
-            "Pan-Seared Fish Tacos",
-            "Eggs and Potatoes in Spicy Tomato Sauce",
-            "Chipotle-Honey Chicken Tenders and Sweet Potatoes",
-            "Spicy Rustic Tomato Sauce",
-            "Turkey Chili",
-            "Manly Marmalade Chicken",
-            "Smoked Salmon and Egg Tortilla",
-            "Zesty Shrimp and Quinoa",
-            "Broccoli Rabe “Spaghetti,” Tomatoes, and Chicken",
-            "Apricot Roasted Chicken and Beets With Fall Vegetables",
-            "Butternut Squash Soup",
-            "Herb-Stuffed Turkey Breast"};
 
     private String[] snackNames = new String[]{"Snickers", "Mars", "Biscuits", "Ice cream", "Lollipops", "Muffins", "Donuts", "Sunflower seeds", "Cereal",
             "Chocolate Chip Cookies", "Waffer Biscuits", "Nuts and crackers"};
@@ -113,13 +57,68 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
 
             SharedPreferences prefs = context.getSharedPreferences(Cons.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
 
-            for (int i = 0; i < mealNames.length; i++) {
-                getMealItemDAO().create(new MealItem(mealNames[new Random().nextInt(mealNames.length)], mealTypes[new Random().nextInt(mealTypes.length)]));
-            }
+            getMealItemDAO().create(new MealItem("Recently Added", "Breakfast", 1));
+            getMealItemDAO().create(new MealItem("Twice-Baked Potatoes", "Breakfast", 2));
+            getMealItemDAO().create(new MealItem("Butternut Squash, Chickpea", "Breakfast", 2));
+            getMealItemDAO().create(new MealItem("All Items", "Breakfast", 1));
+            getMealItemDAO().create(new MealItem("Lentils with Roasted Beets and Carrots", "Breakfast", 2));
+            getMealItemDAO().create(new MealItem("Quinoa with Broccoli-Avocado Pesto", "Breakfast", 2));
+            getMealItemDAO().create(new MealItem("Mexican-Style Sweet Potatoes", "Breakfast", 2));
+            getMealItemDAO().create(new MealItem("Whole-Wheat Rigatoni With Greens", "Breakfast", 2));
+            getMealItemDAO().create(new MealItem("Kelp Noodles With Almond-Ginger Dressing", "Breakfast", 2));
+            getMealItemDAO().create(new MealItem("Whole-Wheat Linguine With Asparagus and Lemon", "Breakfast", 2));
+            getMealItemDAO().create(new MealItem("Pesto Cheese Pizza", "Breakfast", 2));
+            getMealItemDAO().create(new MealItem("Pesto Cheese Pizza", "Breakfast", 2));
+            getMealItemDAO().create(new MealItem("Pesto Cheese Pizza", "Breakfast", 2));
+            getMealItemDAO().create(new MealItem("Pesto Cheese Pizza", "Breakfast", 2));
+            getMealItemDAO().create(new MealItem("Pesto Cheese Pizza", "Breakfast", 2));
+            getMealItemDAO().create(new MealItem("Pesto Cheese Pizza", "Breakfast", 2));
+            getMealItemDAO().create(new MealItem("Pesto Cheese Pizza", "Breakfast", 2));
+            getMealItemDAO().create(new MealItem("Pesto Cheese Pizza", "Breakfast", 2));
+            getMealItemDAO().create(new MealItem("Fresh Fig and Onion Flatbread Pizza", "Breakfast", 2));
 
-            for (int i = 0; i < snackNames.length; i++){
-                getMealItemDAO().create(new MealItem(snackNames[i], "Snacks"));
-            }
+            getMealItemDAO().create(new MealItem("Recently Added", "Lunch", 1));
+            getMealItemDAO().create(new MealItem("Meat-Free Mushroom Bolognese", "Lunch", 2));
+            getMealItemDAO().create(new MealItem("Vegetable and Goat Cheese Quesadilla", "Lunch", 2));
+            getMealItemDAO().create(new MealItem("Veggie-Stuffed Zucchini", "Lunch", 2));
+            getMealItemDAO().create(new MealItem("Another Added", "", 1));
+            getMealItemDAO().create(new MealItem("Black Bean and Quinoa Burgers", "Lunch", 2));
+            getMealItemDAO().create(new MealItem("Cauliflower Crust Pizza", "Lunch", 2));
+            getMealItemDAO().create(new MealItem("Baked Chickpea Burgers", "Lunch", 2));
+            getMealItemDAO().create(new MealItem("Creamy Avocado Pasta", "Lunch", 2));
+            getMealItemDAO().create(new MealItem("Quinoa Puttanesca", "Lunch", 2));
+            getMealItemDAO().create(new MealItem("All Items", "Lunch", 1));
+            getMealItemDAO().create(new MealItem("Mushroom and Olive Veggie Burgers", "Lunch", 2));
+            getMealItemDAO().create(new MealItem("Basil Quinoa Cakes", "Lunch", 2));
+            getMealItemDAO().create(new MealItem("Quinoa and Sweet Potato Stuffed Mushrooms", "Lunch", 2));
+            getMealItemDAO().create(new MealItem("Pizza Margherita", "Lunch", 2));
+            getMealItemDAO().create(new MealItem("Spanish Potato and Onion Tortilla", "Lunch", 2));
+            getMealItemDAO().create(new MealItem("Roasted Vegetable Pizza", "Lunch", 2));
+
+            getMealItemDAO().create(new MealItem("Open-Faced Egg and Veggie Sammie", "Dinner", 2));
+            getMealItemDAO().create(new MealItem("Lentil and Goat Cheese Stuffed Zucchini", "Dinner", 2));
+            getMealItemDAO().create(new MealItem("Mushroom Risotto", "Dinner", 2));
+            getMealItemDAO().create(new MealItem("Spaghetti Squash Casserole", "Dinner", 2));
+            getMealItemDAO().create(new MealItem("Butternut Squash With Tortellini", "Dinner", 2));
+            getMealItemDAO().create(new MealItem("Light Spinach Pesto", "Dinner", 2));
+            getMealItemDAO().create(new MealItem("Stuffed Squash", "Dinner", 2));
+            getMealItemDAO().create(new MealItem("Easy Sesame Salmon", "Dinner", 2));
+            getMealItemDAO().create(new MealItem("Chicken Fajitas", "Dinner", 2));
+            getMealItemDAO().create(new MealItem("Sesame Chicken Bowl", "Dinner", 2));
+            getMealItemDAO().create(new MealItem("Turkey Brie and Cranberry Sandwich", "Dinner", 2));
+            getMealItemDAO().create(new MealItem("Baked Salmon With Avocado-Dill Yogurt", "Dinner", 2));
+            getMealItemDAO().create(new MealItem("Pan-Seared Fish Tacos", "Dinner", 2));
+            getMealItemDAO().create(new MealItem("Eggs and Potatoes in Spicy Tomato Sauce", "Dinner", 2));
+            getMealItemDAO().create(new MealItem("Chipotle-Honey Chicken Tenders", "Dinner", 2));
+            getMealItemDAO().create(new MealItem("Spicy Rustic Tomato Sauce", "Dinner", 2));
+            getMealItemDAO().create(new MealItem("Turkey Chili", "Dinner", 2));
+            getMealItemDAO().create(new MealItem("Manly Marmalade Chicken", "Dinner", 2));
+            getMealItemDAO().create(new MealItem("Smoked Salmon and Egg Tortilla", "Dinner", 2));
+            getMealItemDAO().create(new MealItem("Zesty Shrimp and Quinoa", "Dinner", 2));
+            getMealItemDAO().create(new MealItem("Broccoli Rabe “Spaghetti,”", "Dinner", 2));
+            getMealItemDAO().create(new MealItem("Apricot Roasted Chicken", "Dinner", 2));
+            getMealItemDAO().create(new MealItem("Butternut Squash Soup", "Dinner", 2));
+            getMealItemDAO().create(new MealItem("Herb-Stuffed Turkey Breast", "Dinner", 2));
 
             FitnessWidget fw1 = new FitnessWidget("Walking", "Km/hour", 0, R.drawable.ic_running, 0);
             FitnessWidget fw2 = new FitnessWidget("Biking", "meters", 0, R.drawable.ic_biking, 1);
