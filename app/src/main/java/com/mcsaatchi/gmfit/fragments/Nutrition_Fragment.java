@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -40,8 +39,10 @@ import com.mcsaatchi.gmfit.models.NutritionWidget;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponseChart;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponseChartData;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponseWidget;
+import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.rest.RestClient;
 import com.mcsaatchi.gmfit.rest.UiResponse;
+import com.squareup.otto.Subscribe;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -56,17 +57,13 @@ import retrofit2.Response;
 public class Nutrition_Fragment extends Fragment {
 
     public static final int ADD_NEW_NUTRITION_CHART_REQUEST = 2;
+
+    public static final int REORDER_WIDGETS_REQUEST = 4;
+
     private static final int BARCODE_CAPTURE_RC = 773;
+
     private static final String TAG = "Nutrition_Fragment";
-    private final String caloriesChartType = "Calories";
-    private final String biotinChartType = "Biotin";
-    private final String caffeineChartType = "Caffeine";
-    private final String calciumChartType = "Calcium";
-    private final String carbohydratesChartType = "Carbohydrates";
-    private final String chlorideChartType = "Chloride";
-    private final String chromiumChartType = "Chromium";
-    private final String copperChartType = "Copper";
-    private final String dietary_cholesterolChartType = "Dietary Cholesterol";
+
     @Bind(R.id.widgetsGridView)
     GridView widgetsGridView;
     @Bind(R.id.metricCounterTV)
@@ -130,7 +127,6 @@ public class Nutrition_Fragment extends Fragment {
 
     private RuntimeExceptionDao<NutritionWidget, Integer> nutritionWidgetsDAO;
     private QueryBuilder<NutritionWidget, Integer> nutritionWidgetsQB;
-//    private PreparedQuery<NutritionWidget> nutritioWidgetsnPQ;
 
     private RuntimeExceptionDao<DataChart, Integer> dataChartDAO;
     private QueryBuilder<DataChart, Integer> dataChartQB;
@@ -143,7 +139,6 @@ public class Nutrition_Fragment extends Fragment {
     /**
      * TOP LAYOUT WITH WIDGETS
      */
-    private NestedScrollView parentScrollView;
     private Activity parentActivity;
 
     @Override
@@ -168,16 +163,11 @@ public class Nutrition_Fragment extends Fragment {
 
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.nutrition_tab_title);
 
-        parentScrollView = (NestedScrollView) getActivity().findViewById(R.id.myScrollingContent);
-
         ButterKnife.bind(this, fragmentView);
 
         prefs = getActivity().getSharedPreferences(Cons.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
 
-        if (!prefs.getBoolean(Cons.EVENTBUS_NUTRITION_ALREADY_REGISTERED, false)) {
-            EventBus_Singleton.getInstance().register(this);
-            prefs.edit().putBoolean(Cons.EVENTBUS_NUTRITION_ALREADY_REGISTERED, true).apply();
-        }
+        EventBus_Singleton.getInstance().register(this);
 
         setHasOptionsMenu(true);
 
@@ -265,6 +255,173 @@ public class Nutrition_Fragment extends Fragment {
         return fragmentView;
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus_Singleton.getInstance().unregister(this);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent = new Intent(getActivity(), CustomizeWidgetsAndCharts_Activity.class);
+        intent.putExtra(Cons.EXTRAS_CUSTOMIZE_WIDGETS_CHARTS_FRAGMENT_TYPE, Cons.EXTRAS_NUTRITION_FRAGMENT);
+        intent.putParcelableArrayListExtra(Cons.BUNDLE_NUTRITION_WIDGETS_MAP, widgetsMap);
+        startActivity(intent);
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        String scanContent;
+
+        switch (requestCode) {
+            case ADD_NEW_NUTRITION_CHART_REQUEST:
+                if (data != null) {
+//                    addNewBarChart(data.getStringExtra(Cons.EXTRAS_CHART_FULL_NAME));
+                }
+                break;
+            case BARCODE_CAPTURE_RC:
+                if (resultCode == CommonStatusCodes.SUCCESS) {
+                    if (data != null) {
+                        Barcode barcode = data.getParcelableExtra(BarcodeCapture_Activity.BarcodeObject);
+                        scanContent = barcode.displayValue;
+
+                        Toast.makeText(getActivity(), "Barcode value: " + scanContent, Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getActivity(), getString(R.string.no_barcode_detected_here), Toast.LENGTH_LONG).show();
+                    }
+                }
+                break;
+        }
+    }
+
+    private boolean checkIfWidgetExistsInDB(int widget_id) {
+        try {
+            List<NutritionWidget> nw = nutritionWidgetsQB.where().eq("widget_id", widget_id).query();
+
+            return !nw.isEmpty();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    private boolean checkIfChartExistsInDB(int chart_id) {
+        try {
+            List<DataChart> dc = dataChartQB.where().eq("chart_id", chart_id).query();
+
+            return !dc.isEmpty();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    private void fetchWidgetsAndSetupViews() {
+        try {
+            /**
+             * Refresh the query builder
+             */
+            nutritionWidgetsQB = nutritionWidgetsDAO.queryBuilder();
+
+            /**
+             * Grab the newly created/updated Nutrition widgets from DB
+             */
+            ArrayList<NutritionWidget> widgetsFromDB = (ArrayList<NutritionWidget>) nutritionWidgetsQB.orderBy("position", true).query();
+
+            /**
+             * Get the sublist from the above list
+             */
+            widgetsMap = new ArrayList<>(widgetsFromDB.subList(0, 4));
+
+            setUpWidgetsGridView(widgetsMap);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void fetchChartsAndSetupViews() {
+        try {
+            /**
+             * Refresh the query builder
+             */
+            dataChartQB = dataChartDAO.queryBuilder();
+
+            /**
+             * Grab the newly created/updated Nutrition widgets from DB
+             */
+            ArrayList<DataChart> chartsFromDB = (ArrayList<DataChart>) dataChartQB.orderBy("position", true).query();
+
+            for (int i = 0; i < chartsFromDB.size(); i++) {
+                addNewBarChart(chartsFromDB.get(i));
+
+                Log.d(TAG, "fetchChartsAndSetupViews: Chart name " + chartsFromDB.get(i).getName());
+                Log.d(TAG, "fetchChartsAndSetupViews: Chart name " + chartsFromDB.get(i).getChartData().size());
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setUpWidgetsGridView(ArrayList<NutritionWidget> widgetsMap) {
+        nutritionWidgets_GridAdapter = new NutritionWidgets_GridAdapter(getActivity(), widgetsMap, R.layout.grid_item_nutrition_widgets);
+
+        widgetsGridView.setAdapter(nutritionWidgets_GridAdapter);
+    }
+
+    @Subscribe
+    public void handle_BusEvents(EventBus_Poster ebp) {
+        String ebpMessage = ebp.getMessage();
+
+        switch (ebpMessage) {
+            case Cons.EXTRAS_PICKED_MEAL_ENTRY:
+                if (ebp.getMealItemExtra() != null) {
+                    switch (ebp.getMealItemExtra().getType()) {
+                        case "Breakfast":
+                            addMealEntryLayout(ebp.getMealItemExtra().getName(), entriesContainerLayout_BREAKFAST);
+                            break;
+                        case "Lunch":
+                            addMealEntryLayout(ebp.getMealItemExtra().getName(), entriesContainerLayout_LUNCH);
+                            break;
+                        case "Dinner":
+                            addMealEntryLayout(ebp.getMealItemExtra().getName(), entriesContainerLayout_DINNER);
+                            break;
+                        case "Snacks":
+                            addMealEntryLayout(ebp.getMealItemExtra().getName(), entriesContainerLayout_SNACKS);
+                            break;
+                    }
+                }
+
+                break;
+            case Cons.EXTRAS_NUTRITION_WIDGETS_ORDER_ARRAY_CHANGED:
+                Log.d(TAG, "handle_BusEvents: Event received!");
+
+                if (ebp.getNutritionWidgetsMap() != null) {
+                    widgetsMap = ebp.getNutritionWidgetsMap();
+                    setUpWidgetsGridView(ebp.getNutritionWidgetsMap());
+
+                    int[] widgets = new int[widgetsMap.size()];
+                    int[] positions = new int[widgetsMap.size()];
+
+                    for (int i = 0; i < widgetsMap.size(); i++) {
+                        widgets[i] = widgetsMap.get(i).getWidget_id();
+                        positions[i] = widgetsMap.get(i).getPosition();
+                    }
+
+                    updateUserWidgets(widgets, positions);
+                }
+
+                break;
+        }
+    }
+
     private void getUiForSection(String section) {
         Call<UiResponse> getUiForSectionCall = new RestClient().getGMFitService().getUiForSection(prefs.getString(Cons.PREF_USER_ACCESS_TOKEN,
                 Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS), "http://gmfit.mcsaatchi.me/api/v1/user/ui?section=" + section);
@@ -330,165 +487,26 @@ public class Nutrition_Fragment extends Fragment {
         });
     }
 
-    private void fetchWidgetsAndSetupViews() {
-        try {
-            /**
-             * Refresh the query builder
-             */
-            nutritionWidgetsQB = nutritionWidgetsDAO.queryBuilder();
+    private void updateUserWidgets(int[] widgetIds, int[] widgetPositions) {
 
-            /**
-             * Grab the newly created/updated Nutrition widgets from DB
-             */
-            ArrayList<NutritionWidget> widgetsFromDB = (ArrayList<NutritionWidget>) nutritionWidgetsQB.orderBy("position", true).query();
+        Call<DefaultGetResponse> updateUserWidgetsCall = new RestClient().getGMFitService().updateUserWidgets(prefs.getString(Cons.PREF_USER_ACCESS_TOKEN,
+                Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS), new UpdateWidgetsRequest(widgetIds, widgetPositions));
 
-            /**
-             * Get the sublist from the above list
-             */
-            widgetsMap = new ArrayList<>(widgetsFromDB.subList(0, 4));
-
-            setUpWidgetsGridView(widgetsMap);
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void fetchChartsAndSetupViews() {
-        try {
-            /**
-             * Refresh the query builder
-             */
-            dataChartQB = dataChartDAO.queryBuilder();
-
-            /**
-             * Grab the newly created/updated Nutrition widgets from DB
-             */
-            ArrayList<DataChart> chartsFromDB = (ArrayList<DataChart>) dataChartQB.orderBy("position", true).query();
-
-            for (int i = 0; i < chartsFromDB.size(); i++) {
-                addNewBarChart(chartsFromDB.get(i));
+        updateUserWidgetsCall.enqueue(new Callback<DefaultGetResponse>() {
+            @Override
+            public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
+                switch (response.code()) {
+                    case 200:
+                        break;
+                }
             }
 
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+            @Override
+            public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+                Log.d(TAG, "onFailure: Failed");
+            }
+        });
     }
-
-    private boolean checkIfWidgetExistsInDB(int widget_id) {
-        try {
-            List<NutritionWidget> nw = nutritionWidgetsQB.where().eq("widget_id", widget_id).query();
-
-            return !nw.isEmpty();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return false;
-    }
-
-    private boolean checkIfChartExistsInDB(int chart_id) {
-        try {
-            List<DataChart> dc = dataChartQB.where().eq("chart_id", chart_id).query();
-
-            return !dc.isEmpty();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return false;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        Intent intent = new Intent(getActivity(), CustomizeWidgetsAndCharts_Activity.class);
-        intent.putExtra(Cons.EXTRAS_CUSTOMIZE_WIDGETS_CHARTS_FRAGMENT_TYPE, Cons.EXTRAS_NUTRITION_FRAGMENT);
-        intent.putParcelableArrayListExtra(Cons.BUNDLE_NUTRITION_WIDGETS_MAP, widgetsMap);
-        startActivity(intent);
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    private void setUpWidgetsGridView(ArrayList<NutritionWidget> widgetsMap) {
-        nutritionWidgets_GridAdapter = new NutritionWidgets_GridAdapter(getActivity(), widgetsMap, R.layout.grid_item_nutrition_widgets);
-
-        widgetsGridView.setAdapter(nutritionWidgets_GridAdapter);
-    }
-
-    @com.squareup.otto.Subscribe
-    public void handle_BusEvents(EventBus_Poster ebp) {
-        String ebpMessage = ebp.getMessage();
-
-        switch (ebpMessage) {
-            case Cons.EXTRAS_PICKED_MEAL_ENTRY:
-                if (ebp.getMealItemExtra() != null) {
-                    switch (ebp.getMealItemExtra().getType()) {
-                        case "Breakfast":
-                            addMealEntryLayout(ebp.getMealItemExtra().getName(), entriesContainerLayout_BREAKFAST);
-                            break;
-                        case "Lunch":
-                            addMealEntryLayout(ebp.getMealItemExtra().getName(), entriesContainerLayout_LUNCH);
-                            break;
-                        case "Dinner":
-                            addMealEntryLayout(ebp.getMealItemExtra().getName(), entriesContainerLayout_DINNER);
-                            break;
-                        case "Snacks":
-                            addMealEntryLayout(ebp.getMealItemExtra().getName(), entriesContainerLayout_SNACKS);
-                            break;
-                    }
-                }
-
-                break;
-            case Cons.EXTRAS_NUTRITION_WIDGETS_ORDER_ARRAY_CHANGED:
-                if (ebp.getNutritionWidgetsMap() != null) {
-                    widgetsMap = ebp.getNutritionWidgetsMap();
-                    setUpWidgetsGridView(ebp.getNutritionWidgetsMap());
-                }
-
-//                int[] widgets = new int[0], positions = new int[0];
-//
-//                for (int i = 0; i < widgetsMap.size(); i++) {
-//                    widgets[i] = ((ParcelableNutritionString) widgetsMap.get(i)).get;
-//                    positions[i] = i;
-//                }
-                break;
-        }
-    }
-
-//    private void updateUserWidgets() {
-//
-//        Call<UiResponse> getUiForSectionCall = new RestClient().getGMFitService().updateUserWidgets(prefs.getString(Cons.PREF_USER_ACCESS_TOKEN,
-//                Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS), );
-//
-//        getUiForSectionCall.enqueue(new Callback<UiResponse>() {
-//            @Override
-//            public void onResponse(Call<UiResponse> call, Response<UiResponse> response) {
-//
-//                switch (response.code()) {
-//                    case 200:
-//                        prefs.edit().putBoolean(Cons.EXTRAS_USER_LOGGED_IN, true).apply();
-//                        prefs.edit().putBoolean(prefs.getString(Cons.EXTRAS_USER_EMAIL, "") + "_" + Cons.EVENT_FINISHED_SETTING_UP_PROFILE_SUCCESSFULLY, true).apply();
-//
-//                        List<AuthenticationResponseWidget> widgetsMap = response.body().getData().getBody().getWidgets();
-//                        List<AuthenticationResponseChart> chartsMap = response.body().getData().getBody().getCharts();
-//
-//                        Intent intent = new Intent(getActivity(), Main_Activity.class);
-//                        intent.putParcelableArrayListExtra("widgets", (ArrayList<AuthenticationResponseWidget>) widgetsMap);
-//                        intent.putParcelableArrayListExtra("charts", (ArrayList<AuthenticationResponseChart>) chartsMap);
-//                        startActivity(intent);
-//
-//                        getActivity().finish();
-//
-//                        break;
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<UiResponse> call, Throwable t) {
-//                Log.d(TAG, "onFailure: Failed");
-//            }
-//        });
-//    }
 
     public void handleScanMealEntry() {
         Intent intent = new Intent(getActivity(), BarcodeCapture_Activity.class);
@@ -496,33 +514,6 @@ public class Nutrition_Fragment extends Fragment {
         intent.putExtra(BarcodeCapture_Activity.UseFlash, false);
 
         startActivityForResult(intent, BARCODE_CAPTURE_RC);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        String scanContent;
-
-        switch (requestCode) {
-            case ADD_NEW_NUTRITION_CHART_REQUEST:
-                if (data != null) {
-//                    addNewBarChart(data.getStringExtra(Cons.EXTRAS_CHART_FULL_NAME));
-                }
-                break;
-            case BARCODE_CAPTURE_RC:
-                if (resultCode == CommonStatusCodes.SUCCESS) {
-                    if (data != null) {
-                        Barcode barcode = data.getParcelableExtra(BarcodeCapture_Activity.BarcodeObject);
-                        scanContent = barcode.displayValue;
-
-                        Toast.makeText(getActivity(), "Barcode value: " + scanContent, Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(getActivity(), getString(R.string.no_barcode_detected_here), Toast.LENGTH_LONG).show();
-                    }
-                }
-                break;
-        }
     }
 
     private void openMealEntryPickerActivity(String mainMealName) {
@@ -563,9 +554,13 @@ public class Nutrition_Fragment extends Fragment {
         cards_container.addView(barChartLayout);
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        prefs.edit().putBoolean(Cons.EVENTBUS_NUTRITION_ALREADY_REGISTERED, false).apply();
+    public class UpdateWidgetsRequest {
+        final int[] widgets;
+        final int[] positions;
+
+        public UpdateWidgetsRequest(int[] widgets, int[] positions) {
+            this.widgets = widgets;
+            this.positions = positions;
+        }
     }
 }
