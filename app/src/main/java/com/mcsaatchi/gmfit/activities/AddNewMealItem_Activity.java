@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,11 +19,10 @@ import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.stmt.SelectArg;
 import com.j256.ormlite.stmt.Where;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.adapters.OneItemWithIcon_ListAdapter;
+import com.mcsaatchi.gmfit.adapters.SimpleSectioned_ListAdapter;
 import com.mcsaatchi.gmfit.classes.Cons;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
-import com.mcsaatchi.gmfit.classes.Helpers;
 import com.mcsaatchi.gmfit.models.MealItem;
 
 import java.sql.SQLException;
@@ -31,24 +31,24 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import dev.dworks.libs.astickyheader.SimpleSectionedListAdapter;
-import dev.dworks.libs.astickyheader.SimpleSectionedListAdapter.Section;
 
 public class AddNewMealItem_Activity extends Base_Activity implements SearchView.OnQueryTextListener {
 
     private static final String TAG = "AddNewMealItem_Activity";
+    private static final int SECTION_VIEWTYPE = 1;
+    private static final int ITEM_VIEWTYPE = 2;
+    @Bind(R.id.toolbar)
+    Toolbar toolbar;
     @Bind(R.id.mealItemsList)
     ListView mealItemsList;
     private RuntimeExceptionDao<MealItem, Integer> mealItemsDAO;
     private QueryBuilder<MealItem, Integer> mealsQueryBuilder;
     private PreparedQuery<MealItem> pq;
+
     private String mealType;
-    private String[] mHeaderNames;
-    private Integer[] mHeaderPositions;
+
     private List<MealItem> mealsList = new ArrayList<>();
-    private List<Section> sections = new ArrayList<>();
-    private SimpleSectionedListAdapter simpleSectionedListAdapter;
-    private OneItemWithIcon_ListAdapter oneItem_ListAdapter;
+    private SimpleSectioned_ListAdapter simpleSectionedListAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -56,56 +56,44 @@ public class AddNewMealItem_Activity extends Base_Activity implements SearchView
         String actionBarTitle;
 
         if (getIntent().getExtras() != null) {
-            actionBarTitle = getString(R.string.add_new_meal_item_activity_title) + " " + getIntent().getExtras().getString(Cons.EXTRAS_MAIN_MEAL_NAME);
             mealType = getIntent().getExtras().getString(Cons.EXTRAS_MAIN_MEAL_NAME);
+            actionBarTitle = getString(R.string.add_new_meal_item_activity_title) + " " + mealType;
         } else {
             actionBarTitle = getString(R.string.app_name);
             mealType = getString(R.string.meal_headline_title_breakfast);
         }
 
-        super.onCreate(Helpers.createActivityBundleWithProperties(actionBarTitle, true));
+        super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_add_new_meal_item);
 
         ButterKnife.bind(this);
 
-        mealItemsDAO = getDBHelper().getMealItemDAO();
+        setupToolbar(toolbar, actionBarTitle, true);
 
-        mHeaderNames = new String[]{getString(R.string.list_section_recently_added), getString(R.string.list_section_popular_meals)};
-        mHeaderPositions = new Integer[]{0, 7};
+        mealItemsDAO = getDBHelper().getMealItemDAO();
 
         prepareQueryForAllMealTypeItems(mealType);
 
         mealsList = getDBHelper().getMealItemDAO().query(pq);
 
         initMealsList();
-        addListSections();
 
         mealItemsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                if (position > 7)
-                    position -= 2;
-                else
-                    position -= 1;
-
                 Log.d(TAG, "onItemClick: Selected " + mealsList.get(position).getName() + " at index " + position);
-                EventBus_Singleton.getInstance().post(new EventBus_Poster(Cons.EXTRAS_PICKED_MEAL_ENTRY, mealsList.get(position)));
-                finish();
+
+                if (mealsList.get(position).getSectionType() == ITEM_VIEWTYPE) {
+                    EventBus_Singleton.getInstance().post(new EventBus_Poster(Cons.EXTRAS_PICKED_MEAL_ENTRY, mealsList.get(position)));
+                    finish();
+                }
             }
         });
     }
 
     private void initMealsList() {
-        List<String> mealNames = new ArrayList<>();
-
-        for (MealItem meal :
-                mealsList) {
-            mealNames.add(meal.getName());
-        }
-        oneItem_ListAdapter = new OneItemWithIcon_ListAdapter(this,
-                mealNames, R.drawable.ic_arrow_right_pink);
-        simpleSectionedListAdapter = new SimpleSectionedListAdapter(this, oneItem_ListAdapter,
-                R.layout.view_header_add_new_meal_item_list, R.id.header);
+        simpleSectionedListAdapter = new SimpleSectioned_ListAdapter(this, mealsList);
 
         mealItemsList.setAdapter(simpleSectionedListAdapter);
     }
@@ -162,14 +150,6 @@ public class AddNewMealItem_Activity extends Base_Activity implements SearchView
         }
     }
 
-    public void addListSections() {
-        for (int i = 0; i < mHeaderPositions.length; i++) {
-            sections.add(new Section(mHeaderPositions[i], mHeaderNames[i]));
-        }
-
-        simpleSectionedListAdapter.setSections(sections.toArray(new Section[sections.size()]));
-    }
-
     @Override
     public boolean onQueryTextSubmit(String query) {
         return false;
@@ -183,7 +163,6 @@ public class AddNewMealItem_Activity extends Base_Activity implements SearchView
             prepareQueryForSearchTerm(newText, mealType);
 
             mealsList = mealItemsDAO.query(pq);
-            sections.clear();
 
             initMealsList();
         } else {
@@ -193,7 +172,6 @@ public class AddNewMealItem_Activity extends Base_Activity implements SearchView
             mealsList = mealItemsDAO.query(pq);
 
             initMealsList();
-            addListSections();
         }
 
         return true;
