@@ -12,13 +12,16 @@ public class MealItem {
     String name;
     @DatabaseField
     String type;
+    @DatabaseField
+    int sectionType;
 
     public MealItem() {
     }
 
-    public MealItem(String name, String type) {
+    public MealItem(String name, String type, int sectionType) {
         this.name = name;
         this.type = type;
+        this.sectionType = sectionType;
     }
 
     public String getName() {
@@ -35,5 +38,13 @@ public class MealItem {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public int getSectionType() {
+        return sectionType;
+    }
+
+    public void setSectionType(int sectionType) {
+        this.sectionType = sectionType;
     }
 }
