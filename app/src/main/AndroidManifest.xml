@@ -90,7 +90,8 @@
                   android:screenOrientation="portrait"/>
 
         <activity android:name=".activities.AddNewMealItem_Activity"
-                  android:screenOrientation="portrait">
+                  android:screenOrientation="portrait"
+                  android:theme="@style/No_Action_Bar_Theme">
 
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH"/>
