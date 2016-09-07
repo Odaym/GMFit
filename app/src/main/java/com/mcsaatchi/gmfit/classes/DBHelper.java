@@ -120,6 +120,24 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
             getMealItemDAO().create(new MealItem("Butternut Squash Soup", "Dinner", 2));
             getMealItemDAO().create(new MealItem("Herb-Stuffed Turkey Breast", "Dinner", 2));
 
+            getMealItemDAO().create(new MealItem("Recently Added", "Snacks", 1));
+            getMealItemDAO().create(new MealItem("Pretzels", "Snacks", 2));
+            getMealItemDAO().create(new MealItem("Rice Snacks Peanut Butter", "Snacks", 2));
+            getMealItemDAO().create(new MealItem("Chocolate", "Snacks", 2));
+            getMealItemDAO().create(new MealItem("Popcorn", "Snacks", 2));
+            getMealItemDAO().create(new MealItem("All Items", "Snacks", 1));
+            getMealItemDAO().create(new MealItem("Crackers", "Snacks", 2));
+            getMealItemDAO().create(new MealItem("Cakes/Muffins", "Snacks", 2));
+            getMealItemDAO().create(new MealItem("Candy", "Snacks", 2));
+            getMealItemDAO().create(new MealItem("Cheese Snacks", "Snacks", 2));
+            getMealItemDAO().create(new MealItem("Corn Chips", "Snacks", 2));
+            getMealItemDAO().create(new MealItem("Granola/Trail Mixes", "Snacks", 2));
+            getMealItemDAO().create(new MealItem("Flours/Mixes", "Snacks", 2));
+            getMealItemDAO().create(new MealItem("Potato Chips", "Snacks", 2));
+            getMealItemDAO().create(new MealItem("Cookies", "Snacks", 2));
+            getMealItemDAO().create(new MealItem("Nutrition/Cereal Bars", "Snacks", 2));
+            getMealItemDAO().create(new MealItem("Frozen Desserts", "Snacks", 2));
+
             FitnessWidget fw1 = new FitnessWidget("Walking", "Km/hour", 0, R.drawable.ic_running, 0);
             FitnessWidget fw2 = new FitnessWidget("Biking", "meters", 0, R.drawable.ic_biking, 1);
             FitnessWidget fw3 = new FitnessWidget("Steps", "steps", 0, R.drawable.ic_steps, 2);
