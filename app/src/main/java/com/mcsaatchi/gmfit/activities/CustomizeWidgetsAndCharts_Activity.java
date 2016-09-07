@@ -7,7 +7,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import android.widget.LinearLayout;
 
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.classes.Cons;
@@ -29,6 +29,8 @@ public class CustomizeWidgetsAndCharts_Activity extends Base_Activity {
     SlidingTabLayout tabs;
     @Bind(R.id.toolbar)
     Toolbar toolbar;
+    @Bind(R.id.mainLayoutTop)
+    LinearLayout mainLayoutTop;
 
     private CustomizerViewPager_Adapter fragmentsPagerAdapter;
 
@@ -56,19 +58,18 @@ public class CustomizeWidgetsAndCharts_Activity extends Base_Activity {
         //Grab the Fragment type from one of the three Fragments (Fitness, Nutrition, Health)
         if (intentExtras != null) {
             typeOfFragmentToCustomiseFor = intentExtras.getString(Cons.EXTRAS_CUSTOMIZE_WIDGETS_CHARTS_FRAGMENT_TYPE);
-            Log.d("TAG", "onCreate: Extras not null");
+
             if (typeOfFragmentToCustomiseFor != null) {
                 switch (typeOfFragmentToCustomiseFor) {
                     case Cons.EXTRAS_FITNESS_FRAGMENT:
                         fitnessWidgetsMapExtra = intentExtras.getParcelableArrayList(Cons.BUNDLE_FITNESS_WIDGETS_MAP);
+                        mainLayoutTop.setBackground(getResources().getDrawable(R.drawable.fitness_background));
                         break;
                     case Cons.EXTRAS_NUTRITION_FRAGMENT:
                         nutritionWidgetsMapExtra = intentExtras.getParcelableArrayList(Cons.BUNDLE_NUTRITION_WIDGETS_MAP);
+                        mainLayoutTop.setBackground(getResources().getDrawable(R.drawable.nutrition_background));
                         break;
                 }
-
-
-                Log.d("TAG", "onCreate: Type of fragment being sent from " + typeOfFragmentToCustomiseFor);
             }
         }
 
