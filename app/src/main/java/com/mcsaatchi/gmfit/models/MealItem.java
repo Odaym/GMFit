@@ -1,19 +1,14 @@
 package com.mcsaatchi.gmfit.models;
 
-import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.table.DatabaseTable;
-
-@DatabaseTable(tableName = "MealItem")
-
 public class MealItem {
-    @DatabaseField(generatedId = true, index = true)
     int id;
-    @DatabaseField
+    int meal_id;
     String name;
-    @DatabaseField
     String type;
-    @DatabaseField
     int sectionType;
+    String amount;
+    String measurementUnit;
+    int totalCalories;
 
     public MealItem() {
     }
@@ -22,6 +17,14 @@ public class MealItem {
         this.name = name;
         this.type = type;
         this.sectionType = sectionType;
+    }
+
+    public int getMeal_id() {
+        return meal_id;
+    }
+
+    public void setMeal_id(int meal_id) {
+        this.meal_id = meal_id;
     }
 
     public String getName() {
@@ -46,5 +49,29 @@ public class MealItem {
 
     public void setSectionType(int sectionType) {
         this.sectionType = sectionType;
+    }
+
+    public String getAmount() {
+        return amount;
+    }
+
+    public void setAmount(String amount) {
+        this.amount = amount;
+    }
+
+    public String getMeasurementUnit() {
+        return measurementUnit;
+    }
+
+    public void setMeasurementUnit(String measurementUnit) {
+        this.measurementUnit = measurementUnit;
+    }
+
+    public int getTotalCalories() {
+        return totalCalories;
+    }
+
+    public void setTotalCalories(int totalCalories) {
+        this.totalCalories = totalCalories;
     }
 }

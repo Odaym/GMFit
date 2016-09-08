@@ -3,30 +3,7 @@ package com.mcsaatchi.gmfit.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.table.DatabaseTable;
-
-@DatabaseTable(tableName = "User")
-
 public class User implements Parcelable {
-
-    @DatabaseField(generatedId = true, index = true)
-    int id;
-    @DatabaseField
-    String full_name;
-    @DatabaseField
-    String email_address;
-    @DatabaseField
-    String photo_url;
-
-    public User() {
-    }
-
-    public User(Parcel in) {
-        full_name = in.readString();
-        email_address = in.readString();
-        photo_url = in.readString();
-    }
 
     public static final Parcelable.Creator<User> CREATOR = new Parcelable.Creator<User>() {
         public User createFromParcel(Parcel in) {
@@ -37,6 +14,19 @@ public class User implements Parcelable {
             return new User[size];
         }
     };
+    int id;
+    String full_name;
+    String email_address;
+    String photo_url;
+
+    public User() {
+    }
+
+    public User(Parcel in) {
+        full_name = in.readString();
+        email_address = in.readString();
+        photo_url = in.readString();
+    }
 
     public String getFull_name() {
         return full_name;

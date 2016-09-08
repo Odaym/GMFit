@@ -1,7 +1,6 @@
 package com.mcsaatchi.gmfit.classes;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
@@ -26,12 +25,6 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
     private static final String DATABASE_NAME = "GMFit.db";
 
     private static final int DATABASE_VERSION = 1;
-    private static final String TAG = "DBHelper";
-    private Context context;
-    private String[] mealTypes = new String[]{"Breakfast", "Lunch", "Dinner"};
-
-    private String[] snackNames = new String[]{"Snickers", "Mars", "Biscuits", "Ice cream", "Lollipops", "Muffins", "Donuts", "Sunflower seeds", "Cereal",
-            "Chocolate Chip Cookies", "Waffer Biscuits", "Nuts and crackers"};
 
     private RuntimeExceptionDao<MealItem, Integer> mealItemRunTimeDAO = null;
     private RuntimeExceptionDao<FitnessWidget, Integer> fitnessWidgetsRunTimeDAO = null;
@@ -40,8 +33,7 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
     private RuntimeExceptionDao<User, Integer> userRunTimeDAO = null;
 
     public DBHelper(Context context) {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
-        this.context = context;
+        super(context, DATABASE_NAME, null, DATABASE_VERSION, R.raw.ormlite_config);
     }
 
     @Override
@@ -52,10 +44,6 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTable(connectionSource, User.class);
             TableUtils.createTable(connectionSource, FitnessWidget.class);
             TableUtils.createTable(connectionSource, NutritionWidget.class);
-
-            Log.d(TAG, "DBHelper: We're here in the DATABASE constructor");
-
-            SharedPreferences prefs = context.getSharedPreferences(Cons.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
 
             getMealItemDAO().create(new MealItem("Recently Added", "Breakfast", 1));
             getMealItemDAO().create(new MealItem("Twice-Baked Potatoes", "Breakfast", 2));

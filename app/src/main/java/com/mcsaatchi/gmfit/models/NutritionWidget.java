@@ -3,10 +3,6 @@ package com.mcsaatchi.gmfit.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.j256.ormlite.field.DatabaseField;
-import com.j256.ormlite.table.DatabaseTable;
-
-@DatabaseTable(tableName = "NutritionWidget")
 public class NutritionWidget implements Parcelable {
     public static final Creator<NutritionWidget> CREATOR = new Creator<NutritionWidget>() {
         @Override
@@ -19,19 +15,13 @@ public class NutritionWidget implements Parcelable {
             return new NutritionWidget[size];
         }
     };
-    @DatabaseField(generatedId = true, index = true)
+
     int id;
-    @DatabaseField
     double value;
-    @DatabaseField
     String title;
-    @DatabaseField
     String measurementUnit;
-    @DatabaseField
     double percentage;
-    @DatabaseField
     int position;
-    @DatabaseField
     int widget_id;
 
     public NutritionWidget() {
