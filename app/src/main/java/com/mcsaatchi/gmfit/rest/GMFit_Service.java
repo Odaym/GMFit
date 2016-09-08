@@ -78,4 +78,7 @@ public interface GMFit_Service {
     @POST("user/widgets/update")
     Call<DefaultGetResponse> updateUserWidgets(@Header(Cons.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken,
                                                @Body Nutrition_Fragment.UpdateWidgetsRequest updateWidgetsRequest);
+
+    @GET("user/meals")
+    Call<UserMealsResponse> getUserAddedMeals(@Header(Cons.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken);
 }
