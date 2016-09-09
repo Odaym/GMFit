@@ -76,7 +76,7 @@ dependencies {
     compile 'com.github.florent37:materialtextfield:1.0.4'
     compile 'com.wrapp.floatlabelededittext:library:0.0.6'
     compile 'de.halfbit:pinned-section-listview:1.0.0'
-    compile 'com.github.PhilJay:MPAndroidChart:v2.2.4'
+    compile 'com.github.PhilJay:MPAndroidChart:v2.2.5'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.squareup.okhttp3:okhttp:3.2.0'
     compile 'com.jakewharton:butterknife:7.0.1'
