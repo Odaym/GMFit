@@ -17,7 +17,6 @@ package com.mcsaatchi.gmfit.activities;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -31,11 +30,12 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
-import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -53,6 +53,9 @@ import com.mcsaatchi.gmfit.barcode_reader.GraphicOverlay;
 
 import java.io.IOException;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 /**
  * Activity for the multi-tracker app.  This app detects barcodes and displays the value with the
  * rear facing camera. During detection overlay graphics are drawn to indicate the position,
@@ -68,6 +71,10 @@ public final class BarcodeCapture_Activity extends Base_Activity {
     private static final int RC_HANDLE_GMS = 9001;
     // permission request codes need to be < 256
     private static final int RC_HANDLE_CAMERA_PERM = 2;
+
+    @Bind(R.id.toolbar)
+    Toolbar toolbar;
+
     private CameraSource mCameraSource;
     private CameraSourcePreview mPreview;
     private GraphicOverlay<BarcodeGraphic> mGraphicOverlay;
@@ -82,7 +89,12 @@ public final class BarcodeCapture_Activity extends Base_Activity {
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
+
         setContentView(R.layout.activity_barcode_capture);
+
+        ButterKnife.bind(this);
+
+        setupToolbar(toolbar, R.string.barcode_capture_activity_title, true);
 
         mPreview = (CameraSourcePreview) findViewById(R.id.preview);
         mGraphicOverlay = (GraphicOverlay<BarcodeGraphic>) findViewById(R.id.graphicOverlay);
@@ -93,14 +105,16 @@ public final class BarcodeCapture_Activity extends Base_Activity {
 
         // Check for the camera permission before accessing the camera.  If the
         // permission is not granted yet, request permission.
-        int rc = ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA);
 
-        if (rc == PackageManager.PERMISSION_GRANTED) {
-            Log.d(TAG, "onCreate: Permission was granted");
-            createCameraSource(autoFocus, useFlash);
+        boolean hasPermission = (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED);
+
+        if (!hasPermission) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.CAMERA},
+                    RC_HANDLE_CAMERA_PERM);
         } else {
-            Log.d(TAG, "onCreate: Permission was DENIED");
-            requestCameraPermission();
+            createCameraSource(autoFocus, useFlash);
         }
 
         gestureDetector = new GestureDetector(this, new CaptureGestureListener());
@@ -108,38 +122,6 @@ public final class BarcodeCapture_Activity extends Base_Activity {
 
         Snackbar.make(mGraphicOverlay, R.string.capture_barcode_instructions,
                 Snackbar.LENGTH_INDEFINITE)
-                .show();
-    }
-
-    /**
-     * Handles the requesting of the camera permission.  This includes
-     * showing a "Snackbar" message of why the permission is needed then
-     * sending the request.
-     */
-    private void requestCameraPermission() {
-        Log.w(TAG, "Camera permission is not granted. Requesting permission");
-
-        final String[] permissions = new String[]{Manifest.permission.CAMERA};
-
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                Manifest.permission.CAMERA)) {
-            ActivityCompat.requestPermissions(this, permissions, RC_HANDLE_CAMERA_PERM);
-            return;
-        }
-
-        final Activity thisActivity = this;
-
-        View.OnClickListener listener = new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ActivityCompat.requestPermissions(thisActivity, permissions,
-                        RC_HANDLE_CAMERA_PERM);
-            }
-        };
-
-        Snackbar.make(mGraphicOverlay, R.string.permission_capture_rationale,
-                Snackbar.LENGTH_LONG)
-                .setAction(R.string.OK, listener)
                 .show();
     }
 
