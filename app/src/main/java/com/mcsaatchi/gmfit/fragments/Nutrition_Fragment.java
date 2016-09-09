@@ -7,6 +7,9 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -30,18 +33,23 @@ import com.mcsaatchi.gmfit.activities.BarcodeCapture_Activity;
 import com.mcsaatchi.gmfit.activities.Base_Activity;
 import com.mcsaatchi.gmfit.activities.CustomizeWidgetsAndCharts_Activity;
 import com.mcsaatchi.gmfit.adapters.NutritionWidgets_GridAdapter;
+import com.mcsaatchi.gmfit.adapters.UserMeals_RecyclerAdapter;
 import com.mcsaatchi.gmfit.classes.Cons;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
 import com.mcsaatchi.gmfit.classes.Helpers;
 import com.mcsaatchi.gmfit.models.DataChart;
+import com.mcsaatchi.gmfit.models.MealItem;
 import com.mcsaatchi.gmfit.models.NutritionWidget;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponseChart;
-import com.mcsaatchi.gmfit.rest.AuthenticationResponseChartData;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponseWidget;
 import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.rest.RestClient;
 import com.mcsaatchi.gmfit.rest.UiResponse;
+import com.mcsaatchi.gmfit.rest.UserMealsResponse;
+import com.mcsaatchi.gmfit.rest.UserMealsResponseBreakfast;
+import com.mcsaatchi.gmfit.rest.UserMealsResponseDinner;
+import com.mcsaatchi.gmfit.rest.UserMealsResponseLunch;
 import com.squareup.otto.Subscribe;
 
 import java.sql.SQLException;
@@ -63,7 +71,6 @@ public class Nutrition_Fragment extends Fragment {
     private static final int BARCODE_CAPTURE_RC = 773;
 
     private static final String TAG = "Nutrition_Fragment";
-
     @Bind(R.id.widgetsGridView)
     GridView widgetsGridView;
     @Bind(R.id.metricCounterTV)
@@ -82,8 +89,8 @@ public class Nutrition_Fragment extends Fragment {
     TextView addNewEntryBTN_BREAKFAST;
     @Bind(R.id.scanEntryBTN_BREAKFAST)
     TextView scanEntryBTN_BREAKFAST;
-    @Bind(R.id.entriesContainerLayout_BREAKFAST)
-    LinearLayout entriesContainerLayout_BREAKFAST;
+    @Bind(R.id.breakfastListView)
+    RecyclerView breakfastListView;
     /**
      * LUNCH CHART
      */
@@ -93,8 +100,8 @@ public class Nutrition_Fragment extends Fragment {
     TextView addNewEntryBTN_LUNCH;
     @Bind(R.id.scanEntryBTN_LUNCH)
     TextView scanEntryBTN_LUNCH;
-    @Bind(R.id.entriesContainerLayout_LUNCH)
-    LinearLayout entriesContainerLayout_LUNCH;
+    @Bind(R.id.lunchListView)
+    RecyclerView lunchListView;
     /**
      * DINNER CHART
      */
@@ -104,8 +111,8 @@ public class Nutrition_Fragment extends Fragment {
     TextView addNewEntryBTN_DINNER;
     @Bind(R.id.scanEntryBTN_DINNER)
     TextView scanEntryBTN_DINNER;
-    @Bind(R.id.entriesContainerLayout_DINNER)
-    LinearLayout entriesContainerLayout_DINNER;
+    @Bind(R.id.dinnerListView)
+    RecyclerView dinnerListView;
     /**
      * SNACKS CHART
      */
@@ -115,18 +122,21 @@ public class Nutrition_Fragment extends Fragment {
     TextView addNewEntryBTN_SNACKS;
     @Bind(R.id.scanEntryBTN_SNACKS)
     TextView scanEntryBTN_SNACKS;
-    @Bind(R.id.entriesContainerLayout_SNACKS)
-    LinearLayout entriesContainerLayout_SNACKS;
+    @Bind(R.id.snacksListView)
+    RecyclerView snacksListView;
     /**
      * ADD CHART BUTTON
      */
     @Bind(R.id.addChartBTN)
     Button addNewChartBTN;
-
+    private UserMeals_RecyclerAdapter userMealsRecyclerAdapter;
     private NutritionWidgets_GridAdapter nutritionWidgets_GridAdapter;
 
     private RuntimeExceptionDao<NutritionWidget, Integer> nutritionWidgetsDAO;
     private QueryBuilder<NutritionWidget, Integer> nutritionWidgetsQB;
+
+    private RuntimeExceptionDao<MealItem, Integer> userMealsDAO;
+    private QueryBuilder<MealItem, Integer> userMealsQB;
 
     private RuntimeExceptionDao<DataChart, Integer> dataChartDAO;
     private QueryBuilder<DataChart, Integer> dataChartQB;
@@ -152,6 +162,9 @@ public class Nutrition_Fragment extends Fragment {
 
         dataChartDAO = ((Base_Activity) parentActivity).getDBHelper().getDataChartDAO();
         dataChartQB = dataChartDAO.queryBuilder();
+
+        userMealsDAO = ((Base_Activity) parentActivity).getDBHelper().getMealItemDAO();
+        userMealsQB = userMealsDAO.queryBuilder();
     }
 
     @Override
@@ -171,6 +184,8 @@ public class Nutrition_Fragment extends Fragment {
 
         setHasOptionsMenu(true);
 
+        getUserAddedMeals();
+
         try {
             widgetsMap = (ArrayList<NutritionWidget>) nutritionWidgetsQB.orderBy("position", true).query();
             chartsMap = (ArrayList<DataChart>) dataChartQB.orderBy("position", true).query();
@@ -182,7 +197,7 @@ public class Nutrition_Fragment extends Fragment {
                 Log.d(TAG, "onCreateView: Widgets map is not empty, fetching and setting up widgets and charts");
                 fetchWidgetsAndSetupViews();
 
-                fetchChartsAndSetupViews();
+//                fetchChartsAndSetupViews();
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -252,6 +267,17 @@ public class Nutrition_Fragment extends Fragment {
             }
         });
 
+        /**
+         * Setup Meals Eaten Listviews
+         */
+        setupMealSectionsListView((ArrayList<MealItem>) userMealsDAO.queryForEq("type", "Breakfast_EATEN"), "Breakfast");
+
+        setupMealSectionsListView((ArrayList<MealItem>) userMealsDAO.queryForEq("type", "Lunch_EATEN"), "Lunch");
+
+        setupMealSectionsListView((ArrayList<MealItem>) userMealsDAO.queryForEq("type", "Dinner_EATEN"), "Dinner");
+
+        setupMealSectionsListView((ArrayList<MealItem>) userMealsDAO.queryForEq("type", "Snacks_EATEN"), "Snacks");
+
         return fragmentView;
     }
 
@@ -280,7 +306,7 @@ public class Nutrition_Fragment extends Fragment {
         switch (requestCode) {
             case ADD_NEW_NUTRITION_CHART_REQUEST:
                 if (data != null) {
-//                    addNewBarChart(data.getStringExtra(Cons.EXTRAS_CHART_FULL_NAME));
+                    addNewBarChart(data.getStringExtra(Cons.EXTRAS_CHART_FULL_NAME));
                 }
                 break;
             case BARCODE_CAPTURE_RC:
@@ -301,6 +327,18 @@ public class Nutrition_Fragment extends Fragment {
     private boolean checkIfWidgetExistsInDB(int widget_id) {
         try {
             List<NutritionWidget> nw = nutritionWidgetsQB.where().eq("widget_id", widget_id).query();
+
+            return !nw.isEmpty();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    private boolean checkIfMealExistsInDB(int meal_id, String mealType) {
+        try {
+            List<MealItem> nw = userMealsQB.where().eq("meal_id", meal_id).and().eq("type", mealType).query();
 
             return !nw.isEmpty();
         } catch (SQLException e) {
@@ -359,12 +397,13 @@ public class Nutrition_Fragment extends Fragment {
             ArrayList<DataChart> chartsFromDB = (ArrayList<DataChart>) dataChartQB.orderBy("position", true).query();
 
             for (int i = 0; i < chartsFromDB.size(); i++) {
-                addNewBarChart(chartsFromDB.get(i));
+                if (chartsFromDB.get(i).getChartData() != null) {
+//                    addNewBarChart(chartsFromDB.get(i));
 
-                Log.d(TAG, "fetchChartsAndSetupViews: Chart name " + chartsFromDB.get(i).getName());
-                Log.d(TAG, "fetchChartsAndSetupViews: Chart name " + chartsFromDB.get(i).getChartData().size());
+                    Log.d(TAG, "fetchChartsAndSetupViews: Chart name " + chartsFromDB.get(i).getName());
+                    Log.d(TAG, "fetchChartsAndSetupViews: Chart name " + chartsFromDB.get(i).getChartData().size());
+                }
             }
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -376,33 +415,86 @@ public class Nutrition_Fragment extends Fragment {
         widgetsGridView.setAdapter(nutritionWidgets_GridAdapter);
     }
 
+    private void setupMealSectionsListView(ArrayList<MealItem> mealItems, String mealType) {
+        userMealsRecyclerAdapter = new UserMeals_RecyclerAdapter(mealItems);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+
+        switch (mealType) {
+            case "Breakfast":
+                breakfastListView.setLayoutManager(mLayoutManager);
+                breakfastListView.setItemAnimator(new DefaultItemAnimator());
+                breakfastListView.setAdapter(userMealsRecyclerAdapter);
+                break;
+            case "Lunch":
+                lunchListView.setLayoutManager(mLayoutManager);
+                lunchListView.setItemAnimator(new DefaultItemAnimator());
+                lunchListView.setAdapter(userMealsRecyclerAdapter);
+                break;
+            case "Dinner":
+                dinnerListView.setLayoutManager(mLayoutManager);
+                dinnerListView.setItemAnimator(new DefaultItemAnimator());
+                dinnerListView.setAdapter(userMealsRecyclerAdapter);
+                break;
+            case "Snacks":
+                snacksListView.setLayoutManager(mLayoutManager);
+                snacksListView.setItemAnimator(new DefaultItemAnimator());
+                snacksListView.setAdapter(userMealsRecyclerAdapter);
+                break;
+        }
+    }
+
     @Subscribe
-    public void handle_BusEvents(EventBus_Poster ebp) {
+    public void handle_BusEvents(final EventBus_Poster ebp) {
         String ebpMessage = ebp.getMessage();
 
         switch (ebpMessage) {
             case Cons.EXTRAS_PICKED_MEAL_ENTRY:
                 if (ebp.getMealItemExtra() != null) {
+                    MealItem mealChosenToEat = new MealItem();
+                    mealChosenToEat.setTotalCalories(ebp.getMealItemExtra().getTotalCalories());
+                    mealChosenToEat.setAmount(ebp.getMealItemExtra().getAmount());
+                    mealChosenToEat.setMeasurementUnit(ebp.getMealItemExtra().getMeasurementUnit());
+                    mealChosenToEat.setName(ebp.getMealItemExtra().getName());
+
                     switch (ebp.getMealItemExtra().getType()) {
                         case "Breakfast":
-                            addMealEntryLayout(ebp.getMealItemExtra().getName(), entriesContainerLayout_BREAKFAST);
+
+                            mealChosenToEat.setType("Breakfast_EATEN");
+
+                            userMealsDAO.create(mealChosenToEat);
+
+                            setupMealSectionsListView((ArrayList<MealItem>) userMealsDAO.queryForEq("type", "Breakfast_EATEN"), ebp.getMealItemExtra().getType());
+
                             break;
                         case "Lunch":
-                            addMealEntryLayout(ebp.getMealItemExtra().getName(), entriesContainerLayout_LUNCH);
+                            mealChosenToEat.setType("Lunch_EATEN");
+
+                            userMealsDAO.create(mealChosenToEat);
+
+                            setupMealSectionsListView((ArrayList<MealItem>) userMealsDAO.queryForEq("type", "Lunch_EATEN"), ebp.getMealItemExtra().getType());
+
                             break;
                         case "Dinner":
-                            addMealEntryLayout(ebp.getMealItemExtra().getName(), entriesContainerLayout_DINNER);
+                            mealChosenToEat.setType("Dinner_EATEN");
+
+                            userMealsDAO.create(mealChosenToEat);
+
+                            setupMealSectionsListView((ArrayList<MealItem>) userMealsDAO.queryForEq("type", "Dinner_EATEN"), ebp.getMealItemExtra().getType());
+
                             break;
                         case "Snacks":
-                            addMealEntryLayout(ebp.getMealItemExtra().getName(), entriesContainerLayout_SNACKS);
+                            mealChosenToEat.setType("Snacks_EATEN");
+
+                            userMealsDAO.create(mealChosenToEat);
+
+                            setupMealSectionsListView((ArrayList<MealItem>) userMealsDAO.queryForEq("type", "Snacks_EATEN"), ebp.getMealItemExtra().getType());
+
                             break;
                     }
                 }
 
                 break;
             case Cons.EXTRAS_NUTRITION_WIDGETS_ORDER_ARRAY_CHANGED:
-                Log.d(TAG, "handle_BusEvents: Event received!");
-
                 if (ebp.getNutritionWidgetsMap() != null) {
                     widgetsMap = ebp.getNutritionWidgetsMap();
                     setUpWidgetsGridView(ebp.getNutritionWidgetsMap());
@@ -453,28 +545,28 @@ public class Nutrition_Fragment extends Fragment {
                             }
                         }
 
-                        for (int i = 0; i < chartsMapFromAPI.size(); i++) {
-                            DataChart nutritionDataChart = new DataChart();
-                            nutritionDataChart.setName(chartsMapFromAPI.get(i).getName());
-                            nutritionDataChart.setPosition(Integer.parseInt(chartsMapFromAPI.get(i).getPosition()));
-                            nutritionDataChart.setType(chartsMapFromAPI.get(i).getSlug());
-                            nutritionDataChart.setUsername(chartsMapFromAPI.get(i).getSlug());
-                            nutritionDataChart.setChart_id(chartsMapFromAPI.get(i).getChartId());
-                            nutritionDataChart.setChartData((ArrayList<AuthenticationResponseChartData>) chartsMapFromAPI.get(i).getData());
-
-                            if (checkIfChartExistsInDB(chartsMapFromAPI.get(i).getChartId())) {
-                                dataChartDAO.update(nutritionDataChart);
-                            } else {
-                                dataChartDAO.create(nutritionDataChart);
-                            }
-                        }
+//                        for (int i = 0; i < chartsMapFromAPI.size(); i++) {
+//                            DataChart nutritionDataChart = new DataChart();
+//                            nutritionDataChart.setName(chartsMapFromAPI.get(i).getName());
+//                            nutritionDataChart.setPosition(Integer.parseInt(chartsMapFromAPI.get(i).getPosition()));
+//                            nutritionDataChart.setType(chartsMapFromAPI.get(i).getSlug());
+//                            nutritionDataChart.setUsername(chartsMapFromAPI.get(i).getSlug());
+//                            nutritionDataChart.setChart_id(chartsMapFromAPI.get(i).getChartId());
+//                            nutritionDataChart.setChartData((ArrayList<AuthenticationResponseChartData>) chartsMapFromAPI.get(i).getData());
+//
+//                            if (checkIfChartExistsInDB(chartsMapFromAPI.get(i).getChartId())) {
+//                                dataChartDAO.update(nutritionDataChart);
+//                            } else {
+//                                dataChartDAO.create(nutritionDataChart);
+//                            }
+//                        }
 
                         /**
                          * Now get the data back and use it to load the views
                          */
                         fetchWidgetsAndSetupViews();
 
-                        fetchChartsAndSetupViews();
+//                        fetchChartsAndSetupViews();
 
                         break;
                 }
@@ -497,12 +589,117 @@ public class Nutrition_Fragment extends Fragment {
             public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
                 switch (response.code()) {
                     case 200:
+                        Log.d(TAG, "onResponse: User's widgets updated successfully");
                         break;
                 }
             }
 
             @Override
             public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+                Log.d(TAG, "onFailure: Failed");
+            }
+        });
+    }
+
+    private void getUserAddedMeals() {
+        Call<UserMealsResponse> updateUserWidgetsCall = new RestClient().getGMFitService().getUserAddedMeals(prefs.getString(Cons.PREF_USER_ACCESS_TOKEN,
+                Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS));
+
+        updateUserWidgetsCall.enqueue(new Callback<UserMealsResponse>() {
+            @Override
+            public void onResponse(Call<UserMealsResponse> call, Response<UserMealsResponse> response) {
+
+                Log.d(TAG, "onResponse: Response code was : " + response.code());
+
+                switch (response.code()) {
+                    case 200:
+
+                        /**
+                         * Grab all meals from the API
+                         */
+                        List<UserMealsResponseBreakfast> breakfastMeals = response.body().getData().getBody().getData().getBreakfast();
+                        List<UserMealsResponseLunch> lunchMeals = response.body().getData().getBody().getData().getLunch();
+                        List<UserMealsResponseDinner> dinnerMeals = response.body().getData().getBody().getData().getDinner();
+
+                        /**
+                         * Insert Breakfast meals
+                         */
+                        for (int i = 0; i < breakfastMeals.size(); i++) {
+                            MealItem breakfastMeal = new MealItem();
+                            breakfastMeal.setMeal_id(breakfastMeals.get(i).getId());
+                            breakfastMeal.setType("Breakfast");
+                            breakfastMeal.setName(breakfastMeals.get(i).getName());
+                            breakfastMeal.setMeasurementUnit(breakfastMeals.get(i).getMeasurementUnit());
+                            breakfastMeal.setAmount(breakfastMeals.get(i).getAmount());
+                            breakfastMeal.setSectionType(2);
+
+                            if (breakfastMeals.get(i).getTotalCalories() != null)
+                                breakfastMeal.setTotalCalories(breakfastMeals.get(i).getTotalCalories());
+                            else
+                                breakfastMeal.setTotalCalories(0);
+
+                            if (checkIfMealExistsInDB(breakfastMeals.get(i).getId(), "Breakfast")) {
+                                userMealsDAO.update(breakfastMeal);
+                            } else {
+                                userMealsDAO.create(breakfastMeal);
+                            }
+                        }
+
+
+                        /**
+                         * Insert Lunch meals
+                         */
+                        for (int i = 0; i < lunchMeals.size(); i++) {
+                            MealItem lunchMeal = new MealItem();
+                            lunchMeal.setMeal_id(lunchMeals.get(i).getId());
+                            lunchMeal.setType("Lunch");
+                            lunchMeal.setName(lunchMeals.get(i).getName());
+                            lunchMeal.setMeasurementUnit(lunchMeals.get(i).getMeasurementUnit());
+                            lunchMeal.setAmount(lunchMeals.get(i).getAmount());
+                            lunchMeal.setSectionType(2);
+
+                            if (lunchMeals.get(i).getTotalCalories() != null)
+                                lunchMeal.setTotalCalories(lunchMeals.get(i).getTotalCalories());
+                            else
+                                lunchMeal.setTotalCalories(0);
+
+                            if (checkIfMealExistsInDB(lunchMeals.get(i).getId(), "Lunch")) {
+                                userMealsDAO.update(lunchMeal);
+                            } else {
+                                userMealsDAO.create(lunchMeal);
+                            }
+                        }
+
+                        /**
+                         * Insert Dinner meals
+                         */
+                        for (int i = 0; i < dinnerMeals.size(); i++) {
+                            MealItem dinnerMeal = new MealItem();
+                            dinnerMeal.setType("Dinner");
+                            dinnerMeal.setName(dinnerMeals.get(i).getName());
+                            dinnerMeal.setMeasurementUnit(dinnerMeals.get(i).getMeasurementUnit());
+                            dinnerMeal.setAmount(dinnerMeals.get(i).getAmount());
+                            dinnerMeal.setMeal_id(dinnerMeals.get(i).getId());
+                            dinnerMeal.setSectionType(2);
+
+                            if (dinnerMeals.get(i).getTotalCalories() != null)
+                                dinnerMeal.setTotalCalories(dinnerMeals.get(i).getTotalCalories());
+                            else
+                                dinnerMeal.setTotalCalories(0);
+
+                            if (checkIfMealExistsInDB(dinnerMeals.get(i).getId(), "Dinner")) {
+                                userMealsDAO.update(dinnerMeal);
+                            } else {
+                                userMealsDAO.create(dinnerMeal);
+                            }
+                        }
+                        break;
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<UserMealsResponse> call, Throwable t) {
                 Log.d(TAG, "onFailure: Failed");
             }
         });
@@ -522,33 +719,20 @@ public class Nutrition_Fragment extends Fragment {
         startActivity(intent);
     }
 
-    private void addMealEntryLayout(String mealTitle, LinearLayout targetLayoutForMeal) {
-        final View mealEntryLayout = parentActivity.getLayoutInflater().inflate(R.layout.list_item_new_meal_entry, null);
+    private void addNewBarChart(String chartTitle) {
+        final View barChartLayout = parentActivity.getLayoutInflater().inflate(R.layout.view_barchart_container, null);
 
-        TextView entryTitleTV = (TextView) mealEntryLayout.findViewById(R.id.entryTitleTV);
-        TextView entryDescription = (TextView) mealEntryLayout.findViewById(R.id.entryDescriptionTV);
-        TextView entryUnitsTV = (TextView) mealEntryLayout.findViewById(R.id.entryUnitsTV);
-
-        entryTitleTV.setText(mealTitle);
-        entryDescription.setText("This is a description");
-        entryUnitsTV.setText("400 mg");
-
-        targetLayoutForMeal.addView(mealEntryLayout);
-    }
-
-    public void addNewBarChart(DataChart chartObject) {
-        final View barChartLayout = getActivity().getLayoutInflater().inflate(R.layout.view_barchart_container, null);
-
-        final TextView chartTitleTV_NEW_CHART = (TextView) barChartLayout.findViewById(R.id.chartTitleTV);
+        TextView chartTitleTV = (TextView) barChartLayout.findViewById(R.id.chartTitleTV);
         BarChart barChart = (BarChart) barChartLayout.findViewById(R.id.barChart);
 
-        chartTitleTV_NEW_CHART.setText(chartObject.getName());
+        if (chartTitle != null)
+            chartTitleTV.setText(chartTitle);
 
-        Helpers.setBarChartData(barChart, chartObject.getChartData());
+        //TODO: apply the same change you did here as in the Fitness Fragment
 
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, getResources().getDimensionPixelSize(R
                 .dimen.chart_height_2));
-        lp.topMargin = getResources().getDimensionPixelSize(R.dimen.default_margin_1);
+        lp.topMargin = getResources().getDimensionPixelSize(R.dimen.default_margin_2);
         barChartLayout.setLayoutParams(lp);
 
         cards_container.addView(barChartLayout);
