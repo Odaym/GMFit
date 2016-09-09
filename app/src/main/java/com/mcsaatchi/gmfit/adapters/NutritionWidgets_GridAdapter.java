@@ -59,7 +59,7 @@ public class NutritionWidgets_GridAdapter extends BaseAdapter {
         }
 
         holder.metricTitleTV.setText((widgetsMap.get(position)).getTitle());
-        holder.metricTV.setText(String.valueOf(widgetsMap.get(position).getValue()));
+        holder.metricTV.setText(String.valueOf((int) widgetsMap.get(position).getValue()));
         holder.metricPercentageTV.setText("(" + (widgetsMap.get(position)).getPercentage() + "%)");
         holder.measurementUnitTV.setText((widgetsMap.get(position)).getMeasurementUnit());
 

@@ -50,7 +50,7 @@ public class SlugBreakdown_Fragment_Daily extends Fragment {
             measurementUnitForMetric = fragmentBundle.getString(Cons.BUNDLE_SLUG_BREAKDOWN_MEASUREMENT_UNIT, "");
 
             float slugBreakdownYearlyTotal =  fragmentBundle.getFloat(Cons.BUNDLE_SLUG_BREAKDOWN_YEARLY_TOTAL, 0);
-            allTimeValueTV.setText(String.valueOf(slugBreakdownYearlyTotal) + " " + measurementUnitForMetric);
+            allTimeValueTV.setText((int) Double.parseDouble(String.valueOf(slugBreakdownYearlyTotal)) + " " + measurementUnitForMetric);
 
             hookupListWithItems(slugBreakdownData, measurementUnitForMetric);
         }
@@ -111,7 +111,7 @@ public class SlugBreakdown_Fragment_Daily extends Fragment {
             }
 
             holder.slugDateTV.setText(getItem(position).getDate());
-            holder.slugTotalTV.setText(getItem(position).getTotal() + " " + measurementUnit);
+            holder.slugTotalTV.setText((int) Double.parseDouble(getItem(position).getTotal()) + " " + measurementUnit);
 
             return convertView;
         }
