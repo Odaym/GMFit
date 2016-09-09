@@ -143,13 +143,13 @@
                     </LinearLayout>
                 </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/entriesContainerLayout_BREAKFAST"
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/breakfastListView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:scrollbars="vertical"/>
 
-                </LinearLayout>
             </LinearLayout>
 
             <!---->
@@ -210,13 +210,13 @@
                     </LinearLayout>
                 </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/entriesContainerLayout_LUNCH"
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/lunchListView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:scrollbars="vertical"/>
 
-                </LinearLayout>
             </LinearLayout>
 
             <!---->
@@ -277,12 +277,13 @@
                     </LinearLayout>
                 </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/entriesContainerLayout_DINNER"
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/dinnerListView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
-                </LinearLayout>
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:scrollbars="vertical"/>
+
             </LinearLayout>
 
             <!---->
@@ -343,13 +344,12 @@
                     </LinearLayout>
                 </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/entriesContainerLayout_SNACKS"
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/snacksListView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                </LinearLayout>
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:scrollbars="vertical"/>
             </LinearLayout>
         </LinearLayout>
         <!---->
