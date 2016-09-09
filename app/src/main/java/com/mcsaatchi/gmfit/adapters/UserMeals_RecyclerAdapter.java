@@ -75,12 +75,12 @@ public class UserMeals_RecyclerAdapter extends RecyclerView.Adapter<UserMeals_Re
 
     @Override
     public void onItemDismiss(int position) {
+        notifyItemRemoved(position);
+
         try {
             mealItems.remove(position);
-        }catch(IndexOutOfBoundsException ignored){
+        } catch (IndexOutOfBoundsException ignored) {
         }
-
-        notifyItemRemoved(position);
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
