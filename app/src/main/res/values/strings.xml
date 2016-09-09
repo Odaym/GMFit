@@ -193,6 +193,7 @@
     <string name="search_hint">Search meals</string>
 
     <!-- BARCODE CAPTURE ACTIVITY -->
+    <string name="barcode_capture_activity_title">Scan Meals</string>
     <string name="capture_barcode_instructions">Tap to capture. Pinch/Stretch to zoom.</string>
     <string name="permission_capture_rationale">Access to the camera is needed</string>
     <string name="low_storage_error">Barcode detector dependencies cannot be downloaded due to low device storage</string>

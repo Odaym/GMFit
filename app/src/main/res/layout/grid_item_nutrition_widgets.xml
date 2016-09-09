@@ -4,6 +4,7 @@
                 android:layout_height="@dimen/fitness_widget_cell_height"
                 android:background="@color/fitness_dark_blue"
                 android:orientation="horizontal"
+                android:paddingEnd="@dimen/default_margin_1"
                 android:paddingStart="@dimen/default_margin_1"
                 android:paddingTop="@dimen/default_margin_1">
 
@@ -11,7 +12,6 @@
         android:id="@+id/metricTitleTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingEnd="@dimen/default_margin_1"
         android:textColor="@color/nutrition_red"
         android:textSize="@dimen/nutrition_metric_title_font_size"/>
 
@@ -19,7 +19,7 @@
         android:id="@+id/metricTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
+        android:layout_alignParentEnd="true"
         android:layout_toEndOf="@id/metricIMG"
         android:gravity="center_vertical"
         android:textColor="@android:color/white"
@@ -39,7 +39,7 @@
         android:id="@+id/metricPercentageTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
         android:layout_below="@+id/metricTV"
-        android:layout_toEndOf="@+id/measurementUnitTV"
         android:textColor="@android:color/white"/>
 </RelativeLayout>

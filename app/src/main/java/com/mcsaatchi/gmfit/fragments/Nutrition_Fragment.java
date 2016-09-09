@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -422,22 +421,18 @@ public class Nutrition_Fragment extends Fragment {
         switch (mealType) {
             case "Breakfast":
                 breakfastListView.setLayoutManager(mLayoutManager);
-                breakfastListView.setItemAnimator(new DefaultItemAnimator());
                 breakfastListView.setAdapter(userMealsRecyclerAdapter);
                 break;
             case "Lunch":
                 lunchListView.setLayoutManager(mLayoutManager);
-                lunchListView.setItemAnimator(new DefaultItemAnimator());
                 lunchListView.setAdapter(userMealsRecyclerAdapter);
                 break;
             case "Dinner":
                 dinnerListView.setLayoutManager(mLayoutManager);
-                dinnerListView.setItemAnimator(new DefaultItemAnimator());
                 dinnerListView.setAdapter(userMealsRecyclerAdapter);
                 break;
             case "Snacks":
                 snacksListView.setLayoutManager(mLayoutManager);
-                snacksListView.setItemAnimator(new DefaultItemAnimator());
                 snacksListView.setAdapter(userMealsRecyclerAdapter);
                 break;
         }

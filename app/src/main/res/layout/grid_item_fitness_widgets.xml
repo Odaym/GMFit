@@ -14,8 +14,8 @@
 
     <com.mcsaatchi.gmfit.classes.FontTextView
         android:id="@+id/metricTV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_toEndOf="@id/metricIMG"
         android:gravity="center_vertical"
         android:textColor="@android:color/white"

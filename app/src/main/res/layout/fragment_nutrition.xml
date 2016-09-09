@@ -136,7 +136,7 @@
                         <TextView
                             android:id="@+id/scanEntryBTN_BREAKFAST"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:gravity="center"
                             android:text="@string/scan_new_meal"
                             android:textColor="@android:color/white"/>
@@ -147,7 +147,6 @@
                     android:id="@+id/breakfastListView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="?attr/selectableItemBackgroundBorderless"
                     android:scrollbars="vertical"/>
 
             </LinearLayout>
@@ -203,7 +202,7 @@
                         <TextView
                             android:id="@+id/scanEntryBTN_LUNCH"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:gravity="center"
                             android:text="@string/scan_new_meal"
                             android:textColor="@android:color/white"/>
@@ -214,7 +213,6 @@
                     android:id="@+id/lunchListView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="?attr/selectableItemBackgroundBorderless"
                     android:scrollbars="vertical"/>
 
             </LinearLayout>
@@ -270,7 +268,7 @@
                         <TextView
                             android:id="@+id/scanEntryBTN_DINNER"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:gravity="center"
                             android:text="@string/scan_new_meal"
                             android:textColor="@android:color/white"/>
@@ -281,7 +279,6 @@
                     android:id="@+id/dinnerListView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="?attr/selectableItemBackgroundBorderless"
                     android:scrollbars="vertical"/>
 
             </LinearLayout>
@@ -337,7 +334,7 @@
                         <TextView
                             android:id="@+id/scanEntryBTN_SNACKS"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:gravity="center"
                             android:text="@string/scan_new_meal"
                             android:textColor="@android:color/white"/>
@@ -348,7 +345,6 @@
                     android:id="@+id/snacksListView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="?attr/selectableItemBackgroundBorderless"
                     android:scrollbars="vertical"/>
             </LinearLayout>
         </LinearLayout>
