@@ -47,7 +47,7 @@ public class Helpers {
         return allValid;
     }
 
-    public static String getTodayDate(){
+    public static String getTodayDate() {
         LocalDate dt = new LocalDate();
         return dt.toString();
     }
@@ -103,11 +103,12 @@ public class Helpers {
         }
 
         BarDataSet set1;
-        set1 = new BarDataSet(valsMetrics, "Legend");
-        set1.setColor(R.color.fitness_dark_blue);
+        set1 = new BarDataSet(valsMetrics, "Daily Breakdown");
+        set1.setColor(R.color.fitness_pink);
         set1.setHighLightAlpha(1);
 
         ArrayList<IBarDataSet> dataSets = new ArrayList<>();
+
         dataSets.add(set1);
 
         BarData data = new BarData(xVals, dataSets);

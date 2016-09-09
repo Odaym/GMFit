@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -32,6 +33,7 @@ import com.mcsaatchi.gmfit.activities.BarcodeCapture_Activity;
 import com.mcsaatchi.gmfit.activities.Base_Activity;
 import com.mcsaatchi.gmfit.activities.CustomizeWidgetsAndCharts_Activity;
 import com.mcsaatchi.gmfit.adapters.NutritionWidgets_GridAdapter;
+import com.mcsaatchi.gmfit.adapters.SimpleItemTouchHelperCallback;
 import com.mcsaatchi.gmfit.adapters.UserMeals_RecyclerAdapter;
 import com.mcsaatchi.gmfit.classes.Cons;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
@@ -415,25 +417,51 @@ public class Nutrition_Fragment extends Fragment {
     }
 
     private void setupMealSectionsListView(ArrayList<MealItem> mealItems, String mealType) {
-        userMealsRecyclerAdapter = new UserMeals_RecyclerAdapter(mealItems);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+
+        ItemTouchHelper.Callback callback;
+        ItemTouchHelper touchHelper;
 
         switch (mealType) {
             case "Breakfast":
+                userMealsRecyclerAdapter = new UserMeals_RecyclerAdapter(getActivity(), mealItems, "Breakfast");
+
+                callback = new SimpleItemTouchHelperCallback(userMealsRecyclerAdapter);
+                touchHelper = new ItemTouchHelper(callback);
+
                 breakfastListView.setLayoutManager(mLayoutManager);
                 breakfastListView.setAdapter(userMealsRecyclerAdapter);
+                touchHelper.attachToRecyclerView(breakfastListView);
                 break;
             case "Lunch":
+                userMealsRecyclerAdapter = new UserMeals_RecyclerAdapter(getActivity(), mealItems, "Lunch");
+
+                callback = new SimpleItemTouchHelperCallback(userMealsRecyclerAdapter);
+                touchHelper = new ItemTouchHelper(callback);
+
                 lunchListView.setLayoutManager(mLayoutManager);
                 lunchListView.setAdapter(userMealsRecyclerAdapter);
+                touchHelper.attachToRecyclerView(lunchListView);
                 break;
             case "Dinner":
+                userMealsRecyclerAdapter = new UserMeals_RecyclerAdapter(getActivity(), mealItems, "Dinner");
+
+                callback = new SimpleItemTouchHelperCallback(userMealsRecyclerAdapter);
+                touchHelper = new ItemTouchHelper(callback);
+
                 dinnerListView.setLayoutManager(mLayoutManager);
                 dinnerListView.setAdapter(userMealsRecyclerAdapter);
+                touchHelper.attachToRecyclerView(dinnerListView);
                 break;
             case "Snacks":
+                userMealsRecyclerAdapter = new UserMeals_RecyclerAdapter(getActivity(), mealItems, "Snacks");
+
+                callback = new SimpleItemTouchHelperCallback(userMealsRecyclerAdapter);
+                touchHelper = new ItemTouchHelper(callback);
+
                 snacksListView.setLayoutManager(mLayoutManager);
                 snacksListView.setAdapter(userMealsRecyclerAdapter);
+                touchHelper.attachToRecyclerView(snacksListView);
                 break;
         }
     }

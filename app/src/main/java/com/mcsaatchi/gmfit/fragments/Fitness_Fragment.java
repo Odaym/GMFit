@@ -242,13 +242,13 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
 
         switch (chartType) {
             case "steps-count":
-                Helpers.setBarChartData(barChart, chartsMap.get(0).getData().subList(0, 7));
+                Helpers.setBarChartData(barChart, chartsMap.get(0).getData());
                 break;
             case "active-calories":
-                Helpers.setBarChartData(barChart, chartsMap.get(3).getData().subList(0, 7));
+                Helpers.setBarChartData(barChart, chartsMap.get(3).getData());
                 break;
             case "distance-traveled":
-                Helpers.setBarChartData(barChart, chartsMap.get(4).getData().subList(0, 7));
+                Helpers.setBarChartData(barChart, chartsMap.get(4).getData());
                 break;
         }
 
