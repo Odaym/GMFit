@@ -7,6 +7,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.SparseArray;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.mcsaatchi.gmfit.R;
@@ -23,6 +24,8 @@ public class AddNewChart_Activity extends Base_Activity {
     ListView chartsList;
     @Bind(R.id.toolbar)
     Toolbar toolbar;
+    @Bind(R.id.topLayout)
+    LinearLayout topLayout;
 
     private SparseArray<String[]> fitnessItemsMap = new SparseArray<String[]>() {{
         put(0, new String[]{"Number of Steps", "Steps", "steps-count"});
@@ -63,10 +66,13 @@ public class AddNewChart_Activity extends Base_Activity {
             if (CALL_PURPOSE != null) {
                 switch (CALL_PURPOSE) {
                     case Cons.EXTRAS_ADD_FITNESS_CHART:
+                        topLayout.setBackground(getResources().getDrawable(R.drawable.fitness_background));
+                        
                         chartsList.setAdapter(new TwoItem_Sparse_ListAdapter(this, fitnessItemsMap));
                         chartsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                             @Override
                             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+
                                 Intent intent = new Intent();
                                 intent.putExtra(Cons.EXTRAS_CHART_FULL_NAME, fitnessItemsMap.get(position)[0]);
                                 intent.putExtra(Cons.EXTRAS_CHART_TYPE_SELECTED, fitnessItemsMap.get(position)[2]);
@@ -76,6 +82,8 @@ public class AddNewChart_Activity extends Base_Activity {
                         });
                         break;
                     case Cons.EXTRAS_ADD_NUTRIITION_CHART:
+                        topLayout.setBackground(getResources().getDrawable(R.drawable.nutrition_background));
+
                         chartsList.setAdapter(new TwoItem_Sparse_ListAdapter(this, nutritionItemsMap));
                         chartsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                             @Override
