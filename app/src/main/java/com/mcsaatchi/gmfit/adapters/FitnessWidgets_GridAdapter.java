@@ -62,14 +62,8 @@ public class FitnessWidgets_GridAdapter extends BaseAdapter {
         holder.measurementUnitTV.setText(widgetsMap.get(position).getMeasurementUnit());
 
         switch (widgetsMap.get(position).getTitle()) {
-            case "Biking":
+            case "Distance":
                 holder.metricIcon.setImageResource(R.drawable.ic_biking);
-                break;
-            case "Walking":
-                holder.metricIcon.setImageResource(R.drawable.ic_running);
-                break;
-            case "Steps":
-                holder.metricIcon.setImageResource(R.drawable.ic_steps);
                 break;
             case "Calories":
                 holder.metricIcon.setImageResource(R.drawable.ic_calories);
