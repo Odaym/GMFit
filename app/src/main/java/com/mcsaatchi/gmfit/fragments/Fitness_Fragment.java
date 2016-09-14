@@ -186,7 +186,7 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
                 + Build.VERSION.RELEASE);
 
         if (chartsMap != null && chartsMap.size() > 0)
-            Helpers.setBarChartData(defaultBarChart, chartsMap.get(0).getData());
+            Helpers.setBarChartData(defaultBarChart, chartsMap.get(0).getData().subList(0, 7));
 
         defaultBarChart.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -242,13 +242,13 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
 
         switch (chartType) {
             case "steps-count":
-                Helpers.setBarChartData(barChart, chartsMap.get(0).getData());
+                Helpers.setBarChartData(barChart, chartsMap.get(0).getData().subList(0, 7));
                 break;
             case "active-calories":
-                Helpers.setBarChartData(barChart, chartsMap.get(3).getData());
+                Helpers.setBarChartData(barChart, chartsMap.get(3).getData().subList(0, 7));
                 break;
             case "distance-traveled":
-                Helpers.setBarChartData(barChart, chartsMap.get(4).getData());
+                Helpers.setBarChartData(barChart, chartsMap.get(4).getData().subList(0, 7));
                 break;
         }
 
@@ -351,7 +351,7 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
                 fitnessWidget.setText(String.valueOf((int) prefs.getFloat(Helpers.getTodayDate() + "_calories", 0)));
                 break;
             case Cons.EVENT_DISTANCE_COUNTER_INCREMENTED:
-                fitnessWidget = findWidgetInGrid("Biking");
+                fitnessWidget = findWidgetInGrid("Distance");
                 fitnessWidget.setText(String.valueOf((int) (prefs.getFloat(Helpers.getTodayDate() + "_distance", 0) * 1000)));
                 break;
             case Cons.EVENT_CHART_ADDED_FROM_SETTINGS:
