@@ -126,15 +126,11 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
             getMealItemDAO().create(new MealItem("Nutrition/Cereal Bars", "Snacks", 2));
             getMealItemDAO().create(new MealItem("Frozen Desserts", "Snacks", 2));
 
-            FitnessWidget fw1 = new FitnessWidget("Walking", "Km/hour", 0, R.drawable.ic_running, 0);
-            FitnessWidget fw2 = new FitnessWidget("Biking", "meters", 0, R.drawable.ic_biking, 1);
-            FitnessWidget fw3 = new FitnessWidget("Steps", "steps", 0, R.drawable.ic_steps, 2);
-            FitnessWidget fw4 = new FitnessWidget("Calories", "Calories", 0, R.drawable.ic_calories, 3);
+            FitnessWidget fw1 = new FitnessWidget("Distance", "meters", 0, R.drawable.ic_biking, 1);
+            FitnessWidget fw2 = new FitnessWidget("Calories", "Calories", 0, R.drawable.ic_calories, 3);
 
             getFitnessWidgetsDAO().create(fw1);
             getFitnessWidgetsDAO().create(fw2);
-            getFitnessWidgetsDAO().create(fw3);
-            getFitnessWidgetsDAO().create(fw4);
 
         } catch (SQLException e) {
             Log.e(DBHelper.class.getName(), "Can't create database", e);
