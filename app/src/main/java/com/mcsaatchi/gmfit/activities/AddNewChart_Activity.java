@@ -29,11 +29,8 @@ public class AddNewChart_Activity extends Base_Activity {
 
     private SparseArray<String[]> fitnessItemsMap = new SparseArray<String[]>() {{
         put(0, new String[]{"Number of Steps", "Steps", "steps-count"});
-        put(1, new String[]{"Walking and Running Distance", "KM", "distance-traveled"});
-        put(2, new String[]{"Cycling Distance", "KM", "cycling-distance"});
-        put(3, new String[]{"Total Distance Traveled", "KM", "distance-traveled"});
-        put(4, new String[]{"Flights Climbed", "Steps", "steps-count"});
-        put(5, new String[]{"Active Calories", "kcal", "active-calories"});
+        put(1, new String[]{"Distance Traveled", "KM", "distance-traveled"});
+        put(2, new String[]{"Active Calories", "kcal", "active-calories"});
     }};
 
     private SparseArray<String[]> nutritionItemsMap = new SparseArray<String[]>() {{
