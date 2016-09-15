@@ -208,25 +208,7 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
 
         setUpWidgetsGridView(widgetsMap);
 
-        /**
-         * Show all the charts that exist in the database
-         */
-        try {
-            allDataCharts = dataChartQB.orderBy("position", true).where().eq("username", userEmail).query();
-
-            if (!allDataCharts.isEmpty()) {
-                for (DataChart chart :
-                        allDataCharts) {
-                    /**
-                     * For each chart, send over its name and type.
-                     * According to the type, the data for that chart will be selected from the data fetched from the API for all charts.
-                     */
-                    addNewBarChart(chart.getName(), chart.getType());
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        setUpAllCharts();
 
         return fragmentView;
     }
@@ -265,6 +247,36 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
                 getSlugBreakdownForChart(chartTitleTV_NEW_CHART.getText().toString(), chartType);
             }
         });
+    }
+
+    private void setUpAllCharts() {
+        /**
+         * Show all the charts that exist in the database
+         */
+        try {
+            allDataCharts = dataChartQB.orderBy("position", true).where().eq("username", userEmail).query();
+
+            cards_container.removeAllViews();
+
+            if (!allDataCharts.isEmpty()) {
+                for (DataChart chart :
+                        allDataCharts) {
+
+                    /**
+                     * For each chart, send over its name and type.
+                     * According to the type, the data for that chart will be selected from the data fetched from the API for all charts.
+                     */
+                    addNewBarChart(chart.getName(), chart.getType());
+                }
+            } else {
+                /**
+                 * The default chart only
+                 */
+                addNewBarChart("Number Of Steps", "steps-count");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     private void setUpWidgetsGridView(ArrayList<FitnessWidget> widgetsMap) {
@@ -325,7 +337,6 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
                     widgetsMap = ebp.getFitnessWidgetsMap();
                     setUpWidgetsGridView(widgetsMap);
                 }
-
                 break;
             case Cons.EXTRAS_FITNESS_CHARTS_ORDER_ARRAY_CHANGED:
                 List<DataChart> allDataCharts = ebp.getDataChartsListExtra();
@@ -339,6 +350,9 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
                     addNewBarChart(chart.getName(), chart.getType());
                 }
 
+                break;
+            case Cons.EXTRAS_FITNESS_CHART_DELETED:
+                setUpAllCharts();
                 break;
             case Cons.EVENT_CHART_METRICS_RECEIVED:
 //                addNewBarChart(chartName, ebp.getFloatArrayExtra());

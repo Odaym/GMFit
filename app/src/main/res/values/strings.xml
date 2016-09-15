@@ -173,6 +173,8 @@
 
     <!-- BREAKDOWN ACTIVITY -->
     <string name="all_time_breakdown_bar_hint">All Time</string>
+    <string name="delete_chart_dialog_title">Delete Chart</string>
+    <string name="delete_chart_dialog_message">Are you sure you want to delete this chart?</string>
 
     <!-- NUTRITION FRAGMENT -->
     <string name="add_new_meal">+ Add</string>

@@ -1,5 +1,6 @@
 package com.mcsaatchi.gmfit.activities;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
@@ -7,18 +8,28 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.LinearLayout;
 
+import com.j256.ormlite.dao.RuntimeExceptionDao;
+import com.j256.ormlite.stmt.QueryBuilder;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.classes.Cons;
+import com.mcsaatchi.gmfit.classes.EventBus_Poster;
+import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
 import com.mcsaatchi.gmfit.classes.SlidingTabLayout;
 import com.mcsaatchi.gmfit.fragments.SlugBreakdown_Fragment_Daily;
 import com.mcsaatchi.gmfit.fragments.SlugBreakdown_Fragment_Monthly;
 import com.mcsaatchi.gmfit.fragments.SlugBreakdown_Fragment_Yearly;
+import com.mcsaatchi.gmfit.models.DataChart;
 import com.mcsaatchi.gmfit.rest.SlugBreakdownResponseInnerData;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -32,6 +43,9 @@ public class SlugBreakdown_Activity extends Base_Activity {
     Toolbar toolbar;
     @Bind(R.id.parentLayoutToCustomize)
     LinearLayout parentLayoutToCustomize;
+
+    private RuntimeExceptionDao<DataChart, Integer> dataChartDAO;
+    private QueryBuilder<DataChart, Integer> dataChartQB;
 
     private String typeOfFragmentToCustomizeFor;
     private SlugBreakdownResponseInnerData slugBreakdownData;
@@ -52,13 +66,19 @@ public class SlugBreakdown_Activity extends Base_Activity {
 
         Bundle intentExtras = getIntent().getExtras();
 
+        dataChartDAO = getDBHelper().getDataChartDAO();
+        dataChartQB = dataChartDAO.queryBuilder();
+
         //Grab the Fragment type from one of the three Fragments (Fitness, Nutrition, Health)
         if (intentExtras != null) {
-            setupToolbar(toolbar, intentExtras.getString(Cons.EXTRAS_CHART_FULL_NAME), true);
+            chartTitle = intentExtras.getString(Cons.EXTRAS_CHART_FULL_NAME);
+
+            setupToolbar(toolbar, chartTitle, true);
 
             typeOfFragmentToCustomizeFor = intentExtras.getString(Cons.EXTRAS_CUSTOMIZE_WIDGETS_CHARTS_FRAGMENT_TYPE);
             slugBreakdownData = intentExtras.getParcelable(Cons.BUNDLE_SLUG_BREAKDOWN_DATA);
             chartType = intentExtras.getString(Cons.EXTRAS_CHART_TYPE_SELECTED, "");
+            chartTitle = intentExtras.getString(Cons.EXTRAS_CHART_FULL_NAME, "");
 
             switch (typeOfFragmentToCustomizeFor) {
                 case Cons.EXTRAS_FITNESS_FRAGMENT:
@@ -82,6 +102,47 @@ public class SlugBreakdown_Activity extends Base_Activity {
         pager.setCurrentItem(0);
 
         tabs.setViewPager(pager);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.chart_slug_breakdown, menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.deleteChartBTN:
+
+                new AlertDialog.Builder(this)
+                        .setTitle(R.string.delete_chart_dialog_title)
+                        .setMessage(R.string.delete_chart_dialog_message)
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                List<DataChart> chartToBeDeleted = dataChartDAO.queryForEq("name", chartTitle);
+
+                                Log.d("charts", "onClick: Charts found are : " + chartToBeDeleted.size());
+
+                                for (int i = 0; i < chartToBeDeleted.size(); i++)
+                                    dataChartDAO.delete(chartToBeDeleted);
+
+                                EventBus_Singleton.getInstance().post(new EventBus_Poster(Cons.EXTRAS_FITNESS_CHART_DELETED));
+
+                                finish();
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                            }
+                        })
+                        .show();
+
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     public class SlugBreakdownViewPager_Adapter extends FragmentStatePagerAdapter {
