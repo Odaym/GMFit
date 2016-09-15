@@ -56,7 +56,7 @@
 
         <GridView android:id="@+id/widgetsGridView"
                   android:layout_width="match_parent"
-                  android:layout_height="@dimen/widgets_gridview_height"
+                  android:layout_height="@dimen/nutrition_widgets_gridview_height"
                   android:layout_marginBottom="@dimen/default_margin_2"
                   android:layout_marginEnd="@dimen/default_margin_2"
                   android:layout_marginStart="@dimen/default_margin_2"
