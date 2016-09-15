@@ -8,6 +8,62 @@
 
     <include layout="@layout/app_toolbar"/>
 
+    <FrameLayout android:layout_width="match_parent"
+                 android:layout_height="@dimen/default_button_height_1"
+                 android:layout_marginBottom="@dimen/default_margin_2">
+
+        <EditText
+            android:id="@+id/searchMealsAutoCompleTV"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/offwhite_more_transparent"
+            android:hint="@string/search_hint"
+            android:imeOptions="actionSearch"
+            android:inputType="textCapSentences"
+            android:paddingStart="@dimen/default_margin_1_5"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|end"
+            android:orientation="horizontal">
+
+            <ProgressBar
+                android:id="@+id/pb_loading_indicator"
+                style="?android:attr/progressBarStyleSmall"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center_vertical|end"
+                android:layout_marginEnd="@dimen/default_margin_1"
+                android:visibility="gone"/>
+
+            <ImageView
+                android:id="@+id/searchIconIV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|end"
+                android:paddingEnd="@dimen/default_margin_1_5"
+                android:src="@drawable/ic_search_white_24dp"/>
+        </LinearLayout>
+
+    </FrameLayout>
+
+    <TextView android:id="@+id/searchResultsHintTV"
+              xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@color/nutrition_red"
+              android:gravity="center_vertical"
+              android:minHeight="?android:attr/listPreferredItemHeightSmall"
+              android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
+              android:paddingStart="?android:attr/listPreferredItemPaddingStart"
+              android:text="@string/search_results_list_label"
+              android:textAppearance="?android:attr/textAppearanceListItemSmall"
+              android:textColor="@android:color/white"
+              android:visibility="gone"/>
+
     <de.halfbit.pinnedsection.PinnedSectionListView
         android:id="@+id/mealItemsList"
         android:layout_width="match_parent"

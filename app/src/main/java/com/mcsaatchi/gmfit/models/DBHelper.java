@@ -43,7 +43,7 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
             getMealItemDAO().create(new MealItem("Recently Added", "Breakfast", 1));
             getMealItemDAO().create(new MealItem("Twice-Baked Potatoes", "Breakfast", 2));
             getMealItemDAO().create(new MealItem("Butternut Squash, Chickpea", "Breakfast", 2));
-            getMealItemDAO().create(new MealItem("All Items", "Breakfast", 1));
+            getMealItemDAO().create(new MealItem("Popular Meals", "Breakfast", 1));
             getMealItemDAO().create(new MealItem("Lentils with Roasted Beets and Carrots", "Breakfast", 2));
             getMealItemDAO().create(new MealItem("Quinoa with Broccoli-Avocado Pesto", "Breakfast", 2));
             getMealItemDAO().create(new MealItem("Mexican-Style Sweet Potatoes", "Breakfast", 2));
@@ -70,7 +70,7 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
             getMealItemDAO().create(new MealItem("Baked Chickpea Burgers", "Lunch", 2));
             getMealItemDAO().create(new MealItem("Creamy Avocado Pasta", "Lunch", 2));
             getMealItemDAO().create(new MealItem("Quinoa Puttanesca", "Lunch", 2));
-            getMealItemDAO().create(new MealItem("All Items", "Lunch", 1));
+            getMealItemDAO().create(new MealItem("Popular Meals", "Lunch", 1));
             getMealItemDAO().create(new MealItem("Mushroom and Olive Veggie Burgers", "Lunch", 2));
             getMealItemDAO().create(new MealItem("Basil Quinoa Cakes", "Lunch", 2));
             getMealItemDAO().create(new MealItem("Quinoa and Sweet Potato Stuffed Mushrooms", "Lunch", 2));
@@ -108,7 +108,7 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
             getMealItemDAO().create(new MealItem("Rice Snacks Peanut Butter", "Snacks", 2));
             getMealItemDAO().create(new MealItem("Chocolate", "Snacks", 2));
             getMealItemDAO().create(new MealItem("Popcorn", "Snacks", 2));
-            getMealItemDAO().create(new MealItem("All Items", "Snacks", 1));
+            getMealItemDAO().create(new MealItem("Popular Meals", "Snacks", 1));
             getMealItemDAO().create(new MealItem("Crackers", "Snacks", 2));
             getMealItemDAO().create(new MealItem("Cakes/Muffins", "Snacks", 2));
             getMealItemDAO().create(new MealItem("Candy", "Snacks", 2));

@@ -192,7 +192,8 @@
     <string name="add_new_meal_item_activity_title">Add</string>
     <string name="list_section_recently_added">Recently Added</string>
     <string name="list_section_popular_meals">Popular Meals</string>
-    <string name="search_hint">Search meals</string>
+    <string name="search_hint">Search For Meal</string>
+    <string name="search_results_list_label">Search results</string>
 
     <!-- BARCODE CAPTURE ACTIVITY -->
     <string name="barcode_capture_activity_title">Scan Meals</string>

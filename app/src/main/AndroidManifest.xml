@@ -92,15 +92,8 @@
 
         <activity android:name=".activities.AddNewMealItem_Activity"
                   android:screenOrientation="portrait"
-                  android:theme="@style/No_Action_Bar_Theme">
-
-            <intent-filter>
-                <action android:name="android.intent.action.SEARCH"/>
-            </intent-filter>
-
-            <meta-data android:name="android.app.searchable"
-                       android:resource="@xml/searchable"/>
-        </activity>
+                  android:theme="@style/No_Action_Bar_Theme"
+                  android:windowSoftInputMode="stateHidden"/>
 
         <activity android:name=".activities.BarcodeCapture_Activity"
                   android:screenOrientation="portrait"

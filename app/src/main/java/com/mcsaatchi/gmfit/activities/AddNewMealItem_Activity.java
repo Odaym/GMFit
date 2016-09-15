@@ -1,22 +1,27 @@
 package com.mcsaatchi.gmfit.activities;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.v4.view.MenuItemCompat;
-import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.QueryBuilder;
-import com.j256.ormlite.stmt.SelectArg;
 import com.j256.ormlite.stmt.Where;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.adapters.SimpleSectioned_ListAdapter;
@@ -24,6 +29,9 @@ import com.mcsaatchi.gmfit.classes.Cons;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
 import com.mcsaatchi.gmfit.models.MealItem;
+import com.mcsaatchi.gmfit.rest.RestClient;
+import com.mcsaatchi.gmfit.rest.SearchMealItemResponse;
+import com.mcsaatchi.gmfit.rest.SearchMealItemResponseDatum;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -31,16 +39,31 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
-public class AddNewMealItem_Activity extends Base_Activity implements SearchView.OnQueryTextListener {
+public class AddNewMealItem_Activity extends Base_Activity {
 
     private static final String TAG = "AddNewMealItem_Activity";
     private static final int SECTION_VIEWTYPE = 1;
     private static final int ITEM_VIEWTYPE = 2;
+
     @Bind(R.id.toolbar)
     Toolbar toolbar;
     @Bind(R.id.mealItemsList)
     ListView mealItemsList;
+    @Bind(R.id.searchMealsAutoCompleTV)
+    EditText searchMealsAutoCompleTV;
+    @Bind(R.id.searchIconIV)
+    ImageView searchIconIV;
+    @Bind(R.id.searchResultsHintTV)
+    TextView searchResultsHintTV;
+    @Bind(R.id.pb_loading_indicator)
+    ProgressBar pb_loading_indicator;
+
+    private SharedPreferences prefs;
+
     private RuntimeExceptionDao<MealItem, Integer> mealItemsDAO;
     private QueryBuilder<MealItem, Integer> mealsQueryBuilder;
     private PreparedQuery<MealItem> pq;
@@ -69,15 +92,13 @@ public class AddNewMealItem_Activity extends Base_Activity implements SearchView
 
         ButterKnife.bind(this);
 
+        prefs = getSharedPreferences(Cons.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
+
         setupToolbar(toolbar, actionBarTitle, true);
 
         mealItemsDAO = getDBHelper().getMealItemDAO();
 
-        prepareQueryForAllMealTypeItems(mealType);
-
-        mealsList = getDBHelper().getMealItemDAO().query(pq);
-
-        initMealsList();
+        loadMealsFromDB(mealType);
 
         mealItemsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -90,52 +111,140 @@ public class AddNewMealItem_Activity extends Base_Activity implements SearchView
                 }
             }
         });
+
+        mealItemsList.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView absListView, int i) {
+                /**
+                 * Hide keyboard
+                 */
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(getWindow().getDecorView().getRootView().getWindowToken(), 0);
+            }
+
+            @Override
+            public void onScroll(AbsListView absListView, int i, int i1, int i2) {
+            }
+        });
+
+        searchMealsAutoCompleTV.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(final CharSequence charSequence, int i, int i1, int i2) {
+                /**
+                 * EditText is empty
+                 */
+                if (charSequence.toString().isEmpty()) {
+                    searchResultsHintTV.setVisibility(View.GONE);
+
+                    searchIconIV.setImageResource(R.drawable.ic_search_white_24dp);
+                    searchIconIV.setOnClickListener(null);
+
+                    loadMealsFromDB(mealType);
+                } else if (charSequence.toString().length() > 2) {
+
+                    pb_loading_indicator.setVisibility(View.VISIBLE);
+
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            searchIconIV.setImageResource(R.drawable.ic_clear_search);
+                            searchIconIV.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    searchMealsAutoCompleTV.setText("");
+
+                                    /**
+                                     * Hide keyboard
+                                     */
+                                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                                }
+                            });
+
+                            findMeals(charSequence.toString(), new Callback<SearchMealItemResponse>() {
+                                @Override
+                                public void onResponse(Call<SearchMealItemResponse> call, Response<SearchMealItemResponse> response) {
+
+                                    final List<MealItem> mealsReturned = new ArrayList<>();
+
+                                    List<SearchMealItemResponseDatum> mealsResponse = response.body().getData().getBody().getData();
+
+                                    for (int i = 0; i < mealsResponse.size(); i++) {
+                                        MealItem mealItem = new MealItem();
+
+                                        mealItem.setName(mealsResponse.get(i).getName());
+                                        mealItem.setMeasurementUnit(mealsResponse.get(i).getMeasurementUnit());
+                                        mealItem.setMeal_id(mealsResponse.get(i).getId());
+                                        mealItem.setType(mealType);
+                                        mealItem.setSectionType(ITEM_VIEWTYPE);
+
+                                        mealsReturned.add(mealItem);
+                                    }
+
+                                    mealsList = mealsReturned;
+
+                                    initMealsList();
+
+                                    searchResultsHintTV.setVisibility(View.VISIBLE);
+                                    pb_loading_indicator.setVisibility(View.INVISIBLE);
+                                }
+
+                                @Override
+                                public void onFailure(Call<SearchMealItemResponse> call, Throwable t) {
+
+                                }
+                            });
+                        }
+                    }, 500);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+    }
+
+    private void findMeals(String mealName, final Callback<SearchMealItemResponse> mealItemsResponse) {
+
+        Call<SearchMealItemResponse> searchForMealCall = new RestClient().getGMFitService().searchForMeals(prefs.getString(Cons
+                .PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS), mealName);
+
+        searchForMealCall.enqueue(new Callback<SearchMealItemResponse>() {
+            @Override
+            public void onResponse(Call<SearchMealItemResponse> call, Response<SearchMealItemResponse> response) {
+
+                switch (response.code()) {
+                    case 200:
+                        mealItemsResponse.onResponse(null, response);
+                        break;
+                }
+            }
+
+            @Override
+            public void onFailure(Call<SearchMealItemResponse> call, Throwable t) {
+            }
+        });
+    }
+
+    private void loadMealsFromDB(String mealType) {
+        prepareQueryForAllMealTypeItems(mealType);
+
+        mealsList = getDBHelper().getMealItemDAO().query(pq);
+
+        initMealsList();
     }
 
     private void initMealsList() {
         simpleSectionedListAdapter = new SimpleSectioned_ListAdapter(this, mealsList);
 
         mealItemsList.setAdapter(simpleSectionedListAdapter);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-
-        inflater.inflate(R.menu.add_new_meal_item_activity, menu);
-
-        MenuItem searchItem = menu.findItem(R.id.search);
-        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-        searchView.setOnSearchClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-            }
-        });
-
-        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
-            @Override
-            public boolean onClose() {
-                return false;
-            }
-        });
-
-        searchView.setOnQueryTextListener(this);
-
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    public void prepareQueryForSearchTerm(String searchQuery, String mealType) {
-        try {
-            mealsQueryBuilder = mealItemsDAO.queryBuilder();
-
-            SelectArg nameSelectArg = new SelectArg("%" + searchQuery + "%");
-
-            Where where = mealsQueryBuilder.where();
-            where.eq("type", mealType).and().like("name", nameSelectArg);
-            pq = mealsQueryBuilder.prepare();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
     }
 
     public void prepareQueryForAllMealTypeItems(String mealType) {
@@ -148,32 +257,5 @@ public class AddNewMealItem_Activity extends Base_Activity implements SearchView
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public boolean onQueryTextSubmit(String query) {
-        return false;
-    }
-
-    @Override
-    public boolean onQueryTextChange(String newText) {
-
-        if (!newText.isEmpty()) {
-            //Run actual search query for this meal type
-            prepareQueryForSearchTerm(newText, mealType);
-
-            mealsList = mealItemsDAO.query(pq);
-
-            initMealsList();
-        } else {
-            //Show all results for this meal type
-            prepareQueryForAllMealTypeItems(mealType);
-
-            mealsList = mealItemsDAO.query(pq);
-
-            initMealsList();
-        }
-
-        return true;
     }
 }
