@@ -20,7 +20,7 @@ import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.mcsaatchi.gmfit.BuildConfig;
 import com.mcsaatchi.gmfit.classes.Cons;
-import com.mcsaatchi.gmfit.classes.DBHelper;
+import com.mcsaatchi.gmfit.models.DBHelper;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
 import com.mcsaatchi.gmfit.classes.Helpers;

@@ -8,7 +8,7 @@ import android.view.MenuItem;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.classes.DBHelper;
+import com.mcsaatchi.gmfit.models.DBHelper;
 
 public class Base_Activity extends AppCompatActivity {
     private DBHelper dbHelper = null;
