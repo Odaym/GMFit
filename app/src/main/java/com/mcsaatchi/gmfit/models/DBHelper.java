@@ -1,4 +1,4 @@
-package com.mcsaatchi.gmfit.classes;
+package com.mcsaatchi.gmfit.models;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -9,11 +9,6 @@ import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.models.DataChart;
-import com.mcsaatchi.gmfit.models.FitnessWidget;
-import com.mcsaatchi.gmfit.models.MealItem;
-import com.mcsaatchi.gmfit.models.NutritionWidget;
-import com.mcsaatchi.gmfit.models.User;
 
 import java.sql.SQLException;
 
