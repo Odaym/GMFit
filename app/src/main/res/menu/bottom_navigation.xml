@@ -2,12 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/item_one"
-        android:icon="@drawable/ic_local_dining_white_24dp"
+        android:icon="@drawable/ic_bottom_bar_fitness_inactive"
         android:title="@string/fitness_tab_title"/>
 
     <item
         android:id="@+id/item_two"
-        android:icon="@drawable/ic_location_on_white_24dp"
+        android:icon="@drawable/ic_bottom_bar_nutrition_inactive"
         android:title="@string/nutrition_tab_title"/>
 
     <!--<item-->
@@ -22,7 +22,7 @@
 
     <item
         android:id="@+id/item_five"
-        android:icon="@drawable/ic_person_white_24dp"
+        android:icon="@drawable/ic_bottom_bar_profile"
         android:title="@string/profile_tab_title"/>
 
 </menu>

@@ -84,9 +84,7 @@ public class Main_Activity extends Base_Activity {
         nutritionFragment = new Nutrition_Fragment();
         mainProfileFragment = new MainProfile_Fragment();
 
-        bottomBar.noTopOffset();
         bottomBar.setActiveTabColor(ContextCompat.getColor(this, R.color.bpDarker_blue));
-        bottomBar.useFixedMode();
 
         bottomBar.setItemsFromMenu(R.menu.bottom_navigation, new OnMenuTabClickListener() {
             @Override
@@ -117,12 +115,6 @@ public class Main_Activity extends Base_Activity {
             public void onMenuTabReSelected(@IdRes int menuItemId) {
             }
         });
-
-        bottomBar.mapColorForTab(0, ContextCompat.getColor(this, R.color.colorAccent));
-        bottomBar.mapColorForTab(1, ContextCompat.getColor(this, android.R.color.holo_green_dark));
-        bottomBar.mapColorForTab(2, "#FF5252");
-//        bottomBar.mapColorForTab(3, "#FF5252");
-//        bottomBar.mapColorForTab(4, ContextCompat.getColor(this, android.R.color.holo_green_dark));
     }
 
     @Override

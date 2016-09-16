@@ -90,7 +90,7 @@
     <string name="verify_account_hint">We\'ve just sent a verification code to your email address, please enter that code below to complete the
         registration process.
     </string>
-    <string name="verification_code_hint">0 0 0 0</string>
+    <string name="verification_code_hint">6-digit code</string>
     <string name="wrong_verification_code">The code you provided is incorrect.</string>
     <string name="verifying_email_dialog_title">Verifying email address</string>
     <string name="verifying_email_dialog_message">Please wait…</string>
@@ -157,6 +157,8 @@
     <string name="female_option">Female</string>
     <string name="you_can_change_this_setting_hint">You can change these settings at any time from the preferences</string>
     <string name="medical_conditions_hint">Medical Condition\n(if any)</string>
+    <string name="weight_or_height_empty_dialog_title">Input incomplete</string>
+    <string name="weight_or_height_empty_dialog_message">Please make sure to fill in both your weight and height</string>
 
     <!-- CUSTOMIZE WIDGETS AND CHARTS ACTIVITY -->
     <string name="customize_widgets_and_charts_activity_title">Customize</string>

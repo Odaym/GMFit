@@ -29,7 +29,6 @@ import com.mcsaatchi.gmfit.activities.Main_Activity;
 import com.mcsaatchi.gmfit.classes.Cons;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
-import com.mcsaatchi.gmfit.classes.Helpers;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponseChart;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponseWidget;
 import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
@@ -146,36 +145,46 @@ public class Setup_Profile_3_Fragment extends Fragment implements CalendarDatePi
 
         switch (ebpMessage) {
             case Cons.EVENT_USER_FINALIZE_SETUP_PROFILE:
-                if (Helpers.validateFields(allFields)) {
-                    if (!weightET.getText().toString().isEmpty() && !heightET.getText().toString().isEmpty()) {
-                        int finalGender;
+                if (!weightET.getText().toString().isEmpty() && !heightET.getText().toString().isEmpty()) {
+                    int finalGender;
 
-                        finalGender = genderSpinner.getSelectedItem().toString().equals("Male") ? 1 : 0;
+                    finalGender = genderSpinner.getSelectedItem().toString().equals("Male") ? 1 : 0;
 
-                        String finalDateOfBirth = null;
+                    String finalDateOfBirth = null;
 
-                        if (!dateOfBirth.isEmpty())
-                            finalDateOfBirth = dateOfBirth;
-                        else
-                            finalDateOfBirth = "1990-01-01";
+                    if (!dateOfBirth.isEmpty())
+                        finalDateOfBirth = dateOfBirth;
+                    else
+                        finalDateOfBirth = "1990-01-01";
 
-                        float finalWeight = Float.parseFloat(weightET.getText().toString());
-                        float finalHeight = Float.parseFloat(heightET.getText().toString());
+                    float finalWeight = Float.parseFloat(weightET.getText().toString());
+                    float finalHeight = Float.parseFloat(heightET.getText().toString());
 
-                        String finalBloodType = bloodTypeSpinner.getSelectedItem().toString();
+                    String finalBloodType = bloodTypeSpinner.getSelectedItem().toString();
 
-                        prefs.edit().putString(Cons.EXTRAS_USER_PROFILE_DATE_OF_BIRTH, finalDateOfBirth).apply();
-                        prefs.edit().putFloat(Cons.EXTRAS_USER_PROFILE_WEIGHT, finalWeight).apply();
-                        prefs.edit().putFloat(Cons.EXTRAS_USER_PROFILE_HEIGHT, finalHeight).apply();
-                        prefs.edit().putString(Cons.EXTRAS_USER_PROFILE_BLOOD_TYPE, finalBloodType).apply();
+                    prefs.edit().putString(Cons.EXTRAS_USER_PROFILE_DATE_OF_BIRTH, finalDateOfBirth).apply();
+                    prefs.edit().putFloat(Cons.EXTRAS_USER_PROFILE_WEIGHT, finalWeight).apply();
+                    prefs.edit().putFloat(Cons.EXTRAS_USER_PROFILE_HEIGHT, finalHeight).apply();
+                    prefs.edit().putString(Cons.EXTRAS_USER_PROFILE_BLOOD_TYPE, finalBloodType).apply();
 
-                        String nationality = prefs.getString(Cons.EXTRAS_USER_PROFILE_NATIONALITY, "");
-                        String measurementSystem = prefs.getString(Cons.EXTRAS_USER_PROFILE_MEASUREMENT_SYSTEM, "");
-                        String goal = prefs.getString(Cons.EXTRAS_USER_PROFILE_GOAL, "");
+                    String nationality = prefs.getString(Cons.EXTRAS_USER_PROFILE_NATIONALITY, "");
+                    String measurementSystem = prefs.getString(Cons.EXTRAS_USER_PROFILE_MEASUREMENT_SYSTEM, "");
+                    String goal = prefs.getString(Cons.EXTRAS_USER_PROFILE_GOAL, "");
 
-                        setupUserProfile(finalDateOfBirth, finalBloodType, nationality, (int) medicalConditionsSpinner.getSelectedItemId(), measurementSystem, goal,
-                                finalGender, finalHeight, finalWeight, calculateBMI(finalWeight, finalHeight));
-                    }
+                    setupUserProfile(finalDateOfBirth, finalBloodType, nationality, (int) medicalConditionsSpinner.getSelectedItemId(), measurementSystem, goal,
+                            finalGender, finalHeight, finalWeight, calculateBMI(finalWeight, finalHeight));
+                } else {
+//                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+//                    builder.setTitle(R.string.weight_or_height_empty_dialog_title)
+//                            .setMessage(R.string.weight_or_height_empty_dialog_message)
+//                            .setCancelable(false)
+//                            .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+//                                public void onClick(DialogInterface dialog, int id) {
+//                                    //do things
+//                                }
+//                            });
+//                    AlertDialog alert = builder.create();
+//                    alert.show();
                 }
 
                 break;

@@ -151,6 +151,8 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
 
         userEmail = prefs.getString(Cons.EXTRAS_USER_EMAIL, "");
 
+        Log.d(TAG, "onCreate: User email is now : " + userEmail);
+
         if (getArguments() != null) {
             try {
 
@@ -182,11 +184,14 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
 
         setHasOptionsMenu(true);
 
+        metricCounterTV.setText(String.valueOf(prefs.getInt(Helpers.getTodayDate() + "_steps", 0)));
+
+        setUpWidgetsGridView(widgetsMap);
+
+        setUpAllCharts();
+
         Log.d(TAG, "onCreateView: Device info : " + Build.MANUFACTURER + " " + Build.MODEL + " (" + Build.DEVICE + ") - "
                 + Build.VERSION.RELEASE);
-
-        if (chartsMap != null && chartsMap.size() > 0)
-            Helpers.setBarChartData(defaultBarChart, chartsMap.get(0).getData().subList(0, 7));
 
         defaultBarChart.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -204,12 +209,6 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
             }
         });
 
-        metricCounterTV.setText(String.valueOf(prefs.getInt(Helpers.getTodayDate() + "_steps", 0)));
-
-        setUpWidgetsGridView(widgetsMap);
-
-        setUpAllCharts();
-
         return fragmentView;
     }
 
@@ -224,13 +223,13 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
 
         switch (chartType) {
             case "steps-count":
-                Helpers.setBarChartData(barChart, chartsMap.get(0).getData().subList(0, 7));
+                Helpers.setBarChartData(barChart, chartsMap.get(0).getData());
                 break;
             case "active-calories":
-                Helpers.setBarChartData(barChart, chartsMap.get(3).getData().subList(0, 7));
+                Helpers.setBarChartData(barChart, chartsMap.get(3).getData());
                 break;
             case "distance-traveled":
-                Helpers.setBarChartData(barChart, chartsMap.get(4).getData().subList(0, 7));
+                Helpers.setBarChartData(barChart, chartsMap.get(4).getData());
                 break;
         }
 
@@ -256,9 +255,17 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
         try {
             allDataCharts = dataChartQB.orderBy("position", true).where().eq("username", userEmail).query();
 
+            Log.d(TAG, "setUpAllCharts: How many fucking charts are there now? " + allDataCharts.size());
+
             cards_container.removeAllViews();
 
-            if (!allDataCharts.isEmpty()) {
+            addNewBarChart("Number Of Steps", "steps-count");
+
+            if (allDataCharts.isEmpty()) {
+                /**
+                 * The default chart only
+                 */
+            } else {
                 for (DataChart chart :
                         allDataCharts) {
 
@@ -268,11 +275,6 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
                      */
                     addNewBarChart(chart.getName(), chart.getType());
                 }
-            } else {
-                /**
-                 * The default chart only
-                 */
-                addNewBarChart("Number Of Steps", "steps-count");
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -352,6 +354,7 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
 
                 break;
             case Cons.EXTRAS_FITNESS_CHART_DELETED:
+                Log.d(TAG, "handle_BusEvents: A chart was deleted!");
                 setUpAllCharts();
                 break;
             case Cons.EVENT_CHART_METRICS_RECEIVED:

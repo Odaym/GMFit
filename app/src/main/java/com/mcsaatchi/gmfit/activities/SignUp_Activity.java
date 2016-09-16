@@ -43,6 +43,10 @@ public class SignUp_Activity extends Base_Activity {
     FormEditText emailET;
     @Bind(R.id.passwordET)
     FormEditText passwordET;
+    @Bind(R.id.firstNameET)
+    FormEditText firstNameET;
+    @Bind(R.id.lastNameET)
+    FormEditText lastNameET;
     @Bind(R.id.showPasswordTV)
     TextView showPasswordTV;
     @Bind(R.id.createAccountBTN)
@@ -80,7 +84,7 @@ public class SignUp_Activity extends Base_Activity {
             @Override
             public void onClick(View v) {
                 if (Helpers.validateFields(allFields)) {
-                    registerUser(emailET.getText().toString(), passwordET.getText().toString());
+                    registerUser(firstNameET.getText().toString() + " " + lastNameET.getText().toString(), emailET.getText().toString(), passwordET.getText().toString());
                 }
             }
         });
@@ -117,7 +121,7 @@ public class SignUp_Activity extends Base_Activity {
         });
     }
 
-    private void registerUser(final String email, final String password) {
+    private void registerUser(final String full_name, final String email, final String password) {
         final ProgressDialog waitingDialog = new ProgressDialog(this);
         waitingDialog.setTitle(getString(R.string.signing_up_dialog_title));
         waitingDialog.setMessage(getString(R.string.signing_up_dialog_message));
@@ -135,7 +139,7 @@ public class SignUp_Activity extends Base_Activity {
                     }
                 });
 
-        Call<AuthenticationResponse> registerUserCall = new RestClient().getGMFitService().registerUser(new RegisterRequest(email, password));
+        Call<AuthenticationResponse> registerUserCall = new RestClient().getGMFitService().registerUser(new RegisterRequest(full_name, email, password));
 
         registerUserCall.enqueue(new Callback<AuthenticationResponse>() {
             @Override
@@ -148,6 +152,7 @@ public class SignUp_Activity extends Base_Activity {
 
                         //Refreshes access token
                         prefs.edit().putString(Cons.PREF_USER_ACCESS_TOKEN, "Bearer " + responseBody.getToken()).apply();
+                        prefs.edit().putString(Cons.EXTRAS_USER_FULL_NAME, full_name).apply();
                         prefs.edit().putString(Cons.EXTRAS_USER_EMAIL, email).apply();
                         prefs.edit().putString(Cons.EXTRAS_USER_PASSWORD, password).apply();
 
@@ -175,10 +180,12 @@ public class SignUp_Activity extends Base_Activity {
     }
 
     public class RegisterRequest {
+        final String name;
         final String email;
         final String password;
 
-        public RegisterRequest(String email, String password) {
+        public RegisterRequest(String name, String email, String password) {
+            this.name = name;
             this.email = email;
             this.password = password;
         }
