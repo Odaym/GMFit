@@ -153,7 +153,6 @@
                 android:textAppearance="?android:textAppearanceSmall"
                 android:textColor="@android:color/white"
                 android:textColorHint="@android:color/white"
-                android:textCursorDrawable="@null"
                 validator:emptyErrorString="@string/field_empty_error_message"
                 validator:testErrorString="@string/error_only_numeric_digits_allowed"
                 validator:testType="numeric"/>
@@ -192,7 +191,6 @@
                 android:textAppearance="?android:textAppearanceSmall"
                 android:textColor="@android:color/white"
                 android:textColorHint="@android:color/white"
-                android:textCursorDrawable="@null"
                 validator:emptyErrorString="@string/field_empty_error_message"
                 validator:testErrorString="@string/error_only_numeric_digits_allowed"
                 validator:testType="numeric"/>

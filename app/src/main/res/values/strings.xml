@@ -197,6 +197,12 @@
     <string name="search_hint">Search For Meal</string>
     <string name="search_results_list_label">Search results</string>
 
+    <!-- SPECIFY MEAL AMOUNT ACTIVITY -->
+    <string name="add_meal_amount_hint">200</string>
+    <string name="add_meal_to_diary">Add to diary</string>
+    <string name="fetching_meal_info_dialog_title">Fetching meal information</string>
+    <string name="fetching_meal_info_dialog_message">Please wait…</string>
+
     <!-- BARCODE CAPTURE ACTIVITY -->
     <string name="barcode_capture_activity_title">Scan Meals</string>
     <string name="capture_barcode_instructions">Tap to capture. Pinch/Stretch to zoom.</string>

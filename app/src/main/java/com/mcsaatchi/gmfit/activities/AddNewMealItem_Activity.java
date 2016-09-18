@@ -1,6 +1,7 @@
 package com.mcsaatchi.gmfit.activities;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
@@ -26,8 +27,6 @@ import com.j256.ormlite.stmt.Where;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.adapters.SimpleSectioned_ListAdapter;
 import com.mcsaatchi.gmfit.classes.Cons;
-import com.mcsaatchi.gmfit.classes.EventBus_Poster;
-import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
 import com.mcsaatchi.gmfit.models.MealItem;
 import com.mcsaatchi.gmfit.rest.RestClient;
 import com.mcsaatchi.gmfit.rest.SearchMealItemResponse;
@@ -48,6 +47,7 @@ public class AddNewMealItem_Activity extends Base_Activity {
     private static final String TAG = "AddNewMealItem_Activity";
     private static final int SECTION_VIEWTYPE = 1;
     private static final int ITEM_VIEWTYPE = 2;
+    private static final int MEAL_AMOUNT_SPECIFIED = 536;
 
     @Bind(R.id.toolbar)
     Toolbar toolbar;
@@ -105,10 +105,15 @@ public class AddNewMealItem_Activity extends Base_Activity {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 Log.d(TAG, "onItemClick: Selected " + mealsList.get(position).getName() + " at index " + position);
 
-                if (mealsList.get(position).getSectionType() == ITEM_VIEWTYPE) {
-                    EventBus_Singleton.getInstance().post(new EventBus_Poster(Cons.EXTRAS_PICKED_MEAL_ENTRY, mealsList.get(position)));
-                    finish();
-                }
+                Intent intent = new Intent(AddNewMealItem_Activity.this, SpecifyMealAmount_Activity.class);
+                intent.putExtra(Cons.EXTRAS_MEAL_ID_FOR_METRIC_DATA, mealsList.get(position).getMeal_id());
+                intent.putExtra(Cons.EXTRAS_MAIN_MEAL_NAME, mealsList.get(position).getName());
+                startActivityForResult(intent, MEAL_AMOUNT_SPECIFIED);
+
+//                if (mealsList.get(position).getSectionType() == ITEM_VIEWTYPE) {
+//                    EventBus_Singleton.getInstance().post(new EventBus_Poster(Cons.EXTRAS_PICKED_MEAL_ENTRY, mealsList.get(position)));
+//                    finish();
+//                }
             }
         });
 
@@ -209,6 +214,17 @@ public class AddNewMealItem_Activity extends Base_Activity {
 
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (resultCode) {
+            case MEAL_AMOUNT_SPECIFIED:
+
+                break;
+        }
     }
 
     private void findMeals(String mealName, final Callback<SearchMealItemResponse> mealItemsResponse) {

@@ -10,9 +10,9 @@
     android:orientation="vertical">
 
     <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:theme="@style/TransparentToolbar"/>
@@ -162,6 +162,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@android:color/transparent"
+                    android:gravity="center_vertical"
                     android:hint="@string/password_hint"
                     android:inputType="textPassword"
                     android:paddingBottom="@dimen/default_margin_1"
@@ -175,9 +176,11 @@
                     validator:emptyErrorString="@string/field_empty_error_message"
                     validator:testErrorString="@string/field_password_too_short_error"/>
 
-                <TextView android:id="@+id/showPasswordTV" android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
+                <TextView android:id="@+id/showPasswordTV"
+                          android:layout_width="wrap_content"
+                          android:layout_height="match_parent"
                           android:layout_gravity="center_vertical|end"
+                          android:gravity="center_vertical"
                           android:paddingEnd="@dimen/default_margin_2"
                           android:text="@string/show_password"
                           android:textAppearance="?android:textAppearanceSmall"

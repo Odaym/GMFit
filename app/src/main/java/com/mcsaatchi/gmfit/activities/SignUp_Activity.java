@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -14,7 +13,7 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.text.method.PasswordTransformationMethod;
-import android.text.style.ClickableSpan;
+import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -90,18 +89,17 @@ public class SignUp_Activity extends Base_Activity {
         });
 
         SpannableString ss = new SpannableString(getString(R.string.creating_account_TOS));
-        ClickableSpan clickableSpan = new ClickableSpan() {
-            @Override
-            public void onClick(View textView) {
-                startActivity(new Intent(SignUp_Activity.this, TOS_Activity.class));
-            }
-        };
-        ss.setSpan(clickableSpan, 41, ss.length() - 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        ss.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.offwhite_transparent)), 41, ss.length() - 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
         creatingAccountTOSTV.setText(ss);
         creatingAccountTOSTV.setMovementMethod(LinkMovementMethod.getInstance());
         creatingAccountTOSTV.setTextColor(getResources().getColor(R.color.offwhite_transparent));
-        creatingAccountTOSTV.setHighlightColor(Color.BLUE);
+        creatingAccountTOSTV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(SignUp_Activity.this, TOS_Activity.class));
+            }
+        });
 
         showPasswordTV.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -24,9 +24,11 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.mcsaatchi.gmfit.R;
+import com.mcsaatchi.gmfit.activities.Login_Activity;
 import com.mcsaatchi.gmfit.activities.UserPolicy_Activity;
 import com.mcsaatchi.gmfit.classes.Cons;
 import com.mcsaatchi.gmfit.classes.Helpers;
+import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.rest.RestClient;
 import com.mcsaatchi.gmfit.rest.UserPolicyResponse;
 
@@ -50,10 +52,14 @@ public class MainProfile_Fragment extends Fragment {
     private static final String TAG = "MainProfile_Fragment";
     private static final int REQUEST_WRITE_STORAGE = 112;
     private static OkHttpClient client = new OkHttpClient();
+
     @Bind(R.id.userPolicyBTN)
     Button userPolicyBTN;
     @Bind(R.id.emergencyProfileBTN)
     Button emergencyProfileBTN;
+    @Bind(R.id.logoutBTN)
+    Button logoutBTN;
+
     private SharedPreferences prefs;
 
     @Override
@@ -77,6 +83,17 @@ public class MainProfile_Fragment extends Fragment {
                 getUserPolicy();
 //                ApiHelper.runApiAsyncTask(getActivity(), Cons.API_NAME_USER_POLICY, Cons.GET_REQUEST_TYPE, null, R.string.grabbing_user_policy_dialog_title,
 //                        R.string.grabbing_user_policy_dialog_message, null);
+            }
+        });
+
+        logoutBTN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (Helpers.isInternetAvailable(getActivity())) {
+                    signOutUser();
+                } else {
+                    Helpers.showNoInternetDialog(getActivity());
+                }
             }
         });
 
@@ -209,6 +226,53 @@ public class MainProfile_Fragment extends Fragment {
 //            }
 //        }.execute();
 //    }
+
+    private void signOutUser() {
+        final ProgressDialog waitingDialog = new ProgressDialog(getActivity());
+        waitingDialog.setTitle(getString(R.string.signing_out_dialog_title));
+        waitingDialog.setMessage(getString(R.string.signing_out_dialog_message));
+        waitingDialog.show();
+
+        final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+        alertDialog.setTitle(R.string.signing_out_dialog_title);
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+
+                        if (waitingDialog.isShowing())
+                            waitingDialog.dismiss();
+                    }
+                });
+
+        Call<DefaultGetResponse> signOutUserCall = new RestClient().getGMFitService().signOutUser(prefs.getString(Cons.PREF_USER_ACCESS_TOKEN, Cons
+                .NO_ACCESS_TOKEN_FOUND_IN_PREFS));
+
+        signOutUserCall.enqueue(new Callback<DefaultGetResponse>() {
+            @Override
+            public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
+                switch (response.code()) {
+                    case 200:
+                        waitingDialog.dismiss();
+
+                        prefs.edit().putString(Cons.PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS).apply();
+                        prefs.edit().putBoolean(Cons.EXTRAS_USER_LOGGED_IN, false).apply();
+
+                        getActivity().finish();
+
+                        Intent intent = new Intent(getActivity(), Login_Activity.class);
+                        startActivity(intent);
+                        break;
+                }
+            }
+
+            @Override
+            public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+                alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
+                alertDialog.show();
+            }
+        });
+    }
 
     private void downloadUserEmergencyProfile(final InputStream inputStreamResult) {
         new Thread(new Runnable() {

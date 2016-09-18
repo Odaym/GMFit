@@ -37,6 +37,7 @@ public class Cons {
     public static final String EXTRAS_CHART_TYPE_SELECTED = "chart_type_selected";
     public static final String EXTRAS_CHART_FULL_NAME = "chart_full_name";
     public static final String EXTRAS_CHART_OBJECT = "chart_object";
+    public static final String EXTRAS_MEAL_ID_FOR_METRIC_DATA = "meal_id_for_metric_data";
 
     public static final String EXTRAS_FITNESS_WIDGETS_ORDER_ARRAY = "fitness_widgets_order_array";
     public static final String EXTRAS_FITNESS_CHART_DELETED = "fitness_chart_deleted";
