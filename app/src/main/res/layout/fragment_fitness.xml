@@ -93,7 +93,8 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <TextView android:layout_width="match_parent" android:layout_height="@dimen/chart_title_headline_bar_height"
+                    <TextView android:layout_width="match_parent"
+                              android:layout_height="@dimen/chart_title_headline_bar_height"
                               android:background="@color/fitness_pink"
                               android:gravity="center_vertical"
                               android:paddingEnd="@dimen/default_margin_2"

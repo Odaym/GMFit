@@ -94,27 +94,41 @@ public class Helpers {
             LocalDate date = LocalDate.parse(chartData.get(i).getDate());
             int dow = date.getDayOfWeek();
 
+            xVals.add(getDayofWeekString(dow));
+
             BarEntry val1 = new BarEntry(Float.parseFloat(chartData.get(i).getValue()), k);
             valsMetrics.add(val1);
 
             k++;
-
-            xVals.add(getDayofWeekString(dow));
         }
 
         BarDataSet set1;
         set1 = new BarDataSet(valsMetrics, "Daily Breakdown");
         set1.setColor(R.color.fitness_pink);
         set1.setHighLightAlpha(1);
+        set1.setValueTextSize(7f);
 
         ArrayList<IBarDataSet> dataSets = new ArrayList<>();
-
         dataSets.add(set1);
 
         BarData data = new BarData(xVals, dataSets);
 
+        chart.setScaleEnabled(false);
         chart.setDescription(null);
-        chart.setDrawBarShadow(false);
+        chart.setDrawGridBackground(false);
+        chart.getLegend().setEnabled(false);
+
+        chart.getXAxis().setDrawGridLines(false);
+
+        chart.getAxisLeft().setShowOnlyMinMax(true);
+        chart.getAxisRight().setShowOnlyMinMax(true);
+
+        chart.getAxisLeft().setDrawLabels(false);
+        chart.getAxisRight().setDrawLabels(false);
+
+        chart.getAxisRight().setAxisMinValue(0);
+        chart.getAxisLeft().setAxisMinValue(0);
+
         chart.setData(data);
         chart.invalidate();
     }

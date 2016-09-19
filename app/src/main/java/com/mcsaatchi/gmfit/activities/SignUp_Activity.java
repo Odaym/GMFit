@@ -9,11 +9,8 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.method.LinkMovementMethod;
+import android.text.Html;
 import android.text.method.PasswordTransformationMethod;
-import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -88,12 +85,7 @@ public class SignUp_Activity extends Base_Activity {
             }
         });
 
-        SpannableString ss = new SpannableString(getString(R.string.creating_account_TOS));
-        ss.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.offwhite_transparent)), 41, ss.length() - 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-        creatingAccountTOSTV.setText(ss);
-        creatingAccountTOSTV.setMovementMethod(LinkMovementMethod.getInstance());
-        creatingAccountTOSTV.setTextColor(getResources().getColor(R.color.offwhite_transparent));
+        creatingAccountTOSTV.setText(Html.fromHtml(getString(R.string.creating_account_TOS)));
         creatingAccountTOSTV.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

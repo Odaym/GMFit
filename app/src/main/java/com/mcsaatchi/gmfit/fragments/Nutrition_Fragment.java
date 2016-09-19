@@ -376,10 +376,11 @@ public class Nutrition_Fragment extends Fragment {
             /**
              * Get the sublist from the above list
              */
-            widgetsMap = new ArrayList<>(widgetsFromDB.subList(0, 4));
+            if (widgetsFromDB != null && !widgetsFromDB.isEmpty()) {
+                widgetsMap = new ArrayList<>(widgetsFromDB.subList(0, 4));
 
-            setUpWidgetsGridView(widgetsMap);
-
+                setUpWidgetsGridView(widgetsMap);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }

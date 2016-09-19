@@ -10,7 +10,9 @@
         android:id="@+id/metricIMG"
         android:layout_width="@dimen/metric_image_dimen"
         android:layout_height="@dimen/metric_image_dimen"
-        android:layout_marginEnd="@dimen/default_margin_0"/>
+        android:layout_above="@+id/measurementUnitTV"
+        android:layout_marginBottom="@dimen/default_margin_1"
+        android:layout_marginEnd="@dimen/default_margin_2"/>
 
     <com.mcsaatchi.gmfit.classes.FontTextView
         android:id="@+id/metricTV"

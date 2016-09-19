@@ -47,10 +47,13 @@ public class UserMeals_RecyclerAdapter extends RecyclerView.Adapter<UserMeals_Re
 
         holder.entryTitleTV.setText(meal.getName());
 
-        holder.entryDescriptionTV.setText(meal.getTotalCalories() + " kcal");
+        if (meal.getAmount() != null) {
+            holder.entryDescriptionTV.setText(meal.getAmount() + " servings");
+        } else {
+            holder.entryDescriptionTV.setText("1 serving");
+        }
 
-        if (meal.getAmount() == null || meal.getMeasurementUnit() == null)
-            holder.entryUnitsTV.setText("430 mg");
+        holder.entryUnitsTV.setText(meal.getTotalCalories() + " kcal");
     }
 
     @Override

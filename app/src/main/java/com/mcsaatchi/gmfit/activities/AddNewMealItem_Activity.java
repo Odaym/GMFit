@@ -27,6 +27,8 @@ import com.j256.ormlite.stmt.Where;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.adapters.SimpleSectioned_ListAdapter;
 import com.mcsaatchi.gmfit.classes.Cons;
+import com.mcsaatchi.gmfit.classes.EventBus_Poster;
+import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
 import com.mcsaatchi.gmfit.models.MealItem;
 import com.mcsaatchi.gmfit.rest.RestClient;
 import com.mcsaatchi.gmfit.rest.SearchMealItemResponse;
@@ -106,8 +108,7 @@ public class AddNewMealItem_Activity extends Base_Activity {
                 Log.d(TAG, "onItemClick: Selected " + mealsList.get(position).getName() + " at index " + position);
 
                 Intent intent = new Intent(AddNewMealItem_Activity.this, SpecifyMealAmount_Activity.class);
-                intent.putExtra(Cons.EXTRAS_MEAL_ID_FOR_METRIC_DATA, mealsList.get(position).getMeal_id());
-                intent.putExtra(Cons.EXTRAS_MAIN_MEAL_NAME, mealsList.get(position).getName());
+                intent.putExtra(Cons.EXTRAS_MEAL_OBJECT_DETAILS, mealsList.get(position));
                 startActivityForResult(intent, MEAL_AMOUNT_SPECIFIED);
 
 //                if (mealsList.get(position).getSectionType() == ITEM_VIEWTYPE) {
@@ -222,6 +223,14 @@ public class AddNewMealItem_Activity extends Base_Activity {
 
         switch (resultCode) {
             case MEAL_AMOUNT_SPECIFIED:
+                if (data != null) {
+                    MealItem mealItem = data.getParcelableExtra(Cons.EXTRAS_MEAL_OBJECT_DETAILS);
+
+                    if (mealItem != null) {
+                        EventBus_Singleton.getInstance().post(new EventBus_Poster(Cons.EXTRAS_PICKED_MEAL_ENTRY, mealItem));
+                        finish();
+                    }
+                }
 
                 break;
         }

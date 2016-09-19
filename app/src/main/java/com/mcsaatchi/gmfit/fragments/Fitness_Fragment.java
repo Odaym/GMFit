@@ -223,13 +223,16 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
 
         switch (chartType) {
             case "steps-count":
-                Helpers.setBarChartData(barChart, chartsMap.get(0).getData());
+                if (!chartsMap.get(0).getData().isEmpty())
+                    Helpers.setBarChartData(barChart, chartsMap.get(0).getData());
                 break;
             case "active-calories":
-                Helpers.setBarChartData(barChart, chartsMap.get(3).getData());
+                if (!chartsMap.get(3).getData().isEmpty())
+                    Helpers.setBarChartData(barChart, chartsMap.get(3).getData());
                 break;
             case "distance-traveled":
-                Helpers.setBarChartData(barChart, chartsMap.get(4).getData());
+                if (!chartsMap.get(4).getData().isEmpty())
+                    Helpers.setBarChartData(barChart, chartsMap.get(4).getData());
                 break;
         }
 
@@ -254,8 +257,6 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
          */
         try {
             allDataCharts = dataChartQB.orderBy("position", true).where().eq("username", userEmail).query();
-
-            Log.d(TAG, "setUpAllCharts: How many fucking charts are there now? " + allDataCharts.size());
 
             cards_container.removeAllViews();
 

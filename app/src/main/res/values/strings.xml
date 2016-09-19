@@ -55,7 +55,7 @@
     <string name="password_hint">Password</string>
     <string name="confirm_password_hint">Confirm Password</string>
     <string name="create_account_button">Create Account</string>
-    <string name="creating_account_TOS">By creating an account, you agree to the Terms of Use.</string>
+    <string name="creating_account_TOS">By creating an account, you agree to the &lt;u>Terms of Use&lt;u>.</string>
     <string name="signing_up_dialog_title">Registering a new account</string>
     <string name="signing_up_dialog_message">Please wait…</string>
     <string name="email_already_taken_api_response">Email already in use, please choose a different email.</string>
@@ -66,7 +66,7 @@
     <!-- SIGN IN ACTIVITY -->
     <string name="existing_password_hint">Password</string>
     <string name="sign_in_activity_title">Sign In</string>
-    <string name="forgot_password_button">Forgot Password?</string>
+    <string name="forgot_password_button">&lt;u>Forgot Password?&lt;u></string>
     <string name="signing_in_dialog_title">Logging in</string>
     <string name="signing_in_dialog_message">Please wait…</string>
     <string name="login_failed_alert_dialog_title">Login failed</string>
@@ -198,10 +198,11 @@
     <string name="search_results_list_label">Search results</string>
 
     <!-- SPECIFY MEAL AMOUNT ACTIVITY -->
-    <string name="add_meal_amount_hint">200</string>
+    <string name="add_meal_amount_hint">Number of servings</string>
     <string name="add_meal_to_diary">Add to diary</string>
     <string name="fetching_meal_info_dialog_title">Fetching meal information</string>
     <string name="fetching_meal_info_dialog_message">Please wait…</string>
+    <string name="nutrition_facts_hint">Nutritional Facts</string>
 
     <!-- BARCODE CAPTURE ACTIVITY -->
     <string name="barcode_capture_activity_title">Scan Meals</string>

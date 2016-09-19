@@ -3,21 +3,27 @@ package com.mcsaatchi.gmfit.activities;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.util.SparseArray;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ListView;
 
+import com.andreabaccega.widget.FormEditText;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.adapters.TwoItem_Sparse_ListAdapter;
 import com.mcsaatchi.gmfit.classes.Cons;
+import com.mcsaatchi.gmfit.classes.Helpers;
+import com.mcsaatchi.gmfit.models.MealItem;
 import com.mcsaatchi.gmfit.rest.MealMetricsResponse;
 import com.mcsaatchi.gmfit.rest.MealMetricsResponseDatum;
 import com.mcsaatchi.gmfit.rest.RestClient;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -27,18 +33,21 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class SpecifyMealAmount_Activity extends Base_Activity {
+    private static final int MEAL_AMOUNT_SPECIFIED = 536;
     @Bind(R.id.toolbar)
     Toolbar toolbar;
     @Bind(R.id.nutritionFactsList)
     ListView nutritionFactsList;
-
+    @Bind(R.id.addToDiaryBTN)
+    Button addToDiaryBTN;
+    @Bind(R.id.mealAmountET)
+    FormEditText mealAmountET;
+    private ArrayList<FormEditText> allFields = new ArrayList<>();
     private SharedPreferences prefs;
     private TwoItem_Sparse_ListAdapter nutritionFactsListAdapter;
-
     private SparseArray<String[]> nutritionalFacts = new SparseArray<>();
 
-    private int meal_id;
-    private String meal_name;
+    private MealItem mealItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,15 +58,16 @@ public class SpecifyMealAmount_Activity extends Base_Activity {
 
         prefs = getSharedPreferences(Cons.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
 
+        allFields.add(mealAmountET);
+
         if (getIntent().getExtras() != null) {
-            meal_id = getIntent().getExtras().getInt(Cons.EXTRAS_MEAL_ID_FOR_METRIC_DATA, 0);
-            meal_name = getIntent().getExtras().getString(Cons.EXTRAS_MAIN_MEAL_NAME);
+            mealItem = getIntent().getExtras().getParcelable(Cons.EXTRAS_MEAL_OBJECT_DETAILS);
 
-            if (meal_name != null) {
-                setupToolbar(toolbar, meal_name, true);
+            if (mealItem != null) {
+                setupToolbar(toolbar, mealItem.getName(), true);
+
+                getMealMetrics(mealItem.getMeal_id());
             }
-
-            getMealMetrics(meal_id);
         }
     }
 
@@ -80,7 +90,7 @@ public class SpecifyMealAmount_Activity extends Base_Activity {
                 });
 
         Call<MealMetricsResponse> getMealMetricsCall = new RestClient().getGMFitService().getMealMetrics(prefs.getString(Cons
-                .PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS), String.valueOf(meal_id));
+                .PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS), "http://gmfit.mcsaatchi.me/api/v1/meals/" + meal_id);
 
         getMealMetricsCall.enqueue(new Callback<MealMetricsResponse>() {
             @Override
@@ -89,23 +99,16 @@ public class SpecifyMealAmount_Activity extends Base_Activity {
                     case 200:
                         waitingDialog.dismiss();
 
-                        Log.d("TAGTRAG", "onResponse: Success!");
 
                         List<MealMetricsResponseDatum> mealMetricsResponseDatumList = response.body().getData().getBody().getMetrics();
 
                         for (int i = 0; i < mealMetricsResponseDatumList.size(); i++) {
-                            nutritionalFacts.put(i, new String[]{mealMetricsResponseDatumList.get(i).getName(), mealMetricsResponseDatumList.get(i).getName() + "" + mealMetricsResponseDatumList.get(i).getName()});
+                            nutritionalFacts.put(i, new String[]{mealMetricsResponseDatumList.get(i).getName(), mealMetricsResponseDatumList.get(i).getValue() + "" + mealMetricsResponseDatumList.get(i).getUnit()});
                         }
 
-                        Log.d("TAAG", "onResponse: nutrition size " + nutritionalFacts.size());
-                        Log.d("TAAG", "onResponse: response size " + mealMetricsResponseDatumList.size());
+                        if (nutritionalFacts.size() > 0)
+                            initNutritionFactsList(nutritionalFacts);
 
-//                        initNutritionFactsList(nutritionalFacts);
-
-                        break;
-                    case 449:
-                        alertDialog.setMessage(getString(R.string.email_already_taken_api_response));
-                        alertDialog.show();
                         break;
                 }
             }
@@ -122,5 +125,21 @@ public class SpecifyMealAmount_Activity extends Base_Activity {
         nutritionFactsListAdapter = new TwoItem_Sparse_ListAdapter(this, nutritionalFacts);
 
         nutritionFactsList.setAdapter(nutritionFactsListAdapter);
+
+        addToDiaryBTN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (Helpers.validateFields(allFields)) {
+
+                    mealItem.setAmount(mealAmountET.getText().toString());
+                    mealItem.setTotalCalories(Integer.parseInt(mealItem.getAmount()) * mealItem.getTotalCalories());
+
+                    Intent resultIntent = new Intent();
+                    resultIntent.putExtra(Cons.EXTRAS_MEAL_OBJECT_DETAILS, mealItem);
+                    setResult(MEAL_AMOUNT_SPECIFIED, resultIntent);
+                    finish();
+                }
+            }
+        });
     }
 }

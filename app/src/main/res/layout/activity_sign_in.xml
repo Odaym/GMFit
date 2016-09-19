@@ -10,9 +10,9 @@
     android:orientation="vertical">
 
     <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:theme="@style/TransparentToolbar"/>
@@ -96,8 +96,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/default_margin_2"
-            android:layout_marginTop="20dp"
-            android:text="@string/forgot_password_button"/>
+            android:layout_marginTop="@dimen/default_margin_2"
+            android:text="@string/forgot_password_button"
+            android:textColor="@android:color/white"/>
 
     </LinearLayout>
 

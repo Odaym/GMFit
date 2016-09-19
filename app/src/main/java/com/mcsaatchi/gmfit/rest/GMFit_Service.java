@@ -85,6 +85,6 @@ public interface GMFit_Service {
     @GET("meals")
     Call<SearchMealItemResponse> searchForMeals(@Header(Cons.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken, @Query("name") String mealName);
 
-    @GET("meals")
-    Call<MealMetricsResponse> getMealMetrics(@Header(Cons.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken, @Query("id") String mealId);
+    @GET
+    Call<MealMetricsResponse> getMealMetrics(@Header(Cons.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken, @Url String fullUrl);
 }

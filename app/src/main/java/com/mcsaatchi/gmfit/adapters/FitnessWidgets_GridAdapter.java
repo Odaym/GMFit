@@ -63,10 +63,10 @@ public class FitnessWidgets_GridAdapter extends BaseAdapter {
 
         switch (widgetsMap.get(position).getTitle()) {
             case "Distance":
-                holder.metricIcon.setImageResource(R.drawable.ic_biking);
+                holder.metricIcon.setImageResource(R.drawable.ic_distance_traveled);
                 break;
             case "Calories":
-                holder.metricIcon.setImageResource(R.drawable.ic_calories);
+                holder.metricIcon.setImageResource(R.drawable.ic_calories_spent);
                 break;
         }
 

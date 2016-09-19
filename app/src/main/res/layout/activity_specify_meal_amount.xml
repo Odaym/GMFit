@@ -18,10 +18,9 @@
 
         <com.wrapp.floatlabelededittext.FloatLabeledEditText
             android:id="@+id/mealAmountFloatingET"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="@dimen/radiobutton_row_height"
             android:layout_marginBottom="@dimen/default_margin_0"
-            android:layout_marginEnd="@dimen/default_margin_2"
             android:layout_weight="1"
             android:paddingBottom="@dimen/default_margin_0"
             app:fletPaddingLeft="@dimen/default_margin_2"
@@ -47,16 +46,34 @@
     </LinearLayout>
 
     <Button android:id="@+id/addToDiaryBTN"
+            style="?android:attr/borderlessButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="@dimen/radiobutton_row_height"
             android:layout_margin="@dimen/activity_vertical_margin"
-            android:text="@string/add_meal_to_diary"/>
+            android:background="@color/fitness_dark_blue"
+            android:text="@string/add_meal_to_diary"
+            android:textColor="@android:color/white"/>
+
+    <TextView android:id="@+id/nutritionFactsHintTV"
+              xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@color/nutrition_red"
+              android:gravity="center_vertical"
+              android:minHeight="?android:attr/listPreferredItemHeightSmall"
+              android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
+              android:paddingStart="?android:attr/listPreferredItemPaddingStart"
+              android:text="@string/nutrition_facts_hint"
+              android:textAppearance="?android:attr/textAppearanceListItemSmall"
+              android:textColor="@android:color/white"/>
+
     <ListView
         android:id="@+id/nutritionFactsList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@android:color/white"
         android:drawSelectorOnTop="true"/>
+
     <!--<de.halfbit.pinnedsection.PinnedSectionListView-->
     <!--android:layout_width="match_parent"-->
     <!--android:layout_height="match_parent"-->
