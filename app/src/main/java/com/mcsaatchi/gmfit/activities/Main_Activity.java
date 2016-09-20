@@ -85,7 +85,11 @@ public class Main_Activity extends Base_Activity {
                         Bundle bundle = new Bundle();
                         bundle.putParcelableArrayList("charts", chartsMap);
 
-                        fitnessFragment.setArguments(bundle);
+                        try {
+                            fitnessFragment.setArguments(bundle);
+                        } catch (IllegalStateException e) {
+                            Log.d("TAG", "onMenuTabSelected: Fragment already active!");
+                        }
 
                         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fitnessFragment).commit();
                         mainContentLayout.setBackground(getResources().getDrawable(R.drawable.fitness_background));

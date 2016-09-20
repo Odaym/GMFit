@@ -30,8 +30,8 @@
         android:id="@+id/measurementUnitTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/metricTV"
         android:layout_below="@+id/metricTV"
+        android:layout_centerHorizontal="true"
         android:layout_marginEnd="@dimen/default_margin_0"
         android:textColor="@android:color/white"/>
 
@@ -39,7 +39,8 @@
         android:id="@+id/metricPercentageTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
         android:layout_below="@+id/metricTV"
+        android:layout_toEndOf="@+id/measurementUnitTV"
+        android:paddingStart="@dimen/default_margin_1"
         android:textColor="@android:color/white"/>
 </RelativeLayout>

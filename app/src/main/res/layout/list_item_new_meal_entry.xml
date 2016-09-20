@@ -20,8 +20,8 @@
               android:textColor="@color/fitness_pink"/>
 
     <TextView android:id="@+id/entryUnitsTV"
-              android:layout_width="@dimen/customize_widgets_reorder_list_item_edge_height_width"
-              android:layout_height="@dimen/customize_widgets_reorder_list_item_edge_height_width"
+              android:layout_width="@dimen/add_new_chart_list_item_edge_width"
+              android:layout_height="@dimen/add_new_chart_list_item_edge_width"
               android:layout_alignParentEnd="true"
               android:layout_centerVertical="true"
               android:background="@color/much_lighter_gray"

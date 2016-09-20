@@ -1,8 +1,6 @@
 package com.mcsaatchi.gmfit.fragments;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,9 +11,8 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -35,7 +32,6 @@ import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.activities.AddNewChart_Activity;
 import com.mcsaatchi.gmfit.activities.Base_Activity;
 import com.mcsaatchi.gmfit.activities.CustomizeWidgetsAndCharts_Activity;
-import com.mcsaatchi.gmfit.activities.SlugBreakdown_Activity;
 import com.mcsaatchi.gmfit.adapters.FitnessWidgets_GridAdapter;
 import com.mcsaatchi.gmfit.classes.Cons;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
@@ -44,9 +40,8 @@ import com.mcsaatchi.gmfit.classes.FontTextView;
 import com.mcsaatchi.gmfit.classes.Helpers;
 import com.mcsaatchi.gmfit.models.DataChart;
 import com.mcsaatchi.gmfit.models.FitnessWidget;
+import com.mcsaatchi.gmfit.rest.ApiCallsHandler;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponseChart;
-import com.mcsaatchi.gmfit.rest.RestClient;
-import com.mcsaatchi.gmfit.rest.SlugBreakdownResponse;
 import com.squareup.otto.Subscribe;
 
 import net.danlew.android.joda.JodaTimeAndroid;
@@ -57,9 +52,6 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class Fitness_Fragment extends Fragment implements SensorEventListener {
 
@@ -78,96 +70,97 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
     @Bind(R.id.metricCounterTV)
     FontTextView metricCounterTV;
 
-    private NestedScrollView parentScrollView;
     private Activity parentActivity;
     private SharedPreferences prefs;
     private FitnessWidgets_GridAdapter widgets_GridAdapter;
     private String chartName;
     private String chartType;
 
-    private RuntimeExceptionDao<FitnessWidget, Integer> fitnessWidgetsDAO;
-    private QueryBuilder<FitnessWidget, Integer> fitnessQB;
     private RuntimeExceptionDao<DataChart, Integer> dataChartDAO;
     private QueryBuilder<DataChart, Integer> dataChartQB;
-    private List<DataChart> allDataCharts;
 
     private ArrayList<FitnessWidget> widgetsMap;
     private ArrayList<AuthenticationResponseChart> chartsMap;
 
     private String userEmail;
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
 
         if (context instanceof Activity) {
             parentActivity = (Activity) context;
-            fitnessWidgetsDAO = ((Base_Activity) parentActivity).getDBHelper().getFitnessWidgetsDAO();
-            fitnessQB = fitnessWidgetsDAO.queryBuilder();
+
+            /**
+             * Initialise Fitness DAO
+             */
+            RuntimeExceptionDao<FitnessWidget, Integer> fitnessWidgetsDAO = ((Base_Activity) parentActivity).getDBHelper().getFitnessWidgetsDAO();
+            QueryBuilder<FitnessWidget, Integer> fitnessQB = fitnessWidgetsDAO.queryBuilder();
+
+            /**
+             * Initialise DataChart DAO
+             */
             dataChartDAO = ((Base_Activity) parentActivity).getDBHelper().getDataChartDAO();
             dataChartQB = dataChartDAO.queryBuilder();
-        }
-    }
 
-    @TargetApi(Build.VERSION_CODES.KITKAT)
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+            super.onAttach(context);
 
-        EventBus_Singleton.getInstance().register(this);
+            EventBus_Singleton.getInstance().register(this);
 
-        /**
-         * Initialize JodaTime
-         */
-        JodaTimeAndroid.init(getActivity());
+            /**
+             * Initialise JodaTime
+             */
+            JodaTimeAndroid.init(getActivity());
 
-        SensorManager sm =
-                (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
-        Sensor sensor = sm.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
-        if (sensor == null) {
-            new AlertDialog.Builder(getActivity()).setTitle("Cannot count steps")
-                    .setMessage("Your device isn't equipped with this sensor")
-                    .setOnDismissListener(new DialogInterface.OnDismissListener() {
-                        @Override
-                        public void onDismiss(final DialogInterface dialogInterface) {
-                            getActivity().finish();
-                        }
-                    }).setNeutralButton(android.R.string.ok,
-                    new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(final DialogInterface dialogInterface, int i) {
-                            dialogInterface.dismiss();
-                        }
-                    }).create().show();
-        } else {
-            sm.registerListener(this, sensor, SensorManager.SENSOR_DELAY_UI, 0);
-        }
+            /**
+             * Initialise SensorManager, take care if it isn't supported
+             */
+            SensorManager sm =
+                    (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
+            Sensor sensor = sm.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
+            if (sensor == null) {
+                new AlertDialog.Builder(getActivity()).setTitle("Cannot count steps")
+                        .setMessage("Your device isn't equipped with this sensor")
+                        .setOnDismissListener(new DialogInterface.OnDismissListener() {
+                            @Override
+                            public void onDismiss(final DialogInterface dialogInterface) {
+                                getActivity().finish();
+                            }
+                        }).setNeutralButton(android.R.string.ok,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(final DialogInterface dialogInterface, int i) {
+                                dialogInterface.dismiss();
+                            }
+                        }).create().show();
+            } else {
+                sm.registerListener(this, sensor, SensorManager.SENSOR_DELAY_UI, 0);
+            }
 
-        if (((AppCompatActivity) getActivity()).getSupportActionBar() != null)
-            ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.fitness_tab_title);
+            if (((AppCompatActivity) getActivity()).getSupportActionBar() != null)
+                ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.fitness_tab_title);
 
-        prefs = getActivity().getSharedPreferences(Cons.SHARED_PREFS_TITLE
-                , Context.MODE_PRIVATE);
+            prefs = getActivity().getSharedPreferences(Cons.SHARED_PREFS_TITLE
+                    , Context.MODE_PRIVATE);
 
-        userEmail = prefs.getString(Cons.EXTRAS_USER_EMAIL, "");
+            userEmail = prefs.getString(Cons.EXTRAS_USER_EMAIL, "");
 
-        Log.d(TAG, "onCreate: User email is now : " + userEmail);
+            /**
+             * If the arguments are not null, get the Charts ArrayList from them
+             */
+            if (getArguments() != null) {
+                chartsMap = getArguments().getParcelableArrayList("charts");
+            }
 
-        if (getArguments() != null) {
+            /**
+             * Get the Widgets ArrayList from the database
+             */
             try {
-
-                /**
-                 * Get the widgets map from DB
-                 */
                 widgetsMap = (ArrayList<FitnessWidget>) fitnessQB.orderBy("position", true).query();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-
-            /**
-             * Get the charts only from arguments
-             */
-            chartsMap = getArguments().getParcelableArrayList("charts");
         }
     }
 
@@ -178,25 +171,29 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
 
         View fragmentView = inflater.inflate(R.layout.fragment_fitness, container, false);
 
-        parentScrollView = (NestedScrollView) getActivity().findViewById(R.id.myScrollingContent);
-
         ButterKnife.bind(this, fragmentView);
 
         setHasOptionsMenu(true);
 
         metricCounterTV.setText(String.valueOf(prefs.getInt(Helpers.getTodayDate() + "_steps", 0)));
 
-        setUpWidgetsGridView(widgetsMap);
+        /**
+         * Setup Widgets UI
+         */
+        setupWidgetsFromDB(widgetsMap);
 
-        setUpAllCharts();
+        setupChartsFromDB();
 
         Log.d(TAG, "onCreateView: Device info : " + Build.MANUFACTURER + " " + Build.MODEL + " (" + Build.DEVICE + ") - "
                 + Build.VERSION.RELEASE);
 
+        /**
+         * Setup the default bar chart to open the breakdown for Number Of Steps
+         */
         defaultBarChart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getSlugBreakdownForChart("Number of Steps", "steps-count");
+                ApiCallsHandler.getInstance(prefs).getSlugBreakdownForChart(parentActivity, "Number of Steps", "steps-count");
             }
         });
 
@@ -216,11 +213,15 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
         final View barChartLayout = getActivity().getLayoutInflater().inflate(R.layout.view_barchart_container, null);
 
         final TextView chartTitleTV_NEW_CHART = (TextView) barChartLayout.findViewById(R.id.chartTitleTV);
-        BarChart barChart = (BarChart) barChartLayout.findViewById(R.id.barChart);
+        final BarChart barChart = (BarChart) barChartLayout.findViewById(R.id.barChart);
 
         if (chartTitle != null)
             chartTitleTV_NEW_CHART.setText(chartTitle);
 
+        /**
+         * Depending on the chart type passed here,
+         * grab the appropriate element from the array within the API response that was passed to this fragment from the host activity
+         */
         switch (chartType) {
             case "steps-count":
                 if (!chartsMap.get(0).getData().isEmpty())
@@ -243,37 +244,74 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
 
         cards_container.addView(barChartLayout);
 
+        /**
+         * Open the breakdown for the chart
+         */
         barChart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getSlugBreakdownForChart(chartTitleTV_NEW_CHART.getText().toString(), chartType);
+                ApiCallsHandler.getInstance(prefs).getSlugBreakdownForChart(parentActivity, chartTitleTV_NEW_CHART.getText().toString(), chartType);
             }
         });
     }
 
-    private void setUpAllCharts() {
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
         /**
-         * Show all the charts that exist in the database
+         * Added a new chart for Fitness, get the chart details from the result and use them to actually create that chart in the UI
+         * Save it in the DB under the user's email
          */
+        if (requestCode == ADD_NEW_FITNESS_CHART_REQUEST_CODE) {
+            if (data != null) {
+
+                chartType = data.getStringExtra(Cons.EXTRAS_CHART_TYPE_SELECTED);
+                chartName = data.getStringExtra(Cons.EXTRAS_CHART_FULL_NAME);
+
+                addNewBarChart(chartName, chartType);
+
+                dataChartDAO.create(new DataChart(chartName, chartType, dataChartDAO.queryForAll().size() + 1, userEmail, Cons.EXTRAS_FITNESS_FRAGMENT));
+            }
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.settings:
+                Intent intent = new Intent(getActivity(), CustomizeWidgetsAndCharts_Activity.class);
+                intent.putExtra(Cons.EXTRAS_CUSTOMIZE_WIDGETS_CHARTS_FRAGMENT_TYPE, Cons.EXTRAS_FITNESS_FRAGMENT);
+                intent.putExtra(Cons.BUNDLE_FITNESS_WIDGETS_MAP, widgetsMap);
+                startActivity(intent);
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus_Singleton.getInstance().unregister(this);
+    }
+
+    /**
+     * Grab all charts from DB, remove all containing views, add the default bar chart, add the remaining barcharts
+     * (the ones from DB)
+     */
+    private void setupChartsFromDB() {
         try {
-            allDataCharts = dataChartQB.orderBy("position", true).where().eq("username", userEmail).query();
+            List<DataChart> allDataCharts = dataChartQB.orderBy("position", true).where().eq("username", userEmail).query();
 
             cards_container.removeAllViews();
 
             addNewBarChart("Number Of Steps", "steps-count");
 
-            if (allDataCharts.isEmpty()) {
-                /**
-                 * The default chart only
-                 */
-            } else {
+            if (!allDataCharts.isEmpty()) {
                 for (DataChart chart :
                         allDataCharts) {
 
-                    /**
-                     * For each chart, send over its name and type.
-                     * According to the type, the data for that chart will be selected from the data fetched from the API for all charts.
-                     */
                     addNewBarChart(chart.getName(), chart.getType());
                 }
             }
@@ -282,8 +320,7 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
         }
     }
 
-    private void setUpWidgetsGridView(ArrayList<FitnessWidget> widgetsMap) {
-
+    private void setupWidgetsFromDB(ArrayList<FitnessWidget> widgetsMap) {
         widgets_GridAdapter = new FitnessWidgets_GridAdapter(getActivity(), widgetsMap, R.layout.grid_item_fitness_widgets);
 
         widgetsGridView.setAdapter(widgets_GridAdapter);
@@ -312,23 +349,15 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
         return metricCountTextView;
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == ADD_NEW_FITNESS_CHART_REQUEST_CODE) {
-            if (data != null) {
-
-                chartType = data.getStringExtra(Cons.EXTRAS_CHART_TYPE_SELECTED);
-                chartName = data.getStringExtra(Cons.EXTRAS_CHART_FULL_NAME);
-
-                addNewBarChart(chartName, chartType);
-
-                dataChartDAO.create(new DataChart(chartName, chartType, dataChartDAO.queryForAll().size() + 1, userEmail, Cons.EXTRAS_FITNESS_FRAGMENT));
-            }
-        }
-    }
-
+    /**
+     * Events are received from the Event Bus and handled here.
+     * Notable events:
+     * - Steps counter
+     * - Distance counter (widget needs finding in the gridview before its value can be changed)
+     * - Calories counter (widget needs finding in the gridview before its value can be changed)
+     *
+     * @param ebp
+     */
     @Subscribe
     public void handle_BusEvents(EventBus_Poster ebp) {
         String ebpMessage = ebp.getMessage();
@@ -338,7 +367,7 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
             case Cons.EXTRAS_FITNESS_WIDGETS_ORDER_ARRAY_CHANGED:
                 if (ebp.getFitnessWidgetsMap() != null) {
                     widgetsMap = ebp.getFitnessWidgetsMap();
-                    setUpWidgetsGridView(widgetsMap);
+                    setupWidgetsFromDB(widgetsMap);
                 }
                 break;
             case Cons.EXTRAS_FITNESS_CHARTS_ORDER_ARRAY_CHANGED:
@@ -355,8 +384,7 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
 
                 break;
             case Cons.EXTRAS_FITNESS_CHART_DELETED:
-                Log.d(TAG, "handle_BusEvents: A chart was deleted!");
-                setUpAllCharts();
+                setupChartsFromDB();
                 break;
             case Cons.EVENT_CHART_METRICS_RECEIVED:
 //                addNewBarChart(chartName, ebp.getFloatArrayExtra());
@@ -387,86 +415,9 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
         }
     }
 
-    public void getSlugBreakdownForChart(final String chartTitle, final String chartType) {
-        final ProgressDialog waitingDialog = new ProgressDialog(getActivity());
-        waitingDialog.setTitle(getString(R.string.grabbing_breakdown_data_dialog_title));
-        waitingDialog.setMessage(getString(R.string.grabbing_breakdown_data_dialog_message));
-        waitingDialog.show();
-
-        final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
-        alertDialog.setTitle(R.string.grabbing_breakdown_data_dialog_title);
-        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-
-                        if (waitingDialog.isShowing())
-                            waitingDialog.dismiss();
-                    }
-                });
-
-        Call<SlugBreakdownResponse> breakdownForSlugCall = new RestClient().getGMFitService().getBreakdownForSlug(Cons.BASE_URL_ADDRESS +
-                "user/metrics/breakdown?slug=" + chartType, prefs.getString(Cons.PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS));
-
-        breakdownForSlugCall.enqueue(new Callback<SlugBreakdownResponse>() {
-            @Override
-            public void onResponse(Call<SlugBreakdownResponse> call, Response<SlugBreakdownResponse> response) {
-                switch (response.code()) {
-                    case 200:
-
-                        waitingDialog.dismiss();
-
-                        Intent intent = new Intent(getActivity(), SlugBreakdown_Activity.class);
-                        intent.putExtra(Cons.EXTRAS_CUSTOMIZE_WIDGETS_CHARTS_FRAGMENT_TYPE, Cons.EXTRAS_FITNESS_FRAGMENT);
-                        intent.putExtra(Cons.EXTRAS_CHART_FULL_NAME, chartTitle);
-                        intent.putExtra(Cons.EXTRAS_CHART_TYPE_SELECTED, chartType);
-                        intent.putExtra(Cons.BUNDLE_SLUG_BREAKDOWN_DATA, response.body().getData().getBody().getData());
-                        startActivity(intent);
-
-                        break;
-                }
-            }
-
-            @Override
-            public void onFailure(Call<SlugBreakdownResponse> call, Throwable t) {
-                alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
-                alertDialog.show();
-            }
-        });
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.settings:
-                Intent intent = new Intent(getActivity(), CustomizeWidgetsAndCharts_Activity.class);
-                intent.putExtra(Cons.EXTRAS_CUSTOMIZE_WIDGETS_CHARTS_FRAGMENT_TYPE, Cons.EXTRAS_FITNESS_FRAGMENT);
-                intent.putExtra(Cons.BUNDLE_FITNESS_WIDGETS_MAP, widgetsMap);
-                startActivity(intent);
-                break;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        EventBus_Singleton.getInstance().unregister(this);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
-
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
+
     }
 
     @Override

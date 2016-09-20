@@ -102,7 +102,7 @@ public class SensorListener extends Service implements SensorEventListener {
 
                 for (int i = 0; i < fitnessWidgets.size(); i++) {
                     switch (fitnessWidgets.get(i).getTitle()) {
-                        case "Biking":
+                        case "Distance":
                             fitnessWidgets.get(i).setValue((int) (calculatedDistance + prefs.getFloat(todayDate + "_distance", 0) * 1000));
                             break;
                         case "Calories":

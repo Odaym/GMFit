@@ -103,11 +103,20 @@ public class SpecifyMealAmount_Activity extends Base_Activity {
                         List<MealMetricsResponseDatum> mealMetricsResponseDatumList = response.body().getData().getBody().getMetrics();
 
                         for (int i = 0; i < mealMetricsResponseDatumList.size(); i++) {
-                            nutritionalFacts.put(i, new String[]{mealMetricsResponseDatumList.get(i).getName(), mealMetricsResponseDatumList.get(i).getValue() + "" + mealMetricsResponseDatumList.get(i).getUnit()});
+                            nutritionalFacts.put(i, new String[]{mealMetricsResponseDatumList.get(i).getName(), (int) Double.parseDouble(mealMetricsResponseDatumList.get(i).getValue()) + " " + mealMetricsResponseDatumList.get(i).getUnit()});
                         }
 
-                        if (nutritionalFacts.size() > 0)
-                            initNutritionFactsList(nutritionalFacts);
+                        if (nutritionalFacts.size() > 0) {
+                            int caloriesForThisMeal = 0;
+
+                            for (int i = 0; i < nutritionalFacts.size(); i++) {
+                                if (nutritionalFacts.get(i)[0].equals("Calories")) {
+                                    caloriesForThisMeal = Integer.parseInt(nutritionalFacts.get(i)[1].split(" ")[0]);
+                                }
+                            }
+
+                            initNutritionFactsList(nutritionalFacts, caloriesForThisMeal);
+                        }
 
                         break;
                 }
@@ -121,7 +130,8 @@ public class SpecifyMealAmount_Activity extends Base_Activity {
         });
     }
 
-    private void initNutritionFactsList(SparseArray<String[]> nutritionalFacts) {
+    private void initNutritionFactsList(SparseArray<String[]> nutritionalFacts, final int caloriesForThisMeal) {
+
         nutritionFactsListAdapter = new TwoItem_Sparse_ListAdapter(this, nutritionalFacts);
 
         nutritionFactsList.setAdapter(nutritionFactsListAdapter);
@@ -132,7 +142,7 @@ public class SpecifyMealAmount_Activity extends Base_Activity {
                 if (Helpers.validateFields(allFields)) {
 
                     mealItem.setAmount(mealAmountET.getText().toString());
-                    mealItem.setTotalCalories(Integer.parseInt(mealItem.getAmount()) * mealItem.getTotalCalories());
+                    mealItem.setTotalCalories(Integer.parseInt(mealItem.getAmount()) * caloriesForThisMeal);
 
                     Intent resultIntent = new Intent();
                     resultIntent.putExtra(Cons.EXTRAS_MEAL_OBJECT_DETAILS, mealItem);
