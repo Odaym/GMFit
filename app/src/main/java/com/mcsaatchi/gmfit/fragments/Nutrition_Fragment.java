@@ -39,6 +39,7 @@ import com.mcsaatchi.gmfit.classes.Cons;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
 import com.mcsaatchi.gmfit.classes.Helpers;
+import com.mcsaatchi.gmfit.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.models.DataChart;
 import com.mcsaatchi.gmfit.models.MealItem;
 import com.mcsaatchi.gmfit.models.NutritionWidget;
@@ -605,10 +606,8 @@ public class Nutrition_Fragment extends Fragment {
 
     private void updateUserWidgets(int[] widgetIds, int[] widgetPositions) {
 
-        Call<DefaultGetResponse> updateUserWidgetsCall = new RestClient().getGMFitService().updateUserWidgets(prefs.getString(Cons.PREF_USER_ACCESS_TOKEN,
-                Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS), new UpdateWidgetsRequest(widgetIds, widgetPositions));
-
-        updateUserWidgetsCall.enqueue(new Callback<DefaultGetResponse>() {
+        DataAccessHandler.getInstance().updateUserWidgets(prefs.getString(Cons.PREF_USER_ACCESS_TOKEN,
+                Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS), widgetIds, widgetPositions, new Callback<DefaultGetResponse>() {
             @Override
             public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
                 switch (response.code()) {
@@ -620,19 +619,16 @@ public class Nutrition_Fragment extends Fragment {
 
             @Override
             public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
-                Log.d(TAG, "onFailure: Failed");
+
             }
         });
     }
 
     private void getUserAddedMeals() {
-        Call<UserMealsResponse> updateUserWidgetsCall = new RestClient().getGMFitService().getUserAddedMeals(prefs.getString(Cons.PREF_USER_ACCESS_TOKEN,
-                Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS));
-
-        updateUserWidgetsCall.enqueue(new Callback<UserMealsResponse>() {
+        DataAccessHandler.getInstance().getUserAddedMeals(prefs.getString(Cons.PREF_USER_ACCESS_TOKEN,
+                Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS), new Callback<UserMealsResponse>() {
             @Override
             public void onResponse(Call<UserMealsResponse> call, Response<UserMealsResponse> response) {
-
                 Log.d(TAG, "onResponse: Response code was : " + response.code());
 
                 switch (response.code()) {
@@ -668,7 +664,6 @@ public class Nutrition_Fragment extends Fragment {
                                 userMealsDAO.create(breakfastMeal);
                             }
                         }
-
 
                         /**
                          * Insert Lunch meals
@@ -718,13 +713,12 @@ public class Nutrition_Fragment extends Fragment {
                             }
                         }
                         break;
-
                 }
             }
 
             @Override
             public void onFailure(Call<UserMealsResponse> call, Throwable t) {
-                Log.d(TAG, "onFailure: Failed");
+
             }
         });
     }
@@ -760,15 +754,5 @@ public class Nutrition_Fragment extends Fragment {
         barChartLayout.setLayoutParams(lp);
 
         cards_container.addView(barChartLayout);
-    }
-
-    public class UpdateWidgetsRequest {
-        final int[] widgets;
-        final int[] positions;
-
-        public UpdateWidgetsRequest(int[] widgets, int[] positions) {
-            this.widgets = widgets;
-            this.positions = positions;
-        }
     }
 }

@@ -1,11 +1,9 @@
 package com.mcsaatchi.gmfit.activities;
 
-import android.annotation.TargetApi;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
@@ -16,8 +14,8 @@ import com.andreabaccega.widget.FormEditText;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.classes.Cons;
 import com.mcsaatchi.gmfit.classes.Helpers;
+import com.mcsaatchi.gmfit.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
-import com.mcsaatchi.gmfit.rest.RestClient;
 
 import java.util.ArrayList;
 
@@ -88,9 +86,7 @@ public class ResetPassword_Activity extends Base_Activity {
                     }
                 });
 
-        Call<DefaultGetResponse> resetPasswordCall = new RestClient().getGMFitService().finalizeResetPassword(new ResetPasswordRequest(token, newPassword));
-
-        resetPasswordCall.enqueue(new Callback<DefaultGetResponse>() {
+        DataAccessHandler.getInstance().finalizeResetPassword(token, newPassword, new Callback<DefaultGetResponse>() {
             @Override
             public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
                 switch (response.code()) {
@@ -109,22 +105,5 @@ public class ResetPassword_Activity extends Base_Activity {
                 alertDialog.show();
             }
         });
-    }
-
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private void setupToolbar(Toolbar toolbar) {
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        toolbar.setNavigationIcon(getDrawable(R.drawable.ic_arrow_left));
-        toolbar.setTitleTextAppearance(this, R.style.Toolbar_TitleTextStyle);
-    }
-
-    public class ResetPasswordRequest {
-        final String password;
-        final String token;
-
-        public ResetPasswordRequest(String token, String password) {
-            this.token = token;
-            this.password = password;
-        }
     }
 }

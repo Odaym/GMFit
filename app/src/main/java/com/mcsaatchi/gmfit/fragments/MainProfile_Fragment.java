@@ -28,8 +28,8 @@ import com.mcsaatchi.gmfit.activities.Login_Activity;
 import com.mcsaatchi.gmfit.activities.UserPolicy_Activity;
 import com.mcsaatchi.gmfit.classes.Cons;
 import com.mcsaatchi.gmfit.classes.Helpers;
+import com.mcsaatchi.gmfit.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
-import com.mcsaatchi.gmfit.rest.RestClient;
 import com.mcsaatchi.gmfit.rest.UserPolicyResponse;
 
 import java.io.File;
@@ -157,9 +157,7 @@ public class MainProfile_Fragment extends Fragment {
                     }
                 });
 
-        Call<UserPolicyResponse> registerUserCall = new RestClient().getGMFitService().getUserPolicy(prefs.getString(Cons.PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS));
-
-        registerUserCall.enqueue(new Callback<UserPolicyResponse>() {
+        DataAccessHandler.getInstance().getUserPolicy(prefs.getString(Cons.PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS), new Callback<UserPolicyResponse>() {
             @Override
             public void onResponse(Call<UserPolicyResponse> call, Response<UserPolicyResponse> response) {
                 switch (response.code()) {
@@ -245,10 +243,8 @@ public class MainProfile_Fragment extends Fragment {
                     }
                 });
 
-        Call<DefaultGetResponse> signOutUserCall = new RestClient().getGMFitService().signOutUser(prefs.getString(Cons.PREF_USER_ACCESS_TOKEN, Cons
-                .NO_ACCESS_TOKEN_FOUND_IN_PREFS));
-
-        signOutUserCall.enqueue(new Callback<DefaultGetResponse>() {
+        DataAccessHandler.getInstance().signOutUser(prefs.getString(Cons.PREF_USER_ACCESS_TOKEN, Cons
+                .NO_ACCESS_TOKEN_FOUND_IN_PREFS), new Callback<DefaultGetResponse>() {
             @Override
             public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
                 switch (response.code()) {
@@ -270,6 +266,7 @@ public class MainProfile_Fragment extends Fragment {
             public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
                 alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
                 alertDialog.show();
+
             }
         });
     }

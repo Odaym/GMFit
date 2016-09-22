@@ -8,7 +8,7 @@ import android.view.MenuItem;
 
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.models.DBHelper;
+import com.mcsaatchi.gmfit.data_access.DBHelper;
 
 public class Base_Activity extends AppCompatActivity {
     private DBHelper dbHelper = null;
@@ -46,7 +46,7 @@ public class Base_Activity extends AppCompatActivity {
     }
 
 
-    public void addTopPaddingToolbar(Toolbar toolbar){
+    public void addTopPaddingToolbar(Toolbar toolbar) {
         toolbar.setPadding(0, getStatusBarHeight(), 0, 0);
     }
 

@@ -21,11 +21,11 @@ import com.mcsaatchi.gmfit.classes.Cons;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
 import com.mcsaatchi.gmfit.classes.Helpers;
+import com.mcsaatchi.gmfit.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponse;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponseChart;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponseInnerBody;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponseWidget;
-import com.mcsaatchi.gmfit.rest.RestClient;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -131,10 +131,7 @@ public class SignIn_Activity extends Base_Activity {
                     }
                 });
 
-        Call<AuthenticationResponse> signInUserCall = new RestClient().getGMFitService().signInUser(new SignInRequest(email,
-                password));
-
-        signInUserCall.enqueue(new Callback<AuthenticationResponse>() {
+        DataAccessHandler.getInstance().signInUser(email, password, new Callback<AuthenticationResponse>() {
             @Override
             public void onResponse(Call<AuthenticationResponse> call, Response<AuthenticationResponse> response) {
                 switch (response.code()) {
@@ -191,19 +188,8 @@ public class SignIn_Activity extends Base_Activity {
 
             @Override
             public void onFailure(Call<AuthenticationResponse> call, Throwable t) {
-                alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
-                alertDialog.show();
+
             }
         });
-    }
-
-    public class SignInRequest {
-        final String email;
-        final String password;
-
-        public SignInRequest(String email, String password) {
-            this.email = email;
-            this.password = password;
-        }
     }
 }

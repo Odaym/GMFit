@@ -1,4 +1,4 @@
-package com.mcsaatchi.gmfit.models;
+package com.mcsaatchi.gmfit.data_access;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -9,6 +9,11 @@ import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import com.mcsaatchi.gmfit.R;
+import com.mcsaatchi.gmfit.models.DataChart;
+import com.mcsaatchi.gmfit.models.FitnessWidget;
+import com.mcsaatchi.gmfit.models.MealItem;
+import com.mcsaatchi.gmfit.models.NutritionWidget;
+import com.mcsaatchi.gmfit.models.User;
 
 import java.sql.SQLException;
 
@@ -50,13 +55,6 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
             getMealItemDAO().create(new MealItem("Whole-Wheat Rigatoni With Greens", "Breakfast", 2));
             getMealItemDAO().create(new MealItem("Kelp Noodles With Almond-Ginger Dressing", "Breakfast", 2));
             getMealItemDAO().create(new MealItem("Whole-Wheat Linguine With Asparagus and Lemon", "Breakfast", 2));
-            getMealItemDAO().create(new MealItem("Pesto Cheese Pizza", "Breakfast", 2));
-            getMealItemDAO().create(new MealItem("Pesto Cheese Pizza", "Breakfast", 2));
-            getMealItemDAO().create(new MealItem("Pesto Cheese Pizza", "Breakfast", 2));
-            getMealItemDAO().create(new MealItem("Pesto Cheese Pizza", "Breakfast", 2));
-            getMealItemDAO().create(new MealItem("Pesto Cheese Pizza", "Breakfast", 2));
-            getMealItemDAO().create(new MealItem("Pesto Cheese Pizza", "Breakfast", 2));
-            getMealItemDAO().create(new MealItem("Pesto Cheese Pizza", "Breakfast", 2));
             getMealItemDAO().create(new MealItem("Pesto Cheese Pizza", "Breakfast", 2));
             getMealItemDAO().create(new MealItem("Fresh Fig and Onion Flatbread Pizza", "Breakfast", 2));
 

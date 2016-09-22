@@ -41,7 +41,6 @@ public class Main_Activity extends Base_Activity {
     private Fitness_Fragment fitnessFragment;
     private Nutrition_Fragment nutritionFragment;
     private MainProfile_Fragment mainProfileFragment;
-    private SharedPreferences prefs;
 
     private ArrayList<AuthenticationResponseWidget> widgetsMap;
     private ArrayList<AuthenticationResponseChart> chartsMap;
@@ -59,7 +58,7 @@ public class Main_Activity extends Base_Activity {
 
         setupToolbar(toolbar, R.string.app_name, false);
 
-        prefs = getSharedPreferences(Cons.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
+        SharedPreferences prefs = getSharedPreferences(Cons.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
 
         Log.d("USER_ACCESS_TOKEN", "onCreate: User access token is : " + prefs.getString(Cons.PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS));
 

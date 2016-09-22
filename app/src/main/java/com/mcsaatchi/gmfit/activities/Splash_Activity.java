@@ -11,11 +11,11 @@ import android.util.Log;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.classes.Cons;
 import com.mcsaatchi.gmfit.classes.Helpers;
+import com.mcsaatchi.gmfit.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponse;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponseChart;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponseInnerBody;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponseWidget;
-import com.mcsaatchi.gmfit.rest.RestClient;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -86,10 +86,7 @@ public class Splash_Activity extends AppCompatActivity {
     }
 
     public void signInUserSilently(String email, String password) {
-        Call<AuthenticationResponse> signInUserCall = new RestClient().getGMFitService().signInUserSilently(new SignInRequest(email,
-                password));
-
-        signInUserCall.enqueue(new Callback<AuthenticationResponse>() {
+        DataAccessHandler.getInstance().signInUserSilently(email, password, new Callback<AuthenticationResponse>() {
             @Override
             public void onResponse(Call<AuthenticationResponse> call, Response<AuthenticationResponse> response) {
                 switch (response.code()) {
@@ -117,19 +114,8 @@ public class Splash_Activity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<AuthenticationResponse> call, Throwable t) {
-//                alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
-//                alertDialog.show();
+
             }
         });
-    }
-
-    public class SignInRequest {
-        final String email;
-        final String password;
-
-        public SignInRequest(String email, String password) {
-            this.email = email;
-            this.password = password;
-        }
     }
 }

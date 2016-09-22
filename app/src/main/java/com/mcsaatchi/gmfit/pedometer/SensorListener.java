@@ -20,14 +20,12 @@ import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.mcsaatchi.gmfit.BuildConfig;
 import com.mcsaatchi.gmfit.classes.Cons;
-import com.mcsaatchi.gmfit.models.DBHelper;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
-import com.mcsaatchi.gmfit.classes.Helpers;
+import com.mcsaatchi.gmfit.data_access.DBHelper;
+import com.mcsaatchi.gmfit.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.models.FitnessWidget;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponse;
-import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
-import com.mcsaatchi.gmfit.rest.RestClient;
 
 import org.joda.time.LocalDate;
 
@@ -52,7 +50,7 @@ public class SensorListener extends Service implements SensorEventListener {
     private static final String TAG = "SensorListener";
     private static final float STEP_LENGTH = 20;
     private static double METRIC_RUNNING_FACTOR = 1.02784823;
-    private static int steps;
+
     private final Handler handler = new Handler();
     private Timer timer = new Timer();
     private SharedPreferences prefs;
@@ -75,7 +73,7 @@ public class SensorListener extends Service implements SensorEventListener {
             if (BuildConfig.DEBUG) Log.d("SERVICE_TAG", "probably not a real value: " + event.values[0]);
             return;
         } else {
-            steps = (int) event.values[0];
+            int steps = (int) event.values[0];
 
             LocalDate dt = new LocalDate();
 
@@ -158,81 +156,66 @@ public class SensorListener extends Service implements SensorEventListener {
                 handler.post(new Runnable() {
                     @SuppressWarnings("unchecked")
                     public void run() {
-
-                        Call<AuthenticationResponse> refreshAccessTokenCall = new RestClient().getGMFitService().refreshAccessToken(prefs.getString(Cons
-                                .PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS));
-
-                        refreshAccessTokenCall.enqueue(new Callback<AuthenticationResponse>() {
-                            @Override
-                            public void onResponse(Call<AuthenticationResponse> call, Response<AuthenticationResponse> response) {
-                                Log.d("SYNC_SERVER", "onResponse: Refresh Access Token response was " + response.code());
-                                switch (response.code()) {
-                                    case 200:
-
-                                        prefs.edit().putString(Cons.PREF_USER_ACCESS_TOKEN, "Bearer " + response.body().getData().getBody().getToken()).apply();
-
-                                        String[] slugsArray = new String[]{"steps-count", "active-calories",
-                                                "distance-traveled"};
-
-                                        int[] valuesArray = new int[]{prefs.getInt(todayDate + "_steps", 0), (int) prefs.getFloat(todayDate + "_calories", 0),
-                                                (int) (prefs.getFloat(todayDate + "_distance", 0) * 1000)};
-
-                                        Call<DefaultGetResponse> updateMetricsCall = new RestClient().getGMFitService().updateMetrics(prefs.getString(Cons
-                                                .PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS), new UpdateMetricsRequest(slugsArray, valuesArray, Helpers.getCalendarDate()));
-
-                                        updateMetricsCall.enqueue(new Callback<DefaultGetResponse>() {
-                                            @Override
-                                            public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
-
-                                                Log.d("SYNC_SERVER", "onResponse: Update Metrics Call response was " + response.code());
-
-                                                switch (response.code()) {
-                                                    case 200:
-                                                        Log.d(TAG, "onResponse: SYNCED Metrics successfully");
-
-                                                        break;
-                                                }
-                                            }
-
-                                            @Override
-                                            public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
-                                            }
-                                        });
-
-                                        /**
-                                         * Doesn't contain today's date as a key, but DOES contain yesterday's day as a key
-                                         */
-                                        if (!prefs.contains(todayDate + "_steps") && prefs.contains(yesterdayDate)) {
-                                            Log.d("TAGTAG", "run: Doesn't contain today's date as a key, but DOES contain yesterday's day as a key");
-
-                                            prefs.edit().remove(yesterdayDate + "_steps").apply();
-                                            prefs.edit().remove(yesterdayDate + "_distance").apply();
-                                            prefs.edit().remove(yesterdayDate + "_calories").apply();
-
-                                            List<FitnessWidget> fitnessWidgets = fitnessWidgetsDAO.queryForAll();
-
-                                            for (int i = 0; i < fitnessWidgets.size(); i++) {
-                                                fitnessWidgets.get(i).setValue(0);
-
-                                                fitnessWidgetsDAO.update(fitnessWidgets.get(i));
-                                            }
-                                        }
-
-                                        break;
-                                }
-                            }
-
-                            @Override
-                            public void onFailure(Call<AuthenticationResponse> call, Throwable t) {
-                            }
-                        });
-
+                        refreshAccessToken();
                     }
                 });
             }
         };
 
         timer.schedule(doAsynchronousTask, 0, Cons.WAIT_TIME_BEFORE_CHECKING_METRICS_SERVICE);
+    }
+
+    private void refreshAccessToken() {
+        DataAccessHandler.getInstance().refreshAccessToken(prefs, new Callback<AuthenticationResponse>() {
+            @Override
+            public void onResponse(Call<AuthenticationResponse> call, Response<AuthenticationResponse> response) {
+                switch (response.code()) {
+                    case 200:
+                        prefs.edit().putString(Cons.PREF_USER_ACCESS_TOKEN, "Bearer " + response.body().getData().getBody().getToken()).apply();
+
+                        String[] slugsArray = new String[]{"steps-count", "active-calories",
+                                "distance-traveled"};
+
+                        int[] valuesArray = new int[]{prefs.getInt(todayDate + "_steps", 0), (int) prefs.getFloat(todayDate + "_calories", 0),
+                                (int) (prefs.getFloat(todayDate + "_distance", 0) * 1000)};
+
+                        synchronizeMetricsWithServer(prefs, slugsArray, valuesArray);
+                        break;
+                }
+            }
+
+            @Override
+            public void onFailure(Call<AuthenticationResponse> call, Throwable t) {
+
+            }
+        });
+    }
+
+    private void synchronizeMetricsWithServer(final SharedPreferences prefs, String[] slugsArray, int[] valuesArray) {
+        DataAccessHandler.getInstance().synchronizeMetricsWithServer(prefs, slugsArray, valuesArray);
+
+        wipeOutFitnessMetricsAtMidnight();
+    }
+
+    private void wipeOutFitnessMetricsAtMidnight() {
+        /**
+         * Doesn't contain today's date as a key, but DOES contain yesterday's day as a key
+         */
+        if (!prefs.contains(todayDate + "_steps") && prefs.contains(yesterdayDate)) {
+            Log.d("TAGTAG", "run: Doesn't contain today's date as a key, but DOES contain yesterday's day as a key");
+
+            prefs.edit().remove(yesterdayDate + "_steps").apply();
+            prefs.edit().remove(yesterdayDate + "_distance").apply();
+            prefs.edit().remove(yesterdayDate + "_calories").apply();
+
+            List<FitnessWidget> fitnessWidgets = fitnessWidgetsDAO.queryForAll();
+
+            for (int i = 0; i < fitnessWidgets.size(); i++) {
+                fitnessWidgets.get(i).setValue(0);
+
+                fitnessWidgetsDAO.update(fitnessWidgets.get(i));
+            }
+        }
     }
 
     @Override
@@ -287,17 +270,5 @@ public class SensorListener extends Service implements SensorEventListener {
                     OpenHelperManager.getHelper(getApplicationContext(), DBHelper.class);
         }
         return dbHelper;
-    }
-
-    public class UpdateMetricsRequest {
-        final String[] slug;
-        final int[] value;
-        final String date;
-
-        public UpdateMetricsRequest(String[] slug, int[] value, String date) {
-            this.slug = slug;
-            this.value = value;
-            this.date = date;
-        }
     }
 }

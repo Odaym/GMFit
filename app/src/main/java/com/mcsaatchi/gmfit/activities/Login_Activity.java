@@ -33,12 +33,12 @@ import com.mcsaatchi.gmfit.classes.DefaultIndicator_Controller;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
 import com.mcsaatchi.gmfit.classes.Helpers;
+import com.mcsaatchi.gmfit.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.fragments.IntroSlider_Fragment;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponse;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponseChart;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponseInnerBody;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponseWidget;
-import com.mcsaatchi.gmfit.rest.RestClient;
 import com.squareup.otto.Subscribe;
 
 import org.json.JSONException;
@@ -231,9 +231,7 @@ public class Login_Activity extends Base_Activity {
                     }
                 });
 
-        Call<AuthenticationResponse> signInUserCall = new RestClient().getGMFitService().registerUserFacebook(new RegisterFacebookRequest(accessToken));
-
-        signInUserCall.enqueue(new Callback<AuthenticationResponse>() {
+        DataAccessHandler.getInstance().registerUserFacebook(accessToken, new Callback<AuthenticationResponse>() {
             @Override
             public void onResponse(Call<AuthenticationResponse> call, Response<AuthenticationResponse> response) {
                 switch (response.code()) {
@@ -314,14 +312,6 @@ public class Login_Activity extends Base_Activity {
         @Override
         public int getCount() {
             return 4;
-        }
-    }
-
-    public class RegisterFacebookRequest{
-        final String access_token;
-
-        public RegisterFacebookRequest(String access_token) {
-            this.access_token = access_token;
         }
     }
 }

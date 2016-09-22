@@ -17,8 +17,8 @@ import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.classes.CircleTransform;
 import com.mcsaatchi.gmfit.classes.Cons;
 import com.mcsaatchi.gmfit.classes.Helpers;
+import com.mcsaatchi.gmfit.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
-import com.mcsaatchi.gmfit.rest.RestClient;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -88,13 +88,10 @@ public class GetStarted_Activity extends Base_Activity {
                     }
                 });
 
-        Call<DefaultGetResponse> verifyUserCall = new RestClient().getGMFitService().verifyRegistrationCode(prefs.getString(Cons
-                .PREF_USER_ACCESS_TOKEN, ""), new VerificationRequest(verificationCode));
-
-        verifyUserCall.enqueue(new Callback<DefaultGetResponse>() {
+        DataAccessHandler.getInstance().verifyUser(prefs.getString(Cons
+                .PREF_USER_ACCESS_TOKEN, ""), verificationCode, new Callback<DefaultGetResponse>() {
             @Override
             public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
-
                 switch (response.code()) {
                     case 200:
                         waitingDialog.dismiss();
@@ -116,15 +113,8 @@ public class GetStarted_Activity extends Base_Activity {
             public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
                 alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
                 alertDialog.show();
+
             }
         });
-    }
-
-    public class VerificationRequest {
-        final String code;
-
-        public VerificationRequest(String code) {
-            this.code = code;
-        }
     }
 }

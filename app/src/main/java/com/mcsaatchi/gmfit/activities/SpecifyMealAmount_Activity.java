@@ -18,10 +18,10 @@ import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.adapters.TwoItem_Sparse_ListAdapter;
 import com.mcsaatchi.gmfit.classes.Cons;
 import com.mcsaatchi.gmfit.classes.Helpers;
+import com.mcsaatchi.gmfit.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.models.MealItem;
 import com.mcsaatchi.gmfit.rest.MealMetricsResponse;
 import com.mcsaatchi.gmfit.rest.MealMetricsResponseDatum;
-import com.mcsaatchi.gmfit.rest.RestClient;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -89,10 +89,8 @@ public class SpecifyMealAmount_Activity extends Base_Activity {
                     }
                 });
 
-        Call<MealMetricsResponse> getMealMetricsCall = new RestClient().getGMFitService().getMealMetrics(prefs.getString(Cons
-                .PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS), "http://gmfit.mcsaatchi.me/api/v1/meals/" + meal_id);
-
-        getMealMetricsCall.enqueue(new Callback<MealMetricsResponse>() {
+        DataAccessHandler.getInstance().getMealMetrics(prefs.getString(Cons
+                .PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS), "http://gmfit.mcsaatchi.me/api/v1/meals/" + meal_id, new Callback<MealMetricsResponse>() {
             @Override
             public void onResponse(Call<MealMetricsResponse> call, Response<MealMetricsResponse> response) {
                 switch (response.code()) {

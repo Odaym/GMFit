@@ -29,8 +29,8 @@ import com.mcsaatchi.gmfit.adapters.SimpleSectioned_ListAdapter;
 import com.mcsaatchi.gmfit.classes.Cons;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
+import com.mcsaatchi.gmfit.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.models.MealItem;
-import com.mcsaatchi.gmfit.rest.RestClient;
 import com.mcsaatchi.gmfit.rest.SearchMealItemResponse;
 import com.mcsaatchi.gmfit.rest.SearchMealItemResponseDatum;
 
@@ -238,13 +238,9 @@ public class AddNewMealItem_Activity extends Base_Activity {
 
     private void findMeals(String mealName, final Callback<SearchMealItemResponse> mealItemsResponse) {
 
-        Call<SearchMealItemResponse> searchForMealCall = new RestClient().getGMFitService().searchForMeals(prefs.getString(Cons
-                .PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS), mealName);
-
-        searchForMealCall.enqueue(new Callback<SearchMealItemResponse>() {
+        DataAccessHandler.findMeals(prefs.getString(Cons.PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS), mealName, new Callback<SearchMealItemResponse>() {
             @Override
             public void onResponse(Call<SearchMealItemResponse> call, Response<SearchMealItemResponse> response) {
-
                 switch (response.code()) {
                     case 200:
                         mealItemsResponse.onResponse(null, response);
@@ -254,6 +250,7 @@ public class AddNewMealItem_Activity extends Base_Activity {
 
             @Override
             public void onFailure(Call<SearchMealItemResponse> call, Throwable t) {
+
             }
         });
     }

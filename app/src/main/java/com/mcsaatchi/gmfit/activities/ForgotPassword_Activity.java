@@ -1,12 +1,10 @@
 package com.mcsaatchi.gmfit.activities;
 
-import android.annotation.TargetApi;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
@@ -18,8 +16,8 @@ import com.andreabaccega.widget.FormEditText;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.classes.Cons;
 import com.mcsaatchi.gmfit.classes.Helpers;
+import com.mcsaatchi.gmfit.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
-import com.mcsaatchi.gmfit.rest.RestClient;
 
 import java.util.ArrayList;
 
@@ -85,10 +83,9 @@ public class ForgotPassword_Activity extends Base_Activity {
                     }
                 });
 
-        Call<DefaultGetResponse> sendResetPasswordCall = new RestClient().getGMFitService().sendResetPasswordLink(prefs.getString(Cons.PREF_USER_ACCESS_TOKEN, Cons
-                .NO_ACCESS_TOKEN_FOUND_IN_PREFS), new ForgotPasswordRequest(email));
 
-        sendResetPasswordCall.enqueue(new Callback<DefaultGetResponse>() {
+        DataAccessHandler.getInstance().sendResetPasswordLink(prefs.getString(Cons.PREF_USER_ACCESS_TOKEN, Cons
+                .NO_ACCESS_TOKEN_FOUND_IN_PREFS), email, new Callback<DefaultGetResponse>() {
             @Override
             public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
                 switch (response.code()) {
@@ -112,20 +109,5 @@ public class ForgotPassword_Activity extends Base_Activity {
                 alertDialog.show();
             }
         });
-    }
-
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private void setupToolbar(Toolbar toolbar) {
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        toolbar.setNavigationIcon(getDrawable(R.drawable.ic_arrow_left));
-        toolbar.setTitleTextAppearance(this, R.style.Toolbar_TitleTextStyle);
-    }
-
-    public class ForgotPasswordRequest {
-        final String email;
-
-        public ForgotPasswordRequest(String email) {
-            this.email = email;
-        }
     }
 }

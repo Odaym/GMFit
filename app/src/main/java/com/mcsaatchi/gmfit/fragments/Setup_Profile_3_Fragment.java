@@ -9,7 +9,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -29,12 +28,12 @@ import com.mcsaatchi.gmfit.activities.Main_Activity;
 import com.mcsaatchi.gmfit.classes.Cons;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
+import com.mcsaatchi.gmfit.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponseChart;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponseWidget;
 import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.rest.MedicalConditionsResponse;
 import com.mcsaatchi.gmfit.rest.MedicalConditionsResponseDatum;
-import com.mcsaatchi.gmfit.rest.RestClient;
 import com.mcsaatchi.gmfit.rest.UiResponse;
 import com.squareup.otto.Subscribe;
 
@@ -192,14 +191,11 @@ public class Setup_Profile_3_Fragment extends Fragment implements CalendarDatePi
     }
 
     private void getAndPopulateMedicalConditions() {
-        Call<MedicalConditionsResponse> getMedicalConditionsCall = new RestClient().getGMFitService().getMedicalConditions(prefs.getString(Cons.PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS));
-
-        getMedicalConditionsCall.enqueue(new Callback<MedicalConditionsResponse>() {
+        DataAccessHandler.getInstance().getMedicalConditions(prefs.getString(Cons.PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS), new Callback<MedicalConditionsResponse>() {
             @Override
             public void onResponse(Call<MedicalConditionsResponse> call, Response<MedicalConditionsResponse> response) {
                 switch (response.code()) {
                     case 200:
-
                         ArrayList<MedicalConditionsResponseDatum> allMedicalData = (ArrayList<MedicalConditionsResponseDatum>) response.body().getData().getBody().getData();
 
                         ArrayList<String> medicalConditions = new ArrayList<>();
@@ -221,9 +217,9 @@ public class Setup_Profile_3_Fragment extends Fragment implements CalendarDatePi
 
             @Override
             public void onFailure(Call<MedicalConditionsResponse> call, Throwable t) {
+
             }
         });
-
     }
 
     private void setupUserProfile(String finalDateOfBirth, String bloodType, String nationality, int medical_condition, String measurementSystem, String goal,
@@ -246,41 +242,34 @@ public class Setup_Profile_3_Fragment extends Fragment implements CalendarDatePi
                     }
                 });
 
-        Call<DefaultGetResponse> registerUserCall = new RestClient().getGMFitService().updateUserProfile(prefs.getString(Cons.PREF_USER_ACCESS_TOKEN,
-                Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS), new UpdateProfileRequest(finalDateOfBirth, bloodType, nationality, medical_condition, measurementSystem, goal, finalGender, height, weight, BMI));
+        DataAccessHandler.getInstance().updateUserProfile(prefs.getString(Cons.PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS), finalDateOfBirth,
+                bloodType, nationality, medical_condition, measurementSystem, goal, finalGender, height, weight, BMI, new Callback<DefaultGetResponse>() {
+                    @Override
+                    public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
+                        switch (response.code()) {
+                            case 200:
+                                getUiForSection(waitingDialog, "fitness");
+                                break;
+                            case 401:
+                                alertDialog.setMessage(getString(R.string.login_failed_wrong_credentials));
+                                alertDialog.show();
+                                break;
+                        }
+                    }
 
-        registerUserCall.enqueue(new Callback<DefaultGetResponse>() {
-            @Override
-            public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
-
-                switch (response.code()) {
-                    case 200:
-                        getUiForSection(waitingDialog, "fitness");
-                        break;
-                    case 401:
-                        alertDialog.setMessage(getString(R.string.login_failed_wrong_credentials));
+                    @Override
+                    public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+                        alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
                         alertDialog.show();
-                        break;
-                }
-            }
-
-            @Override
-            public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
-                alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
-                alertDialog.show();
-            }
-        });
+                    }
+                });
     }
 
     private void getUiForSection(final ProgressDialog waitingDialog, String section) {
-
-        Call<UiResponse> getUiForSectionCall = new RestClient().getGMFitService().getUiForSection(prefs.getString(Cons.PREF_USER_ACCESS_TOKEN,
-                Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS), "http://gmfit.mcsaatchi.me/api/v1/user/ui?section=" + section);
-
-        getUiForSectionCall.enqueue(new Callback<UiResponse>() {
+        DataAccessHandler.getInstance().getUiForSection(prefs.getString(Cons.PREF_USER_ACCESS_TOKEN,
+                Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS), "http://gmfit.mcsaatchi.me/api/v1/user/ui?section=" + section, new Callback<UiResponse>() {
             @Override
             public void onResponse(Call<UiResponse> call, Response<UiResponse> response) {
-
                 switch (response.code()) {
                     case 200:
                         waitingDialog.dismiss();
@@ -304,7 +293,7 @@ public class Setup_Profile_3_Fragment extends Fragment implements CalendarDatePi
 
             @Override
             public void onFailure(Call<UiResponse> call, Throwable t) {
-                Log.d(TAG, "onFailure: Failed");
+
             }
         });
     }
@@ -393,32 +382,5 @@ public class Setup_Profile_3_Fragment extends Fragment implements CalendarDatePi
             return txt;
         }
 
-    }
-
-    public class UpdateProfileRequest {
-        final String date_of_birth;
-        final String blood_type;
-        final String country;
-        final String metric_system;
-        final int medical_condition;
-        final String goal;
-        final int gender;
-        final double height;
-        final double weight;
-        final double BMI;
-
-        public UpdateProfileRequest(String date_of_birth, String blood_type, String country, int medical_condition, String metric_system, String goal, int
-                gender, double height, double weight, double BMI) {
-            this.date_of_birth = date_of_birth;
-            this.blood_type = blood_type;
-            this.country = country;
-            this.metric_system = metric_system;
-            this.medical_condition = medical_condition;
-            this.goal = goal;
-            this.gender = gender;
-            this.height = height;
-            this.weight = weight;
-            this.BMI = BMI;
-        }
     }
 }
