@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
 import android.widget.Button;
@@ -20,6 +21,7 @@ import com.mcsaatchi.gmfit.classes.Cons;
 import com.mcsaatchi.gmfit.classes.Helpers;
 import com.mcsaatchi.gmfit.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.models.MealItem;
+import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.rest.MealMetricsResponse;
 import com.mcsaatchi.gmfit.rest.MealMetricsResponseDatum;
 
@@ -42,6 +44,7 @@ public class SpecifyMealAmount_Activity extends Base_Activity {
     Button addToDiaryBTN;
     @Bind(R.id.mealAmountET)
     FormEditText mealAmountET;
+
     private ArrayList<FormEditText> allFields = new ArrayList<>();
     private SharedPreferences prefs;
     private TwoItem_Sparse_ListAdapter nutritionFactsListAdapter;
@@ -139,13 +142,52 @@ public class SpecifyMealAmount_Activity extends Base_Activity {
             public void onClick(View view) {
                 if (Helpers.validateFields(allFields)) {
 
-                    mealItem.setAmount(mealAmountET.getText().toString());
-                    mealItem.setTotalCalories(Integer.parseInt(mealItem.getAmount()) * caloriesForThisMeal);
+                    final ProgressDialog waitingDialog = new ProgressDialog(SpecifyMealAmount_Activity.this);
+                    waitingDialog.setTitle(getString(R.string.adding_new_meal_dialog_title));
+                    waitingDialog.setMessage(getString(R.string.adding_new_meal_dialog_message));
+                    waitingDialog.show();
 
-                    Intent resultIntent = new Intent();
-                    resultIntent.putExtra(Cons.EXTRAS_MEAL_OBJECT_DETAILS, mealItem);
-                    setResult(MEAL_AMOUNT_SPECIFIED, resultIntent);
-                    finish();
+                    final AlertDialog alertDialog = new AlertDialog.Builder(SpecifyMealAmount_Activity.this).create();
+                    alertDialog.setTitle(R.string.adding_new_meal_dialog_title);
+                    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+
+                                    if (waitingDialog.isShowing())
+                                        waitingDialog.dismiss();
+                                }
+                            });
+
+                    DataAccessHandler.getInstance().storeNewMeal(prefs.getString(Cons
+                                    .PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS), mealItem.getMeal_id(), Integer.parseInt(mealAmountET.getText().toString()),
+                            mealItem.getType(), new Callback<DefaultGetResponse>() {
+                                @Override
+                                public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
+
+                                    Log.d("TAG", "onResponse: Response is : " + response.code());
+
+                                    switch (response.code()) {
+                                        case 200:
+                                            waitingDialog.dismiss();
+
+                                            mealItem.setAmount(mealAmountET.getText().toString());
+                                            mealItem.setTotalCalories(Integer.parseInt(mealItem.getAmount()) * caloriesForThisMeal);
+
+                                            Intent resultIntent = new Intent();
+                                            resultIntent.putExtra(Cons.EXTRAS_MEAL_OBJECT_DETAILS, mealItem);
+                                            setResult(MEAL_AMOUNT_SPECIFIED, resultIntent);
+                                            finish();
+
+                                            break;
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+
+                                }
+                            });
                 }
             }
         });

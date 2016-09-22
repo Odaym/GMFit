@@ -202,6 +202,8 @@
     <string name="add_meal_to_diary">Add to diary</string>
     <string name="fetching_meal_info_dialog_title">Fetching meal information</string>
     <string name="fetching_meal_info_dialog_message">Please wait…</string>
+    <string name="adding_new_meal_dialog_title">Adding new meal</string>
+    <string name="adding_new_meal_dialog_message">Please wait…</string>
     <string name="nutrition_facts_hint">Nutritional Facts</string>
 
     <!-- BARCODE CAPTURE ACTIVITY -->

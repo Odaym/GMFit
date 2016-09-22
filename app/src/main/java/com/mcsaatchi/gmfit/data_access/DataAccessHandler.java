@@ -108,4 +108,8 @@ public class DataAccessHandler {
     public void registerUserFacebook(String facebookAccessToken, Callback<AuthenticationResponse> callback){
         ApiCallsHandler.getInstance().registerUserFacebook(facebookAccessToken, callback);
     }
+
+    public void storeNewMeal(String userAccessToken, int meal_id, int servingsAmount, String when, Callback<DefaultGetResponse> callback){
+        ApiCallsHandler.getInstance().storeNewMeal(userAccessToken, meal_id, servingsAmount, when, callback);
+    }
 }

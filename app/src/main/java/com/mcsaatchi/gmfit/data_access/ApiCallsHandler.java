@@ -1,6 +1,7 @@
 package com.mcsaatchi.gmfit.data_access;
 
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.mcsaatchi.gmfit.classes.Cons;
 import com.mcsaatchi.gmfit.classes.Helpers;
@@ -354,6 +355,23 @@ public class ApiCallsHandler {
         });
     }
 
+    void storeNewMeal(String userAccessToken, int meal_id, int servingsAmount, String when, final Callback<DefaultGetResponse> callback) {
+        Log.d("TAG", "storeNewMeal: meal_id : " + meal_id + " servingsAmount : " + servingsAmount + " When : " + when);
+        Call<DefaultGetResponse> apiCall = new RestClient().getGMFitService().storeNewMeal(userAccessToken, new StoreNewMealRequest(meal_id, servingsAmount, when.toLowerCase()));
+
+        apiCall.enqueue(new Callback<DefaultGetResponse>() {
+            @Override
+            public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
+                callback.onResponse(call, response);
+            }
+
+            @Override
+            public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+                callback.onFailure(call, t);
+            }
+        });
+    }
+
     public class UpdateMetricsRequest {
         final String[] slug;
         final int[] value;
@@ -427,7 +445,7 @@ public class ApiCallsHandler {
         final String password;
         final String token;
 
-        public ResetPasswordRequest(String token, String password) {
+        ResetPasswordRequest(String token, String password) {
             this.token = token;
             this.password = password;
         }
@@ -457,6 +475,18 @@ public class ApiCallsHandler {
 
         RegisterFacebookRequest(String access_token) {
             this.access_token = access_token;
+        }
+    }
+
+    public class StoreNewMealRequest {
+        final int meal_id;
+        final int amount;
+        final String when;
+
+        StoreNewMealRequest(int meal_id, int amount, String when) {
+            this.meal_id = meal_id;
+            this.amount = amount;
+            this.when = when;
         }
     }
 }

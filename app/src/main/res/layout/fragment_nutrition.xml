@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -31,7 +30,6 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/metricProgressBar"
             android:layout_centerHorizontal="true"
-            android:text="760"
             android:textColor="@android:color/white"
             android:textSize="@dimen/metric_counter_font_size"/>
 

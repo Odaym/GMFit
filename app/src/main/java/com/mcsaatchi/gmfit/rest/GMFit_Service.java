@@ -76,4 +76,8 @@ public interface GMFit_Service {
 
     @GET
     Call<MealMetricsResponse> getMealMetrics(@Header(Cons.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken, @Url String fullUrl);
+
+    @POST("user/meals/store")
+    Call<DefaultGetResponse> storeNewMeal(@Header(Cons.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken, @Body ApiCallsHandler.StoreNewMealRequest storeNewMealRequest);
+
 }

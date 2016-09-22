@@ -22,14 +22,14 @@ public class UserMeals_RecyclerAdapter extends RecyclerView.Adapter<UserMeals_Re
     private List<MealItem> mealItems;
     private RuntimeExceptionDao<MealItem, Integer> userMealsDAO;
     private QueryBuilder<MealItem, Integer> userMealsQB;
-    private String mealType;
 
-    public UserMeals_RecyclerAdapter(Context context, List<MealItem> mealItems, String mealType) {
+    public UserMeals_RecyclerAdapter(Context context, List<MealItem> mealItems) {
         this.mealItems = mealItems;
-        this.mealType = mealType;
 
-        userMealsDAO = ((Base_Activity) context).getDBHelper().getMealItemDAO();
-        userMealsQB = userMealsDAO.queryBuilder();
+        if (context != null) {
+            userMealsDAO = ((Base_Activity) context).getDBHelper().getMealItemDAO();
+            userMealsQB = userMealsDAO.queryBuilder();
+        }
     }
 
     @Override

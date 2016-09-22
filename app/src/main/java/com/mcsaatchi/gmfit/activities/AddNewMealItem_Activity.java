@@ -186,7 +186,10 @@ public class AddNewMealItem_Activity extends Base_Activity {
                                         mealItem.setName(mealsResponse.get(i).getName());
                                         mealItem.setMeasurementUnit(mealsResponse.get(i).getMeasurementUnit());
                                         mealItem.setMeal_id(mealsResponse.get(i).getId());
-                                        mealItem.setType(mealType);
+                                        if (mealType.equals("Snacks"))
+                                            mealItem.setType("Snack");
+                                        else
+                                            mealItem.setType(mealType);
                                         mealItem.setSectionType(ITEM_VIEWTYPE);
 
                                         mealsReturned.add(mealItem);
