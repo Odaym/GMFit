@@ -279,7 +279,7 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
         sixMonthsBTN = (Button) barChartLayout.findViewById(R.id.sixMonthsBTN);
         oneYearBTN = (Button) barChartLayout.findViewById(R.id.oneYearBTN);
 
-        LocalDate dt = new LocalDate();
+        final LocalDate dt = new LocalDate();
         final String todayDate;
 
         todayDate = dt.toString();
@@ -288,7 +288,7 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
             @Override
             public void onClick(View view) {
                 DataAccessHandler.getInstance().getPeriodicalChartData(prefs.getString(Cons.PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
-                        todayDate, todayDate, "fitness", chart_slug, new Callback<DefaultGetResponse>() {
+                        dt.minusDays(7).toString(), todayDate, "fitness", chart_slug, new Callback<DefaultGetResponse>() {
                             @Override
                             public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
                                 Log.d(TAG, "onResponse: Response was : " + response.code());
@@ -297,11 +297,11 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
                             @Override
                             public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
 
+                                Log.d(TAG, "onFailure: Failure");
                             }
                         });
             }
         });
-
     }
 
     @Override
