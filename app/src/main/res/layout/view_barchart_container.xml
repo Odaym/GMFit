@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <RelativeLayout android:layout_width="match_parent" android:layout_height="match_parent">
+    <RelativeLayout android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
         <TextView android:id="@+id/chartTitleTV" android:layout_width="match_parent"
                   android:layout_height="@dimen/chart_title_headline_bar_height"
@@ -16,11 +17,57 @@
                   android:textAppearance="?android:textAppearanceMedium"
                   android:textColor="@android:color/white"/>
 
+        <LinearLayout
+            android:id="@+id/periodicalBreakdownLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/chartTitleTV"
+            android:orientation="horizontal">
+
+            <Button android:id="@+id/oneDayBTN"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="1D"/>
+
+            <Button android:id="@+id/oneWeekBTN"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="1W"/>
+
+            <Button android:id="@+id/oneMonthBTN"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="1M"/>
+
+            <Button android:id="@+id/threeMonthsBTN"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="3M"/>
+
+            <Button android:id="@+id/sixMonthsBTN"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="6M"/>
+
+            <Button android:id="@+id/oneYearBTN"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="1Y"/>
+
+        </LinearLayout>
+
         <com.github.mikephil.charting.charts.BarChart
             android:id="@+id/barChart"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/chartTitleTV"
+            android:layout_below="@id/periodicalBreakdownLayout"
+            android:layout_marginBottom="@dimen/default_margin_1"
             android:layout_marginTop="@dimen/default_margin_1"/>
 
     </RelativeLayout>

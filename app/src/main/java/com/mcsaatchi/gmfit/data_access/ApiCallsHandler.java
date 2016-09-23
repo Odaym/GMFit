@@ -1,7 +1,6 @@
 package com.mcsaatchi.gmfit.data_access;
 
 import android.content.SharedPreferences;
-import android.util.Log;
 
 import com.mcsaatchi.gmfit.classes.Cons;
 import com.mcsaatchi.gmfit.classes.Helpers;
@@ -357,6 +356,22 @@ public class ApiCallsHandler {
 
     void storeNewMeal(String userAccessToken, int meal_id, int servingsAmount, String when, final Callback<DefaultGetResponse> callback) {
         Call<DefaultGetResponse> apiCall = new RestClient().getGMFitService().storeNewMeal(userAccessToken, new StoreNewMealRequest(meal_id, servingsAmount, when.toLowerCase()));
+
+        apiCall.enqueue(new Callback<DefaultGetResponse>() {
+            @Override
+            public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
+                callback.onResponse(call, response);
+            }
+
+            @Override
+            public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+                callback.onFailure(call, t);
+            }
+        });
+    }
+
+    void getPeriodicalChartData(String userAccessToken, String start_date, String end_date, String type, String monitored_metric, final Callback<DefaultGetResponse> callback) {
+        Call<DefaultGetResponse> apiCall = new RestClient().getGMFitService().getPeriodicalChartData(userAccessToken, start_date, end_date, type, monitored_metric);
 
         apiCall.enqueue(new Callback<DefaultGetResponse>() {
             @Override

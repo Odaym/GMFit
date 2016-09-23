@@ -112,4 +112,8 @@ public class DataAccessHandler {
     public void storeNewMeal(String userAccessToken, int meal_id, int servingsAmount, String when, Callback<DefaultGetResponse> callback){
         ApiCallsHandler.getInstance().storeNewMeal(userAccessToken, meal_id, servingsAmount, when, callback);
     }
+
+    public void getPeriodicalChartData(String userAccessToken, String start_date, String end_date, String type, String monitored_metric, Callback<DefaultGetResponse> callback){
+        ApiCallsHandler.getInstance().getPeriodicalChartData(userAccessToken, start_date, end_date, type, monitored_metric, callback);
+    }
 }

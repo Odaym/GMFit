@@ -41,9 +41,9 @@ public interface GMFit_Service {
     Call<DefaultGetResponse> updateMetrics(@Header(Cons.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken, @Body ApiCallsHandler.UpdateMetricsRequest
             updateMetricsRequest);
 
-//    @GET("user/metrics")
-//    Call<DefaultGetResponse> getMetricsForChart(@Header(Cons.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken, @Query("start_date") String
-//            start_date, @Query("end_date") String end_date, @Query("type") String type, @Query("monitored_metrics") String monitored_metrics);
+    @GET("user/metrics/range")
+    Call<DefaultGetResponse> getPeriodicalChartData(@Header(Cons.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken, @Query("start_date") String
+            start_date, @Query("end_date") String end_date, @Query("type") String type, @Query("monitored_metrics") String monitored_metrics);
 
     @POST("verify")
     Call<DefaultGetResponse> verifyRegistrationCode(@Header(Cons.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken, @Body ApiCallsHandler.VerificationRequest

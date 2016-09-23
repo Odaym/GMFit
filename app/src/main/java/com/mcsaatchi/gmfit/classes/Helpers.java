@@ -8,6 +8,7 @@ import android.support.v7.app.AlertDialog;
 
 import com.andreabaccega.widget.FormEditText;
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
@@ -72,18 +73,6 @@ public class Helpers {
         return bundle;
     }
 
-    public static Bundle createActivityBundleWithProperties(String activityTitle, boolean enableBackButton) {
-        Bundle bundle = new Bundle();
-
-        if (activityTitle != null) {
-            bundle.putString(Cons.BUNDLE_ACTIVITY_TITLE, activityTitle);
-        }
-
-        bundle.putBoolean(Cons.BUNDLE_ACTIVITY_BACK_BUTTON_ENABLED, enableBackButton);
-
-        return bundle;
-    }
-
     public static void setBarChartData(BarChart chart, List<AuthenticationResponseChartData> chartData) {
         ArrayList<BarEntry> valsMetrics = new ArrayList<>();
         ArrayList<String> xVals = new ArrayList<>();
@@ -103,7 +92,7 @@ public class Helpers {
         }
 
         BarDataSet set1;
-        set1 = new BarDataSet(valsMetrics, "Daily Breakdown");
+        set1 = new BarDataSet(valsMetrics, "");
         set1.setColor(R.color.fitness_pink);
         set1.setHighLightAlpha(1);
         set1.setValueTextSize(7f);
@@ -118,7 +107,12 @@ public class Helpers {
         chart.setDrawGridBackground(false);
         chart.getLegend().setEnabled(false);
 
+        chart.getAxisRight().setEnabled(false);
+        chart.getAxisLeft().setEnabled(false);
+
         chart.getXAxis().setDrawGridLines(false);
+
+        chart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
 
         chart.getAxisLeft().setShowOnlyMinMax(true);
         chart.getAxisRight().setShowOnlyMinMax(true);
@@ -133,7 +127,7 @@ public class Helpers {
         chart.invalidate();
     }
 
-    public static String getDayofWeekString(int dayOfWeek) {
+    private static String getDayofWeekString(int dayOfWeek) {
         switch (dayOfWeek) {
             case 1:
                 return "Mon";
