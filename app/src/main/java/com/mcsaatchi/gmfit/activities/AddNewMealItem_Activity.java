@@ -230,7 +230,7 @@ public class AddNewMealItem_Activity extends Base_Activity {
                     MealItem mealItem = data.getParcelableExtra(Cons.EXTRAS_MEAL_OBJECT_DETAILS);
 
                     if (mealItem != null) {
-                        EventBus_Singleton.getInstance().post(new EventBus_Poster(Cons.EXTRAS_PICKED_MEAL_ENTRY, mealItem));
+                        EventBus_Singleton.getInstance().post(new EventBus_Poster(Cons.EXTRAS_PICKED_MEAL_ENTRY, mealItem, true));
                         finish();
                     }
                 }

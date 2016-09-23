@@ -356,7 +356,6 @@ public class ApiCallsHandler {
     }
 
     void storeNewMeal(String userAccessToken, int meal_id, int servingsAmount, String when, final Callback<DefaultGetResponse> callback) {
-        Log.d("TAG", "storeNewMeal: meal_id : " + meal_id + " servingsAmount : " + servingsAmount + " When : " + when);
         Call<DefaultGetResponse> apiCall = new RestClient().getGMFitService().storeNewMeal(userAccessToken, new StoreNewMealRequest(meal_id, servingsAmount, when.toLowerCase()));
 
         apiCall.enqueue(new Callback<DefaultGetResponse>() {

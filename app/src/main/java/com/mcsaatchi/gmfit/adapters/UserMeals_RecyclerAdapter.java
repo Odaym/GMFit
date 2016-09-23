@@ -1,6 +1,7 @@
 package com.mcsaatchi.gmfit.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,8 @@ import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.activities.Base_Activity;
+import com.mcsaatchi.gmfit.activities.SpecifyMealAmount_Activity;
+import com.mcsaatchi.gmfit.classes.Cons;
 import com.mcsaatchi.gmfit.models.MealItem;
 
 import java.util.Collections;
@@ -22,9 +25,11 @@ public class UserMeals_RecyclerAdapter extends RecyclerView.Adapter<UserMeals_Re
     private List<MealItem> mealItems;
     private RuntimeExceptionDao<MealItem, Integer> userMealsDAO;
     private QueryBuilder<MealItem, Integer> userMealsQB;
+    private Context context;
 
     public UserMeals_RecyclerAdapter(Context context, List<MealItem> mealItems) {
         this.mealItems = mealItems;
+        this.context = context;
 
         if (context != null) {
             userMealsDAO = ((Base_Activity) context).getDBHelper().getMealItemDAO();
@@ -86,14 +91,23 @@ public class UserMeals_RecyclerAdapter extends RecyclerView.Adapter<UserMeals_Re
         }
     }
 
-    public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView entryTitleTV, entryDescriptionTV, entryUnitsTV;
+    class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+        TextView entryTitleTV, entryDescriptionTV, entryUnitsTV;
 
-        public MyViewHolder(View view) {
+        MyViewHolder(View view) {
             super(view);
+            view.setOnClickListener(this);
             entryTitleTV = (TextView) view.findViewById(R.id.entryTitleTV);
             entryDescriptionTV = (TextView) view.findViewById(R.id.entryDescriptionTV);
             entryUnitsTV = (TextView) view.findViewById(R.id.entryUnitsTV);
+        }
+
+        @Override
+        public void onClick(View view) {
+            Intent intent = new Intent(context, SpecifyMealAmount_Activity.class);
+            intent.putExtra(Cons.EXTRAS_MEAL_OBJECT_DETAILS, mealItems.get(getAdapterPosition()));
+            intent.putExtra(Cons.EXTRAS_MEAL_ITEM_PURPOSE_EDITING, true);
+            context.startActivity(intent);
         }
     }
 }

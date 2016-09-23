@@ -12,6 +12,7 @@ public class EventBus_Poster {
     private String message;
     private String[] stringsExtra;
     private MealItem mealItem;
+    private boolean createNewMealItem;
     private List<DataChart> dataChartsListExtra;
     private ArrayList<NutritionWidget> widgetsMapNutrition;
     private ArrayList<FitnessWidget> widgetsMapFitness;
@@ -20,9 +21,10 @@ public class EventBus_Poster {
         this.message = message;
     }
 
-    public EventBus_Poster(String message, MealItem mealItem) {
+    public EventBus_Poster(String message, MealItem mealItem, boolean createNewMealItem) {
         this.message = message;
         this.mealItem = mealItem;
+        this.createNewMealItem = createNewMealItem;
     }
 
     public EventBus_Poster(String message, String[] stringsExtra) {
@@ -53,6 +55,10 @@ public class EventBus_Poster {
 
     public MealItem getMealItemExtra() {
         return mealItem;
+    }
+
+    public boolean isCreateNewMealItem() {
+        return createNewMealItem;
     }
 
     public String[] getStringsExtra() {

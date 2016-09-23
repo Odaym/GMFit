@@ -378,6 +378,8 @@ public class Nutrition_Fragment extends Fragment {
                 for (int i = 0; i < widgetsMap.size(); i++) {
                     if (widgetsMap.get(i).getTitle().equals("Calories")) {
                         metricCounterTV.setText(NumberFormat.getNumberInstance(Locale.US).format((int) widgetsMap.get(i).getValue()));
+
+                        Log.d(TAG, "fetchWidgetsAndSetupViews: Calories total is " + widgetsMap.get(i).getValue());
                     }
                 }
 
@@ -423,6 +425,10 @@ public class Nutrition_Fragment extends Fragment {
     private void setupMealSectionsListView(ArrayList<MealItem> mealItems, String mealType) {
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
 
+        for (int i = 0; i < mealItems.size(); i++) {
+            Log.d(TAG, "setupMealSectionsListView: Meal Item name : " + mealItems.get(i).getName());
+            Log.d(TAG, "setupMealSectionsListView: Meal Item AMOUNT : " + mealItems.get(i).getAmount());
+        }
         ItemTouchHelper.Callback callback;
         ItemTouchHelper touchHelper;
 
@@ -432,26 +438,24 @@ public class Nutrition_Fragment extends Fragment {
 
         switch (mealType) {
             case "Breakfast":
-                breakfastListView.setLayoutManager(mLayoutManager);
-                breakfastListView.setAdapter(userMealsRecyclerAdapter);
-                touchHelper.attachToRecyclerView(breakfastListView);
+                hookUpMealSectionListViews(breakfastListView, mLayoutManager, touchHelper);
                 break;
             case "Lunch":
-                lunchListView.setLayoutManager(mLayoutManager);
-                lunchListView.setAdapter(userMealsRecyclerAdapter);
-                touchHelper.attachToRecyclerView(lunchListView);
+                hookUpMealSectionListViews(lunchListView, mLayoutManager, touchHelper);
                 break;
             case "Dinner":
-                dinnerListView.setLayoutManager(mLayoutManager);
-                dinnerListView.setAdapter(userMealsRecyclerAdapter);
-                touchHelper.attachToRecyclerView(dinnerListView);
+                hookUpMealSectionListViews(dinnerListView, mLayoutManager, touchHelper);
                 break;
             case "Snack":
-                snacksListView.setLayoutManager(mLayoutManager);
-                snacksListView.setAdapter(userMealsRecyclerAdapter);
-                touchHelper.attachToRecyclerView(snacksListView);
+                hookUpMealSectionListViews(snacksListView, mLayoutManager, touchHelper);
                 break;
         }
+    }
+
+    private void hookUpMealSectionListViews(RecyclerView mealListView, RecyclerView.LayoutManager layoutManager, ItemTouchHelper touchHelper) {
+        mealListView.setLayoutManager(layoutManager);
+        mealListView.setAdapter(userMealsRecyclerAdapter);
+        touchHelper.attachToRecyclerView(mealListView);
     }
 
     @Subscribe
@@ -461,46 +465,63 @@ public class Nutrition_Fragment extends Fragment {
         switch (ebpMessage) {
             case Cons.EXTRAS_PICKED_MEAL_ENTRY:
                 if (ebp.getMealItemExtra() != null) {
-                    MealItem mealChosenToEat = new MealItem();
-                    mealChosenToEat.setMeal_id(ebp.getMealItemExtra().getMeal_id());
-                    mealChosenToEat.setTotalCalories(ebp.getMealItemExtra().getTotalCalories());
-                    mealChosenToEat.setAmount(ebp.getMealItemExtra().getAmount());
-                    mealChosenToEat.setMeasurementUnit(ebp.getMealItemExtra().getMeasurementUnit());
-                    mealChosenToEat.setName(ebp.getMealItemExtra().getName());
-                    mealChosenToEat.setSectionType(ITEM_VIEWTYPE);
+                    boolean isPurposeToCreateNewMeal = ebp.isCreateNewMealItem();
 
-                    switch (ebp.getMealItemExtra().getType()) {
+                    MealItem chosenMealFromList = ebp.getMealItemExtra();
+
+                    MealItem newMealItem = new MealItem();
+                    newMealItem.setMeal_id(chosenMealFromList.getMeal_id());
+                    newMealItem.setTotalCalories(chosenMealFromList.getTotalCalories());
+                    newMealItem.setAmount(chosenMealFromList.getAmount());
+                    newMealItem.setMeasurementUnit(chosenMealFromList.getMeasurementUnit());
+                    newMealItem.setName(chosenMealFromList.getName());
+                    newMealItem.setSectionType(ITEM_VIEWTYPE);
+
+                    switch (chosenMealFromList.getType()) {
                         case "Breakfast":
 
-                            mealChosenToEat.setType("Breakfast");
+                            newMealItem.setType("Breakfast");
 
-                            userMealsDAO.create(mealChosenToEat);
+                            if (isPurposeToCreateNewMeal)
+                                userMealsDAO.create(newMealItem);
+                            else
+                                userMealsDAO.update(chosenMealFromList);
 
-                            setupMealSectionsListView((ArrayList<MealItem>) userMealsDAO.queryForEq("type", "Breakfast"), ebp.getMealItemExtra().getType());
+
+                            setupMealSectionsListView((ArrayList<MealItem>) userMealsDAO.queryForEq("type", "Breakfast"), chosenMealFromList.getType());
 
                             break;
                         case "Lunch":
-                            mealChosenToEat.setType("Lunch");
+                            newMealItem.setType("Lunch");
 
-                            userMealsDAO.create(mealChosenToEat);
+                            if (isPurposeToCreateNewMeal)
+                                userMealsDAO.create(newMealItem);
+                            else
+                                userMealsDAO.update(chosenMealFromList);
 
-                            setupMealSectionsListView((ArrayList<MealItem>) userMealsDAO.queryForEq("type", "Lunch"), ebp.getMealItemExtra().getType());
+                            setupMealSectionsListView((ArrayList<MealItem>) userMealsDAO.queryForEq("type", "Lunch"), chosenMealFromList.getType());
 
                             break;
                         case "Dinner":
-                            mealChosenToEat.setType("Dinner");
+                            newMealItem.setType("Dinner");
 
-                            userMealsDAO.create(mealChosenToEat);
+                            if (isPurposeToCreateNewMeal)
+                                userMealsDAO.create(newMealItem);
+                            else
+                                userMealsDAO.update(chosenMealFromList);
 
-                            setupMealSectionsListView((ArrayList<MealItem>) userMealsDAO.queryForEq("type", "Dinner"), ebp.getMealItemExtra().getType());
+                            setupMealSectionsListView((ArrayList<MealItem>) userMealsDAO.queryForEq("type", "Dinner"), chosenMealFromList.getType());
 
                             break;
                         case "Snack":
-                            mealChosenToEat.setType("Snack");
+                            newMealItem.setType("Snack");
 
-                            userMealsDAO.create(mealChosenToEat);
+                            if (isPurposeToCreateNewMeal)
+                                userMealsDAO.create(newMealItem);
+                            else
+                                userMealsDAO.update(chosenMealFromList);
 
-                            setupMealSectionsListView((ArrayList<MealItem>) userMealsDAO.queryForEq("type", "Snack"), ebp.getMealItemExtra().getType());
+                            setupMealSectionsListView((ArrayList<MealItem>) userMealsDAO.queryForEq("type", "Snack"), chosenMealFromList.getType());
 
                             break;
                     }

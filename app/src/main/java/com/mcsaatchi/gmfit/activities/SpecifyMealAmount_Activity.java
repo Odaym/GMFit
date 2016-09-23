@@ -15,9 +15,12 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import com.andreabaccega.widget.FormEditText;
+import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.adapters.TwoItem_Sparse_ListAdapter;
 import com.mcsaatchi.gmfit.classes.Cons;
+import com.mcsaatchi.gmfit.classes.EventBus_Poster;
+import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
 import com.mcsaatchi.gmfit.classes.Helpers;
 import com.mcsaatchi.gmfit.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.models.MealItem;
@@ -50,7 +53,10 @@ public class SpecifyMealAmount_Activity extends Base_Activity {
     private TwoItem_Sparse_ListAdapter nutritionFactsListAdapter;
     private SparseArray<String[]> nutritionalFacts = new SparseArray<>();
 
+    private RuntimeExceptionDao<MealItem, Integer> mealItemsDAO;
+
     private MealItem mealItem;
+    private boolean purposeIsEditMeal = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,11 +69,19 @@ public class SpecifyMealAmount_Activity extends Base_Activity {
 
         allFields.add(mealAmountET);
 
+        mealItemsDAO = getDBHelper().getMealItemDAO();
+
         if (getIntent().getExtras() != null) {
             mealItem = getIntent().getExtras().getParcelable(Cons.EXTRAS_MEAL_OBJECT_DETAILS);
+            purposeIsEditMeal = getIntent().getExtras().getBoolean(Cons.EXTRAS_MEAL_ITEM_PURPOSE_EDITING);
 
             if (mealItem != null) {
                 setupToolbar(toolbar, mealItem.getName(), true);
+
+                if (purposeIsEditMeal)
+                    mealAmountET.setText(mealItem.getAmount());
+
+                mealAmountET.setSelection(mealAmountET.getText().toString().length());
 
                 getMealMetrics(mealItem.getMeal_id());
             }
@@ -174,9 +188,21 @@ public class SpecifyMealAmount_Activity extends Base_Activity {
                                             mealItem.setAmount(mealAmountET.getText().toString());
                                             mealItem.setTotalCalories(Integer.parseInt(mealItem.getAmount()) * caloriesForThisMeal);
 
-                                            Intent resultIntent = new Intent();
-                                            resultIntent.putExtra(Cons.EXTRAS_MEAL_OBJECT_DETAILS, mealItem);
-                                            setResult(MEAL_AMOUNT_SPECIFIED, resultIntent);
+                                            /**
+                                             * Editing an existing meal
+                                             */
+                                            if (purposeIsEditMeal) {
+                                                Log.d("TAG", "onResponse: Editing an existing meal.");
+                                                EventBus_Singleton.getInstance().post(new EventBus_Poster(Cons.EXTRAS_PICKED_MEAL_ENTRY, mealItem, false));
+                                            } else {
+                                                /**
+                                                 * Creating a new meal
+                                                 */
+                                                Intent resultIntent = new Intent();
+                                                resultIntent.putExtra(Cons.EXTRAS_MEAL_OBJECT_DETAILS, mealItem);
+                                                setResult(MEAL_AMOUNT_SPECIFIED, resultIntent);
+                                            }
+
                                             finish();
 
                                             break;
