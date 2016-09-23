@@ -382,7 +382,6 @@ public class Nutrition_Fragment extends Fragment {
                 }
 
                 widgetsMap = new ArrayList<>(widgetsFromDB.subList(0, 4));
-                Log.d(TAG, "fetchWidgetsAndSetupViews: Setup widgets grid view");
                 setUpWidgetsGridView(widgetsMap);
             }
         } catch (SQLException e) {
@@ -615,8 +614,6 @@ public class Nutrition_Fragment extends Fragment {
                 Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS), new Callback<UserMealsResponse>() {
             @Override
             public void onResponse(Call<UserMealsResponse> call, Response<UserMealsResponse> response) {
-                Log.d(TAG, "onResponse: Response code was : " + response.code());
-
                 switch (response.code()) {
                     case 200:
 
