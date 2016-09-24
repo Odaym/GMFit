@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import com.mcsaatchi.gmfit.classes.Cons;
 import com.mcsaatchi.gmfit.classes.Helpers;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponse;
+import com.mcsaatchi.gmfit.rest.ChartMetricBreakdownResponse;
 import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.rest.MealMetricsResponse;
 import com.mcsaatchi.gmfit.rest.MedicalConditionsResponse;
@@ -370,17 +371,17 @@ public class ApiCallsHandler {
         });
     }
 
-    void getPeriodicalChartData(String userAccessToken, String start_date, String end_date, String type, String monitored_metric, final Callback<DefaultGetResponse> callback) {
-        Call<DefaultGetResponse> apiCall = new RestClient().getGMFitService().getPeriodicalChartData(userAccessToken, start_date, end_date, type, monitored_metric);
+    void getPeriodicalChartData(String userAccessToken, String start_date, String end_date, String type, String monitored_metric, final Callback<ChartMetricBreakdownResponse> callback) {
+        Call<ChartMetricBreakdownResponse> apiCall = new RestClient().getGMFitService().getPeriodicalChartData(userAccessToken, start_date, end_date, type, monitored_metric);
 
-        apiCall.enqueue(new Callback<DefaultGetResponse>() {
+        apiCall.enqueue(new Callback<ChartMetricBreakdownResponse>() {
             @Override
-            public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
+            public void onResponse(Call<ChartMetricBreakdownResponse> call, Response<ChartMetricBreakdownResponse> response) {
                 callback.onResponse(call, response);
             }
 
             @Override
-            public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+            public void onFailure(Call<ChartMetricBreakdownResponse> call, Throwable t) {
                 callback.onFailure(call, t);
             }
         });

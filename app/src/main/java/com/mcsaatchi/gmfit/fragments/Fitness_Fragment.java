@@ -44,7 +44,9 @@ import com.mcsaatchi.gmfit.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.models.DataChart;
 import com.mcsaatchi.gmfit.models.FitnessWidget;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponseChart;
-import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
+import com.mcsaatchi.gmfit.rest.AuthenticationResponseChartData;
+import com.mcsaatchi.gmfit.rest.ChartMetricBreakdownResponse;
+import com.mcsaatchi.gmfit.rest.ChartMetricBreakdownResponseDatum;
 import com.mcsaatchi.gmfit.rest.SlugBreakdownResponse;
 import com.squareup.otto.Subscribe;
 
@@ -84,6 +86,8 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
     private FitnessWidgets_GridAdapter widgets_GridAdapter;
     private String chartName;
     private String chartType;
+
+    private final LocalDate dt = new LocalDate();
 
     private RuntimeExceptionDao<DataChart, Integer> dataChartDAO;
     private QueryBuilder<DataChart, Integer> dataChartQB;
@@ -235,19 +239,19 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
             case "steps-count":
                 if (!chartsMap.get(0).getData().isEmpty()) {
                     Helpers.setBarChartData(barChart, chartsMap.get(0).getData());
-                    hookupPeriodicalBreakdownButtons(barChartLayout, "steps-count");
+                    hookupPeriodicalBreakdownButtons(barChartLayout, barChart, "steps-count");
                 }
                 break;
             case "active-calories":
                 if (!chartsMap.get(3).getData().isEmpty()) {
                     Helpers.setBarChartData(barChart, chartsMap.get(3).getData());
-                    hookupPeriodicalBreakdownButtons(barChartLayout, "active-calories");
+                    hookupPeriodicalBreakdownButtons(barChartLayout, barChart, "active-calories");
                 }
                 break;
             case "distance-traveled":
                 if (!chartsMap.get(4).getData().isEmpty()) {
                     Helpers.setBarChartData(barChart, chartsMap.get(4).getData());
-                    hookupPeriodicalBreakdownButtons(barChartLayout, "distance-traveled");
+                    hookupPeriodicalBreakdownButtons(barChartLayout, barChart, "distance-traveled");
                 }
                 break;
         }
@@ -270,7 +274,7 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
         });
     }
 
-    private void hookupPeriodicalBreakdownButtons(View barChartLayout, final String chart_slug) {
+    private void hookupPeriodicalBreakdownButtons(View barChartLayout, final BarChart barchart, final String chart_slug) {
         final Button oneDayBTN, oneWeekBTN, oneMonthBTN, threeMonthsBTN, sixMonthsBTN, oneYearBTN;
         oneDayBTN = (Button) barChartLayout.findViewById(R.id.oneDayBTN);
         oneWeekBTN = (Button) barChartLayout.findViewById(R.id.oneWeekBTN);
@@ -279,29 +283,12 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
         sixMonthsBTN = (Button) barChartLayout.findViewById(R.id.sixMonthsBTN);
         oneYearBTN = (Button) barChartLayout.findViewById(R.id.oneYearBTN);
 
-        final LocalDate dt = new LocalDate();
-        final String todayDate;
-
-        todayDate = dt.toString();
-
-        oneDayBTN.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                DataAccessHandler.getInstance().getPeriodicalChartData(prefs.getString(Cons.PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
-                        dt.minusDays(7).toString(), todayDate, "fitness", chart_slug, new Callback<DefaultGetResponse>() {
-                            @Override
-                            public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
-                                Log.d(TAG, "onResponse: Response was : " + response.code());
-                            }
-
-                            @Override
-                            public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
-
-                                Log.d(TAG, "onFailure: Failure");
-                            }
-                        });
-            }
-        });
+        setPeriodicalBreakdownButtonsClickListener(oneDayBTN, barchart, chart_slug, dt.minusDays(1).toString());
+        setPeriodicalBreakdownButtonsClickListener(oneWeekBTN, barchart, chart_slug, dt.minusWeeks(1).toString());
+        setPeriodicalBreakdownButtonsClickListener(oneMonthBTN, barchart, chart_slug, dt.minusMonths(1).toString());
+        setPeriodicalBreakdownButtonsClickListener(threeMonthsBTN, barchart, chart_slug, dt.minusMonths(3).toString());
+        setPeriodicalBreakdownButtonsClickListener(sixMonthsBTN, barchart, chart_slug, dt.minusMonths(6).toString());
+        setPeriodicalBreakdownButtonsClickListener(oneYearBTN, barchart, chart_slug, dt.minusYears(1).toString());
     }
 
     @Override
@@ -343,6 +330,41 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
     public void onDestroy() {
         super.onDestroy();
         EventBus_Singleton.getInstance().unregister(this);
+    }
+
+    private void setPeriodicalBreakdownButtonsClickListener(Button periodicBreakdownButton, final BarChart barchart, final String chart_slug, final String start_date) {
+        final String todayDate;
+        todayDate = dt.toString();
+
+        periodicBreakdownButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DataAccessHandler.getInstance().getPeriodicalChartData(prefs.getString(Cons.PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
+                        start_date, todayDate, "fitness", chart_slug, new Callback<ChartMetricBreakdownResponse>() {
+                            @Override
+                            public void onResponse(Call<ChartMetricBreakdownResponse> call, Response<ChartMetricBreakdownResponse> response) {
+                                List<ChartMetricBreakdownResponseDatum> rawChartData = response.body().getData().getBody().getData();
+
+                                if (rawChartData != null && rawChartData.size() > 0) {
+                                    List<AuthenticationResponseChartData> newChartData = new ArrayList<>();
+
+                                    for (int i = 0; i < rawChartData.size(); i++) {
+                                        newChartData.add(new AuthenticationResponseChartData(rawChartData.get(i).getDate(), rawChartData.get(i).getValue()));
+                                    }
+
+                                    barchart.getData().clearValues();
+                                    barchart.invalidate();
+                                    Helpers.setBarChartData(barchart, newChartData);
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<ChartMetricBreakdownResponse> call, Throwable t) {
+                                //TODO: Add failure code
+                            }
+                        });
+            }
+        });
     }
 
     private void getSlugBreakdownForChart(final String chartTitle, final String chartType) {

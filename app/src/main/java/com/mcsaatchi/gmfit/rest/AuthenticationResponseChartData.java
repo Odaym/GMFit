@@ -25,7 +25,12 @@ public class AuthenticationResponseChartData implements Parcelable {
     @Expose
     private String value;
 
-    protected AuthenticationResponseChartData(Parcel in) {
+    public AuthenticationResponseChartData(String date, String value) {
+        this.date = date;
+        this.value = value;
+    }
+
+    public AuthenticationResponseChartData(Parcel in) {
         date = in.readString();
         value = in.readString();
     }

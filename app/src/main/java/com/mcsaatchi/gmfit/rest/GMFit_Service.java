@@ -42,7 +42,7 @@ public interface GMFit_Service {
             updateMetricsRequest);
 
     @GET("user/metrics/range")
-    Call<DefaultGetResponse> getPeriodicalChartData(@Header(Cons.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken, @Query("start_date") String
+    Call<ChartMetricBreakdownResponse> getPeriodicalChartData(@Header(Cons.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken, @Query("start_date") String
             start_date, @Query("end_date") String end_date, @Query("type") String type, @Query("monitored_metrics") String monitored_metrics);
 
     @POST("verify")

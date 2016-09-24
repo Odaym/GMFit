@@ -4,6 +4,7 @@ package com.mcsaatchi.gmfit.data_access;
 import android.content.SharedPreferences;
 
 import com.mcsaatchi.gmfit.rest.AuthenticationResponse;
+import com.mcsaatchi.gmfit.rest.ChartMetricBreakdownResponse;
 import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.rest.MealMetricsResponse;
 import com.mcsaatchi.gmfit.rest.MedicalConditionsResponse;
@@ -113,7 +114,7 @@ public class DataAccessHandler {
         ApiCallsHandler.getInstance().storeNewMeal(userAccessToken, meal_id, servingsAmount, when, callback);
     }
 
-    public void getPeriodicalChartData(String userAccessToken, String start_date, String end_date, String type, String monitored_metric, Callback<DefaultGetResponse> callback){
+    public void getPeriodicalChartData(String userAccessToken, String start_date, String end_date, String type, String monitored_metric, Callback<ChartMetricBreakdownResponse> callback){
         ApiCallsHandler.getInstance().getPeriodicalChartData(userAccessToken, start_date, end_date, type, monitored_metric, callback);
     }
 }
