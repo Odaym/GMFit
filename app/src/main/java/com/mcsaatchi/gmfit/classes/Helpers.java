@@ -11,7 +11,10 @@ import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
+import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponseChartData;
 
@@ -98,6 +101,11 @@ public class Helpers {
 
         BarData data = new BarData(xVals, dataSets);
 
+        /**
+         * If you would like to show values, use this formatter
+         */
+        data.setValueFormatter(new MyValueFormatter());
+
         chart.setScaleEnabled(false);
         chart.setDescription(null);
         chart.setDrawGridBackground(false);
@@ -158,5 +166,12 @@ public class Helpers {
                     }
                 });
         alertDialog.show();
+    }
+
+    public static class MyValueFormatter implements ValueFormatter {
+        @Override
+        public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
+            return Math.round(value)+"";
+        }
     }
 }

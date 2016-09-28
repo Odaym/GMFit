@@ -66,6 +66,7 @@ import org.joda.time.LocalDate;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -84,6 +85,9 @@ public class Nutrition_Fragment extends Fragment {
     private static final int ITEM_VIEWTYPE = 2;
     private static final int BARCODE_CAPTURE_RC = 773;
     private final LocalDate dt = new LocalDate();
+
+    private boolean setDrawChartValuesEnabled = false;
+
     @Bind(R.id.widgetsGridView)
     GridView widgetsGridView;
     @Bind(R.id.metricCounterTV)
@@ -144,13 +148,14 @@ public class Nutrition_Fragment extends Fragment {
     Button addNewChartBTN;
     @Bind(R.id.loadingProgressBar)
     ProgressBar loadingProgressBar;
+
     private UserMeals_RecyclerAdapter userMealsRecyclerAdapter;
     private ArrayList<NutritionWidget> widgetsMap;
     private SharedPreferences prefs;
-    private ArrayList<MealItem> finalBreakfastMeals;
-    private ArrayList<MealItem> finalLunchmeals;
-    private ArrayList<MealItem> finalDinnerMeals;
-    private ArrayList<MealItem> finalSnackMeals;
+    private ArrayList<MealItem> finalBreakfastMeals = new ArrayList<>();
+    private ArrayList<MealItem> finalLunchmeals = new ArrayList<>();
+    private ArrayList<MealItem> finalDinnerMeals = new ArrayList<>();
+    private ArrayList<MealItem> finalSnackMeals = new ArrayList<>();
 
     private ArrayList<NutritionWidget> finalWidgets;
     private ArrayList<DataChart> finalCharts;
@@ -363,8 +368,6 @@ public class Nutrition_Fragment extends Fragment {
                         /**
                          * Insert Breakfast meals
                          */
-                        finalBreakfastMeals = new ArrayList<>();
-
                         for (int i = 0; i < breakfastMeals.size(); i++) {
                             MealItem breakfastMeal = new MealItem();
                             breakfastMeal.setMeal_id(breakfastMeals.get(i).getId());
@@ -387,8 +390,6 @@ public class Nutrition_Fragment extends Fragment {
                         /**
                          * Insert Lunch meals
                          */
-                        finalLunchmeals = new ArrayList<>();
-
                         for (int i = 0; i < lunchMeals.size(); i++) {
                             MealItem lunchMeal = new MealItem();
                             lunchMeal.setMeal_id(lunchMeals.get(i).getId());
@@ -411,8 +412,6 @@ public class Nutrition_Fragment extends Fragment {
                         /**
                          * Insert Dinner meals
                          */
-                        finalDinnerMeals = new ArrayList<>();
-
                         for (int i = 0; i < dinnerMeals.size(); i++) {
                             MealItem dinnerMeal = new MealItem();
                             dinnerMeal.setType("Dinner");
@@ -435,8 +434,6 @@ public class Nutrition_Fragment extends Fragment {
                         /**
                          * Insert Snack meals
                          */
-                        finalSnackMeals = new ArrayList<>();
-
                         for (int i = 0; i < snackMeals.size(); i++) {
                             MealItem snackMeal = new MealItem();
                             snackMeal.setType("Snack");
@@ -696,7 +693,7 @@ public class Nutrition_Fragment extends Fragment {
     }
 
     private void addNewBarChart(final String chartTitle) {
-        final TextView dateTV_1, dateTV_2, dateTV_3, dateTV_4;
+        final TextView dateTV_1, dateTV_2, dateTV_3, dateTV_4, dateTV_5;
 
         final View barChartLayout = parentActivity.getLayoutInflater().inflate(R.layout.view_barchart_container, null);
 
@@ -704,14 +701,18 @@ public class Nutrition_Fragment extends Fragment {
         dateTV_2 = (TextView) barChartLayout.findViewById(R.id.dateTV_2);
         dateTV_3 = (TextView) barChartLayout.findViewById(R.id.dateTV_3);
         dateTV_4 = (TextView) barChartLayout.findViewById(R.id.dateTV_4);
+        dateTV_5 = (TextView) barChartLayout.findViewById(R.id.dateTV_5);
 
         TextView chartTitleTV = (TextView) barChartLayout.findViewById(R.id.chartTitleTV);
-        BarChart barChart = (BarChart) barChartLayout.findViewById(R.id.barChart);
+        final BarChart barChart = (BarChart) barChartLayout.findViewById(R.id.barChart);
+        Button showChartValuesBTN = (Button) barChartLayout.findViewById(R.id.showChartValuesBTN);
+
+        showChartValuesBTN.setBackgroundResource(R.drawable.ic_format_list_numbered_white_24dp);
 
         if (chartTitle != null)
             chartTitleTV.setText(chartTitle);
 
-        getDefaultChartMonthlyBreakdown(barChart, dateTV_1, dateTV_2, dateTV_3, dateTV_4, chartTitle);
+        getDefaultChartMonthlyBreakdown(barChart, dateTV_1, dateTV_2, dateTV_3, dateTV_4, dateTV_5, chartTitle);
 
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, getResources().getDimensionPixelSize(R
                 .dimen.chart_height_2));
@@ -727,6 +728,21 @@ public class Nutrition_Fragment extends Fragment {
             @Override
             public void onClick(View view) {
                 getSlugBreakdownForChart(chartTitle, chartTitle);
+            }
+        });
+
+        showChartValuesBTN.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (setDrawChartValuesEnabled) {
+                    barChart.getBarData().setDrawValues(true);
+                } else {
+                    barChart.getBarData().setDrawValues(false);
+                }
+
+                setDrawChartValuesEnabled = !setDrawChartValuesEnabled;
+
+                barChart.invalidate();
             }
         });
     }
@@ -774,7 +790,7 @@ public class Nutrition_Fragment extends Fragment {
         });
     }
 
-    private void getDefaultChartMonthlyBreakdown(final BarChart barchart, final TextView dateTV_1, final TextView dateTV_2, final TextView dateTV_3, final TextView dateTV_4, final String chart_slug) {
+    private void getDefaultChartMonthlyBreakdown(final BarChart barchart, final TextView dateTV_1, final TextView dateTV_2, final TextView dateTV_3, final TextView dateTV_4, final TextView dateTV_5, final String chart_slug) {
         final String todayDate;
         todayDate = dt.toString();
 
@@ -791,19 +807,30 @@ public class Nutrition_Fragment extends Fragment {
                                 newChartData.add(new AuthenticationResponseChartData(rawChartData.get(i).getDate(), rawChartData.get(i).getValue()));
                             }
 
+                            DateTime date;
+
+                            Collections.reverse(newChartData);
+
                             for (int i = 0; i < newChartData.size(); i++) {
+                                date = new DateTime(newChartData.get(i).getDate());
 
-                                if (i % 7 == 0) {
-                                    DateTime date = new DateTime(newChartData.get(i).getDate());
+                                int dayOfMonth = date.getDayOfMonth();
 
-                                    if (i == 7) {
-                                        dateTV_4.setText(date.monthOfYear().getAsText().substring(0, 3) + "-" + date.getDayOfMonth());
-                                    } else if (i == 14) {
-                                        dateTV_3.setText(date.monthOfYear().getAsText().substring(0, 3) + "-" + date.getDayOfMonth());
-                                    } else if (i == 21) {
+                                if (i == 0)
+                                    dateTV_1.setText(date.monthOfYear().getAsText().substring(0, 3) + "-" + date.getDayOfMonth());
+
+                                if (dayOfMonth % 7 == 0) {
+
+                                    if (dayOfMonth == 7) {
                                         dateTV_2.setText(date.monthOfYear().getAsText().substring(0, 3) + "-" + date.getDayOfMonth());
-                                    } else if (i == 28) {
-                                        dateTV_1.setText(date.monthOfYear().getAsText().substring(0, 3) + "-" + date.getDayOfMonth());
+                                    } else if (dayOfMonth == 14) {
+                                        dateTV_3.setText(date.monthOfYear().getAsText().substring(0, 3) + "-" + date.getDayOfMonth());
+                                    } else if (dayOfMonth == 21) {
+                                        dateTV_4.setText(date.monthOfYear().getAsText().substring(0, 3) + "-" + date.getDayOfMonth());
+                                    }
+
+                                    if (i == newChartData.size() - 1) {
+                                        dateTV_5.setText(date.monthOfYear().getAsText().substring(0, 3) + "-" + date.getDayOfMonth());
                                     }
                                 }
                             }

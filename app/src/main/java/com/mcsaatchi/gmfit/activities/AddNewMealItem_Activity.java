@@ -9,7 +9,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
@@ -65,7 +64,7 @@ public class AddNewMealItem_Activity extends Base_Activity {
 
     private String mealType;
 
-    private List<MealItem> mealsList = new ArrayList<>();
+    private List<MealItem> mealItems = new ArrayList<>();
 
     private SimpleSectioned_ListAdapter simpleSectionedListAdapter;
 
@@ -97,10 +96,9 @@ public class AddNewMealItem_Activity extends Base_Activity {
         mealItemsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                Log.d(TAG, "onItemClick: Selected " + mealsList.get(position).getName() + " at index " + position);
 
                 Intent intent = new Intent(AddNewMealItem_Activity.this, SpecifyMealAmount_Activity.class);
-                intent.putExtra(Cons.EXTRAS_MEAL_OBJECT_DETAILS, mealsList.get(position));
+                intent.putExtra(Cons.EXTRAS_MEAL_OBJECT_DETAILS, mealItems.get(position));
                 startActivityForResult(intent, MEAL_AMOUNT_SPECIFIED);
             }
         });
@@ -137,7 +135,7 @@ public class AddNewMealItem_Activity extends Base_Activity {
                     searchIconIV.setImageResource(R.drawable.ic_search_white_24dp);
                     searchIconIV.setOnClickListener(null);
 
-                    initMealsList(mealsList);
+                    initMealsList(mealItems);
                 } else if (charSequence.toString().length() > 2) {
 
                     pb_loading_indicator.setVisibility(View.VISIBLE);
@@ -181,6 +179,8 @@ public class AddNewMealItem_Activity extends Base_Activity {
 
                                         mealsReturned.add(mealItem);
                                     }
+
+                                    mealItems = mealsReturned;
 
                                     initMealsList(mealsReturned);
 
@@ -254,7 +254,7 @@ public class AddNewMealItem_Activity extends Base_Activity {
                         recentlyAddedMealItem.setName("Recently Added");
                         recentlyAddedMealItem.setSectionType(1);
 
-                        mealsList.add(recentlyAddedMealItem);
+                        mealItems.add(recentlyAddedMealItem);
 
                         for (int i = 0; i < recentMealsFromAPI.size(); i++) {
                             MealItem item = new MealItem();
@@ -264,10 +264,10 @@ public class AddNewMealItem_Activity extends Base_Activity {
                             item.setMeasurementUnit(recentMealsFromAPI.get(i).getMeasurementUnit());
                             item.setName(recentMealsFromAPI.get(i).getName());
 
-                            mealsList.add(item);
+                            mealItems.add(item);
                         }
 
-                        initMealsList(mealsList);
+                        initMealsList(mealItems);
                     }
 
                     @Override
