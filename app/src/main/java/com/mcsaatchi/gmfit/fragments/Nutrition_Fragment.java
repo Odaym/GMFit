@@ -791,21 +791,19 @@ public class Nutrition_Fragment extends Fragment {
                                 newChartData.add(new AuthenticationResponseChartData(rawChartData.get(i).getDate(), rawChartData.get(i).getValue()));
                             }
 
-                            Log.d(TAG, "onResponse: newchartdata size : " + newChartData.size());
-
                             for (int i = 0; i < newChartData.size(); i++) {
 
                                 if (i % 7 == 0) {
                                     DateTime date = new DateTime(newChartData.get(i).getDate());
 
                                     if (i == 7) {
-                                        dateTV_1.setText(date.monthOfYear().getAsText().substring(0, 3) + "-" + date.getDayOfMonth());
-                                    } else if (i == 14) {
-                                        dateTV_2.setText(date.monthOfYear().getAsText().substring(0, 3) + "-" + date.getDayOfMonth());
-                                    } else if (i == 21) {
-                                        dateTV_3.setText(date.monthOfYear().getAsText().substring(0, 3) + "-" + date.getDayOfMonth());
-                                    } else if (i == 28) {
                                         dateTV_4.setText(date.monthOfYear().getAsText().substring(0, 3) + "-" + date.getDayOfMonth());
+                                    } else if (i == 14) {
+                                        dateTV_3.setText(date.monthOfYear().getAsText().substring(0, 3) + "-" + date.getDayOfMonth());
+                                    } else if (i == 21) {
+                                        dateTV_2.setText(date.monthOfYear().getAsText().substring(0, 3) + "-" + date.getDayOfMonth());
+                                    } else if (i == 28) {
+                                        dateTV_1.setText(date.monthOfYear().getAsText().substring(0, 3) + "-" + date.getDayOfMonth());
                                     }
                                 }
                             }

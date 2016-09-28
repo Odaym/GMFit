@@ -52,6 +52,7 @@ import com.squareup.otto.Subscribe;
 
 import net.danlew.android.joda.JodaTimeAndroid;
 
+import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 
 import java.sql.SQLException;
@@ -204,7 +205,14 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
     }
 
     public void addNewBarChart(final String chartTitle, final String chartType) {
+        final TextView dateTV_1, dateTV_2, dateTV_3, dateTV_4;
+
         final View barChartLayout = getActivity().getLayoutInflater().inflate(R.layout.view_barchart_container, null);
+
+        dateTV_1 = (TextView) barChartLayout.findViewById(R.id.dateTV_1);
+        dateTV_2 = (TextView) barChartLayout.findViewById(R.id.dateTV_2);
+        dateTV_3 = (TextView) barChartLayout.findViewById(R.id.dateTV_3);
+        dateTV_4 = (TextView) barChartLayout.findViewById(R.id.dateTV_4);
 
         final TextView chartTitleTV_NEW_CHART = (TextView) barChartLayout.findViewById(R.id.chartTitleTV);
         final BarChart barChart = (BarChart) barChartLayout.findViewById(R.id.barChart);
@@ -219,17 +227,17 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
         switch (chartType) {
             case "steps-count":
                 if (!chartsMap.get(0).getData().isEmpty()) {
-                    getDefaultChartMonthlyBreakdown(barChart, "steps-count");
+                    getDefaultChartMonthlyBreakdown(barChart, dateTV_1, dateTV_2, dateTV_3, dateTV_4, "steps-count");
                 }
                 break;
             case "active-calories":
                 if (!chartsMap.get(3).getData().isEmpty()) {
-                    getDefaultChartMonthlyBreakdown(barChart, "active-calories");
+                    getDefaultChartMonthlyBreakdown(barChart, dateTV_1, dateTV_2, dateTV_3, dateTV_4, "active-calories");
                 }
                 break;
             case "distance-traveled":
                 if (!chartsMap.get(4).getData().isEmpty()) {
-                    getDefaultChartMonthlyBreakdown(barChart, "distance-traveled");
+                    getDefaultChartMonthlyBreakdown(barChart, dateTV_1, dateTV_2, dateTV_3, dateTV_4, "distance-traveled");
                 }
                 break;
         }
@@ -252,7 +260,7 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
         });
     }
 
-    private void getDefaultChartMonthlyBreakdown(final BarChart barchart, final String chart_slug) {
+    private void getDefaultChartMonthlyBreakdown(final BarChart barchart, final TextView dateTV_1, final TextView dateTV_2, final TextView dateTV_3, final TextView dateTV_4, final String chart_slug) {
         final String todayDate;
         todayDate = dt.toString();
 
@@ -268,6 +276,23 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
 
                                 for (int i = 0; i < rawChartData.size(); i++) {
                                     newChartData.add(new AuthenticationResponseChartData(rawChartData.get(i).getDate(), rawChartData.get(i).getValue()));
+                                }
+
+                                for (int i = 0; i < newChartData.size(); i++) {
+
+                                    if (i % 7 == 0) {
+                                        DateTime date = new DateTime(newChartData.get(i).getDate());
+
+                                        if (i == 7) {
+                                            dateTV_4.setText(date.monthOfYear().getAsText().substring(0, 3) + "-" + date.getDayOfMonth());
+                                        } else if (i == 14) {
+                                            dateTV_3.setText(date.monthOfYear().getAsText().substring(0, 3) + "-" + date.getDayOfMonth());
+                                        } else if (i == 21) {
+                                            dateTV_2.setText(date.monthOfYear().getAsText().substring(0, 3) + "-" + date.getDayOfMonth());
+                                        } else if (i == 28) {
+                                            dateTV_1.setText(date.monthOfYear().getAsText().substring(0, 3) + "-" + date.getDayOfMonth());
+                                        }
+                                    }
                                 }
 
                                 Helpers.setBarChartData(barchart, newChartData);

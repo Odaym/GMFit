@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 
 import com.andreabaccega.widget.FormEditText;
 import com.github.mikephil.charting.charts.BarChart;
@@ -82,10 +81,7 @@ public class Helpers {
         for (int i = 0; i < chartData.size(); i++) {
             xVals.add("");
 
-            Log.d("TAG", "setBarChartData: " + chartData.get(i).getValue());
-
-
-            BarEntry val1 = new BarEntry(Float.parseFloat(chartData.get(i).getValue()), k);
+            BarEntry val1 = new BarEntry((int) Float.parseFloat(chartData.get(i).getValue()), k);
             valsMetrics.add(val1);
 
             k++;
