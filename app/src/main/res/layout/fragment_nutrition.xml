@@ -1,4 +1,3 @@
-
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -10,6 +9,14 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/metric_header_section_height"
         android:background="@android:color/transparent">
+
+        <ProgressBar
+            android:id="@+id/loadingProgressBar"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:indeterminate="true"/>
 
         <ProgressBar
             android:id="@+id/metricProgressBar"
@@ -78,7 +85,6 @@
         <!-- MEAL BARS START HERE -->
         <!---->
         <LinearLayout
-            android:id="@+id/cards_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:animateLayoutChanges="true"
@@ -349,6 +355,13 @@
         <!---->
         <!-- MEAL BARS END HERE -->
         <!---->
+
+        <LinearLayout
+            android:id="@+id/cards_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:animateLayoutChanges="true"
+            android:orientation="vertical"/>
 
         <Button
             android:id="@+id/addChartBTN"

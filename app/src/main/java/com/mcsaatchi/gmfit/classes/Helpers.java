@@ -5,10 +5,10 @@ import android.content.DialogInterface;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 
 import com.andreabaccega.widget.FormEditText;
 import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
@@ -80,10 +80,10 @@ public class Helpers {
         int k = 0;
 
         for (int i = 0; i < chartData.size(); i++) {
-            LocalDate date = LocalDate.parse(chartData.get(i).getDate());
-            int dow = date.getDayOfWeek();
+            xVals.add("");
 
-            xVals.add(getDayofWeekString(dow));
+            Log.d("TAG", "setBarChartData: " + chartData.get(i).getValue());
+
 
             BarEntry val1 = new BarEntry(Float.parseFloat(chartData.get(i).getValue()), k);
             valsMetrics.add(val1);
@@ -92,7 +92,7 @@ public class Helpers {
         }
 
         BarDataSet set1;
-        set1 = new BarDataSet(valsMetrics, "");
+        set1 = new BarDataSet(valsMetrics, null);
         set1.setColor(R.color.fitness_pink);
         set1.setHighLightAlpha(1);
         set1.setValueTextSize(7f);
@@ -112,8 +112,9 @@ public class Helpers {
 
         chart.getXAxis().setDrawGridLines(false);
 
-        chart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
+        chart.getXAxis().setEnabled(false);
 
+        chart.getAxisLeft().setAxisMaxValue(findLargestNumber(chartData));
         chart.getAxisLeft().setShowOnlyMinMax(true);
         chart.getAxisRight().setShowOnlyMinMax(true);
 
@@ -127,25 +128,19 @@ public class Helpers {
         chart.invalidate();
     }
 
-    private static String getDayofWeekString(int dayOfWeek) {
-        switch (dayOfWeek) {
-            case 1:
-                return "Mon";
-            case 2:
-                return "Tue";
-            case 3:
-                return "Wed";
-            case 4:
-                return "Thu";
-            case 5:
-                return "Fri";
-            case 6:
-                return "Sat";
-            case 7:
-                return "Sun";
+    private static int findLargestNumber(List<AuthenticationResponseChartData> rawChartData) {
+        int smallest = (int) Double.parseDouble(rawChartData.get(0).getValue());
+        int largetst = (int) Double.parseDouble(rawChartData.get(0).getValue());
+
+        for (int i = 1; i < rawChartData.size(); i++) {
+            int currentValue = (int) Double.parseDouble(rawChartData.get(i).getValue());
+            if (currentValue > largetst)
+                largetst = currentValue;
+            else if (currentValue < smallest)
+                smallest = currentValue;
         }
 
-        return "";
+        return largetst;
     }
 
     public static boolean isInternetAvailable(Context context) {

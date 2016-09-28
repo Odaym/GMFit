@@ -9,6 +9,7 @@ import com.mcsaatchi.gmfit.rest.ChartMetricBreakdownResponse;
 import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.rest.MealMetricsResponse;
 import com.mcsaatchi.gmfit.rest.MedicalConditionsResponse;
+import com.mcsaatchi.gmfit.rest.RecentMealsResponse;
 import com.mcsaatchi.gmfit.rest.RestClient;
 import com.mcsaatchi.gmfit.rest.SearchMealItemResponse;
 import com.mcsaatchi.gmfit.rest.SlugBreakdownResponse;
@@ -307,6 +308,22 @@ public class ApiCallsHandler {
         });
     }
 
+    void updateUserCharts(String userAccessToken, int[] chartIds, int[] chartPositions, final Callback<DefaultGetResponse> callback) {
+        Call<DefaultGetResponse> apiCall = new RestClient().getGMFitService().updateUserCharts(userAccessToken, new UpdateChartsRequest(chartIds, chartPositions));
+
+        apiCall.enqueue(new Callback<DefaultGetResponse>() {
+            @Override
+            public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
+                callback.onResponse(call, response);
+            }
+
+            @Override
+            public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+                callback.onFailure(call, t);
+            }
+        });
+    }
+
     void getUserAddedMeals(String userAccessToken, final Callback<UserMealsResponse> callback) {
         Call<UserMealsResponse> apiCall = new RestClient().getGMFitService().getUserAddedMeals(userAccessToken);
 
@@ -366,6 +383,22 @@ public class ApiCallsHandler {
 
             @Override
             public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+                callback.onFailure(call, t);
+            }
+        });
+    }
+
+    void getRecentMeals(String userAccessToken, String fullUrl, final Callback<RecentMealsResponse> callback) {
+        Call<RecentMealsResponse> apiCall = new RestClient().getGMFitService().getRecentMeals(userAccessToken, fullUrl);
+
+        apiCall.enqueue(new Callback<RecentMealsResponse>() {
+            @Override
+            public void onResponse(Call<RecentMealsResponse> call, Response<RecentMealsResponse> response) {
+                callback.onResponse(call, response);
+            }
+
+            @Override
+            public void onFailure(Call<RecentMealsResponse> call, Throwable t) {
                 callback.onFailure(call, t);
             }
         });
@@ -466,7 +499,6 @@ public class ApiCallsHandler {
         }
     }
 
-
     public class VerificationRequest {
         final String code;
 
@@ -481,6 +513,16 @@ public class ApiCallsHandler {
 
         UpdateWidgetsRequest(int[] widgets, int[] positions) {
             this.widgets = widgets;
+            this.positions = positions;
+        }
+    }
+
+    public class UpdateChartsRequest {
+        final int[] charts;
+        final int[] positions;
+
+        UpdateChartsRequest(int[] charts, int[] positions) {
+            this.charts = charts;
             this.positions = positions;
         }
     }

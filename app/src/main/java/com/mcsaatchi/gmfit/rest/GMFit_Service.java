@@ -68,6 +68,10 @@ public interface GMFit_Service {
     @POST("user/widgets/update")
     Call<DefaultGetResponse> updateUserWidgets(@Header(Cons.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken,
                                                @Body ApiCallsHandler.UpdateWidgetsRequest updateWidgetsRequest);
+
+    @POST("user/charts/update")
+    Call<DefaultGetResponse> updateUserCharts(@Header(Cons.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken,
+                                               @Body ApiCallsHandler.UpdateChartsRequest updateChartsRequest);
     @GET("user/meals")
     Call<UserMealsResponse> getUserAddedMeals(@Header(Cons.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken);
 
@@ -80,4 +84,6 @@ public interface GMFit_Service {
     @POST("user/meals/store")
     Call<DefaultGetResponse> storeNewMeal(@Header(Cons.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken, @Body ApiCallsHandler.StoreNewMealRequest storeNewMealRequest);
 
+    @GET
+    Call<RecentMealsResponse> getRecentMeals(@Header(Cons.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken, @Url String fullUrl);
 }

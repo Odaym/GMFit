@@ -15,7 +15,9 @@ import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.classes.Cons;
 import com.mcsaatchi.gmfit.rest.SlugBreakdownResponseMonthly;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -50,7 +52,7 @@ public class SlugBreakdown_Fragment_Monthly extends Fragment {
             measurementUnitForMetric = fragmentBundle.getString(Cons.BUNDLE_SLUG_BREAKDOWN_MEASUREMENT_UNIT, "");
 
             float slugBreakdownYearlyTotal =  fragmentBundle.getFloat(Cons.BUNDLE_SLUG_BREAKDOWN_YEARLY_TOTAL, 0);
-            allTimeValueTV.setText((int) Double.parseDouble(String.valueOf(slugBreakdownYearlyTotal)) + " " + measurementUnitForMetric);
+            allTimeValueTV.setText(NumberFormat.getNumberInstance(Locale.US).format((int) Double.parseDouble(String.valueOf(slugBreakdownYearlyTotal))) + " " + measurementUnitForMetric);
 
             hookupListWithItems(slugBreakdownData, measurementUnitForMetric);
         }
@@ -111,7 +113,7 @@ public class SlugBreakdown_Fragment_Monthly extends Fragment {
             }
 
             holder.slugDateTV.setText(getItem(position).getDate());
-            holder.slugTotalTV.setText((int) Double.parseDouble(getItem(position).getTotal()) + " " + measurementUnit);
+            holder.slugTotalTV.setText(NumberFormat.getNumberInstance(Locale.US).format((int) Double.parseDouble(getItem(position).getTotal())) + " " + measurementUnit);
 
             return convertView;
         }

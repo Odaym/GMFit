@@ -42,6 +42,7 @@ public class Cons {
 
     public static final String EXTRAS_FITNESS_WIDGETS_ORDER_ARRAY = "fitness_widgets_order_array";
     public static final String EXTRAS_FITNESS_CHART_DELETED = "fitness_chart_deleted";
+    public static final String EXTRAS_NUTRITION_CHART_DELETED = "nutrition_chart_deleted";
     public static final String EXTRAS_FITNESS_WIDGETS_ORDER_ARRAY_CHANGED = "fitness_widgets_order_array_changed";
     public static final String EXTRAS_NUTRITION_WIDGETS_ORDER_ARRAY = "nutrition_widgets_order_array";
     public static final String EXTRAS_NUTRITION_WIDGETS_ORDER_ARRAY_CHANGED = "nutrition_widgets_order_array_changed";
@@ -61,6 +62,7 @@ public class Cons {
     public static final String BUNDLE_ACTIVITY_BACK_BUTTON_ENABLED = "activity_back_button_enabled";
     public static final String BUNDLE_FITNESS_WIDGETS_MAP = "fitness_widgets_map";
     public static final String BUNDLE_NUTRITION_WIDGETS_MAP = "nutrition_widgets_map";
+    public static final String BUNDLE_NUTRITION_CHARTS_MAP = "nutrition_charts_map";
 
     public static final String BUNDLE_SLUG_BREAKDOWN_DATA = "slug_breakdown_data";
     public static final String BUNDLE_SLUG_BREAKDOWN_DATA_DAILY = "slug_breakdown_data_daily";
@@ -79,7 +81,8 @@ public class Cons {
     public static final String EVENT_DISTANCE_COUNTER_INCREMENTED = "distance_counter_incremented";
     public static final String EVENT_FINISHED_SETTING_UP_PROFILE_SUCCESSFULLY = "finished_setting_up_profile_successfully";
 
-    public static final String EVENT_CHART_ADDED_FROM_SETTINGS = "event_chart_added_from_settings";
+    public static final String EVENT_NUTRITION_CHART_ADDED_FROM_SETTINGS = "event_nutrition_chart_added_from_settings";
+    public static final String EVENT_FITNESS_CHART_ADDED_FROM_SETTINGS = "event_fitness_chart_added_from_settings";
     public static final String EVENT_CHART_METRICS_RECEIVED = "event_chart_metrics_received";
     public static final String EVENT_SIGNNED_UP_SUCCESSFULLY_CLOSE_LOGIN_ACTIVITY = "signned_up_successfully_close_login_activity";
 

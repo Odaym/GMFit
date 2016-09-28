@@ -189,6 +189,7 @@
     <!-- ADD NEW CHART -->
     <string name="add_new_chart_activity_title">Add New Chart</string>
     <string name="add_new_chart_prompt">Add a chart from the list below</string>
+    <string name="duplicate_chart_error">You may only have one type of chart at a time</string>
 
     <!-- ADD NEW MEAL ITEM ACTIVITY -->
     <string name="add_new_meal_item_activity_title">Add</string>

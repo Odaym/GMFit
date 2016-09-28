@@ -10,13 +10,10 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
 
-import com.j256.ormlite.dao.RuntimeExceptionDao;
-import com.j256.ormlite.stmt.QueryBuilder;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.classes.Cons;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
@@ -25,16 +22,17 @@ import com.mcsaatchi.gmfit.classes.SlidingTabLayout;
 import com.mcsaatchi.gmfit.fragments.SlugBreakdown_Fragment_Daily;
 import com.mcsaatchi.gmfit.fragments.SlugBreakdown_Fragment_Monthly;
 import com.mcsaatchi.gmfit.fragments.SlugBreakdown_Fragment_Yearly;
-import com.mcsaatchi.gmfit.models.DataChart;
 import com.mcsaatchi.gmfit.rest.SlugBreakdownResponseInnerData;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class SlugBreakdown_Activity extends Base_Activity {
+    private static final int DAY_BREAKDOWN = 0;
+    private static final int MONTH_BREAKDOWN = 1;
+    private static final int YEAR_BREAKDOWN = 2;
     @Bind(R.id.pager)
     ViewPager pager;
     @Bind(R.id.tabs)
@@ -43,10 +41,6 @@ public class SlugBreakdown_Activity extends Base_Activity {
     Toolbar toolbar;
     @Bind(R.id.parentLayoutToCustomize)
     LinearLayout parentLayoutToCustomize;
-
-    private RuntimeExceptionDao<DataChart, Integer> dataChartDAO;
-    private QueryBuilder<DataChart, Integer> dataChartQB;
-
     private String typeOfFragmentToCustomizeFor;
     private SlugBreakdownResponseInnerData slugBreakdownData;
     private String chartTitle;
@@ -65,9 +59,6 @@ public class SlugBreakdown_Activity extends Base_Activity {
         ButterKnife.bind(this);
 
         Bundle intentExtras = getIntent().getExtras();
-
-        dataChartDAO = getDBHelper().getDataChartDAO();
-        dataChartQB = dataChartDAO.queryBuilder();
 
         //Grab the Fragment type from one of the three Fragments (Fitness, Nutrition, Health)
         if (intentExtras != null) {
@@ -99,7 +90,7 @@ public class SlugBreakdown_Activity extends Base_Activity {
         tabs.setSelectedIndicatorColors(getResources().getColor(android.R.color.white));
 
         pager.setAdapter(fragmentsPagerAdapter);
-        pager.setCurrentItem(0);
+        pager.setCurrentItem(DAY_BREAKDOWN);
 
         tabs.setViewPager(pager);
     }
@@ -115,20 +106,20 @@ public class SlugBreakdown_Activity extends Base_Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.deleteChartBTN:
-
                 new AlertDialog.Builder(this)
                         .setTitle(R.string.delete_chart_dialog_title)
                         .setMessage(R.string.delete_chart_dialog_message)
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                List<DataChart> chartToBeDeleted = dataChartDAO.queryForEq("name", chartTitle);
 
-                                Log.d("charts", "onClick: Charts found are : " + chartToBeDeleted.size());
-
-                                for (int i = 0; i < chartToBeDeleted.size(); i++)
-                                    dataChartDAO.delete(chartToBeDeleted);
-
-                                EventBus_Singleton.getInstance().post(new EventBus_Poster(Cons.EXTRAS_FITNESS_CHART_DELETED));
+                                switch (typeOfFragmentToCustomizeFor) {
+                                    case Cons.EXTRAS_FITNESS_FRAGMENT:
+                                        EventBus_Singleton.getInstance().post(new EventBus_Poster(Cons.EXTRAS_FITNESS_CHART_DELETED));
+                                        break;
+                                    case Cons.EXTRAS_NUTRITION_FRAGMENT:
+                                        EventBus_Singleton.getInstance().post(new EventBus_Poster(Cons.EXTRAS_NUTRITION_CHART_DELETED));
+                                        break;
+                                }
 
                                 finish();
                             }
@@ -152,7 +143,7 @@ public class SlugBreakdown_Activity extends Base_Activity {
         private String chartType;
         private String measurementUnit;
 
-        public SlugBreakdownViewPager_Adapter(FragmentManager fm, String[] tabTitles, SlugBreakdownResponseInnerData slugBreakdownData, String chartType) {
+        SlugBreakdownViewPager_Adapter(FragmentManager fm, String[] tabTitles, SlugBreakdownResponseInnerData slugBreakdownData, String chartType) {
             super(fm);
 
             this.tabTitles = tabTitles;
@@ -170,6 +161,8 @@ public class SlugBreakdown_Activity extends Base_Activity {
                 case "active-calories":
                     measurementUnit = "kcal";
                     break;
+                default:
+                    measurementUnit = "units";
             }
         }
 
@@ -186,21 +179,21 @@ public class SlugBreakdown_Activity extends Base_Activity {
                 slugBreakdownYearlyTotal += Float.parseFloat(slugBreakdownData.getYearly().get(i).getTotal());
 
             switch (position) {
-                case 0:
+                case DAY_BREAKDOWN:
                     slugBreakdownFragment = new SlugBreakdown_Fragment_Daily();
                     fragmentArguments.putFloat(Cons.BUNDLE_SLUG_BREAKDOWN_YEARLY_TOTAL, slugBreakdownYearlyTotal);
                     fragmentArguments.putParcelableArrayList(Cons.BUNDLE_SLUG_BREAKDOWN_DATA_DAILY, (ArrayList<? extends Parcelable>) slugBreakdownData.getDaily());
                     fragmentArguments.putString(Cons.BUNDLE_SLUG_BREAKDOWN_MEASUREMENT_UNIT, measurementUnit);
                     slugBreakdownFragment.setArguments(fragmentArguments);
                     return slugBreakdownFragment;
-                case 1:
+                case MONTH_BREAKDOWN:
                     slugBreakdownFragment = new SlugBreakdown_Fragment_Monthly();
                     fragmentArguments.putFloat(Cons.BUNDLE_SLUG_BREAKDOWN_YEARLY_TOTAL, slugBreakdownYearlyTotal);
                     fragmentArguments.putParcelableArrayList(Cons.BUNDLE_SLUG_BREAKDOWN_DATA_MONTHLY, (ArrayList<? extends Parcelable>) slugBreakdownData.getMonthly());
                     fragmentArguments.putString(Cons.BUNDLE_SLUG_BREAKDOWN_MEASUREMENT_UNIT, measurementUnit);
                     slugBreakdownFragment.setArguments(fragmentArguments);
                     return slugBreakdownFragment;
-                case 2:
+                case YEAR_BREAKDOWN:
                     slugBreakdownFragment = new SlugBreakdown_Fragment_Yearly();
                     fragmentArguments.putFloat(Cons.BUNDLE_SLUG_BREAKDOWN_YEARLY_TOTAL, slugBreakdownYearlyTotal);
                     fragmentArguments.putParcelableArrayList(Cons.BUNDLE_SLUG_BREAKDOWN_DATA_YEARLY, (ArrayList<? extends Parcelable>) slugBreakdownData.getYearly());

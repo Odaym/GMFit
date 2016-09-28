@@ -26,14 +26,4 @@
         dslv:max_drag_scroll_speed="0.7"
         dslv:slide_shuffle_speed="0.1"/>
 
-    <Button
-        android:id="@+id/addChartBTN"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/default_margin_4"
-        android:layout_marginStart="@dimen/default_margin_4"
-        android:layout_marginTop="@dimen/default_margin_4"
-        android:background="@color/fitness_dark_blue"
-        android:text="ADD NEW CHART"
-        android:textColor="@android:color/white"/>
 </LinearLayout>

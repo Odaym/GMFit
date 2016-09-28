@@ -7,6 +7,9 @@ public class UserMealsResponseDinner {
     @SerializedName("id")
     @Expose
     private Integer id;
+    @SerializedName("instance_id")
+    @Expose
+    private Integer instance_id;
     @SerializedName("name")
     @Expose
     private String name;
@@ -22,6 +25,24 @@ public class UserMealsResponseDinner {
     @SerializedName("total_calories")
     @Expose
     private Integer totalCalories;
+
+    /**
+     *
+     * @return
+     * The instance_id
+     */
+    public Integer getInstance_id() {
+        return instance_id;
+    }
+
+    /**
+     *
+     * @param instance_id
+     * The id
+     */
+    public void setInstance_id(Integer instance_id) {
+        this.instance_id = instance_id;
+    }
 
     /**
      *

@@ -8,6 +8,7 @@ import com.mcsaatchi.gmfit.rest.ChartMetricBreakdownResponse;
 import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.rest.MealMetricsResponse;
 import com.mcsaatchi.gmfit.rest.MedicalConditionsResponse;
+import com.mcsaatchi.gmfit.rest.RecentMealsResponse;
 import com.mcsaatchi.gmfit.rest.SearchMealItemResponse;
 import com.mcsaatchi.gmfit.rest.SlugBreakdownResponse;
 import com.mcsaatchi.gmfit.rest.UiResponse;
@@ -32,7 +33,7 @@ public class DataAccessHandler {
         return dataAccessHandler;
     }
 
-    public static void findMeals(String userAccessToken, String mealName, Callback<SearchMealItemResponse> callback){
+    public static void findMeals(String userAccessToken, String mealName, Callback<SearchMealItemResponse> callback) {
         ApiCallsHandler.getInstance().findMeals(userAccessToken, mealName, callback);
     }
 
@@ -86,35 +87,43 @@ public class DataAccessHandler {
         ApiCallsHandler.getInstance().finalizeResetPassword(resetPasswordToken, newPassword, callback);
     }
 
-    public void getMealMetrics(String userAccessToken, String fullUrl, Callback<MealMetricsResponse> callback){
+    public void getMealMetrics(String userAccessToken, String fullUrl, Callback<MealMetricsResponse> callback) {
         ApiCallsHandler.getInstance().getMealMetrics(userAccessToken, fullUrl, callback);
     }
 
-    public void verifyUser(String userAccessToken, String verificationCode, Callback<DefaultGetResponse> callback){
+    public void verifyUser(String userAccessToken, String verificationCode, Callback<DefaultGetResponse> callback) {
         ApiCallsHandler.getInstance().verifyUser(userAccessToken, verificationCode, callback);
     }
 
-    public void updateUserWidgets(String userAccessToken, int[] widgetIds, int[] widgetPositions, Callback<DefaultGetResponse> callback){
+    public void updateUserWidgets(String userAccessToken, int[] widgetIds, int[] widgetPositions, Callback<DefaultGetResponse> callback) {
         ApiCallsHandler.getInstance().updateUserWidgets(userAccessToken, widgetIds, widgetPositions, callback);
     }
 
-    public void getUserAddedMeals(String userAccessToken, Callback<UserMealsResponse> callback){
+    public void updateUserCharts(String userAccessToken, int[] chartIds, int[] chartPositions, Callback<DefaultGetResponse> callback) {
+        ApiCallsHandler.getInstance().updateUserCharts(userAccessToken, chartIds, chartPositions, callback);
+    }
+
+    public void getUserAddedMeals(String userAccessToken, Callback<UserMealsResponse> callback) {
         ApiCallsHandler.getInstance().getUserAddedMeals(userAccessToken, callback);
     }
 
-    public void getUserPolicy(String userAccessToken, Callback<UserPolicyResponse> callback){
+    public void getUserPolicy(String userAccessToken, Callback<UserPolicyResponse> callback) {
         ApiCallsHandler.getInstance().getUserPolicy(userAccessToken, callback);
     }
 
-    public void registerUserFacebook(String facebookAccessToken, Callback<AuthenticationResponse> callback){
+    public void registerUserFacebook(String facebookAccessToken, Callback<AuthenticationResponse> callback) {
         ApiCallsHandler.getInstance().registerUserFacebook(facebookAccessToken, callback);
     }
 
-    public void storeNewMeal(String userAccessToken, int meal_id, int servingsAmount, String when, Callback<DefaultGetResponse> callback){
+    public void storeNewMeal(String userAccessToken, int meal_id, int servingsAmount, String when, Callback<DefaultGetResponse> callback) {
         ApiCallsHandler.getInstance().storeNewMeal(userAccessToken, meal_id, servingsAmount, when, callback);
     }
 
-    public void getPeriodicalChartData(String userAccessToken, String start_date, String end_date, String type, String monitored_metric, Callback<ChartMetricBreakdownResponse> callback){
+    public void getRecentMeals(String userAccessToken, String fullUrl, Callback<RecentMealsResponse> callback) {
+        ApiCallsHandler.getInstance().getRecentMeals(userAccessToken, fullUrl, callback);
+    }
+
+    public void getPeriodicalChartData(String userAccessToken, String start_date, String end_date, String type, String monitored_metric, Callback<ChartMetricBreakdownResponse> callback) {
         ApiCallsHandler.getInstance().getPeriodicalChartData(userAccessToken, start_date, end_date, type, monitored_metric, callback);
     }
 }

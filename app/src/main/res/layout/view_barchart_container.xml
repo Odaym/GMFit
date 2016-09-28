@@ -8,7 +8,8 @@
     <RelativeLayout android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
-        <TextView android:id="@+id/chartTitleTV" android:layout_width="match_parent"
+        <TextView android:id="@+id/chartTitleTV"
+                  android:layout_width="match_parent"
                   android:layout_height="@dimen/chart_title_headline_bar_height"
                   android:background="@color/fitness_pink"
                   android:gravity="center_vertical"
@@ -17,58 +18,50 @@
                   android:textAppearance="?android:textAppearanceMedium"
                   android:textColor="@android:color/white"/>
 
-        <LinearLayout
-            android:id="@+id/periodicalBreakdownLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/chartTitleTV"
-            android:orientation="horizontal">
-
-            <Button android:id="@+id/oneDayBTN"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="1D"/>
-
-            <Button android:id="@+id/oneWeekBTN"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="1W"/>
-
-            <Button android:id="@+id/oneMonthBTN"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="1M"/>
-
-            <Button android:id="@+id/threeMonthsBTN"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="3M"/>
-
-            <Button android:id="@+id/sixMonthsBTN"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="6M"/>
-
-            <Button android:id="@+id/oneYearBTN"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="1Y"/>
-
-        </LinearLayout>
-
         <com.github.mikephil.charting.charts.BarChart
             android:id="@+id/barChart"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@id/periodicalBreakdownLayout"
+            android:layout_height="@dimen/chart_height"
+            android:layout_below="@id/chartTitleTV"
             android:layout_marginBottom="@dimen/default_margin_1"
             android:layout_marginTop="@dimen/default_margin_1"/>
+
+        <LinearLayout android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:layout_below="@id/barChart"
+                      android:gravity="center_horizontal"
+                      android:orientation="horizontal"
+                      android:paddingEnd="@dimen/activity_vertical_margin"
+                      android:paddingStart="@dimen/activity_vertical_margin">
+
+            <TextView
+                android:id="@+id/dateTV_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"/>
+
+            <TextView
+                android:id="@+id/dateTV_2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"/>
+
+            <TextView
+                android:id="@+id/dateTV_3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"/>
+
+            <TextView
+                android:id="@+id/dateTV_4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal"/>
+        </LinearLayout>
 
     </RelativeLayout>
 </android.support.v7.widget.CardView>

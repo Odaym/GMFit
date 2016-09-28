@@ -14,6 +14,7 @@ import com.mcsaatchi.gmfit.classes.Cons;
 import com.mcsaatchi.gmfit.classes.SlidingTabLayout;
 import com.mcsaatchi.gmfit.fragments.CustomizeCharts_Fragment;
 import com.mcsaatchi.gmfit.fragments.CustomizeWidgets_Fragment;
+import com.mcsaatchi.gmfit.models.DataChart;
 import com.mcsaatchi.gmfit.models.FitnessWidget;
 import com.mcsaatchi.gmfit.models.NutritionWidget;
 
@@ -38,6 +39,7 @@ public class CustomizeWidgetsAndCharts_Activity extends Base_Activity {
 
     private ArrayList<FitnessWidget> fitnessWidgetsMapExtra;
     private ArrayList<NutritionWidget> nutritionWidgetsMapExtra;
+    private ArrayList<DataChart> dataChartsMapExtra;
 
     private String[] tabTitles = new String[]{
             "Widgets", "Charts"
@@ -66,6 +68,7 @@ public class CustomizeWidgetsAndCharts_Activity extends Base_Activity {
                         mainLayoutTop.setBackground(getResources().getDrawable(R.drawable.fitness_background));
                         break;
                     case Cons.EXTRAS_NUTRITION_FRAGMENT:
+                        dataChartsMapExtra = intentExtras.getParcelableArrayList(Cons.BUNDLE_NUTRITION_CHARTS_MAP);
                         nutritionWidgetsMapExtra = intentExtras.getParcelableArrayList(Cons.BUNDLE_NUTRITION_WIDGETS_MAP);
                         mainLayoutTop.setBackground(getResources().getDrawable(R.drawable.nutrition_background));
                         break;
@@ -107,6 +110,7 @@ public class CustomizeWidgetsAndCharts_Activity extends Base_Activity {
                         break;
                     case Cons.EXTRAS_NUTRITION_FRAGMENT:
                         fragmentArguments.putParcelableArrayList(Cons.BUNDLE_NUTRITION_WIDGETS_MAP, nutritionWidgetsMapExtra);
+                        fragmentArguments.putParcelableArrayList(Cons.BUNDLE_NUTRITION_CHARTS_MAP, dataChartsMapExtra);
                         break;
                 }
             }

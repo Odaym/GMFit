@@ -20,10 +20,6 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.j256.ormlite.dao.RuntimeExceptionDao;
-import com.j256.ormlite.stmt.PreparedQuery;
-import com.j256.ormlite.stmt.QueryBuilder;
-import com.j256.ormlite.stmt.Where;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.adapters.SimpleSectioned_ListAdapter;
 import com.mcsaatchi.gmfit.classes.Cons;
@@ -31,10 +27,11 @@ import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
 import com.mcsaatchi.gmfit.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.models.MealItem;
+import com.mcsaatchi.gmfit.rest.RecentMealsResponse;
+import com.mcsaatchi.gmfit.rest.RecentMealsResponseBody;
 import com.mcsaatchi.gmfit.rest.SearchMealItemResponse;
 import com.mcsaatchi.gmfit.rest.SearchMealItemResponseDatum;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,13 +63,10 @@ public class AddNewMealItem_Activity extends Base_Activity {
 
     private SharedPreferences prefs;
 
-    private RuntimeExceptionDao<MealItem, Integer> mealItemsDAO;
-    private QueryBuilder<MealItem, Integer> mealsQueryBuilder;
-    private PreparedQuery<MealItem> pq;
-
     private String mealType;
 
     private List<MealItem> mealsList = new ArrayList<>();
+
     private SimpleSectioned_ListAdapter simpleSectionedListAdapter;
 
     @Override
@@ -98,9 +92,7 @@ public class AddNewMealItem_Activity extends Base_Activity {
 
         setupToolbar(toolbar, actionBarTitle, true);
 
-        mealItemsDAO = getDBHelper().getMealItemDAO();
-
-        loadMealsFromDB(mealType);
+        loadRecentMealsFromServer(mealType);
 
         mealItemsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -110,11 +102,6 @@ public class AddNewMealItem_Activity extends Base_Activity {
                 Intent intent = new Intent(AddNewMealItem_Activity.this, SpecifyMealAmount_Activity.class);
                 intent.putExtra(Cons.EXTRAS_MEAL_OBJECT_DETAILS, mealsList.get(position));
                 startActivityForResult(intent, MEAL_AMOUNT_SPECIFIED);
-
-//                if (mealsList.get(position).getSectionType() == ITEM_VIEWTYPE) {
-//                    EventBus_Singleton.getInstance().post(new EventBus_Poster(Cons.EXTRAS_PICKED_MEAL_ENTRY, mealsList.get(position)));
-//                    finish();
-//                }
             }
         });
 
@@ -150,7 +137,7 @@ public class AddNewMealItem_Activity extends Base_Activity {
                     searchIconIV.setImageResource(R.drawable.ic_search_white_24dp);
                     searchIconIV.setOnClickListener(null);
 
-                    loadMealsFromDB(mealType);
+                    initMealsList(mealsList);
                 } else if (charSequence.toString().length() > 2) {
 
                     pb_loading_indicator.setVisibility(View.VISIBLE);
@@ -195,9 +182,7 @@ public class AddNewMealItem_Activity extends Base_Activity {
                                         mealsReturned.add(mealItem);
                                     }
 
-                                    mealsList = mealsReturned;
-
-                                    initMealsList();
+                                    initMealsList(mealsReturned);
 
                                     searchResultsHintTV.setVisibility(View.VISIBLE);
                                     pb_loading_indicator.setVisibility(View.INVISIBLE);
@@ -258,29 +243,43 @@ public class AddNewMealItem_Activity extends Base_Activity {
         });
     }
 
-    private void loadMealsFromDB(String mealType) {
-        prepareQueryForAllMealTypeItems(mealType);
+    private void loadRecentMealsFromServer(final String mealType) {
+        DataAccessHandler.getInstance().getRecentMeals(prefs.getString(Cons.PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
+                "http://gmfit.mcsaatchi.me/api/v1/user/meals/recent?when=" + mealType.toLowerCase(), new Callback<RecentMealsResponse>() {
+                    @Override
+                    public void onResponse(Call<RecentMealsResponse> call, Response<RecentMealsResponse> response) {
+                        ArrayList<RecentMealsResponseBody> recentMealsFromAPI = (ArrayList<RecentMealsResponseBody>) response.body().getData().getBody();
 
-        mealsList = getDBHelper().getMealItemDAO().query(pq);
+                        MealItem recentlyAddedMealItem = new MealItem();
+                        recentlyAddedMealItem.setName("Recently Added");
+                        recentlyAddedMealItem.setSectionType(1);
 
-        initMealsList();
+                        mealsList.add(recentlyAddedMealItem);
+
+                        for (int i = 0; i < recentMealsFromAPI.size(); i++) {
+                            MealItem item = new MealItem();
+                            item.setType(mealType);
+                            item.setMeal_id(recentMealsFromAPI.get(i).getId());
+                            item.setSectionType(2);
+                            item.setMeasurementUnit(recentMealsFromAPI.get(i).getMeasurementUnit());
+                            item.setName(recentMealsFromAPI.get(i).getName());
+
+                            mealsList.add(item);
+                        }
+
+                        initMealsList(mealsList);
+                    }
+
+                    @Override
+                    public void onFailure(Call<RecentMealsResponse> call, Throwable t) {
+
+                    }
+                });
     }
 
-    private void initMealsList() {
-        simpleSectionedListAdapter = new SimpleSectioned_ListAdapter(this, mealsList);
+    private void initMealsList(List<MealItem> mealsToShow) {
+        simpleSectionedListAdapter = new SimpleSectioned_ListAdapter(this, mealsToShow);
 
         mealItemsList.setAdapter(simpleSectionedListAdapter);
-    }
-
-    public void prepareQueryForAllMealTypeItems(String mealType) {
-        try {
-            mealsQueryBuilder = mealItemsDAO.queryBuilder();
-
-            Where where = mealsQueryBuilder.where();
-            where.eq("type", mealType);
-            pq = mealsQueryBuilder.prepare();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
     }
 }
