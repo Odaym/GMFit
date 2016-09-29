@@ -16,6 +16,7 @@ public class MealItem implements Parcelable {
         }
     };
     int id;
+    int instance_id;
     int meal_id;
     String name;
     String type;
@@ -50,6 +51,14 @@ public class MealItem implements Parcelable {
 
     public void setMeal_id(int meal_id) {
         this.meal_id = meal_id;
+    }
+
+    public int getInstance_id() {
+        return instance_id;
+    }
+
+    public void setInstance_id(int instance_id) {
+        this.instance_id = instance_id;
     }
 
     public String getName() {

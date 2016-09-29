@@ -47,9 +47,8 @@ import retrofit2.Response;
 public class SensorListener extends Service implements SensorEventListener {
 
     private final static int MICROSECONDS_IN_ONE_MINUTE = 60000000;
-    private static final String TAG = "SensorListener";
     private static final float STEP_LENGTH = 20;
-    private static double METRIC_RUNNING_FACTOR = 1.02784823;
+    private static float METRIC_RUNNING_FACTOR = 1.02784823f;
 
     private final Handler handler = new Handler();
     private Timer timer = new Timer();
@@ -62,60 +61,83 @@ public class SensorListener extends Service implements SensorEventListener {
 
     @Override
     public void onAccuracyChanged(final Sensor sensor, int accuracy) {
-        // nobody knows what happens here: step value might magically decrease
-        // when this method is called...
         if (BuildConfig.DEBUG) Log.d("SERVICE_TAG", sensor.getName() + " accuracy changed: " + accuracy);
     }
 
     @Override
     public void onSensorChanged(final SensorEvent event) {
-        if (event.values[0] > Integer.MAX_VALUE) {
-            if (BuildConfig.DEBUG) Log.d("SERVICE_TAG", "probably not a real value: " + event.values[0]);
-            return;
+        LocalDate dt = new LocalDate();
+
+        todayDate = dt.toString();
+        yesterdayDate = dt.minusDays(1).toString();
+
+        int stepsToday = prefs.getInt(todayDate + "_steps", 0);
+
+        if (prefs.getBoolean(Cons.EXTRAS_FIRST_APP_LAUNCH, true)) {
+            prefs.edit().putBoolean(Cons.EXTRAS_FIRST_APP_LAUNCH, false).apply();
+
+            prefs.edit().putInt(todayDate + "_steps", 0).apply();
+            prefs.edit().putFloat(todayDate + "_calories", 0).apply();
+            prefs.edit().putFloat(todayDate + "_distance", 0).apply();
         } else {
-            int steps = (int) event.values[0];
+            float caloriesToday = calculateCalories(prefs.getFloat(Cons.EXTRAS_USER_PROFILE_WEIGHT, 70), METRIC_RUNNING_FACTOR, STEP_LENGTH);
+            float distanceToday = calculateDistance(STEP_LENGTH);
 
-            LocalDate dt = new LocalDate();
+            storeStepsToday(stepsToday, "steps");
+            storeCaloriesToday(caloriesToday, prefs.getFloat(todayDate + "_calories", 0), "calories");
+            storeDistanceToday(distanceToday, prefs.getFloat(todayDate + "_distance", 0), "distance");
 
-            todayDate = dt.toString();
-            yesterdayDate = dt.minusDays(1).toString();
+            List<FitnessWidget> fitnessWidgets = fitnessWidgetsDAO.queryForAll();
 
-            int todayStepsFromPrefs = prefs.getInt(todayDate + "_steps", 0);
+            findAndUpdateWidgetsInDB(fitnessWidgets, caloriesToday, distanceToday);
 
-            if (prefs.getBoolean(Cons.EXTRAS_FIRST_APP_LAUNCH, true)) {
-                prefs.edit().putBoolean(Cons.EXTRAS_FIRST_APP_LAUNCH, false).apply();
-
-                prefs.edit().putInt(todayDate + "_steps", 0).apply();
-                prefs.edit().putFloat(todayDate + "_calories", 0).apply();
-                prefs.edit().putFloat(todayDate + "_distance", 0).apply();
-            } else {
-                float calculatedCalories = (float) (prefs.getFloat(Cons.EXTRAS_USER_PROFILE_WEIGHT, 70) * METRIC_RUNNING_FACTOR * STEP_LENGTH / 100000.0);
-                float calculatedDistance = (float) (STEP_LENGTH / 100000.0);
-
-                prefs.edit().putInt(todayDate + "_steps", todayStepsFromPrefs + 1).apply();
-                prefs.edit().putFloat(todayDate + "_calories", calculatedCalories + prefs.getFloat(todayDate + "_calories", 0)).apply();
-                prefs.edit().putFloat(todayDate + "_distance", calculatedDistance + prefs.getFloat(todayDate + "_distance", 0)).apply();
-
-                List<FitnessWidget> fitnessWidgets = fitnessWidgetsDAO.queryForAll();
-
-                for (int i = 0; i < fitnessWidgets.size(); i++) {
-                    switch (fitnessWidgets.get(i).getTitle()) {
-                        case "Distance":
-                            fitnessWidgets.get(i).setValue((int) (calculatedDistance + prefs.getFloat(todayDate + "_distance", 0) * 1000));
-                            break;
-                        case "Calories":
-                            fitnessWidgets.get(i).setValue((int) (calculatedCalories + prefs.getFloat(todayDate + "_calories", 0)));
-                            break;
-                    }
-
-                    fitnessWidgetsDAO.update(fitnessWidgets.get(i));
-                }
-            }
-
-            EventBus_Singleton.getInstance().post(new EventBus_Poster(Cons.EVENT_STEP_COUNTER_INCREMENTED));
-            EventBus_Singleton.getInstance().post(new EventBus_Poster(Cons.EVENT_CALORIES_COUNTER_INCREMENTED));
-            EventBus_Singleton.getInstance().post(new EventBus_Poster(Cons.EVENT_DISTANCE_COUNTER_INCREMENTED));
+            sendOutEventBusEvents();
         }
+    }
+
+    public float calculateCalories(float weight, float metricRunningFactor, float stepLength) {
+        return weight * metricRunningFactor * stepLength / 100000.0f;
+    }
+
+    public float calculateDistance(float stepLength) {
+        return stepLength / 100000.0f;
+    }
+
+    public void storeStepsToday(int stepsToday, String metricName) {
+        prefs.edit().putInt(todayDate + "_" + metricName, stepsToday + 1).apply();
+    }
+
+    public void storeCaloriesToday(float caloriesToday, float caloriesSoFar, String metricName) {
+        prefs.edit().putFloat(todayDate + "_" + metricName, caloriesToday + caloriesSoFar).apply();
+    }
+
+    public void storeDistanceToday(float distanceToday, float distanceSoFar, String metricName) {
+        prefs.edit().putFloat(todayDate + "_" + metricName, distanceToday + distanceSoFar).apply();
+    }
+
+    public void findAndUpdateWidgetsInDB(List<FitnessWidget> fitnessWidgets, float calculatedCalories, float calculatedDistance) {
+        for (int i = 0; i < fitnessWidgets.size(); i++) {
+            switch (fitnessWidgets.get(i).getTitle()) {
+                case "Calories":
+                    updateFitnessWidget(fitnessWidgets.get(i), calculatedCalories, prefs.getFloat(todayDate + "_calories", 0), 1);
+                    break;
+                case "Distance":
+                    updateFitnessWidget(fitnessWidgets.get(i), calculatedDistance, prefs.getFloat(todayDate + "_distance", 0), 1000);
+                    break;
+            }
+        }
+    }
+
+    public void updateFitnessWidget(FitnessWidget fitnessWidget, float currentMetricValue, float metricValueSoFar, int multiplier) {
+        fitnessWidget.setValue((int) (currentMetricValue + metricValueSoFar) * multiplier);
+
+        fitnessWidgetsDAO.update(fitnessWidget);
+    }
+
+    public void sendOutEventBusEvents(){
+        EventBus_Singleton.getInstance().post(new EventBus_Poster(Cons.EVENT_STEP_COUNTER_INCREMENTED));
+        EventBus_Singleton.getInstance().post(new EventBus_Poster(Cons.EVENT_CALORIES_COUNTER_INCREMENTED));
+        EventBus_Singleton.getInstance().post(new EventBus_Poster(Cons.EVENT_DISTANCE_COUNTER_INCREMENTED));
     }
 
     @Override

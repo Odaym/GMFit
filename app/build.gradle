@@ -8,6 +8,7 @@ buildscript {
     }
 }
 
+apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
 
@@ -15,8 +16,8 @@ repositories {
     maven { url 'https://maven.fabric.io/public' }
 }
 
-def supportLibVersion = '24.2.0'
-def playServicesVersion = '9.4.0'
+def supportLibVersion = '24.2.1'
+def playServicesVersion = '9.6.1'
 def retroFitVersion = '2.1.0'
 
 android {

@@ -27,6 +27,7 @@ import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
 import com.mcsaatchi.gmfit.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.models.MealItem;
+import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.rest.RecentMealsResponse;
 import com.mcsaatchi.gmfit.rest.RecentMealsResponseBody;
 import com.mcsaatchi.gmfit.rest.SearchMealItemResponse;
@@ -215,6 +216,8 @@ public class AddNewMealItem_Activity extends Base_Activity {
                     MealItem mealItem = data.getParcelableExtra(Cons.EXTRAS_MEAL_OBJECT_DETAILS);
 
                     if (mealItem != null) {
+                        updateUserMeal(mealItem.getInstance_id(), Integer.parseInt(mealItem.getAmount()));
+
                         EventBus_Singleton.getInstance().post(new EventBus_Poster(Cons.EXTRAS_PICKED_MEAL_ENTRY, mealItem, true));
                         finish();
                     }
@@ -241,6 +244,21 @@ public class AddNewMealItem_Activity extends Base_Activity {
 
             }
         });
+    }
+
+    private void updateUserMeal(int instance_id, int amount) {
+        DataAccessHandler.getInstance().updateUserMeals(prefs.getString(Cons.PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
+                instance_id, amount, new Callback<DefaultGetResponse>() {
+                    @Override
+                    public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
+                        Log.d(TAG, "onResponse: Successfully updated user's meal!");
+                    }
+
+                    @Override
+                    public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+
+                    }
+                });
     }
 
     private void loadRecentMealsFromServer(final String mealType) {

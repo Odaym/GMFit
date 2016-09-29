@@ -72,6 +72,11 @@ public interface GMFit_Service {
     @POST("user/charts/update")
     Call<DefaultGetResponse> updateUserCharts(@Header(Cons.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken,
                                                @Body ApiCallsHandler.UpdateChartsRequest updateChartsRequest);
+
+    @POST("user/meals/update")
+    Call<DefaultGetResponse> updateUserMeals(@Header(Cons.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken,
+                                              @Body ApiCallsHandler.UpdateMealsRequest updateMealsRequest);
+
     @GET("user/meals")
     Call<UserMealsResponse> getUserAddedMeals(@Header(Cons.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken);
 
