@@ -371,6 +371,7 @@ public class Nutrition_Fragment extends Fragment {
                         for (int i = 0; i < breakfastMeals.size(); i++) {
                             MealItem breakfastMeal = new MealItem();
                             breakfastMeal.setMeal_id(breakfastMeals.get(i).getId());
+                            breakfastMeal.setInstance_id(breakfastMeals.get(i).getInstance_id());
                             breakfastMeal.setType("Breakfast");
                             breakfastMeal.setName(breakfastMeals.get(i).getName());
                             breakfastMeal.setMeasurementUnit(breakfastMeals.get(i).getMeasurementUnit());
@@ -393,6 +394,7 @@ public class Nutrition_Fragment extends Fragment {
                         for (int i = 0; i < lunchMeals.size(); i++) {
                             MealItem lunchMeal = new MealItem();
                             lunchMeal.setMeal_id(lunchMeals.get(i).getId());
+                            lunchMeal.setInstance_id(lunchMeals.get(i).getInstance_id());
                             lunchMeal.setType("Lunch");
                             lunchMeal.setName(lunchMeals.get(i).getName());
                             lunchMeal.setMeasurementUnit(lunchMeals.get(i).getMeasurementUnit());
@@ -414,11 +416,12 @@ public class Nutrition_Fragment extends Fragment {
                          */
                         for (int i = 0; i < dinnerMeals.size(); i++) {
                             MealItem dinnerMeal = new MealItem();
+                            dinnerMeal.setMeal_id(dinnerMeals.get(i).getId());
+                            dinnerMeal.setInstance_id(dinnerMeals.get(i).getInstance_id());
                             dinnerMeal.setType("Dinner");
                             dinnerMeal.setName(dinnerMeals.get(i).getName());
                             dinnerMeal.setMeasurementUnit(dinnerMeals.get(i).getMeasurementUnit());
                             dinnerMeal.setAmount(dinnerMeals.get(i).getAmount());
-                            dinnerMeal.setMeal_id(dinnerMeals.get(i).getId());
                             dinnerMeal.setSectionType(2);
 
                             if (dinnerMeals.get(i).getTotalCalories() != null)
@@ -436,11 +439,12 @@ public class Nutrition_Fragment extends Fragment {
                          */
                         for (int i = 0; i < snackMeals.size(); i++) {
                             MealItem snackMeal = new MealItem();
+                            snackMeal.setMeal_id(snackMeals.get(i).getId());
+                            snackMeal.setInstance_id(snackMeals.get(i).getInstance_id());
                             snackMeal.setType("Snack");
                             snackMeal.setName(snackMeals.get(i).getName());
                             snackMeal.setMeasurementUnit(snackMeals.get(i).getMeasurementUnit());
                             snackMeal.setAmount(snackMeals.get(i).getAmount());
-                            snackMeal.setMeal_id(snackMeals.get(i).getId());
                             snackMeal.setSectionType(2);
 
                             if (snackMeals.get(i).getTotalCalories() != null)

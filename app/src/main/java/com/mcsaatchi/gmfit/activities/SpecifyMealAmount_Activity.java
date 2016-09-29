@@ -8,7 +8,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.View;
 import android.widget.Button;
@@ -179,8 +178,6 @@ public class SpecifyMealAmount_Activity extends Base_Activity {
                                 @Override
                                 public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
 
-                                    Log.d("TAG", "onResponse: Response is : " + response.code());
-
                                     switch (response.code()) {
                                         case 200:
                                             waitingDialog.dismiss();
@@ -192,7 +189,6 @@ public class SpecifyMealAmount_Activity extends Base_Activity {
                                              * Editing an existing meal
                                              */
                                             if (purposeIsEditMeal) {
-                                                Log.d("TAG", "onResponse: Editing an existing meal.");
                                                 EventBus_Singleton.getInstance().post(new EventBus_Poster(Cons.EXTRAS_PICKED_MEAL_ENTRY, mealItem, false));
                                             } else {
                                                 /**

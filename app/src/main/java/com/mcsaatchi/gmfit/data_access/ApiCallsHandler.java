@@ -404,6 +404,22 @@ public class ApiCallsHandler {
         });
     }
 
+    void updateUserMeals(String userAccessToken, int instance_id, int amount, final Callback<DefaultGetResponse> callback) {
+        Call<DefaultGetResponse> apiCall = new RestClient().getGMFitService().updateUserMeals(userAccessToken, new UpdateMealsRequest(instance_id, amount));
+
+        apiCall.enqueue(new Callback<DefaultGetResponse>() {
+            @Override
+            public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
+                callback.onResponse(call, response);
+            }
+
+            @Override
+            public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+                callback.onFailure(call, t);
+            }
+        });
+    }
+
     void getPeriodicalChartData(String userAccessToken, String start_date, String end_date, String type, String monitored_metric, final Callback<ChartMetricBreakdownResponse> callback) {
         Call<ChartMetricBreakdownResponse> apiCall = new RestClient().getGMFitService().getPeriodicalChartData(userAccessToken, start_date, end_date, type, monitored_metric);
 
@@ -544,6 +560,16 @@ public class ApiCallsHandler {
             this.meal_id = meal_id;
             this.amount = amount;
             this.when = when;
+        }
+    }
+
+    public class UpdateMealsRequest{
+        final int instance_id;
+        final int amount;
+
+        public UpdateMealsRequest(int amount, int instance_id) {
+            this.amount = amount;
+            this.instance_id = instance_id;
         }
     }
 }

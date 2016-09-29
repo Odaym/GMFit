@@ -103,6 +103,10 @@ public class DataAccessHandler {
         ApiCallsHandler.getInstance().updateUserCharts(userAccessToken, chartIds, chartPositions, callback);
     }
 
+    public void updateUserMeals(String userAccessToken, int instance_id, int amount, Callback<DefaultGetResponse> callback) {
+        ApiCallsHandler.getInstance().updateUserMeals(userAccessToken, instance_id, amount, callback);
+    }
+
     public void getUserAddedMeals(String userAccessToken, Callback<UserMealsResponse> callback) {
         ApiCallsHandler.getInstance().getUserAddedMeals(userAccessToken, callback);
     }
