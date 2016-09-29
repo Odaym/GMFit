@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "944339899462",
+    "firebase_url": "https://gm-fit.firebaseio.com",
+    "project_id": "gm-fit",
+    "storage_bucket": "gm-fit.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:944339899462:android:cefd814f841f166f",
+        "android_client_info": {
+          "package_name": "com.mcsaatchi.gmfit"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "944339899462-bgueij62fsi5cm9lut38t88mij42v917.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mcsaatchi.gmfit",
+            "certificate_hash": "B25DCF1425412963AD7AB965ACD80D6FCCC655FA"
+          }
+        },
+        {
+          "client_id": "944339899462-gsuqbpvo37jun4aj755ss6memd513o9r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAMu-oDIbQr2GE4jKxYpE2VtV7iD__0dZw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "944339899462-gsuqbpvo37jun4aj755ss6memd513o9r.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
