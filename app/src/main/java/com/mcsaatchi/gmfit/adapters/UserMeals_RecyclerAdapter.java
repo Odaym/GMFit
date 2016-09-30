@@ -8,10 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.j256.ormlite.dao.RuntimeExceptionDao;
-import com.j256.ormlite.stmt.QueryBuilder;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.activities.Base_Activity;
 import com.mcsaatchi.gmfit.activities.SpecifyMealAmount_Activity;
 import com.mcsaatchi.gmfit.classes.Cons;
 import com.mcsaatchi.gmfit.models.MealItem;
@@ -23,18 +20,11 @@ public class UserMeals_RecyclerAdapter extends RecyclerView.Adapter<UserMeals_Re
         implements ItemTouchHelperAdapter {
 
     private List<MealItem> mealItems;
-    private RuntimeExceptionDao<MealItem, Integer> userMealsDAO;
-    private QueryBuilder<MealItem, Integer> userMealsQB;
     private Context context;
 
     public UserMeals_RecyclerAdapter(Context context, List<MealItem> mealItems) {
         this.mealItems = mealItems;
         this.context = context;
-
-        if (context != null) {
-            userMealsDAO = ((Base_Activity) context).getDBHelper().getMealItemDAO();
-            userMealsQB = userMealsDAO.queryBuilder();
-        }
     }
 
     @Override

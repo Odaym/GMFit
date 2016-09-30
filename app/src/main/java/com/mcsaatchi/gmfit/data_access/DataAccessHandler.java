@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 
 import com.mcsaatchi.gmfit.rest.AuthenticationResponse;
 import com.mcsaatchi.gmfit.rest.ChartMetricBreakdownResponse;
+import com.mcsaatchi.gmfit.rest.ChartsBySectionResponse;
 import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.rest.MealMetricsResponse;
 import com.mcsaatchi.gmfit.rest.MedicalConditionsResponse;
@@ -129,5 +130,13 @@ public class DataAccessHandler {
 
     public void getPeriodicalChartData(String userAccessToken, String start_date, String end_date, String type, String monitored_metric, Callback<ChartMetricBreakdownResponse> callback) {
         ApiCallsHandler.getInstance().getPeriodicalChartData(userAccessToken, start_date, end_date, type, monitored_metric, callback);
+    }
+
+    public void addMetricChart(String userAccessToken, int chart_id, Callback<DefaultGetResponse> callback){
+        ApiCallsHandler.getInstance().addMetricChart(userAccessToken, chart_id, callback);
+    }
+
+    public void getChartsBySection(String userAccessToken, String sectionName, Callback<ChartsBySectionResponse> callback){
+        ApiCallsHandler.getInstance().getChartsBySection(userAccessToken, sectionName, callback);
     }
 }

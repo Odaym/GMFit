@@ -36,6 +36,7 @@ public class MealItem implements Parcelable {
 
     protected MealItem(Parcel in) {
         this.id = in.readInt();
+        this.instance_id = in.readInt();
         this.meal_id = in.readInt();
         this.name = in.readString();
         this.type = in.readString();
@@ -117,6 +118,7 @@ public class MealItem implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(this.id);
+        dest.writeInt(this.instance_id);
         dest.writeInt(this.meal_id);
         dest.writeString(this.name);
         dest.writeString(this.type);

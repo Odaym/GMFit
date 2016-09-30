@@ -14,7 +14,6 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import com.andreabaccega.widget.FormEditText;
-import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.adapters.TwoItem_Sparse_ListAdapter;
 import com.mcsaatchi.gmfit.classes.Cons;
@@ -38,6 +37,7 @@ import retrofit2.Response;
 
 public class SpecifyMealAmount_Activity extends Base_Activity {
     private static final int MEAL_AMOUNT_SPECIFIED = 536;
+
     @Bind(R.id.toolbar)
     Toolbar toolbar;
     @Bind(R.id.nutritionFactsList)
@@ -52,8 +52,6 @@ public class SpecifyMealAmount_Activity extends Base_Activity {
     private TwoItem_Sparse_ListAdapter nutritionFactsListAdapter;
     private SparseArray<String[]> nutritionalFacts = new SparseArray<>();
 
-    private RuntimeExceptionDao<MealItem, Integer> mealItemsDAO;
-
     private MealItem mealItem;
     private boolean purposeIsEditMeal = false;
 
@@ -67,8 +65,6 @@ public class SpecifyMealAmount_Activity extends Base_Activity {
         prefs = getSharedPreferences(Cons.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
 
         allFields.add(mealAmountET);
-
-        mealItemsDAO = getDBHelper().getMealItemDAO();
 
         if (getIntent().getExtras() != null) {
             mealItem = getIntent().getExtras().getParcelable(Cons.EXTRAS_MEAL_OBJECT_DETAILS);
@@ -172,46 +168,70 @@ public class SpecifyMealAmount_Activity extends Base_Activity {
                                 }
                             });
 
-                    DataAccessHandler.getInstance().storeNewMeal(prefs.getString(Cons
-                                    .PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS), mealItem.getMeal_id(), Integer.parseInt(mealAmountET.getText().toString()),
-                            mealItem.getType(), new Callback<DefaultGetResponse>() {
-                                @Override
-                                public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
-
-                                    switch (response.code()) {
-                                        case 200:
-                                            waitingDialog.dismiss();
-
-                                            mealItem.setAmount(mealAmountET.getText().toString());
-                                            mealItem.setTotalCalories(Integer.parseInt(mealItem.getAmount()) * caloriesForThisMeal);
-
-                                            /**
-                                             * Editing an existing meal
-                                             */
-                                            if (purposeIsEditMeal) {
-                                                EventBus_Singleton.getInstance().post(new EventBus_Poster(Cons.EXTRAS_PICKED_MEAL_ENTRY, mealItem, false));
-                                            } else {
-                                                /**
-                                                 * Creating a new meal
-                                                 */
-                                                Intent resultIntent = new Intent();
-                                                resultIntent.putExtra(Cons.EXTRAS_MEAL_OBJECT_DETAILS, mealItem);
-                                                setResult(MEAL_AMOUNT_SPECIFIED, resultIntent);
-                                            }
-
-                                            finish();
-
-                                            break;
-                                    }
-                                }
-
-                                @Override
-                                public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
-
-                                }
-                            });
+                    if (purposeIsEditMeal) {
+                        updateUserMeal(waitingDialog, caloriesForThisMeal);
+                    } else {
+                        storeNewMeal(waitingDialog, caloriesForThisMeal);
+                    }
                 }
             }
         });
+    }
+
+    private void storeNewMeal(final ProgressDialog waitingDialog, final int caloriesForThisMeal) {
+        DataAccessHandler.getInstance().storeNewMeal(prefs.getString(Cons
+                        .PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS), mealItem.getMeal_id(), Integer.parseInt(mealAmountET.getText().toString()),
+                mealItem.getType(), new Callback<DefaultGetResponse>() {
+                    @Override
+                    public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
+                        switch (response.code()) {
+                            case 200:
+                                waitingDialog.dismiss();
+
+                                mealItem.setAmount(mealAmountET.getText().toString());
+                                mealItem.setTotalCalories(Integer.parseInt(mealItem.getAmount()) * caloriesForThisMeal);
+
+                                Intent resultIntent = new Intent();
+                                resultIntent.putExtra(Cons.EXTRAS_MEAL_OBJECT_DETAILS, mealItem);
+                                setResult(MEAL_AMOUNT_SPECIFIED, resultIntent);
+
+                                finish();
+
+                                break;
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+                        waitingDialog.dismiss();
+                    }
+                });
+    }
+
+    private void updateUserMeal(final ProgressDialog waitingDialog, final int caloriesForThisMeal) {
+        DataAccessHandler.getInstance().updateUserMeals(prefs.getString(Cons.PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
+                mealItem.getInstance_id(), Integer.parseInt(mealAmountET.getText().toString()), new Callback<DefaultGetResponse>() {
+                    @Override
+                    public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
+                        switch (response.code()) {
+                            case 200:
+                                waitingDialog.dismiss();
+
+                                mealItem.setAmount(mealAmountET.getText().toString());
+                                mealItem.setTotalCalories(Integer.parseInt(mealItem.getAmount()) * caloriesForThisMeal);
+
+                                EventBus_Singleton.getInstance().post(new EventBus_Poster(Cons.EXTRAS_UPDATED_MEAL_ENTRY, mealItem, true));
+
+                                finish();
+
+                                break;
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+                        waitingDialog.dismiss();
+                    }
+                });
     }
 }

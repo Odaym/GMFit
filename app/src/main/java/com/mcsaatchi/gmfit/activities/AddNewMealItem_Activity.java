@@ -26,7 +26,6 @@ import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
 import com.mcsaatchi.gmfit.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.models.MealItem;
-import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.rest.RecentMealsResponse;
 import com.mcsaatchi.gmfit.rest.RecentMealsResponseBody;
 import com.mcsaatchi.gmfit.rest.SearchMealItemResponse;
@@ -46,6 +45,7 @@ public class AddNewMealItem_Activity extends Base_Activity {
     private static final String TAG = "AddNewMealItem_Activity";
     private static final int SECTION_VIEWTYPE = 1;
     private static final int ITEM_VIEWTYPE = 2;
+
     private static final int MEAL_AMOUNT_SPECIFIED = 536;
 
     @Bind(R.id.toolbar)
@@ -210,20 +210,19 @@ public class AddNewMealItem_Activity extends Base_Activity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        switch (resultCode) {
-            case MEAL_AMOUNT_SPECIFIED:
-                if (data != null) {
-                    MealItem mealItem = data.getParcelableExtra(Cons.EXTRAS_MEAL_OBJECT_DETAILS);
+        if (data != null) {
 
-                    if (mealItem != null) {
-                        updateUserMeal(mealItem.getInstance_id(), Integer.parseInt(mealItem.getAmount()));
+            MealItem mealItem = data.getParcelableExtra(Cons.EXTRAS_MEAL_OBJECT_DETAILS);
 
-                        EventBus_Singleton.getInstance().post(new EventBus_Poster(Cons.EXTRAS_PICKED_MEAL_ENTRY, mealItem, true));
-                        finish();
-                    }
+            if (mealItem != null) {
+                switch (resultCode) {
+                    case MEAL_AMOUNT_SPECIFIED:
+                        EventBus_Singleton.getInstance().post(new EventBus_Poster(Cons.EXTRAS_CREATED_NEW_MEAL_ENTRY, mealItem, true));
+                        break;
                 }
 
-                break;
+                finish();
+            }
         }
     }
 
@@ -244,21 +243,6 @@ public class AddNewMealItem_Activity extends Base_Activity {
 
             }
         });
-    }
-
-    private void updateUserMeal(int instance_id, int amount) {
-        DataAccessHandler.getInstance().updateUserMeals(prefs.getString(Cons.PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
-                instance_id, amount, new Callback<DefaultGetResponse>() {
-                    @Override
-                    public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
-                        Log.d(TAG, "onResponse: Successfully updated user's meal!");
-                    }
-
-                    @Override
-                    public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
-
-                    }
-                });
     }
 
     private void loadRecentMealsFromServer(final String mealType) {

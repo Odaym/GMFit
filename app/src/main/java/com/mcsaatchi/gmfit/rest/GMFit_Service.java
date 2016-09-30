@@ -77,8 +77,14 @@ public interface GMFit_Service {
     Call<DefaultGetResponse> updateUserMeals(@Header(Cons.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken,
                                               @Body ApiCallsHandler.UpdateMealsRequest updateMealsRequest);
 
+    @POST("user/charts/add")
+    Call<DefaultGetResponse> addMetricChart(@Header(Cons.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken, @Body ApiCallsHandler.AddMetricChartRequest addMetricChartRequest);
+
     @GET("user/meals")
     Call<UserMealsResponse> getUserAddedMeals(@Header(Cons.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken);
+
+    @GET
+    Call<ChartsBySectionResponse> getChartsBySection(@Header(Cons.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken, @Url String fullUrl);
 
     @GET("meals")
     Call<SearchMealItemResponse> searchForMeals(@Header(Cons.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken, @Query("name") String mealName);

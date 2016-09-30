@@ -6,6 +6,7 @@ import com.mcsaatchi.gmfit.classes.Cons;
 import com.mcsaatchi.gmfit.classes.Helpers;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponse;
 import com.mcsaatchi.gmfit.rest.ChartMetricBreakdownResponse;
+import com.mcsaatchi.gmfit.rest.ChartsBySectionResponse;
 import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.rest.MealMetricsResponse;
 import com.mcsaatchi.gmfit.rest.MedicalConditionsResponse;
@@ -420,6 +421,39 @@ public class ApiCallsHandler {
         });
     }
 
+    void getChartsBySection(String userAccessToken, String chartSection, final Callback<ChartsBySectionResponse> callback){
+        Call<ChartsBySectionResponse> apiCall = new RestClient().getGMFitService().getChartsBySection(userAccessToken, Cons.BASE_URL_ADDRESS +
+                "charts?section=" + chartSection);
+
+        apiCall.enqueue(new Callback<ChartsBySectionResponse>() {
+            @Override
+            public void onResponse(Call<ChartsBySectionResponse> call, Response<ChartsBySectionResponse> response) {
+                callback.onResponse(call, response);
+            }
+
+            @Override
+            public void onFailure(Call<ChartsBySectionResponse> call, Throwable t) {
+                callback.onFailure(call, t);
+            }
+        });
+    }
+
+    void addMetricChart(String userAccessToken, int chart_id, final Callback<DefaultGetResponse> callback) {
+        Call<DefaultGetResponse> apiCall = new RestClient().getGMFitService().addMetricChart(userAccessToken, new AddMetricChartRequest(chart_id));
+
+        apiCall.enqueue(new Callback<DefaultGetResponse>() {
+            @Override
+            public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
+                callback.onResponse(call, response);
+            }
+
+            @Override
+            public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+                callback.onFailure(call, t);
+            }
+        });
+    }
+
     void getPeriodicalChartData(String userAccessToken, String start_date, String end_date, String type, String monitored_metric, final Callback<ChartMetricBreakdownResponse> callback) {
         Call<ChartMetricBreakdownResponse> apiCall = new RestClient().getGMFitService().getPeriodicalChartData(userAccessToken, start_date, end_date, type, monitored_metric);
 
@@ -567,9 +601,17 @@ public class ApiCallsHandler {
         final int instance_id;
         final int amount;
 
-        public UpdateMealsRequest(int amount, int instance_id) {
-            this.amount = amount;
+        UpdateMealsRequest(int instance_id, int amount) {
             this.instance_id = instance_id;
+            this.amount = amount;
+        }
+    }
+
+    public class AddMetricChartRequest{
+        final int chart_id;
+
+        AddMetricChartRequest(int chart_id) {
+            this.chart_id = chart_id;
         }
     }
 }

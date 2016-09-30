@@ -85,9 +85,6 @@ public class Nutrition_Fragment extends Fragment {
     private static final int ITEM_VIEWTYPE = 2;
     private static final int BARCODE_CAPTURE_RC = 773;
     private final LocalDate dt = new LocalDate();
-
-    private boolean setDrawChartValuesEnabled = false;
-
     @Bind(R.id.widgetsGridView)
     GridView widgetsGridView;
     @Bind(R.id.metricCounterTV)
@@ -148,12 +145,12 @@ public class Nutrition_Fragment extends Fragment {
     Button addNewChartBTN;
     @Bind(R.id.loadingProgressBar)
     ProgressBar loadingProgressBar;
-
+    private boolean setDrawChartValuesEnabled = false;
     private UserMeals_RecyclerAdapter userMealsRecyclerAdapter;
     private ArrayList<NutritionWidget> widgetsMap;
     private SharedPreferences prefs;
     private ArrayList<MealItem> finalBreakfastMeals = new ArrayList<>();
-    private ArrayList<MealItem> finalLunchmeals = new ArrayList<>();
+    private ArrayList<MealItem> finalLunchMeals = new ArrayList<>();
     private ArrayList<MealItem> finalDinnerMeals = new ArrayList<>();
     private ArrayList<MealItem> finalSnackMeals = new ArrayList<>();
 
@@ -406,10 +403,10 @@ public class Nutrition_Fragment extends Fragment {
                             else
                                 lunchMeal.setTotalCalories(0);
 
-                            finalLunchmeals.add(lunchMeal);
+                            finalLunchMeals.add(lunchMeal);
                         }
 
-                        setupMealSectionsListView(finalLunchmeals, "Lunch");
+                        setupMealSectionsListView(finalLunchMeals, "Lunch");
 
                         /**
                          * Insert Dinner meals
@@ -588,12 +585,42 @@ public class Nutrition_Fragment extends Fragment {
         String ebpMessage = ebp.getMessage();
 
         switch (ebpMessage) {
-            case Cons.EXTRAS_PICKED_MEAL_ENTRY:
+            case Cons.EXTRAS_UPDATED_MEAL_ENTRY:
+                Log.d(TAG, "handle_BusEvents: Updating existing meal");
+
+                if (ebp.getMealItemExtra() != null) {
+                    MealItem freshlyUpdatedMealItem = ebp.getMealItemExtra();
+
+                    switch (freshlyUpdatedMealItem.getType()) {
+                        case "Breakfast":
+                            findMealInList(finalBreakfastMeals, freshlyUpdatedMealItem);
+                            setupMealSectionsListView(finalBreakfastMeals, freshlyUpdatedMealItem.getType());
+                            break;
+                        case "Lunch":
+                            findMealInList(finalLunchMeals, freshlyUpdatedMealItem);
+                            setupMealSectionsListView(finalLunchMeals, freshlyUpdatedMealItem.getType());
+                            break;
+                        case "Dinner":
+                            findMealInList(finalDinnerMeals, freshlyUpdatedMealItem);
+                            setupMealSectionsListView(finalDinnerMeals, freshlyUpdatedMealItem.getType());
+                            break;
+                        case "Snack":
+                            findMealInList(finalSnackMeals, freshlyUpdatedMealItem);
+                            setupMealSectionsListView(finalSnackMeals, freshlyUpdatedMealItem.getType());
+                            break;
+                    }
+                }
+
+                break;
+            case Cons.EXTRAS_CREATED_NEW_MEAL_ENTRY:
+                Log.d(TAG, "handle_BusEvents: Creating new meal");
+
                 if (ebp.getMealItemExtra() != null) {
                     MealItem chosenMealFromList = ebp.getMealItemExtra();
 
                     MealItem newMealItem = new MealItem();
                     newMealItem.setMeal_id(chosenMealFromList.getMeal_id());
+                    newMealItem.setInstance_id(chosenMealFromList.getInstance_id());
                     newMealItem.setTotalCalories(chosenMealFromList.getTotalCalories());
                     newMealItem.setAmount(chosenMealFromList.getAmount());
                     newMealItem.setMeasurementUnit(chosenMealFromList.getMeasurementUnit());
@@ -613,9 +640,9 @@ public class Nutrition_Fragment extends Fragment {
                         case "Lunch":
                             newMealItem.setType("Lunch");
 
-                            finalLunchmeals.add(newMealItem);
+                            finalLunchMeals.add(newMealItem);
 
-                            setupMealSectionsListView(finalLunchmeals, chosenMealFromList.getType());
+                            setupMealSectionsListView(finalLunchMeals, chosenMealFromList.getType());
 
                             break;
                         case "Dinner":
@@ -679,6 +706,23 @@ public class Nutrition_Fragment extends Fragment {
             case Cons.EXTRAS_NUTRITION_CHART_DELETED:
 
                 break;
+        }
+    }
+
+    private void findMealInList(ArrayList<MealItem> listOfMeals, MealItem item) {
+        Log.d(TAG, "findMealInList: Meal item instance id : " + item.getInstance_id() + " amount " + item.getAmount());
+
+        for (int i = 0; i < listOfMeals.size(); i++) {
+            if (listOfMeals.get(i).getInstance_id() == item.getInstance_id()) {
+                Log.d(TAG, "findMealInList: Just found an item matching the old item's instance id!");
+
+                Log.d(TAG, "findMealInList: Old Item details " + listOfMeals.get(i).getInstance_id() + " amount : " + listOfMeals.get(i).getAmount());
+
+                listOfMeals.remove(i);
+
+                listOfMeals.add(i, item);
+                Log.d(TAG, "findMealInList: Old Item details " + listOfMeals.get(i).getInstance_id() + " amount : " + listOfMeals.get(i).getAmount());
+            }
         }
     }
 
