@@ -15,7 +15,7 @@ import android.widget.ImageView;
 import com.andreabaccega.widget.FormEditText;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.classes.CircleTransform;
-import com.mcsaatchi.gmfit.classes.Cons;
+import com.mcsaatchi.gmfit.classes.Constants;
 import com.mcsaatchi.gmfit.classes.Helpers;
 import com.mcsaatchi.gmfit.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
@@ -50,7 +50,7 @@ public class GetStarted_Activity extends Base_Activity {
 
         ButterKnife.bind(this);
 
-        prefs = getSharedPreferences(Cons.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
+        prefs = getSharedPreferences(Constants.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
 
         allFields.add(verifyCodeET);
 
@@ -88,7 +88,7 @@ public class GetStarted_Activity extends Base_Activity {
                     }
                 });
 
-        DataAccessHandler.getInstance().verifyUser(prefs.getString(Cons
+        DataAccessHandler.getInstance().verifyUser(prefs.getString(Constants
                 .PREF_USER_ACCESS_TOKEN, ""), verificationCode, new Callback<DefaultGetResponse>() {
             @Override
             public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
@@ -96,7 +96,7 @@ public class GetStarted_Activity extends Base_Activity {
                     case 200:
                         waitingDialog.dismiss();
 
-                        prefs.edit().putBoolean(Cons.EXTRAS_USER_LOGGED_IN, true).apply();
+                        prefs.edit().putBoolean(Constants.EXTRAS_USER_LOGGED_IN, true).apply();
 
                         Intent intent = new Intent(GetStarted_Activity.this, SetupProfile_Activity.class);
                         startActivity(intent);

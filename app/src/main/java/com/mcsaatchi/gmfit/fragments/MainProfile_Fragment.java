@@ -26,7 +26,7 @@ import android.widget.Toast;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.activities.Login_Activity;
 import com.mcsaatchi.gmfit.activities.UserPolicy_Activity;
-import com.mcsaatchi.gmfit.classes.Cons;
+import com.mcsaatchi.gmfit.classes.Constants;
 import com.mcsaatchi.gmfit.classes.Helpers;
 import com.mcsaatchi.gmfit.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
@@ -71,7 +71,7 @@ public class MainProfile_Fragment extends Fragment {
 
         ButterKnife.bind(this, fragmentView);
 
-        prefs = getActivity().getSharedPreferences(Cons.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
+        prefs = getActivity().getSharedPreferences(Constants.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
 
         setHasOptionsMenu(false);
 
@@ -81,7 +81,7 @@ public class MainProfile_Fragment extends Fragment {
             @Override
             public void onClick(View view) {
                 getUserPolicy();
-//                ApiHelper.runApiAsyncTask(getActivity(), Cons.API_NAME_USER_POLICY, Cons.GET_REQUEST_TYPE, null, R.string.grabbing_user_policy_dialog_title,
+//                ApiHelper.runApiAsyncTask(getActivity(), Constants.API_NAME_USER_POLICY, Constants.GET_REQUEST_TYPE, null, R.string.grabbing_user_policy_dialog_title,
 //                        R.string.grabbing_user_policy_dialog_message, null);
             }
         });
@@ -157,7 +157,7 @@ public class MainProfile_Fragment extends Fragment {
                     }
                 });
 
-        DataAccessHandler.getInstance().getUserPolicy(prefs.getString(Cons.PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS), new Callback<UserPolicyResponse>() {
+        DataAccessHandler.getInstance().getUserPolicy(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), new Callback<UserPolicyResponse>() {
             @Override
             public void onResponse(Call<UserPolicyResponse> call, Response<UserPolicyResponse> response) {
                 switch (response.code()) {
@@ -167,7 +167,7 @@ public class MainProfile_Fragment extends Fragment {
                         String userPolicyString = response.body().getData().getBody().getUserPolicy();
 
                         Intent intent = new Intent(getActivity(), UserPolicy_Activity.class);
-                        intent.putExtra(Cons.EXTRAS_USER_POLICY, userPolicyString);
+                        intent.putExtra(Constants.EXTRAS_USER_POLICY, userPolicyString);
                         startActivity(intent);
                         break;
                     case 401:
@@ -196,8 +196,8 @@ public class MainProfile_Fragment extends Fragment {
 //
 //            protected InputStream doInBackground(String... aParams) {
 //                Request request = new Request.Builder()
-//                        .addHeader(Cons.USER_ACCESS_TOKEN_HEADER_PARAMETER, prefs.getString(Cons.PREF_USER_ACCESS_TOKEN, ""))
-//                        .url(Cons.BASE_URL_ADDRESS + Cons.API_NAME_EMERGENCY)
+//                        .addHeader(Constants.USER_ACCESS_TOKEN_HEADER_PARAMETER, prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, ""))
+//                        .url(Constants.BASE_URL_ADDRESS + Constants.API_NAME_EMERGENCY)
 //                        .build();
 //
 //                try {
@@ -243,7 +243,7 @@ public class MainProfile_Fragment extends Fragment {
                     }
                 });
 
-        DataAccessHandler.getInstance().signOutUser(prefs.getString(Cons.PREF_USER_ACCESS_TOKEN, Cons
+        DataAccessHandler.getInstance().signOutUser(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants
                 .NO_ACCESS_TOKEN_FOUND_IN_PREFS), new Callback<DefaultGetResponse>() {
             @Override
             public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
@@ -251,8 +251,8 @@ public class MainProfile_Fragment extends Fragment {
                     case 200:
                         waitingDialog.dismiss();
 
-                        prefs.edit().putString(Cons.PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS).apply();
-                        prefs.edit().putBoolean(Cons.EXTRAS_USER_LOGGED_IN, false).apply();
+                        prefs.edit().putString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS).apply();
+                        prefs.edit().putBoolean(Constants.EXTRAS_USER_LOGGED_IN, false).apply();
 
                         getActivity().finish();
 

@@ -2,7 +2,7 @@ package com.mcsaatchi.gmfit.data_access;
 
 import android.content.SharedPreferences;
 
-import com.mcsaatchi.gmfit.classes.Cons;
+import com.mcsaatchi.gmfit.classes.Constants;
 import com.mcsaatchi.gmfit.classes.Helpers;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponse;
 import com.mcsaatchi.gmfit.rest.ChartMetricBreakdownResponse;
@@ -44,8 +44,8 @@ public class ApiCallsHandler {
      */
     void getSlugBreakdownForChart(final String chartType, SharedPreferences prefs, final Callback<SlugBreakdownResponse> callback) {
 
-        Call<SlugBreakdownResponse> apiCall = new RestClient().getGMFitService().getBreakdownForSlug(Cons.BASE_URL_ADDRESS +
-                "user/metrics/breakdown?slug=" + chartType, prefs.getString(Cons.PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS));
+        Call<SlugBreakdownResponse> apiCall = new RestClient().getGMFitService().getBreakdownForSlug(Constants.BASE_URL_ADDRESS +
+                "user/metrics/breakdown?slug=" + chartType, prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS));
 
         apiCall.enqueue(new Callback<SlugBreakdownResponse>() {
             @Override
@@ -67,8 +67,8 @@ public class ApiCallsHandler {
      * @param callback
      */
     void refreshAccessToken(final SharedPreferences prefs, final Callback<AuthenticationResponse> callback) {
-        Call<AuthenticationResponse> apiCall = new RestClient().getGMFitService().refreshAccessToken(prefs.getString(Cons
-                .PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS));
+        Call<AuthenticationResponse> apiCall = new RestClient().getGMFitService().refreshAccessToken(prefs.getString(Constants
+                .PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS));
 
         apiCall.enqueue(new Callback<AuthenticationResponse>() {
             @Override
@@ -83,8 +83,8 @@ public class ApiCallsHandler {
     }
 
     void synchronizeMetricsWithServer(SharedPreferences prefs, String[] slugsArray, int[] valuesArray) {
-        Call<DefaultGetResponse> apiCall = new RestClient().getGMFitService().updateMetrics(prefs.getString(Cons
-                .PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS), new UpdateMetricsRequest(slugsArray, valuesArray, Helpers.getCalendarDate()));
+        Call<DefaultGetResponse> apiCall = new RestClient().getGMFitService().updateMetrics(prefs.getString(Constants
+                .PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), new UpdateMetricsRequest(slugsArray, valuesArray, Helpers.getCalendarDate()));
 
         apiCall.enqueue(new Callback<DefaultGetResponse>() {
             @Override
@@ -422,7 +422,7 @@ public class ApiCallsHandler {
     }
 
     void getChartsBySection(String userAccessToken, String chartSection, final Callback<ChartsBySectionResponse> callback){
-        Call<ChartsBySectionResponse> apiCall = new RestClient().getGMFitService().getChartsBySection(userAccessToken, Cons.BASE_URL_ADDRESS +
+        Call<ChartsBySectionResponse> apiCall = new RestClient().getGMFitService().getChartsBySection(userAccessToken, Constants.BASE_URL_ADDRESS +
                 "charts?section=" + chartSection);
 
         apiCall.enqueue(new Callback<ChartsBySectionResponse>() {

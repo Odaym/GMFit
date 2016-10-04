@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.activities.SpecifyMealAmount_Activity;
-import com.mcsaatchi.gmfit.classes.Cons;
+import com.mcsaatchi.gmfit.classes.Constants;
 import com.mcsaatchi.gmfit.models.MealItem;
 
 import java.util.Collections;
@@ -95,8 +95,8 @@ public class UserMeals_RecyclerAdapter extends RecyclerView.Adapter<UserMeals_Re
         @Override
         public void onClick(View view) {
             Intent intent = new Intent(context, SpecifyMealAmount_Activity.class);
-            intent.putExtra(Cons.EXTRAS_MEAL_OBJECT_DETAILS, mealItems.get(getAdapterPosition()));
-            intent.putExtra(Cons.EXTRAS_MEAL_ITEM_PURPOSE_EDITING, true);
+            intent.putExtra(Constants.EXTRAS_MEAL_OBJECT_DETAILS, mealItems.get(getAdapterPosition()));
+            intent.putExtra(Constants.EXTRAS_MEAL_ITEM_PURPOSE_EDITING, true);
             context.startActivity(intent);
         }
     }

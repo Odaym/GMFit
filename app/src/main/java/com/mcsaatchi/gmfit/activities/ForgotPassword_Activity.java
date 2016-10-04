@@ -14,7 +14,7 @@ import android.widget.Toast;
 
 import com.andreabaccega.widget.FormEditText;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.classes.Cons;
+import com.mcsaatchi.gmfit.classes.Constants;
 import com.mcsaatchi.gmfit.classes.Helpers;
 import com.mcsaatchi.gmfit.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
@@ -48,7 +48,7 @@ public class ForgotPassword_Activity extends Base_Activity {
 
         ButterKnife.bind(this);
 
-        prefs = getSharedPreferences(Cons.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
+        prefs = getSharedPreferences(Constants.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
 
         setupToolbar(toolbar, R.string.forgot_password_activity_title, true);
         addTopPaddingToolbar(toolbar);
@@ -84,7 +84,7 @@ public class ForgotPassword_Activity extends Base_Activity {
                 });
 
 
-        DataAccessHandler.getInstance().sendResetPasswordLink(prefs.getString(Cons.PREF_USER_ACCESS_TOKEN, Cons
+        DataAccessHandler.getInstance().sendResetPasswordLink(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants
                 .NO_ACCESS_TOKEN_FOUND_IN_PREFS), email, new Callback<DefaultGetResponse>() {
             @Override
             public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {

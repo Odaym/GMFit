@@ -10,7 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.widget.LinearLayout;
 
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.classes.Cons;
+import com.mcsaatchi.gmfit.classes.Constants;
 import com.mcsaatchi.gmfit.classes.SlidingTabLayout;
 import com.mcsaatchi.gmfit.fragments.CustomizeCharts_Fragment;
 import com.mcsaatchi.gmfit.fragments.CustomizeWidgets_Fragment;
@@ -59,17 +59,17 @@ public class CustomizeWidgetsAndCharts_Activity extends Base_Activity {
 
         //Grab the Fragment type from one of the three Fragments (Fitness, Nutrition, Health)
         if (intentExtras != null) {
-            typeOfFragmentToCustomiseFor = intentExtras.getString(Cons.EXTRAS_CUSTOMIZE_WIDGETS_CHARTS_FRAGMENT_TYPE);
+            typeOfFragmentToCustomiseFor = intentExtras.getString(Constants.EXTRAS_CUSTOMIZE_WIDGETS_CHARTS_FRAGMENT_TYPE);
 
             if (typeOfFragmentToCustomiseFor != null) {
                 switch (typeOfFragmentToCustomiseFor) {
-                    case Cons.EXTRAS_FITNESS_FRAGMENT:
-                        fitnessWidgetsMapExtra = intentExtras.getParcelableArrayList(Cons.BUNDLE_FITNESS_WIDGETS_MAP);
+                    case Constants.EXTRAS_FITNESS_FRAGMENT:
+                        fitnessWidgetsMapExtra = intentExtras.getParcelableArrayList(Constants.BUNDLE_FITNESS_WIDGETS_MAP);
                         mainLayoutTop.setBackground(getResources().getDrawable(R.drawable.fitness_background));
                         break;
-                    case Cons.EXTRAS_NUTRITION_FRAGMENT:
-                        dataChartsMapExtra = intentExtras.getParcelableArrayList(Cons.BUNDLE_NUTRITION_CHARTS_MAP);
-                        nutritionWidgetsMapExtra = intentExtras.getParcelableArrayList(Cons.BUNDLE_NUTRITION_WIDGETS_MAP);
+                    case Constants.EXTRAS_NUTRITION_FRAGMENT:
+                        dataChartsMapExtra = intentExtras.getParcelableArrayList(Constants.BUNDLE_NUTRITION_CHARTS_MAP);
+                        nutritionWidgetsMapExtra = intentExtras.getParcelableArrayList(Constants.BUNDLE_NUTRITION_WIDGETS_MAP);
                         mainLayoutTop.setBackground(getResources().getDrawable(R.drawable.nutrition_background));
                         break;
                 }
@@ -101,16 +101,16 @@ public class CustomizeWidgetsAndCharts_Activity extends Base_Activity {
         public Fragment getItem(int position) {
             Bundle fragmentArguments = new Bundle();
 
-            fragmentArguments.putString(Cons.EXTRAS_CUSTOMIZE_WIDGETS_CHARTS_FRAGMENT_TYPE, typeOfFragmentToCustomiseFor);
+            fragmentArguments.putString(Constants.EXTRAS_CUSTOMIZE_WIDGETS_CHARTS_FRAGMENT_TYPE, typeOfFragmentToCustomiseFor);
 
             if (typeOfFragmentToCustomiseFor != null) {
                 switch (typeOfFragmentToCustomiseFor) {
-                    case Cons.EXTRAS_FITNESS_FRAGMENT:
-                        fragmentArguments.putParcelableArrayList(Cons.BUNDLE_FITNESS_WIDGETS_MAP, fitnessWidgetsMapExtra);
+                    case Constants.EXTRAS_FITNESS_FRAGMENT:
+                        fragmentArguments.putParcelableArrayList(Constants.BUNDLE_FITNESS_WIDGETS_MAP, fitnessWidgetsMapExtra);
                         break;
-                    case Cons.EXTRAS_NUTRITION_FRAGMENT:
-                        fragmentArguments.putParcelableArrayList(Cons.BUNDLE_NUTRITION_WIDGETS_MAP, nutritionWidgetsMapExtra);
-                        fragmentArguments.putParcelableArrayList(Cons.BUNDLE_NUTRITION_CHARTS_MAP, dataChartsMapExtra);
+                    case Constants.EXTRAS_NUTRITION_FRAGMENT:
+                        fragmentArguments.putParcelableArrayList(Constants.BUNDLE_NUTRITION_WIDGETS_MAP, nutritionWidgetsMapExtra);
+                        fragmentArguments.putParcelableArrayList(Constants.BUNDLE_NUTRITION_CHARTS_MAP, dataChartsMapExtra);
                         break;
                 }
             }

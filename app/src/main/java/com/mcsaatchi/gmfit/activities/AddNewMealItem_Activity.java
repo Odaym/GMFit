@@ -21,7 +21,7 @@ import android.widget.TextView;
 
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.adapters.SimpleSectioned_ListAdapter;
-import com.mcsaatchi.gmfit.classes.Cons;
+import com.mcsaatchi.gmfit.classes.Constants;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
 import com.mcsaatchi.gmfit.data_access.DataAccessHandler;
@@ -75,7 +75,7 @@ public class AddNewMealItem_Activity extends Base_Activity {
         String actionBarTitle;
 
         if (getIntent().getExtras() != null) {
-            mealType = getIntent().getExtras().getString(Cons.EXTRAS_MAIN_MEAL_NAME);
+            mealType = getIntent().getExtras().getString(Constants.EXTRAS_MAIN_MEAL_NAME);
             actionBarTitle = getString(R.string.add_new_meal_item_activity_title) + " " + mealType;
         } else {
             actionBarTitle = getString(R.string.app_name);
@@ -88,7 +88,7 @@ public class AddNewMealItem_Activity extends Base_Activity {
 
         ButterKnife.bind(this);
 
-        prefs = getSharedPreferences(Cons.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
+        prefs = getSharedPreferences(Constants.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
 
         setupToolbar(toolbar, actionBarTitle, true);
 
@@ -99,7 +99,7 @@ public class AddNewMealItem_Activity extends Base_Activity {
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
 
                 Intent intent = new Intent(AddNewMealItem_Activity.this, SpecifyMealAmount_Activity.class);
-                intent.putExtra(Cons.EXTRAS_MEAL_OBJECT_DETAILS, mealItems.get(position));
+                intent.putExtra(Constants.EXTRAS_MEAL_OBJECT_DETAILS, mealItems.get(position));
                 startActivityForResult(intent, MEAL_AMOUNT_SPECIFIED);
             }
         });
@@ -212,12 +212,12 @@ public class AddNewMealItem_Activity extends Base_Activity {
 
         if (data != null) {
 
-            MealItem mealItem = data.getParcelableExtra(Cons.EXTRAS_MEAL_OBJECT_DETAILS);
+            MealItem mealItem = data.getParcelableExtra(Constants.EXTRAS_MEAL_OBJECT_DETAILS);
 
             if (mealItem != null) {
                 switch (resultCode) {
                     case MEAL_AMOUNT_SPECIFIED:
-                        EventBus_Singleton.getInstance().post(new EventBus_Poster(Cons.EXTRAS_CREATED_NEW_MEAL_ENTRY, mealItem, true));
+                        EventBus_Singleton.getInstance().post(new EventBus_Poster(Constants.EXTRAS_CREATED_NEW_MEAL_ENTRY, mealItem, true));
                         break;
                 }
 
@@ -228,7 +228,7 @@ public class AddNewMealItem_Activity extends Base_Activity {
 
     private void findMeals(String mealName, final Callback<SearchMealItemResponse> mealItemsResponse) {
 
-        DataAccessHandler.findMeals(prefs.getString(Cons.PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS), mealName, new Callback<SearchMealItemResponse>() {
+        DataAccessHandler.findMeals(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), mealName, new Callback<SearchMealItemResponse>() {
             @Override
             public void onResponse(Call<SearchMealItemResponse> call, Response<SearchMealItemResponse> response) {
                 switch (response.code()) {
@@ -246,7 +246,7 @@ public class AddNewMealItem_Activity extends Base_Activity {
     }
 
     private void loadRecentMealsFromServer(final String mealType) {
-        DataAccessHandler.getInstance().getRecentMeals(prefs.getString(Cons.PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
+        DataAccessHandler.getInstance().getRecentMeals(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
                 "http://gmfit.mcsaatchi.me/api/v1/user/meals/recent?when=" + mealType.toLowerCase(), new Callback<RecentMealsResponse>() {
                     @Override
                     public void onResponse(Call<RecentMealsResponse> call, Response<RecentMealsResponse> response) {

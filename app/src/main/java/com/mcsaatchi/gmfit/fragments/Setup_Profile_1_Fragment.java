@@ -13,7 +13,7 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.classes.Cons;
+import com.mcsaatchi.gmfit.classes.Constants;
 import com.mukesh.countrypicker.fragments.CountryPicker;
 import com.mukesh.countrypicker.interfaces.CountryPickerListener;
 import com.mukesh.countrypicker.models.Country;
@@ -42,7 +42,7 @@ public class Setup_Profile_1_Fragment extends Fragment {
 
         ButterKnife.bind(this, fragmentView);
 
-        prefs = getActivity().getSharedPreferences(Cons.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
+        prefs = getActivity().getSharedPreferences(Constants.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
 
         final CountryPicker picker = CountryPicker.newInstance(getString(R.string.choose_country_hint));
 
@@ -54,14 +54,14 @@ public class Setup_Profile_1_Fragment extends Fragment {
         /**
          * The defaults are set here
          */
-        prefs.edit().putString(Cons.EXTRAS_USER_PROFILE_MEASUREMENT_SYSTEM, "metric").apply();
-        prefs.edit().putString(Cons.EXTRAS_USER_PROFILE_NATIONALITY, chooseCountryBTN.getText().toString()).apply();
+        prefs.edit().putString(Constants.EXTRAS_USER_PROFILE_MEASUREMENT_SYSTEM, "metric").apply();
+        prefs.edit().putString(Constants.EXTRAS_USER_PROFILE_NATIONALITY, chooseCountryBTN.getText().toString()).apply();
 
         metricRdBTN.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
                 if (checked)
-                    prefs.edit().putString(Cons.EXTRAS_USER_PROFILE_MEASUREMENT_SYSTEM, "metric").apply();
+                    prefs.edit().putString(Constants.EXTRAS_USER_PROFILE_MEASUREMENT_SYSTEM, "metric").apply();
             }
         });
 
@@ -69,7 +69,7 @@ public class Setup_Profile_1_Fragment extends Fragment {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
                 if (checked)
-                    prefs.edit().putString(Cons.EXTRAS_USER_PROFILE_MEASUREMENT_SYSTEM, "imperial").apply();
+                    prefs.edit().putString(Constants.EXTRAS_USER_PROFILE_MEASUREMENT_SYSTEM, "imperial").apply();
             }
         });
 
@@ -83,7 +83,7 @@ public class Setup_Profile_1_Fragment extends Fragment {
                         chooseCountryBTN.setText(name);
                         countryFlagIV.setImageResource(flagDrawableResID);
 
-                        prefs.edit().putString(Cons.EXTRAS_USER_PROFILE_NATIONALITY, name).apply();
+                        prefs.edit().putString(Constants.EXTRAS_USER_PROFILE_NATIONALITY, name).apply();
 
                         picker.dismiss();
                     }

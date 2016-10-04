@@ -12,7 +12,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.classes.Cons;
+import com.mcsaatchi.gmfit.classes.Constants;
 import com.mcsaatchi.gmfit.rest.SlugBreakdownResponseMonthly;
 
 import java.text.NumberFormat;
@@ -47,11 +47,11 @@ public class SlugBreakdown_Fragment_Monthly extends Fragment {
         Bundle fragmentBundle = getArguments();
 
         if (fragmentBundle != null) {
-            ArrayList<Parcelable> slugBreakdownData = fragmentBundle.getParcelableArrayList(Cons.BUNDLE_SLUG_BREAKDOWN_DATA_MONTHLY);
+            ArrayList<Parcelable> slugBreakdownData = fragmentBundle.getParcelableArrayList(Constants.BUNDLE_SLUG_BREAKDOWN_DATA_MONTHLY);
 
-            measurementUnitForMetric = fragmentBundle.getString(Cons.BUNDLE_SLUG_BREAKDOWN_MEASUREMENT_UNIT, "");
+            measurementUnitForMetric = fragmentBundle.getString(Constants.BUNDLE_SLUG_BREAKDOWN_MEASUREMENT_UNIT, "");
 
-            float slugBreakdownYearlyTotal =  fragmentBundle.getFloat(Cons.BUNDLE_SLUG_BREAKDOWN_YEARLY_TOTAL, 0);
+            float slugBreakdownYearlyTotal =  fragmentBundle.getFloat(Constants.BUNDLE_SLUG_BREAKDOWN_YEARLY_TOTAL, 0);
             allTimeValueTV.setText(NumberFormat.getNumberInstance(Locale.US).format((int) Double.parseDouble(String.valueOf(slugBreakdownYearlyTotal))) + " " + measurementUnitForMetric);
 
             hookupListWithItems(slugBreakdownData, measurementUnitForMetric);

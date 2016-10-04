@@ -6,7 +6,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.classes.Cons;
+import com.mcsaatchi.gmfit.classes.Constants;
 import com.mcsaatchi.gmfit.classes.Helpers;
 
 import butterknife.Bind;
@@ -25,7 +25,7 @@ public class UserPolicy_Activity extends Base_Activity {
         ButterKnife.bind(this);
 
         if (getIntent().getExtras() != null) {
-            String userPolicyString = getIntent().getExtras().getString(Cons.EXTRAS_USER_POLICY);
+            String userPolicyString = getIntent().getExtras().getString(Constants.EXTRAS_USER_POLICY);
 
             WebSettings settings = userPolicyWebView.getSettings();
             settings.setLoadWithOverviewMode(true);

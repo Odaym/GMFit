@@ -25,7 +25,7 @@ import com.andreabaccega.widget.FormEditText;
 import com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialogFragment;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.activities.Main_Activity;
-import com.mcsaatchi.gmfit.classes.Cons;
+import com.mcsaatchi.gmfit.classes.Constants;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
 import com.mcsaatchi.gmfit.data_access.DataAccessHandler;
@@ -107,7 +107,7 @@ public class Setup_Profile_3_Fragment extends Fragment implements CalendarDatePi
 
         initCustomSpinner(bloodTypeItems, bloodTypeSpinner);
 
-        prefs = getActivity().getSharedPreferences(Cons.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
+        prefs = getActivity().getSharedPreferences(Constants.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
 
         getAndPopulateMedicalConditions();
 
@@ -143,7 +143,7 @@ public class Setup_Profile_3_Fragment extends Fragment implements CalendarDatePi
         String ebpMessage = ebp.getMessage();
 
         switch (ebpMessage) {
-            case Cons.EVENT_USER_FINALIZE_SETUP_PROFILE:
+            case Constants.EVENT_USER_FINALIZE_SETUP_PROFILE:
                 if (!weightET.getText().toString().isEmpty() && !heightET.getText().toString().isEmpty()) {
                     int finalGender;
 
@@ -161,14 +161,14 @@ public class Setup_Profile_3_Fragment extends Fragment implements CalendarDatePi
 
                     String finalBloodType = bloodTypeSpinner.getSelectedItem().toString();
 
-                    prefs.edit().putString(Cons.EXTRAS_USER_PROFILE_DATE_OF_BIRTH, finalDateOfBirth).apply();
-                    prefs.edit().putFloat(Cons.EXTRAS_USER_PROFILE_WEIGHT, finalWeight).apply();
-                    prefs.edit().putFloat(Cons.EXTRAS_USER_PROFILE_HEIGHT, finalHeight).apply();
-                    prefs.edit().putString(Cons.EXTRAS_USER_PROFILE_BLOOD_TYPE, finalBloodType).apply();
+                    prefs.edit().putString(Constants.EXTRAS_USER_PROFILE_DATE_OF_BIRTH, finalDateOfBirth).apply();
+                    prefs.edit().putFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, finalWeight).apply();
+                    prefs.edit().putFloat(Constants.EXTRAS_USER_PROFILE_HEIGHT, finalHeight).apply();
+                    prefs.edit().putString(Constants.EXTRAS_USER_PROFILE_BLOOD_TYPE, finalBloodType).apply();
 
-                    String nationality = prefs.getString(Cons.EXTRAS_USER_PROFILE_NATIONALITY, "");
-                    String measurementSystem = prefs.getString(Cons.EXTRAS_USER_PROFILE_MEASUREMENT_SYSTEM, "");
-                    String goal = prefs.getString(Cons.EXTRAS_USER_PROFILE_GOAL, "");
+                    String nationality = prefs.getString(Constants.EXTRAS_USER_PROFILE_NATIONALITY, "");
+                    String measurementSystem = prefs.getString(Constants.EXTRAS_USER_PROFILE_MEASUREMENT_SYSTEM, "");
+                    String goal = prefs.getString(Constants.EXTRAS_USER_PROFILE_GOAL, "");
 
                     setupUserProfile(finalDateOfBirth, finalBloodType, nationality, (int) medicalConditionsSpinner.getSelectedItemId(), measurementSystem, goal,
                             finalGender, finalHeight, finalWeight, calculateBMI(finalWeight, finalHeight));
@@ -191,7 +191,7 @@ public class Setup_Profile_3_Fragment extends Fragment implements CalendarDatePi
     }
 
     private void getAndPopulateMedicalConditions() {
-        DataAccessHandler.getInstance().getMedicalConditions(prefs.getString(Cons.PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS), new Callback<MedicalConditionsResponse>() {
+        DataAccessHandler.getInstance().getMedicalConditions(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), new Callback<MedicalConditionsResponse>() {
             @Override
             public void onResponse(Call<MedicalConditionsResponse> call, Response<MedicalConditionsResponse> response) {
                 switch (response.code()) {
@@ -242,7 +242,7 @@ public class Setup_Profile_3_Fragment extends Fragment implements CalendarDatePi
                     }
                 });
 
-        DataAccessHandler.getInstance().updateUserProfile(prefs.getString(Cons.PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS), finalDateOfBirth,
+        DataAccessHandler.getInstance().updateUserProfile(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), finalDateOfBirth,
                 bloodType, nationality, medical_condition, measurementSystem, goal, finalGender, height, weight, BMI, new Callback<DefaultGetResponse>() {
                     @Override
                     public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
@@ -266,16 +266,16 @@ public class Setup_Profile_3_Fragment extends Fragment implements CalendarDatePi
     }
 
     private void getUiForSection(final ProgressDialog waitingDialog, String section) {
-        DataAccessHandler.getInstance().getUiForSection(prefs.getString(Cons.PREF_USER_ACCESS_TOKEN,
-                Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS), "http://gmfit.mcsaatchi.me/api/v1/user/ui?section=" + section, new Callback<UiResponse>() {
+        DataAccessHandler.getInstance().getUiForSection(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN,
+                Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), "http://gmfit.mcsaatchi.me/api/v1/user/ui?section=" + section, new Callback<UiResponse>() {
             @Override
             public void onResponse(Call<UiResponse> call, Response<UiResponse> response) {
                 switch (response.code()) {
                     case 200:
                         waitingDialog.dismiss();
 
-                        prefs.edit().putBoolean(Cons.EXTRAS_USER_LOGGED_IN, true).apply();
-                        prefs.edit().putBoolean(prefs.getString(Cons.EXTRAS_USER_EMAIL, "") + "_" + Cons.EVENT_FINISHED_SETTING_UP_PROFILE_SUCCESSFULLY, true).apply();
+                        prefs.edit().putBoolean(Constants.EXTRAS_USER_LOGGED_IN, true).apply();
+                        prefs.edit().putBoolean(prefs.getString(Constants.EXTRAS_USER_EMAIL, "") + "_" + Constants.EVENT_FINISHED_SETTING_UP_PROFILE_SUCCESSFULLY, true).apply();
 
                         List<AuthenticationResponseWidget> widgetsMap = response.body().getData().getBody().getWidgets();
                         List<AuthenticationResponseChart> chartsMap = response.body().getData().getBody().getCharts();

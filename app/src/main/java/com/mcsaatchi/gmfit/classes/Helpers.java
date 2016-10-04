@@ -67,10 +67,10 @@ public class Helpers {
         Bundle bundle = new Bundle();
 
         if (activityTitleResourceId != 0) {
-            bundle.putInt(Cons.BUNDLE_ACTIVITY_TITLE, activityTitleResourceId);
+            bundle.putInt(Constants.BUNDLE_ACTIVITY_TITLE, activityTitleResourceId);
         }
 
-        bundle.putBoolean(Cons.BUNDLE_ACTIVITY_BACK_BUTTON_ENABLED, enableBackButton);
+        bundle.putBoolean(Constants.BUNDLE_ACTIVITY_BACK_BUTTON_ENABLED, enableBackButton);
 
         return bundle;
     }

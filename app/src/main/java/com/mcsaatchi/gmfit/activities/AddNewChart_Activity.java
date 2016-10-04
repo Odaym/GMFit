@@ -17,7 +17,7 @@ import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.adapters.DataChartsListing_Adapter;
-import com.mcsaatchi.gmfit.classes.Cons;
+import com.mcsaatchi.gmfit.classes.Constants;
 import com.mcsaatchi.gmfit.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.models.DataChart;
 import com.mcsaatchi.gmfit.rest.ChartsBySectionResponse;
@@ -62,21 +62,21 @@ public class AddNewChart_Activity extends Base_Activity {
 
         setupToolbar(toolbar, R.string.add_new_chart_activity_title, true);
 
-        prefs = getSharedPreferences(Cons.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
+        prefs = getSharedPreferences(Constants.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
 
         Bundle extras = getIntent().getExtras();
 
         if (extras != null) {
-            String CALL_PURPOSE = extras.getString(Cons.EXTRAS_ADD_CHART_WHAT_TYPE);
+            String CALL_PURPOSE = extras.getString(Constants.EXTRAS_ADD_CHART_WHAT_TYPE);
 
             if (CALL_PURPOSE != null) {
                 switch (CALL_PURPOSE) {
-                    case Cons.EXTRAS_ADD_FITNESS_CHART:
+                    case Constants.EXTRAS_ADD_FITNESS_CHART:
                         topLayout.setBackground(getResources().getDrawable(R.drawable.fitness_background));
 
                         getChartsBySection("fitness", ADD_NEW_FITNESS_CHART_REQUEST_CODE);
                         break;
-                    case Cons.EXTRAS_ADD_NUTRIITION_CHART:
+                    case Constants.EXTRAS_ADD_NUTRIITION_CHART:
                         topLayout.setBackground(getResources().getDrawable(R.drawable.nutrition_background));
 
                         getChartsBySection("nutrition", ADD_NEW_NUTRITION_CHART_REQUEST_CODE);
@@ -102,7 +102,7 @@ public class AddNewChart_Activity extends Base_Activity {
     }
 
     private void getChartsBySection(String sectionName, final int requestCodeToSendBack) {
-        DataAccessHandler.getInstance().getChartsBySection(prefs.getString(Cons.PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS), sectionName, new Callback<ChartsBySectionResponse>() {
+        DataAccessHandler.getInstance().getChartsBySection(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), sectionName, new Callback<ChartsBySectionResponse>() {
             @Override
             public void onResponse(Call<ChartsBySectionResponse> call, Response<ChartsBySectionResponse> response) {
                 switch (response.code()) {
@@ -133,8 +133,8 @@ public class AddNewChart_Activity extends Base_Activity {
                                     addMetricChart(dataChart.getChart_id());
 
                                     Intent intent = new Intent();
-                                    intent.putExtra(Cons.EXTRAS_CHART_FULL_NAME, dataChart.getName());
-                                    intent.putExtra(Cons.EXTRAS_CHART_TYPE_SELECTED, dataChart.getType());
+                                    intent.putExtra(Constants.EXTRAS_CHART_FULL_NAME, dataChart.getName());
+                                    intent.putExtra(Constants.EXTRAS_CHART_TYPE_SELECTED, dataChart.getType());
                                     setResult(requestCodeToSendBack, intent);
 
                                     finish();
@@ -156,7 +156,7 @@ public class AddNewChart_Activity extends Base_Activity {
 
     private void addMetricChart(int chart_id) {
         Log.d("TAG", "addMetricChart: Chart ID is : " + chart_id);
-        DataAccessHandler.getInstance().addMetricChart(prefs.getString(Cons.PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS), chart_id, new Callback<DefaultGetResponse>() {
+        DataAccessHandler.getInstance().addMetricChart(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), chart_id, new Callback<DefaultGetResponse>() {
             @Override
             public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
                 switch (response.code()) {

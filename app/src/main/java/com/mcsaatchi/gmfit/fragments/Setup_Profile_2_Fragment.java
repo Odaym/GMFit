@@ -11,7 +11,7 @@ import android.widget.CompoundButton;
 import android.widget.RadioButton;
 
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.classes.Cons;
+import com.mcsaatchi.gmfit.classes.Constants;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -36,15 +36,15 @@ public class Setup_Profile_2_Fragment extends Fragment {
 
         ButterKnife.bind(this, fragmentView);
 
-        prefs = getActivity().getSharedPreferences(Cons.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
+        prefs = getActivity().getSharedPreferences(Constants.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
 
-        prefs.edit().putString(Cons.EXTRAS_USER_PROFILE_GOAL, "Lose weight").apply();
+        prefs.edit().putString(Constants.EXTRAS_USER_PROFILE_GOAL, "Lose weight").apply();
 
         loseWeightRdBTN.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
                 if (checked)
-                    prefs.edit().putString(Cons.EXTRAS_USER_PROFILE_GOAL, "Lose weight").apply();
+                    prefs.edit().putString(Constants.EXTRAS_USER_PROFILE_GOAL, "Lose weight").apply();
             }
         });
 
@@ -52,7 +52,7 @@ public class Setup_Profile_2_Fragment extends Fragment {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
                 if (checked)
-                    prefs.edit().putString(Cons.EXTRAS_USER_PROFILE_GOAL, "Maintain weight").apply();
+                    prefs.edit().putString(Constants.EXTRAS_USER_PROFILE_GOAL, "Maintain weight").apply();
             }
         });
 
@@ -61,7 +61,7 @@ public class Setup_Profile_2_Fragment extends Fragment {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
                 if (checked)
-                    prefs.edit().putString(Cons.EXTRAS_USER_PROFILE_GOAL, "Gain weight").apply();
+                    prefs.edit().putString(Constants.EXTRAS_USER_PROFILE_GOAL, "Gain weight").apply();
             }
         });
 

@@ -2,7 +2,7 @@ package com.mcsaatchi.gmfit.classes;
 
 import okhttp3.MediaType;
 
-public class Cons {
+public class Constants {
     public static final String SHARED_PREFS_TITLE = "GMFIT_PREFS";
     public static final String TAG = "GMFIT_DEBUG";
 

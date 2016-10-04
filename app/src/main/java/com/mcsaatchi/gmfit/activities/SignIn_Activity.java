@@ -17,7 +17,7 @@ import android.widget.TextView;
 
 import com.andreabaccega.widget.FormEditText;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.classes.Cons;
+import com.mcsaatchi.gmfit.classes.Constants;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
 import com.mcsaatchi.gmfit.classes.Helpers;
@@ -67,7 +67,7 @@ public class SignIn_Activity extends Base_Activity {
         setupToolbar(toolbar, R.string.sign_in_activity_title, true);
         addTopPaddingToolbar(toolbar);
 
-        prefs = getSharedPreferences(Cons.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
+        prefs = getSharedPreferences(Constants.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
 
         allFields.add(emailET);
         allFields.add(passwordET);
@@ -139,21 +139,21 @@ public class SignIn_Activity extends Base_Activity {
                         AuthenticationResponseInnerBody responseBody = response.body().getData().getBody();
 
                         //Refreshes access token
-                        prefs.edit().putString(Cons.PREF_USER_ACCESS_TOKEN, "Bearer " + responseBody.getToken()).apply();
-                        prefs.edit().putString(Cons.EXTRAS_USER_EMAIL, email).apply();
-                        prefs.edit().putString(Cons.EXTRAS_USER_PASSWORD, password).apply();
-                        prefs.edit().putBoolean(Cons.EXTRAS_USER_LOGGED_IN, true).apply();
+                        prefs.edit().putString(Constants.PREF_USER_ACCESS_TOKEN, "Bearer " + responseBody.getToken()).apply();
+                        prefs.edit().putString(Constants.EXTRAS_USER_EMAIL, email).apply();
+                        prefs.edit().putString(Constants.EXTRAS_USER_PASSWORD, password).apply();
+                        prefs.edit().putBoolean(Constants.EXTRAS_USER_LOGGED_IN, true).apply();
 
                         /**
                          * Case where the user already has an account and they just logged in with it on a new installation
                          * Cannot happen otherwise
                          */
-                        prefs.edit().putBoolean(prefs.getString(Cons.EXTRAS_USER_EMAIL, "") + "_" + Cons.EVENT_FINISHED_SETTING_UP_PROFILE_SUCCESSFULLY, true).apply();
+                        prefs.edit().putBoolean(prefs.getString(Constants.EXTRAS_USER_EMAIL, "") + "_" + Constants.EVENT_FINISHED_SETTING_UP_PROFILE_SUCCESSFULLY, true).apply();
 
                         List<AuthenticationResponseWidget> widgetsMap = responseBody.getWidgets();
                         List<AuthenticationResponseChart> chartsMap = responseBody.getCharts();
 
-                        EventBus_Singleton.getInstance().post(new EventBus_Poster(Cons.EVENT_SIGNNED_UP_SUCCESSFULLY_CLOSE_LOGIN_ACTIVITY));
+                        EventBus_Singleton.getInstance().post(new EventBus_Poster(Constants.EVENT_SIGNNED_UP_SUCCESSFULLY_CLOSE_LOGIN_ACTIVITY));
 
                         Intent intent = new Intent(SignIn_Activity.this, Main_Activity.class);
                         intent.putParcelableArrayListExtra("widgets", (ArrayList<AuthenticationResponseWidget>) widgetsMap);

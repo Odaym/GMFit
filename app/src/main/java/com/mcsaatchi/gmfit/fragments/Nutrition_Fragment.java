@@ -37,7 +37,7 @@ import com.mcsaatchi.gmfit.activities.SlugBreakdown_Activity;
 import com.mcsaatchi.gmfit.adapters.NutritionWidgets_GridAdapter;
 import com.mcsaatchi.gmfit.adapters.SimpleItemTouchHelperCallback;
 import com.mcsaatchi.gmfit.adapters.UserMeals_RecyclerAdapter;
-import com.mcsaatchi.gmfit.classes.Cons;
+import com.mcsaatchi.gmfit.classes.Constants;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
 import com.mcsaatchi.gmfit.classes.FontTextView;
@@ -76,7 +76,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static com.mcsaatchi.gmfit.classes.Cons.EXTRAS_NUTRITION_CHARTS_ORDER_ARRAY_CHANGED;
+import static com.mcsaatchi.gmfit.classes.Constants.EXTRAS_NUTRITION_CHARTS_ORDER_ARRAY_CHANGED;
 
 public class Nutrition_Fragment extends Fragment {
 
@@ -170,7 +170,7 @@ public class Nutrition_Fragment extends Fragment {
 
         EventBus_Singleton.getInstance().register(this);
 
-        prefs = getActivity().getSharedPreferences(Cons.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
+        prefs = getActivity().getSharedPreferences(Constants.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
     }
 
     @Override
@@ -196,7 +196,7 @@ public class Nutrition_Fragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), AddNewChart_Activity.class);
-                intent.putExtra(Cons.EXTRAS_ADD_CHART_WHAT_TYPE, Cons.EXTRAS_ADD_NUTRIITION_CHART);
+                intent.putExtra(Constants.EXTRAS_ADD_CHART_WHAT_TYPE, Constants.EXTRAS_ADD_NUTRIITION_CHART);
                 startActivityForResult(intent,
                         ADD_NEW_NUTRITION_CHART_REQUEST);
             }
@@ -214,9 +214,9 @@ public class Nutrition_Fragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent intent = new Intent(getActivity(), CustomizeWidgetsAndCharts_Activity.class);
-        intent.putExtra(Cons.EXTRAS_CUSTOMIZE_WIDGETS_CHARTS_FRAGMENT_TYPE, Cons.EXTRAS_NUTRITION_FRAGMENT);
-        intent.putParcelableArrayListExtra(Cons.BUNDLE_NUTRITION_WIDGETS_MAP, widgetsMap);
-        intent.putParcelableArrayListExtra(Cons.BUNDLE_NUTRITION_CHARTS_MAP, finalCharts);
+        intent.putExtra(Constants.EXTRAS_CUSTOMIZE_WIDGETS_CHARTS_FRAGMENT_TYPE, Constants.EXTRAS_NUTRITION_FRAGMENT);
+        intent.putParcelableArrayListExtra(Constants.BUNDLE_NUTRITION_WIDGETS_MAP, widgetsMap);
+        intent.putParcelableArrayListExtra(Constants.BUNDLE_NUTRITION_CHARTS_MAP, finalCharts);
         startActivity(intent);
 
         return super.onOptionsItemSelected(item);
@@ -231,11 +231,11 @@ public class Nutrition_Fragment extends Fragment {
         switch (requestCode) {
             case ADD_NEW_NUTRITION_CHART_REQUEST:
                 if (data != null) {
-                    String chartTitle = data.getStringExtra(Cons.EXTRAS_CHART_FULL_NAME);
+                    String chartTitle = data.getStringExtra(Constants.EXTRAS_CHART_FULL_NAME);
 
                     addNewBarChart(chartTitle);
 //TODO:
-//                    dataChartDAO.create(new DataChart(chartTitle, "", dataChartDAO.queryForAll().size() + 1, userEmail, Cons.EXTRAS_NUTRITION_FRAGMENT));
+//                    dataChartDAO.create(new DataChart(chartTitle, "", dataChartDAO.queryForAll().size() + 1, userEmail, Constants.EXTRAS_NUTRITION_FRAGMENT));
                 }
                 break;
             case BARCODE_CAPTURE_RC:
@@ -254,8 +254,8 @@ public class Nutrition_Fragment extends Fragment {
     }
 
     private void getUiForSection(String section) {
-        DataAccessHandler.getInstance().getUiForSection(prefs.getString(Cons.PREF_USER_ACCESS_TOKEN,
-                Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS), "http://gmfit.mcsaatchi.me/api/v1/user/ui?section=" + section, new Callback<UiResponse>() {
+        DataAccessHandler.getInstance().getUiForSection(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN,
+                Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), "http://gmfit.mcsaatchi.me/api/v1/user/ui?section=" + section, new Callback<UiResponse>() {
             @Override
             public void onResponse(Call<UiResponse> call, Response<UiResponse> response) {
                 switch (response.code()) {
@@ -309,8 +309,8 @@ public class Nutrition_Fragment extends Fragment {
     }
 
     private void updateUserWidgets(int[] widgetIds, int[] widgetPositions) {
-        DataAccessHandler.getInstance().updateUserWidgets(prefs.getString(Cons.PREF_USER_ACCESS_TOKEN,
-                Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS), widgetIds, widgetPositions, new Callback<DefaultGetResponse>() {
+        DataAccessHandler.getInstance().updateUserWidgets(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN,
+                Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), widgetIds, widgetPositions, new Callback<DefaultGetResponse>() {
             @Override
             public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
                 switch (response.code()) {
@@ -328,8 +328,8 @@ public class Nutrition_Fragment extends Fragment {
     }
 
     private void updateUserCharts(int[] chartIds, int[] chartPositions) {
-        DataAccessHandler.getInstance().updateUserCharts(prefs.getString(Cons.PREF_USER_ACCESS_TOKEN,
-                Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS), chartIds, chartPositions, new Callback<DefaultGetResponse>() {
+        DataAccessHandler.getInstance().updateUserCharts(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN,
+                Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), chartIds, chartPositions, new Callback<DefaultGetResponse>() {
             @Override
             public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
                 switch (response.code()) {
@@ -347,8 +347,8 @@ public class Nutrition_Fragment extends Fragment {
     }
 
     private void getUserAddedMeals() {
-        DataAccessHandler.getInstance().getUserAddedMeals(prefs.getString(Cons.PREF_USER_ACCESS_TOKEN,
-                Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS), new Callback<UserMealsResponse>() {
+        DataAccessHandler.getInstance().getUserAddedMeals(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN,
+                Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), new Callback<UserMealsResponse>() {
             @Override
             public void onResponse(Call<UserMealsResponse> call, Response<UserMealsResponse> response) {
                 switch (response.code()) {
@@ -585,7 +585,7 @@ public class Nutrition_Fragment extends Fragment {
         String ebpMessage = ebp.getMessage();
 
         switch (ebpMessage) {
-            case Cons.EXTRAS_UPDATED_MEAL_ENTRY:
+            case Constants.EXTRAS_UPDATED_MEAL_ENTRY:
                 Log.d(TAG, "handle_BusEvents: Updating existing meal");
 
                 if (ebp.getMealItemExtra() != null) {
@@ -612,7 +612,7 @@ public class Nutrition_Fragment extends Fragment {
                 }
 
                 break;
-            case Cons.EXTRAS_CREATED_NEW_MEAL_ENTRY:
+            case Constants.EXTRAS_CREATED_NEW_MEAL_ENTRY:
                 Log.d(TAG, "handle_BusEvents: Creating new meal");
 
                 if (ebp.getMealItemExtra() != null) {
@@ -665,7 +665,7 @@ public class Nutrition_Fragment extends Fragment {
                 }
 
                 break;
-            case Cons.EXTRAS_NUTRITION_WIDGETS_ORDER_ARRAY_CHANGED:
+            case Constants.EXTRAS_NUTRITION_WIDGETS_ORDER_ARRAY_CHANGED:
                 if (ebp.getNutritionWidgetsMap() != null) {
                     widgetsMap = ebp.getNutritionWidgetsMap();
                     setupWidgetViews(ebp.getNutritionWidgetsMap());
@@ -703,7 +703,7 @@ public class Nutrition_Fragment extends Fragment {
                 updateUserCharts(charts, chartPositions);
 
                 break;
-            case Cons.EXTRAS_NUTRITION_CHART_DELETED:
+            case Constants.EXTRAS_NUTRITION_CHART_DELETED:
 
                 break;
         }
@@ -736,7 +736,7 @@ public class Nutrition_Fragment extends Fragment {
 
     private void openMealEntryPickerActivity(String mainMealName) {
         Intent intent = new Intent(parentActivity, AddNewMealItem_Activity.class);
-        intent.putExtra(Cons.EXTRAS_MAIN_MEAL_NAME, mainMealName);
+        intent.putExtra(Constants.EXTRAS_MAIN_MEAL_NAME, mainMealName);
         startActivity(intent);
     }
 
@@ -821,10 +821,10 @@ public class Nutrition_Fragment extends Fragment {
                         waitingDialog.dismiss();
 
                         Intent intent = new Intent(getActivity(), SlugBreakdown_Activity.class);
-                        intent.putExtra(Cons.EXTRAS_CUSTOMIZE_WIDGETS_CHARTS_FRAGMENT_TYPE, Cons.EXTRAS_NUTRITION_FRAGMENT);
-                        intent.putExtra(Cons.EXTRAS_CHART_FULL_NAME, chartTitle);
-                        intent.putExtra(Cons.EXTRAS_CHART_TYPE_SELECTED, chartType);
-                        intent.putExtra(Cons.BUNDLE_SLUG_BREAKDOWN_DATA, response.body().getData().getBody().getData());
+                        intent.putExtra(Constants.EXTRAS_CUSTOMIZE_WIDGETS_CHARTS_FRAGMENT_TYPE, Constants.EXTRAS_NUTRITION_FRAGMENT);
+                        intent.putExtra(Constants.EXTRAS_CHART_FULL_NAME, chartTitle);
+                        intent.putExtra(Constants.EXTRAS_CHART_TYPE_SELECTED, chartType);
+                        intent.putExtra(Constants.BUNDLE_SLUG_BREAKDOWN_DATA, response.body().getData().getBody().getData());
                         getActivity().startActivity(intent);
                         break;
                 }
@@ -842,7 +842,7 @@ public class Nutrition_Fragment extends Fragment {
         final String todayDate;
         todayDate = dt.toString();
 
-        DataAccessHandler.getInstance().getPeriodicalChartData(prefs.getString(Cons.PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
+        DataAccessHandler.getInstance().getPeriodicalChartData(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
                 dt.minusMonths(1).toString(), todayDate, "nutrition", chart_slug, new Callback<ChartMetricBreakdownResponse>() {
                     @Override
                     public void onResponse(Call<ChartMetricBreakdownResponse> call, Response<ChartMetricBreakdownResponse> response) {

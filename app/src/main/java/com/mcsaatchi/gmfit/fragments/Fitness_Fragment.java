@@ -35,7 +35,7 @@ import com.mcsaatchi.gmfit.activities.Base_Activity;
 import com.mcsaatchi.gmfit.activities.CustomizeWidgetsAndCharts_Activity;
 import com.mcsaatchi.gmfit.activities.SlugBreakdown_Activity;
 import com.mcsaatchi.gmfit.adapters.FitnessWidgets_GridAdapter;
-import com.mcsaatchi.gmfit.classes.Cons;
+import com.mcsaatchi.gmfit.classes.Constants;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
 import com.mcsaatchi.gmfit.classes.FontTextView;
@@ -148,10 +148,10 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
             if (((AppCompatActivity) getActivity()).getSupportActionBar() != null)
                 ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.fitness_tab_title);
 
-            prefs = getActivity().getSharedPreferences(Cons.SHARED_PREFS_TITLE
+            prefs = getActivity().getSharedPreferences(Constants.SHARED_PREFS_TITLE
                     , Context.MODE_PRIVATE);
 
-            userEmail = prefs.getString(Cons.EXTRAS_USER_EMAIL, "");
+            userEmail = prefs.getString(Constants.EXTRAS_USER_EMAIL, "");
 
             /**
              * If the arguments are not null, get the Charts ArrayList from them
@@ -198,7 +198,7 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), AddNewChart_Activity.class);
-                intent.putExtra(Cons.EXTRAS_ADD_CHART_WHAT_TYPE, Cons.EXTRAS_ADD_FITNESS_CHART);
+                intent.putExtra(Constants.EXTRAS_ADD_CHART_WHAT_TYPE, Constants.EXTRAS_ADD_FITNESS_CHART);
                 startActivityForResult(intent, ADD_NEW_FITNESS_CHART_REQUEST_CODE);
             }
         });
@@ -288,7 +288,7 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
         final String todayDate;
         todayDate = dt.toString();
 
-        DataAccessHandler.getInstance().getPeriodicalChartData(prefs.getString(Cons.PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
+        DataAccessHandler.getInstance().getPeriodicalChartData(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
                 dt.minusMonths(1).toString(), todayDate, "fitness", chart_slug, new Callback<ChartMetricBreakdownResponse>() {
                     @Override
                     public void onResponse(Call<ChartMetricBreakdownResponse> call, Response<ChartMetricBreakdownResponse> response) {
@@ -353,12 +353,12 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
         if (requestCode == ADD_NEW_FITNESS_CHART_REQUEST_CODE) {
             if (data != null) {
 
-                chartType = data.getStringExtra(Cons.EXTRAS_CHART_TYPE_SELECTED);
-                chartName = data.getStringExtra(Cons.EXTRAS_CHART_FULL_NAME);
+                chartType = data.getStringExtra(Constants.EXTRAS_CHART_TYPE_SELECTED);
+                chartName = data.getStringExtra(Constants.EXTRAS_CHART_FULL_NAME);
 
                 addNewBarChart(chartName, chartType);
 
-                dataChartDAO.create(new DataChart(chartName, chartType, dataChartDAO.queryForAll().size() + 1, userEmail, Cons.EXTRAS_FITNESS_FRAGMENT));
+                dataChartDAO.create(new DataChart(chartName, chartType, dataChartDAO.queryForAll().size() + 1, userEmail, Constants.EXTRAS_FITNESS_FRAGMENT));
             }
         }
     }
@@ -368,8 +368,8 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
         switch (item.getItemId()) {
             case R.id.settings:
                 Intent intent = new Intent(getActivity(), CustomizeWidgetsAndCharts_Activity.class);
-                intent.putExtra(Cons.EXTRAS_CUSTOMIZE_WIDGETS_CHARTS_FRAGMENT_TYPE, Cons.EXTRAS_FITNESS_FRAGMENT);
-                intent.putExtra(Cons.BUNDLE_FITNESS_WIDGETS_MAP, widgetsMap);
+                intent.putExtra(Constants.EXTRAS_CUSTOMIZE_WIDGETS_CHARTS_FRAGMENT_TYPE, Constants.EXTRAS_FITNESS_FRAGMENT);
+                intent.putExtra(Constants.BUNDLE_FITNESS_WIDGETS_MAP, widgetsMap);
                 startActivity(intent);
                 break;
         }
@@ -409,10 +409,10 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
                         waitingDialog.dismiss();
 
                         Intent intent = new Intent(getActivity(), SlugBreakdown_Activity.class);
-                        intent.putExtra(Cons.EXTRAS_CUSTOMIZE_WIDGETS_CHARTS_FRAGMENT_TYPE, Cons.EXTRAS_FITNESS_FRAGMENT);
-                        intent.putExtra(Cons.EXTRAS_CHART_FULL_NAME, chartTitle);
-                        intent.putExtra(Cons.EXTRAS_CHART_TYPE_SELECTED, chartType);
-                        intent.putExtra(Cons.BUNDLE_SLUG_BREAKDOWN_DATA, response.body().getData().getBody().getData());
+                        intent.putExtra(Constants.EXTRAS_CUSTOMIZE_WIDGETS_CHARTS_FRAGMENT_TYPE, Constants.EXTRAS_FITNESS_FRAGMENT);
+                        intent.putExtra(Constants.EXTRAS_CHART_FULL_NAME, chartTitle);
+                        intent.putExtra(Constants.EXTRAS_CHART_TYPE_SELECTED, chartType);
+                        intent.putExtra(Constants.BUNDLE_SLUG_BREAKDOWN_DATA, response.body().getData().getBody().getData());
                         getActivity().startActivity(intent);
                         break;
                 }
@@ -432,7 +432,7 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
      */
     private void setupChartsFromDB() {
         try {
-            List<DataChart> allDataCharts = dataChartQB.orderBy("position", true).where().eq("username", userEmail).and().eq("whichFragment", Cons.EXTRAS_FITNESS_FRAGMENT).query();
+            List<DataChart> allDataCharts = dataChartQB.orderBy("position", true).where().eq("username", userEmail).and().eq("whichFragment", Constants.EXTRAS_FITNESS_FRAGMENT).query();
 
             cards_container.removeAllViews();
 
@@ -494,13 +494,13 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
         TextView fitnessWidget;
 
         switch (ebpMessage) {
-            case Cons.EXTRAS_FITNESS_WIDGETS_ORDER_ARRAY_CHANGED:
+            case Constants.EXTRAS_FITNESS_WIDGETS_ORDER_ARRAY_CHANGED:
                 if (ebp.getFitnessWidgetsMap() != null) {
                     widgetsMap = ebp.getFitnessWidgetsMap();
                     setupWidgetViews(widgetsMap);
                 }
                 break;
-            case Cons.EXTRAS_FITNESS_CHARTS_ORDER_ARRAY_CHANGED:
+            case Constants.EXTRAS_FITNESS_CHARTS_ORDER_ARRAY_CHANGED:
                 List<DataChart> allDataCharts = ebp.getDataChartsListExtra();
 
                 cards_container.removeAllViews();
@@ -513,20 +513,20 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
                 }
 
                 break;
-            case Cons.EXTRAS_FITNESS_CHART_DELETED:
+            case Constants.EXTRAS_FITNESS_CHART_DELETED:
                 setupChartsFromDB();
                 break;
-            case Cons.EVENT_CHART_METRICS_RECEIVED:
+            case Constants.EVENT_CHART_METRICS_RECEIVED:
 //                addNewBarChart(chartName, ebp.getFloatArrayExtra());
                 break;
-            case Cons.EVENT_STEP_COUNTER_INCREMENTED:
+            case Constants.EVENT_STEP_COUNTER_INCREMENTED:
                 metricCounterTV.setText(String.valueOf(prefs.getInt(Helpers.getTodayDate() + "_steps", 0)));
                 break;
-            case Cons.EVENT_CALORIES_COUNTER_INCREMENTED:
+            case Constants.EVENT_CALORIES_COUNTER_INCREMENTED:
                 fitnessWidget = findWidgetInGrid("Calories");
                 fitnessWidget.setText(String.valueOf((int) prefs.getFloat(Helpers.getTodayDate() + "_calories", 0)));
                 break;
-            case Cons.EVENT_DISTANCE_COUNTER_INCREMENTED:
+            case Constants.EVENT_DISTANCE_COUNTER_INCREMENTED:
                 fitnessWidget = findWidgetInGrid("Distance");
                 fitnessWidget.setText(String.valueOf((int) (prefs.getFloat(Helpers.getTodayDate() + "_distance", 0) * 1000)));
                 break;

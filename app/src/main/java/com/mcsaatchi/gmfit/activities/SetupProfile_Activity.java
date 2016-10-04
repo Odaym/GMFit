@@ -15,7 +15,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.classes.Cons;
+import com.mcsaatchi.gmfit.classes.Constants;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
 import com.mcsaatchi.gmfit.classes.Helpers;
@@ -46,7 +46,7 @@ public class SetupProfile_Activity extends Base_Activity {
 
         ButterKnife.bind(this);
 
-        prefs = getSharedPreferences(Cons.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
+        prefs = getSharedPreferences(Constants.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
 
         setupProfileAdapter = new SetupProfile_Adapter(getSupportFragmentManager());
 
@@ -104,7 +104,7 @@ public class SetupProfile_Activity extends Base_Activity {
                 // Time for submission
                 if (nextPageBTN.getText().toString().equals(getString(R.string.finish_setup))) {
                     if (Helpers.isInternetAvailable(SetupProfile_Activity.this)) {
-                        EventBus_Singleton.getInstance().post(new EventBus_Poster(Cons.EVENT_USER_FINALIZE_SETUP_PROFILE));
+                        EventBus_Singleton.getInstance().post(new EventBus_Poster(Constants.EVENT_USER_FINALIZE_SETUP_PROFILE));
                     } else {
                         Helpers.showNoInternetDialog(SetupProfile_Activity.this);
                     }

@@ -19,7 +19,7 @@ import android.util.Log;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.mcsaatchi.gmfit.BuildConfig;
-import com.mcsaatchi.gmfit.classes.Cons;
+import com.mcsaatchi.gmfit.classes.Constants;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
 import com.mcsaatchi.gmfit.data_access.DBHelper;
@@ -73,14 +73,14 @@ public class SensorListener extends Service implements SensorEventListener {
 
         int stepsToday = prefs.getInt(todayDate + "_steps", 0);
 
-        if (prefs.getBoolean(Cons.EXTRAS_FIRST_APP_LAUNCH, true)) {
-            prefs.edit().putBoolean(Cons.EXTRAS_FIRST_APP_LAUNCH, false).apply();
+        if (prefs.getBoolean(Constants.EXTRAS_FIRST_APP_LAUNCH, true)) {
+            prefs.edit().putBoolean(Constants.EXTRAS_FIRST_APP_LAUNCH, false).apply();
 
             prefs.edit().putInt(todayDate + "_steps", 0).apply();
             prefs.edit().putFloat(todayDate + "_calories", 0).apply();
             prefs.edit().putFloat(todayDate + "_distance", 0).apply();
         } else {
-            float caloriesToday = calculateCalories(prefs.getFloat(Cons.EXTRAS_USER_PROFILE_WEIGHT, 70), METRIC_RUNNING_FACTOR, STEP_LENGTH);
+            float caloriesToday = calculateCalories(prefs.getFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, 70), METRIC_RUNNING_FACTOR, STEP_LENGTH);
             float distanceToday = calculateDistance(STEP_LENGTH);
 
             storeStepsToday(stepsToday, "steps");
@@ -135,9 +135,9 @@ public class SensorListener extends Service implements SensorEventListener {
     }
 
     public void sendOutEventBusEvents(){
-        EventBus_Singleton.getInstance().post(new EventBus_Poster(Cons.EVENT_STEP_COUNTER_INCREMENTED));
-        EventBus_Singleton.getInstance().post(new EventBus_Poster(Cons.EVENT_CALORIES_COUNTER_INCREMENTED));
-        EventBus_Singleton.getInstance().post(new EventBus_Poster(Cons.EVENT_DISTANCE_COUNTER_INCREMENTED));
+        EventBus_Singleton.getInstance().post(new EventBus_Poster(Constants.EVENT_STEP_COUNTER_INCREMENTED));
+        EventBus_Singleton.getInstance().post(new EventBus_Poster(Constants.EVENT_CALORIES_COUNTER_INCREMENTED));
+        EventBus_Singleton.getInstance().post(new EventBus_Poster(Constants.EVENT_DISTANCE_COUNTER_INCREMENTED));
     }
 
     @Override
@@ -164,7 +164,7 @@ public class SensorListener extends Service implements SensorEventListener {
 
         reRegisterSensor();
 
-        prefs = getApplicationContext().getSharedPreferences(Cons.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
+        prefs = getApplicationContext().getSharedPreferences(Constants.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
 
         fitnessWidgetsDAO = getDBHelper().getFitnessWidgetsDAO();
 
@@ -184,7 +184,7 @@ public class SensorListener extends Service implements SensorEventListener {
             }
         };
 
-        timer.schedule(doAsynchronousTask, 0, Cons.WAIT_TIME_BEFORE_CHECKING_METRICS_SERVICE);
+        timer.schedule(doAsynchronousTask, 0, Constants.WAIT_TIME_BEFORE_CHECKING_METRICS_SERVICE);
     }
 
     private void refreshAccessToken() {
@@ -193,7 +193,7 @@ public class SensorListener extends Service implements SensorEventListener {
             public void onResponse(Call<AuthenticationResponse> call, Response<AuthenticationResponse> response) {
                 switch (response.code()) {
                     case 200:
-                        prefs.edit().putString(Cons.PREF_USER_ACCESS_TOKEN, "Bearer " + response.body().getData().getBody().getToken()).apply();
+                        prefs.edit().putString(Constants.PREF_USER_ACCESS_TOKEN, "Bearer " + response.body().getData().getBody().getToken()).apply();
 
                         String[] slugsArray = new String[]{"steps-count", "active-calories",
                                 "distance-traveled"};

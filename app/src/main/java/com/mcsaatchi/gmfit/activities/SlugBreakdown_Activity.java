@@ -15,7 +15,7 @@ import android.view.MenuItem;
 import android.widget.LinearLayout;
 
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.classes.Cons;
+import com.mcsaatchi.gmfit.classes.Constants;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
 import com.mcsaatchi.gmfit.classes.SlidingTabLayout;
@@ -62,23 +62,23 @@ public class SlugBreakdown_Activity extends Base_Activity {
 
         //Grab the Fragment type from one of the three Fragments (Fitness, Nutrition, Health)
         if (intentExtras != null) {
-            chartTitle = intentExtras.getString(Cons.EXTRAS_CHART_FULL_NAME);
+            chartTitle = intentExtras.getString(Constants.EXTRAS_CHART_FULL_NAME);
 
             setupToolbar(toolbar, chartTitle, true);
 
-            typeOfFragmentToCustomizeFor = intentExtras.getString(Cons.EXTRAS_CUSTOMIZE_WIDGETS_CHARTS_FRAGMENT_TYPE);
-            slugBreakdownData = intentExtras.getParcelable(Cons.BUNDLE_SLUG_BREAKDOWN_DATA);
-            chartType = intentExtras.getString(Cons.EXTRAS_CHART_TYPE_SELECTED, "");
-            chartTitle = intentExtras.getString(Cons.EXTRAS_CHART_FULL_NAME, "");
+            typeOfFragmentToCustomizeFor = intentExtras.getString(Constants.EXTRAS_CUSTOMIZE_WIDGETS_CHARTS_FRAGMENT_TYPE);
+            slugBreakdownData = intentExtras.getParcelable(Constants.BUNDLE_SLUG_BREAKDOWN_DATA);
+            chartType = intentExtras.getString(Constants.EXTRAS_CHART_TYPE_SELECTED, "");
+            chartTitle = intentExtras.getString(Constants.EXTRAS_CHART_FULL_NAME, "");
 
             switch (typeOfFragmentToCustomizeFor) {
-                case Cons.EXTRAS_FITNESS_FRAGMENT:
+                case Constants.EXTRAS_FITNESS_FRAGMENT:
                     parentLayoutToCustomize.setBackground(getResources().getDrawable(R.drawable.fitness_background));
                     break;
-                case Cons.EXTRAS_NUTRITION_FRAGMENT:
+                case Constants.EXTRAS_NUTRITION_FRAGMENT:
                     parentLayoutToCustomize.setBackground(getResources().getDrawable(R.drawable.nutrition_background));
                     break;
-                case Cons.EXTRAS_HEALTH_FRAGMENT:
+                case Constants.EXTRAS_HEALTH_FRAGMENT:
                     break;
             }
         }
@@ -113,11 +113,11 @@ public class SlugBreakdown_Activity extends Base_Activity {
                             public void onClick(DialogInterface dialog, int which) {
 
                                 switch (typeOfFragmentToCustomizeFor) {
-                                    case Cons.EXTRAS_FITNESS_FRAGMENT:
-                                        EventBus_Singleton.getInstance().post(new EventBus_Poster(Cons.EXTRAS_FITNESS_CHART_DELETED));
+                                    case Constants.EXTRAS_FITNESS_FRAGMENT:
+                                        EventBus_Singleton.getInstance().post(new EventBus_Poster(Constants.EXTRAS_FITNESS_CHART_DELETED));
                                         break;
-                                    case Cons.EXTRAS_NUTRITION_FRAGMENT:
-                                        EventBus_Singleton.getInstance().post(new EventBus_Poster(Cons.EXTRAS_NUTRITION_CHART_DELETED));
+                                    case Constants.EXTRAS_NUTRITION_FRAGMENT:
+                                        EventBus_Singleton.getInstance().post(new EventBus_Poster(Constants.EXTRAS_NUTRITION_CHART_DELETED));
                                         break;
                                 }
 
@@ -169,7 +169,7 @@ public class SlugBreakdown_Activity extends Base_Activity {
         @Override
         public Fragment getItem(int position) {
             Bundle fragmentArguments = new Bundle();
-//            fragmentArguments.putString(Cons.EXTRAS_CUSTOMIZE_WIDGETS_CHARTS_FRAGMENT_TYPE, typeOfFragmentToCustomizeFor);
+//            fragmentArguments.putString(Constants.EXTRAS_CUSTOMIZE_WIDGETS_CHARTS_FRAGMENT_TYPE, typeOfFragmentToCustomizeFor);
 
             Fragment slugBreakdownFragment;
 
@@ -181,23 +181,23 @@ public class SlugBreakdown_Activity extends Base_Activity {
             switch (position) {
                 case DAY_BREAKDOWN:
                     slugBreakdownFragment = new SlugBreakdown_Fragment_Daily();
-                    fragmentArguments.putFloat(Cons.BUNDLE_SLUG_BREAKDOWN_YEARLY_TOTAL, slugBreakdownYearlyTotal);
-                    fragmentArguments.putParcelableArrayList(Cons.BUNDLE_SLUG_BREAKDOWN_DATA_DAILY, (ArrayList<? extends Parcelable>) slugBreakdownData.getDaily());
-                    fragmentArguments.putString(Cons.BUNDLE_SLUG_BREAKDOWN_MEASUREMENT_UNIT, measurementUnit);
+                    fragmentArguments.putFloat(Constants.BUNDLE_SLUG_BREAKDOWN_YEARLY_TOTAL, slugBreakdownYearlyTotal);
+                    fragmentArguments.putParcelableArrayList(Constants.BUNDLE_SLUG_BREAKDOWN_DATA_DAILY, (ArrayList<? extends Parcelable>) slugBreakdownData.getDaily());
+                    fragmentArguments.putString(Constants.BUNDLE_SLUG_BREAKDOWN_MEASUREMENT_UNIT, measurementUnit);
                     slugBreakdownFragment.setArguments(fragmentArguments);
                     return slugBreakdownFragment;
                 case MONTH_BREAKDOWN:
                     slugBreakdownFragment = new SlugBreakdown_Fragment_Monthly();
-                    fragmentArguments.putFloat(Cons.BUNDLE_SLUG_BREAKDOWN_YEARLY_TOTAL, slugBreakdownYearlyTotal);
-                    fragmentArguments.putParcelableArrayList(Cons.BUNDLE_SLUG_BREAKDOWN_DATA_MONTHLY, (ArrayList<? extends Parcelable>) slugBreakdownData.getMonthly());
-                    fragmentArguments.putString(Cons.BUNDLE_SLUG_BREAKDOWN_MEASUREMENT_UNIT, measurementUnit);
+                    fragmentArguments.putFloat(Constants.BUNDLE_SLUG_BREAKDOWN_YEARLY_TOTAL, slugBreakdownYearlyTotal);
+                    fragmentArguments.putParcelableArrayList(Constants.BUNDLE_SLUG_BREAKDOWN_DATA_MONTHLY, (ArrayList<? extends Parcelable>) slugBreakdownData.getMonthly());
+                    fragmentArguments.putString(Constants.BUNDLE_SLUG_BREAKDOWN_MEASUREMENT_UNIT, measurementUnit);
                     slugBreakdownFragment.setArguments(fragmentArguments);
                     return slugBreakdownFragment;
                 case YEAR_BREAKDOWN:
                     slugBreakdownFragment = new SlugBreakdown_Fragment_Yearly();
-                    fragmentArguments.putFloat(Cons.BUNDLE_SLUG_BREAKDOWN_YEARLY_TOTAL, slugBreakdownYearlyTotal);
-                    fragmentArguments.putParcelableArrayList(Cons.BUNDLE_SLUG_BREAKDOWN_DATA_YEARLY, (ArrayList<? extends Parcelable>) slugBreakdownData.getYearly());
-                    fragmentArguments.putString(Cons.BUNDLE_SLUG_BREAKDOWN_MEASUREMENT_UNIT, measurementUnit);
+                    fragmentArguments.putFloat(Constants.BUNDLE_SLUG_BREAKDOWN_YEARLY_TOTAL, slugBreakdownYearlyTotal);
+                    fragmentArguments.putParcelableArrayList(Constants.BUNDLE_SLUG_BREAKDOWN_DATA_YEARLY, (ArrayList<? extends Parcelable>) slugBreakdownData.getYearly());
+                    fragmentArguments.putString(Constants.BUNDLE_SLUG_BREAKDOWN_MEASUREMENT_UNIT, measurementUnit);
                     slugBreakdownFragment.setArguments(fragmentArguments);
                     return slugBreakdownFragment;
             }

@@ -9,7 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.classes.Cons;
+import com.mcsaatchi.gmfit.classes.Constants;
 import com.mcsaatchi.gmfit.classes.Helpers;
 import com.mcsaatchi.gmfit.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponse;
@@ -34,17 +34,17 @@ public class Splash_Activity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        prefs = getSharedPreferences(Cons.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
+        prefs = getSharedPreferences(Constants.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
 
         int SPLASH_TIME_OUT = 1000;
         int NO_INTERNET_DIALOG_TIMEOUT = 3000;
 
-        Log.d("TAGTAG", "onCreate outside if : " + prefs.getBoolean(prefs.getString(Cons.EXTRAS_USER_EMAIL, "") + "_" + Cons.EVENT_FINISHED_SETTING_UP_PROFILE_SUCCESSFULLY, false));
+        Log.d("TAGTAG", "onCreate outside if : " + prefs.getBoolean(prefs.getString(Constants.EXTRAS_USER_EMAIL, "") + "_" + Constants.EVENT_FINISHED_SETTING_UP_PROFILE_SUCCESSFULLY, false));
 
         /**
          * User is not logged in
          */
-        if (!prefs.getBoolean(Cons.EXTRAS_USER_LOGGED_IN, false)) {
+        if (!prefs.getBoolean(Constants.EXTRAS_USER_LOGGED_IN, false)) {
             Log.d("TAGTAG", "User not logged in");
 
             new Handler().postDelayed(new Runnable() {
@@ -59,7 +59,7 @@ public class Splash_Activity extends AppCompatActivity {
             /**
              * User did not finish setting up profile
              */
-        } else if (!prefs.getBoolean(prefs.getString(Cons.EXTRAS_USER_EMAIL, "") + "_" + Cons.EVENT_FINISHED_SETTING_UP_PROFILE_SUCCESSFULLY, false)) {
+        } else if (!prefs.getBoolean(prefs.getString(Constants.EXTRAS_USER_EMAIL, "") + "_" + Constants.EVENT_FINISHED_SETTING_UP_PROFILE_SUCCESSFULLY, false)) {
 
             Log.d("TAGTAG", "onCreate: user has not yet finished setup profile process");
             intent = new Intent(Splash_Activity.this, SetupProfile_Activity.class);
@@ -68,11 +68,11 @@ public class Splash_Activity extends AppCompatActivity {
             /**
              * User is logged in and they did finish setting up their profile
              */
-        } else if (prefs.getBoolean(Cons.EXTRAS_USER_LOGGED_IN, false)) {
+        } else if (prefs.getBoolean(Constants.EXTRAS_USER_LOGGED_IN, false)) {
             if (Helpers.isInternetAvailable(Splash_Activity.this)) {
                 Log.d("TAGTAG", "onCreate: signing the user in silently now");
 
-                signInUserSilently(prefs.getString(Cons.EXTRAS_USER_EMAIL, ""), prefs.getString(Cons.EXTRAS_USER_PASSWORD, ""));
+                signInUserSilently(prefs.getString(Constants.EXTRAS_USER_EMAIL, ""), prefs.getString(Constants.EXTRAS_USER_PASSWORD, ""));
             } else {
                 Helpers.showNoInternetDialog(Splash_Activity.this);
                 new Handler().postDelayed(new Runnable() {
@@ -94,7 +94,7 @@ public class Splash_Activity extends AppCompatActivity {
                         AuthenticationResponseInnerBody responseBody = response.body().getData().getBody();
 
                         //Refreshes access token
-                        prefs.edit().putString(Cons.PREF_USER_ACCESS_TOKEN, "Bearer " + responseBody.getToken()).apply();
+                        prefs.edit().putString(Constants.PREF_USER_ACCESS_TOKEN, "Bearer " + responseBody.getToken()).apply();
 
                         /**
                          * Don't send the widgets over to the Main Activity here

@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.adapters.OneItemWithIcon_ListAdapter;
-import com.mcsaatchi.gmfit.classes.Cons;
+import com.mcsaatchi.gmfit.classes.Constants;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
 import com.mcsaatchi.gmfit.models.DataChart;
@@ -86,19 +86,19 @@ public class CustomizeCharts_Fragment extends Fragment {
 
         if (fragmentBundle != null) {
 
-            typeOfFragmentToCustomizeFor = fragmentBundle.getString(Cons.EXTRAS_CUSTOMIZE_WIDGETS_CHARTS_FRAGMENT_TYPE);
+            typeOfFragmentToCustomizeFor = fragmentBundle.getString(Constants.EXTRAS_CUSTOMIZE_WIDGETS_CHARTS_FRAGMENT_TYPE);
 
             if (typeOfFragmentToCustomizeFor != null) {
                 switch (typeOfFragmentToCustomizeFor) {
-                    case Cons.EXTRAS_FITNESS_FRAGMENT:
-                        CHARTS_ORDER_ARRAY_CHANGED_EVENT = Cons.EXTRAS_FITNESS_CHARTS_ORDER_ARRAY_CHANGED;
+                    case Constants.EXTRAS_FITNESS_FRAGMENT:
+                        CHARTS_ORDER_ARRAY_CHANGED_EVENT = Constants.EXTRAS_FITNESS_CHARTS_ORDER_ARRAY_CHANGED;
                         break;
-                    case Cons.EXTRAS_NUTRITION_FRAGMENT:
-                        CHARTS_ORDER_ARRAY_CHANGED_EVENT = Cons.EXTRAS_NUTRITION_CHARTS_ORDER_ARRAY_CHANGED;
-                        dataChartsMap = fragmentBundle.getParcelableArrayList(Cons.BUNDLE_NUTRITION_CHARTS_MAP);
+                    case Constants.EXTRAS_NUTRITION_FRAGMENT:
+                        CHARTS_ORDER_ARRAY_CHANGED_EVENT = Constants.EXTRAS_NUTRITION_CHARTS_ORDER_ARRAY_CHANGED;
+                        dataChartsMap = fragmentBundle.getParcelableArrayList(Constants.BUNDLE_NUTRITION_CHARTS_MAP);
                         break;
-                    case Cons.EXTRAS_HEALTH_FRAGMENT:
-                        CHARTS_ORDER_ARRAY_CHANGED_EVENT = Cons.EXTRAS_HEALTH_CHARTS_ORDER_ARRAY_CHANGED;
+                    case Constants.EXTRAS_HEALTH_FRAGMENT:
+                        CHARTS_ORDER_ARRAY_CHANGED_EVENT = Constants.EXTRAS_HEALTH_CHARTS_ORDER_ARRAY_CHANGED;
                         break;
                 }
             }

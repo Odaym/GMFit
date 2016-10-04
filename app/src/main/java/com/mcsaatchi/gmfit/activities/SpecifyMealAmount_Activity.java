@@ -15,7 +15,7 @@ import android.widget.ListView;
 import com.andreabaccega.widget.FormEditText;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.adapters.NutritionalFactsList_Adapter;
-import com.mcsaatchi.gmfit.classes.Cons;
+import com.mcsaatchi.gmfit.classes.Constants;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
 import com.mcsaatchi.gmfit.classes.Helpers;
@@ -63,13 +63,13 @@ public class SpecifyMealAmount_Activity extends Base_Activity {
 
         ButterKnife.bind(this);
 
-        prefs = getSharedPreferences(Cons.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
+        prefs = getSharedPreferences(Constants.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
 
         allFields.add(mealAmountET);
 
         if (getIntent().getExtras() != null) {
-            mealItem = getIntent().getExtras().getParcelable(Cons.EXTRAS_MEAL_OBJECT_DETAILS);
-            purposeIsEditMeal = getIntent().getExtras().getBoolean(Cons.EXTRAS_MEAL_ITEM_PURPOSE_EDITING);
+            mealItem = getIntent().getExtras().getParcelable(Constants.EXTRAS_MEAL_OBJECT_DETAILS);
+            purposeIsEditMeal = getIntent().getExtras().getBoolean(Constants.EXTRAS_MEAL_ITEM_PURPOSE_EDITING);
 
             if (mealItem != null) {
                 setupToolbar(toolbar, mealItem.getName(), true);
@@ -102,8 +102,8 @@ public class SpecifyMealAmount_Activity extends Base_Activity {
                     }
                 });
 
-        DataAccessHandler.getInstance().getMealMetrics(prefs.getString(Cons
-                .PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS), "http://gmfit.mcsaatchi.me/api/v1/meals/" + meal_id, new Callback<MealMetricsResponse>() {
+        DataAccessHandler.getInstance().getMealMetrics(prefs.getString(Constants
+                .PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), "http://gmfit.mcsaatchi.me/api/v1/meals/" + meal_id, new Callback<MealMetricsResponse>() {
             @Override
             public void onResponse(Call<MealMetricsResponse> call, Response<MealMetricsResponse> response) {
                 switch (response.code()) {
@@ -185,8 +185,8 @@ public class SpecifyMealAmount_Activity extends Base_Activity {
     }
 
     private void storeNewMeal(final ProgressDialog waitingDialog, final int caloriesForThisMeal) {
-        DataAccessHandler.getInstance().storeNewMeal(prefs.getString(Cons
-                        .PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS), mealItem.getMeal_id(), Integer.parseInt(mealAmountET.getText().toString()),
+        DataAccessHandler.getInstance().storeNewMeal(prefs.getString(Constants
+                        .PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), mealItem.getMeal_id(), Integer.parseInt(mealAmountET.getText().toString()),
                 mealItem.getType(), new Callback<DefaultGetResponse>() {
                     @Override
                     public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
@@ -198,7 +198,7 @@ public class SpecifyMealAmount_Activity extends Base_Activity {
                                 mealItem.setTotalCalories(Integer.parseInt(mealItem.getAmount()) * caloriesForThisMeal);
 
                                 Intent resultIntent = new Intent();
-                                resultIntent.putExtra(Cons.EXTRAS_MEAL_OBJECT_DETAILS, mealItem);
+                                resultIntent.putExtra(Constants.EXTRAS_MEAL_OBJECT_DETAILS, mealItem);
                                 setResult(MEAL_AMOUNT_SPECIFIED, resultIntent);
 
                                 finish();
@@ -215,7 +215,7 @@ public class SpecifyMealAmount_Activity extends Base_Activity {
     }
 
     private void updateUserMeal(final ProgressDialog waitingDialog, final int caloriesForThisMeal) {
-        DataAccessHandler.getInstance().updateUserMeals(prefs.getString(Cons.PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
+        DataAccessHandler.getInstance().updateUserMeals(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
                 mealItem.getInstance_id(), Integer.parseInt(mealAmountET.getText().toString()), new Callback<DefaultGetResponse>() {
                     @Override
                     public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
@@ -226,7 +226,7 @@ public class SpecifyMealAmount_Activity extends Base_Activity {
                                 mealItem.setAmount(mealAmountET.getText().toString());
                                 mealItem.setTotalCalories(Integer.parseInt(mealItem.getAmount()) * caloriesForThisMeal);
 
-                                EventBus_Singleton.getInstance().post(new EventBus_Poster(Cons.EXTRAS_UPDATED_MEAL_ENTRY, mealItem, true));
+                                EventBus_Singleton.getInstance().post(new EventBus_Poster(Constants.EXTRAS_UPDATED_MEAL_ENTRY, mealItem, true));
 
                                 finish();
 

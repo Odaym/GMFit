@@ -13,7 +13,7 @@ import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.activities.Base_Activity;
 import com.mcsaatchi.gmfit.adapters.OneItemWithIcon_Fitness_ListAdapter;
 import com.mcsaatchi.gmfit.adapters.OneItemWithIcon_Nutrition_ListAdapter;
-import com.mcsaatchi.gmfit.classes.Cons;
+import com.mcsaatchi.gmfit.classes.Constants;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
 import com.mcsaatchi.gmfit.models.FitnessWidget;
@@ -139,22 +139,22 @@ public class CustomizeWidgets_Fragment extends Fragment {
         Bundle fragmentBundle = getArguments();
 
         if (fragmentBundle != null) {
-            typeOfFragmentToCustomiseFor = fragmentBundle.getString(Cons.EXTRAS_CUSTOMIZE_WIDGETS_CHARTS_FRAGMENT_TYPE);
+            typeOfFragmentToCustomiseFor = fragmentBundle.getString(Constants.EXTRAS_CUSTOMIZE_WIDGETS_CHARTS_FRAGMENT_TYPE);
 
             if (typeOfFragmentToCustomiseFor != null) {
                 switch (typeOfFragmentToCustomiseFor) {
-                    case Cons.EXTRAS_FITNESS_FRAGMENT:
-                        itemsMapFitness = fragmentBundle.getParcelableArrayList(Cons.BUNDLE_FITNESS_WIDGETS_MAP);
-                        WIDGETS_ORDER_ARRAY_CHANGED_EVENT = Cons.EXTRAS_FITNESS_WIDGETS_ORDER_ARRAY_CHANGED;
+                    case Constants.EXTRAS_FITNESS_FRAGMENT:
+                        itemsMapFitness = fragmentBundle.getParcelableArrayList(Constants.BUNDLE_FITNESS_WIDGETS_MAP);
+                        WIDGETS_ORDER_ARRAY_CHANGED_EVENT = Constants.EXTRAS_FITNESS_WIDGETS_ORDER_ARRAY_CHANGED;
                         hookUpListWithFitnessItems(itemsMapFitness);
                         break;
-                    case Cons.EXTRAS_NUTRITION_FRAGMENT:
-                        itemsMapNutrition = fragmentBundle.getParcelableArrayList(Cons.BUNDLE_NUTRITION_WIDGETS_MAP);
-                        WIDGETS_ORDER_ARRAY_CHANGED_EVENT = Cons.EXTRAS_NUTRITION_WIDGETS_ORDER_ARRAY_CHANGED;
+                    case Constants.EXTRAS_NUTRITION_FRAGMENT:
+                        itemsMapNutrition = fragmentBundle.getParcelableArrayList(Constants.BUNDLE_NUTRITION_WIDGETS_MAP);
+                        WIDGETS_ORDER_ARRAY_CHANGED_EVENT = Constants.EXTRAS_NUTRITION_WIDGETS_ORDER_ARRAY_CHANGED;
                         hookUpListWithNutritionItems(itemsMapNutrition);
                         break;
-                    case Cons.EXTRAS_HEALTH_FRAGMENT:
-                        WIDGETS_ORDER_ARRAY_CHANGED_EVENT = Cons.EXTRAS_HEALTH_WIDGETS_ORDER_ARRAY_CHANGED;
+                    case Constants.EXTRAS_HEALTH_FRAGMENT:
+                        WIDGETS_ORDER_ARRAY_CHANGED_EVENT = Constants.EXTRAS_HEALTH_WIDGETS_ORDER_ARRAY_CHANGED;
                         break;
                 }
             }

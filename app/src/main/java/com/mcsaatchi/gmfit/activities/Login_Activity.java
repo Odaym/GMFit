@@ -28,7 +28,7 @@ import com.facebook.GraphResponse;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.classes.Cons;
+import com.mcsaatchi.gmfit.classes.Constants;
 import com.mcsaatchi.gmfit.classes.DefaultIndicator_Controller;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
@@ -86,7 +86,7 @@ public class Login_Activity extends Base_Activity {
 
         EventBus_Singleton.getInstance().register(this);
 
-        prefs = getSharedPreferences(Cons.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
+        prefs = getSharedPreferences(Constants.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
 
         signInBTN.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -121,7 +121,7 @@ public class Login_Activity extends Base_Activity {
         String ebpMessage = ebp.getMessage();
 
         switch (ebpMessage) {
-            case Cons.EVENT_SIGNNED_UP_SUCCESSFULLY_CLOSE_LOGIN_ACTIVITY:
+            case Constants.EVENT_SIGNNED_UP_SUCCESSFULLY_CLOSE_LOGIN_ACTIVITY:
                 finish();
                 break;
         }
@@ -161,7 +161,7 @@ public class Login_Activity extends Base_Activity {
 
                 Log.d("TAGTAG", "onSuccess: FACEBOOK ACCESS TOKEN IS : " + accessToken.getToken());
 
-                prefs.edit().putString(Cons.EXTRAS_USER_FACEBOOK_TOKEN, accessToken.getToken());
+                prefs.edit().putString(Constants.EXTRAS_USER_FACEBOOK_TOKEN, accessToken.getToken());
 
                 GraphRequest request = GraphRequest.newMeRequest(
                         accessToken,
@@ -178,11 +178,11 @@ public class Login_Activity extends Base_Activity {
 
                                     SharedPreferences.Editor prefsEditor = prefs.edit();
 
-                                    prefsEditor.putBoolean(Cons.EXTRAS_USER_LOGGED_IN, true);
+                                    prefsEditor.putBoolean(Constants.EXTRAS_USER_LOGGED_IN, true);
 
-                                    prefsEditor.putString(Cons.EXTRAS_USER_FULL_NAME, userName);
-                                    prefsEditor.putString(Cons.EXTRAS_USER_DISPLAY_PHOTO, "https://graph.facebook.com/" + userID + "/picture?type=large");
-                                    prefsEditor.putString(Cons.EXTRAS_USER_EMAIL, userEmail);
+                                    prefsEditor.putString(Constants.EXTRAS_USER_FULL_NAME, userName);
+                                    prefsEditor.putString(Constants.EXTRAS_USER_DISPLAY_PHOTO, "https://graph.facebook.com/" + userID + "/picture?type=large");
+                                    prefsEditor.putString(Constants.EXTRAS_USER_EMAIL, userEmail);
 
                                     prefsEditor.apply();
 
@@ -241,12 +241,12 @@ public class Login_Activity extends Base_Activity {
                         AuthenticationResponseInnerBody responseBody = response.body().getData().getBody();
 
                         //Refreshes access token
-                        prefs.edit().putString(Cons.PREF_USER_ACCESS_TOKEN, "Bearer " + responseBody.getToken()).apply();
+                        prefs.edit().putString(Constants.PREF_USER_ACCESS_TOKEN, "Bearer " + responseBody.getToken()).apply();
 
                         List<AuthenticationResponseWidget> widgetsMap = responseBody.getWidgets();
                         List<AuthenticationResponseChart> chartsMap = responseBody.getCharts();
 
-                        EventBus_Singleton.getInstance().post(new EventBus_Poster(Cons.EVENT_SIGNNED_UP_SUCCESSFULLY_CLOSE_LOGIN_ACTIVITY));
+                        EventBus_Singleton.getInstance().post(new EventBus_Poster(Constants.EVENT_SIGNNED_UP_SUCCESSFULLY_CLOSE_LOGIN_ACTIVITY));
 
                         Intent intent = new Intent(Login_Activity.this, Main_Activity.class);
                         intent.putParcelableArrayListExtra("widgets", (ArrayList<AuthenticationResponseWidget>) widgetsMap);

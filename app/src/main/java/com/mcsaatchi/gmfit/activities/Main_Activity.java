@@ -14,7 +14,7 @@ import android.view.MenuInflater;
 import android.widget.LinearLayout;
 
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.classes.Cons;
+import com.mcsaatchi.gmfit.classes.Constants;
 import com.mcsaatchi.gmfit.fragments.Fitness_Fragment;
 import com.mcsaatchi.gmfit.fragments.MainProfile_Fragment;
 import com.mcsaatchi.gmfit.fragments.Nutrition_Fragment;
@@ -58,9 +58,9 @@ public class Main_Activity extends Base_Activity {
 
         setupToolbar(toolbar, R.string.app_name, false);
 
-        SharedPreferences prefs = getSharedPreferences(Cons.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
+        SharedPreferences prefs = getSharedPreferences(Constants.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
 
-        Log.d("USER_ACCESS_TOKEN", "onCreate: User access token is : " + prefs.getString(Cons.PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS));
+        Log.d("USER_ACCESS_TOKEN", "onCreate: User access token is : " + prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS));
 
         if (getIntent().getExtras() != null) {
             chartsMap = getIntent().getExtras().getParcelableArrayList("charts");
