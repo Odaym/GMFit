@@ -293,9 +293,16 @@ public class Nutrition_Fragment extends Fragment {
                             finalCharts.add(nutritionDataChart);
                         }
 
-                        setupWidgetViews(finalWidgets);
+                        if (isAdded()) {
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    setupWidgetViews(finalWidgets);
 
-                        setupChartViews(finalCharts);
+                                    setupChartViews(finalCharts);
+                                }
+                            });
+                        }
 
                         break;
                 }

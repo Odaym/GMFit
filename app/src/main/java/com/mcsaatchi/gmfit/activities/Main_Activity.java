@@ -4,25 +4,22 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.annotation.IdRes;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.widget.LinearLayout;
 
+import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
+import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.classes.Constants;
 import com.mcsaatchi.gmfit.fragments.Fitness_Fragment;
+import com.mcsaatchi.gmfit.fragments.Health_Fragment;
 import com.mcsaatchi.gmfit.fragments.MainProfile_Fragment;
 import com.mcsaatchi.gmfit.fragments.Nutrition_Fragment;
 import com.mcsaatchi.gmfit.pedometer.SensorListener;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponseChart;
-import com.mcsaatchi.gmfit.rest.AuthenticationResponseWidget;
-import com.roughike.bottombar.BottomBar;
-import com.roughike.bottombar.OnMenuTabClickListener;
 
 import java.util.ArrayList;
 
@@ -36,13 +33,14 @@ public class Main_Activity extends Base_Activity {
     Toolbar toolbar;
     @Bind(R.id.mainContentLayout)
     LinearLayout mainContentLayout;
+    @Bind(R.id.bottom_navigation)
+    AHBottomNavigation bottom_navigation;
 
-    private BottomBar bottomBar;
     private Fitness_Fragment fitnessFragment;
     private Nutrition_Fragment nutritionFragment;
+    private Health_Fragment healthFragment;
     private MainProfile_Fragment mainProfileFragment;
 
-    private ArrayList<AuthenticationResponseWidget> widgetsMap;
     private ArrayList<AuthenticationResponseChart> chartsMap;
 
     @Override
@@ -66,21 +64,26 @@ public class Main_Activity extends Base_Activity {
             chartsMap = getIntent().getExtras().getParcelableArrayList("charts");
         }
 
-        bottomBar = BottomBar.attachShy((CoordinatorLayout) findViewById(R.id.myCoordinator),
-                findViewById(R.id.myScrollingContent), savedInstanceState);
-
         fitnessFragment = new Fitness_Fragment();
         nutritionFragment = new Nutrition_Fragment();
+        healthFragment = new Health_Fragment();
         mainProfileFragment = new MainProfile_Fragment();
 
-        bottomBar.setActiveTabColor(ContextCompat.getColor(this, R.color.bpDarker_blue));
+        AHBottomNavigationItem item1 = new AHBottomNavigationItem(R.string.fitness_tab_title, R.drawable.ic_bottom_bar_fitness_inactive, R.color.fitness_pink);
+        AHBottomNavigationItem item2 = new AHBottomNavigationItem(R.string.nutrition_tab_title, R.drawable.ic_bottom_bar_nutrition_inactive, R.color.nutrition_red);
+        AHBottomNavigationItem item3 = new AHBottomNavigationItem(R.string.health_tab_title, R.drawable.ic_bottom_bar_health_inactive, R.color.health_green);
+        AHBottomNavigationItem item4 = new AHBottomNavigationItem(R.string.profile_tab_title, R.drawable.ic_bottom_bar_profile, R.color.profile_blue);
 
-        bottomBar.setItemsFromMenu(R.menu.bottom_navigation, new OnMenuTabClickListener() {
+        bottom_navigation.addItem(item1);
+        bottom_navigation.addItem(item2);
+        bottom_navigation.addItem(item3);
+        bottom_navigation.addItem(item4);
+
+        bottom_navigation.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
             @Override
-            public void onMenuTabSelected(@IdRes int menuItemId) {
-
-                switch (menuItemId) {
-                    case R.id.item_one:
+            public boolean onTabSelected(int position, boolean wasSelected) {
+                switch (position) {
+                    case 0:
                         Bundle bundle = new Bundle();
                         bundle.putParcelableArrayList("charts", chartsMap);
 
@@ -93,26 +96,28 @@ public class Main_Activity extends Base_Activity {
                         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, fitnessFragment).commit();
                         mainContentLayout.setBackground(getResources().getDrawable(R.drawable.fitness_background));
                         break;
-                    case R.id.item_two:
+                    case 1:
                         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, nutritionFragment).commit();
                         mainContentLayout.setBackground(getResources().getDrawable(R.drawable.nutrition_background));
                         break;
-                    case R.id.item_five:
+                    case 2:
+                        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, healthFragment).commit();
+                        mainContentLayout.setBackground(getResources().getDrawable(R.drawable.health_background));
+                        break;
+                    case 3:
                         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, mainProfileFragment).commit();
                         break;
                 }
-            }
 
-            @Override
-            public void onMenuTabReSelected(@IdRes int menuItemId) {
+                return true;
             }
         });
-    }
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        bottomBar.onSaveInstanceState(outState);
+        bottom_navigation.setColored(true);
+        bottom_navigation.setCurrentItem(0);
+        bottom_navigation.setForceTitlesDisplay(true);
+        bottom_navigation.setBehaviorTranslationEnabled(true);
+        bottom_navigation.setDefaultBackgroundColor(getResources().getColor(R.color.white));
     }
 
     @Override
