@@ -362,6 +362,11 @@ public class Nutrition_Fragment extends Fragment {
                         List<UserMealsResponseDinner> dinnerMeals = response.body().getData().getBody().getData().getDinner();
                         List<UserMealsResponseSnack> snackMeals = response.body().getData().getBody().getData().getSnack();
 
+                        finalBreakfastMeals.clear();
+                        finalLunchMeals.clear();
+                        finalDinnerMeals.clear();
+                        finalSnackMeals.clear();
+
                         /**
                          * Insert Breakfast meals
                          */
@@ -710,18 +715,10 @@ public class Nutrition_Fragment extends Fragment {
     }
 
     private void findMealInList(ArrayList<MealItem> listOfMeals, MealItem item) {
-        Log.d(TAG, "findMealInList: Meal item instance id : " + item.getInstance_id() + " amount " + item.getAmount());
-
         for (int i = 0; i < listOfMeals.size(); i++) {
             if (listOfMeals.get(i).getInstance_id() == item.getInstance_id()) {
-                Log.d(TAG, "findMealInList: Just found an item matching the old item's instance id!");
-
-                Log.d(TAG, "findMealInList: Old Item details " + listOfMeals.get(i).getInstance_id() + " amount : " + listOfMeals.get(i).getAmount());
-
                 listOfMeals.remove(i);
-
                 listOfMeals.add(i, item);
-                Log.d(TAG, "findMealInList: Old Item details " + listOfMeals.get(i).getInstance_id() + " amount : " + listOfMeals.get(i).getAmount());
             }
         }
     }
@@ -762,37 +759,39 @@ public class Nutrition_Fragment extends Fragment {
 
         getDefaultChartMonthlyBreakdown(barChart, dateTV_1, dateTV_2, dateTV_3, dateTV_4, dateTV_5, chartTitle);
 
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, getResources().getDimensionPixelSize(R
-                .dimen.chart_height_2));
-        lp.topMargin = getResources().getDimensionPixelSize(R.dimen.default_margin_2);
-        barChartLayout.setLayoutParams(lp);
+        if (isAdded()) {
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, getResources().getDimensionPixelSize(R
+                    .dimen.chart_height_2));
+            lp.topMargin = getResources().getDimensionPixelSize(R.dimen.default_margin_2);
+            barChartLayout.setLayoutParams(lp);
 
-        cards_container.addView(barChartLayout);
+            cards_container.addView(barChartLayout);
 
-        /**
-         * Open the breakdown for the chart
-         */
-        barChart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getSlugBreakdownForChart(chartTitle, chartTitle);
-            }
-        });
-
-        showChartValuesBTN.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (setDrawChartValuesEnabled) {
-                    barChart.getBarData().setDrawValues(true);
-                } else {
-                    barChart.getBarData().setDrawValues(false);
+            /**
+             * Open the breakdown for the chart
+             */
+            barChart.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    getSlugBreakdownForChart(chartTitle, chartTitle);
                 }
+            });
 
-                setDrawChartValuesEnabled = !setDrawChartValuesEnabled;
+            showChartValuesBTN.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (setDrawChartValuesEnabled) {
+                        barChart.getBarData().setDrawValues(true);
+                    } else {
+                        barChart.getBarData().setDrawValues(false);
+                    }
 
-                barChart.invalidate();
-            }
-        });
+                    setDrawChartValuesEnabled = !setDrawChartValuesEnabled;
+
+                    barChart.invalidate();
+                }
+            });
+        }
     }
 
     private void getSlugBreakdownForChart(final String chartTitle, final String chartType) {
