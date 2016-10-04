@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.util.SparseArray;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
@@ -17,7 +16,7 @@ import android.widget.Toast;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.adapters.TwoItem_Sparse_ListAdapter;
+import com.mcsaatchi.gmfit.adapters.DataChartsListing_Adapter;
 import com.mcsaatchi.gmfit.classes.Cons;
 import com.mcsaatchi.gmfit.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.models.DataChart;
@@ -26,6 +25,7 @@ import com.mcsaatchi.gmfit.rest.ChartsBySectionResponseDatum;
 import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -50,13 +50,7 @@ public class AddNewChart_Activity extends Base_Activity {
 
     private SharedPreferences prefs;
 
-    private SparseArray<String[]> fitnessItemsMap = new SparseArray<String[]>() {{
-        put(0, new String[]{"Number of Steps", "Steps", "steps-count"});
-        put(1, new String[]{"Distance Traveled", "KM", "distance-traveled"});
-        put(2, new String[]{"Active Calories", "kcal", "active-calories"});
-    }};
-
-    private SparseArray<String[]> nutritionItemsMap = new SparseArray<>();
+    private List<DataChart> chartItemsMap = new ArrayList<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -80,27 +74,12 @@ public class AddNewChart_Activity extends Base_Activity {
                     case Cons.EXTRAS_ADD_FITNESS_CHART:
                         topLayout.setBackground(getResources().getDrawable(R.drawable.fitness_background));
 
-                        chartsList.setAdapter(new TwoItem_Sparse_ListAdapter(this, fitnessItemsMap));
-                        chartsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                            @Override
-                            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-
-                                String chartName = fitnessItemsMap.get(position)[0];
-
-                                if (!chartName.equals("Number of Steps") && !checkIfChartExistsInDB(chartName)) {
-                                    Intent intent = new Intent();
-                                    intent.putExtra(Cons.EXTRAS_CHART_FULL_NAME, fitnessItemsMap.get(position)[0]);
-                                    intent.putExtra(Cons.EXTRAS_CHART_TYPE_SELECTED, fitnessItemsMap.get(position)[2]);
-                                    setResult(ADD_NEW_FITNESS_CHART_REQUEST_CODE, intent);
-                                    finish();
-                                } else {
-                                    Toast.makeText(AddNewChart_Activity.this, R.string.duplicate_chart_error, Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        });
+                        getChartsBySection("fitness", ADD_NEW_FITNESS_CHART_REQUEST_CODE);
                         break;
                     case Cons.EXTRAS_ADD_NUTRIITION_CHART:
-                        getChartsBySection("Nutritition");
+                        topLayout.setBackground(getResources().getDrawable(R.drawable.nutrition_background));
+
+                        getChartsBySection("nutrition", ADD_NEW_NUTRITION_CHART_REQUEST_CODE);
                         break;
                 }
             }
@@ -122,38 +101,42 @@ public class AddNewChart_Activity extends Base_Activity {
         return false;
     }
 
-    private void getChartsBySection(String sectionName){
+    private void getChartsBySection(String sectionName, final int requestCodeToSendBack) {
         DataAccessHandler.getInstance().getChartsBySection(prefs.getString(Cons.PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS), sectionName, new Callback<ChartsBySectionResponse>() {
             @Override
             public void onResponse(Call<ChartsBySectionResponse> call, Response<ChartsBySectionResponse> response) {
                 switch (response.code()) {
                     case 200:
-                        Log.d("TAG", "onResponse: Successfully add a new chart!");
-
-                        topLayout.setBackground(getResources().getDrawable(R.drawable.nutrition_background));
-
                         List<ChartsBySectionResponseDatum> chartsFromResponse = response.body().getData().getBody().getData();
 
-                        for (int i = 0; i < chartsFromResponse.size(); i++){
-                            nutritionItemsMap.put(i, new String[]{chartsFromResponse.get(i).getName(), chartsFromResponse.get(i).getUnit(), String.valueOf(chartsFromResponse.get(i).getId())});
+                        for (int i = 0; i < chartsFromResponse.size(); i++) {
+                            DataChart newChartToAdd = new DataChart();
+
+                            newChartToAdd.setType(chartsFromResponse.get(i).getSlug());
+                            newChartToAdd.setName(chartsFromResponse.get(i).getName());
+                            newChartToAdd.setMeasurementUnit(chartsFromResponse.get(i).getUnit());
+                            newChartToAdd.setChart_id(chartsFromResponse.get(i).getId());
+
+                            chartItemsMap.add(newChartToAdd);
                         }
 
-                        chartsList.setAdapter(new TwoItem_Sparse_ListAdapter(AddNewChart_Activity.this, nutritionItemsMap));
+                        chartsList.setAdapter(new DataChartsListing_Adapter(AddNewChart_Activity.this, chartItemsMap));
+
                         chartsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                             @Override
                             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
 
-                                String chartName = nutritionItemsMap.get(position)[0];
+                                DataChart dataChart = chartItemsMap.get(position);
 
-                                if (!checkIfChartExistsInDB(chartName)) {
-                                    /**
-                                     * Send ID along with this request
-                                     */
-                                    addMetricChart(Integer.parseInt(nutritionItemsMap.get(position)[2]));
+                                if (!dataChart.getName().equals("Number of Steps") && !checkIfChartExistsInDB(dataChart.getName())) {
+
+                                    addMetricChart(dataChart.getChart_id());
 
                                     Intent intent = new Intent();
-                                    intent.putExtra(Cons.EXTRAS_CHART_FULL_NAME, nutritionItemsMap.get(position)[0]);
-                                    setResult(ADD_NEW_NUTRITION_CHART_REQUEST_CODE, intent);
+                                    intent.putExtra(Cons.EXTRAS_CHART_FULL_NAME, dataChart.getName());
+                                    intent.putExtra(Cons.EXTRAS_CHART_TYPE_SELECTED, dataChart.getType());
+                                    setResult(requestCodeToSendBack, intent);
+
                                     finish();
                                 } else {
                                     Toast.makeText(AddNewChart_Activity.this, R.string.duplicate_chart_error, Toast.LENGTH_SHORT).show();
@@ -171,7 +154,8 @@ public class AddNewChart_Activity extends Base_Activity {
         });
     }
 
-    private void addMetricChart(int chart_id){
+    private void addMetricChart(int chart_id) {
+        Log.d("TAG", "addMetricChart: Chart ID is : " + chart_id);
         DataAccessHandler.getInstance().addMetricChart(prefs.getString(Cons.PREF_USER_ACCESS_TOKEN, Cons.NO_ACCESS_TOKEN_FOUND_IN_PREFS), chart_id, new Callback<DefaultGetResponse>() {
             @Override
             public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {

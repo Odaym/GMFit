@@ -8,6 +8,7 @@ import com.mcsaatchi.gmfit.rest.AuthenticationResponseChartData;
 import java.util.ArrayList;
 
 public class DataChart implements Parcelable {
+
     public static final Creator<DataChart> CREATOR = new Creator<DataChart>() {
         @Override
         public DataChart createFromParcel(Parcel source) {
@@ -19,21 +20,20 @@ public class DataChart implements Parcelable {
             return new DataChart[size];
         }
     };
-
-    int id;
-    String name;
-    String type;
-    int position;
-    String username;
-    int chart_id;
-    ArrayList<AuthenticationResponseChartData> chartData;
-
+    private int id;
+    private String name;
+    private String type;
+    private String measurementUnit;
+    private int position;
+    private String username;
+    private int chart_id;
+    private ArrayList<AuthenticationResponseChartData> chartData;
     /**
      * 1 = FITNESS
      * 2 = NUTRITION
      * 3 = HEALTH
      */
-    String whichFragment;
+    private String whichFragment;
 
     public DataChart() {
     }
@@ -50,6 +50,7 @@ public class DataChart implements Parcelable {
         this.id = in.readInt();
         this.name = in.readString();
         this.type = in.readString();
+        this.measurementUnit = in.readString();
         this.position = in.readInt();
         this.username = in.readString();
         this.chart_id = in.readInt();
@@ -113,6 +114,14 @@ public class DataChart implements Parcelable {
         this.chartData = chartData;
     }
 
+    public String getMeasurementUnit() {
+        return measurementUnit;
+    }
+
+    public void setMeasurementUnit(String measurementUnit) {
+        this.measurementUnit = measurementUnit;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -123,6 +132,7 @@ public class DataChart implements Parcelable {
         dest.writeInt(this.id);
         dest.writeString(this.name);
         dest.writeString(this.type);
+        dest.writeString(this.measurementUnit);
         dest.writeInt(this.position);
         dest.writeString(this.username);
         dest.writeInt(this.chart_id);

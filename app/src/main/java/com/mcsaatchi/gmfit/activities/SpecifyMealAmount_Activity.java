@@ -8,20 +8,20 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
-import android.util.SparseArray;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 
 import com.andreabaccega.widget.FormEditText;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.adapters.TwoItem_Sparse_ListAdapter;
+import com.mcsaatchi.gmfit.adapters.NutritionalFactsList_Adapter;
 import com.mcsaatchi.gmfit.classes.Cons;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
 import com.mcsaatchi.gmfit.classes.Helpers;
 import com.mcsaatchi.gmfit.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.models.MealItem;
+import com.mcsaatchi.gmfit.models.NutritionalFact;
 import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.rest.MealMetricsResponse;
 import com.mcsaatchi.gmfit.rest.MealMetricsResponseDatum;
@@ -49,8 +49,9 @@ public class SpecifyMealAmount_Activity extends Base_Activity {
 
     private ArrayList<FormEditText> allFields = new ArrayList<>();
     private SharedPreferences prefs;
-    private TwoItem_Sparse_ListAdapter nutritionFactsListAdapter;
-    private SparseArray<String[]> nutritionalFacts = new SparseArray<>();
+    private NutritionalFactsList_Adapter nutritionFactsListAdapter;
+
+    private List<NutritionalFact> nutritionalFacts = new ArrayList<>();
 
     private MealItem mealItem;
     private boolean purposeIsEditMeal = false;
@@ -109,19 +110,24 @@ public class SpecifyMealAmount_Activity extends Base_Activity {
                     case 200:
                         waitingDialog.dismiss();
 
-
                         List<MealMetricsResponseDatum> mealMetricsResponseDatumList = response.body().getData().getBody().getMetrics();
 
                         for (int i = 0; i < mealMetricsResponseDatumList.size(); i++) {
-                            nutritionalFacts.put(i, new String[]{mealMetricsResponseDatumList.get(i).getName(), (int) Double.parseDouble(mealMetricsResponseDatumList.get(i).getValue()) + " " + mealMetricsResponseDatumList.get(i).getUnit()});
+                            NutritionalFact nutritionalFact = new NutritionalFact();
+
+                            nutritionalFact.setName(mealMetricsResponseDatumList.get(i).getName());
+                            nutritionalFact.setUnit((int) Double.parseDouble(mealMetricsResponseDatumList.get(i).getValue()) + " " + mealMetricsResponseDatumList.get(i).getUnit());
+
+                            nutritionalFacts.add(nutritionalFact);
                         }
+
 
                         if (nutritionalFacts.size() > 0) {
                             int caloriesForThisMeal = 0;
 
                             for (int i = 0; i < nutritionalFacts.size(); i++) {
-                                if (nutritionalFacts.get(i)[0].equals("Calories")) {
-                                    caloriesForThisMeal = Integer.parseInt(nutritionalFacts.get(i)[1].split(" ")[0]);
+                                if (nutritionalFacts.get(i).getName().equals("Calories")) {
+                                    caloriesForThisMeal = Integer.parseInt(nutritionalFacts.get(i).getUnit().split(" ")[0]);
                                 }
                             }
 
@@ -140,9 +146,9 @@ public class SpecifyMealAmount_Activity extends Base_Activity {
         });
     }
 
-    private void initNutritionFactsList(SparseArray<String[]> nutritionalFacts, final int caloriesForThisMeal) {
+    private void initNutritionFactsList(List<NutritionalFact> nutritionalFacts, final int caloriesForThisMeal) {
 
-        nutritionFactsListAdapter = new TwoItem_Sparse_ListAdapter(this, nutritionalFacts);
+        nutritionFactsListAdapter = new NutritionalFactsList_Adapter(this, nutritionalFacts);
 
         nutritionFactsList.setAdapter(nutritionFactsListAdapter);
 
