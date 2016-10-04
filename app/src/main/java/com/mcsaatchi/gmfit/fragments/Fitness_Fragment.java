@@ -71,9 +71,6 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
     public static final String TAG = "Fitness_Fragment";
     private static final int ADD_NEW_FITNESS_CHART_REQUEST_CODE = 1;
     private final LocalDate dt = new LocalDate();
-
-    private boolean setDrawChartValuesEnabled = false;
-
     @Bind(R.id.widgetsGridView)
     GridView widgetsGridView;
     @Bind(R.id.cards_container)
@@ -82,7 +79,7 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
     Button addNewChartBTN;
     @Bind(R.id.metricCounterTV)
     FontTextView metricCounterTV;
-
+    private boolean setDrawChartValuesEnabled = false;
     private Activity parentActivity;
     private SharedPreferences prefs;
     private FitnessWidgets_GridAdapter widgets_GridAdapter;
@@ -532,13 +529,6 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
             case Cons.EVENT_DISTANCE_COUNTER_INCREMENTED:
                 fitnessWidget = findWidgetInGrid("Distance");
                 fitnessWidget.setText(String.valueOf((int) (prefs.getFloat(Helpers.getTodayDate() + "_distance", 0) * 1000)));
-                break;
-            case Cons.EVENT_FITNESS_CHART_ADDED_FROM_SETTINGS:
-                String[] chartDetails = ebp.getStringsExtra();
-                addNewBarChart(chartDetails[0], chartDetails[1]);
-
-                dataChartDAO.create(new DataChart(chartDetails[0], chartDetails[1], dataChartDAO.queryForAll().size() + 1, userEmail, Cons.EXTRAS_FITNESS_FRAGMENT));
-
                 break;
         }
     }
