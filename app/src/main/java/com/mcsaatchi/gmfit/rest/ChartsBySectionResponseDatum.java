@@ -13,6 +13,9 @@ public class ChartsBySectionResponseDatum {
     @SerializedName("unit")
     @Expose
     private String unit;
+    @SerializedName("slug")
+    @Expose
+    private String slug;
 
     /**
      * @return The id
@@ -54,5 +57,13 @@ public class ChartsBySectionResponseDatum {
      */
     public void setUnit(String unit) {
         this.unit = unit;
+    }
+
+    public String getSlug() {
+        return slug;
+    }
+
+    public void setSlug(String slug) {
+        this.slug = slug;
     }
 }
