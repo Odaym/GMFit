@@ -1,7 +1,5 @@
 package com.mcsaatchi.gmfit.classes;
 
-import okhttp3.MediaType;
-
 public class Constants {
     public static final String SHARED_PREFS_TITLE = "GMFIT_PREFS";
     public static final String TAG = "GMFIT_DEBUG";
@@ -17,7 +15,6 @@ public class Constants {
     public static final String EXTRAS_FIRST_APP_LAUNCH = "first_app_launch";
 
     public static final int WAIT_TIME_BEFORE_CHECKING_METRICS_SERVICE = 1200000;
-    public static final int WAIT_TIME_BEFORE_SERVER_SYNC = 60000;
 
     public static final String EXTRAS_USER_PROFILE_MEASUREMENT_SYSTEM = "user_profile_measurement_system";
     public static final String EXTRAS_USER_PROFILE_NATIONALITY = "user_profile_nationality";
@@ -31,8 +28,6 @@ public class Constants {
     public static final String EXTRAS_NUTRITION_FRAGMENT = "NUTRITION";
     public static final String EXTRAS_HEALTH_FRAGMENT = "HEALTH";
 
-    public static final String EVENTBUS_NUTRITION_ALREADY_REGISTERED = "eventbus_nutrition_already_registered";
-
     public static final String EXTRAS_ADD_CHART_WHAT_TYPE = "add_chart_what_type";
     public static final String EXTRAS_CHART_TYPE_SELECTED = "chart_type_selected";
     public static final String EXTRAS_CHART_FULL_NAME = "chart_full_name";
@@ -40,19 +35,15 @@ public class Constants {
     public static final String EXTRAS_MEAL_OBJECT_DETAILS = "meal_object_details";
     public static final String EXTRAS_MEAL_ITEM_PURPOSE_EDITING = "meal_item_purpose_editing";
 
-    public static final String EXTRAS_FITNESS_WIDGETS_ORDER_ARRAY = "fitness_widgets_order_array";
     public static final String EXTRAS_FITNESS_CHART_DELETED = "fitness_chart_deleted";
     public static final String EXTRAS_NUTRITION_CHART_DELETED = "nutrition_chart_deleted";
     public static final String EXTRAS_FITNESS_WIDGETS_ORDER_ARRAY_CHANGED = "fitness_widgets_order_array_changed";
-    public static final String EXTRAS_NUTRITION_WIDGETS_ORDER_ARRAY = "nutrition_widgets_order_array";
     public static final String EXTRAS_NUTRITION_WIDGETS_ORDER_ARRAY_CHANGED = "nutrition_widgets_order_array_changed";
-    public static final String EXTRAS_HEALTH_WIDGETS_ORDER_ARRAY = "health_widgets_order_array";
     public static final String EXTRAS_HEALTH_WIDGETS_ORDER_ARRAY_CHANGED = "health_widgets_order_array_changed";
     public static final String EXTRAS_FITNESS_CHARTS_ORDER_ARRAY_CHANGED = "fitness_charts_order_array_changed";
     public static final String EXTRAS_NUTRITION_CHARTS_ORDER_ARRAY_CHANGED = "nutrition_charts_order_array_changed";
     public static final String EXTRAS_HEALTH_CHARTS_ORDER_ARRAY_CHANGED = "health_charts_order_array_changed";
     public static final String EXTRAS_CUSTOMIZE_WIDGETS_CHARTS_FRAGMENT_TYPE = "customize_widgets_charts_fragment_type";
-    public static final String EXTRAS_ALL_DATA_CHARTS = "all_data_charts";
     public static final String EXTRAS_ADD_FITNESS_CHART = "add_fitness_chart";
     public static final String EXTRAS_ADD_NUTRIITION_CHART = "add_nutrition_chart";
     public static final String EXTRAS_MAIN_MEAL_NAME = "main_meal_name";
@@ -73,8 +64,6 @@ public class Constants {
     public static final String BUNDLE_SLUG_BREAKDOWN_MEASUREMENT_UNIT = "slug_breakdown_measurement_unit";
 
     public static final String BASE_URL_ADDRESS = "http://gmfit.mcsaatchi.me/api/v1/";
-    public static final MediaType JSON_FORMAT_IDENTIFIER
-            = MediaType.parse("application/json; charset=utf-8");
 
     public static final String EVENT_USER_FINALIZE_SETUP_PROFILE = "user_finalize_setup_profile";
     public static final String EVENT_STEP_COUNTER_INCREMENTED = "step_counter_incremented";
@@ -82,8 +71,6 @@ public class Constants {
     public static final String EVENT_DISTANCE_COUNTER_INCREMENTED = "distance_counter_incremented";
     public static final String EVENT_FINISHED_SETTING_UP_PROFILE_SUCCESSFULLY = "finished_setting_up_profile_successfully";
 
-    public static final String EVENT_NUTRITION_CHART_ADDED_FROM_SETTINGS = "event_nutrition_chart_added_from_settings";
-    public static final String EVENT_FITNESS_CHART_ADDED_FROM_SETTINGS = "event_fitness_chart_added_from_settings";
     public static final String EVENT_CHART_METRICS_RECEIVED = "event_chart_metrics_received";
     public static final String EVENT_SIGNNED_UP_SUCCESSFULLY_CLOSE_LOGIN_ACTIVITY = "signned_up_successfully_close_login_activity";
 
