@@ -15,15 +15,15 @@ public class MealItem implements Parcelable {
             return new MealItem[size];
         }
     };
-    int id;
-    int instance_id;
-    int meal_id;
-    String name;
-    String type;
-    int sectionType;
-    String amount;
-    String measurementUnit;
-    int totalCalories;
+    private int id;
+    private int instance_id;
+    private int meal_id;
+    private String name;
+    private String type;
+    private int sectionType;
+    private String amount;
+    private String measurementUnit;
+    private int totalCalories;
 
     public MealItem() {
     }

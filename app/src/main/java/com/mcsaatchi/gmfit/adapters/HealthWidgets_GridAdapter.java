@@ -9,16 +9,16 @@ import android.widget.TextView;
 
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.classes.FontTextView;
-import com.mcsaatchi.gmfit.models.NutritionWidget;
+import com.mcsaatchi.gmfit.models.HealthWidget;
 
 import java.util.ArrayList;
 
-public class NutritionWidgets_GridAdapter extends BaseAdapter {
+public class HealthWidgets_GridAdapter extends BaseAdapter {
     private Context context;
-    private ArrayList<NutritionWidget> widgetsMap;
+    private ArrayList<HealthWidget> widgetsMap;
     private int layoutResourceId;
 
-    public NutritionWidgets_GridAdapter(Context context, ArrayList<NutritionWidget> widgetsMap, int layoutResourceId) {
+    public HealthWidgets_GridAdapter(Context context, ArrayList<HealthWidget> widgetsMap, int layoutResourceId) {
         this.context = context;
         this.widgetsMap = widgetsMap;
         this.layoutResourceId = layoutResourceId;
@@ -28,7 +28,7 @@ public class NutritionWidgets_GridAdapter extends BaseAdapter {
         return widgetsMap.size();
     }
 
-    public NutritionWidget getItem(int position) {
+    public HealthWidget getItem(int position) {
         return widgetsMap.get(position);
     }
 
@@ -48,7 +48,6 @@ public class NutritionWidgets_GridAdapter extends BaseAdapter {
             holder = new ViewHolder();
 
             holder.metricTV = (FontTextView) convertView.findViewById(R.id.metricTV);
-            holder.metricPercentageTV = (TextView) convertView.findViewById(R.id.metricPercentageTV);
             holder.measurementUnitTV = (TextView) convertView.findViewById(R.id.measurementUnitTV);
             holder.metricTitleTV = (FontTextView) convertView.findViewById(R.id.metricTitleTV);
 
@@ -59,7 +58,6 @@ public class NutritionWidgets_GridAdapter extends BaseAdapter {
 
         holder.metricTitleTV.setText((widgetsMap.get(position)).getTitle());
         holder.metricTV.setText(String.valueOf((int) widgetsMap.get(position).getValue()));
-        holder.metricPercentageTV.setText("(" + (widgetsMap.get(position)).getPercentage() + "%)");
         holder.measurementUnitTV.setText((widgetsMap.get(position)).getMeasurementUnit());
 
         return convertView;
@@ -68,7 +66,6 @@ public class NutritionWidgets_GridAdapter extends BaseAdapter {
     class ViewHolder {
         FontTextView metricTV;
         TextView measurementUnitTV;
-        TextView metricPercentageTV;
         FontTextView metricTitleTV;
     }
 }

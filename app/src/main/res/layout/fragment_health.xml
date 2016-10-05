@@ -7,23 +7,10 @@
     android:orientation="vertical">
 
     <RelativeLayout
-        android:id="@+id/mainFitnessMetricDetail"
+        android:id="@+id/mainHealthMetricDetail"
         android:layout_width="match_parent"
         android:layout_height="@dimen/metric_header_section_height"
         android:background="@android:color/transparent">
-
-        <ProgressBar
-            android:id="@+id/metricProgressBar"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="@dimen/metric_header_progress_bar_width"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:indeterminate="false"
-            android:maxHeight="@dimen/sections_progress_bar_height"
-            android:minHeight="@dimen/sections_progress_bar_height"
-            android:progress="70"
-            android:progressDrawable="@drawable/fitness_progress_bar"/>
 
         <com.mcsaatchi.gmfit.classes.FontTextView
             android:id="@+id/metricCounterTV"
@@ -35,24 +22,24 @@
             android:textSize="@dimen/metric_counter_font_size"/>
 
         <TextView
-            android:id="@+id/metricCounterLabelTV"
+            android:id="@+id/userWeightLabelTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/metricCounterTV"
             android:layout_centerHorizontal="true"
-            android:background="@drawable/rounded_view"
+            android:background="@drawable/health_rounded_view"
             android:paddingBottom="5dp"
             android:paddingEnd="@dimen/default_margin_2"
             android:paddingStart="@dimen/default_margin_2"
             android:paddingTop="5dp"
-            android:text="Health Today"
+            android:text="@string/user_weight_label_metric"
             android:textColor="@android:color/white"/>
 
     </RelativeLayout>
 
     <LinearLayout android:layout_width="match_parent"
                   android:layout_height="match_parent"
-                  android:layout_below="@+id/mainFitnessMetricDetail"
+                  android:layout_below="@+id/mainHealthMetricDetail"
                   android:background="@android:color/white"
                   android:orientation="vertical">
 
@@ -63,7 +50,7 @@
 
             <GridView android:id="@+id/widgetsGridView"
                       android:layout_width="match_parent"
-                      android:layout_height="@dimen/fitness_widgets_gridview_height"
+                      android:layout_height="@dimen/health_widgets_gridview_height"
                       android:layout_marginBottom="@dimen/default_margin_2"
                       android:layout_marginEnd="@dimen/default_margin_2"
                       android:layout_marginStart="@dimen/default_margin_2"
@@ -85,19 +72,6 @@
             android:orientation="vertical">
 
         </LinearLayout>
-
-        <Button
-            android:id="@+id/addChartBTN"
-            style="?android:attr/borderlessButtonStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/default_margin_2"
-            android:layout_marginEnd="@dimen/default_margin_2"
-            android:layout_marginStart="@dimen/default_margin_2"
-            android:layout_marginTop="@dimen/default_margin_3"
-            android:background="@color/fitness_dark_blue"
-            android:text="@string/add_new_chart_button"
-            android:textColor="@android:color/white"/>
     </LinearLayout>
 
 </RelativeLayout>

@@ -40,7 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/metricCounterTV"
             android:layout_centerHorizontal="true"
-            android:background="@drawable/rounded_view"
+            android:background="@drawable/fitness_rounded_view"
             android:paddingBottom="5dp"
             android:paddingEnd="@dimen/default_margin_2"
             android:paddingStart="@dimen/default_margin_2"

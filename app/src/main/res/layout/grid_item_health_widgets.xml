@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/fitness_widget_cell_height"
+                android:background="@color/fitness_dark_blue"
+                android:orientation="horizontal"
+                android:paddingEnd="@dimen/default_margin_1"
+                android:paddingStart="@dimen/default_margin_1"
+                android:paddingTop="@dimen/default_margin_1">
+
+    <com.mcsaatchi.gmfit.classes.FontTextView
+        android:id="@+id/metricTitleTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/fitness_teal"
+        android:textSize="@dimen/nutrition_metric_title_font_size"/>
+
+    <com.mcsaatchi.gmfit.classes.FontTextView
+        android:id="@+id/metricTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="@dimen/default_margin_3"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/nutrition_widgets_main_metric_value_font_size"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/measurementUnitTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/metricTV"
+        android:layout_below="@+id/metricTV"
+        android:textColor="@android:color/white"/>
+
+    <!--<TextView-->
+    <!--android:id="@+id/metricPercentageTV"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_below="@+id/metricTV"-->
+    <!--android:layout_toEndOf="@+id/measurementUnitTV"-->
+    <!--android:paddingStart="@dimen/default_margin_1"-->
+    <!--android:textColor="@android:color/white"/>-->
+</RelativeLayout>

@@ -186,6 +186,10 @@
     <string name="meal_headline_title_dinner">Dinner</string>
     <string name="meal_headline_title_snacks">Snacks</string>
 
+    <!-- HEALTH FRAGMENT -->
+    <string name="user_weight_label_metric">Kilograms</string>
+    <string name="user_weight_label_imperial">Pounds</string>
+
     <!-- ADD NEW CHART -->
     <string name="add_new_chart_activity_title">Add New Chart</string>
     <string name="add_new_chart_prompt">Add a chart from the list below</string>

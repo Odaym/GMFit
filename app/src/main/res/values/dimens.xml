@@ -54,7 +54,6 @@
     <dimen name="fitness_widget_cell_height">90dp</dimen>
     <dimen name="fitness_widget_cell_width">150dp</dimen>
     <dimen name="fitness_widgets_gridview_height">90dp</dimen>
-    <dimen name="nutrition_widgets_gridview_height">200dp</dimen>
     <dimen name="top_bar_tips_height">50dp</dimen>
     <dimen name="customize_widgets_reorder_list_item_edge_height_width">60dp</dimen>
     <dimen name="add_new_chart_list_item_edge_width">90dp</dimen>
@@ -67,8 +66,12 @@
     <!-- NUTRITION FRAGMENT -->
     <dimen name="nutrition_metric_title_font_size">15sp</dimen>
     <dimen name="add_meal_item_layout_height">60dp</dimen>
+    <dimen name="nutrition_widgets_gridview_height">200dp</dimen>
     <dimen name="meal_item_name_width">250dp</dimen>
     <dimen name="add_and_scan_icons_dimens">20dp</dimen>
+
+    <!-- HEALTH FRAGMENT-->
+    <dimen name="health_widgets_gridview_height">200dp</dimen>
 
     <!-- TOP OF DASHBOARD-->
     <dimen name="metric_cell_padding_horizontal">25dp</dimen>

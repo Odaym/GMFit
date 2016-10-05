@@ -3,19 +3,19 @@ package com.mcsaatchi.gmfit.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class NutritionWidget implements Parcelable {
-    public static final Creator<NutritionWidget> CREATOR = new Creator<NutritionWidget>() {
+public class HealthWidget implements Parcelable {
+
+    public static final Creator<HealthWidget> CREATOR = new Creator<HealthWidget>() {
         @Override
-        public NutritionWidget createFromParcel(Parcel source) {
-            return new NutritionWidget(source);
+        public HealthWidget createFromParcel(Parcel source) {
+            return new HealthWidget(source);
         }
 
         @Override
-        public NutritionWidget[] newArray(int size) {
-            return new NutritionWidget[size];
+        public HealthWidget[] newArray(int size) {
+            return new HealthWidget[size];
         }
     };
-
     private int id;
     private double value;
     private String title;
@@ -24,10 +24,10 @@ public class NutritionWidget implements Parcelable {
     private int position;
     private int widget_id;
 
-    public NutritionWidget() {
+    public HealthWidget() {
     }
 
-    protected NutritionWidget(Parcel in) {
+    protected HealthWidget(Parcel in) {
         this.id = in.readInt();
         this.value = in.readDouble();
         this.title = in.readString();
