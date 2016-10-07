@@ -42,6 +42,7 @@ import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
 import com.mcsaatchi.gmfit.classes.FontTextView;
 import com.mcsaatchi.gmfit.classes.Helpers;
+import com.mcsaatchi.gmfit.classes.SimpleDividerItemDecoration;
 import com.mcsaatchi.gmfit.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.models.DataChart;
 import com.mcsaatchi.gmfit.models.MealItem;
@@ -143,8 +144,11 @@ public class Nutrition_Fragment extends Fragment {
      */
     @Bind(R.id.addChartBTN)
     Button addNewChartBTN;
-    @Bind(R.id.loadingProgressBar)
-    ProgressBar loadingProgressBar;
+    @Bind(R.id.loadingMetricProgressBar)
+    ProgressBar loadingMetricProgressBar;
+    @Bind(R.id.loadingWidgetsProgressBar)
+    ProgressBar loadingWidgetsProgressBar;
+
     private boolean setDrawChartValuesEnabled = false;
     private UserMeals_RecyclerAdapter userMealsRecyclerAdapter;
     private ArrayList<NutritionWidget> widgetsMap;
@@ -539,13 +543,15 @@ public class Nutrition_Fragment extends Fragment {
             }
         }
 
-        loadingProgressBar.setVisibility(View.GONE);
+        loadingMetricProgressBar.setVisibility(View.GONE);
 
         widgetsMap = new ArrayList<>(widgetsFromResponse.subList(0, 4));
 
         NutritionWidgets_GridAdapter nutritionWidgets_GridAdapter = new NutritionWidgets_GridAdapter(getActivity(), widgetsMap, R.layout.grid_item_nutrition_widgets);
 
         widgetsGridView.setAdapter(nutritionWidgets_GridAdapter);
+
+        loadingWidgetsProgressBar.setVisibility(View.GONE);
     }
 
     private void setupChartViews(ArrayList<DataChart> chartsMap) {
@@ -587,6 +593,7 @@ public class Nutrition_Fragment extends Fragment {
     }
 
     private void hookUpMealSectionListViews(RecyclerView mealListView, RecyclerView.LayoutManager layoutManager, ItemTouchHelper touchHelper) {
+        mealListView.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
         mealListView.setLayoutManager(layoutManager);
         mealListView.setAdapter(userMealsRecyclerAdapter);
         touchHelper.attachToRecyclerView(mealListView);
@@ -819,7 +826,7 @@ public class Nutrition_Fragment extends Fragment {
                     }
                 });
 
-        DataAccessHandler.getInstance().getSlugBreakdownForChart(chartType, prefs, new Callback<SlugBreakdownResponse>() {
+        DataAccessHandler.getInstance().getSlugBreakdownForChart(chartType, prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), new Callback<SlugBreakdownResponse>() {
             @Override
             public void onResponse(Call<SlugBreakdownResponse> call, Response<SlugBreakdownResponse> response) {
                 switch (response.code()) {

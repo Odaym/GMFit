@@ -22,7 +22,7 @@
             android:inputType="textCapSentences"
             android:paddingStart="@dimen/default_margin_1_5"
             android:textColor="@color/white"
-            android:textColorHint="@color/white"/>
+            android:textColorHint="@color/offwhite_transparent"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -50,28 +50,84 @@
 
     </FrameLayout>
 
-    <TextView android:id="@+id/searchResultsHintTV"
-              xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:background="@color/nutrition_red"
-              android:gravity="center_vertical"
-              android:minHeight="?android:attr/listPreferredItemHeightSmall"
-              android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
-              android:paddingStart="?android:attr/listPreferredItemPaddingStart"
-              android:text="@string/search_results_list_label"
-              android:textAppearance="?android:attr/textAppearanceListItemSmall"
-              android:textColor="@android:color/white"
-              android:visibility="gone"/>
+    <RelativeLayout android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/offwhite_background_gray">
 
-    <de.halfbit.pinnedsection.PinnedSectionListView
-        android:id="@+id/mealItemsList"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@android:color/white"
-        android:choiceMode="singleChoice"
-        android:drawSelectorOnTop="true"
-        android:focusable="false"
-        android:gravity="center"
-        android:scrollbarStyle="outsideOverlay"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:id="@+id/searchResultsListLayout"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView android:id="@+id/searchResultsHintTV"
+                      xmlns:android="http://schemas.android.com/apk/res/android"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:background="@color/nutrition_red"
+                      android:gravity="center_vertical"
+                      android:minHeight="?android:attr/listPreferredItemHeightSmall"
+                      android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
+                      android:paddingStart="?android:attr/listPreferredItemPaddingStart"
+                      android:text="@string/search_results_list_label"
+                      android:textAppearance="?android:attr/textAppearanceListItemSmall"
+                      android:textColor="@android:color/white"
+                      android:visibility="gone"/>
+
+            <de.halfbit.pinnedsection.PinnedSectionListView
+                android:id="@+id/mealItemsList"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@android:color/white"
+                android:choiceMode="singleChoice"
+                android:drawSelectorOnTop="true"
+                android:focusable="false"
+                android:gravity="center"
+                android:scrollbarStyle="outsideOverlay"/>
+        </LinearLayout>
+
+        <LinearLayout android:id="@+id/requestMealLayout"
+                      android:layout_width="match_parent"
+                      android:visibility="gone"
+                      android:layout_height="match_parent"
+                      android:orientation="vertical">
+
+            <LinearLayout android:layout_width="match_parent"
+                          android:layout_height="wrap_content"
+                          android:background="@color/white"
+                          android:orientation="vertical"
+                          android:padding="@dimen/default_margin_2">
+
+                <TextView android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:text="@string/could_not_find_meal_title"
+                          android:textAppearance="?android:textAppearanceMedium"/>
+
+                <TextView android:id="@+id/meal_not_found_meal_title"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:textAppearance="?android:textAppearanceMedium"
+                          android:textColor="@color/fitness_pink"/>
+            </LinearLayout>
+
+            <TextView android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:padding="@dimen/default_margin_2"
+                      android:text="@string/request_new_meal_hint"/>
+
+            <Button
+                android:id="@+id/requestMealBTN"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/default_margin_2"
+                android:layout_marginEnd="@dimen/default_margin_2"
+                android:layout_marginStart="@dimen/default_margin_2"
+                android:layout_marginTop="@dimen/default_margin_3"
+                android:background="@color/fitness_dark_blue"
+                android:text="@string/request_new_meal_button"
+                android:textColor="@android:color/white"/>
+
+        </LinearLayout>
+    </RelativeLayout>
 </LinearLayout>

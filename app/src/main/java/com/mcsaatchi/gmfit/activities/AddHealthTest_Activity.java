@@ -35,6 +35,7 @@ public class AddHealthTest_Activity extends Base_Activity {
     Button addNewPhotoTestBTN;
     @Bind(R.id.testPhotosLayout)
     LinearLayout testPhotosLayout;
+
     private static final String TAG = "AddHealthTest_Activity";
 
     private static final int SELECT_PICTURE = 1;

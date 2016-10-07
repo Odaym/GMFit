@@ -1,10 +1,13 @@
 package com.mcsaatchi.gmfit.activities;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
@@ -13,8 +16,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.j256.ormlite.dao.RuntimeExceptionDao;
-import com.j256.ormlite.stmt.QueryBuilder;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.adapters.DataChartsListing_Adapter;
 import com.mcsaatchi.gmfit.classes.Constants;
@@ -24,7 +25,6 @@ import com.mcsaatchi.gmfit.rest.ChartsBySectionResponse;
 import com.mcsaatchi.gmfit.rest.ChartsBySectionResponseDatum;
 import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,12 +45,11 @@ public class AddNewChart_Activity extends Base_Activity {
     @Bind(R.id.topLayout)
     LinearLayout topLayout;
 
-    private RuntimeExceptionDao<DataChart, Integer> dataChartDAO;
-    private QueryBuilder<DataChart, Integer> dataChartQB;
-
     private SharedPreferences prefs;
 
     private List<DataChart> chartItemsMap = new ArrayList<>();
+
+    private ProgressDialog waitingDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -65,6 +64,23 @@ public class AddNewChart_Activity extends Base_Activity {
         prefs = getSharedPreferences(Constants.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
 
         Bundle extras = getIntent().getExtras();
+
+        waitingDialog = new ProgressDialog(this);
+        waitingDialog.setTitle(getString(R.string.fetching_chart_data_dialog_title));
+        waitingDialog.setMessage(getString(R.string.fetching_chart_data_dialog_message));
+        waitingDialog.show();
+
+        final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+        alertDialog.setTitle(R.string.fetching_chart_data_dialog_title);
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+
+                        if (waitingDialog.isShowing())
+                            waitingDialog.dismiss();
+                    }
+                });
 
         if (extras != null) {
             String CALL_PURPOSE = extras.getString(Constants.EXTRAS_ADD_CHART_WHAT_TYPE);
@@ -86,27 +102,14 @@ public class AddNewChart_Activity extends Base_Activity {
         }
     }
 
-    private boolean checkIfChartExistsInDB(String chart_title) {
-        dataChartDAO = getDBHelper().getDataChartDAO();
-        dataChartQB = dataChartDAO.queryBuilder();
-
-        try {
-            List<DataChart> dc = dataChartQB.where().eq("name", chart_title).query();
-
-            return !dc.isEmpty();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return false;
-    }
-
     private void getChartsBySection(String sectionName, final int requestCodeToSendBack) {
         DataAccessHandler.getInstance().getChartsBySection(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), sectionName, new Callback<ChartsBySectionResponse>() {
             @Override
             public void onResponse(Call<ChartsBySectionResponse> call, Response<ChartsBySectionResponse> response) {
                 switch (response.code()) {
                     case 200:
+                        waitingDialog.dismiss();
+
                         List<ChartsBySectionResponseDatum> chartsFromResponse = response.body().getData().getBody().getData();
 
                         for (int i = 0; i < chartsFromResponse.size(); i++) {
@@ -128,7 +131,8 @@ public class AddNewChart_Activity extends Base_Activity {
 
                                 DataChart dataChart = chartItemsMap.get(position);
 
-                                if (!dataChart.getName().equals("Number of Steps") && !checkIfChartExistsInDB(dataChart.getName())) {
+                                //TODO: Check if chart already exists, in some fucking way....
+                                if (!dataChart.getName().equals("Number of Steps")) {
 
                                     addMetricChart(dataChart.getChart_id());
 
@@ -155,7 +159,6 @@ public class AddNewChart_Activity extends Base_Activity {
     }
 
     private void addMetricChart(int chart_id) {
-        Log.d("TAG", "addMetricChart: Chart ID is : " + chart_id);
         DataAccessHandler.getInstance().addMetricChart(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), chart_id, new Callback<DefaultGetResponse>() {
             @Override
             public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {

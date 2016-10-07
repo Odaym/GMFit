@@ -1,11 +1,14 @@
 package com.mcsaatchi.gmfit.activities;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -13,8 +16,10 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -26,6 +31,7 @@ import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
 import com.mcsaatchi.gmfit.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.models.MealItem;
+import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.rest.RecentMealsResponse;
 import com.mcsaatchi.gmfit.rest.RecentMealsResponseBody;
 import com.mcsaatchi.gmfit.rest.SearchMealItemResponse;
@@ -60,14 +66,20 @@ public class AddNewMealItem_Activity extends Base_Activity {
     TextView searchResultsHintTV;
     @Bind(R.id.pb_loading_indicator)
     ProgressBar pb_loading_indicator;
+    @Bind(R.id.searchResultsListLayout)
+    LinearLayout searchResultsListLayout;
+    @Bind(R.id.requestMealLayout)
+    LinearLayout requestMealLayout;
+    @Bind(R.id.meal_not_found_meal_title)
+    TextView mealNotFoundTitleTV;
+    @Bind(R.id.requestMealBTN)
+    Button requestMealBTN;
 
     private SharedPreferences prefs;
 
     private String mealType;
 
     private List<MealItem> mealItems = new ArrayList<>();
-
-    private SimpleSectioned_ListAdapter simpleSectionedListAdapter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -98,9 +110,11 @@ public class AddNewMealItem_Activity extends Base_Activity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
 
-                Intent intent = new Intent(AddNewMealItem_Activity.this, SpecifyMealAmount_Activity.class);
-                intent.putExtra(Constants.EXTRAS_MEAL_OBJECT_DETAILS, mealItems.get(position));
-                startActivityForResult(intent, MEAL_AMOUNT_SPECIFIED);
+                if (((MealItem) adapterView.getItemAtPosition(position)).getSectionType() == ITEM_VIEWTYPE) {
+                    Intent intent = new Intent(AddNewMealItem_Activity.this, SpecifyMealAmount_Activity.class);
+                    intent.putExtra(Constants.EXTRAS_MEAL_OBJECT_DETAILS, mealItems.get(position));
+                    startActivityForResult(intent, MEAL_AMOUNT_SPECIFIED);
+                }
             }
         });
 
@@ -136,8 +150,14 @@ public class AddNewMealItem_Activity extends Base_Activity {
                     searchIconIV.setImageResource(R.drawable.ic_search_white_24dp);
                     searchIconIV.setOnClickListener(null);
 
-                    initMealsList(mealItems);
+                    searchResultsListLayout.setVisibility(View.VISIBLE);
+                    requestMealLayout.setVisibility(View.GONE);
+
+                    loadRecentMealsFromServer(mealType);
                 } else if (charSequence.toString().length() > 2) {
+                    /**
+                     * If the search box includes enough characters to warrant a search
+                     */
 
                     pb_loading_indicator.setVisibility(View.VISIBLE);
 
@@ -181,9 +201,64 @@ public class AddNewMealItem_Activity extends Base_Activity {
                                         mealsReturned.add(mealItem);
                                     }
 
+                                    mealItems.clear();
+
                                     mealItems = mealsReturned;
 
-                                    initMealsList(mealsReturned);
+                                    if (mealItems.isEmpty()) {
+                                        searchResultsListLayout.setVisibility(View.GONE);
+                                        requestMealLayout.setVisibility(View.VISIBLE);
+                                        mealNotFoundTitleTV.setText("\"" + charSequence.toString() + "\"");
+
+                                        requestMealBTN.setText(getResources().getString(R.string.request_new_meal_button));
+                                        requestMealBTN.setAlpha(1);
+                                        requestMealBTN.setEnabled(true);
+
+                                        requestMealBTN.setOnClickListener(new View.OnClickListener() {
+                                            @Override
+                                            public void onClick(View view) {
+                                                final ProgressDialog waitingDialog = new ProgressDialog(AddNewMealItem_Activity.this);
+                                                waitingDialog.setTitle(getResources().getString(R.string.requesting_meal_item_dialog_title));
+                                                waitingDialog.setMessage(getResources().getString(R.string.requesting_meal_item_dialog_message));
+                                                waitingDialog.show();
+
+                                                final AlertDialog alertDialog = new AlertDialog.Builder(AddNewMealItem_Activity.this).create();
+                                                alertDialog.setTitle(R.string.requesting_meal_item_dialog_title);
+                                                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getResources().getString(R.string.ok),
+                                                        new DialogInterface.OnClickListener() {
+                                                            public void onClick(DialogInterface dialog, int which) {
+                                                                dialog.dismiss();
+
+                                                                if (waitingDialog.isShowing())
+                                                                    waitingDialog.dismiss();
+                                                            }
+                                                        });
+
+                                                DataAccessHandler.getInstance().requestNewMeal(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
+                                                        charSequence.toString(), new Callback<DefaultGetResponse>() {
+                                                            @Override
+                                                            public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
+                                                                switch (response.code()) {
+                                                                    case 200:
+                                                                        waitingDialog.dismiss();
+
+                                                                        requestMealBTN.setText(getResources().getString(R.string.request_new_meal_sent_thanks));
+                                                                        requestMealBTN.setAlpha(0.5f);
+                                                                        requestMealBTN.setEnabled(false);
+                                                                        break;
+                                                                }
+                                                            }
+
+                                                            @Override
+                                                            public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+
+                                                            }
+                                                        });
+                                            }
+                                        });
+                                    } else {
+                                        initMealsList(mealsReturned);
+                                    }
 
                                     searchResultsHintTV.setVisibility(View.VISIBLE);
                                     pb_loading_indicator.setVisibility(View.INVISIBLE);
@@ -227,8 +302,7 @@ public class AddNewMealItem_Activity extends Base_Activity {
     }
 
     private void findMeals(String mealName, final Callback<SearchMealItemResponse> mealItemsResponse) {
-
-        DataAccessHandler.findMeals(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), mealName, new Callback<SearchMealItemResponse>() {
+        DataAccessHandler.getInstance().findMeals(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), mealName, new Callback<SearchMealItemResponse>() {
             @Override
             public void onResponse(Call<SearchMealItemResponse> call, Response<SearchMealItemResponse> response) {
                 switch (response.code()) {
@@ -256,6 +330,8 @@ public class AddNewMealItem_Activity extends Base_Activity {
                         recentlyAddedMealItem.setName("Recently Added");
                         recentlyAddedMealItem.setSectionType(1);
 
+                        mealItems.clear();
+
                         mealItems.add(recentlyAddedMealItem);
 
                         for (int i = 0; i < recentMealsFromAPI.size(); i++) {
@@ -280,7 +356,7 @@ public class AddNewMealItem_Activity extends Base_Activity {
     }
 
     private void initMealsList(List<MealItem> mealsToShow) {
-        simpleSectionedListAdapter = new SimpleSectioned_ListAdapter(this, mealsToShow);
+        SimpleSectioned_ListAdapter simpleSectionedListAdapter = new SimpleSectioned_ListAdapter(this, mealsToShow);
 
         mealItemsList.setAdapter(simpleSectionedListAdapter);
     }

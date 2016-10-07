@@ -401,7 +401,7 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
                     }
                 });
 
-        DataAccessHandler.getInstance().getSlugBreakdownForChart(chartType, prefs, new Callback<SlugBreakdownResponse>() {
+        DataAccessHandler.getInstance().getSlugBreakdownForChart(chartType, prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), new Callback<SlugBreakdownResponse>() {
             @Override
             public void onResponse(Call<SlugBreakdownResponse> call, Response<SlugBreakdownResponse> response) {
                 switch (response.code()) {

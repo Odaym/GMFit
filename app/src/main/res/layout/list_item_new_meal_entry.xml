@@ -9,7 +9,7 @@
               android:layout_height="wrap_content"
               android:ellipsize="end"
               android:paddingTop="@dimen/default_margin_1"
-              android:singleLine="true"/>
+              android:maxLines="1"/>
 
     <TextView android:id="@+id/entryDescriptionTV"
               android:layout_width="wrap_content"

@@ -1,14 +1,13 @@
 package com.mcsaatchi.gmfit.data_access;
 
 
-import android.content.SharedPreferences;
-
 import com.mcsaatchi.gmfit.rest.AuthenticationResponse;
 import com.mcsaatchi.gmfit.rest.ChartMetricBreakdownResponse;
 import com.mcsaatchi.gmfit.rest.ChartsBySectionResponse;
 import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.rest.MealMetricsResponse;
 import com.mcsaatchi.gmfit.rest.MedicalConditionsResponse;
+import com.mcsaatchi.gmfit.rest.MedicalTestsResponse;
 import com.mcsaatchi.gmfit.rest.RecentMealsResponse;
 import com.mcsaatchi.gmfit.rest.SearchMealItemResponse;
 import com.mcsaatchi.gmfit.rest.SlugBreakdownResponse;
@@ -34,20 +33,20 @@ public class DataAccessHandler {
         return dataAccessHandler;
     }
 
-    public static void findMeals(String userAccessToken, String mealName, Callback<SearchMealItemResponse> callback) {
+    public void findMeals(String userAccessToken, String mealName, Callback<SearchMealItemResponse> callback) {
         ApiCallsHandler.getInstance().findMeals(userAccessToken, mealName, callback);
     }
 
-    public void getSlugBreakdownForChart(final String chartType, SharedPreferences prefs, final Callback<SlugBreakdownResponse> callback) {
-        ApiCallsHandler.getInstance().getSlugBreakdownForChart(chartType, prefs, callback);
+    public void getSlugBreakdownForChart(final String chartType, String userAccessToken, final Callback<SlugBreakdownResponse> callback) {
+        ApiCallsHandler.getInstance().getSlugBreakdownForChart(chartType, userAccessToken, callback);
     }
 
-    public void refreshAccessToken(SharedPreferences prefs, Callback<AuthenticationResponse> callback) {
-        ApiCallsHandler.getInstance().refreshAccessToken(prefs, callback);
+    public void refreshAccessToken(String userAccessToken, Callback<AuthenticationResponse> callback) {
+        ApiCallsHandler.getInstance().refreshAccessToken(userAccessToken, callback);
     }
 
-    public void synchronizeMetricsWithServer(SharedPreferences prefs, String[] slugsArray, int[] valuesArray) {
-        ApiCallsHandler.getInstance().synchronizeMetricsWithServer(prefs, slugsArray, valuesArray);
+    public void synchronizeMetricsWithServer(String userAccessToken, String[] slugsArray, int[] valuesArray) {
+        ApiCallsHandler.getInstance().synchronizeMetricsWithServer(userAccessToken, slugsArray, valuesArray);
     }
 
     public void signInUser(String email, String password, Callback<AuthenticationResponse> callback) {
@@ -138,5 +137,13 @@ public class DataAccessHandler {
 
     public void getChartsBySection(String userAccessToken, String sectionName, Callback<ChartsBySectionResponse> callback){
         ApiCallsHandler.getInstance().getChartsBySection(userAccessToken, sectionName, callback);
+    }
+
+    public void requestNewMeal(String userAccessToken, String mealName, Callback<DefaultGetResponse> callback){
+        ApiCallsHandler.getInstance().requestNewMeal(userAccessToken, mealName, callback);
+    }
+
+    public void getMedicalTests(String userAccessToken, Callback<MedicalTestsResponse> callback){
+        ApiCallsHandler.getInstance().getMedicalTests(userAccessToken, callback);
     }
 }

@@ -188,7 +188,7 @@ public class SensorListener extends Service implements SensorEventListener {
     }
 
     private void refreshAccessToken() {
-        DataAccessHandler.getInstance().refreshAccessToken(prefs, new Callback<AuthenticationResponse>() {
+        DataAccessHandler.getInstance().refreshAccessToken(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), new Callback<AuthenticationResponse>() {
             @Override
             public void onResponse(Call<AuthenticationResponse> call, Response<AuthenticationResponse> response) {
                 switch (response.code()) {
@@ -201,7 +201,8 @@ public class SensorListener extends Service implements SensorEventListener {
                         int[] valuesArray = new int[]{prefs.getInt(todayDate + "_steps", 0), (int) prefs.getFloat(todayDate + "_calories", 0),
                                 (int) (prefs.getFloat(todayDate + "_distance", 0) * 1000)};
 
-                        synchronizeMetricsWithServer(prefs, slugsArray, valuesArray);
+                        synchronizeMetricsWithServer(slugsArray, valuesArray);
+
                         break;
                 }
             }
@@ -213,8 +214,8 @@ public class SensorListener extends Service implements SensorEventListener {
         });
     }
 
-    private void synchronizeMetricsWithServer(final SharedPreferences prefs, String[] slugsArray, int[] valuesArray) {
-        DataAccessHandler.getInstance().synchronizeMetricsWithServer(prefs, slugsArray, valuesArray);
+    private void synchronizeMetricsWithServer(String[] slugsArray, int[] valuesArray) {
+        DataAccessHandler.getInstance().synchronizeMetricsWithServer(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), slugsArray, valuesArray);
 
         wipeOutFitnessMetricsAtMidnight();
     }

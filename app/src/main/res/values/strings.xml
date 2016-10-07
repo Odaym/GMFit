@@ -83,7 +83,8 @@
     <!-- RESET PASSWORD ACTIVITY -->
     <string name="reset_password_activity_title">Reset Password</string>
     <string name="reset_password_enter_code_hint">We sent the verification code to your email address, enter it below to be able to choose a new
-        password</string>
+        password
+    </string>
     <string name="password_change_successful">Your password was changed successfully.</string>
 
     <!-- VERIFY ACCOUNT ACTIVITY -->
@@ -189,11 +190,14 @@
     <!-- HEALTH FRAGMENT -->
     <string name="user_weight_label_metric">Kilograms</string>
     <string name="user_weight_label_imperial">Pounds</string>
+    <string name="medical_tests_bar_title">Medical Tests</string>
 
     <!-- ADD NEW CHART -->
     <string name="add_new_chart_activity_title">Add New Chart</string>
     <string name="add_new_chart_prompt">Add a chart from the list below</string>
     <string name="duplicate_chart_error">You may only have one type of chart at a time</string>
+    <string name="fetching_chart_data_dialog_title">Fetching charts data</string>
+    <string name="fetching_chart_data_dialog_message">Please wait…</string>
 
     <!-- ADD NEW MEAL ITEM ACTIVITY -->
     <string name="add_new_meal_item_activity_title">Add</string>
@@ -201,6 +205,12 @@
     <string name="list_section_popular_meals">Popular Meals</string>
     <string name="search_hint">Search For Meal</string>
     <string name="search_results_list_label">Search results</string>
+    <string name="could_not_find_meal_title">We couldn\'t find the meal you were looking for.</string>
+    <string name="request_new_meal_hint">You can request to add this meal to our database and we\'ll notify you when it has been added.</string>
+    <string name="request_new_meal_button">Request Meal</string>
+    <string name="request_new_meal_sent_thanks">Request sent. Thank you!</string>
+    <string name="requesting_meal_item_dialog_title">Requesting new meal</string>
+    <string name="requesting_meal_item_dialog_message">Please wait…</string>
 
     <!-- SPECIFY MEAL AMOUNT ACTIVITY -->
     <string name="add_meal_amount_hint">Number of servings</string>
@@ -224,6 +234,7 @@
     <string name="grabbing_user_policy_dialog_message">Please wait…</string>
     <string name="downloading_pdf_profile_dialog_title">Downloading PDF Profile</string>
     <string name="downloading_pdf_profile_dialog_message">Please Wait…</string>
+    <string name="profile_information_title">Profile Information</string>
 
     <!-- USER POLICY ACTIVITY -->
     <string name="user_policy_activity_title">User Policy</string>
@@ -237,4 +248,7 @@
     <string name="resetting_password_dialog_message">Please wait…</string>
     <string name="choose_new_password_hint">New password</string>
     <string name="conflicting_old_new_password">Your new password should not match the old password</string>
+
+    <!-- ADD NEW TEST ACTIVITY - AVAILABLE TESTS -->
+    <string name="add_new_test_activity_title">Add new test</string>
 </resources>

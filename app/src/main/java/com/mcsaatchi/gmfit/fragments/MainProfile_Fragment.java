@@ -1,49 +1,31 @@
 package com.mcsaatchi.gmfit.fragments;
 
-import android.Manifest;
 import android.app.ProgressDialog;
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.activities.Login_Activity;
 import com.mcsaatchi.gmfit.activities.UserPolicy_Activity;
+import com.mcsaatchi.gmfit.classes.CircleTransform;
 import com.mcsaatchi.gmfit.classes.Constants;
-import com.mcsaatchi.gmfit.classes.Helpers;
 import com.mcsaatchi.gmfit.data_access.DataAccessHandler;
-import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.rest.UserPolicyResponse;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
+import com.squareup.picasso.Picasso;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -51,14 +33,16 @@ import retrofit2.Response;
 public class MainProfile_Fragment extends Fragment {
     private static final String TAG = "MainProfile_Fragment";
     private static final int REQUEST_WRITE_STORAGE = 112;
-    private static OkHttpClient client = new OkHttpClient();
 
-    @Bind(R.id.userPolicyBTN)
-    Button userPolicyBTN;
-    @Bind(R.id.emergencyProfileBTN)
-    Button emergencyProfileBTN;
-    @Bind(R.id.logoutBTN)
-    Button logoutBTN;
+//    @Bind(R.id.userPolicyBTN)
+//    Button userPolicyBTN;
+//    @Bind(R.id.emergencyProfileBTN)
+//    Button emergencyProfileBTN;
+//    @Bind(R.id.logoutBTN)
+//    Button logoutBTN;
+
+    @Bind(R.id.userProfilePictureIV)
+    ImageView userProfilePictureIV;
 
     private SharedPreferences prefs;
 
@@ -77,47 +61,48 @@ public class MainProfile_Fragment extends Fragment {
 
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.profile_tab_title);
 
-        userPolicyBTN.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getUserPolicy();
-//                ApiHelper.runApiAsyncTask(getActivity(), Constants.API_NAME_USER_POLICY, Constants.GET_REQUEST_TYPE, null, R.string.grabbing_user_policy_dialog_title,
-//                        R.string.grabbing_user_policy_dialog_message, null);
-            }
-        });
+        Picasso.with(getActivity()).load(R.drawable.ic_distance_traveled).transform(new CircleTransform()).into(userProfilePictureIV);
+//        userPolicyBTN.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                getUserPolicy();
+////                ApiHelper.runApiAsyncTask(getActivity(), Constants.API_NAME_USER_POLICY, Constants.GET_REQUEST_TYPE, null, R.string.grabbing_user_policy_dialog_title,
+////                        R.string.grabbing_user_policy_dialog_message, null);
+//            }
+//        });
 
-        logoutBTN.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (Helpers.isInternetAvailable(getActivity())) {
-                    signOutUser();
-                } else {
-                    Helpers.showNoInternetDialog(getActivity());
-                }
-            }
-        });
+//        logoutBTN.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                if (Helpers.isInternetAvailable(getActivity())) {
+////                    signOutUser();
+//                } else {
+//                    Helpers.showNoInternetDialog(getActivity());
+//                }
+//            }
+//        });
 
-        emergencyProfileBTN.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (Helpers.isInternetAvailable(getActivity())) {
-
-                    prefs.edit().putBoolean("SYNCED_METRICS", false).apply();
-
-                    boolean hasPermission = (ContextCompat.checkSelfPermission(getActivity(),
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED);
-                    if (!hasPermission) {
-                        ActivityCompat.requestPermissions(getActivity(),
-                                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                                REQUEST_WRITE_STORAGE);
-                    } else {
-//                        fireUpEmergencyProfileAsyncTask();
-                    }
-                } else {
-                    Helpers.showNoInternetDialog(getActivity());
-                }
-            }
-        });
+//        emergencyProfileBTN.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                if (Helpers.isInternetAvailable(getActivity())) {
+//
+//                    prefs.edit().putBoolean("SYNCED_METRICS", false).apply();
+//
+//                    boolean hasPermission = (ContextCompat.checkSelfPermission(getActivity(),
+//                            Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED);
+//                    if (!hasPermission) {
+//                        ActivityCompat.requestPermissions(getActivity(),
+//                                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+//                                REQUEST_WRITE_STORAGE);
+//                    } else {
+////                        fireUpEmergencyProfileAsyncTask();
+//                    }
+//                } else {
+//                    Helpers.showNoInternetDialog(getActivity());
+//                }
+//            }
+//        });
 
         return fragmentView;
     }
@@ -225,116 +210,116 @@ public class MainProfile_Fragment extends Fragment {
 //        }.execute();
 //    }
 
-    private void signOutUser() {
-        final ProgressDialog waitingDialog = new ProgressDialog(getActivity());
-        waitingDialog.setTitle(getString(R.string.signing_out_dialog_title));
-        waitingDialog.setMessage(getString(R.string.signing_out_dialog_message));
-        waitingDialog.show();
+//    private void signOutUser() {
+//        final ProgressDialog waitingDialog = new ProgressDialog(getActivity());
+//        waitingDialog.setTitle(getString(R.string.signing_out_dialog_title));
+//        waitingDialog.setMessage(getString(R.string.signing_out_dialog_message));
+//        waitingDialog.show();
+//
+//        final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+//        alertDialog.setTitle(R.string.signing_out_dialog_title);
+//        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
+//                new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        dialog.dismiss();
+//
+//                        if (waitingDialog.isShowing())
+//                            waitingDialog.dismiss();
+//                    }
+//                });
+//
+//        DataAccessHandler.getInstance().signOutUser(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants
+//                .NO_ACCESS_TOKEN_FOUND_IN_PREFS), new Callback<DefaultGetResponse>() {
+//            @Override
+//            public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
+//                switch (response.code()) {
+//                    case 200:
+//                        waitingDialog.dismiss();
+//
+//                        prefs.edit().putString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS).apply();
+//                        prefs.edit().putBoolean(Constants.EXTRAS_USER_LOGGED_IN, false).apply();
+//
+//                        getActivity().finish();
+//
+//                        Intent intent = new Intent(getActivity(), Login_Activity.class);
+//                        startActivity(intent);
+//                        break;
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+//                alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
+//                alertDialog.show();
+//
+//            }
+//        });
+//    }
 
-        final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
-        alertDialog.setTitle(R.string.signing_out_dialog_title);
-        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-
-                        if (waitingDialog.isShowing())
-                            waitingDialog.dismiss();
-                    }
-                });
-
-        DataAccessHandler.getInstance().signOutUser(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants
-                .NO_ACCESS_TOKEN_FOUND_IN_PREFS), new Callback<DefaultGetResponse>() {
-            @Override
-            public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
-                switch (response.code()) {
-                    case 200:
-                        waitingDialog.dismiss();
-
-                        prefs.edit().putString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS).apply();
-                        prefs.edit().putBoolean(Constants.EXTRAS_USER_LOGGED_IN, false).apply();
-
-                        getActivity().finish();
-
-                        Intent intent = new Intent(getActivity(), Login_Activity.class);
-                        startActivity(intent);
-                        break;
-                }
-            }
-
-            @Override
-            public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
-                alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
-                alertDialog.show();
-
-            }
-        });
-    }
-
-    private void downloadUserEmergencyProfile(final InputStream inputStreamResult) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-
-                byte[] buffer = new byte[8 * 1024];
-
-                OutputStream output = null;
-
-                File folder = new File(Environment.getExternalStorageDirectory() + "/GMFit/");
-
-                boolean createDirectorySuccess = true;
-
-                if (!folder.exists()) {
-                    createDirectorySuccess = folder.mkdir();
-                }
-
-                if (createDirectorySuccess) {
-                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("ddMMyy-hhmmss_SSS", Locale.getDefault());
-                    String profileFileName = folder.toString() + File.separator + simpleDateFormat.format(new Date()) + ".pdf";
-
-                    Log.d("PROFILE", "run: Profile filename " + profileFileName);
-
-                    try {
-                        output = new FileOutputStream(profileFileName);
-
-                        int bytesRead;
-                        while ((bytesRead = inputStreamResult.read(buffer)) > 0) {
-                            output.write(buffer, 0, bytesRead);
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } finally {
-                        try {
-                            if (output != null)
-                                output.close();
-                            inputStreamResult.close();
-
-                            Uri uri = Uri.fromFile(new File(profileFileName));
-
-
-                            Intent i = new Intent(Intent.ACTION_SEND);
-                            i.setType("message/rfc822");
-                            i.putExtra(Intent.EXTRA_EMAIL,
-                                    new String[]{"support@gmfit.com"});
-                            i.putExtra(Intent.EXTRA_STREAM, uri);
-                            i.putExtra(Intent.EXTRA_SUBJECT, "EMERGENCY PROFILE");
-                            i.putExtra(Intent.EXTRA_TEXT, "This is an emergency, please check my profile.");
-                            try {
-                                startActivity(Intent.createChooser(i, "Send email through"));
-                            } catch (ActivityNotFoundException ex) {
-                                Toast.makeText(getActivity(),
-                                        "No email client", Toast.LENGTH_SHORT)
-                                        .show();
-                            }
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                } else {
-                    //TODO:
-                    //Directory creation failed
-                }
-            }
-        }).start();
-    }
+//    private void downloadUserEmergencyProfile(final InputStream inputStreamResult) {
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//
+//                byte[] buffer = new byte[8 * 1024];
+//
+//                OutputStream output = null;
+//
+//                File folder = new File(Environment.getExternalStorageDirectory() + "/GMFit/");
+//
+//                boolean createDirectorySuccess = true;
+//
+//                if (!folder.exists()) {
+//                    createDirectorySuccess = folder.mkdir();
+//                }
+//
+//                if (createDirectorySuccess) {
+//                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("ddMMyy-hhmmss_SSS", Locale.getDefault());
+//                    String profileFileName = folder.toString() + File.separator + simpleDateFormat.format(new Date()) + ".pdf";
+//
+//                    Log.d("PROFILE", "run: Profile filename " + profileFileName);
+//
+//                    try {
+//                        output = new FileOutputStream(profileFileName);
+//
+//                        int bytesRead;
+//                        while ((bytesRead = inputStreamResult.read(buffer)) > 0) {
+//                            output.write(buffer, 0, bytesRead);
+//                        }
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    } finally {
+//                        try {
+//                            if (output != null)
+//                                output.close();
+//                            inputStreamResult.close();
+//
+//                            Uri uri = Uri.fromFile(new File(profileFileName));
+//
+//
+//                            Intent i = new Intent(Intent.ACTION_SEND);
+//                            i.setType("message/rfc822");
+//                            i.putExtra(Intent.EXTRA_EMAIL,
+//                                    new String[]{"support@gmfit.com"});
+//                            i.putExtra(Intent.EXTRA_STREAM, uri);
+//                            i.putExtra(Intent.EXTRA_SUBJECT, "EMERGENCY PROFILE");
+//                            i.putExtra(Intent.EXTRA_TEXT, "This is an emergency, please check my profile.");
+//                            try {
+//                                startActivity(Intent.createChooser(i, "Send email through"));
+//                            } catch (ActivityNotFoundException ex) {
+//                                Toast.makeText(getActivity(),
+//                                        "No email client", Toast.LENGTH_SHORT)
+//                                        .show();
+//                            }
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                } else {
+//                    //TODO:
+//                    //Directory creation failed
+//                }
+//            }
+//        }).start();
+//    }
 }

@@ -2,33 +2,63 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_marginBottom="100dp"
-    android:gravity="center">
+    android:layout_height="wrap_content">
 
-    <Button
-        android:id="@+id/logoutBTN"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="50dp"
-        android:text="Log out"/>
+    <RelativeLayout android:id="@+id/userPictureAndNameLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/metric_header_section_height"
+                    android:layout_alignParentTop="true">
 
-    <Button
-        android:id="@+id/userPolicyBTN"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/logoutBTN"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="50dp"
-        android:text="View User Policy"/>
+        <ImageView android:id="@+id/userProfilePictureIV"
+                   android:layout_width="100dp"
+                   android:layout_height="100dp"
+                   android:layout_alignParentTop="true"
+                   android:layout_centerHorizontal="true"
+                   android:layout_marginTop="@dimen/default_margin_1"/>
 
-    <Button
-        android:id="@+id/emergencyProfileBTN"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/userPolicyBTN"
-        android:layout_centerHorizontal="true"
-        android:text="Share Emergency Profile"/>
+        <TextView
+            android:id="@+id/userFullNameTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/userProfilePictureIV"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/default_margin_1"
+            android:layout_marginTop="@dimen/default_margin_1"
+            android:text="Oday Maleh"
+            android:textColor="@color/white"
+            android:textSize="30sp"/>
+
+        <TextView
+            android:id="@+id/userCountryTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/userFullNameTV"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="@dimen/default_margin_1"
+            android:text="Lebanon"
+            android:textAppearance="?android:textAppearanceMedium"
+            android:textColor="@color/white"/>
+
+    </RelativeLayout>
+
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="@dimen/chart_height_2">
+
+        <LinearLayout android:layout_width="match_parent"
+                      android:layout_height="@dimen/radiobutton_row_height">
+
+            <TextView android:layout_width="match_parent"
+                      android:layout_height="match_parent"
+                      android:background="@color/bpBlue"
+                      android:gravity="center_vertical"
+                      android:text="@string/profile_information_title"
+                      android:paddingStart="@dimen/default_margin_1"
+                      android:textColor="@color/white"/>
+
+            <ListView android:layout_width="match_parent"
+                      android:id="@+id/profileInformationListView"
+                      android:layout_height="wrap_content"/>
+        </LinearLayout>
+    </LinearLayout>
+
 </RelativeLayout>

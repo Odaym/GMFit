@@ -1,7 +1,6 @@
 package com.mcsaatchi.gmfit.adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,9 +66,6 @@ public class OneItemWithIcon_Fitness_ListAdapter extends BaseAdapter {
 
         holder.itemIconRightIMG.setImageResource(drawableResId);
         holder.itemNameTV.setText((widgetsMap.get(position)).getTitle());
-
-        Log.d("TAG", "getView: Name is : " + (widgetsMap.get(position)).getTitle());
-        Log.d("TAG", "getView: Name is : " + (widgetsMap.get(position)).getValue());
 
         return convertView;
     }

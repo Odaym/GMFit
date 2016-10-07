@@ -97,4 +97,10 @@ public interface GMFit_Service {
 
     @GET
     Call<RecentMealsResponse> getRecentMeals(@Header(Constants.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken, @Url String fullUrl);
+
+    @POST("user/meals/request")
+    Call<DefaultGetResponse> requestNewMeal(@Header(Constants.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken, @Body ApiCallsHandler.RequestMealRequest requestMealRequest);
+
+    @GET("medical-tests")
+    Call<MedicalTestsResponse> getMedicalTests(@Header(Constants.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken);
 }

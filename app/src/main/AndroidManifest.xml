@@ -81,8 +81,8 @@
 
         <activity android:name=".activities.SetupProfile_Activity"
                   android:screenOrientation="portrait"
-                  android:windowSoftInputMode="adjustPan|adjustResize"
-                  android:theme="@style/No_Action_Bar_Theme"/>
+                  android:theme="@style/No_Action_Bar_Theme"
+                  android:windowSoftInputMode="adjustPan|adjustResize"/>
 
         <activity android:name=".activities.CustomizeWidgetsAndCharts_Activity"
                   android:screenOrientation="portrait"
@@ -97,6 +97,11 @@
                   android:windowSoftInputMode="stateHidden"/>
 
         <activity android:name=".activities.SpecifyMealAmount_Activity"
+                  android:screenOrientation="portrait"
+                  android:theme="@style/No_Action_Bar_Theme"
+                  android:windowSoftInputMode="stateHidden"/>
+
+        <activity android:name=".activities.AddNewHealthTest_Activity"
                   android:screenOrientation="portrait"
                   android:theme="@style/No_Action_Bar_Theme"
                   android:windowSoftInputMode="stateHidden"/>

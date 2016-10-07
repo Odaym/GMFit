@@ -64,14 +64,48 @@
                       android:verticalSpacing="@dimen/default_margin_2"/>
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/cards_container"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:animateLayoutChanges="true"
-            android:orientation="vertical">
+        <LinearLayout android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:orientation="vertical">
+
+            <LinearLayout android:id="@+id/chartTopBarLayout_MEDICAL_TESTS"
+                          android:layout_width="match_parent"
+                          android:layout_height="@dimen/add_medical_tests_layout_height"
+                          android:background="@color/add_medical_tests_bar_background"
+                          android:gravity="center_vertical"
+                          android:orientation="horizontal"
+                          android:paddingEnd="@dimen/activity_vertical_margin"
+                          android:paddingStart="@dimen/activity_vertical_margin">
+
+                <TextView android:id="@+id/chartTitleTV_MEDICAL_TESTS"
+                          android:layout_width="0dp"
+                          android:layout_height="wrap_content"
+                          android:layout_weight="30"
+                          android:text="@string/medical_tests_bar_title"
+                          android:textAppearance="?android:textAppearanceMedium"
+                          android:textColor="@android:color/white"/>
+
+                <LinearLayout android:layout_width="wrap_content"
+                              android:layout_height="match_parent"
+                              android:gravity="center_vertical">
+
+                    <TextView
+                        android:id="@+id/addEntryBTN_MEDICAL_TESTS"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="@string/add_new_meal"
+                        android:textColor="@android:color/white"/>
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/userTestsListView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="vertical"/>
 
         </LinearLayout>
     </LinearLayout>
-
 </RelativeLayout>

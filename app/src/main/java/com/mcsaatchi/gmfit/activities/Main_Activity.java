@@ -106,6 +106,7 @@ public class Main_Activity extends Base_Activity {
                         break;
                     case 3:
                         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, mainProfileFragment).commit();
+                        mainContentLayout.setBackground(getResources().getDrawable(R.drawable.general_background));
                         break;
                 }
 

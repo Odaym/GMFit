@@ -16,7 +16,10 @@
     <color name="nutrition_red">#FF7054</color>
     <color name="nutrition_meal_bars_orange">#FF7055</color>
     <color name="profile_blue">#67a3fd</color>
-    <color name="add_medical_conditions_button_green">#1ED4A8</color>
+    <color name="add_medical_conditions_row_green">#1ED4A8</color>
+
+    <color name="health_greenish">#19e2e4</color>
+    <color name="add_medical_tests_bar_background">#1ed4a8</color>
 
     <color name="buttons_blue">#47589a</color>
 
