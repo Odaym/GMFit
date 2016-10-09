@@ -1,8 +1,12 @@
 package com.mcsaatchi.gmfit.activities;
 
+import android.Manifest;
+import android.app.AlertDialog;
 import android.content.ContentUris;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
@@ -10,16 +14,29 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.mcsaatchi.gmfit.R;
+import com.mcsaatchi.gmfit.adapters.TestMetricsRecycler_Adapter;
+import com.mcsaatchi.gmfit.adapters.UserTestsRecycler_Adapter;
+import com.mcsaatchi.gmfit.classes.Constants;
 import com.mcsaatchi.gmfit.classes.Helpers;
+import com.mcsaatchi.gmfit.classes.SimpleDividerItemDecoration;
+import com.mcsaatchi.gmfit.rest.MedicalTestsResponseDatum;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -29,39 +46,57 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class AddHealthTest_Activity extends Base_Activity {
+public class AddTestDetails_Activity extends Base_Activity {
 
-    @Bind(R.id.addNewPhotoTestBTN)
-    Button addNewPhotoTestBTN;
     @Bind(R.id.testPhotosLayout)
     LinearLayout testPhotosLayout;
-
-    private static final String TAG = "AddHealthTest_Activity";
+    @Bind(R.id.toolbar)
+    Toolbar toolbar;
+    @Bind(R.id.addNewTestPhotoBTN)
+    TextView addNewTestPhotoBTN;
+    @Bind(R.id.testMetricsListView)
+    RecyclerView testMetricsListView;
 
     private static final int SELECT_PICTURE = 1;
+    private static final int RC_HANDLE_STORAGE_PERM = 2;
 
     private List<String> selectedImagePaths = new ArrayList<>();
+
+    private ArrayList<MedicalTestsResponseDatum> testMetrics = new ArrayList<>();
+    private String testName;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(Helpers.createActivityBundleWithProperties(R.string.app_name, true));
 
-        setContentView(R.layout.activity_add_health_test);
+        setContentView(R.layout.activity_add_health_test_details);
 
         ButterKnife.bind(this);
 
-        addNewPhotoTestBTN.setOnClickListener(new View.OnClickListener() {
+        addNewTestPhotoBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-                startActivityForResult(Intent.createChooser(intent,
-                        "Select Picture"), SELECT_PICTURE);
+                boolean hasPermission = (ContextCompat.checkSelfPermission(AddTestDetails_Activity.this,
+                        Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED);
+
+                if (!hasPermission) {
+                    ActivityCompat.requestPermissions(AddTestDetails_Activity.this,
+                            new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                            RC_HANDLE_STORAGE_PERM);
+                } else {
+                    openPictureChooser();
+                }
             }
         });
+
+        if (getIntent().getExtras() != null) {
+            testName = getIntent().getExtras().getString(Constants.EXTRAS_TEST_TITLE);
+            testMetrics = getIntent().getExtras().getParcelableArrayList(Constants.EXTRAS_TEST_OBJET_DETAILS);
+            setupMetricsListView(testMetrics);
+        }
+
+        setupToolbar(toolbar, testName, true);
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
@@ -70,7 +105,7 @@ public class AddHealthTest_Activity extends Base_Activity {
 
                 if (intent.getClipData() != null) {
                     for (int i = 0; i < intent.getClipData().getItemCount(); i++) {
-                        selectedImagePaths.add(getPath(AddHealthTest_Activity.this, intent.getClipData().getItemAt(i).getUri()));
+                        selectedImagePaths.add(getPath(AddTestDetails_Activity.this, intent.getClipData().getItemAt(i).getUri()));
                         testPhotosLayout.addView(createNewImageViewLayout(intent.getClipData().getItemAt(i).getUri()));
                     }
                 } else {
@@ -80,13 +115,58 @@ public class AddHealthTest_Activity extends Base_Activity {
         }
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        if (requestCode != RC_HANDLE_STORAGE_PERM) {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+            return;
+        }
+
+        if (grantResults.length != 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            openPictureChooser();
+            return;
+        }
+
+        DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                finish();
+            }
+        };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.add_test_photos_bar_title)
+                .setMessage(R.string.no_storage_permission)
+                .setPositiveButton(R.string.OK, listener)
+                .show();
+    }
+
+    private void openPictureChooser(){
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+        startActivityForResult(Intent.createChooser(intent,
+                "Select Picture"), SELECT_PICTURE);
+    }
+
+    private void setupMetricsListView(ArrayList<MedicalTestsResponseDatum> testMetrics){
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
+        TestMetricsRecycler_Adapter userTestsRecyclerAdapter = new TestMetricsRecycler_Adapter(this, testMetrics);
+
+        testMetricsListView.setLayoutManager(mLayoutManager);
+        testMetricsListView.setAdapter(userTestsRecyclerAdapter);
+        testMetricsListView.addItemDecoration(new SimpleDividerItemDecoration(this));
+    }
+
     public View createNewImageViewLayout(Uri imageURI) {
         final View singlePhotoLayout = getLayoutInflater().inflate(R.layout.view_test_photo_item, null);
 
         ImageView testPhotoIMG = (ImageView) singlePhotoLayout.findViewById(R.id.testPhotoIMG);
         Button deleteTestPhotoBTN = (Button) singlePhotoLayout.findViewById(R.id.deleteTestPhotoBTN);
 
-        Picasso.with(AddHealthTest_Activity.this).load(new File(getPath(AddHealthTest_Activity.this, imageURI))).fit().into
+        Picasso.with(AddTestDetails_Activity.this).load(new File(getPath(AddTestDetails_Activity.this, imageURI))).fit().into
                 (testPhotoIMG);
 
         deleteTestPhotoBTN.setOnClickListener(new View.OnClickListener() {

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="@dimen/medical_tests_row_height"
+              android:background="@color/white"
+              android:gravity="center_vertical"
+              android:orientation="horizontal"
+              android:paddingStart="@dimen/default_margin_1">
+
+    <TextView android:id="@+id/metricNameTV"
+              android:layout_width="@dimen/text_input_label_width"
+              android:layout_height="match_parent"
+              android:layout_weight="1"
+              android:gravity="center_vertical"/>
+
+    <EditText android:id="@+id/metricValueET"
+              android:layout_width="wrap_content"
+              android:layout_height="match_parent"
+              android:layout_weight="3"
+              android:background="@color/much_lighter_gray"
+              android:gravity="center"
+              android:inputType="number"
+              android:maxLength="3"/>
+
+    <Spinner android:id="@+id/metricUnitsSpinner"
+             android:layout_width="wrap_content"
+             android:layout_height="match_parent"
+             android:layout_weight="1"
+             android:background="@color/much_lighter_gray"
+             android:paddingEnd="@dimen/default_margin_1"/>
+
+</LinearLayout>

@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/offwhite_more_transparent"
-            android:hint="@string/search_hint"
+            android:hint="@string/search_meals_hint"
             android:imeOptions="actionSearch"
             android:inputType="textCapSentences"
             android:paddingStart="@dimen/default_margin_1_5"

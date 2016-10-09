@@ -10,7 +10,7 @@
 
     <com.mcsaatchi.gmfit.classes.FontTextView
         android:id="@+id/metricTitleTV"
-        android:layout_width="wrap_content"
+        android:layout_width="@dimen/widgets_metric_name_width"
         android:layout_height="wrap_content"
         android:textColor="@color/fitness_teal"
         android:textSize="@dimen/nutrition_metric_title_font_size"/>

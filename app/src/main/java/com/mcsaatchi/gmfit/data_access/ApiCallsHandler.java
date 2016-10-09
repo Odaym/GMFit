@@ -6,6 +6,7 @@ import com.mcsaatchi.gmfit.rest.AuthenticationResponse;
 import com.mcsaatchi.gmfit.rest.ChartMetricBreakdownResponse;
 import com.mcsaatchi.gmfit.rest.ChartsBySectionResponse;
 import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
+import com.mcsaatchi.gmfit.rest.HealthWidgetsResponse;
 import com.mcsaatchi.gmfit.rest.MealMetricsResponse;
 import com.mcsaatchi.gmfit.rest.MedicalConditionsResponse;
 import com.mcsaatchi.gmfit.rest.MedicalTestsResponse;
@@ -483,6 +484,22 @@ public class ApiCallsHandler {
 
             @Override
             public void onFailure(Call<MedicalTestsResponse> call, Throwable t) {
+                callback.onFailure(call, t);
+            }
+        });
+    }
+
+    void getHealthWidgets(String userAccessToken, String sectionName, final Callback<HealthWidgetsResponse> callback){
+        Call<HealthWidgetsResponse> apiCall = new RestClient().getGMFitService().getHealthWidgets(userAccessToken, sectionName);
+
+        apiCall.enqueue(new Callback<HealthWidgetsResponse>() {
+            @Override
+            public void onResponse(Call<HealthWidgetsResponse> call, Response<HealthWidgetsResponse> response) {
+                callback.onResponse(call, response);
+            }
+
+            @Override
+            public void onFailure(Call<HealthWidgetsResponse> call, Throwable t) {
                 callback.onFailure(call, t);
             }
         });

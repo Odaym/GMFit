@@ -92,4 +92,5 @@
     <dimen name="add_medical_tests_layout_height">60dp</dimen>
     <dimen name="far_right_arrow_icon_dimens">15dp</dimen>
     <dimen name="medical_tests_row_height">60dp</dimen>
+    <dimen name="widgets_metric_name_width">50dp</dimen>
 </resources>

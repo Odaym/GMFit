@@ -1,12 +1,15 @@
 package com.mcsaatchi.gmfit.rest;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MedicalTestsResponseBody {
+public class MedicalTestsResponseBody implements Parcelable {
     @SerializedName("name")
     @Expose
     private String name;
@@ -19,6 +22,24 @@ public class MedicalTestsResponseBody {
     @SerializedName("metrics")
     @Expose
     private List<MedicalTestsResponseDatum> metrics = new ArrayList<>();
+
+    private MedicalTestsResponseBody(Parcel in) {
+        name = in.readString();
+        type = in.readString();
+        slug = in.readString();
+    }
+
+    public static final Creator<MedicalTestsResponseBody> CREATOR = new Creator<MedicalTestsResponseBody>() {
+        @Override
+        public MedicalTestsResponseBody createFromParcel(Parcel in) {
+            return new MedicalTestsResponseBody(in);
+        }
+
+        @Override
+        public MedicalTestsResponseBody[] newArray(int size) {
+            return new MedicalTestsResponseBody[size];
+        }
+    };
 
     /**
      *
@@ -90,5 +111,17 @@ public class MedicalTestsResponseBody {
      */
     public void setMetrics(List<MedicalTestsResponseDatum> metrics) {
         this.metrics = metrics;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(name);
+        parcel.writeString(type);
+        parcel.writeString(slug);
     }
 }

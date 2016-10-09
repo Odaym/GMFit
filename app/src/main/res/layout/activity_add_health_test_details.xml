@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/health_background"
+            android:fitsSystemWindows="true">
+
+    <LinearLayout android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:orientation="vertical">
+
+        <include layout="@layout/app_toolbar"/>
+
+        <LinearLayout android:layout_width="match_parent"
+                      android:layout_height="@dimen/add_medical_tests_layout_height"
+                      android:background="@color/add_medical_tests_bar_background"
+                      android:gravity="center_vertical"
+                      android:orientation="horizontal"
+                      android:paddingEnd="@dimen/activity_vertical_margin"
+                      android:paddingStart="@dimen/activity_vertical_margin">
+
+            <TextView android:layout_width="0dp"
+                      android:layout_height="wrap_content"
+                      android:layout_weight="30"
+                      android:text="@string/add_test_photos_bar_title"
+                      android:textColor="@android:color/white"/>
+
+            <LinearLayout android:layout_width="wrap_content"
+                          android:layout_height="match_parent"
+                          android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/addNewTestPhotoBTN"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="@string/add_photo_hint"
+                    android:textColor="@android:color/white"/>
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <HorizontalScrollView android:layout_width="match_parent"
+                              android:layout_height="@dimen/test_photos_horizontal_scoller_height">
+            <LinearLayout
+                android:id="@+id/testPhotosLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:orientation="horizontal"/>
+
+        </HorizontalScrollView>
+
+        <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:id="@+id/fillInFieldsHint"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:background="@color/health_green"
+                  android:gravity="center_vertical"
+                  android:minHeight="?android:attr/listPreferredItemHeightSmall"
+                  android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
+                  android:paddingStart="?android:attr/listPreferredItemPaddingStart"
+                  android:text="@string/fill_in_below_fields_hint"
+                  android:textColor="@android:color/white"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/testMetricsListView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/offwhite_background_gray"
+            android:scrollbars="vertical"/>
+    </LinearLayout>
+</ScrollView>

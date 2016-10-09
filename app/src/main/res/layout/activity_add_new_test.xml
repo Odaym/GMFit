@@ -1,12 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:id="@+id/topLayout"
-              xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/topLayout"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:background="@drawable/health_background"
+              android:fitsSystemWindows="true"
               android:orientation="vertical">
 
     <include layout="@layout/app_toolbar"/>
+
+    <FrameLayout android:layout_width="match_parent"
+                 android:layout_height="@dimen/default_button_height_1"
+                 android:layout_marginBottom="@dimen/default_margin_2">
+
+        <EditText
+            android:id="@+id/searchTestsAutoCompleTV"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/offwhite_more_transparent"
+            android:hint="@string/search_tests_hint"
+            android:inputType="textCapSentences"
+            android:paddingStart="@dimen/default_margin_1_5"
+            android:textColor="@color/white"
+            android:textColorHint="@color/offwhite_transparent"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|end"
+            android:orientation="horizontal">
+
+            <ProgressBar
+                android:id="@+id/pb_loading_indicator"
+                style="?android:attr/progressBarStyleSmall"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center_vertical|end"
+                android:layout_marginEnd="@dimen/default_margin_1"
+                android:visibility="gone"/>
+
+            <ImageView
+                android:id="@+id/searchIconIV"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|end"
+                android:paddingEnd="@dimen/default_margin_1_5"
+                android:src="@drawable/ic_search_white_24dp"/>
+        </LinearLayout>
+
+    </FrameLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/availableTestsListview"

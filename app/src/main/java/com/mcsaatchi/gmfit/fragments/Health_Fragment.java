@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.mcsaatchi.gmfit.R;
@@ -22,12 +23,19 @@ import com.mcsaatchi.gmfit.adapters.UserTestsRecycler_Adapter;
 import com.mcsaatchi.gmfit.classes.Constants;
 import com.mcsaatchi.gmfit.classes.SimpleDividerItemDecoration;
 import com.mcsaatchi.gmfit.classes.UserTest;
+import com.mcsaatchi.gmfit.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.models.HealthWidget;
+import com.mcsaatchi.gmfit.rest.HealthWidgetsResponse;
+import com.mcsaatchi.gmfit.rest.HealthWidgetsResponseDatum;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class Health_Fragment extends Fragment {
 
@@ -39,6 +47,8 @@ public class Health_Fragment extends Fragment {
     TextView addEntryBTN_MEDICAL_TESTS;
     @Bind(R.id.userTestsListView)
     RecyclerView userTestsListView;
+    @Bind(R.id.loadingWidgetsProgressBar)
+    ProgressBar loadingWidgetsProgressBar;
 
     private ArrayList<HealthWidget> healthWidgetsMap = new ArrayList<>();
 
@@ -66,34 +76,7 @@ public class Health_Fragment extends Fragment {
 
         metricCounterTV.setText(String.valueOf(prefs.getFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, 0.0f)));
 
-        HealthWidget widget1 = new HealthWidget();
-        widget1.setTitle("BMI");
-        widget1.setMeasurementUnit("kg/m");
-        widget1.setValue(26.1);
-
-        HealthWidget widget2 = new HealthWidget();
-        widget2.setTitle("Cholesterol");
-        widget2.setMeasurementUnit("g");
-        widget2.setValue(82);
-
-        HealthWidget widget3 = new HealthWidget();
-        widget3.setTitle("Glucose");
-        widget3.setMeasurementUnit("mmol/L");
-        widget3.setValue(13.7);
-
-        HealthWidget widget4 = new HealthWidget();
-        widget4.setTitle("Heart Rate");
-        widget4.setMeasurementUnit("BPM");
-        widget4.setValue(94);
-
-        healthWidgetsMap.add(widget1);
-        healthWidgetsMap.add(widget2);
-        healthWidgetsMap.add(widget3);
-        healthWidgetsMap.add(widget4);
-
-        HealthWidgets_GridAdapter healthWidgetsGridAdapter = new HealthWidgets_GridAdapter(getActivity(), healthWidgetsMap, R.layout.grid_item_health_widgets);
-
-        widgetsGridView.setAdapter(healthWidgetsGridAdapter);
+        getWidgets();
 
         UserTest userTest1 = new UserTest();
         userTest1.setName("Blood Sugar Tests");
@@ -132,5 +115,47 @@ public class Health_Fragment extends Fragment {
         });
 
         return fragmentView;
+    }
+
+    private void getWidgets() {
+        DataAccessHandler.getInstance().getHealthWidgets(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), "medical", new Callback<HealthWidgetsResponse>() {
+            @Override
+            public void onResponse(Call<HealthWidgetsResponse> call, Response<HealthWidgetsResponse> response) {
+                switch (response.code()) {
+                    case 200:
+                        List<HealthWidgetsResponseDatum> widgetsFromResponse = response.body().getData().getBody().getData();
+
+                        for (int i = 0; i < widgetsFromResponse.size(); i++){
+                            HealthWidget widget = new HealthWidget();
+
+                            widget.setId(widgetsFromResponse.get(i).getWidgetId());
+                            widget.setMeasurementUnit(widgetsFromResponse.get(i).getUnit());
+                            widget.setPosition(Integer.parseInt(widgetsFromResponse.get(i).getPosition()));
+                            widget.setValue(widgetsFromResponse.get(i).getTotal());
+                            widget.setTitle(widgetsFromResponse.get(i).getName());
+                            widget.setSlug(widgetsFromResponse.get(i).getSlug());
+
+                            healthWidgetsMap.add(widget);
+                        }
+
+                        if (!healthWidgetsMap.isEmpty() && healthWidgetsMap.size() > 4) {
+                            healthWidgetsMap = new ArrayList<>(healthWidgetsMap.subList(0, 4));
+
+                            HealthWidgets_GridAdapter healthWidgetsGridAdapter = new HealthWidgets_GridAdapter(getActivity(), healthWidgetsMap, R.layout.grid_item_health_widgets);
+
+                            widgetsGridView.setAdapter(healthWidgetsGridAdapter);
+
+                            loadingWidgetsProgressBar.setVisibility(View.GONE);
+                        }
+
+                        break;
+                }
+            }
+
+            @Override
+            public void onFailure(Call<HealthWidgetsResponse> call, Throwable t) {
+
+            }
+        });
     }
 }

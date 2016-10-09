@@ -1,12 +1,15 @@
 package com.mcsaatchi.gmfit.rest;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MedicalTestsResponseDatum {
+public class MedicalTestsResponseDatum implements Parcelable {
     @SerializedName("name")
     @Expose
     private String name;
@@ -25,6 +28,42 @@ public class MedicalTestsResponseDatum {
     @SerializedName("units")
     @Expose
     private List<MedicalTestsResponseDatumUnit> units = new ArrayList<MedicalTestsResponseDatumUnit>();
+
+    protected MedicalTestsResponseDatum(Parcel in) {
+        name = in.readString();
+        type = in.readString();
+        slug = in.readString();
+        lowValue = in.readString();
+        highValue = in.readString();
+        units = in.createTypedArrayList(MedicalTestsResponseDatumUnit.CREATOR);
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(name);
+        dest.writeString(type);
+        dest.writeString(slug);
+        dest.writeString(lowValue);
+        dest.writeString(highValue);
+        dest.writeTypedList(units);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<MedicalTestsResponseDatum> CREATOR = new Creator<MedicalTestsResponseDatum>() {
+        @Override
+        public MedicalTestsResponseDatum createFromParcel(Parcel in) {
+            return new MedicalTestsResponseDatum(in);
+        }
+
+        @Override
+        public MedicalTestsResponseDatum[] newArray(int size) {
+            return new MedicalTestsResponseDatum[size];
+        }
+    };
 
     /**
      * @return The name
@@ -109,4 +148,5 @@ public class MedicalTestsResponseDatum {
     public void setUnits(List<MedicalTestsResponseDatumUnit> units) {
         this.units = units;
     }
+
 }

@@ -50,6 +50,7 @@ public class Constants {
     public static final String EXTRAS_MAIN_MEAL_NAME = "main_meal_name";
     public static final String EXTRAS_CREATED_NEW_MEAL_ENTRY = "created_new_meal_entry";
     public static final String EXTRAS_UPDATED_MEAL_ENTRY = "updated_meal_entry";
+    public static final String EXTRAS_TEST_TITLE = "test_title";
 
     public static final String BUNDLE_ACTIVITY_TITLE = "activity_title";
     public static final String BUNDLE_ACTIVITY_BACK_BUTTON_ENABLED = "activity_back_button_enabled";

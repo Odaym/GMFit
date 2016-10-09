@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest
-    package="com.mcsaatchi.gmfit"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.mcsaatchi.gmfit">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
@@ -88,20 +88,22 @@
                   android:screenOrientation="portrait"
                   android:theme="@style/No_Action_Bar_Theme"/>
 
-        <activity android:name=".activities.AddHealthTest_Activity"
-                  android:screenOrientation="portrait"/>
+        <activity android:name=".activities.AddTestDetails_Activity"
+                  android:screenOrientation="portrait"
+                  android:theme="@style/No_Action_Bar_Theme"
+                  android:windowSoftInputMode="adjustPan|adjustResize"/>
 
         <activity android:name=".activities.AddNewMealItem_Activity"
                   android:screenOrientation="portrait"
                   android:theme="@style/No_Action_Bar_Theme"
                   android:windowSoftInputMode="stateHidden"/>
 
-        <activity android:name=".activities.SpecifyMealAmount_Activity"
+        <activity android:name=".activities.AddNewHealthTest_Activity"
                   android:screenOrientation="portrait"
                   android:theme="@style/No_Action_Bar_Theme"
                   android:windowSoftInputMode="stateHidden"/>
 
-        <activity android:name=".activities.AddNewHealthTest_Activity"
+        <activity android:name=".activities.SpecifyMealAmount_Activity"
                   android:screenOrientation="portrait"
                   android:theme="@style/No_Action_Bar_Theme"
                   android:windowSoftInputMode="stateHidden"/>

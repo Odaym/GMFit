@@ -19,7 +19,7 @@ import com.mcsaatchi.gmfit.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.rest.MedicalTestsResponse;
 import com.mcsaatchi.gmfit.rest.MedicalTestsResponseBody;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -76,7 +76,7 @@ public class AddNewHealthTest_Activity extends Base_Activity {
 
                         waitingDialog.dismiss();
 
-                        List<MedicalTestsResponseBody> testsFromResponse = response.body().getData().getBody();
+                        ArrayList<MedicalTestsResponseBody> testsFromResponse = (ArrayList<MedicalTestsResponseBody>) response.body().getData().getBody();
 
                         setupAvailableTestsListView(testsFromResponse);
 
@@ -92,13 +92,12 @@ public class AddNewHealthTest_Activity extends Base_Activity {
         });
     }
 
-    private void setupAvailableTestsListView(List<MedicalTestsResponseBody> testsFromResponse) {
+    private void setupAvailableTestsListView(ArrayList<MedicalTestsResponseBody> testsFromResponse) {
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         AvailableTestsRecycler_Adapter userTestsRecyclerAdapter = new AvailableTestsRecycler_Adapter(this, testsFromResponse);
 
         availableTestsListview.setLayoutManager(mLayoutManager);
         availableTestsListview.setAdapter(userTestsRecyclerAdapter);
         availableTestsListview.addItemDecoration(new SimpleDividerItemDecoration(this));
-
     }
 }

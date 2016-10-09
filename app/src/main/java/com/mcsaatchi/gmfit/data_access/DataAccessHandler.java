@@ -5,6 +5,7 @@ import com.mcsaatchi.gmfit.rest.AuthenticationResponse;
 import com.mcsaatchi.gmfit.rest.ChartMetricBreakdownResponse;
 import com.mcsaatchi.gmfit.rest.ChartsBySectionResponse;
 import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
+import com.mcsaatchi.gmfit.rest.HealthWidgetsResponse;
 import com.mcsaatchi.gmfit.rest.MealMetricsResponse;
 import com.mcsaatchi.gmfit.rest.MedicalConditionsResponse;
 import com.mcsaatchi.gmfit.rest.MedicalTestsResponse;
@@ -145,5 +146,9 @@ public class DataAccessHandler {
 
     public void getMedicalTests(String userAccessToken, Callback<MedicalTestsResponse> callback){
         ApiCallsHandler.getInstance().getMedicalTests(userAccessToken, callback);
+    }
+
+    public void getHealthWidgets(String userAccessToken, String sectionName, Callback<HealthWidgetsResponse> callback){
+        ApiCallsHandler.getInstance().getHealthWidgets(userAccessToken, sectionName, callback);
     }
 }

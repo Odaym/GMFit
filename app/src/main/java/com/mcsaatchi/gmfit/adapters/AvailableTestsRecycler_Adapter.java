@@ -1,6 +1,8 @@
 package com.mcsaatchi.gmfit.adapters;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Parcelable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,16 +10,18 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.mcsaatchi.gmfit.R;
+import com.mcsaatchi.gmfit.activities.AddTestDetails_Activity;
+import com.mcsaatchi.gmfit.classes.Constants;
 import com.mcsaatchi.gmfit.rest.MedicalTestsResponseBody;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public class AvailableTestsRecycler_Adapter extends RecyclerView.Adapter<AvailableTestsRecycler_Adapter.MyViewHolder> {
 
-    private List<MedicalTestsResponseBody> availableTests;
+    private ArrayList<MedicalTestsResponseBody> availableTests;
     private Context context;
 
-    public AvailableTestsRecycler_Adapter(Context context, List<MedicalTestsResponseBody> availableTests) {
+    public AvailableTestsRecycler_Adapter(Context context, ArrayList<MedicalTestsResponseBody> availableTests) {
         this.availableTests = availableTests;
         this.context = context;
     }
@@ -54,10 +58,10 @@ public class AvailableTestsRecycler_Adapter extends RecyclerView.Adapter<Availab
 
         @Override
         public void onClick(View view) {
-//            Intent intent = new Intent(context, SpecifyMealAmount_Activity.class);
-//            intent.putExtra(Constants.EXTRAS_MEAL_OBJECT_DETAILS, availableTests.get(getAdapterPosition()));
-//            intent.putExtra(Constants.EXTRAS_MEAL_ITEM_PURPOSE_EDITING, true);
-//            context.startActivity(intent);
+            Intent intent = new Intent(context, AddTestDetails_Activity.class);
+            intent.putExtra(Constants.EXTRAS_TEST_TITLE, availableTests.get(getAdapterPosition()).getName());
+            intent.putParcelableArrayListExtra(Constants.EXTRAS_TEST_OBJET_DETAILS, (ArrayList<? extends Parcelable>) availableTests.get(getAdapterPosition()).getMetrics());
+            context.startActivity(intent);
         }
     }
 }

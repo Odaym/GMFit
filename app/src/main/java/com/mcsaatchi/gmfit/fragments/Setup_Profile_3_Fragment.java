@@ -9,22 +9,20 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
 import com.andreabaccega.widget.FormEditText;
 import com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialogFragment;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.activities.Main_Activity;
+import com.mcsaatchi.gmfit.adapters.MedicalConditionsSpinnerAdapter;
 import com.mcsaatchi.gmfit.classes.Constants;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
@@ -306,8 +304,8 @@ public class Setup_Profile_3_Fragment extends Fragment implements CalendarDatePi
     }
 
     private void initCustomSpinner(ArrayList<String> listItems, Spinner spinner) {
-        CustomSpinnerAdapter customSpinnerAdapter = new CustomSpinnerAdapter(getActivity(), listItems);
-        spinner.setAdapter(customSpinnerAdapter);
+        MedicalConditionsSpinnerAdapter medicalConditionsSpinnerAdapter = new MedicalConditionsSpinnerAdapter(getActivity(), listItems);
+        spinner.setAdapter(medicalConditionsSpinnerAdapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -336,51 +334,5 @@ public class Setup_Profile_3_Fragment extends Fragment implements CalendarDatePi
     public void onDestroy() {
         super.onDestroy();
         EventBus_Singleton.getInstance().unregister(this);
-    }
-
-    public class CustomSpinnerAdapter extends BaseAdapter implements SpinnerAdapter {
-
-        private final Context activity;
-        private ArrayList<String> listItems;
-
-        public CustomSpinnerAdapter(Context context, ArrayList<String> listItems) {
-            this.listItems = listItems;
-            activity = context;
-        }
-
-
-        public int getCount() {
-            return listItems.size();
-        }
-
-        public Object getItem(int i) {
-            return listItems.get(i);
-        }
-
-        public long getItemId(int i) {
-            return (long) i;
-        }
-
-
-        @Override
-        public View getDropDownView(int position, View convertView, ViewGroup parent) {
-            TextView txt = new TextView(activity);
-            txt.setPadding(getResources().getDimensionPixelSize(R.dimen.default_margin_2), 16, 16, 16);
-            txt.setGravity(Gravity.CENTER_VERTICAL);
-            txt.setText(listItems.get(position));
-            txt.setTextColor(getResources().getColor(android.R.color.black));
-            return txt;
-        }
-
-        public View getView(int i, View view, ViewGroup viewgroup) {
-            TextView txt = new TextView(activity);
-            txt.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
-            txt.setPadding(getResources().getDimensionPixelSize(R.dimen.default_margin_2), 16, 16, 16);
-            txt.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_arrow_down, 0);
-            txt.setText(listItems.get(i));
-            txt.setTextColor(getResources().getColor(android.R.color.white));
-            return txt;
-        }
-
     }
 }
