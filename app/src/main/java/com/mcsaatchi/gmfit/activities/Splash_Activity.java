@@ -15,7 +15,6 @@ import com.mcsaatchi.gmfit.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponse;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponseChart;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponseInnerBody;
-import com.mcsaatchi.gmfit.rest.AuthenticationResponseWidget;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -99,11 +98,10 @@ public class Splash_Activity extends AppCompatActivity {
                         /**
                          * Don't send the widgets over to the Main Activity here
                          */
-                        List<AuthenticationResponseWidget> widgetsMap = responseBody.getWidgets();
                         List<AuthenticationResponseChart> chartsMap = responseBody.getCharts();
 
                         Intent intent = new Intent(Splash_Activity.this, Main_Activity.class);
-                        intent.putParcelableArrayListExtra("charts", (ArrayList<AuthenticationResponseChart>) chartsMap);
+                        intent.putParcelableArrayListExtra(Constants.BUNDLE_FITNESS_CHARTS_MAP, (ArrayList<AuthenticationResponseChart>) chartsMap);
                         startActivity(intent);
 
                         finish();

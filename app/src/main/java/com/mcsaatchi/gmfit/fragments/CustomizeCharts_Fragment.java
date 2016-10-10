@@ -1,23 +1,22 @@
 package com.mcsaatchi.gmfit.fragments;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.adapters.OneItemWithIcon_ListAdapter;
+import com.mcsaatchi.gmfit.adapters.CustomizeChartsRecyclerAdapter;
 import com.mcsaatchi.gmfit.classes.Constants;
-import com.mcsaatchi.gmfit.classes.EventBus_Poster;
-import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
+import com.mcsaatchi.gmfit.classes.SimpleDividerItemDecoration;
 import com.mcsaatchi.gmfit.models.DataChart;
-import com.mcsaatchi.gmfit.reorderable_listview.DragSortListView;
+import com.mcsaatchi.gmfit.touch_helpers.SimpleDragItemTouchHelperCallback;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import butterknife.Bind;
@@ -26,49 +25,15 @@ import butterknife.ButterKnife;
 public class CustomizeCharts_Fragment extends Fragment {
 
     @Bind(R.id.chartsListView)
-    DragSortListView chartsListView;
-
-    private OneItemWithIcon_ListAdapter customizeChartsAdapter;
+    RecyclerView chartsListView;
 
     private List<DataChart> dataChartsMap;
 
     private String CHARTS_ORDER_ARRAY_CHANGED_EVENT;
 
-    private Activity parentActivity;
-
-    private List<String> chartNames = new ArrayList<>();
-
-    private DragSortListView.DropListener onDrop =
-            new DragSortListView.DropListener() {
-                @Override
-                public void drop(int from, int to) {
-
-                    EventBus_Singleton.getInstance().post(new EventBus_Poster(CHARTS_ORDER_ARRAY_CHANGED_EVENT, dataChartsMap));
-
-                    customizeChartsAdapter.notifyData();
-                }
-            };
-
-    private DragSortListView.DragListener onDrag = new DragSortListView.DragListener() {
-        @Override
-        public void drag(int from, int to) {
-            if (to < dataChartsMap.size() && from < dataChartsMap.size()) {
-                Collections.swap(chartNames, from, to);
-                Collections.swap(dataChartsMap, from, to);
-                int tempNumber = dataChartsMap.get(from).getPosition();
-                dataChartsMap.get(from).setPosition(dataChartsMap.get(to).getPosition());
-                dataChartsMap.get(to).setPosition(tempNumber);
-            }
-        }
-    };
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
-        if (context instanceof Activity) {
-            parentActivity = (Activity) context;
-        }
     }
 
     @Override
@@ -92,6 +57,7 @@ public class CustomizeCharts_Fragment extends Fragment {
                 switch (typeOfFragmentToCustomizeFor) {
                     case Constants.EXTRAS_FITNESS_FRAGMENT:
                         CHARTS_ORDER_ARRAY_CHANGED_EVENT = Constants.EXTRAS_FITNESS_CHARTS_ORDER_ARRAY_CHANGED;
+                        dataChartsMap = fragmentBundle.getParcelableArrayList(Constants.BUNDLE_FITNESS_CHARTS_MAP);
                         break;
                     case Constants.EXTRAS_NUTRITION_FRAGMENT:
                         CHARTS_ORDER_ARRAY_CHANGED_EVENT = Constants.EXTRAS_NUTRITION_CHARTS_ORDER_ARRAY_CHANGED;
@@ -105,22 +71,17 @@ public class CustomizeCharts_Fragment extends Fragment {
         }
 
         if (dataChartsMap != null) {
-            for (DataChart dataChart :
-                    dataChartsMap) {
-                chartNames.add(dataChart.getName());
-            }
+            CustomizeChartsRecyclerAdapter customizeChartsRecyclerAdapter = new CustomizeChartsRecyclerAdapter(dataChartsMap, R.drawable.ic_menu_black_24dp, CHARTS_ORDER_ARRAY_CHANGED_EVENT);
+            ItemTouchHelper.Callback callback = new SimpleDragItemTouchHelperCallback(customizeChartsRecyclerAdapter);
+            ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
 
-            hookupListWithItems(chartNames);
+            chartsListView.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
+            chartsListView.setLayoutManager(new LinearLayoutManager(getActivity()));
+            chartsListView.setAdapter(customizeChartsRecyclerAdapter);
+
+            touchHelper.attachToRecyclerView(chartsListView);
         }
 
         return fragmentView;
-    }
-
-    private void hookupListWithItems(List<String> items) {
-        chartsListView.setDragListener(onDrag);
-        chartsListView.setDropListener(onDrop);
-
-        customizeChartsAdapter = new OneItemWithIcon_ListAdapter(parentActivity, items, R.drawable.ic_menu_black_24dp);
-        chartsListView.setAdapter(customizeChartsAdapter);
     }
 }

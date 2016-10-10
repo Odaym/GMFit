@@ -35,8 +35,8 @@ import com.mcsaatchi.gmfit.activities.BarcodeCapture_Activity;
 import com.mcsaatchi.gmfit.activities.CustomizeWidgetsAndCharts_Activity;
 import com.mcsaatchi.gmfit.activities.SlugBreakdown_Activity;
 import com.mcsaatchi.gmfit.adapters.NutritionWidgets_GridAdapter;
-import com.mcsaatchi.gmfit.adapters.SimpleItemTouchHelperCallback;
-import com.mcsaatchi.gmfit.adapters.UserMeals_RecyclerAdapter;
+import com.mcsaatchi.gmfit.touch_helpers.SimpleDragSwipeItemTouchHelperCallback;
+import com.mcsaatchi.gmfit.adapters.UserMeals_RecyclerAdapterDragSwipe;
 import com.mcsaatchi.gmfit.classes.Constants;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
@@ -150,7 +150,7 @@ public class Nutrition_Fragment extends Fragment {
     ProgressBar loadingWidgetsProgressBar;
 
     private boolean setDrawChartValuesEnabled = false;
-    private UserMeals_RecyclerAdapter userMealsRecyclerAdapter;
+    private UserMeals_RecyclerAdapterDragSwipe userMealsRecyclerAdapter;
     private ArrayList<NutritionWidget> widgetsMap;
     private SharedPreferences prefs;
     private ArrayList<MealItem> finalBreakfastMeals = new ArrayList<>();
@@ -572,8 +572,8 @@ public class Nutrition_Fragment extends Fragment {
         ItemTouchHelper.Callback callback;
         ItemTouchHelper touchHelper;
 
-        userMealsRecyclerAdapter = new UserMeals_RecyclerAdapter(getActivity(), mealItems);
-        callback = new SimpleItemTouchHelperCallback(userMealsRecyclerAdapter);
+        userMealsRecyclerAdapter = new UserMeals_RecyclerAdapterDragSwipe(getActivity(), mealItems);
+        callback = new SimpleDragSwipeItemTouchHelperCallback(userMealsRecyclerAdapter);
         touchHelper = new ItemTouchHelper(callback);
 
         switch (mealType) {
@@ -632,8 +632,6 @@ public class Nutrition_Fragment extends Fragment {
 
                 break;
             case Constants.EXTRAS_CREATED_NEW_MEAL_ENTRY:
-                Log.d(TAG, "handle_BusEvents: Creating new meal");
-
                 if (ebp.getMealItemExtra() != null) {
                     MealItem chosenMealFromList = ebp.getMealItemExtra();
 
@@ -875,24 +873,23 @@ public class Nutrition_Fragment extends Fragment {
                             for (int i = 0; i < newChartData.size(); i++) {
                                 date = new DateTime(newChartData.get(i).getDate());
 
-                                int dayOfMonth = date.getDayOfMonth();
-
-                                if (i == 0)
-                                    dateTV_1.setText(date.monthOfYear().getAsText().substring(0, 3) + "-" + date.getDayOfMonth());
-
-                                if (dayOfMonth % 7 == 0) {
-
-                                    if (dayOfMonth == 7) {
+                                switch (i) {
+                                    case 0:
+                                        dateTV_1.setText(date.monthOfYear().getAsText().substring(0, 3) + "-" + date.getDayOfMonth());
+                                        break;
+                                    case 7:
                                         dateTV_2.setText(date.monthOfYear().getAsText().substring(0, 3) + "-" + date.getDayOfMonth());
-                                    } else if (dayOfMonth == 14) {
+                                        break;
+                                    case 14:
                                         dateTV_3.setText(date.monthOfYear().getAsText().substring(0, 3) + "-" + date.getDayOfMonth());
-                                    } else if (dayOfMonth == 21) {
+                                        break;
+                                    case 21:
                                         dateTV_4.setText(date.monthOfYear().getAsText().substring(0, 3) + "-" + date.getDayOfMonth());
-                                    }
+                                        break;
+                                }
 
-                                    if (i == newChartData.size() - 1) {
-                                        dateTV_5.setText(date.monthOfYear().getAsText().substring(0, 3) + "-" + date.getDayOfMonth());
-                                    }
+                                if (i == newChartData.size() - 1) {
+                                    dateTV_5.setText(date.monthOfYear().getAsText().substring(0, 3) + "-" + date.getDayOfMonth());
                                 }
                             }
 

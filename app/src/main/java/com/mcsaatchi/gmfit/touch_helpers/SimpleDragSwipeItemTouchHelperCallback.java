@@ -1,13 +1,13 @@
-package com.mcsaatchi.gmfit.adapters;
+package com.mcsaatchi.gmfit.touch_helpers;
 
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 
-public class SimpleItemTouchHelperCallback extends ItemTouchHelper.Callback {
+public class SimpleDragSwipeItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
-    private final ItemTouchHelperAdapter mAdapter;
+    private final Drag_Swipe_ItemTouchHelperAdapter mAdapter;
 
-    public SimpleItemTouchHelperCallback(ItemTouchHelperAdapter adapter) {
+    public SimpleDragSwipeItemTouchHelperCallback(Drag_Swipe_ItemTouchHelperAdapter adapter) {
         mAdapter = adapter;
     }
 

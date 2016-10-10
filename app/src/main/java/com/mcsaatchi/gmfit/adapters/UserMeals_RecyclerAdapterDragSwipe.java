@@ -12,17 +12,18 @@ import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.activities.SpecifyMealAmount_Activity;
 import com.mcsaatchi.gmfit.classes.Constants;
 import com.mcsaatchi.gmfit.models.MealItem;
+import com.mcsaatchi.gmfit.touch_helpers.Drag_Swipe_ItemTouchHelperAdapter;
 
 import java.util.Collections;
 import java.util.List;
 
-public class UserMeals_RecyclerAdapter extends RecyclerView.Adapter<UserMeals_RecyclerAdapter.MyViewHolder>
-        implements ItemTouchHelperAdapter {
+public class UserMeals_RecyclerAdapterDragSwipe extends RecyclerView.Adapter<UserMeals_RecyclerAdapterDragSwipe.MyViewHolder>
+        implements Drag_Swipe_ItemTouchHelperAdapter {
 
     private List<MealItem> mealItems;
     private Context context;
 
-    public UserMeals_RecyclerAdapter(Context context, List<MealItem> mealItems) {
+    public UserMeals_RecyclerAdapterDragSwipe(Context context, List<MealItem> mealItems) {
         this.mealItems = mealItems;
         this.context = context;
     }

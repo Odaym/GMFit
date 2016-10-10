@@ -18,8 +18,10 @@ import com.mcsaatchi.gmfit.fragments.Fitness_Fragment;
 import com.mcsaatchi.gmfit.fragments.Health_Fragment;
 import com.mcsaatchi.gmfit.fragments.MainProfile_Fragment;
 import com.mcsaatchi.gmfit.fragments.Nutrition_Fragment;
+import com.mcsaatchi.gmfit.models.DataChart;
 import com.mcsaatchi.gmfit.pedometer.SensorListener;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponseChart;
+import com.mcsaatchi.gmfit.rest.AuthenticationResponseChartData;
 
 import java.util.ArrayList;
 
@@ -42,6 +44,7 @@ public class Main_Activity extends Base_Activity {
     private MainProfile_Fragment mainProfileFragment;
 
     private ArrayList<AuthenticationResponseChart> chartsMap;
+    private ArrayList<DataChart> finalChartsMap = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +64,21 @@ public class Main_Activity extends Base_Activity {
         Log.d("USER_ACCESS_TOKEN", "onCreate: User access token is : " + prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS));
 
         if (getIntent().getExtras() != null) {
-            chartsMap = getIntent().getExtras().getParcelableArrayList("charts");
+            chartsMap = getIntent().getExtras().getParcelableArrayList(Constants.BUNDLE_FITNESS_CHARTS_MAP);
+
+            if (chartsMap != null) {
+                for (int i = 0; i < chartsMap.size(); i++) {
+                    DataChart dataChart = new DataChart();
+                    dataChart.setChart_id(chartsMap.get(i).getChartId());
+                    dataChart.setName(chartsMap.get(i).getName());
+                    dataChart.setType(chartsMap.get(i).getSlug());
+                    dataChart.setPosition(Integer.parseInt(chartsMap.get(i).getPosition()));
+                    dataChart.setChartData((ArrayList<AuthenticationResponseChartData>) chartsMap.get(i).getData());
+                    dataChart.setWhichFragment(Constants.EXTRAS_FITNESS_FRAGMENT);
+
+                    finalChartsMap.add(dataChart);
+                }
+            }
         }
 
         fitnessFragment = new Fitness_Fragment();
@@ -85,7 +102,7 @@ public class Main_Activity extends Base_Activity {
                 switch (position) {
                     case 0:
                         Bundle bundle = new Bundle();
-                        bundle.putParcelableArrayList("charts", chartsMap);
+                        bundle.putParcelableArrayList(Constants.BUNDLE_FITNESS_CHARTS_MAP, finalChartsMap);
 
                         try {
                             fitnessFragment.setArguments(bundle);

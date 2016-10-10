@@ -279,8 +279,8 @@ public class Setup_Profile_3_Fragment extends Fragment implements CalendarDatePi
                         List<AuthenticationResponseChart> chartsMap = response.body().getData().getBody().getCharts();
 
                         Intent intent = new Intent(getActivity(), Main_Activity.class);
-                        intent.putParcelableArrayListExtra("widgets", (ArrayList<AuthenticationResponseWidget>) widgetsMap);
-                        intent.putParcelableArrayListExtra("charts", (ArrayList<AuthenticationResponseChart>) chartsMap);
+                        intent.putParcelableArrayListExtra(Constants.BUNDLE_FITNESS_WIDGETS_MAP, (ArrayList<AuthenticationResponseWidget>) widgetsMap);
+                        intent.putParcelableArrayListExtra(Constants.BUNDLE_FITNESS_CHARTS_MAP, (ArrayList<AuthenticationResponseChart>) chartsMap);
                         startActivity(intent);
 
                         getActivity().finish();

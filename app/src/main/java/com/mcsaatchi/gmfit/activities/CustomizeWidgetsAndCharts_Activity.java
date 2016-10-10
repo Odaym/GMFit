@@ -65,6 +65,7 @@ public class CustomizeWidgetsAndCharts_Activity extends Base_Activity {
                 switch (typeOfFragmentToCustomiseFor) {
                     case Constants.EXTRAS_FITNESS_FRAGMENT:
                         fitnessWidgetsMapExtra = intentExtras.getParcelableArrayList(Constants.BUNDLE_FITNESS_WIDGETS_MAP);
+                        dataChartsMapExtra = intentExtras.getParcelableArrayList(Constants.BUNDLE_FITNESS_CHARTS_MAP);
                         mainLayoutTop.setBackground(getResources().getDrawable(R.drawable.fitness_background));
                         break;
                     case Constants.EXTRAS_NUTRITION_FRAGMENT:
@@ -107,6 +108,7 @@ public class CustomizeWidgetsAndCharts_Activity extends Base_Activity {
                 switch (typeOfFragmentToCustomiseFor) {
                     case Constants.EXTRAS_FITNESS_FRAGMENT:
                         fragmentArguments.putParcelableArrayList(Constants.BUNDLE_FITNESS_WIDGETS_MAP, fitnessWidgetsMapExtra);
+                        fragmentArguments.putParcelableArrayList(Constants.BUNDLE_FITNESS_CHARTS_MAP, dataChartsMapExtra);
                         break;
                     case Constants.EXTRAS_NUTRITION_FRAGMENT:
                         fragmentArguments.putParcelableArrayList(Constants.BUNDLE_NUTRITION_WIDGETS_MAP, nutritionWidgetsMapExtra);
