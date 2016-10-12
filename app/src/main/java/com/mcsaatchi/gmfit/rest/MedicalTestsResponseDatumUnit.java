@@ -7,6 +7,17 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class MedicalTestsResponseDatumUnit implements Parcelable{
+    public static final Creator<MedicalTestsResponseDatumUnit> CREATOR = new Creator<MedicalTestsResponseDatumUnit>() {
+        @Override
+        public MedicalTestsResponseDatumUnit createFromParcel(Parcel source) {
+            return new MedicalTestsResponseDatumUnit(source);
+        }
+
+        @Override
+        public MedicalTestsResponseDatumUnit[] newArray(int size) {
+            return new MedicalTestsResponseDatumUnit[size];
+        }
+    };
     @SerializedName("id")
     @Expose
     private Integer id;
@@ -15,20 +26,9 @@ public class MedicalTestsResponseDatumUnit implements Parcelable{
     private String unit;
 
     protected MedicalTestsResponseDatumUnit(Parcel in) {
-        unit = in.readString();
+        this.id = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.unit = in.readString();
     }
-
-    public static final Creator<MedicalTestsResponseDatumUnit> CREATOR = new Creator<MedicalTestsResponseDatumUnit>() {
-        @Override
-        public MedicalTestsResponseDatumUnit createFromParcel(Parcel in) {
-            return new MedicalTestsResponseDatumUnit(in);
-        }
-
-        @Override
-        public MedicalTestsResponseDatumUnit[] newArray(int size) {
-            return new MedicalTestsResponseDatumUnit[size];
-        }
-    };
 
     /**
      * @return The id
@@ -64,7 +64,8 @@ public class MedicalTestsResponseDatumUnit implements Parcelable{
     }
 
     @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(unit);
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeValue(this.id);
+        dest.writeString(this.unit);
     }
 }

@@ -32,6 +32,10 @@ public class TestMetricsRecycler_Adapter extends RecyclerView.Adapter<TestMetric
         return new MyViewHolder(itemView);
     }
 
+    public MedicalTestsResponseDatum getItem(int position){
+        return testMetrics.get(position);
+    }
+
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
 
@@ -65,6 +69,5 @@ public class TestMetricsRecycler_Adapter extends RecyclerView.Adapter<TestMetric
             metricValueET = (EditText) view.findViewById(R.id.metricValueET);
             metricUnitsSpinner = (Spinner) view.findViewById(R.id.metricUnitsSpinner);
         }
-
     }
 }

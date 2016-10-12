@@ -2,18 +2,12 @@ package com.mcsaatchi.gmfit.activities;
 
 import android.Manifest;
 import android.app.AlertDialog;
-import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.DocumentsContract;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -22,32 +16,48 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.HorizontalScrollView;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.adapters.TestMetricsRecycler_Adapter;
-import com.mcsaatchi.gmfit.adapters.UserTestsRecycler_Adapter;
 import com.mcsaatchi.gmfit.classes.Constants;
 import com.mcsaatchi.gmfit.classes.Helpers;
 import com.mcsaatchi.gmfit.classes.SimpleDividerItemDecoration;
+import com.mcsaatchi.gmfit.data_access.DataAccessHandler;
+import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.rest.MedicalTestsResponseDatum;
+import com.nguyenhoanglam.imagepicker.activity.ImagePickerActivity;
+import com.nguyenhoanglam.imagepicker.model.Image;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
 
 public class AddTestDetails_Activity extends Base_Activity {
 
+    private static final int SELECT_PICTURE = 1;
+    private static final int RC_HANDLE_STORAGE_PERM = 2;
+    private static final String TAG = "AddTestDetails_Activity";
     @Bind(R.id.testPhotosLayout)
     LinearLayout testPhotosLayout;
     @Bind(R.id.toolbar)
@@ -56,14 +66,19 @@ public class AddTestDetails_Activity extends Base_Activity {
     TextView addNewTestPhotoBTN;
     @Bind(R.id.testMetricsListView)
     RecyclerView testMetricsListView;
-
-    private static final int SELECT_PICTURE = 1;
-    private static final int RC_HANDLE_STORAGE_PERM = 2;
-
+    private SharedPreferences prefs;
     private List<String> selectedImagePaths = new ArrayList<>();
-
     private ArrayList<MedicalTestsResponseDatum> testMetrics = new ArrayList<>();
     private String testName;
+    private String test_slug;
+    private String test_date_taken;
+    private RecyclerView.LayoutManager mLayoutManager;
+    private TestMetricsRecycler_Adapter testMetricsRecyclerAdapter;
+    private ArrayList<Image> selectedImages = new ArrayList<>();
+
+    public static RequestBody toRequestBody(String value) {
+        return RequestBody.create(MediaType.parse("text/plain"), value);
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -72,6 +87,8 @@ public class AddTestDetails_Activity extends Base_Activity {
         setContentView(R.layout.activity_add_health_test_details);
 
         ButterKnife.bind(this);
+
+        prefs = getSharedPreferences(Constants.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
 
         addNewTestPhotoBTN.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,25 +109,122 @@ public class AddTestDetails_Activity extends Base_Activity {
 
         if (getIntent().getExtras() != null) {
             testName = getIntent().getExtras().getString(Constants.EXTRAS_TEST_TITLE);
-            testMetrics = getIntent().getExtras().getParcelableArrayList(Constants.EXTRAS_TEST_OBJET_DETAILS);
+            test_slug = getIntent().getExtras().getString(Constants.EXTRAS_TEST_SLUG);
+            test_date_taken = getIntent().getExtras().getString(Constants.EXTRAS_TEST_DATE_TAKEN);
+            testMetrics = getIntent().getExtras().getParcelableArrayList(Constants.EXTRAS_TEST_OBJECT_DETAILS);
             setupMetricsListView(testMetrics);
         }
 
         setupToolbar(toolbar, testName, true);
     }
 
-    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        if (resultCode == RESULT_OK) {
-            if (requestCode == SELECT_PICTURE) {
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.add_new_health_test, menu);
 
-                if (intent.getClipData() != null) {
-                    for (int i = 0; i < intent.getClipData().getItemCount(); i++) {
-                        selectedImagePaths.add(getPath(AddTestDetails_Activity.this, intent.getClipData().getItemAt(i).getUri()));
-                        testPhotosLayout.addView(createNewImageViewLayout(intent.getClipData().getItemAt(i).getUri()));
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.doneBTN:
+                HashMap<String, RequestBody> metrics = new HashMap<>();
+
+                for (int i = 0; i < testMetricsRecyclerAdapter.getItemCount(); i++) {
+                    if (mLayoutManager.findViewByPosition(i) != null) {
+                        Spinner metricUnitSpinner = ((Spinner) mLayoutManager.findViewByPosition(i).findViewById(R.id.metricUnitsSpinner));
+
+                        EditText metricValueTV = ((EditText) mLayoutManager.findViewByPosition(i).findViewById(R.id.metricValueET));
+
+                        if (!metricValueTV.getText().toString().isEmpty()) {
+                            metrics.put("metrics[" + i + "][id]", toRequestBody(testMetricsRecyclerAdapter.getItem(i).getId()));
+
+                            metrics.put("metrics[" + i + "][value]", toRequestBody(metricValueTV.getText().toString()));
+
+                            if (metricUnitSpinner.getSelectedItem() != null) {
+                                int finalUnitId = 0;
+
+                                if (!testMetrics.get(i).getUnits().isEmpty()) {
+                                    for (int j = 0; j < testMetricsRecyclerAdapter.getItem(i).getUnits().size(); j++) {
+                                        if (testMetricsRecyclerAdapter.getItem(i).getUnits().get(j).getUnit().equals(metricUnitSpinner.getSelectedItem().toString())) {
+                                            finalUnitId = testMetricsRecyclerAdapter.getItem(i).getUnits().get(j).getId();
+                                        }
+                                    }
+                                }
+
+                                metrics.put("metrics[" + i + "][unit_id]", toRequestBody(String.valueOf(finalUnitId)));
+                            }
+                        }
                     }
-                } else {
-                    testPhotosLayout.addView(createNewImageViewLayout(intent.getData()));
                 }
+
+                if (!selectedImages.isEmpty() && !metrics.isEmpty()) {
+                    RequestBody file;
+                    File imageFile;
+
+                    HashMap<String, RequestBody> imageParts = new HashMap<>();
+
+                    for (int i = 0; i < selectedImages.size(); i++) {
+
+                        try {
+
+                            imageFile = new File(selectedImages.get(i).getPath());
+
+                            FileOutputStream fos = new FileOutputStream(imageFile);
+
+                            fos.flush();
+                            fos.close();
+
+                            file = RequestBody.create(MediaType.parse("image/jpeg"), imageFile);
+
+                            imageParts.put("images[" + i + "]\"; filename=\"" + selectedImages.get(i).getName(), file);
+
+                            file = null;
+
+                            imageFile = null;
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    DataAccessHandler.getInstance().storeNewHealthTest(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
+                            toRequestBody(test_slug), toRequestBody(test_date_taken), metrics, imageParts, new Callback<DefaultGetResponse>() {
+                                @Override
+                                public void onResponse(Call<DefaultGetResponse> call, retrofit2.Response<DefaultGetResponse> response) {
+                                    Log.d("TAG", "onResponse: Response : " + response.code());
+
+                                    switch (response.code()) {
+                                        case 200:
+
+                                            Log.d("TAG", "onResponse: Success");
+
+                                            break;
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+                                    Log.d("TAG", "onFailure: Failure");
+                                }
+                            });
+                } else {
+                    Toast.makeText(this, "Please fill in the needed fields to proceed", Toast.LENGTH_SHORT).show();
+                }
+
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == SELECT_PICTURE && resultCode == RESULT_OK && data != null) {
+            selectedImages = data.getParcelableArrayListExtra(ImagePickerActivity.INTENT_EXTRA_SELECTED_IMAGES);
+            // do your logic ....
+            Log.d(TAG, "onActivityResult: Images size is : " + selectedImages.size());
+            for (int i = 0; i < selectedImages.size(); i++) {
+                testPhotosLayout.addView(createNewImageViewLayout(selectedImages.get(i).getPath()));
             }
         }
     }
@@ -142,31 +256,39 @@ public class AddTestDetails_Activity extends Base_Activity {
                 .show();
     }
 
-    private void openPictureChooser(){
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-        startActivityForResult(Intent.createChooser(intent,
-                "Select Picture"), SELECT_PICTURE);
+    private void openPictureChooser() {
+        selectedImages = new ArrayList<>();
+
+        Intent intent = new Intent(this, ImagePickerActivity.class);
+
+        intent.putExtra(ImagePickerActivity.INTENT_EXTRA_FOLDER_MODE, true);
+        intent.putExtra(ImagePickerActivity.INTENT_EXTRA_MODE, ImagePickerActivity.MODE_MULTIPLE);
+        intent.putExtra(ImagePickerActivity.INTENT_EXTRA_LIMIT, 10);
+        intent.putExtra(ImagePickerActivity.INTENT_EXTRA_SHOW_CAMERA, true);
+        intent.putExtra(ImagePickerActivity.INTENT_EXTRA_SELECTED_IMAGES, selectedImages);
+        intent.putExtra(ImagePickerActivity.INTENT_EXTRA_FOLDER_TITLE, "Album");
+        intent.putExtra(ImagePickerActivity.INTENT_EXTRA_IMAGE_TITLE, "Tap to select images");
+        intent.putExtra(ImagePickerActivity.INTENT_EXTRA_IMAGE_DIRECTORY, "Camera");
+
+        startActivityForResult(intent, SELECT_PICTURE);
     }
 
-    private void setupMetricsListView(ArrayList<MedicalTestsResponseDatum> testMetrics){
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
-        TestMetricsRecycler_Adapter userTestsRecyclerAdapter = new TestMetricsRecycler_Adapter(this, testMetrics);
+    private void setupMetricsListView(ArrayList<MedicalTestsResponseDatum> testMetrics) {
+        mLayoutManager = new LinearLayoutManager(this);
+        testMetricsRecyclerAdapter = new TestMetricsRecycler_Adapter(this, testMetrics);
 
         testMetricsListView.setLayoutManager(mLayoutManager);
-        testMetricsListView.setAdapter(userTestsRecyclerAdapter);
+        testMetricsListView.setAdapter(testMetricsRecyclerAdapter);
         testMetricsListView.addItemDecoration(new SimpleDividerItemDecoration(this));
     }
 
-    public View createNewImageViewLayout(Uri imageURI) {
+    public View createNewImageViewLayout(String imagePath) {
         final View singlePhotoLayout = getLayoutInflater().inflate(R.layout.view_test_photo_item, null);
 
         ImageView testPhotoIMG = (ImageView) singlePhotoLayout.findViewById(R.id.testPhotoIMG);
         Button deleteTestPhotoBTN = (Button) singlePhotoLayout.findViewById(R.id.deleteTestPhotoBTN);
 
-        Picasso.with(AddTestDetails_Activity.this).load(new File(getPath(AddTestDetails_Activity.this, imageURI))).fit().into
+        Picasso.with(AddTestDetails_Activity.this).load(new File(imagePath)).fit().into
                 (testPhotoIMG);
 
         deleteTestPhotoBTN.setOnClickListener(new View.OnClickListener() {
@@ -182,115 +304,5 @@ public class AddTestDetails_Activity extends Base_Activity {
         singlePhotoLayout.setLayoutParams(layoutParams);
 
         return singlePhotoLayout;
-    }
-
-    public static String getPath(final Context context, final Uri uri) {
-
-        final boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;
-
-        // DocumentProvider
-        if (isKitKat && DocumentsContract.isDocumentUri(context, uri)) {
-            // ExternalStorageProvider
-            if (isExternalStorageDocument(uri)) {
-                final String docId = DocumentsContract.getDocumentId(uri);
-                final String[] split = docId.split(":");
-                final String type = split[0];
-
-                if ("primary".equalsIgnoreCase(type)) {
-                    return Environment.getExternalStorageDirectory() + "/" + split[1];
-                }
-
-                // TODO handle non-primary volumes
-            }
-            // DownloadsProvider
-            else if (isDownloadsDocument(uri)) {
-
-                final String id = DocumentsContract.getDocumentId(uri);
-                final Uri contentUri = ContentUris.withAppendedId(
-                        Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
-
-                return getDataColumn(context, contentUri, null, null);
-            }
-            // MediaProvider
-            else if (isMediaDocument(uri)) {
-                final String docId = DocumentsContract.getDocumentId(uri);
-                final String[] split = docId.split(":");
-                final String type = split[0];
-
-                Uri contentUri = null;
-                if ("image".equals(type)) {
-                    contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-                } else if ("video".equals(type)) {
-                    contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
-                } else if ("audio".equals(type)) {
-                    contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-                }
-
-                final String selection = "_id=?";
-                final String[] selectionArgs = new String[]{
-                        split[1]
-                };
-
-                return getDataColumn(context, contentUri, selection, selectionArgs);
-            }
-        }
-        // MediaStore (and general)
-        else if ("content".equalsIgnoreCase(uri.getScheme())) {
-            return getDataColumn(context, uri, null, null);
-        }
-        // File
-        else if ("file".equalsIgnoreCase(uri.getScheme())) {
-            return uri.getPath();
-        }
-
-        return null;
-    }
-
-    public static String getDataColumn(Context context, Uri uri, String selection,
-                                       String[] selectionArgs) {
-
-        Cursor cursor = null;
-        final String column = "_data";
-        final String[] projection = {
-                column
-        };
-
-        try {
-            cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs,
-                    null);
-            if (cursor != null && cursor.moveToFirst()) {
-                final int column_index = cursor.getColumnIndexOrThrow(column);
-                return cursor.getString(column_index);
-            }
-        } finally {
-            if (cursor != null)
-                cursor.close();
-        }
-        return null;
-    }
-
-
-    /**
-     * @param uri The Uri to check.
-     * @return Whether the Uri authority is ExternalStorageProvider.
-     */
-    public static boolean isExternalStorageDocument(Uri uri) {
-        return "com.android.externalstorage.documents".equals(uri.getAuthority());
-    }
-
-    /**
-     * @param uri The Uri to check.
-     * @return Whether the Uri authority is DownloadsProvider.
-     */
-    public static boolean isDownloadsDocument(Uri uri) {
-        return "com.android.providers.downloads.documents".equals(uri.getAuthority());
-    }
-
-    /**
-     * @param uri The Uri to check.
-     * @return Whether the Uri authority is MediaProvider.
-     */
-    public static boolean isMediaDocument(Uri uri) {
-        return "com.android.providers.media.documents".equals(uri.getAuthority());
     }
 }

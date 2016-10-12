@@ -6,20 +6,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.models.NutritionWidget;
+import com.mcsaatchi.gmfit.models.FitnessWidget;
 
 import java.util.ArrayList;
 
-public class OneItemWithIcon_Nutrition_ListAdapter extends BaseAdapter {
+public class FitnessWidgets_ListAdapter extends BaseAdapter {
 
     private Context context;
-    private ArrayList<NutritionWidget> widgetsMap;
+    private ArrayList<FitnessWidget> widgetsMap;
     private int drawableResId;
 
-    public OneItemWithIcon_Nutrition_ListAdapter(Context context, ArrayList<NutritionWidget> widgetsMap, int drawableResId) {
+    public FitnessWidgets_ListAdapter(Context context, ArrayList<FitnessWidget> widgetsMap, int drawableResId) {
         super();
         this.context = context;
         this.widgetsMap = widgetsMap;
@@ -58,6 +59,7 @@ public class OneItemWithIcon_Nutrition_ListAdapter extends BaseAdapter {
 
             holder.itemNameTV = (TextView) convertView.findViewById(R.id.itemNameTV);
             holder.itemIconRightIMG = (ImageView) convertView.findViewById(R.id.itemIconRightIMG);
+            holder.itemLayout = (RelativeLayout) convertView.findViewById(R.id.itemLayout);
 
             convertView.setTag(holder);
         } else {
@@ -67,10 +69,15 @@ public class OneItemWithIcon_Nutrition_ListAdapter extends BaseAdapter {
         holder.itemIconRightIMG.setImageResource(drawableResId);
         holder.itemNameTV.setText((widgetsMap.get(position)).getTitle());
 
+        if (position > 4) {
+            holder.itemLayout.setAlpha(0.2f);
+        }
+
         return convertView;
     }
 
     class ViewHolder {
+        RelativeLayout itemLayout;
         TextView itemNameTV;
         ImageView itemIconRightIMG;
     }

@@ -10,15 +10,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MedicalTestsResponseDatum implements Parcelable {
+    public static final Creator<MedicalTestsResponseDatum> CREATOR = new Creator<MedicalTestsResponseDatum>() {
+        @Override
+        public MedicalTestsResponseDatum createFromParcel(Parcel in) {
+            return new MedicalTestsResponseDatum(in);
+        }
+
+        @Override
+        public MedicalTestsResponseDatum[] newArray(int size) {
+            return new MedicalTestsResponseDatum[size];
+        }
+    };
     @SerializedName("name")
     @Expose
     private String name;
     @SerializedName("type")
     @Expose
     private String type;
-    @SerializedName("slug")
+    @SerializedName("id")
     @Expose
-    private String slug;
+    private String id;
     @SerializedName("low_value")
     @Expose
     private String lowValue;
@@ -32,7 +43,7 @@ public class MedicalTestsResponseDatum implements Parcelable {
     protected MedicalTestsResponseDatum(Parcel in) {
         name = in.readString();
         type = in.readString();
-        slug = in.readString();
+        id = in.readString();
         lowValue = in.readString();
         highValue = in.readString();
         units = in.createTypedArrayList(MedicalTestsResponseDatumUnit.CREATOR);
@@ -42,7 +53,7 @@ public class MedicalTestsResponseDatum implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(name);
         dest.writeString(type);
-        dest.writeString(slug);
+        dest.writeString(id);
         dest.writeString(lowValue);
         dest.writeString(highValue);
         dest.writeTypedList(units);
@@ -52,18 +63,6 @@ public class MedicalTestsResponseDatum implements Parcelable {
     public int describeContents() {
         return 0;
     }
-
-    public static final Creator<MedicalTestsResponseDatum> CREATOR = new Creator<MedicalTestsResponseDatum>() {
-        @Override
-        public MedicalTestsResponseDatum createFromParcel(Parcel in) {
-            return new MedicalTestsResponseDatum(in);
-        }
-
-        @Override
-        public MedicalTestsResponseDatum[] newArray(int size) {
-            return new MedicalTestsResponseDatum[size];
-        }
-    };
 
     /**
      * @return The name
@@ -94,17 +93,17 @@ public class MedicalTestsResponseDatum implements Parcelable {
     }
 
     /**
-     * @return The slug
+     * @return The id
      */
-    public String getSlug() {
-        return slug;
+    public String getId() {
+        return id;
     }
 
     /**
-     * @param slug The slug
+     * @param id The id
      */
-    public void setSlug(String slug) {
-        this.slug = slug;
+    public void setId(String id) {
+        this.id = id;
     }
 
     /**

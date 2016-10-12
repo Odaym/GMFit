@@ -10,6 +10,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MedicalTestsResponseBody implements Parcelable {
+    public static final Creator<MedicalTestsResponseBody> CREATOR = new Creator<MedicalTestsResponseBody>() {
+        @Override
+        public MedicalTestsResponseBody createFromParcel(Parcel source) {
+            return new MedicalTestsResponseBody(source);
+        }
+
+        @Override
+        public MedicalTestsResponseBody[] newArray(int size) {
+            return new MedicalTestsResponseBody[size];
+        }
+    };
     @SerializedName("name")
     @Expose
     private String name;
@@ -23,91 +34,64 @@ public class MedicalTestsResponseBody implements Parcelable {
     @Expose
     private List<MedicalTestsResponseDatum> metrics = new ArrayList<>();
 
-    private MedicalTestsResponseBody(Parcel in) {
-        name = in.readString();
-        type = in.readString();
-        slug = in.readString();
+    protected MedicalTestsResponseBody(Parcel in) {
+        this.name = in.readString();
+        this.type = in.readString();
+        this.slug = in.readString();
+        this.metrics = in.createTypedArrayList(MedicalTestsResponseDatum.CREATOR);
     }
 
-    public static final Creator<MedicalTestsResponseBody> CREATOR = new Creator<MedicalTestsResponseBody>() {
-        @Override
-        public MedicalTestsResponseBody createFromParcel(Parcel in) {
-            return new MedicalTestsResponseBody(in);
-        }
-
-        @Override
-        public MedicalTestsResponseBody[] newArray(int size) {
-            return new MedicalTestsResponseBody[size];
-        }
-    };
-
     /**
-     *
-     * @return
-     * The name
+     * @return The name
      */
     public String getName() {
         return name;
     }
 
     /**
-     *
-     * @param name
-     * The name
+     * @param name The name
      */
     public void setName(String name) {
         this.name = name;
     }
 
     /**
-     *
-     * @return
-     * The type
+     * @return The type
      */
     public String getType() {
         return type;
     }
 
     /**
-     *
-     * @param type
-     * The type
+     * @param type The type
      */
     public void setType(String type) {
         this.type = type;
     }
 
     /**
-     *
-     * @return
-     * The slug
+     * @return The slug
      */
     public String getSlug() {
         return slug;
     }
 
     /**
-     *
-     * @param slug
-     * The slug
+     * @param slug The slug
      */
     public void setSlug(String slug) {
         this.slug = slug;
     }
 
     /**
-     *
-     * @return
-     * The metrics
+     * @return The metrics
      */
     public List<MedicalTestsResponseDatum> getMetrics() {
         return metrics;
     }
 
     /**
-     *
-     * @param metrics
-     * The metrics
+     * @param metrics The metrics
      */
     public void setMetrics(List<MedicalTestsResponseDatum> metrics) {
         this.metrics = metrics;
@@ -119,9 +103,10 @@ public class MedicalTestsResponseBody implements Parcelable {
     }
 
     @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(name);
-        parcel.writeString(type);
-        parcel.writeString(slug);
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.name);
+        dest.writeString(this.type);
+        dest.writeString(this.slug);
+        dest.writeTypedList(this.metrics);
     }
 }

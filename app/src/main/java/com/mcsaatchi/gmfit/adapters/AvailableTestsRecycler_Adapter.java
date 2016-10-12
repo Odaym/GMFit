@@ -14,6 +14,8 @@ import com.mcsaatchi.gmfit.activities.AddTestDetails_Activity;
 import com.mcsaatchi.gmfit.classes.Constants;
 import com.mcsaatchi.gmfit.rest.MedicalTestsResponseBody;
 
+import org.joda.time.LocalDate;
+
 import java.util.ArrayList;
 
 public class AvailableTestsRecycler_Adapter extends RecyclerView.Adapter<AvailableTestsRecycler_Adapter.MyViewHolder> {
@@ -60,7 +62,9 @@ public class AvailableTestsRecycler_Adapter extends RecyclerView.Adapter<Availab
         public void onClick(View view) {
             Intent intent = new Intent(context, AddTestDetails_Activity.class);
             intent.putExtra(Constants.EXTRAS_TEST_TITLE, availableTests.get(getAdapterPosition()).getName());
-            intent.putParcelableArrayListExtra(Constants.EXTRAS_TEST_OBJET_DETAILS, (ArrayList<? extends Parcelable>) availableTests.get(getAdapterPosition()).getMetrics());
+            intent.putExtra(Constants.EXTRAS_TEST_SLUG, availableTests.get(getAdapterPosition()).getSlug());
+            intent.putExtra(Constants.EXTRAS_TEST_DATE_TAKEN, new LocalDate().toString());
+            intent.putParcelableArrayListExtra(Constants.EXTRAS_TEST_OBJECT_DETAILS, (ArrayList<? extends Parcelable>) availableTests.get(getAdapterPosition()).getMetrics());
             context.startActivity(intent);
         }
     }

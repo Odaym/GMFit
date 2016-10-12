@@ -3,11 +3,17 @@ package com.mcsaatchi.gmfit.rest;
 import com.mcsaatchi.gmfit.classes.Constants;
 import com.mcsaatchi.gmfit.data_access.ApiCallsHandler;
 
+import java.util.Map;
+
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
+import retrofit2.http.PartMap;
 import retrofit2.http.Query;
 import retrofit2.http.Url;
 
@@ -71,11 +77,11 @@ public interface GMFit_Service {
 
     @POST("user/charts/update")
     Call<DefaultGetResponse> updateUserCharts(@Header(Constants.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken,
-                                               @Body ApiCallsHandler.UpdateChartsRequest updateChartsRequest);
+                                              @Body ApiCallsHandler.UpdateChartsRequest updateChartsRequest);
 
     @POST("user/meals/update")
     Call<DefaultGetResponse> updateUserMeals(@Header(Constants.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken,
-                                              @Body ApiCallsHandler.UpdateMealsRequest updateMealsRequest);
+                                             @Body ApiCallsHandler.UpdateMealsRequest updateMealsRequest);
 
     @POST("user/charts/add")
     Call<DefaultGetResponse> addMetricChart(@Header(Constants.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken, @Body ApiCallsHandler.AddMetricChartRequest addMetricChartRequest);
@@ -106,4 +112,12 @@ public interface GMFit_Service {
 
     @GET("user/widgets")
     Call<HealthWidgetsResponse> getHealthWidgets(@Header(Constants.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken, @Query("section") String sectionName);
+
+    @Multipart
+    @POST("user/medical/store")
+    Call<DefaultGetResponse> storeNewHealthTest(@Header(Constants.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken, @Part("test_slug") RequestBody test_slug,
+                                                @Part("date_taken") RequestBody date_taken, @PartMap() Map<String, RequestBody> metrics, @PartMap() Map<String, RequestBody> imageFiles);
+
+    @GET("user/medical")
+    Call<TakenMedicalTestsResponse> getTakenMedicalTests(@Header(Constants.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken);
 }

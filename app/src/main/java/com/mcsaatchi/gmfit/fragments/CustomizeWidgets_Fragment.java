@@ -11,8 +11,8 @@ import android.view.ViewGroup;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.activities.Base_Activity;
-import com.mcsaatchi.gmfit.adapters.OneItemWithIcon_Fitness_ListAdapter;
-import com.mcsaatchi.gmfit.adapters.OneItemWithIcon_Nutrition_ListAdapter;
+import com.mcsaatchi.gmfit.adapters.FitnessWidgets_ListAdapter;
+import com.mcsaatchi.gmfit.adapters.NutritionWidgets_ListAdapter;
 import com.mcsaatchi.gmfit.classes.Constants;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
@@ -29,8 +29,8 @@ public class CustomizeWidgets_Fragment extends Fragment {
     @Bind(R.id.widgetsListView)
     DragSortListView widgetsListView;
 
-    private OneItemWithIcon_Fitness_ListAdapter customizeFitnessWidgetsAdapter;
-    private OneItemWithIcon_Nutrition_ListAdapter customizeNutritionWidgetsAdapter;
+    private FitnessWidgets_ListAdapter customizeFitnessWidgetsAdapter;
+    private NutritionWidgets_ListAdapter customizeNutritionWidgetsAdapter;
 
     private String WIDGETS_ORDER_ARRAY_CHANGED_EVENT;
     private Activity parentActivity;
@@ -168,7 +168,7 @@ public class CustomizeWidgets_Fragment extends Fragment {
         widgetsListView.setDragListener(onDragFitnessItems);
         widgetsListView.setDropListener(onDropFitnessItems);
 
-        customizeFitnessWidgetsAdapter = new OneItemWithIcon_Fitness_ListAdapter(parentActivity, fitnessItems, R.drawable.ic_menu_black_24dp);
+        customizeFitnessWidgetsAdapter = new FitnessWidgets_ListAdapter(parentActivity, fitnessItems, R.drawable.ic_menu_black_24dp);
         widgetsListView.setAdapter(customizeFitnessWidgetsAdapter);
     }
 
@@ -176,7 +176,7 @@ public class CustomizeWidgets_Fragment extends Fragment {
         widgetsListView.setDragListener(onDragNutritionItems);
         widgetsListView.setDropListener(onDropNutritionItems);
 
-        customizeNutritionWidgetsAdapter = new OneItemWithIcon_Nutrition_ListAdapter(parentActivity, itemsMapNutrition, R.drawable.ic_menu_black_24dp);
+        customizeNutritionWidgetsAdapter = new NutritionWidgets_ListAdapter(parentActivity, itemsMapNutrition, R.drawable.ic_menu_black_24dp);
         widgetsListView.setAdapter(customizeNutritionWidgetsAdapter);
     }
 }

@@ -3,10 +3,10 @@
       xmlns:app="http://schemas.android.com/apk/res-auto"
       android:layout_width="match_parent"
       android:layout_height="wrap_content">
+
     <item
-        android:id="@+id/search"
-        android:icon="@drawable/ic_search_black_24dp"
-        android:title="@string/search"
-        app:actionViewClass="android.support.v7.widget.SearchView"
+        android:id="@+id/doneBTN"
+        android:icon="@drawable/ic_check_light"
+        android:title="storene"
         app:showAsAction="always"/>
 </menu>

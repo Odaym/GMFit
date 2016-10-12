@@ -33,7 +33,7 @@ public class Constants {
     public static final String EXTRAS_CHART_FULL_NAME = "chart_full_name";
     public static final String EXTRAS_CHART_OBJECT = "chart_object";
     public static final String EXTRAS_MEAL_OBJECT_DETAILS = "meal_object_details";
-    public static final String EXTRAS_TEST_OBJET_DETAILS = "test_object_details";
+    public static final String EXTRAS_TEST_OBJECT_DETAILS = "test_object_details";
     public static final String EXTRAS_MEAL_ITEM_PURPOSE_EDITING = "meal_item_purpose_editing";
 
     public static final String EXTRAS_FITNESS_CHART_DELETED = "fitness_chart_deleted";
@@ -51,6 +51,8 @@ public class Constants {
     public static final String EXTRAS_CREATED_NEW_MEAL_ENTRY = "created_new_meal_entry";
     public static final String EXTRAS_UPDATED_MEAL_ENTRY = "updated_meal_entry";
     public static final String EXTRAS_TEST_TITLE = "test_title";
+    public static final String EXTRAS_TEST_SLUG = "test_slug";
+    public static final String EXTRAS_TEST_DATE_TAKEN = "test_date_taken";
 
     public static final String BUNDLE_ACTIVITY_TITLE = "activity_title";
     public static final String BUNDLE_ACTIVITY_BACK_BUTTON_ENABLED = "activity_back_button_enabled";

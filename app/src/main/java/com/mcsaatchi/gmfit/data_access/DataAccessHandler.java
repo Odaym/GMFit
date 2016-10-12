@@ -12,10 +12,14 @@ import com.mcsaatchi.gmfit.rest.MedicalTestsResponse;
 import com.mcsaatchi.gmfit.rest.RecentMealsResponse;
 import com.mcsaatchi.gmfit.rest.SearchMealItemResponse;
 import com.mcsaatchi.gmfit.rest.SlugBreakdownResponse;
+import com.mcsaatchi.gmfit.rest.TakenMedicalTestsResponse;
 import com.mcsaatchi.gmfit.rest.UiResponse;
 import com.mcsaatchi.gmfit.rest.UserMealsResponse;
 import com.mcsaatchi.gmfit.rest.UserPolicyResponse;
 
+import java.util.Map;
+
+import okhttp3.RequestBody;
 import retrofit2.Callback;
 
 public class DataAccessHandler {
@@ -132,23 +136,31 @@ public class DataAccessHandler {
         ApiCallsHandler.getInstance().getPeriodicalChartData(userAccessToken, start_date, end_date, type, monitored_metric, callback);
     }
 
-    public void addMetricChart(String userAccessToken, int chart_id, Callback<DefaultGetResponse> callback){
+    public void addMetricChart(String userAccessToken, int chart_id, Callback<DefaultGetResponse> callback) {
         ApiCallsHandler.getInstance().addMetricChart(userAccessToken, chart_id, callback);
     }
 
-    public void getChartsBySection(String userAccessToken, String sectionName, Callback<ChartsBySectionResponse> callback){
+    public void getChartsBySection(String userAccessToken, String sectionName, Callback<ChartsBySectionResponse> callback) {
         ApiCallsHandler.getInstance().getChartsBySection(userAccessToken, sectionName, callback);
     }
 
-    public void requestNewMeal(String userAccessToken, String mealName, Callback<DefaultGetResponse> callback){
+    public void requestNewMeal(String userAccessToken, String mealName, Callback<DefaultGetResponse> callback) {
         ApiCallsHandler.getInstance().requestNewMeal(userAccessToken, mealName, callback);
     }
 
-    public void getMedicalTests(String userAccessToken, Callback<MedicalTestsResponse> callback){
+    public void getMedicalTests(String userAccessToken, Callback<MedicalTestsResponse> callback) {
         ApiCallsHandler.getInstance().getMedicalTests(userAccessToken, callback);
     }
 
-    public void getHealthWidgets(String userAccessToken, String sectionName, Callback<HealthWidgetsResponse> callback){
+    public void getHealthWidgets(String userAccessToken, String sectionName, Callback<HealthWidgetsResponse> callback) {
         ApiCallsHandler.getInstance().getHealthWidgets(userAccessToken, sectionName, callback);
+    }
+
+    public void storeNewHealthTest(String userAccessToken, RequestBody test_slug, RequestBody date_taken, Map<String, RequestBody> metrics, Map<String, RequestBody> imageFiles, Callback<DefaultGetResponse> callback) {
+        ApiCallsHandler.getInstance().storeNewHealthTest(userAccessToken, test_slug, date_taken, metrics, imageFiles, callback);
+    }
+
+    public void getTakenMedicalTests(String userAccessToken, Callback<TakenMedicalTestsResponse> callback) {
+        ApiCallsHandler.getInstance().getTakenMedicalTests(userAccessToken, callback);
     }
 }

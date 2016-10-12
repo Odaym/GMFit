@@ -14,10 +14,14 @@ import com.mcsaatchi.gmfit.rest.RecentMealsResponse;
 import com.mcsaatchi.gmfit.rest.RestClient;
 import com.mcsaatchi.gmfit.rest.SearchMealItemResponse;
 import com.mcsaatchi.gmfit.rest.SlugBreakdownResponse;
+import com.mcsaatchi.gmfit.rest.TakenMedicalTestsResponse;
 import com.mcsaatchi.gmfit.rest.UiResponse;
 import com.mcsaatchi.gmfit.rest.UserMealsResponse;
 import com.mcsaatchi.gmfit.rest.UserPolicyResponse;
 
+import java.util.Map;
+
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -473,7 +477,7 @@ public class ApiCallsHandler {
         });
     }
 
-    void getMedicalTests(String userAccessToken, final Callback<MedicalTestsResponse> callback){
+    void getMedicalTests(String userAccessToken, final Callback<MedicalTestsResponse> callback) {
         Call<MedicalTestsResponse> apiCall = new RestClient().getGMFitService().getMedicalTests(userAccessToken);
 
         apiCall.enqueue(new Callback<MedicalTestsResponse>() {
@@ -489,7 +493,7 @@ public class ApiCallsHandler {
         });
     }
 
-    void getHealthWidgets(String userAccessToken, String sectionName, final Callback<HealthWidgetsResponse> callback){
+    void getHealthWidgets(String userAccessToken, String sectionName, final Callback<HealthWidgetsResponse> callback) {
         Call<HealthWidgetsResponse> apiCall = new RestClient().getGMFitService().getHealthWidgets(userAccessToken, sectionName);
 
         apiCall.enqueue(new Callback<HealthWidgetsResponse>() {
@@ -500,6 +504,38 @@ public class ApiCallsHandler {
 
             @Override
             public void onFailure(Call<HealthWidgetsResponse> call, Throwable t) {
+                callback.onFailure(call, t);
+            }
+        });
+    }
+
+    void storeNewHealthTest(String userAccessToken, RequestBody test_slug, RequestBody date_taken, Map<String, RequestBody> metrics, Map<String, RequestBody> imageFiles, final Callback<DefaultGetResponse> callback) {
+        Call<DefaultGetResponse> apiCall = new RestClient().getGMFitService().storeNewHealthTest(userAccessToken, test_slug, date_taken, metrics, imageFiles);
+
+        apiCall.enqueue(new Callback<DefaultGetResponse>() {
+            @Override
+            public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
+                callback.onResponse(call, response);
+            }
+
+            @Override
+            public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+                callback.onFailure(call, t);
+            }
+        });
+    }
+
+    void getTakenMedicalTests(String userAccessToken, final Callback<TakenMedicalTestsResponse> callback){
+        Call<TakenMedicalTestsResponse> apiCall = new RestClient().getGMFitService().getTakenMedicalTests(userAccessToken);
+
+        apiCall.enqueue(new Callback<TakenMedicalTestsResponse>() {
+            @Override
+            public void onResponse(Call<TakenMedicalTestsResponse> call, Response<TakenMedicalTestsResponse> response) {
+                callback.onResponse(call, response);
+            }
+
+            @Override
+            public void onFailure(Call<TakenMedicalTestsResponse> call, Throwable t) {
                 callback.onFailure(call, t);
             }
         });
@@ -653,7 +689,7 @@ public class ApiCallsHandler {
     public class RequestMealRequest {
         final String name;
 
-        RequestMealRequest(String name){
+        RequestMealRequest(String name) {
             this.name = name;
         }
     }
