@@ -12,8 +12,8 @@ import java.util.List;
 public class MedicalTestsResponseDatum implements Parcelable {
     public static final Creator<MedicalTestsResponseDatum> CREATOR = new Creator<MedicalTestsResponseDatum>() {
         @Override
-        public MedicalTestsResponseDatum createFromParcel(Parcel in) {
-            return new MedicalTestsResponseDatum(in);
+        public MedicalTestsResponseDatum createFromParcel(Parcel source) {
+            return new MedicalTestsResponseDatum(source);
         }
 
         @Override
@@ -41,27 +41,12 @@ public class MedicalTestsResponseDatum implements Parcelable {
     private List<MedicalTestsResponseDatumUnit> units = new ArrayList<MedicalTestsResponseDatumUnit>();
 
     protected MedicalTestsResponseDatum(Parcel in) {
-        name = in.readString();
-        type = in.readString();
-        id = in.readString();
-        lowValue = in.readString();
-        highValue = in.readString();
-        units = in.createTypedArrayList(MedicalTestsResponseDatumUnit.CREATOR);
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(name);
-        dest.writeString(type);
-        dest.writeString(id);
-        dest.writeString(lowValue);
-        dest.writeString(highValue);
-        dest.writeTypedList(units);
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
+        this.name = in.readString();
+        this.type = in.readString();
+        this.id = in.readString();
+        this.lowValue = in.readString();
+        this.highValue = in.readString();
+        this.units = in.createTypedArrayList(MedicalTestsResponseDatumUnit.CREATOR);
     }
 
     /**
@@ -148,4 +133,18 @@ public class MedicalTestsResponseDatum implements Parcelable {
         this.units = units;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.name);
+        dest.writeString(this.type);
+        dest.writeString(this.id);
+        dest.writeString(this.lowValue);
+        dest.writeString(this.highValue);
+        dest.writeTypedList(this.units);
+    }
 }

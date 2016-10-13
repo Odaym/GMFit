@@ -52,12 +52,12 @@ public class AddNewHealthTest_Activity extends Base_Activity {
 
     private void getMedicalTests() {
         final ProgressDialog waitingDialog = new ProgressDialog(this);
-        waitingDialog.setTitle(getString(R.string.fetching_chart_data_dialog_title));
+        waitingDialog.setTitle(getString(R.string.fetching_test_data_dialog_title));
         waitingDialog.setMessage(getString(R.string.fetching_chart_data_dialog_message));
         waitingDialog.show();
 
         final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-        alertDialog.setTitle(R.string.fetching_chart_data_dialog_title);
+        alertDialog.setTitle(R.string.fetching_test_data_dialog_title);
         alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {

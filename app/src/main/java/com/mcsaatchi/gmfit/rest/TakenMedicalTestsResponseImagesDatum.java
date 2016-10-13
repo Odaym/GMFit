@@ -1,15 +1,37 @@
 package com.mcsaatchi.gmfit.rest;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class TakenMedicalTestsResponseImagesDatum {
+public class TakenMedicalTestsResponseImagesDatum implements Parcelable{
+    public static final Creator<TakenMedicalTestsResponseImagesDatum> CREATOR = new Creator<TakenMedicalTestsResponseImagesDatum>() {
+        @Override
+        public TakenMedicalTestsResponseImagesDatum createFromParcel(Parcel source) {
+            return new TakenMedicalTestsResponseImagesDatum(source);
+        }
+
+        @Override
+        public TakenMedicalTestsResponseImagesDatum[] newArray(int size) {
+            return new TakenMedicalTestsResponseImagesDatum[size];
+        }
+    };
     @SerializedName("id")
     @Expose
     private Integer id;
     @SerializedName("image")
     @Expose
     private String image;
+
+    public TakenMedicalTestsResponseImagesDatum() {
+    }
+
+    protected TakenMedicalTestsResponseImagesDatum(Parcel in) {
+        this.id = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.image = in.readString();
+    }
 
     /**
      *
@@ -45,5 +67,16 @@ public class TakenMedicalTestsResponseImagesDatum {
      */
     public void setImage(String image) {
         this.image = image;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeValue(this.id);
+        dest.writeString(this.image);
     }
 }

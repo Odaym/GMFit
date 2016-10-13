@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,11 +23,12 @@ import com.mcsaatchi.gmfit.adapters.HealthWidgets_GridAdapter;
 import com.mcsaatchi.gmfit.adapters.UserTestsRecycler_Adapter;
 import com.mcsaatchi.gmfit.classes.Constants;
 import com.mcsaatchi.gmfit.classes.SimpleDividerItemDecoration;
-import com.mcsaatchi.gmfit.classes.UserTest;
 import com.mcsaatchi.gmfit.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.models.HealthWidget;
 import com.mcsaatchi.gmfit.rest.HealthWidgetsResponse;
 import com.mcsaatchi.gmfit.rest.HealthWidgetsResponseDatum;
+import com.mcsaatchi.gmfit.rest.TakenMedicalTestsResponse;
+import com.mcsaatchi.gmfit.rest.TakenMedicalTestsResponseBody;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +41,7 @@ import retrofit2.Response;
 
 public class Health_Fragment extends Fragment {
 
+    private static final String TAG = "Health_Fragment";
     @Bind(R.id.metricCounterTV)
     TextView metricCounterTV;
     @Bind(R.id.widgetsGridView)
@@ -49,11 +52,7 @@ public class Health_Fragment extends Fragment {
     RecyclerView userTestsListView;
     @Bind(R.id.loadingWidgetsProgressBar)
     ProgressBar loadingWidgetsProgressBar;
-
     private ArrayList<HealthWidget> healthWidgetsMap = new ArrayList<>();
-
-    private ArrayList<UserTest> userTests = new ArrayList<>();
-
     private SharedPreferences prefs;
 
     @Override
@@ -78,33 +77,7 @@ public class Health_Fragment extends Fragment {
 
         getWidgets();
 
-        UserTest userTest1 = new UserTest();
-        userTest1.setName("Blood Sugar Tests");
-        userTest1.setDateTaken("Sat Apr 2, 2016");
-
-        UserTest userTest2 = new UserTest();
-        userTest2.setName("Cholesterol Tests");
-        userTest2.setDateTaken("Fri Mar 18, 2016");
-
-        UserTest userTest3 = new UserTest();
-        userTest3.setName("Liver Function Test");
-        userTest3.setDateTaken("Sat Nov 7, 2015");
-
-        UserTest userTest4 = new UserTest();
-        userTest4.setName("Ullamcorper Fringilla");
-        userTest4.setDateTaken("Fri Oct 18, 2015");
-
-        userTests.add(userTest1);
-        userTests.add(userTest2);
-        userTests.add(userTest3);
-        userTests.add(userTest4);
-
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
-        UserTestsRecycler_Adapter userTestsRecyclerAdapter = new UserTestsRecycler_Adapter(getActivity(), userTests);
-
-        userTestsListView.setLayoutManager(mLayoutManager);
-        userTestsListView.setAdapter(userTestsRecyclerAdapter);
-        userTestsListView.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
+        getTakenMedicalTests();
 
         addEntryBTN_MEDICAL_TESTS.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -121,11 +94,15 @@ public class Health_Fragment extends Fragment {
         DataAccessHandler.getInstance().getHealthWidgets(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), "medical", new Callback<HealthWidgetsResponse>() {
             @Override
             public void onResponse(Call<HealthWidgetsResponse> call, Response<HealthWidgetsResponse> response) {
+                Log.d(TAG, "onResponse: Response code is : " + response.code());
+
                 switch (response.code()) {
                     case 200:
                         List<HealthWidgetsResponseDatum> widgetsFromResponse = response.body().getData().getBody().getData();
 
-                        for (int i = 0; i < widgetsFromResponse.size(); i++){
+                        Log.d("TAG", "onResponse: Success in widgets!");
+
+                        for (int i = 0; i < widgetsFromResponse.size(); i++) {
                             HealthWidget widget = new HealthWidget();
 
                             widget.setId(widgetsFromResponse.get(i).getWidgetId());
@@ -154,6 +131,32 @@ public class Health_Fragment extends Fragment {
 
             @Override
             public void onFailure(Call<HealthWidgetsResponse> call, Throwable t) {
+                Log.d(TAG, "onFailure: Request failed");
+            }
+        });
+    }
+
+    private void getTakenMedicalTests() {
+        DataAccessHandler.getInstance().getTakenMedicalTests(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), new Callback<TakenMedicalTestsResponse>() {
+            @Override
+            public void onResponse(Call<TakenMedicalTestsResponse> call, Response<TakenMedicalTestsResponse> response) {
+                switch (response.code()) {
+                    case 200:
+                        List<TakenMedicalTestsResponseBody> takenMedicalTests = response.body().getData().getBody();
+
+                        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+                        UserTestsRecycler_Adapter userTestsRecyclerAdapter = new UserTestsRecycler_Adapter(getActivity(), takenMedicalTests);
+
+                        userTestsListView.setLayoutManager(mLayoutManager);
+                        userTestsListView.setNestedScrollingEnabled(false);
+                        userTestsListView.setAdapter(userTestsRecyclerAdapter);
+                        userTestsListView.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
+                        break;
+                }
+            }
+
+            @Override
+            public void onFailure(Call<TakenMedicalTestsResponse> call, Throwable t) {
 
             }
         });

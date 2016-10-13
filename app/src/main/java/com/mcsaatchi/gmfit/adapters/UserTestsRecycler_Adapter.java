@@ -1,6 +1,8 @@
 package com.mcsaatchi.gmfit.adapters;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Parcelable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,16 +10,19 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.classes.UserTest;
+import com.mcsaatchi.gmfit.activities.AddHealthTestDetails_Activity;
+import com.mcsaatchi.gmfit.classes.Constants;
+import com.mcsaatchi.gmfit.rest.TakenMedicalTestsResponseBody;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class UserTestsRecycler_Adapter extends RecyclerView.Adapter<UserTestsRecycler_Adapter.MyViewHolder> {
 
-    private List<UserTest> userTests;
+    private List<TakenMedicalTestsResponseBody> userTests;
     private Context context;
 
-    public UserTestsRecycler_Adapter(Context context, List<UserTest> userTests) {
+    public UserTestsRecycler_Adapter(Context context, List<TakenMedicalTestsResponseBody> userTests) {
         this.userTests = userTests;
         this.context = context;
     }
@@ -33,7 +38,7 @@ public class UserTestsRecycler_Adapter extends RecyclerView.Adapter<UserTestsRec
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
 
-        UserTest userTest = userTests.get(position);
+        TakenMedicalTestsResponseBody userTest = userTests.get(position);
 
         holder.itemNameTV.setText(userTest.getName());
 
@@ -57,10 +62,10 @@ public class UserTestsRecycler_Adapter extends RecyclerView.Adapter<UserTestsRec
 
         @Override
         public void onClick(View view) {
-//            Intent intent = new Intent(context, SpecifyMealAmount_Activity.class);
-//            intent.putExtra(Constants.EXTRAS_MEAL_OBJECT_DETAILS, userTests.get(getAdapterPosition()));
-//            intent.putExtra(Constants.EXTRAS_MEAL_ITEM_PURPOSE_EDITING, true);
-//            context.startActivity(intent);
+            Intent intent = new Intent(context, AddHealthTestDetails_Activity.class);
+            intent.putParcelableArrayListExtra(Constants.EXTRAS_TEST_OBJECT_DETAILS, (ArrayList<? extends Parcelable>) userTests.get(getAdapterPosition()).getMetrics());
+            intent.putExtra(Constants.EXTRAS_TEST_ITEM_PURPOSE_EDITING, true);
+            context.startActivity(intent);
         }
     }
 }

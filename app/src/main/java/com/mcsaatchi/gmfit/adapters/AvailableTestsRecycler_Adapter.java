@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.activities.AddTestDetails_Activity;
+import com.mcsaatchi.gmfit.activities.AddHealthTestDetails_Activity;
 import com.mcsaatchi.gmfit.classes.Constants;
 import com.mcsaatchi.gmfit.rest.MedicalTestsResponseBody;
 
@@ -60,7 +60,7 @@ public class AvailableTestsRecycler_Adapter extends RecyclerView.Adapter<Availab
 
         @Override
         public void onClick(View view) {
-            Intent intent = new Intent(context, AddTestDetails_Activity.class);
+            Intent intent = new Intent(context, AddHealthTestDetails_Activity.class);
             intent.putExtra(Constants.EXTRAS_TEST_TITLE, availableTests.get(getAdapterPosition()).getName());
             intent.putExtra(Constants.EXTRAS_TEST_SLUG, availableTests.get(getAdapterPosition()).getSlug());
             intent.putExtra(Constants.EXTRAS_TEST_DATE_TAKEN, new LocalDate().toString());

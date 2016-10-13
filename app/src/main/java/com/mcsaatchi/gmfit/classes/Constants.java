@@ -34,6 +34,7 @@ public class Constants {
     public static final String EXTRAS_CHART_OBJECT = "chart_object";
     public static final String EXTRAS_MEAL_OBJECT_DETAILS = "meal_object_details";
     public static final String EXTRAS_TEST_OBJECT_DETAILS = "test_object_details";
+    public static final String EXTRAS_TEST_ITEM_PURPOSE_EDITING = "test_item_purpose_editing";
     public static final String EXTRAS_MEAL_ITEM_PURPOSE_EDITING = "meal_item_purpose_editing";
 
     public static final String EXTRAS_FITNESS_CHART_DELETED = "fitness_chart_deleted";

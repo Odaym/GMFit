@@ -594,6 +594,7 @@ public class Nutrition_Fragment extends Fragment {
 
     private void hookUpMealSectionListViews(RecyclerView mealListView, RecyclerView.LayoutManager layoutManager, ItemTouchHelper touchHelper) {
         mealListView.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
+        mealListView.setNestedScrollingEnabled(false);
         mealListView.setLayoutManager(layoutManager);
         mealListView.setAdapter(userMealsRecyclerAdapter);
         touchHelper.attachToRecyclerView(mealListView);

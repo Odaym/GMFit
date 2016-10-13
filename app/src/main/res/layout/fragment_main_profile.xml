@@ -9,18 +9,10 @@
                     android:layout_height="@dimen/metric_header_section_height"
                     android:layout_alignParentTop="true">
 
-        <ImageView android:id="@+id/userProfilePictureIV"
-                   android:layout_width="100dp"
-                   android:layout_height="100dp"
-                   android:layout_alignParentTop="true"
-                   android:layout_centerHorizontal="true"
-                   android:layout_marginTop="@dimen/default_margin_1"/>
-
         <TextView
             android:id="@+id/userFullNameTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/userProfilePictureIV"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="@dimen/default_margin_1"
             android:layout_marginTop="@dimen/default_margin_1"
@@ -39,26 +31,11 @@
             android:textAppearance="?android:textAppearanceMedium"
             android:textColor="@color/white"/>
 
+        <Button android:id="@+id/logoutBTN"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/userCountryTV"
+                android:layout_centerHorizontal="true"
+                android:text="Logout"/>
     </RelativeLayout>
-
-    <LinearLayout android:layout_width="match_parent"
-                  android:layout_height="@dimen/chart_height_2">
-
-        <LinearLayout android:layout_width="match_parent"
-                      android:layout_height="@dimen/radiobutton_row_height">
-
-            <TextView android:layout_width="match_parent"
-                      android:layout_height="match_parent"
-                      android:background="@color/bpBlue"
-                      android:gravity="center_vertical"
-                      android:text="@string/profile_information_title"
-                      android:paddingStart="@dimen/default_margin_1"
-                      android:textColor="@color/white"/>
-
-            <ListView android:layout_width="match_parent"
-                      android:id="@+id/profileInformationListView"
-                      android:layout_height="wrap_content"/>
-        </LinearLayout>
-    </LinearLayout>
-
 </RelativeLayout>

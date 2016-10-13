@@ -1,12 +1,26 @@
 package com.mcsaatchi.gmfit.rest;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TakenMedicalTestsResponseMetricsDatum {
+public class TakenMedicalTestsResponseMetricsDatum implements Parcelable {
+    public static final Creator<TakenMedicalTestsResponseMetricsDatum> CREATOR = new Creator<TakenMedicalTestsResponseMetricsDatum>() {
+        @Override
+        public TakenMedicalTestsResponseMetricsDatum createFromParcel(Parcel source) {
+            return new TakenMedicalTestsResponseMetricsDatum(source);
+        }
+
+        @Override
+        public TakenMedicalTestsResponseMetricsDatum[] newArray(int size) {
+            return new TakenMedicalTestsResponseMetricsDatum[size];
+        }
+    };
     @SerializedName("id")
     @Expose
     private Integer id;
@@ -25,6 +39,16 @@ public class TakenMedicalTestsResponseMetricsDatum {
     @SerializedName("units")
     @Expose
     private List<TakenMedicalTestsResponseUnit> units = new ArrayList<>();
+
+    protected TakenMedicalTestsResponseMetricsDatum(Parcel in) {
+        this.id = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.name = in.readString();
+        this.lowValue = in.readString();
+        this.highValue = in.readString();
+        this.value = in.readString();
+        this.units = new ArrayList<>();
+        in.readList(this.units, TakenMedicalTestsResponseUnit.class.getClassLoader());
+    }
 
     /**
      * @return The id
@@ -108,5 +132,20 @@ public class TakenMedicalTestsResponseMetricsDatum {
      */
     public void setUnits(List<TakenMedicalTestsResponseUnit> units) {
         this.units = units;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeValue(this.id);
+        dest.writeString(this.name);
+        dest.writeString(this.lowValue);
+        dest.writeString(this.highValue);
+        dest.writeString(this.value);
+        dest.writeList(this.units);
     }
 }

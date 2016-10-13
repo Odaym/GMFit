@@ -253,6 +253,8 @@
     <string name="add_new_test_activity_title">Add new test</string>
     <string name="search_tests_hint">Search for test</string>
     <string name="fill_in_below_fields_hint">Please fill in the fields below</string>
+    <string name="fetching_test_data_dialog_title">Fetching test data</string>
+    <string name="fetching_test_data_dialog_message">Please wait…</string>
     <string name="add_test_photos_bar_title">Attach Photos</string>
     <string name="add_photo_hint">+ Add a photo</string>
     <string name="no_storage_permission">To be able to attach photos, GMFit needs access to read from this device\'s external storage</string>

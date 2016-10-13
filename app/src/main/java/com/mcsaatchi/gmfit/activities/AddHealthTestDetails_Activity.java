@@ -29,13 +29,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mcsaatchi.gmfit.R;
+import com.mcsaatchi.gmfit.adapters.EditableTestMetricsRecycler_Adapter;
 import com.mcsaatchi.gmfit.adapters.TestMetricsRecycler_Adapter;
 import com.mcsaatchi.gmfit.classes.Constants;
-import com.mcsaatchi.gmfit.classes.Helpers;
 import com.mcsaatchi.gmfit.classes.SimpleDividerItemDecoration;
 import com.mcsaatchi.gmfit.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.rest.MedicalTestsResponseDatum;
+import com.mcsaatchi.gmfit.rest.TakenMedicalTestsResponseMetricsDatum;
 import com.nguyenhoanglam.imagepicker.activity.ImagePickerActivity;
 import com.nguyenhoanglam.imagepicker.model.Image;
 import com.squareup.picasso.Picasso;
@@ -44,7 +45,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -53,11 +53,12 @@ import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 
-public class AddTestDetails_Activity extends Base_Activity {
+public class AddHealthTestDetails_Activity extends Base_Activity {
 
     private static final int SELECT_PICTURE = 1;
     private static final int RC_HANDLE_STORAGE_PERM = 2;
-    private static final String TAG = "AddTestDetails_Activity";
+    private static final String TAG = "AddHealthTestDetails_Activity";
+
     @Bind(R.id.testPhotosLayout)
     LinearLayout testPhotosLayout;
     @Bind(R.id.toolbar)
@@ -66,12 +67,18 @@ public class AddTestDetails_Activity extends Base_Activity {
     TextView addNewTestPhotoBTN;
     @Bind(R.id.testMetricsListView)
     RecyclerView testMetricsListView;
-    private SharedPreferences prefs;
-    private List<String> selectedImagePaths = new ArrayList<>();
-    private ArrayList<MedicalTestsResponseDatum> testMetrics = new ArrayList<>();
+
     private String testName;
     private String test_slug;
     private String test_date_taken;
+
+    private SharedPreferences prefs;
+
+    private ArrayList<MedicalTestsResponseDatum> testMetrics = new ArrayList<>();
+
+    private ArrayList<TakenMedicalTestsResponseMetricsDatum> editableTestMetrics = new ArrayList<>();
+    private EditableTestMetricsRecycler_Adapter editableTestMetricsRecyclerAdapter;
+
     private RecyclerView.LayoutManager mLayoutManager;
     private TestMetricsRecycler_Adapter testMetricsRecyclerAdapter;
     private ArrayList<Image> selectedImages = new ArrayList<>();
@@ -82,7 +89,7 @@ public class AddTestDetails_Activity extends Base_Activity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(Helpers.createActivityBundleWithProperties(R.string.app_name, true));
+        super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_add_health_test_details);
 
@@ -94,11 +101,11 @@ public class AddTestDetails_Activity extends Base_Activity {
             @Override
             public void onClick(View view) {
 
-                boolean hasPermission = (ContextCompat.checkSelfPermission(AddTestDetails_Activity.this,
+                boolean hasPermission = (ContextCompat.checkSelfPermission(AddHealthTestDetails_Activity.this,
                         Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED);
 
                 if (!hasPermission) {
-                    ActivityCompat.requestPermissions(AddTestDetails_Activity.this,
+                    ActivityCompat.requestPermissions(AddHealthTestDetails_Activity.this,
                             new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                             RC_HANDLE_STORAGE_PERM);
                 } else {
@@ -111,8 +118,15 @@ public class AddTestDetails_Activity extends Base_Activity {
             testName = getIntent().getExtras().getString(Constants.EXTRAS_TEST_TITLE);
             test_slug = getIntent().getExtras().getString(Constants.EXTRAS_TEST_SLUG);
             test_date_taken = getIntent().getExtras().getString(Constants.EXTRAS_TEST_DATE_TAKEN);
-            testMetrics = getIntent().getExtras().getParcelableArrayList(Constants.EXTRAS_TEST_OBJECT_DETAILS);
-            setupMetricsListView(testMetrics);
+
+            if (getIntent().getExtras().getBoolean(Constants.EXTRAS_TEST_ITEM_PURPOSE_EDITING, false)) {
+                editableTestMetrics = getIntent().getExtras().getParcelableArrayList(Constants.EXTRAS_TEST_OBJECT_DETAILS);
+                setupEditableMetricsListView(editableTestMetrics);
+            } else {
+                testMetrics = getIntent().getExtras().getParcelableArrayList(Constants.EXTRAS_TEST_OBJECT_DETAILS);
+                setupFreshMetricsListView(testMetrics);
+            }
+
         }
 
         setupToolbar(toolbar, testName, true);
@@ -166,9 +180,7 @@ public class AddTestDetails_Activity extends Base_Activity {
                     HashMap<String, RequestBody> imageParts = new HashMap<>();
 
                     for (int i = 0; i < selectedImages.size(); i++) {
-
                         try {
-
                             imageFile = new File(selectedImages.get(i).getPath());
 
                             FileOutputStream fos = new FileOutputStream(imageFile);
@@ -221,8 +233,6 @@ public class AddTestDetails_Activity extends Base_Activity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == SELECT_PICTURE && resultCode == RESULT_OK && data != null) {
             selectedImages = data.getParcelableArrayListExtra(ImagePickerActivity.INTENT_EXTRA_SELECTED_IMAGES);
-            // do your logic ....
-            Log.d(TAG, "onActivityResult: Images size is : " + selectedImages.size());
             for (int i = 0; i < selectedImages.size(); i++) {
                 testPhotosLayout.addView(createNewImageViewLayout(selectedImages.get(i).getPath()));
             }
@@ -273,7 +283,16 @@ public class AddTestDetails_Activity extends Base_Activity {
         startActivityForResult(intent, SELECT_PICTURE);
     }
 
-    private void setupMetricsListView(ArrayList<MedicalTestsResponseDatum> testMetrics) {
+    private void setupEditableMetricsListView(ArrayList<TakenMedicalTestsResponseMetricsDatum> editableTestMetrics) {
+        mLayoutManager = new LinearLayoutManager(this);
+        editableTestMetricsRecyclerAdapter = new EditableTestMetricsRecycler_Adapter(this, editableTestMetrics);
+
+        testMetricsListView.setLayoutManager(mLayoutManager);
+        testMetricsListView.setAdapter(editableTestMetricsRecyclerAdapter);
+        testMetricsListView.addItemDecoration(new SimpleDividerItemDecoration(this));
+    }
+
+    private void setupFreshMetricsListView(ArrayList<MedicalTestsResponseDatum> testMetrics) {
         mLayoutManager = new LinearLayoutManager(this);
         testMetricsRecyclerAdapter = new TestMetricsRecycler_Adapter(this, testMetrics);
 
@@ -288,7 +307,7 @@ public class AddTestDetails_Activity extends Base_Activity {
         ImageView testPhotoIMG = (ImageView) singlePhotoLayout.findViewById(R.id.testPhotoIMG);
         Button deleteTestPhotoBTN = (Button) singlePhotoLayout.findViewById(R.id.deleteTestPhotoBTN);
 
-        Picasso.with(AddTestDetails_Activity.this).load(new File(imagePath)).fit().into
+        Picasso.with(AddHealthTestDetails_Activity.this).load(new File(imagePath)).fit().into
                 (testPhotoIMG);
 
         deleteTestPhotoBTN.setOnClickListener(new View.OnClickListener() {
