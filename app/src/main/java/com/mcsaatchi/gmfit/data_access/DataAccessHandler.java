@@ -160,6 +160,10 @@ public class DataAccessHandler {
         ApiCallsHandler.getInstance().storeNewHealthTest(userAccessToken, test_slug, date_taken, metrics, imageFiles, callback);
     }
 
+    public void editExistingHealthTest(String userAccessToken, RequestBody instance_id, Map<String, RequestBody> metrics, Map<String, RequestBody> imageFiles, Map<String, RequestBody> deletedImages, Callback<DefaultGetResponse> callback) {
+        ApiCallsHandler.getInstance().editExistingHealthTest(userAccessToken, instance_id, metrics, imageFiles, deletedImages, callback);
+    }
+
     public void getTakenMedicalTests(String userAccessToken, Callback<TakenMedicalTestsResponse> callback) {
         ApiCallsHandler.getInstance().getTakenMedicalTests(userAccessToken, callback);
     }

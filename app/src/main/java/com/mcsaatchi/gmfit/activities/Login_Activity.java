@@ -38,7 +38,6 @@ import com.mcsaatchi.gmfit.fragments.IntroSlider_Fragment;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponse;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponseChart;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponseInnerBody;
-import com.mcsaatchi.gmfit.rest.AuthenticationResponseWidget;
 import com.squareup.otto.Subscribe;
 
 import org.json.JSONException;
@@ -56,7 +55,6 @@ import retrofit2.Response;
 
 public class Login_Activity extends Base_Activity {
 
-    private static final int RC_SIGN_IN = 5;
     private static final String TAG = "Login_Activity";
     @Bind(R.id.viewpager)
     ViewPager viewPager;
@@ -70,7 +68,6 @@ public class Login_Activity extends Base_Activity {
     private DefaultIndicator_Controller indicatorController;
     private CallbackManager callbackManager;
     private SharedPreferences prefs;
-    private SharedPreferences.Editor prefsEditor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -243,14 +240,12 @@ public class Login_Activity extends Base_Activity {
                         //Refreshes access token
                         prefs.edit().putString(Constants.PREF_USER_ACCESS_TOKEN, "Bearer " + responseBody.getToken()).apply();
 
-                        List<AuthenticationResponseWidget> widgetsMap = responseBody.getWidgets();
                         List<AuthenticationResponseChart> chartsMap = responseBody.getCharts();
 
                         EventBus_Singleton.getInstance().post(new EventBus_Poster(Constants.EVENT_SIGNNED_UP_SUCCESSFULLY_CLOSE_LOGIN_ACTIVITY));
 
                         Intent intent = new Intent(Login_Activity.this, Main_Activity.class);
-                        intent.putParcelableArrayListExtra("widgets", (ArrayList<AuthenticationResponseWidget>) widgetsMap);
-                        intent.putParcelableArrayListExtra("charts", (ArrayList<AuthenticationResponseChart>) chartsMap);
+                        intent.putParcelableArrayListExtra(Constants.BUNDLE_FITNESS_CHARTS_MAP, (ArrayList<AuthenticationResponseChart>) chartsMap);
                         startActivity(intent);
 
                         finish();

@@ -32,12 +32,12 @@ public class EditableTestMetricsRecycler_Adapter extends RecyclerView.Adapter<Ed
         return new MyViewHolder(itemView);
     }
 
-    public TakenMedicalTestsResponseMetricsDatum getItem(int position){
+    public TakenMedicalTestsResponseMetricsDatum getItem(int position) {
         return testMetrics.get(position);
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
+    public void onBindViewHolder(MyViewHolder holder, final int position) {
 
         holder.metricNameTV.setText(testMetrics.get(position).getName());
 
@@ -47,8 +47,16 @@ public class EditableTestMetricsRecycler_Adapter extends RecyclerView.Adapter<Ed
             metricUnits.add(testMetrics.get(position).getUnits().get(i).getUnit());
         }
 
+        if (metricUnits.isEmpty()) {
+            metricUnits.add("unit 1");
+        }
+
         TestMetricUnitsSpinnerAdapter adapter = new TestMetricUnitsSpinnerAdapter(context, metricUnits);
         holder.metricUnitsSpinner.setAdapter(adapter);
+
+        if (!(Integer.parseInt(testMetrics.get(position).getValue()) == -1)) {
+            holder.metricValueET.setText(testMetrics.get(position).getValue());
+        }
 
         holder.metricValueET.setTextColor(context.getResources().getColor(R.color.health_green));
     }

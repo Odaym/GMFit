@@ -525,6 +525,22 @@ public class ApiCallsHandler {
         });
     }
 
+    void editExistingHealthTest(String userAccessToken, RequestBody instance_id, Map<String, RequestBody> metrics, Map<String, RequestBody> imageFiles, Map<String, RequestBody> deletedImages, final Callback<DefaultGetResponse> callback) {
+        Call<DefaultGetResponse> apiCall = new RestClient().getGMFitService().editExistingHealthTest(userAccessToken, instance_id, metrics, deletedImages, imageFiles);
+
+        apiCall.enqueue(new Callback<DefaultGetResponse>() {
+            @Override
+            public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
+                callback.onResponse(call, response);
+            }
+
+            @Override
+            public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+                callback.onFailure(call, t);
+            }
+        });
+    }
+
     void getTakenMedicalTests(String userAccessToken, final Callback<TakenMedicalTestsResponse> callback){
         Call<TakenMedicalTestsResponse> apiCall = new RestClient().getGMFitService().getTakenMedicalTests(userAccessToken);
 

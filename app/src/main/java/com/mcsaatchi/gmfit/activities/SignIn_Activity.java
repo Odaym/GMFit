@@ -25,7 +25,6 @@ import com.mcsaatchi.gmfit.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponse;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponseChart;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponseInnerBody;
-import com.mcsaatchi.gmfit.rest.AuthenticationResponseWidget;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -150,14 +149,12 @@ public class SignIn_Activity extends Base_Activity {
                          */
                         prefs.edit().putBoolean(prefs.getString(Constants.EXTRAS_USER_EMAIL, "") + "_" + Constants.EVENT_FINISHED_SETTING_UP_PROFILE_SUCCESSFULLY, true).apply();
 
-                        List<AuthenticationResponseWidget> widgetsMap = responseBody.getWidgets();
                         List<AuthenticationResponseChart> chartsMap = responseBody.getCharts();
 
                         EventBus_Singleton.getInstance().post(new EventBus_Poster(Constants.EVENT_SIGNNED_UP_SUCCESSFULLY_CLOSE_LOGIN_ACTIVITY));
 
                         Intent intent = new Intent(SignIn_Activity.this, Main_Activity.class);
-                        intent.putParcelableArrayListExtra("widgets", (ArrayList<AuthenticationResponseWidget>) widgetsMap);
-                        intent.putParcelableArrayListExtra("charts", (ArrayList<AuthenticationResponseChart>) chartsMap);
+                        intent.putParcelableArrayListExtra(Constants.BUNDLE_FITNESS_CHARTS_MAP, (ArrayList<AuthenticationResponseChart>) chartsMap);
                         startActivity(intent);
 
                         waitingDialog.dismiss();

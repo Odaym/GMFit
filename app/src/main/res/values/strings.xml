@@ -55,7 +55,7 @@
     <string name="password_hint">Password</string>
     <string name="confirm_password_hint">Confirm Password</string>
     <string name="create_account_button">Create Account</string>
-    <string name="creating_account_TOS">By creating an account, you agree to the &lt;u>Terms of Use&lt;u>.</string>
+    <string name="creating_account_TOS">By signing up, you agree to the &lt;u>Terms of Use&lt;u>.</string>
     <string name="signing_up_dialog_title">Registering a new account</string>
     <string name="signing_up_dialog_message">Please wait…</string>
     <string name="email_already_taken_api_response">Email already in use, please choose a different email.</string>
@@ -191,6 +191,7 @@
     <string name="user_weight_label_metric">Kilograms</string>
     <string name="user_weight_label_imperial">Pounds</string>
     <string name="medical_tests_bar_title">Medical Tests</string>
+    <string name="view_more_tests_btn">View More</string>
 
     <!-- ADD NEW CHART -->
     <string name="add_new_chart_activity_title">Add New Chart</string>

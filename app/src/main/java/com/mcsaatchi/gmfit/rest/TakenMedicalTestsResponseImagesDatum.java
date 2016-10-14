@@ -25,9 +25,6 @@ public class TakenMedicalTestsResponseImagesDatum implements Parcelable{
     @Expose
     private String image;
 
-    public TakenMedicalTestsResponseImagesDatum() {
-    }
-
     protected TakenMedicalTestsResponseImagesDatum(Parcel in) {
         this.id = (Integer) in.readValue(Integer.class.getClassLoader());
         this.image = in.readString();

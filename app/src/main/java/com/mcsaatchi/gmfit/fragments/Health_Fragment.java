@@ -52,6 +52,9 @@ public class Health_Fragment extends Fragment {
     RecyclerView userTestsListView;
     @Bind(R.id.loadingWidgetsProgressBar)
     ProgressBar loadingWidgetsProgressBar;
+    @Bind(R.id.loadingTestsProgressBar)
+    ProgressBar loadingTestsProgressBar;
+
     private ArrayList<HealthWidget> healthWidgetsMap = new ArrayList<>();
     private SharedPreferences prefs;
 
@@ -144,6 +147,8 @@ public class Health_Fragment extends Fragment {
                     case 200:
                         List<TakenMedicalTestsResponseBody> takenMedicalTests = response.body().getData().getBody();
 
+                        loadingTestsProgressBar.setVisibility(View.GONE);
+
                         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
                         UserTestsRecycler_Adapter userTestsRecyclerAdapter = new UserTestsRecycler_Adapter(getActivity(), takenMedicalTests);
 
@@ -151,6 +156,7 @@ public class Health_Fragment extends Fragment {
                         userTestsListView.setNestedScrollingEnabled(false);
                         userTestsListView.setAdapter(userTestsRecyclerAdapter);
                         userTestsListView.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
+
                         break;
                 }
             }

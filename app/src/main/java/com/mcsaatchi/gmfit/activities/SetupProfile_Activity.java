@@ -1,7 +1,5 @@
 package com.mcsaatchi.gmfit.activities;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -28,14 +26,12 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class SetupProfile_Activity extends Base_Activity {
-    private static final String TAG = "SetupProfile_Activity";
     @Bind(R.id.viewpager)
     NonSwipeableViewPager viewPager;
     @Bind(R.id.nextPageBTN)
     Button nextPageBTN;
     @Bind(R.id.toolbar)
     Toolbar toolbar;
-    private SharedPreferences prefs;
     private SetupProfile_Adapter setupProfileAdapter;
 
     @Override
@@ -45,8 +41,6 @@ public class SetupProfile_Activity extends Base_Activity {
         setContentView(R.layout.activity_setup_profile);
 
         ButterKnife.bind(this);
-
-        prefs = getSharedPreferences(Constants.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
 
         setupProfileAdapter = new SetupProfile_Adapter(getSupportFragmentManager());
 

@@ -36,13 +36,13 @@ import com.mcsaatchi.gmfit.classes.SimpleDividerItemDecoration;
 import com.mcsaatchi.gmfit.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.rest.MedicalTestsResponseDatum;
+import com.mcsaatchi.gmfit.rest.TakenMedicalTestsResponseImagesDatum;
 import com.mcsaatchi.gmfit.rest.TakenMedicalTestsResponseMetricsDatum;
 import com.nguyenhoanglam.imagepicker.activity.ImagePickerActivity;
 import com.nguyenhoanglam.imagepicker.model.Image;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -52,6 +52,7 @@ import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Response;
 
 public class AddHealthTestDetails_Activity extends Base_Activity {
 
@@ -71,17 +72,23 @@ public class AddHealthTestDetails_Activity extends Base_Activity {
     private String testName;
     private String test_slug;
     private String test_date_taken;
+    private int test_instance_id;
 
     private SharedPreferences prefs;
+
+    private boolean purposeIsEditing = false;
 
     private ArrayList<MedicalTestsResponseDatum> testMetrics = new ArrayList<>();
 
     private ArrayList<TakenMedicalTestsResponseMetricsDatum> editableTestMetrics = new ArrayList<>();
+    private ArrayList<TakenMedicalTestsResponseImagesDatum> editableTestImages = new ArrayList<>();
     private EditableTestMetricsRecycler_Adapter editableTestMetricsRecyclerAdapter;
 
     private RecyclerView.LayoutManager mLayoutManager;
     private TestMetricsRecycler_Adapter testMetricsRecyclerAdapter;
     private ArrayList<Image> selectedImages = new ArrayList<>();
+
+    private ArrayList<Integer> deletedImageIds = new ArrayList<>();
 
     public static RequestBody toRequestBody(String value) {
         return RequestBody.create(MediaType.parse("text/plain"), value);
@@ -118,15 +125,18 @@ public class AddHealthTestDetails_Activity extends Base_Activity {
             testName = getIntent().getExtras().getString(Constants.EXTRAS_TEST_TITLE);
             test_slug = getIntent().getExtras().getString(Constants.EXTRAS_TEST_SLUG);
             test_date_taken = getIntent().getExtras().getString(Constants.EXTRAS_TEST_DATE_TAKEN);
+            test_instance_id = getIntent().getExtras().getInt(Constants.EXTRAS_TEST_INSTANCE_ID);
+            purposeIsEditing = getIntent().getExtras().getBoolean(Constants.EXTRAS_TEST_ITEM_PURPOSE_EDITING, false);
 
-            if (getIntent().getExtras().getBoolean(Constants.EXTRAS_TEST_ITEM_PURPOSE_EDITING, false)) {
-                editableTestMetrics = getIntent().getExtras().getParcelableArrayList(Constants.EXTRAS_TEST_OBJECT_DETAILS);
+            if (purposeIsEditing) {
+                editableTestMetrics = getIntent().getExtras().getParcelableArrayList(Constants.EXTRAS_TEST_METRICS);
+                editableTestImages = getIntent().getExtras().getParcelableArrayList(Constants.EXTRAS_TEST_IMAGES);
+                setupTestImages(editableTestImages);
                 setupEditableMetricsListView(editableTestMetrics);
             } else {
                 testMetrics = getIntent().getExtras().getParcelableArrayList(Constants.EXTRAS_TEST_OBJECT_DETAILS);
                 setupFreshMetricsListView(testMetrics);
             }
-
         }
 
         setupToolbar(toolbar, testName, true);
@@ -143,85 +153,31 @@ public class AddHealthTestDetails_Activity extends Base_Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.doneBTN:
-                HashMap<String, RequestBody> metrics = new HashMap<>();
 
-                for (int i = 0; i < testMetricsRecyclerAdapter.getItemCount(); i++) {
-                    if (mLayoutManager.findViewByPosition(i) != null) {
-                        Spinner metricUnitSpinner = ((Spinner) mLayoutManager.findViewByPosition(i).findViewById(R.id.metricUnitsSpinner));
+                HashMap<String, RequestBody> metrics;
 
-                        EditText metricValueTV = ((EditText) mLayoutManager.findViewByPosition(i).findViewById(R.id.metricValueET));
+                HashMap<String, RequestBody> imageParts;
 
-                        if (!metricValueTV.getText().toString().isEmpty()) {
-                            metrics.put("metrics[" + i + "][id]", toRequestBody(testMetricsRecyclerAdapter.getItem(i).getId()));
+                HashMap<String, RequestBody> deletedImages;
 
-                            metrics.put("metrics[" + i + "][value]", toRequestBody(metricValueTV.getText().toString()));
-
-                            if (metricUnitSpinner.getSelectedItem() != null) {
-                                int finalUnitId = 0;
-
-                                if (!testMetrics.get(i).getUnits().isEmpty()) {
-                                    for (int j = 0; j < testMetricsRecyclerAdapter.getItem(i).getUnits().size(); j++) {
-                                        if (testMetricsRecyclerAdapter.getItem(i).getUnits().get(j).getUnit().equals(metricUnitSpinner.getSelectedItem().toString())) {
-                                            finalUnitId = testMetricsRecyclerAdapter.getItem(i).getUnits().get(j).getId();
-                                        }
-                                    }
-                                }
-
-                                metrics.put("metrics[" + i + "][unit_id]", toRequestBody(String.valueOf(finalUnitId)));
-                            }
-                        }
-                    }
+                if (purposeIsEditing) {
+                    metrics = constructEditableMetricsForRequest(editableTestMetricsRecyclerAdapter);
+                } else {
+                    metrics = constructNewMetricsForRequest(testMetricsRecyclerAdapter);
                 }
 
-                if (!selectedImages.isEmpty() && !metrics.isEmpty()) {
-                    RequestBody file;
-                    File imageFile;
-
-                    HashMap<String, RequestBody> imageParts = new HashMap<>();
-
-                    for (int i = 0; i < selectedImages.size(); i++) {
-                        try {
-                            imageFile = new File(selectedImages.get(i).getPath());
-
-                            FileOutputStream fos = new FileOutputStream(imageFile);
-
-                            fos.flush();
-                            fos.close();
-
-                            file = RequestBody.create(MediaType.parse("image/jpeg"), imageFile);
-
-                            imageParts.put("images[" + i + "]\"; filename=\"" + selectedImages.get(i).getName(), file);
-
-                            file = null;
-
-                            imageFile = null;
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                    DataAccessHandler.getInstance().storeNewHealthTest(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
-                            toRequestBody(test_slug), toRequestBody(test_date_taken), metrics, imageParts, new Callback<DefaultGetResponse>() {
-                                @Override
-                                public void onResponse(Call<DefaultGetResponse> call, retrofit2.Response<DefaultGetResponse> response) {
-                                    Log.d("TAG", "onResponse: Response : " + response.code());
-
-                                    switch (response.code()) {
-                                        case 200:
-
-                                            Log.d("TAG", "onResponse: Success");
-
-                                            break;
-                                    }
-                                }
-
-                                @Override
-                                public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
-                                    Log.d("TAG", "onFailure: Failure");
-                                }
-                            });
-                } else {
+                if (metrics.isEmpty()) {
                     Toast.makeText(this, "Please fill in the needed fields to proceed", Toast.LENGTH_SHORT).show();
+                } else {
+                    imageParts = constructSelectedImagesForRequest();
+
+                    deletedImages = constructDeletedImagesForRequest(deletedImageIds);
+
+                    if (purposeIsEditing) {
+                        editExistingHealthTestRequest(toRequestBody(String.valueOf(test_instance_id)), metrics, imageParts, deletedImages);
+                    } else {
+                        createNewHealthTestRequest(metrics, imageParts);
+                    }
                 }
 
                 break;
@@ -234,7 +190,7 @@ public class AddHealthTestDetails_Activity extends Base_Activity {
         if (requestCode == SELECT_PICTURE && resultCode == RESULT_OK && data != null) {
             selectedImages = data.getParcelableArrayListExtra(ImagePickerActivity.INTENT_EXTRA_SELECTED_IMAGES);
             for (int i = 0; i < selectedImages.size(); i++) {
-                testPhotosLayout.addView(createNewImageViewLayout(selectedImages.get(i).getPath()));
+                testPhotosLayout.addView(createNewImageViewLayout(selectedImages.get(i).getPath(), null));
             }
         }
     }
@@ -266,6 +222,159 @@ public class AddHealthTestDetails_Activity extends Base_Activity {
                 .show();
     }
 
+    private HashMap<String, RequestBody> constructNewMetricsForRequest(TestMetricsRecycler_Adapter testMetricsRecyclerAdapter) {
+        HashMap<String, RequestBody> metrics = new HashMap<>();
+
+        for (int i = 0; i < testMetricsRecyclerAdapter.getItemCount(); i++) {
+            if (mLayoutManager.findViewByPosition(i) != null) {
+                Spinner metricUnitSpinner = ((Spinner) mLayoutManager.findViewByPosition(i).findViewById(R.id.metricUnitsSpinner));
+
+                EditText metricValueTV = ((EditText) mLayoutManager.findViewByPosition(i).findViewById(R.id.metricValueET));
+
+                if (!metricValueTV.getText().toString().isEmpty()) {
+                    metrics.put("metrics[" + i + "][id]", toRequestBody(testMetricsRecyclerAdapter.getItem(i).getId()));
+
+                    metrics.put("metrics[" + i + "][value]", toRequestBody(metricValueTV.getText().toString()));
+
+                    if (metricUnitSpinner.getSelectedItem() != null) {
+                        int finalUnitId = 0;
+
+                        if (!testMetrics.get(i).getUnits().isEmpty()) {
+                            for (int j = 0; j < testMetricsRecyclerAdapter.getItem(i).getUnits().size(); j++) {
+                                if (testMetricsRecyclerAdapter.getItem(i).getUnits().get(j).getUnit().equals(metricUnitSpinner.getSelectedItem().toString())) {
+                                    finalUnitId = testMetricsRecyclerAdapter.getItem(i).getUnits().get(j).getId();
+                                }
+                            }
+                        }
+
+                        metrics.put("metrics[" + i + "][unit_id]", toRequestBody(String.valueOf(finalUnitId)));
+                    }
+                }
+            }
+        }
+
+        return metrics;
+    }
+
+    private HashMap<String, RequestBody> constructEditableMetricsForRequest(EditableTestMetricsRecycler_Adapter editableTestMetricsRecyclerAdapter) {
+        HashMap<String, RequestBody> metrics = new HashMap<>();
+
+        for (int i = 0; i < editableTestMetricsRecyclerAdapter.getItemCount(); i++) {
+            if (mLayoutManager.findViewByPosition(i) != null) {
+                Spinner metricUnitSpinner = ((Spinner) mLayoutManager.findViewByPosition(i).findViewById(R.id.metricUnitsSpinner));
+
+                EditText metricValueTV = ((EditText) mLayoutManager.findViewByPosition(i).findViewById(R.id.metricValueET));
+
+                if (!metricValueTV.getText().toString().isEmpty()) {
+                    metrics.put("metrics[" + i + "][id]", toRequestBody(String.valueOf(editableTestMetricsRecyclerAdapter.getItem(i).getId())));
+
+                    metrics.put("metrics[" + i + "][value]", toRequestBody(metricValueTV.getText().toString()));
+
+                    if (metricUnitSpinner.getSelectedItem() != null) {
+                        int finalUnitId = 0;
+
+                        if (!editableTestMetrics.get(i).getUnits().isEmpty()) {
+                            for (int j = 0; j < editableTestMetricsRecyclerAdapter.getItem(i).getUnits().size(); j++) {
+                                if (editableTestMetricsRecyclerAdapter.getItem(i).getUnits().get(j).getUnit().equals(metricUnitSpinner.getSelectedItem().toString())) {
+                                    finalUnitId = editableTestMetricsRecyclerAdapter.getItem(i).getUnits().get(j).getId();
+                                }
+                            }
+                        }
+
+                        metrics.put("metrics[" + i + "][unit_id]", toRequestBody(String.valueOf(finalUnitId)));
+                    }
+                }
+            }
+        }
+
+        return metrics;
+    }
+
+    private HashMap<String, RequestBody> constructSelectedImagesForRequest() {
+        HashMap<String, RequestBody> imageParts = new HashMap<>();
+
+        RequestBody file;
+        File imageFile;
+
+        for (int i = 0; i < selectedImages.size(); i++) {
+            try {
+                imageFile = new File(selectedImages.get(i).getPath());
+
+                file = RequestBody.create(MediaType.parse("image/jpeg"), imageFile);
+
+                imageParts.put("images[" + i + "]\"; filename=\"" + selectedImages.get(i).getName(), file);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return imageParts;
+    }
+
+    private HashMap<String, RequestBody> constructDeletedImagesForRequest(ArrayList<Integer> deletedImageIds) {
+        HashMap<String, RequestBody> deletedImages = new HashMap<>();
+
+        String deletedImagesString = "";
+
+        for (int i = 0; i < deletedImageIds.size(); i++) {
+            try {
+
+                deletedImagesString += deletedImageIds.get(i) + ",";
+
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        deletedImages.put("delete_image_ids", toRequestBody(deletedImagesString));
+
+        return deletedImages;
+    }
+
+    private void createNewHealthTestRequest(HashMap<String, RequestBody> metrics, HashMap<String, RequestBody> imageParts) {
+        DataAccessHandler.getInstance().storeNewHealthTest(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
+                toRequestBody(test_slug), toRequestBody(test_date_taken), metrics, imageParts, new Callback<DefaultGetResponse>() {
+                    @Override
+                    public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
+                        switch (response.code()) {
+                            case 200:
+
+                                Log.d("TAG", "onResponse: Succeeded creating new test");
+
+                                break;
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+                        Log.d("TAG", "onFailure: Failure");
+                    }
+                });
+    }
+
+    private void editExistingHealthTestRequest(RequestBody instance_id, HashMap<String, RequestBody> metrics, HashMap<String, RequestBody> imageParts, HashMap<String, RequestBody> deletedImages) {
+        DataAccessHandler.getInstance().editExistingHealthTest(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
+                instance_id, metrics, imageParts, deletedImages, new Callback<DefaultGetResponse>() {
+                    @Override
+                    public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
+                        switch (response.code()) {
+                            case 200:
+
+                                Log.d("TAG", "onResponse: Succeeded editing new test");
+
+                                break;
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+                        Log.d("TAG", "onFailure: Failure");
+                    }
+                });
+    }
+
     private void openPictureChooser() {
         selectedImages = new ArrayList<>();
 
@@ -287,6 +396,8 @@ public class AddHealthTestDetails_Activity extends Base_Activity {
         mLayoutManager = new LinearLayoutManager(this);
         editableTestMetricsRecyclerAdapter = new EditableTestMetricsRecycler_Adapter(this, editableTestMetrics);
 
+        testMetricsListView.setItemViewCacheSize(editableTestMetrics.size());
+
         testMetricsListView.setLayoutManager(mLayoutManager);
         testMetricsListView.setAdapter(editableTestMetricsRecyclerAdapter);
         testMetricsListView.addItemDecoration(new SimpleDividerItemDecoration(this));
@@ -296,23 +407,44 @@ public class AddHealthTestDetails_Activity extends Base_Activity {
         mLayoutManager = new LinearLayoutManager(this);
         testMetricsRecyclerAdapter = new TestMetricsRecycler_Adapter(this, testMetrics);
 
+        testMetricsListView.setItemViewCacheSize(testMetrics.size());
+
         testMetricsListView.setLayoutManager(mLayoutManager);
         testMetricsListView.setAdapter(testMetricsRecyclerAdapter);
         testMetricsListView.addItemDecoration(new SimpleDividerItemDecoration(this));
     }
 
-    public View createNewImageViewLayout(String imagePath) {
+    private void setupTestImages(ArrayList<TakenMedicalTestsResponseImagesDatum> editableTestImages) {
+        for (int i = 0; i < editableTestImages.size(); i++) {
+            testPhotosLayout.addView(createNewImageViewLayout(editableTestImages.get(i).getImage(), editableTestImages.get(i)));
+        }
+    }
+
+    public View createNewImageViewLayout(String imagePath, final TakenMedicalTestsResponseImagesDatum editableTestImage) {
         final View singlePhotoLayout = getLayoutInflater().inflate(R.layout.view_test_photo_item, null);
 
         ImageView testPhotoIMG = (ImageView) singlePhotoLayout.findViewById(R.id.testPhotoIMG);
         Button deleteTestPhotoBTN = (Button) singlePhotoLayout.findViewById(R.id.deleteTestPhotoBTN);
 
-        Picasso.with(AddHealthTestDetails_Activity.this).load(new File(imagePath)).fit().into
-                (testPhotoIMG);
+        if (imagePath.contains("http")) {
+            imagePath = imagePath.replace("\\", "");
+            Picasso.with(AddHealthTestDetails_Activity.this).load(imagePath).fit().into
+                    (testPhotoIMG);
+        } else {
+            Picasso.with(AddHealthTestDetails_Activity.this).load(new File(imagePath)).fit().into
+                    (testPhotoIMG);
+        }
+
+        final String finalImagePath = imagePath;
 
         deleteTestPhotoBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (editableTestImage != null)
+                    deletedImageIds.add(editableTestImage.getId());
+
+                removeImageFromSelectedImages(finalImagePath);
+
                 testPhotosLayout.removeView(singlePhotoLayout);
             }
         });
@@ -323,5 +455,13 @@ public class AddHealthTestDetails_Activity extends Base_Activity {
         singlePhotoLayout.setLayoutParams(layoutParams);
 
         return singlePhotoLayout;
+    }
+
+    public void removeImageFromSelectedImages(String imagePath) {
+        for (int i = 0; i < selectedImages.size(); i++) {
+            if (selectedImages.get(i).getPath().equals(imagePath)) {
+                selectedImages.remove(selectedImages.get(i));
+            }
+        }
     }
 }

@@ -80,6 +80,7 @@
     <dimen name="radiobutton_row_height_smaller">55dp</dimen>
     <dimen name="country_flag_image_dimen">50dp</dimen>
     <dimen name="text_input_label_width">150dp</dimen>
+    <dimen name="text_input_label_width_smaller">50dp</dimen>
 
     <!-- FORM FIELDS -->
     <dimen name="material_textfield_collapsed_height">10dp</dimen>

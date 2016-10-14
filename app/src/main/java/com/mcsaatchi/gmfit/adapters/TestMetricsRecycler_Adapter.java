@@ -47,6 +47,10 @@ public class TestMetricsRecycler_Adapter extends RecyclerView.Adapter<TestMetric
             metricUnits.add(testMetrics.get(position).getUnits().get(i).getUnit());
         }
 
+        if (metricUnits.isEmpty()) {
+            metricUnits.add("unit 1");
+        }
+
         TestMetricUnitsSpinnerAdapter adapter = new TestMetricUnitsSpinnerAdapter(context, metricUnits);
         holder.metricUnitsSpinner.setAdapter(adapter);
 
