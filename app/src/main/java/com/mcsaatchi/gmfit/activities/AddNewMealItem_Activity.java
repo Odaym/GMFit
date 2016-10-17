@@ -319,7 +319,30 @@ public class AddNewMealItem_Activity extends Base_Activity {
         });
     }
 
-    private void loadRecentMealsFromServer(final String mealType) {
+    private void loadRecentMealsFromServer(String mealType) {
+        if (mealType.equals("Snacks"))
+            mealType = "snack";
+
+        final String finalMealType = mealType;
+
+        final ProgressDialog waitingDialog = new ProgressDialog(AddNewMealItem_Activity.this);
+        waitingDialog.setTitle(getResources().getString(R.string.fetching_available_meals_dialog_title));
+        waitingDialog.setMessage(getResources().getString(R.string.fetching_available_meals_dialog_message));
+        waitingDialog.show();
+
+        final AlertDialog alertDialog = new AlertDialog.Builder(AddNewMealItem_Activity.this).create();
+        alertDialog.setTitle(R.string.fetching_available_meals_dialog_title);
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getResources().getString(R.string.ok),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+
+                        if (waitingDialog.isShowing())
+                            waitingDialog.dismiss();
+                    }
+                });
+
+
         DataAccessHandler.getInstance().getRecentMeals(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
                 "http://gmfit.mcsaatchi.me/api/v1/user/meals/recent?when=" + mealType.toLowerCase(), new Callback<RecentMealsResponse>() {
                     @Override
@@ -336,7 +359,7 @@ public class AddNewMealItem_Activity extends Base_Activity {
 
                         for (int i = 0; i < recentMealsFromAPI.size(); i++) {
                             MealItem item = new MealItem();
-                            item.setType(mealType);
+                            item.setType(finalMealType);
                             item.setMeal_id(recentMealsFromAPI.get(i).getId());
                             item.setSectionType(2);
                             item.setMeasurementUnit(recentMealsFromAPI.get(i).getMeasurementUnit());
@@ -346,6 +369,8 @@ public class AddNewMealItem_Activity extends Base_Activity {
                         }
 
                         initMealsList(mealItems);
+
+                        waitingDialog.dismiss();
                     }
 
                     @Override

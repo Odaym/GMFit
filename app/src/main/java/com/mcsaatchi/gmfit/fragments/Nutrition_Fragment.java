@@ -680,6 +680,8 @@ public class Nutrition_Fragment extends Fragment {
 
                             break;
                     }
+
+                    getUiForSection("nutrition");
                 }
 
                 break;

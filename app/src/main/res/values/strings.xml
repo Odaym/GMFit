@@ -212,6 +212,8 @@
     <string name="request_new_meal_sent_thanks">Request sent. Thank you!</string>
     <string name="requesting_meal_item_dialog_title">Requesting new meal</string>
     <string name="requesting_meal_item_dialog_message">Please wait…</string>
+    <string name="fetching_available_meals_dialog_title">Fetching available meals</string>
+    <string name="fetching_available_meals_dialog_message">Please wait…</string>
 
     <!-- SPECIFY MEAL AMOUNT ACTIVITY -->
     <string name="add_meal_amount_hint">Number of servings</string>
