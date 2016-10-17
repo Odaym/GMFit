@@ -26,6 +26,7 @@
     <dimen name="default_button_height_2">60dp</dimen>
 
     <dimen name="metric_header_section_height">230dp</dimen>
+    <dimen name="profile_section_header_height">270dp</dimen>
     <dimen name="metric_header_progress_bar_width">110dp</dimen>
     <dimen name="nutrition_widgets_main_metric_value_font_size">50sp</dimen>
     <dimen name="fitness_widgets_main_metric_value_font_size">40sp</dimen>

@@ -14,16 +14,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.activities.Login_Activity;
 import com.mcsaatchi.gmfit.activities.UserPolicy_Activity;
+import com.mcsaatchi.gmfit.classes.CircleTransform;
 import com.mcsaatchi.gmfit.classes.Constants;
 import com.mcsaatchi.gmfit.classes.Helpers;
 import com.mcsaatchi.gmfit.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.rest.UserPolicyResponse;
+import com.squareup.picasso.Picasso;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -37,6 +40,8 @@ public class MainProfile_Fragment extends Fragment {
 
     @Bind(R.id.logoutBTN)
     Button logoutBTN;
+    @Bind(R.id.userProfileIV)
+    ImageView userProfileIV;
 
     private SharedPreferences prefs;
 
@@ -54,6 +59,8 @@ public class MainProfile_Fragment extends Fragment {
         setHasOptionsMenu(false);
 
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.profile_tab_title);
+
+        Picasso.with(getActivity()).load(R.drawable.fragment_intro_picture).resize(100, 100).transform(new CircleTransform()).centerInside().into(userProfileIV);
 
 //        userPolicyBTN.setOnClickListener(new View.OnClickListener() {
 //            @Override

@@ -131,7 +131,7 @@ public class Main_Activity extends Base_Activity {
             }
         });
 
-        bottom_navigation.setColored(true);
+        bottom_navigation.setColored(false);
         bottom_navigation.setCurrentItem(0);
         bottom_navigation.setForceTitlesDisplay(true);
         bottom_navigation.setBehaviorTranslationEnabled(true);

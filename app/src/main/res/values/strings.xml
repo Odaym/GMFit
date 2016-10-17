@@ -237,7 +237,25 @@
     <string name="grabbing_user_policy_dialog_message">Please wait…</string>
     <string name="downloading_pdf_profile_dialog_title">Downloading PDF Profile</string>
     <string name="downloading_pdf_profile_dialog_message">Please Wait…</string>
-    <string name="profile_information_title">Profile Information</string>
+    <string name="profile_information_section_title">Profile Information</string>
+    <string name="emergency_profile_section_title">Emergency Profile</string>
+    <string name="emergency_profile_section_hint">In the case of an emergency, you can share this profile via email as a PDF file.
+        The file will include profile information, medical conditions and the list of medications.
+    </string>
+    <string name="share_emergency_profile_btn">Share Emergency Profile</string>
+    <string name="application_settings_section_title">Application Settings</string>
+    <string name="current_weight_entry">Current Weight</string>
+    <string name="my_goal_entry">My Goal</string>
+    <string name="medical_conditions_entry">Medical Conditions</string>
+    <string name="set_reminders_entry">Set Reminders</string>
+    <string name="country_entry">Country</string>
+    <string name="units_entry">Units</string>
+    <string name="terms_and_conditions_entry">Terms and Conditions</string>
+    <string name="privacy_and_security_entry">Privacy and Security</string>
+    <string name="contact_us_entry">Contact Us</string>
+    <string name="share_the_app_entry">Share the App</string>
+    <string name="log_out_button">Log Out</string>
+    <string name="about_app_section_title">About App</string>
 
     <!-- USER POLICY ACTIVITY -->
     <string name="user_policy_activity_title">User Policy</string>
