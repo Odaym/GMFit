@@ -5,6 +5,7 @@ import com.mcsaatchi.gmfit.rest.AuthenticationResponse;
 import com.mcsaatchi.gmfit.rest.ChartMetricBreakdownResponse;
 import com.mcsaatchi.gmfit.rest.ChartsBySectionResponse;
 import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
+import com.mcsaatchi.gmfit.rest.EmergencyProfileResponse;
 import com.mcsaatchi.gmfit.rest.HealthWidgetsResponse;
 import com.mcsaatchi.gmfit.rest.MealMetricsResponse;
 import com.mcsaatchi.gmfit.rest.MedicalConditionsResponse;
@@ -16,6 +17,7 @@ import com.mcsaatchi.gmfit.rest.TakenMedicalTestsResponse;
 import com.mcsaatchi.gmfit.rest.UiResponse;
 import com.mcsaatchi.gmfit.rest.UserMealsResponse;
 import com.mcsaatchi.gmfit.rest.UserPolicyResponse;
+import com.mcsaatchi.gmfit.rest.UserProfileResponse;
 
 import java.util.Map;
 
@@ -124,8 +126,8 @@ public class DataAccessHandler {
         ApiCallsHandler.getInstance().registerUserFacebook(facebookAccessToken, callback);
     }
 
-    public void storeNewMeal(String userAccessToken, int meal_id, int servingsAmount, String when, Callback<DefaultGetResponse> callback) {
-        ApiCallsHandler.getInstance().storeNewMeal(userAccessToken, meal_id, servingsAmount, when, callback);
+    public void storeNewMeal(String userAccessToken, int meal_id, int servingsAmount, String when, String date, Callback<DefaultGetResponse> callback) {
+        ApiCallsHandler.getInstance().storeNewMeal(userAccessToken, meal_id, servingsAmount, when, date, callback);
     }
 
     public void getRecentMeals(String userAccessToken, String fullUrl, Callback<RecentMealsResponse> callback) {
@@ -166,5 +168,13 @@ public class DataAccessHandler {
 
     public void getTakenMedicalTests(String userAccessToken, Callback<TakenMedicalTestsResponse> callback) {
         ApiCallsHandler.getInstance().getTakenMedicalTests(userAccessToken, callback);
+    }
+
+    public void getUserProfile(String userAccessToken, Callback<UserProfileResponse> callback){
+        ApiCallsHandler.getInstance().getUserProfile(userAccessToken, callback);
+    }
+
+    public void getEmergencyProfile(String userAccessToken, Callback<EmergencyProfileResponse> callback){
+        ApiCallsHandler.getInstance().getEmergencyProfile(userAccessToken, callback);
     }
 }

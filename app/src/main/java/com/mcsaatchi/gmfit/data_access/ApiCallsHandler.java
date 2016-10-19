@@ -6,6 +6,7 @@ import com.mcsaatchi.gmfit.rest.AuthenticationResponse;
 import com.mcsaatchi.gmfit.rest.ChartMetricBreakdownResponse;
 import com.mcsaatchi.gmfit.rest.ChartsBySectionResponse;
 import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
+import com.mcsaatchi.gmfit.rest.EmergencyProfileResponse;
 import com.mcsaatchi.gmfit.rest.HealthWidgetsResponse;
 import com.mcsaatchi.gmfit.rest.MealMetricsResponse;
 import com.mcsaatchi.gmfit.rest.MedicalConditionsResponse;
@@ -18,6 +19,7 @@ import com.mcsaatchi.gmfit.rest.TakenMedicalTestsResponse;
 import com.mcsaatchi.gmfit.rest.UiResponse;
 import com.mcsaatchi.gmfit.rest.UserMealsResponse;
 import com.mcsaatchi.gmfit.rest.UserPolicyResponse;
+import com.mcsaatchi.gmfit.rest.UserProfileResponse;
 
 import java.util.Map;
 
@@ -364,8 +366,8 @@ public class ApiCallsHandler {
         });
     }
 
-    void storeNewMeal(String userAccessToken, int meal_id, int servingsAmount, String when, final Callback<DefaultGetResponse> callback) {
-        Call<DefaultGetResponse> apiCall = new RestClient().getGMFitService().storeNewMeal(userAccessToken, new StoreNewMealRequest(meal_id, servingsAmount, when.toLowerCase()));
+    void storeNewMeal(String userAccessToken, int meal_id, int servingsAmount, String when, String date, final Callback<DefaultGetResponse> callback) {
+        Call<DefaultGetResponse> apiCall = new RestClient().getGMFitService().storeNewMeal(userAccessToken, new StoreNewMealRequest(meal_id, servingsAmount, when.toLowerCase(), date));
 
         apiCall.enqueue(new Callback<DefaultGetResponse>() {
             @Override
@@ -541,7 +543,7 @@ public class ApiCallsHandler {
         });
     }
 
-    void getTakenMedicalTests(String userAccessToken, final Callback<TakenMedicalTestsResponse> callback){
+    void getTakenMedicalTests(String userAccessToken, final Callback<TakenMedicalTestsResponse> callback) {
         Call<TakenMedicalTestsResponse> apiCall = new RestClient().getGMFitService().getTakenMedicalTests(userAccessToken);
 
         apiCall.enqueue(new Callback<TakenMedicalTestsResponse>() {
@@ -552,6 +554,38 @@ public class ApiCallsHandler {
 
             @Override
             public void onFailure(Call<TakenMedicalTestsResponse> call, Throwable t) {
+                callback.onFailure(call, t);
+            }
+        });
+    }
+
+    void getUserProfile(String userAccessToken, final Callback<UserProfileResponse> callback) {
+        Call<UserProfileResponse> apiCall = new RestClient().getGMFitService().getUserProfile(userAccessToken);
+
+        apiCall.enqueue(new Callback<UserProfileResponse>() {
+            @Override
+            public void onResponse(Call<UserProfileResponse> call, Response<UserProfileResponse> response) {
+                callback.onResponse(call, response);
+            }
+
+            @Override
+            public void onFailure(Call<UserProfileResponse> call, Throwable t) {
+                callback.onFailure(call, t);
+            }
+        });
+    }
+
+    void getEmergencyProfile(String userAccessToken, final Callback<EmergencyProfileResponse> callback) {
+        Call<EmergencyProfileResponse> apiCall = new RestClient().getGMFitService().getEmergencyProfile(userAccessToken);
+
+        apiCall.enqueue(new Callback<EmergencyProfileResponse>() {
+            @Override
+            public void onResponse(Call<EmergencyProfileResponse> call, Response<EmergencyProfileResponse> response) {
+                callback.onResponse(call, response);
+            }
+
+            @Override
+            public void onFailure(Call<EmergencyProfileResponse> call, Throwable t) {
                 callback.onFailure(call, t);
             }
         });
@@ -676,11 +710,13 @@ public class ApiCallsHandler {
         final int meal_id;
         final int amount;
         final String when;
+        final String date;
 
-        StoreNewMealRequest(int meal_id, int amount, String when) {
+        StoreNewMealRequest(int meal_id, int amount, String when, String date) {
             this.meal_id = meal_id;
             this.amount = amount;
             this.when = when;
+            this.date = date;
         }
     }
 

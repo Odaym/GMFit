@@ -2,6 +2,7 @@ package com.mcsaatchi.gmfit.activities;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -19,6 +20,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -32,6 +34,8 @@ import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.adapters.EditableTestMetricsRecycler_Adapter;
 import com.mcsaatchi.gmfit.adapters.TestMetricsRecycler_Adapter;
 import com.mcsaatchi.gmfit.classes.Constants;
+import com.mcsaatchi.gmfit.classes.EventBus_Poster;
+import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
 import com.mcsaatchi.gmfit.classes.SimpleDividerItemDecoration;
 import com.mcsaatchi.gmfit.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
@@ -75,6 +79,8 @@ public class AddHealthTestDetails_Activity extends Base_Activity {
     private int test_instance_id;
 
     private SharedPreferences prefs;
+
+    private ProgressDialog testOperationsWaitingDialog;
 
     private boolean purposeIsEditing = false;
 
@@ -154,21 +160,36 @@ public class AddHealthTestDetails_Activity extends Base_Activity {
         switch (item.getItemId()) {
             case R.id.doneBTN:
 
-                HashMap<String, RequestBody> metrics;
+                HashMap<String, RequestBody> metrics, imageParts, deletedImages;
 
-                HashMap<String, RequestBody> imageParts;
+                testOperationsWaitingDialog = new ProgressDialog(this);
+                testOperationsWaitingDialog.setMessage(getString(R.string.please_wait_dialog_message));
 
-                HashMap<String, RequestBody> deletedImages;
+                final android.support.v7.app.AlertDialog alertDialog = new android.support.v7.app.AlertDialog.Builder(this).create();
+                alertDialog.setTitle(R.string.fetching_test_data_dialog_title);
+                alertDialog.setButton(android.support.v7.app.AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+
+                                if (testOperationsWaitingDialog.isShowing())
+                                    testOperationsWaitingDialog.dismiss();
+                            }
+                        });
 
                 if (purposeIsEditing) {
+                    testOperationsWaitingDialog.setTitle(R.string.editing_existing_test_dialog_title);
                     metrics = constructEditableMetricsForRequest(editableTestMetricsRecyclerAdapter);
                 } else {
+                    testOperationsWaitingDialog.setTitle(R.string.creating_new_test_dialog_title);
                     metrics = constructNewMetricsForRequest(testMetricsRecyclerAdapter);
                 }
 
                 if (metrics.isEmpty()) {
                     Toast.makeText(this, "Please fill in the needed fields to proceed", Toast.LENGTH_SHORT).show();
                 } else {
+                    testOperationsWaitingDialog.show();
+
                     imageParts = constructSelectedImagesForRequest();
 
                     deletedImages = constructDeletedImagesForRequest(deletedImageIds);
@@ -343,6 +364,14 @@ public class AddHealthTestDetails_Activity extends Base_Activity {
 
                                 Log.d("TAG", "onResponse: Succeeded creating new test");
 
+                                testOperationsWaitingDialog.dismiss();
+
+                                hideKeyboard();
+
+                                EventBus_Singleton.getInstance().post(new EventBus_Poster(Constants.EXTRAS_TEST_EDIT_OR_CREATE_DONE));
+
+                                finish();
+
                                 break;
                         }
                     }
@@ -363,6 +392,14 @@ public class AddHealthTestDetails_Activity extends Base_Activity {
                             case 200:
 
                                 Log.d("TAG", "onResponse: Succeeded editing new test");
+
+                                testOperationsWaitingDialog.dismiss();
+
+                                hideKeyboard();
+
+                                EventBus_Singleton.getInstance().post(new EventBus_Poster(Constants.EXTRAS_TEST_EDIT_OR_CREATE_DONE));
+
+                                finish();
 
                                 break;
                         }
@@ -400,6 +437,7 @@ public class AddHealthTestDetails_Activity extends Base_Activity {
 
         testMetricsListView.setLayoutManager(mLayoutManager);
         testMetricsListView.setAdapter(editableTestMetricsRecyclerAdapter);
+        testMetricsListView.setNestedScrollingEnabled(false);
         testMetricsListView.addItemDecoration(new SimpleDividerItemDecoration(this));
     }
 
@@ -411,6 +449,7 @@ public class AddHealthTestDetails_Activity extends Base_Activity {
 
         testMetricsListView.setLayoutManager(mLayoutManager);
         testMetricsListView.setAdapter(testMetricsRecyclerAdapter);
+        testMetricsListView.setNestedScrollingEnabled(false);
         testMetricsListView.addItemDecoration(new SimpleDividerItemDecoration(this));
     }
 
@@ -462,6 +501,14 @@ public class AddHealthTestDetails_Activity extends Base_Activity {
             if (selectedImages.get(i).getPath().equals(imagePath)) {
                 selectedImages.remove(selectedImages.get(i));
             }
+        }
+    }
+
+    private void hideKeyboard() {
+        View view = getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
 }

@@ -18,6 +18,8 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -262,6 +264,13 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+
+        inflater.inflate(R.menu.main, menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.settings:
@@ -341,15 +350,17 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
         showChartValuesBTN.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (setDrawChartValuesEnabled) {
-                    barChart.getBarData().setDrawValues(true);
-                } else {
-                    barChart.getBarData().setDrawValues(false);
+                if (barChart.getBarData() != null) {
+                    if (setDrawChartValuesEnabled) {
+                        barChart.getBarData().setDrawValues(true);
+                    } else {
+                        barChart.getBarData().setDrawValues(false);
+                    }
+
+                    setDrawChartValuesEnabled = !setDrawChartValuesEnabled;
+
+                    barChart.invalidate();
                 }
-
-                setDrawChartValuesEnabled = !setDrawChartValuesEnabled;
-
-                barChart.invalidate();
             }
         });
     }
@@ -357,7 +368,7 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
     private void getSlugBreakdownForChart(final String chartTitle, final String chartType) {
         final ProgressDialog waitingDialog = new ProgressDialog(getActivity());
         waitingDialog.setTitle(getActivity().getResources().getString(R.string.grabbing_breakdown_data_dialog_title));
-        waitingDialog.setMessage(getActivity().getResources().getString(R.string.grabbing_breakdown_data_dialog_message));
+        waitingDialog.setMessage(getActivity().getResources().getString(R.string.please_wait_dialog_message));
         waitingDialog.show();
 
         final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();

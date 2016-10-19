@@ -62,13 +62,6 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
 
     }
 
-    public RuntimeExceptionDao<MealItem, Integer> getMealItemDAO() {
-        if (mealItemRunTimeDAO == null) {
-            mealItemRunTimeDAO = getRuntimeExceptionDao(MealItem.class);
-        }
-        return mealItemRunTimeDAO;
-    }
-
     public RuntimeExceptionDao<FitnessWidget, Integer> getFitnessWidgetsDAO() {
         if (fitnessWidgetsRunTimeDAO == null) {
             fitnessWidgetsRunTimeDAO = getRuntimeExceptionDao(FitnessWidget.class);
@@ -88,13 +81,6 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
             dataChartRunTimeDAO = getRuntimeExceptionDao(DataChart.class);
         }
         return dataChartRunTimeDAO;
-    }
-
-    public RuntimeExceptionDao<User, Integer> getUserDAO() {
-        if (userRunTimeDAO == null) {
-            userRunTimeDAO = getRuntimeExceptionDao(User.class);
-        }
-        return userRunTimeDAO;
     }
 
     @Override

@@ -22,6 +22,8 @@ import com.mcsaatchi.gmfit.activities.AddNewHealthTest_Activity;
 import com.mcsaatchi.gmfit.adapters.HealthWidgets_GridAdapter;
 import com.mcsaatchi.gmfit.adapters.UserTestsRecycler_Adapter;
 import com.mcsaatchi.gmfit.classes.Constants;
+import com.mcsaatchi.gmfit.classes.EventBus_Poster;
+import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
 import com.mcsaatchi.gmfit.classes.SimpleDividerItemDecoration;
 import com.mcsaatchi.gmfit.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.models.HealthWidget;
@@ -29,6 +31,9 @@ import com.mcsaatchi.gmfit.rest.HealthWidgetsResponse;
 import com.mcsaatchi.gmfit.rest.HealthWidgetsResponseDatum;
 import com.mcsaatchi.gmfit.rest.TakenMedicalTestsResponse;
 import com.mcsaatchi.gmfit.rest.TakenMedicalTestsResponseBody;
+import com.mcsaatchi.gmfit.rest.UserProfileResponse;
+import com.mcsaatchi.gmfit.rest.UserProfileResponseDatum;
+import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,6 +77,8 @@ public class Health_Fragment extends Fragment {
 
         ButterKnife.bind(this, fragmentView);
 
+        EventBus_Singleton.getInstance().register(this);
+
         setHasOptionsMenu(true);
 
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.health_tab_title);
@@ -81,6 +88,8 @@ public class Health_Fragment extends Fragment {
         getWidgets();
 
         getTakenMedicalTests();
+
+        getUserProfile();
 
         addEntryBTN_MEDICAL_TESTS.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,17 +102,37 @@ public class Health_Fragment extends Fragment {
         return fragmentView;
     }
 
+    private void getUserProfile() {
+        DataAccessHandler.getInstance().getUserProfile(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), new Callback<UserProfileResponse>() {
+            @Override
+            public void onResponse(Call<UserProfileResponse> call, Response<UserProfileResponse> response) {
+                switch (response.code()) {
+                    case 200:
+                        UserProfileResponseDatum userProfileData = response.body().getData().getBody().getData();
+
+                        if (userProfileData != null) {
+                            if (userProfileData.getWeight() != null && !userProfileData.getWeight().isEmpty())
+                                metricCounterTV.setText(userProfileData.getWeight());
+
+                            break;
+                        }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<UserProfileResponse> call, Throwable t) {
+                Log.d(TAG, "onFailure: User profile request failed!");
+            }
+        });
+    }
+
     private void getWidgets() {
         DataAccessHandler.getInstance().getHealthWidgets(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), "medical", new Callback<HealthWidgetsResponse>() {
             @Override
             public void onResponse(Call<HealthWidgetsResponse> call, Response<HealthWidgetsResponse> response) {
-                Log.d(TAG, "onResponse: Response code is : " + response.code());
-
                 switch (response.code()) {
                     case 200:
                         List<HealthWidgetsResponseDatum> widgetsFromResponse = response.body().getData().getBody().getData();
-
-                        Log.d("TAG", "onResponse: Success in widgets!");
 
                         for (int i = 0; i < widgetsFromResponse.size(); i++) {
                             HealthWidget widget = new HealthWidget();
@@ -166,5 +195,22 @@ public class Health_Fragment extends Fragment {
 
             }
         });
+    }
+
+    @Subscribe
+    public void handle_BusEvents(EventBus_Poster ebp) {
+        String ebpMessage = ebp.getMessage();
+
+        switch (ebpMessage) {
+            case Constants.EXTRAS_TEST_EDIT_OR_CREATE_DONE:
+                getTakenMedicalTests();
+                break;
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus_Singleton.getInstance().unregister(this);
     }
 }

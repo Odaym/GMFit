@@ -14,10 +14,13 @@ import android.support.v7.widget.Toolbar;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.adapters.AvailableTestsRecycler_Adapter;
 import com.mcsaatchi.gmfit.classes.Constants;
+import com.mcsaatchi.gmfit.classes.EventBus_Poster;
+import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
 import com.mcsaatchi.gmfit.classes.SimpleDividerItemDecoration;
 import com.mcsaatchi.gmfit.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.rest.MedicalTestsResponse;
 import com.mcsaatchi.gmfit.rest.MedicalTestsResponseBody;
+import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 
@@ -43,6 +46,8 @@ public class AddNewHealthTest_Activity extends Base_Activity {
 
         ButterKnife.bind(this);
 
+        EventBus_Singleton.getInstance().register(this);
+
         prefs = getSharedPreferences(Constants.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
 
         setupToolbar(toolbar, R.string.add_new_test_activity_title, true);
@@ -53,7 +58,7 @@ public class AddNewHealthTest_Activity extends Base_Activity {
     private void getMedicalTests() {
         final ProgressDialog waitingDialog = new ProgressDialog(this);
         waitingDialog.setTitle(getString(R.string.fetching_test_data_dialog_title));
-        waitingDialog.setMessage(getString(R.string.fetching_chart_data_dialog_message));
+        waitingDialog.setMessage(getString(R.string.please_wait_dialog_message));
         waitingDialog.show();
 
         final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
@@ -99,5 +104,22 @@ public class AddNewHealthTest_Activity extends Base_Activity {
         availableTestsListview.setLayoutManager(mLayoutManager);
         availableTestsListview.setAdapter(userTestsRecyclerAdapter);
         availableTestsListview.addItemDecoration(new SimpleDividerItemDecoration(this));
+    }
+
+    @Subscribe
+    public void handle_BusEvents(EventBus_Poster ebp) {
+        String ebpMessage = ebp.getMessage();
+
+        switch (ebpMessage) {
+            case Constants.EXTRAS_TEST_EDIT_OR_CREATE_DONE:
+                finish();
+                break;
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus_Singleton.getInstance().unregister(this);
     }
 }

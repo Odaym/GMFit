@@ -125,4 +125,10 @@ public interface GMFit_Service {
 
     @GET("user/medical")
     Call<TakenMedicalTestsResponse> getTakenMedicalTests(@Header(Constants.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken);
+
+    @GET("user/profile")
+    Call<UserProfileResponse> getUserProfile(@Header(Constants.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken);
+
+    @GET("emergency")
+    Call<EmergencyProfileResponse> getEmergencyProfile(@Header(Constants.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken);
 }

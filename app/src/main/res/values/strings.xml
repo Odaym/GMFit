@@ -16,6 +16,7 @@
     <string name="permission_denied_explanation">Permission was denied, but is needed for core
         functionality.
     </string>
+    <string name="please_wait_dialog_message">Please wait…</string>
 
     <string name="ok">OK</string>
     <string name="finish_setup">Finish Setup</string>
@@ -38,7 +39,6 @@
     <string name="profile_tab_title">Profile</string>
     <string name="sign_out">Sign out</string>
     <string name="signing_out_dialog_title">Signing Out</string>
-    <string name="signing_out_dialog_message">Please wait…</string>
 
     <!-- LOGIN ACTIVITY -->
     <string name="login_with_facebook">LOGIN WITH FACEBOOK</string>
@@ -57,7 +57,6 @@
     <string name="create_account_button">Create Account</string>
     <string name="creating_account_TOS">By signing up, you agree to the &lt;u>Terms of Use&lt;u>.</string>
     <string name="signing_up_dialog_title">Registering a new account</string>
-    <string name="signing_up_dialog_message">Please wait…</string>
     <string name="email_already_taken_api_response">Email already in use, please choose a different email.</string>
     <string name="signup_failed_alert_dialog_title">Registeration failed</string>
     <string name="first_name_hint">First Name</string>
@@ -68,7 +67,6 @@
     <string name="sign_in_activity_title">Sign In</string>
     <string name="forgot_password_button">&lt;u>Forgot Password?&lt;u></string>
     <string name="signing_in_dialog_title">Logging in</string>
-    <string name="signing_in_dialog_message">Please wait…</string>
     <string name="login_failed_alert_dialog_title">Login failed</string>
     <string name="login_failed_wrong_credentials">Wrong email and password combination, please try again.</string>
     <string name="show_password">Show</string>
@@ -94,7 +92,6 @@
     <string name="verification_code_hint">6-digit code</string>
     <string name="wrong_verification_code">The code you provided is incorrect.</string>
     <string name="verifying_email_dialog_title">Verifying email address</string>
-    <string name="verifying_email_dialog_message">Please wait…</string>
 
     <!-- TERMS OF USAGE ACTIVITY -->
     <string name="tos_activity_title">Terms of Use</string>
@@ -149,7 +146,6 @@
     <string name="height_hint">Height</string>
     <string name="error_first_name_not_valid">Names cannot contain numbers</string>
     <string name="setting_up_profile_dialog_title">Setting up your profile</string>
-    <string name="setting_up_profile_dialog_message">Please wait…</string>
     <string name="setup_profile_step_3_heading_hint">Tell us more about yourself</string>
     <string name="setup_profile_step_1_title">Step 1 of 3</string>
     <string name="setup_profile_step_2_title">Step 2 of 3</string>
@@ -167,12 +163,10 @@
 
     <!-- FITNESS FRAGMENT -->
     <string name="syncing_up_dialog_title">Syncronising Fitness data</string>
-    <string name="syncing_up_dialog_message">Please wait…</string>
     <string name="drag_to_reorder_widgets">Drag to re-order your homescreen widgets</string>
     <string name="drag_to_reorder_charts">Drag to re-order your homescreen charts</string>
     <string name="add_new_chart_button">+ Add New Chart</string>
     <string name="grabbing_breakdown_data_dialog_title">Fetching metric data</string>
-    <string name="grabbing_breakdown_data_dialog_message">Please wait…</string>
 
     <!-- BREAKDOWN ACTIVITY -->
     <string name="all_time_breakdown_bar_hint">All Time</string>
@@ -198,7 +192,6 @@
     <string name="add_new_chart_prompt">Add a chart from the list below</string>
     <string name="duplicate_chart_error">You may only have one type of chart at a time</string>
     <string name="fetching_chart_data_dialog_title">Fetching charts data</string>
-    <string name="fetching_chart_data_dialog_message">Please wait…</string>
 
     <!-- ADD NEW MEAL ITEM ACTIVITY -->
     <string name="add_new_meal_item_activity_title">Add</string>
@@ -211,17 +204,13 @@
     <string name="request_new_meal_button">Request Meal</string>
     <string name="request_new_meal_sent_thanks">Request sent. Thank you!</string>
     <string name="requesting_meal_item_dialog_title">Requesting new meal</string>
-    <string name="requesting_meal_item_dialog_message">Please wait…</string>
     <string name="fetching_available_meals_dialog_title">Fetching available meals</string>
-    <string name="fetching_available_meals_dialog_message">Please wait…</string>
 
     <!-- SPECIFY MEAL AMOUNT ACTIVITY -->
     <string name="add_meal_amount_hint">Number of servings</string>
     <string name="add_meal_to_diary">Add to diary</string>
     <string name="fetching_meal_info_dialog_title">Fetching meal information</string>
-    <string name="fetching_meal_info_dialog_message">Please wait…</string>
     <string name="adding_new_meal_dialog_title">Adding new meal</string>
-    <string name="adding_new_meal_dialog_message">Please wait…</string>
     <string name="nutrition_facts_hint">Nutritional Facts</string>
 
     <!-- BARCODE CAPTURE ACTIVITY -->
@@ -234,7 +223,6 @@
 
     <!-- MAIN PROFILE FRAGMENT -->
     <string name="grabbing_user_policy_dialog_title">Fetching user policy</string>
-    <string name="grabbing_user_policy_dialog_message">Please wait…</string>
     <string name="downloading_pdf_profile_dialog_title">Downloading PDF Profile</string>
     <string name="downloading_pdf_profile_dialog_message">Please Wait…</string>
     <string name="profile_information_section_title">Profile Information</string>
@@ -256,17 +244,20 @@
     <string name="share_the_app_entry">Share the App</string>
     <string name="log_out_button">Log Out</string>
     <string name="about_app_section_title">About App</string>
+    <string name="loading_user_profile_dialog_title">Loading user profile information</string>
+    <string name="profile_edit_weight_dialog_title">Edit your weight</string>
+    <string name="profile_edit_goal_dialog_title">Edit your goal</string>
+    <string name="profile_edit_medical_conditions_dialog_title">Edit medical conditions</string>
+    <string name="user_profile_save_changes">Save</string>
 
     <!-- USER POLICY ACTIVITY -->
     <string name="user_policy_activity_title">User Policy</string>
 
     <!-- FORGOT PASSWORD ACTIVITY -->
     <string name="sending_reset_password_dialog_title">Sending password reset link</string>
-    <string name="sending_reset_password_dialog_message">Please wait…</string>
 
     <!-- RESET PASSWORD ACTIVITY -->
     <string name="resetting_password_dialog_title">Resetting your password</string>
-    <string name="resetting_password_dialog_message">Please wait…</string>
     <string name="choose_new_password_hint">New password</string>
     <string name="conflicting_old_new_password">Your new password should not match the old password</string>
 
@@ -275,8 +266,9 @@
     <string name="search_tests_hint">Search for test</string>
     <string name="fill_in_below_fields_hint">Please fill in the fields below</string>
     <string name="fetching_test_data_dialog_title">Fetching test data</string>
-    <string name="fetching_test_data_dialog_message">Please wait…</string>
     <string name="add_test_photos_bar_title">Attach Photos</string>
     <string name="add_photo_hint">+ Add a photo</string>
     <string name="no_storage_permission">To be able to attach photos, GMFit needs access to read from this device\'s external storage</string>
+    <string name="creating_new_test_dialog_title">Adding a new test</string>
+    <string name="editing_existing_test_dialog_title">Applying changes to test</string>
 </resources>

@@ -26,6 +26,12 @@ import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.rest.MealMetricsResponse;
 import com.mcsaatchi.gmfit.rest.MealMetricsResponseDatum;
 
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.LocalDateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -87,7 +93,7 @@ public class SpecifyMealAmount_Activity extends Base_Activity {
     private void getMealMetrics(int meal_id) {
         final ProgressDialog waitingDialog = new ProgressDialog(this);
         waitingDialog.setTitle(getString(R.string.fetching_meal_info_dialog_title));
-        waitingDialog.setMessage(getString(R.string.fetching_meal_info_dialog_message));
+        waitingDialog.setMessage(getString(R.string.please_wait_dialog_message));
         waitingDialog.show();
 
         final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
@@ -159,7 +165,7 @@ public class SpecifyMealAmount_Activity extends Base_Activity {
 
                     final ProgressDialog waitingDialog = new ProgressDialog(SpecifyMealAmount_Activity.this);
                     waitingDialog.setTitle(getString(R.string.adding_new_meal_dialog_title));
-                    waitingDialog.setMessage(getString(R.string.adding_new_meal_dialog_message));
+                    waitingDialog.setMessage(getString(R.string.please_wait_dialog_message));
                     waitingDialog.show();
 
                     final AlertDialog alertDialog = new AlertDialog.Builder(SpecifyMealAmount_Activity.this).create();
@@ -185,9 +191,17 @@ public class SpecifyMealAmount_Activity extends Base_Activity {
     }
 
     private void storeNewMeal(final ProgressDialog waitingDialog, final int caloriesForThisMeal) {
+        LocalDateTime ld = new LocalDateTime();
+
+        DateTime dateTime = new LocalDateTime(ld.toString()).toDateTime(DateTimeZone.UTC);
+
+        DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("YYYY-MM-dd HH:mm:ss");
+
+        String finalDateTime = dateTimeFormatter.print(dateTime);
+
         DataAccessHandler.getInstance().storeNewMeal(prefs.getString(Constants
                         .PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), mealItem.getMeal_id(), Integer.parseInt(mealAmountET.getText().toString()),
-                mealItem.getType(), new Callback<DefaultGetResponse>() {
+                mealItem.getType(), finalDateTime, new Callback<DefaultGetResponse>() {
                     @Override
                     public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
                         switch (response.code()) {

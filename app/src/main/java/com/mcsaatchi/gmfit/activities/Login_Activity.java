@@ -213,7 +213,7 @@ public class Login_Activity extends Base_Activity {
     private void registerUserWithFacebook(String accessToken){
         final ProgressDialog waitingDialog = new ProgressDialog(this);
         waitingDialog.setTitle(getString(R.string.signing_in_dialog_title));
-        waitingDialog.setMessage(getString(R.string.signing_in_dialog_message));
+        waitingDialog.setMessage(getString(R.string.please_wait_dialog_message));
         waitingDialog.show();
 
         final AlertDialog alertDialog = new AlertDialog.Builder(this).create();

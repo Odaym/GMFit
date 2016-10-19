@@ -15,6 +15,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,7 +37,6 @@ import com.mcsaatchi.gmfit.activities.BarcodeCapture_Activity;
 import com.mcsaatchi.gmfit.activities.CustomizeWidgetsAndCharts_Activity;
 import com.mcsaatchi.gmfit.activities.SlugBreakdown_Activity;
 import com.mcsaatchi.gmfit.adapters.NutritionWidgets_GridAdapter;
-import com.mcsaatchi.gmfit.touch_helpers.SimpleDragSwipeItemTouchHelperCallback;
 import com.mcsaatchi.gmfit.adapters.UserMeals_RecyclerAdapterDragSwipe;
 import com.mcsaatchi.gmfit.classes.Constants;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
@@ -60,16 +61,15 @@ import com.mcsaatchi.gmfit.rest.UserMealsResponseBreakfast;
 import com.mcsaatchi.gmfit.rest.UserMealsResponseDinner;
 import com.mcsaatchi.gmfit.rest.UserMealsResponseLunch;
 import com.mcsaatchi.gmfit.rest.UserMealsResponseSnack;
+import com.mcsaatchi.gmfit.touch_helpers.SimpleDragSwipeItemTouchHelperCallback;
 import com.squareup.otto.Subscribe;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -213,6 +213,12 @@ public class Nutrition_Fragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
         EventBus_Singleton.getInstance().unregister(this);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.main, menu);
     }
 
     @Override
@@ -384,6 +390,7 @@ public class Nutrition_Fragment extends Fragment {
                         for (int i = 0; i < breakfastMeals.size(); i++) {
                             MealItem breakfastMeal = new MealItem();
                             breakfastMeal.setMeal_id(breakfastMeals.get(i).getId());
+                            breakfastMeal.setCreated_at(breakfastMeals.get(i).getCreatedAt());
                             breakfastMeal.setInstance_id(breakfastMeals.get(i).getInstance_id());
                             breakfastMeal.setType("Breakfast");
                             breakfastMeal.setName(breakfastMeals.get(i).getName());
@@ -407,6 +414,7 @@ public class Nutrition_Fragment extends Fragment {
                         for (int i = 0; i < lunchMeals.size(); i++) {
                             MealItem lunchMeal = new MealItem();
                             lunchMeal.setMeal_id(lunchMeals.get(i).getId());
+                            lunchMeal.setCreated_at(lunchMeals.get(i).getCreatedAt());
                             lunchMeal.setInstance_id(lunchMeals.get(i).getInstance_id());
                             lunchMeal.setType("Lunch");
                             lunchMeal.setName(lunchMeals.get(i).getName());
@@ -430,6 +438,7 @@ public class Nutrition_Fragment extends Fragment {
                         for (int i = 0; i < dinnerMeals.size(); i++) {
                             MealItem dinnerMeal = new MealItem();
                             dinnerMeal.setMeal_id(dinnerMeals.get(i).getId());
+                            dinnerMeal.setCreated_at(dinnerMeals.get(i).getCreatedAt());
                             dinnerMeal.setInstance_id(dinnerMeals.get(i).getInstance_id());
                             dinnerMeal.setType("Dinner");
                             dinnerMeal.setName(dinnerMeals.get(i).getName());
@@ -454,6 +463,7 @@ public class Nutrition_Fragment extends Fragment {
                             MealItem snackMeal = new MealItem();
                             snackMeal.setMeal_id(snackMeals.get(i).getId());
                             snackMeal.setInstance_id(snackMeals.get(i).getInstance_id());
+                            snackMeal.setCreated_at(snackMeals.get(i).getCreatedAt());
                             snackMeal.setType("Snack");
                             snackMeal.setName(snackMeals.get(i).getName());
                             snackMeal.setMeasurementUnit(snackMeals.get(i).getMeasurementUnit());
@@ -539,7 +549,7 @@ public class Nutrition_Fragment extends Fragment {
 
         for (int i = 0; i < widgetsFromResponse.size(); i++) {
             if (widgetsFromResponse.get(i).getTitle().equals("Calories")) {
-                metricCounterTV.setText(NumberFormat.getNumberInstance(Locale.US).format((int) widgetsFromResponse.get(i).getValue()));
+                metricCounterTV.setText(String.valueOf((int) widgetsFromResponse.get(i).getValue()));
             }
         }
 
@@ -812,7 +822,7 @@ public class Nutrition_Fragment extends Fragment {
     private void getSlugBreakdownForChart(final String chartTitle, final String chartType) {
         final ProgressDialog waitingDialog = new ProgressDialog(getActivity());
         waitingDialog.setTitle(getActivity().getResources().getString(R.string.grabbing_breakdown_data_dialog_title));
-        waitingDialog.setMessage(getActivity().getResources().getString(R.string.grabbing_breakdown_data_dialog_message));
+        waitingDialog.setMessage(getActivity().getResources().getString(R.string.please_wait_dialog_message));
         waitingDialog.show();
 
         final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();

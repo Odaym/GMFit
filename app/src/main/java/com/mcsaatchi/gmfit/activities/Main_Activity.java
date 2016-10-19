@@ -6,8 +6,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.widget.LinearLayout;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
@@ -143,11 +141,5 @@ public class Main_Activity extends Base_Activity {
         super.onActivityResult(requestCode, resultCode, data);
 
         fitnessFragment.onActivityResult(USER_AUTHORISED_REQUEST_CODE, resultCode, data);
-    }
-
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main, menu);
-        return true;
     }
 }

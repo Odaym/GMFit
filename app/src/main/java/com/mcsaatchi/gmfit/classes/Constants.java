@@ -57,6 +57,7 @@ public class Constants {
     public static final String EXTRAS_TEST_TITLE = "test_title";
     public static final String EXTRAS_TEST_SLUG = "test_slug";
     public static final String EXTRAS_TEST_DATE_TAKEN = "test_date_taken";
+    public static final String EXTRAS_TEST_EDIT_OR_CREATE_DONE = "test_edit_or_create_done";
 
     public static final String BUNDLE_ACTIVITY_TITLE = "activity_title";
     public static final String BUNDLE_ACTIVITY_BACK_BUTTON_ENABLED = "activity_back_button_enabled";

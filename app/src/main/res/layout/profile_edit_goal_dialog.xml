@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:padding="@dimen/activity_horizontal_margin">
+
+    <RadioGroup android:id="@+id/goalRadioButtonsGroup" android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+        <RadioButton android:id="@+id/loseWeightRdBTN" android:layout_width="match_parent"
+                     android:layout_height="@dimen/radiobutton_row_height"
+                     android:checked="true"
+                     android:paddingStart="@dimen/default_margin_1"
+                     android:text="@string/goal_purpose_lose_weight"/>
+
+        <RadioButton android:id="@+id/maintainWeightRdBTN" android:layout_width="match_parent"
+                     android:layout_height="@dimen/radiobutton_row_height"
+                     android:paddingStart="@dimen/default_margin_1"
+                     android:text="@string/goal_purpose_maintain_weight"/>
+
+        <RadioButton android:id="@+id/gainWeightRdBTN" android:layout_width="match_parent"
+                     android:layout_height="@dimen/radiobutton_row_height"
+                     android:paddingStart="@dimen/default_margin_1"
+                     android:text="@string/goal_purpose_gain_weight"/>
+    </RadioGroup>
+</LinearLayout>

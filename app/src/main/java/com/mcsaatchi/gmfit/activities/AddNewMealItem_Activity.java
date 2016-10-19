@@ -114,6 +114,7 @@ public class AddNewMealItem_Activity extends Base_Activity {
                     Intent intent = new Intent(AddNewMealItem_Activity.this, SpecifyMealAmount_Activity.class);
                     intent.putExtra(Constants.EXTRAS_MEAL_OBJECT_DETAILS, mealItems.get(position));
                     startActivityForResult(intent, MEAL_AMOUNT_SPECIFIED);
+
                 }
             }
         });
@@ -219,7 +220,7 @@ public class AddNewMealItem_Activity extends Base_Activity {
                                             public void onClick(View view) {
                                                 final ProgressDialog waitingDialog = new ProgressDialog(AddNewMealItem_Activity.this);
                                                 waitingDialog.setTitle(getResources().getString(R.string.requesting_meal_item_dialog_title));
-                                                waitingDialog.setMessage(getResources().getString(R.string.requesting_meal_item_dialog_message));
+                                                waitingDialog.setMessage(getResources().getString(R.string.please_wait_dialog_message));
                                                 waitingDialog.show();
 
                                                 final AlertDialog alertDialog = new AlertDialog.Builder(AddNewMealItem_Activity.this).create();
@@ -327,7 +328,7 @@ public class AddNewMealItem_Activity extends Base_Activity {
 
         final ProgressDialog waitingDialog = new ProgressDialog(AddNewMealItem_Activity.this);
         waitingDialog.setTitle(getResources().getString(R.string.fetching_available_meals_dialog_title));
-        waitingDialog.setMessage(getResources().getString(R.string.fetching_available_meals_dialog_message));
+        waitingDialog.setMessage(getResources().getString(R.string.please_wait_dialog_message));
         waitingDialog.show();
 
         final AlertDialog alertDialog = new AlertDialog.Builder(AddNewMealItem_Activity.this).create();

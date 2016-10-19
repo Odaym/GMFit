@@ -24,6 +24,7 @@ public class MealItem implements Parcelable {
     private String amount;
     private String measurementUnit;
     private int totalCalories;
+    private String created_at;
 
     public MealItem() {
     }
@@ -108,6 +109,14 @@ public class MealItem implements Parcelable {
 
     public void setTotalCalories(int totalCalories) {
         this.totalCalories = totalCalories;
+    }
+
+    public String getCreated_at() {
+        return created_at;
+    }
+
+    public void setCreated_at(String created_at) {
+        this.created_at = created_at;
     }
 
     @Override

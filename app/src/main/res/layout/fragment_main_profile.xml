@@ -24,16 +24,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/default_margin_1"
                 android:layout_marginTop="@dimen/default_margin_2"
-                android:text="Oday Maleh"
                 android:textColor="@color/white"
                 android:textSize="30sp"/>
 
             <TextView
-                android:id="@+id/userCountryTV"
+                android:id="@+id/userEmailTV"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/default_margin_1"
-                android:text="Lebanon"
                 android:textAppearance="?android:textAppearanceMedium"
                 android:textColor="@color/white"/>
         </LinearLayout>
@@ -70,6 +68,10 @@
                 <!-- WEIGHT ENTRY -->
                 <RelativeLayout android:layout_width="match_parent"
                                 android:layout_height="@dimen/add_meal_item_layout_height"
+                                android:background="?android:attr/selectableItemBackground"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:id="@+id/weightLayout"
                                 android:paddingStart="@dimen/activity_vertical_margin">
 
                     <TextView android:id="@+id/weightEntryTitleTV"
@@ -86,7 +88,6 @@
                               android:layout_alignParentEnd="true"
                               android:background="@color/much_lighter_gray"
                               android:gravity="center"
-                              android:text="79.8 kg"
                               android:textColor="@color/fitness_dark_blue"/>
                 </RelativeLayout>
 
@@ -98,6 +99,10 @@
                 <!-- GOALS ENTRY -->
                 <RelativeLayout android:layout_width="match_parent"
                                 android:layout_height="@dimen/add_meal_item_layout_height"
+                                android:background="?android:attr/selectableItemBackground"
+                                android:id="@+id/goalsLayout"
+                                android:clickable="true"
+                                android:focusable="true"
                                 android:paddingStart="@dimen/activity_vertical_margin">
 
                     <TextView android:id="@+id/goalsEntryTitleTV"
@@ -126,6 +131,10 @@
                 <!-- MEDICAL CONDITIONS ENTRY -->
                 <RelativeLayout android:layout_width="match_parent"
                                 android:layout_height="@dimen/add_meal_item_layout_height"
+                                android:background="?android:attr/selectableItemBackground"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:id="@+id/medicalConditionsLayout"
                                 android:paddingStart="@dimen/activity_vertical_margin">
 
                     <TextView android:id="@+id/medicalConditionsTitleTV"
@@ -222,6 +231,10 @@
 
                 <RelativeLayout android:layout_width="match_parent"
                                 android:layout_height="@dimen/add_meal_item_layout_height"
+                                android:background="?android:attr/selectableItemBackground"
+                                android:clickable="true"
+                                android:id="@+id/appRemindersLayout"
+                                android:focusable="true"
                                 android:paddingStart="@dimen/activity_vertical_margin">
 
                     <!-- APP REMINDERS ENTRY -->
@@ -250,6 +263,10 @@
 
                 <RelativeLayout android:layout_width="match_parent"
                                 android:layout_height="@dimen/add_meal_item_layout_height"
+                                android:background="?android:attr/selectableItemBackground"
+                                android:id="@+id/countryLayout"
+                                android:clickable="true"
+                                android:focusable="true"
                                 android:paddingStart="@dimen/activity_vertical_margin">
 
                     <!-- COUNTRY ENTRY -->
@@ -278,10 +295,14 @@
 
                 <RelativeLayout android:layout_width="match_parent"
                                 android:layout_height="@dimen/add_meal_item_layout_height"
+                                android:background="?android:attr/selectableItemBackground"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:id="@+id/metricLayout"
                                 android:paddingStart="@dimen/activity_vertical_margin">
 
-                    <!-- APP REMINDERS ENTRY -->
-                    <TextView android:id="@+id/measurementUnitsTitleTV"
+                    <!-- METRIC SYSTEM ENTRY-->
+                    <TextView android:id="@+id/metricSystemTitleTV"
                               android:layout_width="@dimen/meal_item_name_width"
                               android:layout_height="match_parent"
                               android:ellipsize="end"
@@ -289,7 +310,7 @@
                               android:maxLines="1"
                               android:text="@string/units_entry"/>
 
-                    <TextView android:id="@+id/measurementUnitsValueTV"
+                    <TextView android:id="@+id/metricSystemValueTV"
                               android:layout_width="@dimen/add_new_chart_list_item_edge_width"
                               android:layout_height="match_parent"
                               android:layout_alignParentEnd="true"
@@ -331,6 +352,9 @@
 
                 <RelativeLayout android:layout_width="match_parent"
                                 android:layout_height="@dimen/add_meal_item_layout_height"
+                                android:background="?android:attr/selectableItemBackground"
+                                android:clickable="true"
+                                android:focusable="true"
                                 android:paddingStart="@dimen/activity_vertical_margin">
 
                     <!-- TERMS AND CONDITIONS ENTRY -->
@@ -362,6 +386,9 @@
 
                 <RelativeLayout android:layout_width="match_parent"
                                 android:layout_height="@dimen/add_meal_item_layout_height"
+                                android:background="?android:attr/selectableItemBackground"
+                                android:clickable="true"
+                                android:focusable="true"
                                 android:paddingStart="@dimen/activity_vertical_margin">
 
                     <!-- PRIVACY AND SECURITY ENTRY -->
@@ -393,6 +420,9 @@
 
                 <RelativeLayout android:layout_width="match_parent"
                                 android:layout_height="@dimen/add_meal_item_layout_height"
+                                android:background="?android:attr/selectableItemBackground"
+                                android:clickable="true"
+                                android:focusable="true"
                                 android:paddingStart="@dimen/activity_vertical_margin">
 
                     <!-- CONTACT US ENTRY -->
@@ -424,6 +454,9 @@
 
                 <RelativeLayout android:layout_width="match_parent"
                                 android:layout_height="@dimen/add_meal_item_layout_height"
+                                android:background="?android:attr/selectableItemBackground"
+                                android:clickable="true"
+                                android:focusable="true"
                                 android:paddingStart="@dimen/activity_vertical_margin">
 
                     <!-- SHARE THE APP ENTRY -->
