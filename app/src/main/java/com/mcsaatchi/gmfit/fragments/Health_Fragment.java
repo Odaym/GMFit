@@ -31,8 +31,6 @@ import com.mcsaatchi.gmfit.rest.HealthWidgetsResponse;
 import com.mcsaatchi.gmfit.rest.HealthWidgetsResponseDatum;
 import com.mcsaatchi.gmfit.rest.TakenMedicalTestsResponse;
 import com.mcsaatchi.gmfit.rest.TakenMedicalTestsResponseBody;
-import com.mcsaatchi.gmfit.rest.UserProfileResponse;
-import com.mcsaatchi.gmfit.rest.UserProfileResponseDatum;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
@@ -83,13 +81,11 @@ public class Health_Fragment extends Fragment {
 
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.health_tab_title);
 
-        metricCounterTV.setText(String.valueOf(prefs.getFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, 0.0f)));
-
         getWidgets();
 
         getTakenMedicalTests();
 
-        getUserProfile();
+        metricCounterTV.setText(String.valueOf((int) prefs.getFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, 0)));
 
         addEntryBTN_MEDICAL_TESTS.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,30 +96,6 @@ public class Health_Fragment extends Fragment {
         });
 
         return fragmentView;
-    }
-
-    private void getUserProfile() {
-        DataAccessHandler.getInstance().getUserProfile(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), new Callback<UserProfileResponse>() {
-            @Override
-            public void onResponse(Call<UserProfileResponse> call, Response<UserProfileResponse> response) {
-                switch (response.code()) {
-                    case 200:
-                        UserProfileResponseDatum userProfileData = response.body().getData().getBody().getData();
-
-                        if (userProfileData != null) {
-                            if (userProfileData.getWeight() != null && !userProfileData.getWeight().isEmpty())
-                                metricCounterTV.setText(userProfileData.getWeight());
-
-                            break;
-                        }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<UserProfileResponse> call, Throwable t) {
-                Log.d(TAG, "onFailure: User profile request failed!");
-            }
-        });
     }
 
     private void getWidgets() {

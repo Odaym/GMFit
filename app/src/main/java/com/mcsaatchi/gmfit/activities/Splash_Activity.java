@@ -15,6 +15,9 @@ import com.mcsaatchi.gmfit.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponse;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponseChart;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponseInnerBody;
+import com.mcsaatchi.gmfit.rest.UserProfileResponse;
+import com.mcsaatchi.gmfit.rest.UserProfileResponseDatum;
+import com.mcsaatchi.gmfit.rest.UserProfileResponseMedicalCondition;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +30,8 @@ public class Splash_Activity extends AppCompatActivity {
 
     private SharedPreferences prefs;
     private Intent intent;
+
+    private List<UserProfileResponseMedicalCondition> userMedicalConditions = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,7 +89,7 @@ public class Splash_Activity extends AppCompatActivity {
         }
     }
 
-    public void signInUserSilently(String email, String password) {
+    private void signInUserSilently(String email, String password) {
         DataAccessHandler.getInstance().signInUserSilently(email, password, new Callback<AuthenticationResponse>() {
             @Override
             public void onResponse(Call<AuthenticationResponse> call, Response<AuthenticationResponse> response) {
@@ -100,11 +105,7 @@ public class Splash_Activity extends AppCompatActivity {
                          */
                         List<AuthenticationResponseChart> chartsMap = responseBody.getCharts();
 
-                        Intent intent = new Intent(Splash_Activity.this, Main_Activity.class);
-                        intent.putParcelableArrayListExtra(Constants.BUNDLE_FITNESS_CHARTS_MAP, (ArrayList<AuthenticationResponseChart>) chartsMap);
-                        startActivity(intent);
-
-                        finish();
+                        getUserProfile(chartsMap);
 
                         break;
                 }
@@ -112,7 +113,70 @@ public class Splash_Activity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<AuthenticationResponse> call, Throwable t) {
+                Log.d("TAG", "onFailure: Failed to login user silently");
+            }
+        });
+    }
 
+    private void getUserProfile(final List<AuthenticationResponseChart> chartsMap) {
+        DataAccessHandler.getInstance().getUserProfile(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), new Callback<UserProfileResponse>() {
+            @Override
+            public void onResponse(Call<UserProfileResponse> call, Response<UserProfileResponse> response) {
+                switch (response.code()) {
+                    case 200:
+                        UserProfileResponseDatum userProfileData = response.body().getData().getBody().getData();
+
+                        SharedPreferences.Editor prefsEditor = prefs.edit();
+
+                        if (userProfileData != null) {
+
+                            userMedicalConditions = userProfileData.getMedicalConditions();
+
+                            for (int i = 0; i < userMedicalConditions.size(); i++) {
+                                if (userMedicalConditions.get(i).getSelected().equals("1")) {
+                                    prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION, userMedicalConditions.get(i).getName());
+                                } else {
+                                    prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION, "None");
+                                }
+                            }
+
+                            if (userProfileData.getName() != null && !userProfileData.getName().isEmpty())
+                                prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_USER_FULL_NAME, userProfileData.getName());
+
+                            if (userProfileData.getEmail() != null && !userProfileData.getEmail().isEmpty())
+                                prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_USER_EMAIL, userProfileData.getEmail());
+
+                            if (userProfileData.getWeight() != null && !userProfileData.getWeight().isEmpty())
+                                prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_DATE_OF_BIRTH, userProfileData.getBirthday());
+
+                            if (userProfileData.getCountry() != null && !userProfileData.getCountry().isEmpty())
+                                prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_NATIONALITY, userProfileData.getCountry());
+
+                            if (userProfileData.getMetricSystem() != null && !userProfileData.getMetricSystem().isEmpty())
+                                prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_MEASUREMENT_SYSTEM, userProfileData.getMetricSystem());
+
+                            if (userProfileData.getWeight() != null && !userProfileData.getWeight().isEmpty())
+                                prefsEditor.putFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, Float.parseFloat(userProfileData.getWeight()));
+
+                            if (userProfileData.getHeight() != null && !userProfileData.getHeight().isEmpty())
+                                prefsEditor.putFloat(Constants.EXTRAS_USER_PROFILE_HEIGHT, Float.parseFloat(userProfileData.getHeight()));
+
+                            prefsEditor.apply();
+
+                            Intent intent = new Intent(Splash_Activity.this, Main_Activity.class);
+                            intent.putParcelableArrayListExtra(Constants.BUNDLE_FITNESS_CHARTS_MAP, (ArrayList<AuthenticationResponseChart>) chartsMap);
+                            startActivity(intent);
+
+                            finish();
+
+                            break;
+                        }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<UserProfileResponse> call, Throwable t) {
+                Log.d("TAG", "onFailure: User profile request failed!");
             }
         });
     }

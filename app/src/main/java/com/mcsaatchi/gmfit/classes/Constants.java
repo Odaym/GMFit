@@ -16,6 +16,9 @@ public class Constants {
 
     public static final int WAIT_TIME_BEFORE_CHECKING_METRICS_SERVICE = 1200000;
 
+    public static final String EXTRAS_USER_PROFILE_USER_FULL_NAME = "user_profile_user_full_name";
+    public static final String EXTRAS_USER_PROFILE_USER_EMAIL = "user_profile_user_email";
+    public static final String EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION = "user_profile_user_medical_condition";
     public static final String EXTRAS_USER_PROFILE_MEASUREMENT_SYSTEM = "user_profile_measurement_system";
     public static final String EXTRAS_USER_PROFILE_NATIONALITY = "user_profile_nationality";
     public static final String EXTRAS_USER_PROFILE_GOAL = "user_profile_goal";

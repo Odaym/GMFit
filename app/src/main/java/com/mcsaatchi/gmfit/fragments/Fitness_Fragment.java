@@ -93,6 +93,8 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
     private ArrayList<DataChart> chartsMap;
 
     private String userEmail;
+    private RuntimeExceptionDao<FitnessWidget, Integer> fitnessWidgetsDAO;
+    private QueryBuilder<FitnessWidget, Integer> fitnessQB;
 
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
@@ -102,8 +104,8 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
         if (context instanceof Activity) {
             parentActivity = (Activity) context;
 
-            RuntimeExceptionDao<FitnessWidget, Integer> fitnessWidgetsDAO = ((Base_Activity) parentActivity).getDBHelper().getFitnessWidgetsDAO();
-            QueryBuilder<FitnessWidget, Integer> fitnessQB = fitnessWidgetsDAO.queryBuilder();
+            fitnessWidgetsDAO = ((Base_Activity) parentActivity).getDBHelper().getFitnessWidgetsDAO();
+            fitnessQB = fitnessWidgetsDAO.queryBuilder();
 
             dataChartDAO = ((Base_Activity) parentActivity).getDBHelper().getDataChartDAO();
 
@@ -120,7 +122,7 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
                         .setOnDismissListener(new DialogInterface.OnDismissListener() {
                             @Override
                             public void onDismiss(final DialogInterface dialogInterface) {
-//                                getActivity().finish();
+                                getActivity().finish();
                             }
                         }).setNeutralButton(android.R.string.ok,
                         new DialogInterface.OnClickListener() {
@@ -189,6 +191,15 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
         final String todayDate;
         todayDate = dt.toString();
 
+        final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+        alertDialog.setTitle(R.string.loading_user_profile_dialog_title);
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
         DataAccessHandler.getInstance().getPeriodicalChartData(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
                 dt.minusMonths(1).toString(), todayDate, "fitness", chart_slug, new Callback<ChartMetricBreakdownResponse>() {
                     @Override
@@ -237,7 +248,8 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
 
                     @Override
                     public void onFailure(Call<ChartMetricBreakdownResponse> call, Throwable t) {
-                        //TODO: Add failure code
+                        alertDialog.setMessage(getActivity().getString(R.string.error_response_from_server_incorrect));
+                        alertDialog.show();
                     }
                 });
     }

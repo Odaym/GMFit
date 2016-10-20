@@ -5,6 +5,7 @@
     <dimen name="default_padding_1">10dp</dimen>
     <dimen name="margin_medium">16dp</dimen>
 
+    <dimen name="bottom_bar_navigation_height">60dp</dimen>
     <dimen name="sections_progress_bar_height">7dp</dimen>
     <dimen name="metric_counter_font_size">140sp</dimen>
 

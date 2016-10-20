@@ -249,6 +249,7 @@
     <string name="profile_edit_goal_dialog_title">Edit your goal</string>
     <string name="profile_edit_medical_conditions_dialog_title">Edit medical conditions</string>
     <string name="user_profile_save_changes">Save</string>
+    <string name="updating_user_profile_dialog_title">Updating your profile</string>
 
     <!-- USER POLICY ACTIVITY -->
     <string name="user_policy_activity_title">User Policy</string>

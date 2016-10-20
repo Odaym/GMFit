@@ -1,7 +1,6 @@
 package com.mcsaatchi.gmfit.adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,9 +56,6 @@ public class FitnessWidgets_GridAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-
-        Log.d("TAG", "getView: widgetsMap.get(position).getValue() " + widgetsMap.get(position).getValue());
-        Log.d("TAG", "getView: widgetsMap.get(position).getValue() " + widgetsMap.get(position).getValue());
 
         holder.metricTV.setText(String.valueOf(widgetsMap.get(position).getValue()));
         holder.measurementUnitTV.setText(widgetsMap.get(position).getMeasurementUnit());

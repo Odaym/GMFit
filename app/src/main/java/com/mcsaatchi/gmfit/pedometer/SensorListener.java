@@ -119,22 +119,18 @@ public class SensorListener extends Service implements SensorEventListener {
         for (int i = 0; i < fitnessWidgets.size(); i++) {
             switch (fitnessWidgets.get(i).getTitle()) {
                 case "Calories":
-                    updateFitnessWidget(fitnessWidgets.get(i), calculatedCalories, prefs.getFloat(todayDate + "_calories", 0), 1);
+                    fitnessWidgets.get(i).setValue((int) ((calculatedCalories + prefs.getFloat(todayDate + "_calories", 0)) * 1));
                     break;
                 case "Distance":
-                    updateFitnessWidget(fitnessWidgets.get(i), calculatedDistance, prefs.getFloat(todayDate + "_distance", 0), 1000);
+                    fitnessWidgets.get(i).setValue((int) ((calculatedDistance + prefs.getFloat(todayDate + "_distance", 0)) * 1000));
                     break;
             }
+
+            fitnessWidgetsDAO.update(fitnessWidgets.get(i));
         }
     }
 
-    public void updateFitnessWidget(FitnessWidget fitnessWidget, float currentMetricValue, float metricValueSoFar, int multiplier) {
-        fitnessWidget.setValue((int) (currentMetricValue + metricValueSoFar) * multiplier);
-
-        fitnessWidgetsDAO.update(fitnessWidget);
-    }
-
-    public void sendOutEventBusEvents(){
+    public void sendOutEventBusEvents() {
         EventBus_Singleton.getInstance().post(new EventBus_Poster(Constants.EVENT_STEP_COUNTER_INCREMENTED));
         EventBus_Singleton.getInstance().post(new EventBus_Poster(Constants.EVENT_CALORIES_COUNTER_INCREMENTED));
         EventBus_Singleton.getInstance().post(new EventBus_Poster(Constants.EVENT_DISTANCE_COUNTER_INCREMENTED));
