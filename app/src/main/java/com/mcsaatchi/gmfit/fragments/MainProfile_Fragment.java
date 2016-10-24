@@ -12,7 +12,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.v4.app.ActivityCompat;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -43,6 +43,8 @@ import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.rest.EmergencyProfileResponse;
 import com.mcsaatchi.gmfit.rest.MedicalConditionsResponse;
 import com.mcsaatchi.gmfit.rest.MedicalConditionsResponseDatum;
+import com.mukesh.countrypicker.fragments.CountryPicker;
+import com.mukesh.countrypicker.interfaces.CountryPickerListener;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -51,8 +53,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -62,9 +67,13 @@ import retrofit2.Response;
 
 public class MainProfile_Fragment extends Fragment {
     private static final int REQUEST_WRITE_STORAGE = 112;
+    private static final int ASK_CAMERA_AND_STORAGE_PERMISSION = 834;
+    private static final int CAPTURE_NEW_PICTURE_REQUEST_CODE = 871;
 
     @Bind(R.id.userProfileIV)
     ImageView userProfileIV;
+    @Bind(R.id.takePictureIV)
+    ImageView takePictureIV;
     @Bind(R.id.userFullNameTV)
     TextView userFullNameTV;
     @Bind(R.id.userEmailTV)
@@ -99,11 +108,16 @@ public class MainProfile_Fragment extends Fragment {
     @Bind(R.id.logoutBTN)
     Button logoutBTN;
 
+    private File photoFile;
+    private Uri photoFileUri;
+
     private MenuItem saveChangesItem;
 
     private SharedPreferences prefs;
 
-    private String newUserGoal, newUserWeight, newUser, newUserMedicalCondition;
+    private double newUserWeight;
+    private int newUserMedicalConditionId;
+    private String newUserGoal;
 
     private List<MedicalConditionsResponseDatum> userMedicalConditions = new ArrayList<>();
 
@@ -122,7 +136,7 @@ public class MainProfile_Fragment extends Fragment {
 
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.profile_tab_title);
 
-        Picasso.with(getActivity()).load(R.drawable.fragment_intro_picture).resize(100, 100).transform(new CircleTransform()).centerInside().into(userProfileIV);
+        Picasso.with(getActivity()).load(new File(prefs.getString(Constants.EXTRAS_USER_PROFILE_IMAGE, ""))).resize(500, 500).transform(new CircleTransform()).centerInside().into(userProfileIV);
 
         userFullNameTV.setText(prefs.getString(Constants.EXTRAS_USER_PROFILE_USER_FULL_NAME, ""));
 
@@ -130,9 +144,34 @@ public class MainProfile_Fragment extends Fragment {
 
         weightEntryValueTV.setText(String.valueOf((int) prefs.getFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, 0)));
 
+        goalsEntryValueTV.setText(prefs.getString(Constants.EXTRAS_USER_PROFILE_GOAL, "Maintain Weight"));
+
         countryValueTV.setText(prefs.getString(Constants.EXTRAS_USER_PROFILE_NATIONALITY, ""));
 
         metricSystemValueTV.setText(prefs.getString(Constants.EXTRAS_USER_PROFILE_MEASUREMENT_SYSTEM, ""));
+
+        medicalConditionsValueTV.setText(prefs.getString(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION, "None"));
+
+        takePictureIV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String[] neededPermissions = new String[]{Manifest.permission.CAMERA,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE};
+
+                boolean hasCameraPermission = (ContextCompat.checkSelfPermission(getActivity(),
+                        Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED);
+
+                boolean hasWriteStoragePermission = (ContextCompat.checkSelfPermission(getActivity(),
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED);
+
+                if (!hasCameraPermission || !hasWriteStoragePermission) {
+                    requestPermissions(neededPermissions,
+                            ASK_CAMERA_AND_STORAGE_PERMISSION);
+                } else {
+                    openTakePictureIntent();
+                }
+            }
+        });
 
         weightLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -153,12 +192,14 @@ public class MainProfile_Fragment extends Fragment {
                 dialogBuilder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        newUserWeight = editWeightET.getText().toString();
-                        weightEntryValueTV.setText(newUserWeight);
+                        newUserWeight = Double.parseDouble(editWeightET.getText().toString());
+                        weightEntryValueTV.setText(String.valueOf((int) newUserWeight));
 
-                        if (Float.parseFloat(newUserWeight) != prefs.getFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, 0)) {
+                        if (newUserWeight != prefs.getFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, 0)) {
                             showSaveChangesMenuItem();
                         }
+
+                        prefs.edit().putFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, (float) newUserWeight).apply();
                     }
                 });
                 dialogBuilder.setNegativeButton(R.string.decline_cancel, new DialogInterface.OnClickListener() {
@@ -205,6 +246,8 @@ public class MainProfile_Fragment extends Fragment {
                         if (!newUserGoal.equals(prefs.getString(Constants.EXTRAS_USER_PROFILE_GOAL, ""))) {
                             showSaveChangesMenuItem();
                         }
+
+                        prefs.edit().putString(Constants.EXTRAS_USER_PROFILE_GOAL, newUserGoal).apply();
                     }
                 });
                 dialogBuilder.setNegativeButton(R.string.decline_cancel, new DialogInterface.OnClickListener() {
@@ -245,8 +288,7 @@ public class MainProfile_Fragment extends Fragment {
                     boolean hasPermission = (ContextCompat.checkSelfPermission(getActivity(),
                             Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED);
                     if (!hasPermission) {
-                        ActivityCompat.requestPermissions(getActivity(),
-                                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                                 REQUEST_WRITE_STORAGE);
                     } else {
                         requestEmergencyProfile();
@@ -257,6 +299,28 @@ public class MainProfile_Fragment extends Fragment {
             }
         });
 
+        countryLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final CountryPicker picker = CountryPicker.newInstance(getString(R.string.choose_country_hint));
+
+                picker.show(getActivity().getSupportFragmentManager(), "COUNTRY_PICKER");
+                picker.setListener(new CountryPickerListener() {
+                    @Override
+                    public void onSelectCountry(String countryName, String code, String dialCode, int flagDrawableResID) {
+                        countryValueTV.setText(countryName);
+
+                        if (!countryName.equals(prefs.getString(Constants.EXTRAS_USER_PROFILE_NATIONALITY, ""))) {
+                            showSaveChangesMenuItem();
+                        }
+
+                        prefs.edit().putString(Constants.EXTRAS_USER_PROFILE_NATIONALITY, countryName).apply();
+
+                        picker.dismiss();
+                    }
+                });
+            }
+        });
 
         return fragmentView;
     }
@@ -272,7 +336,7 @@ public class MainProfile_Fragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.save_changes:
                 saveUserProfile();
                 break;
@@ -284,7 +348,7 @@ public class MainProfile_Fragment extends Fragment {
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
-            case REQUEST_WRITE_STORAGE: {
+            case REQUEST_WRITE_STORAGE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     //reload my activity with permission granted or use the features what required the permission
                     requestEmergencyProfile();
@@ -292,12 +356,84 @@ public class MainProfile_Fragment extends Fragment {
                     Toast.makeText(getActivity(), "The app was not allowed to write to your storage. Hence, it cannot function properly. Please consider granting it " +
                             "this permission", Toast.LENGTH_LONG).show();
                 }
+                break;
+
+            case ASK_CAMERA_AND_STORAGE_PERMISSION:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED
+                        && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                    openTakePictureIntent();
+                } else {
+                    Toast.makeText(getActivity(), "The app was not allowed to write to your storage or take use the device's Camera. Hence, it cannot function properly." +
+                            "Please consider granting it these permissions", Toast.LENGTH_LONG).show();
+                }
+                break;
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        switch (requestCode) {
+            case CAPTURE_NEW_PICTURE_REQUEST_CODE:
+                Picasso.with(getActivity()).load(new File(prefs.getString(Constants.EXTRAS_USER_PROFILE_IMAGE, ""))).resize(500, 500).transform(new CircleTransform()).centerInside().into(userProfileIV);
+
+                prefs.edit().putString(Constants.EXTRAS_USER_PROFILE_IMAGE, photoFile.getAbsolutePath()).apply();
+
+                break;
+        }
+    }
+
+    public void openTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+            photoFile = null;
+            try {
+                photoFile = createImageFile(constructImageFilename());
+                photoFileUri = Uri.fromFile(photoFile);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+
+            if (photoFile != null) {
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT,
+                        photoFileUri);
+                startActivityForResult(takePictureIntent, CAPTURE_NEW_PICTURE_REQUEST_CODE);
             }
         }
     }
 
+    private File createImageFile(String imagePath) throws IOException {
+        return new File(imagePath);
+    }
 
-    private void saveUserProfile(){
+    private String constructImageFilename() {
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+        String imageFileName = "JPEG_" + timeStamp;
+
+        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_PICTURES), "GMFit");
+
+        if (!mediaStorageDir.exists()) {
+            if (!mediaStorageDir.mkdirs()) {
+                Log.d("Constants.DEBUG_TAG", "failed to create directory");
+                return null;
+            }
+        }
+
+        return mediaStorageDir.getPath() + File.separator + imageFileName;
+    }
+
+    private void saveUserProfile() {
+        String dateOfBirth = prefs.getString(Constants.EXTRAS_USER_PROFILE_DATE_OF_BIRTH, "");
+        String bloodType = prefs.getString(Constants.EXTRAS_USER_PROFILE_BLOOD_TYPE, "");
+        String nationality = prefs.getString(Constants.EXTRAS_USER_PROFILE_NATIONALITY, "");
+        String measurementSystem = prefs.getString(Constants.EXTRAS_USER_PROFILE_MEASUREMENT_SYSTEM, "");
+        String userGoal = prefs.getString(Constants.EXTRAS_USER_PROFILE_GOAL, "");
+        int gender = prefs.getInt(Constants.EXTRAS_USER_PROFILE_GENDER, 1);
+        float height = prefs.getFloat(Constants.EXTRAS_USER_PROFILE_HEIGHT, 0.0f);
+        float weight = prefs.getFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, 0.0f);
+
         final ProgressDialog waitingDialog = new ProgressDialog(getActivity());
         waitingDialog.setTitle(getString(R.string.updating_user_profile_dialog_title));
         waitingDialog.setMessage(getString(R.string.please_wait_dialog_message));
@@ -315,27 +451,32 @@ public class MainProfile_Fragment extends Fragment {
                     }
                 });
 
-//        DataAccessHandler.getInstance().updateUserProfile(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), finalDateOfBirth,
-//                bloodType, nationality, medical_condition, measurementSystem, goal, finalGender, height, weight, BMI, new Callback<DefaultGetResponse>() {
-//                    @Override
-//                    public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
-//                        switch (response.code()) {
-//                            case 200:
-//                                getUiForSection(waitingDialog, "fitness");
-//                                break;
-//                            case 401:
-//                                alertDialog.setMessage(getString(R.string.login_failed_wrong_credentials));
-//                                alertDialog.show();
-//                                break;
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
-//                        alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
-//                        alertDialog.show();
-//                    }
-//                });
+        DataAccessHandler.getInstance().updateUserProfile(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), dateOfBirth,
+                bloodType, nationality, newUserMedicalConditionId, measurementSystem, userGoal, gender, height, weight,
+                Helpers.calculateBMI(weight, height), new Callback<DefaultGetResponse>() {
+                    @Override
+                    public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
+                        switch (response.code()) {
+                            case 200:
+                                waitingDialog.dismiss();
+
+                                Toast.makeText(getActivity(), "Your profile was updated succesfully", Toast.LENGTH_SHORT).show();
+                                break;
+                            case 401:
+                                waitingDialog.dismiss();
+
+                                alertDialog.setMessage(getString(R.string.login_failed_wrong_credentials));
+                                alertDialog.show();
+                                break;
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+                        alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
+                        alertDialog.show();
+                    }
+                });
     }
 
     private void getMedicalConditionsAndShowDialog() {
@@ -355,31 +496,37 @@ public class MainProfile_Fragment extends Fragment {
 
                         for (int i = 0; i < userMedicalConditions.size(); i++) {
                             final RadioButton radioButton = new RadioButton(getActivity());
+                            radioButton.setLayoutParams(new RadioGroup.LayoutParams(RadioGroup.LayoutParams.MATCH_PARENT, RadioGroup.LayoutParams.MATCH_PARENT));
                             radioButton.setPadding(0, getResources().getDimensionPixelSize(R.dimen.default_margin_1), 0, getResources().getDimensionPixelSize(R.dimen.default_margin_1));
+
                             radioButton.setText(userMedicalConditions.get(i).getName());
+                            radioButton.setId(Integer.parseInt(userMedicalConditions.get(i).getId()));
 
                             medicalRdGroup.addView(radioButton);
                         }
 
-                        for (int i = 0; i < medicalRdGroup.getChildCount(); i++){
+                        for (int i = 0; i < userMedicalConditions.size(); i++) {
                             RadioButton selectedRadioButton = (RadioButton) medicalRdGroup.getChildAt(i);
 
-                            if (selectedRadioButton.getText().equals("Asthma"))
+                            if (userMedicalConditions.get(i).getName().equals(medicalConditionsValueTV.getText().toString()))
                                 selectedRadioButton.setChecked(true);
                         }
 
                         dialogBuilder.setView(dialogView);
                         dialogBuilder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                             @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
+                            public void onClick(DialogInterface dialogInterface, int position) {
                                 RadioButton selectedRadioButton = (RadioButton) medicalRdGroup.findViewById(medicalRdGroup.getCheckedRadioButtonId());
 
-                                newUserMedicalCondition = selectedRadioButton.getText().toString();
-                                medicalConditionsValueTV.setText(newUserMedicalCondition);
+                                medicalConditionsValueTV.setText(selectedRadioButton.getText().toString());
 
-                                if (!newUserMedicalCondition.equals(prefs.getString(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION, ""))) {
+                                newUserMedicalConditionId = selectedRadioButton.getId();
+
+                                if (!medicalConditionsValueTV.getText().toString().equals(prefs.getString(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION, ""))) {
                                     showSaveChangesMenuItem();
                                 }
+
+                                prefs.edit().putString(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION, selectedRadioButton.getText().toString()).apply();
                             }
                         });
                         dialogBuilder.setNegativeButton(R.string.decline_cancel, new DialogInterface.OnClickListener() {

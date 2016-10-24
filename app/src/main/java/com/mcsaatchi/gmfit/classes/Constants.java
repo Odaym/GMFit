@@ -20,12 +20,14 @@ public class Constants {
     public static final String EXTRAS_USER_PROFILE_USER_EMAIL = "user_profile_user_email";
     public static final String EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION = "user_profile_user_medical_condition";
     public static final String EXTRAS_USER_PROFILE_MEASUREMENT_SYSTEM = "user_profile_measurement_system";
+    public static final String EXTRAS_USER_PROFILE_GENDER = "user_profile_gender";
     public static final String EXTRAS_USER_PROFILE_NATIONALITY = "user_profile_nationality";
     public static final String EXTRAS_USER_PROFILE_GOAL = "user_profile_goal";
     public static final String EXTRAS_USER_PROFILE_DATE_OF_BIRTH = "user_profile_date_of_birth";
     public static final String EXTRAS_USER_PROFILE_WEIGHT = "user_profile_weight";
     public static final String EXTRAS_USER_PROFILE_HEIGHT = "user_profile_height";
     public static final String EXTRAS_USER_PROFILE_BLOOD_TYPE = "user_profile_blood_type";
+    public static final String EXTRAS_USER_PROFILE_IMAGE = "user_profile_image";
 
     public static final String EXTRAS_FITNESS_FRAGMENT = "FITNESS";
     public static final String EXTRAS_NUTRITION_FRAGMENT = "NUTRITION";

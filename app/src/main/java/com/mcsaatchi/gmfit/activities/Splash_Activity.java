@@ -161,6 +161,11 @@ public class Splash_Activity extends AppCompatActivity {
                             if (userProfileData.getHeight() != null && !userProfileData.getHeight().isEmpty())
                                 prefsEditor.putFloat(Constants.EXTRAS_USER_PROFILE_HEIGHT, Float.parseFloat(userProfileData.getHeight()));
 
+                            if (userProfileData.getGender() != null && !userProfileData.getGender().isEmpty()) {
+                                int finalGender = userProfileData.getGender().equals("Male") ? 1 : 0;
+                                prefsEditor.putInt(Constants.EXTRAS_USER_PROFILE_GENDER, finalGender);
+                            }
+
                             prefsEditor.apply();
 
                             Intent intent = new Intent(Splash_Activity.this, Main_Activity.class);

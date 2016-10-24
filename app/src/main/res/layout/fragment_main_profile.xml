@@ -14,10 +14,23 @@
                       android:gravity="center_horizontal"
                       android:orientation="vertical">
 
-            <ImageView android:id="@+id/userProfileIV"
-                       android:layout_width="@dimen/intro_image_dimens"
-                       android:layout_height="@dimen/intro_image_dimens"/>
+            <RelativeLayout android:layout_width="@dimen/intro_image_dimens"
+                            android:layout_height="@dimen/intro_image_dimens">
 
+                <ImageView android:id="@+id/userProfileIV"
+                           android:layout_width="match_parent"
+                           android:layout_height="match_parent"
+                           android:layout_centerHorizontal="true"
+                           android:layout_centerVertical="true"/>
+
+                <ImageView android:id="@+id/takePictureIV"
+                           android:layout_width="25dp"
+                           android:layout_height="25dp"
+                           android:layout_alignParentBottom="true"
+                           android:layout_alignParentEnd="true"
+                           android:src="@drawable/ic_photo_camera_white_24dp"/>
+
+            </RelativeLayout>
             <TextView
                 android:id="@+id/userFullNameTV"
                 android:layout_width="wrap_content"
@@ -66,12 +79,12 @@
                 </LinearLayout>
 
                 <!-- WEIGHT ENTRY -->
-                <RelativeLayout android:layout_width="match_parent"
+                <RelativeLayout android:id="@+id/weightLayout"
+                                android:layout_width="match_parent"
                                 android:layout_height="@dimen/add_meal_item_layout_height"
                                 android:background="?android:attr/selectableItemBackground"
                                 android:clickable="true"
                                 android:focusable="true"
-                                android:id="@+id/weightLayout"
                                 android:paddingStart="@dimen/activity_vertical_margin">
 
                     <TextView android:id="@+id/weightEntryTitleTV"
@@ -97,10 +110,10 @@
                       android:background="@color/offwhite_background_gray"/>
 
                 <!-- GOALS ENTRY -->
-                <RelativeLayout android:layout_width="match_parent"
+                <RelativeLayout android:id="@+id/goalsLayout"
+                                android:layout_width="match_parent"
                                 android:layout_height="@dimen/add_meal_item_layout_height"
                                 android:background="?android:attr/selectableItemBackground"
-                                android:id="@+id/goalsLayout"
                                 android:clickable="true"
                                 android:focusable="true"
                                 android:paddingStart="@dimen/activity_vertical_margin">
@@ -119,7 +132,6 @@
                               android:layout_alignParentEnd="true"
                               android:background="@color/much_lighter_gray"
                               android:gravity="center"
-                              android:text="Gain Weight"
                               android:textColor="@color/fitness_dark_blue"/>
                 </RelativeLayout>
 
@@ -129,12 +141,12 @@
                       android:background="@color/offwhite_background_gray"/>
 
                 <!-- MEDICAL CONDITIONS ENTRY -->
-                <RelativeLayout android:layout_width="match_parent"
+                <RelativeLayout android:id="@+id/medicalConditionsLayout"
+                                android:layout_width="match_parent"
                                 android:layout_height="@dimen/add_meal_item_layout_height"
                                 android:background="?android:attr/selectableItemBackground"
                                 android:clickable="true"
                                 android:focusable="true"
-                                android:id="@+id/medicalConditionsLayout"
                                 android:paddingStart="@dimen/activity_vertical_margin">
 
                     <TextView android:id="@+id/medicalConditionsTitleTV"
@@ -151,7 +163,6 @@
                               android:layout_alignParentEnd="true"
                               android:background="@color/much_lighter_gray"
                               android:gravity="center"
-                              android:text="None"
                               android:textColor="@color/fitness_dark_blue"/>
                 </RelativeLayout>
 
@@ -229,11 +240,11 @@
                               android:textColor="@android:color/white"/>
                 </LinearLayout>
 
-                <RelativeLayout android:layout_width="match_parent"
+                <RelativeLayout android:id="@+id/appRemindersLayout"
+                                android:layout_width="match_parent"
                                 android:layout_height="@dimen/add_meal_item_layout_height"
                                 android:background="?android:attr/selectableItemBackground"
                                 android:clickable="true"
-                                android:id="@+id/appRemindersLayout"
                                 android:focusable="true"
                                 android:paddingStart="@dimen/activity_vertical_margin">
 
@@ -261,10 +272,10 @@
                       android:layout_height="0.5dp"
                       android:background="@color/offwhite_background_gray"/>
 
-                <RelativeLayout android:layout_width="match_parent"
+                <RelativeLayout android:id="@+id/countryLayout"
+                                android:layout_width="match_parent"
                                 android:layout_height="@dimen/add_meal_item_layout_height"
                                 android:background="?android:attr/selectableItemBackground"
-                                android:id="@+id/countryLayout"
                                 android:clickable="true"
                                 android:focusable="true"
                                 android:paddingStart="@dimen/activity_vertical_margin">
@@ -293,12 +304,12 @@
                       android:layout_height="0.5dp"
                       android:background="@color/offwhite_background_gray"/>
 
-                <RelativeLayout android:layout_width="match_parent"
+                <RelativeLayout android:id="@+id/metricLayout"
+                                android:layout_width="match_parent"
                                 android:layout_height="@dimen/add_meal_item_layout_height"
                                 android:background="?android:attr/selectableItemBackground"
                                 android:clickable="true"
                                 android:focusable="true"
-                                android:id="@+id/metricLayout"
                                 android:paddingStart="@dimen/activity_vertical_margin">
 
                     <!-- METRIC SYSTEM ENTRY-->

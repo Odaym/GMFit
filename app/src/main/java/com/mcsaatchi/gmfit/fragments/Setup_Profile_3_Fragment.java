@@ -26,6 +26,7 @@ import com.mcsaatchi.gmfit.adapters.MedicalConditionsSpinnerAdapter;
 import com.mcsaatchi.gmfit.classes.Constants;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
+import com.mcsaatchi.gmfit.classes.Helpers;
 import com.mcsaatchi.gmfit.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponseChart;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponseWidget;
@@ -147,7 +148,7 @@ public class Setup_Profile_3_Fragment extends Fragment implements CalendarDatePi
 
                     finalGender = genderSpinner.getSelectedItem().toString().equals("Male") ? 1 : 0;
 
-                    String finalDateOfBirth = null;
+                    String finalDateOfBirth;
 
                     if (!dateOfBirth.isEmpty())
                         finalDateOfBirth = dateOfBirth;
@@ -160,16 +161,20 @@ public class Setup_Profile_3_Fragment extends Fragment implements CalendarDatePi
                     String finalBloodType = bloodTypeSpinner.getSelectedItem().toString();
 
                     prefs.edit().putString(Constants.EXTRAS_USER_PROFILE_DATE_OF_BIRTH, finalDateOfBirth).apply();
+                    prefs.edit().putInt(Constants.EXTRAS_USER_PROFILE_GENDER, finalGender).apply();
                     prefs.edit().putFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, finalWeight).apply();
                     prefs.edit().putFloat(Constants.EXTRAS_USER_PROFILE_HEIGHT, finalHeight).apply();
                     prefs.edit().putString(Constants.EXTRAS_USER_PROFILE_BLOOD_TYPE, finalBloodType).apply();
 
+                    /**
+                     * These values are from previous steps 1 and 2 in the Setup Profile process
+                     */
                     String nationality = prefs.getString(Constants.EXTRAS_USER_PROFILE_NATIONALITY, "");
                     String measurementSystem = prefs.getString(Constants.EXTRAS_USER_PROFILE_MEASUREMENT_SYSTEM, "");
                     String goal = prefs.getString(Constants.EXTRAS_USER_PROFILE_GOAL, "");
 
                     setupUserProfile(finalDateOfBirth, finalBloodType, nationality, (int) medicalConditionsSpinner.getSelectedItemId(), measurementSystem, goal,
-                            finalGender, finalHeight, finalWeight, calculateBMI(finalWeight, finalHeight));
+                            finalGender, finalHeight, finalWeight, Helpers.calculateBMI(finalWeight, finalHeight));
                 } else {
 //                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 //                    builder.setTitle(R.string.weight_or_height_empty_dialog_title)
@@ -294,13 +299,6 @@ public class Setup_Profile_3_Fragment extends Fragment implements CalendarDatePi
 
             }
         });
-    }
-
-    private double calculateBMI(double weight, double height) {
-        //centimeters to meters
-        double finalHeight = height / 100;
-
-        return weight / (finalHeight * finalHeight);
     }
 
     private void initCustomSpinner(ArrayList<String> listItems, Spinner spinner) {
