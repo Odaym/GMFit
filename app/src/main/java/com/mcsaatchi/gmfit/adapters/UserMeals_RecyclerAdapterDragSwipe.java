@@ -44,9 +44,9 @@ public class UserMeals_RecyclerAdapterDragSwipe extends RecyclerView.Adapter<Use
         holder.entryTitleTV.setText(meal.getName());
 
         if (meal.getAmount() != null) {
-            holder.entryDescriptionTV.setText(meal.getCreated_at().split(" ")[1] + " - " + meal.getAmount() + " servings");
+            holder.entryDescriptionTV.setText(meal.getAmount() + " servings");
         } else {
-            holder.entryDescriptionTV.setText(meal.getCreated_at().split(" ")[1] + " - 1 serving");
+            holder.entryDescriptionTV.setText("1 serving");
         }
 
         holder.entryUnitsTV.setText(meal.getTotalCalories() + " kcal");
