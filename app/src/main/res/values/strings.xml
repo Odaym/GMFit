@@ -168,7 +168,7 @@
     <string name="drag_to_reorder_widgets">Drag to re-order your homescreen widgets</string>
     <string name="drag_to_reorder_charts">Drag to re-order your homescreen charts</string>
     <string name="add_new_chart_button">+ Add New Chart</string>
-    <string name="grabbing_breakdown_data_dialog_title">Fetching metric data</string>
+    <string name="grabbing_breakdown_data_dialog_title">Loading chart data</string>
     <string name="deleting_chart_dialog_title">Deleting chart</string>
 
     <!-- BREAKDOWN ACTIVITY -->
@@ -194,7 +194,7 @@
     <string name="add_new_chart_activity_title">Add New Chart</string>
     <string name="add_new_chart_prompt">Add a chart from the list below</string>
     <string name="duplicate_chart_error">You may only have one type of chart at a time</string>
-    <string name="fetching_chart_data_dialog_title">Fetching charts data</string>
+    <string name="fetching_chart_data_dialog_title">Loading charts data</string>
     <string name="chart_last_30_days_hint">Last 30 days</string>
 
     <!-- ADD NEW MEAL ITEM ACTIVITY -->
@@ -208,12 +208,12 @@
     <string name="request_new_meal_button">Request Meal</string>
     <string name="request_new_meal_sent_thanks">Request sent. Thank you!</string>
     <string name="requesting_meal_item_dialog_title">Requesting new meal</string>
-    <string name="fetching_available_meals_dialog_title">Fetching available meals</string>
+    <string name="fetching_available_meals_dialog_title">Loading available meals</string>
 
     <!-- SPECIFY MEAL AMOUNT ACTIVITY -->
     <string name="add_meal_amount_hint">Number of servings</string>
     <string name="add_meal_to_diary">Add to diary</string>
-    <string name="fetching_meal_info_dialog_title">Fetching meal information</string>
+    <string name="fetching_meal_info_dialog_title">Loading meal information</string>
     <string name="adding_new_meal_dialog_title">Adding new meal</string>
     <string name="nutrition_facts_hint">Nutritional Facts</string>
 
@@ -226,7 +226,7 @@
     <string name="no_barcode_detected_here">No barcode detected here</string>
 
     <!-- MAIN PROFILE FRAGMENT -->
-    <string name="grabbing_user_policy_dialog_title">Fetching user policy</string>
+    <string name="grabbing_user_policy_dialog_title">Loading user policy</string>
     <string name="downloading_pdf_profile_dialog_title">Downloading PDF Profile</string>
     <string name="downloading_pdf_profile_dialog_message">Please Wait…</string>
     <string name="profile_information_section_title">Profile Information</string>
@@ -270,7 +270,7 @@
     <string name="add_new_test_activity_title">Add new test</string>
     <string name="search_tests_hint">Search for test</string>
     <string name="fill_in_below_fields_hint">Please fill in the fields below</string>
-    <string name="fetching_test_data_dialog_title">Fetching test data</string>
+    <string name="fetching_test_data_dialog_title">Loading test data</string>
     <string name="add_test_photos_bar_title">Attach Photos</string>
     <string name="add_photo_hint">+ Add a photo</string>
     <string name="no_storage_permission">To be able to attach photos, GMFit needs access to read from this device\'s external storage</string>
