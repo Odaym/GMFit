@@ -490,6 +490,7 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
                         chartsMap.remove(i);
                     }
                 }
+
                 break;
             case Constants.EXTRAS_FITNESS_CHARTS_ORDER_ARRAY_CHANGED:
                 List<DataChart> allDataCharts = ebp.getDataChartsListExtra();

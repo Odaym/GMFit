@@ -131,7 +131,6 @@ public class AddNewChart_Activity extends Base_Activity {
 
                                 DataChart dataChart = chartItemsMap.get(position);
 
-                                //TODO: Check if chart already exists, in some fucking way....
                                 if (!dataChart.getName().equals("Number of Steps")) {
 
                                     addMetricChart(dataChart.getChart_id());
