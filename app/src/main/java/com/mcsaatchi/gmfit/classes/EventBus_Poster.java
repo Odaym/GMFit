@@ -10,6 +10,7 @@ import java.util.List;
 
 public class EventBus_Poster {
     private String message;
+    private String chart_title;
     private String[] stringsExtra;
     private MealItem mealItem;
     private boolean createNewMealItem;
@@ -19,6 +20,11 @@ public class EventBus_Poster {
 
     public EventBus_Poster(String message) {
         this.message = message;
+    }
+
+    public EventBus_Poster(String message, String chart_title) {
+        this.message = message;
+        this.chart_title = chart_title;
     }
 
     public EventBus_Poster(String message, MealItem mealItem, boolean createNewMealItem) {
@@ -67,6 +73,10 @@ public class EventBus_Poster {
 
     public String getMessage() {
         return message;
+    }
+
+    public String getChart_title() {
+        return chart_title;
     }
 
     public List<DataChart> getDataChartsListExtra() {
