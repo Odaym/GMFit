@@ -9,7 +9,9 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
 import android.text.Html;
+import android.text.TextWatcher;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.View;
@@ -88,6 +90,8 @@ public class SignIn_Activity extends Base_Activity {
                         signInUser(emailET.getText().toString(), passwordET.getText().toString());
                     else
                         Helpers.showNoInternetDialog(SignIn_Activity.this);
+                } else {
+                    showPasswordTV.setVisibility(View.GONE);
                 }
             }
         });
@@ -114,6 +118,23 @@ public class SignIn_Activity extends Base_Activity {
                 passwordET.setSelection(passwordET.getText().length());
 
                 passwordShowing = !passwordShowing;
+            }
+        });
+
+        passwordET.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                showPasswordTV.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
             }
         });
     }
@@ -188,7 +209,7 @@ public class SignIn_Activity extends Base_Activity {
         });
     }
 
-    private void getUserProfile(final List<AuthenticationResponseChart> chartsMap, final ProgressDialog waitingDialog){
+    private void getUserProfile(final List<AuthenticationResponseChart> chartsMap, final ProgressDialog waitingDialog) {
         DataAccessHandler.getInstance().getUserProfile(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), new Callback<UserProfileResponse>() {
             @Override
             public void onResponse(Call<UserProfileResponse> call, Response<UserProfileResponse> response) {

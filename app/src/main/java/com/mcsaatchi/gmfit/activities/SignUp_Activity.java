@@ -9,7 +9,9 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
 import android.text.Html;
+import android.text.TextWatcher;
 import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.widget.Button;
@@ -71,6 +73,8 @@ public class SignUp_Activity extends Base_Activity {
 
         prefs = getSharedPreferences(Constants.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
 
+        allFields.add(firstNameET);
+        allFields.add(lastNameET);
         allFields.add(emailET);
         allFields.add(passwordET);
 
@@ -81,6 +85,8 @@ public class SignUp_Activity extends Base_Activity {
             public void onClick(View v) {
                 if (Helpers.validateFields(allFields)) {
                     registerUser(firstNameET.getText().toString() + " " + lastNameET.getText().toString(), emailET.getText().toString(), passwordET.getText().toString());
+                } else {
+                    showPasswordTV.setVisibility(View.GONE);
                 }
             }
         });
@@ -107,6 +113,23 @@ public class SignUp_Activity extends Base_Activity {
                 passwordET.setSelection(passwordET.getText().length());
 
                 passwordShowing = !passwordShowing;
+            }
+        });
+
+        passwordET.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                showPasswordTV.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
             }
         });
     }
