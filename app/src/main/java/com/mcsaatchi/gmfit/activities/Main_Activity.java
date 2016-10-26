@@ -5,8 +5,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
 import android.widget.LinearLayout;
 
 import com.mcsaatchi.gmfit.R;
@@ -34,6 +36,8 @@ public class Main_Activity extends Base_Activity {
     Toolbar toolbar;
     @Bind(R.id.mainContentLayout)
     LinearLayout mainContentLayout;
+    @Bind(R.id.myScrollingContent)
+    NestedScrollView myScrollingContent;
     @Bind(R.id.bottomBar)
     BottomBar bottomBar;
 
@@ -88,7 +92,10 @@ public class Main_Activity extends Base_Activity {
         bottomBar.setOnTabSelectListener(new OnTabSelectListener() {
             @Override
             public void onTabSelected(@IdRes int tabId) {
-                switch(tabId){
+
+                myScrollingContent.fullScroll(View.FOCUS_UP);
+
+                switch (tabId) {
                     case R.id.item_one:
                         Bundle bundle = new Bundle();
                         bundle.putParcelableArrayList(Constants.BUNDLE_FITNESS_CHARTS_MAP, finalChartsMap);
