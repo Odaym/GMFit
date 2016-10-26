@@ -11,18 +11,26 @@
         <RelativeLayout
             android:id="@+id/chartHeader"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="@dimen/chart_title_headline_bar_height"
+            android:background="@color/fitness_pink">
 
             <TextView android:id="@+id/chartTitleTV"
                       android:layout_width="match_parent"
-                      android:layout_height="@dimen/chart_title_headline_bar_height"
-                      android:background="@color/fitness_pink"
+                      android:layout_height="wrap_content"
+                      android:layout_marginTop="@dimen/default_margin_1"
                       android:gravity="center_vertical"
                       android:paddingEnd="@dimen/default_margin_2"
                       android:paddingStart="@dimen/default_margin_2"
                       android:textAppearance="?android:textAppearanceMedium"
                       android:textColor="@android:color/white"/>
 
+            <TextView android:layout_width="wrap_content"
+                      android:layout_height="wrap_content"
+                      android:layout_below="@+id/chartTitleTV"
+                      android:paddingStart="@dimen/default_margin_2"
+                      android:text="@string/chart_last_30_days_hint"
+                      android:textColor="@color/white"
+                      android:textSize="@dimen/default_small_font_size"/>
             <Button
                 android:id="@+id/showChartValuesBTN"
                 android:layout_width="30dp"
@@ -37,7 +45,6 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/chart_height"
             android:layout_below="@id/chartHeader"
-            android:layout_marginBottom="@dimen/default_margin_1"
             android:layout_marginTop="@dimen/default_margin_1"
             android:background="?android:attr/selectableItemBackground"
             android:clickable="true"
@@ -46,8 +53,10 @@
         <LinearLayout android:layout_width="match_parent"
                       android:layout_height="wrap_content"
                       android:layout_below="@id/barChart"
-                      android:gravity="center_horizontal"
+                      android:layout_marginBottom="@dimen/default_margin_1"
+                      android:gravity="center_vertical"
                       android:orientation="horizontal"
+                      android:paddingBottom="5dp"
                       android:paddingEnd="@dimen/activity_vertical_margin"
                       android:paddingStart="@dimen/activity_vertical_margin">
 
@@ -63,24 +72,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="center_horizontal"/>
+                android:gravity="center"/>
 
             <TextView
                 android:id="@+id/dateTV_3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="center_horizontal"/>
+                android:gravity="center"/>
 
             <TextView
                 android:id="@+id/dateTV_4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center_horizontal"/>
-
-            <TextView
-                android:id="@+id/dateTV_5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
