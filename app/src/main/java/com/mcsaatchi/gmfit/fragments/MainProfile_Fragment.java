@@ -136,7 +136,7 @@ public class MainProfile_Fragment extends Fragment {
 
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.profile_tab_title);
 
-        Picasso.with(getActivity()).load(new File(prefs.getString(Constants.EXTRAS_USER_PROFILE_IMAGE, ""))).resize(500, 500).transform(new CircleTransform()).centerInside().into(userProfileIV);
+        Picasso.with(getActivity()).load(new File(prefs.getString(Constants.EXTRAS_USER_PROFILE_IMAGE, ""))).resize(200, 200).transform(new CircleTransform()).centerInside().into(userProfileIV);
 
         userFullNameTV.setText(prefs.getString(Constants.EXTRAS_USER_PROFILE_USER_FULL_NAME, ""));
 
@@ -376,7 +376,7 @@ public class MainProfile_Fragment extends Fragment {
 
         switch (requestCode) {
             case CAPTURE_NEW_PICTURE_REQUEST_CODE:
-                Picasso.with(getActivity()).load(new File(prefs.getString(Constants.EXTRAS_USER_PROFILE_IMAGE, ""))).resize(500, 500).transform(new CircleTransform()).centerInside().into(userProfileIV);
+                Picasso.with(getActivity()).load(new File(prefs.getString(Constants.EXTRAS_USER_PROFILE_IMAGE, ""))).resize(200, 200).transform(new CircleTransform()).centerInside().into(userProfileIV);
 
                 prefs.edit().putString(Constants.EXTRAS_USER_PROFILE_IMAGE, photoFile.getAbsolutePath()).apply();
 

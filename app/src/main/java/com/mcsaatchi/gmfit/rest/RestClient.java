@@ -34,9 +34,9 @@ public class RestClient {
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
 
         httpClient.addInterceptor(loggingInterceptor);
-        httpClient.addInterceptor(provideOfflineCacheInterceptor());
-        httpClient.addNetworkInterceptor(provideCacheInterceptor());
-        httpClient.cache(provideCache());
+//        httpClient.addInterceptor(provideOfflineCacheInterceptor());
+//        httpClient.addNetworkInterceptor(provideCacheInterceptor());
+//        httpClient.cache(provideCache());
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Constants.BASE_URL_ADDRESS)
@@ -67,7 +67,7 @@ public class RestClient {
 
                 // re-write response header to force use of cache
                 CacheControl cacheControl = new CacheControl.Builder()
-                        .maxAge(15, TimeUnit.MINUTES)
+                        .maxAge(1, TimeUnit.MINUTES)
                         .build();
 
                 return response.newBuilder()
@@ -85,7 +85,7 @@ public class RestClient {
 
                 if (!GMFit_Application.hasNetwork()) {
                     CacheControl cacheControl = new CacheControl.Builder()
-                            .maxStale(7, TimeUnit.DAYS)
+                            .maxStale(1, TimeUnit.MINUTES)
                             .build();
 
                     request = request.newBuilder()
