@@ -591,6 +591,22 @@ public class ApiCallsHandler {
         });
     }
 
+    void deleteUserChart(String userAccessToken, String chart_id, final Callback<DefaultGetResponse> callback){
+        Call<DefaultGetResponse> apiCall = new RestClient().getGMFitService().deleteUserChart(userAccessToken, new DeleteUserChartRequest(chart_id));
+
+        apiCall.enqueue(new Callback<DefaultGetResponse>() {
+            @Override
+            public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
+                callback.onResponse(call, response);
+            }
+
+            @Override
+            public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+                callback.onFailure(call, t);
+            }
+        });
+    }
+
     public class UpdateMetricsRequest {
         final String[] slug;
         final int[] value;
@@ -743,6 +759,14 @@ public class ApiCallsHandler {
 
         RequestMealRequest(String name) {
             this.name = name;
+        }
+    }
+
+    public class DeleteUserChartRequest{
+        final String chart_id;
+
+        public DeleteUserChartRequest(String chart_id) {
+            this.chart_id = chart_id;
         }
     }
 }

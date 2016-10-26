@@ -131,4 +131,7 @@ public interface GMFit_Service {
 
     @GET("emergency")
     Call<EmergencyProfileResponse> getEmergencyProfile(@Header(Constants.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken);
+
+    @POST("user/charts/delete")
+    Call<DefaultGetResponse> deleteUserChart(@Header(Constants.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken, @Body ApiCallsHandler.DeleteUserChartRequest chart_id);
 }

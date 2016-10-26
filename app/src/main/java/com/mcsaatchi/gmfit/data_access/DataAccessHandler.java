@@ -177,4 +177,8 @@ public class DataAccessHandler {
     public void getEmergencyProfile(String userAccessToken, Callback<EmergencyProfileResponse> callback){
         ApiCallsHandler.getInstance().getEmergencyProfile(userAccessToken, callback);
     }
+
+    public void deleteUserChart(String userAccessToken, String chart_id, Callback<DefaultGetResponse> callback){
+        ApiCallsHandler.getInstance().deleteUserChart(userAccessToken, chart_id, callback);
+    }
 }

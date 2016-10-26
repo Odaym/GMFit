@@ -27,6 +27,7 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
@@ -480,7 +481,16 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
                     setupWidgetViews(widgetsMap);
                 }
                 break;
-//            case Constants.EXTRAS_FITNESS_CHART_DELETED:
+            case Constants.EXTRAS_FITNESS_CHART_DELETED:
+                String chart_title = ebp.getChart_title();
+
+                for (int i = 0; i < chartsMap.size(); i++) {
+                    if (chartsMap.get(i).getName().equals(chart_title)) {
+                        deleteUserChart(String.valueOf(chartsMap.get(i).getChart_id()));
+                        chartsMap.remove(i);
+                    }
+                }
+                break;
             case Constants.EXTRAS_FITNESS_CHARTS_ORDER_ARRAY_CHANGED:
                 List<DataChart> allDataCharts = ebp.getDataChartsListExtra();
 
@@ -542,5 +552,49 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
 
             }
         });
+    }
+
+    private void deleteUserChart(String chart_id) {
+        final ProgressDialog waitingDialog = new ProgressDialog(getActivity());
+        waitingDialog.setTitle(getActivity().getResources().getString(R.string.deleting_chart_dialog_title));
+        waitingDialog.setMessage(getActivity().getResources().getString(R.string.please_wait_dialog_message));
+        waitingDialog.show();
+
+        final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+        alertDialog.setTitle(R.string.deleting_chart_dialog_title);
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getActivity().getResources().getString(R.string.ok),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+
+                        if (waitingDialog.isShowing())
+                            waitingDialog.dismiss();
+                    }
+                });
+
+        DataAccessHandler.getInstance().deleteUserChart(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), chart_id,
+                new Callback<DefaultGetResponse>() {
+                    @Override
+                    public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
+                        switch (response.code()) {
+                            case 200:
+                                waitingDialog.dismiss();
+
+                                Toast.makeText(parentActivity, "Chart deleted successfully", Toast.LENGTH_SHORT).show();
+
+                                cards_container.removeAllViews();
+
+                                setupChartViews(chartsMap);
+
+                                break;
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+                        alertDialog.setMessage(getActivity().getString(R.string.error_response_from_server_incorrect));
+                        alertDialog.show();
+                    }
+                });
     }
 }
