@@ -187,7 +187,7 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
         return fragmentView;
     }
 
-    private void getDefaultChartMonthlyBreakdown(final BarChart barchart, final TextView dateTV_1, final TextView dateTV_2, final TextView dateTV_3, final TextView dateTV_4, final TextView dateTV_5, final String chart_slug) {
+    private void getDefaultChartMonthlyBreakdown(final BarChart barchart, final TextView dateTV_1, final TextView dateTV_2, final TextView dateTV_3, final TextView dateTV_4, final String chart_slug) {
         final String todayDate;
         todayDate = dt.toString();
 
@@ -223,21 +223,17 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
 
                                     switch (i) {
                                         case 0:
-                                            dateTV_1.setText(date.monthOfYear().getAsText().substring(0, 3) + "-" + date.getDayOfMonth());
+                                            dateTV_1.setText(date.getDayOfMonth() + " " + date.monthOfYear().getAsText().substring(0, 3));
                                             break;
                                         case 7:
-                                            dateTV_2.setText(date.monthOfYear().getAsText().substring(0, 3) + "-" + date.getDayOfMonth());
+                                            dateTV_2.setText(date.getDayOfMonth() + " " + date.monthOfYear().getAsText().substring(0, 3));
                                             break;
                                         case 14:
-                                            dateTV_3.setText(date.monthOfYear().getAsText().substring(0, 3) + "-" + date.getDayOfMonth());
+                                            dateTV_3.setText(date.getDayOfMonth() + " " + date.monthOfYear().getAsText().substring(0, 3));
                                             break;
                                         case 21:
-                                            dateTV_4.setText(date.monthOfYear().getAsText().substring(0, 3) + "-" + date.getDayOfMonth());
+                                            dateTV_4.setText(date.getDayOfMonth() + " " + date.monthOfYear().getAsText().substring(0, 3));
                                             break;
-                                    }
-
-                                    if (i == newChartData.size() - 1) {
-                                        dateTV_5.setText(date.monthOfYear().getAsText().substring(0, 3) + "-" + date.getDayOfMonth());
                                     }
                                 }
 
@@ -304,7 +300,7 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
     }
 
     public void addNewBarChart(final String chartTitle, final String chartType) {
-        final TextView dateTV_1, dateTV_2, dateTV_3, dateTV_4, dateTV_5;
+        final TextView dateTV_1, dateTV_2, dateTV_3, dateTV_4;
 
         final View barChartLayout = getActivity().getLayoutInflater().inflate(R.layout.view_barchart_container, null);
 
@@ -312,7 +308,6 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
         dateTV_2 = (TextView) barChartLayout.findViewById(R.id.dateTV_2);
         dateTV_3 = (TextView) barChartLayout.findViewById(R.id.dateTV_3);
         dateTV_4 = (TextView) barChartLayout.findViewById(R.id.dateTV_4);
-        dateTV_5 = (TextView) barChartLayout.findViewById(R.id.dateTV_5);
 
         final TextView chartTitleTV_NEW_CHART = (TextView) barChartLayout.findViewById(R.id.chartTitleTV);
         final BarChart barChart = (BarChart) barChartLayout.findViewById(R.id.barChart);
@@ -329,16 +324,13 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
          */
         switch (chartType) {
             case "steps-count":
-                getDefaultChartMonthlyBreakdown(barChart, dateTV_1, dateTV_2, dateTV_3, dateTV_4, dateTV_5,
-                        "steps-count");
+                getDefaultChartMonthlyBreakdown(barChart, dateTV_1, dateTV_2, dateTV_3, dateTV_4, "steps-count");
                 break;
             case "active-calories":
-                getDefaultChartMonthlyBreakdown(barChart, dateTV_1, dateTV_2, dateTV_3, dateTV_4, dateTV_5,
-                        "active-calories");
+                getDefaultChartMonthlyBreakdown(barChart, dateTV_1, dateTV_2, dateTV_3, dateTV_4, "active-calories");
                 break;
             case "distance-traveled":
-                getDefaultChartMonthlyBreakdown(barChart, dateTV_1, dateTV_2, dateTV_3, dateTV_4, dateTV_5,
-                        "distance-traveled");
+                getDefaultChartMonthlyBreakdown(barChart, dateTV_1, dateTV_2, dateTV_3, dateTV_4, "distance-traveled");
                 break;
         }
 

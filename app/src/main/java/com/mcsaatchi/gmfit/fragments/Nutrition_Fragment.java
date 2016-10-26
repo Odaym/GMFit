@@ -763,7 +763,7 @@ public class Nutrition_Fragment extends Fragment {
     }
 
     private void addNewBarChart(final String chartTitle) {
-        final TextView dateTV_1, dateTV_2, dateTV_3, dateTV_4, dateTV_5;
+        final TextView dateTV_1, dateTV_2, dateTV_3, dateTV_4;
 
         final View barChartLayout = parentActivity.getLayoutInflater().inflate(R.layout.view_barchart_container, null);
 
@@ -771,7 +771,6 @@ public class Nutrition_Fragment extends Fragment {
         dateTV_2 = (TextView) barChartLayout.findViewById(R.id.dateTV_2);
         dateTV_3 = (TextView) barChartLayout.findViewById(R.id.dateTV_3);
         dateTV_4 = (TextView) barChartLayout.findViewById(R.id.dateTV_4);
-        dateTV_5 = (TextView) barChartLayout.findViewById(R.id.dateTV_5);
 
         TextView chartTitleTV = (TextView) barChartLayout.findViewById(R.id.chartTitleTV);
         final BarChart barChart = (BarChart) barChartLayout.findViewById(R.id.barChart);
@@ -782,7 +781,7 @@ public class Nutrition_Fragment extends Fragment {
         if (chartTitle != null)
             chartTitleTV.setText(chartTitle);
 
-        getDefaultChartMonthlyBreakdown(barChart, dateTV_1, dateTV_2, dateTV_3, dateTV_4, dateTV_5, chartTitle);
+        getDefaultChartMonthlyBreakdown(barChart, dateTV_1, dateTV_2, dateTV_3, dateTV_4, chartTitle);
 
         if (isAdded()) {
             LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, getResources().getDimensionPixelSize(R
@@ -862,7 +861,7 @@ public class Nutrition_Fragment extends Fragment {
         });
     }
 
-    private void getDefaultChartMonthlyBreakdown(final BarChart barchart, final TextView dateTV_1, final TextView dateTV_2, final TextView dateTV_3, final TextView dateTV_4, final TextView dateTV_5, final String chart_slug) {
+    private void getDefaultChartMonthlyBreakdown(final BarChart barchart, final TextView dateTV_1, final TextView dateTV_2, final TextView dateTV_3, final TextView dateTV_4, final String chart_slug) {
         final String todayDate;
         todayDate = dt.toString();
 
@@ -888,21 +887,17 @@ public class Nutrition_Fragment extends Fragment {
 
                                 switch (i) {
                                     case 0:
-                                        dateTV_1.setText(date.monthOfYear().getAsText().substring(0, 3) + "-" + date.getDayOfMonth());
+                                        dateTV_1.setText(date.getDayOfMonth() + " " + date.monthOfYear().getAsText().substring(0, 3));
                                         break;
                                     case 7:
-                                        dateTV_2.setText(date.monthOfYear().getAsText().substring(0, 3) + "-" + date.getDayOfMonth());
+                                        dateTV_2.setText(date.getDayOfMonth() + " " + date.monthOfYear().getAsText().substring(0, 3));
                                         break;
                                     case 14:
-                                        dateTV_3.setText(date.monthOfYear().getAsText().substring(0, 3) + "-" + date.getDayOfMonth());
+                                        dateTV_3.setText(date.getDayOfMonth() + " " + date.monthOfYear().getAsText().substring(0, 3));
                                         break;
                                     case 21:
-                                        dateTV_4.setText(date.monthOfYear().getAsText().substring(0, 3) + "-" + date.getDayOfMonth());
+                                        dateTV_4.setText(date.getDayOfMonth() + " " + date.monthOfYear().getAsText().substring(0, 3));
                                         break;
-                                }
-
-                                if (i == newChartData.size() - 1) {
-                                    dateTV_5.setText(date.monthOfYear().getAsText().substring(0, 3) + "-" + date.getDayOfMonth());
                                 }
                             }
 
