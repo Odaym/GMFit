@@ -15,6 +15,8 @@ import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.classes.Constants;
 import com.mcsaatchi.gmfit.rest.SlugBreakdownResponseMonthly;
 
+import org.joda.time.DateTime;
+
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Locale;
@@ -112,7 +114,9 @@ public class SlugBreakdown_Fragment_Monthly extends Fragment {
                 holder = (ViewHolder) convertView.getTag();
             }
 
-            holder.slugDateTV.setText(getItem(position).getDate());
+            DateTime entryDate = new DateTime(getItem(position).getDate());
+
+            holder.slugDateTV.setText(entryDate.getDayOfMonth() + " " + entryDate.monthOfYear().getAsText() + " " + entryDate.getYear());
             holder.slugTotalTV.setText(NumberFormat.getNumberInstance(Locale.US).format((int) Double.parseDouble(getItem(position).getTotal())) + " " + measurementUnit);
 
             return convertView;

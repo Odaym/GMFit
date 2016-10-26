@@ -15,6 +15,8 @@ import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.classes.Constants;
 import com.mcsaatchi.gmfit.rest.SlugBreakdownResponseDaily;
 
+import org.joda.time.DateTime;
+
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Locale;
@@ -51,7 +53,7 @@ public class SlugBreakdown_Fragment_Daily extends Fragment {
 
             measurementUnitForMetric = fragmentBundle.getString(Constants.BUNDLE_SLUG_BREAKDOWN_MEASUREMENT_UNIT, "");
 
-            float slugBreakdownYearlyTotal =  fragmentBundle.getFloat(Constants.BUNDLE_SLUG_BREAKDOWN_YEARLY_TOTAL, 0);
+            float slugBreakdownYearlyTotal = fragmentBundle.getFloat(Constants.BUNDLE_SLUG_BREAKDOWN_YEARLY_TOTAL, 0);
             allTimeValueTV.setText(NumberFormat.getNumberInstance(Locale.US).format((int) Double.parseDouble(String.valueOf(slugBreakdownYearlyTotal))) + " " + measurementUnitForMetric);
 
             hookupListWithItems(slugBreakdownData, measurementUnitForMetric);
@@ -112,7 +114,10 @@ public class SlugBreakdown_Fragment_Daily extends Fragment {
                 holder = (ViewHolder) convertView.getTag();
             }
 
-            holder.slugDateTV.setText(getItem(position).getDate());
+            DateTime entryDate = new DateTime(getItem(position).getDate());
+
+            holder.slugDateTV.setText(entryDate.getDayOfMonth() + " " + entryDate.monthOfYear().getAsText() + ", " + entryDate.getYear());
+
             holder.slugTotalTV.setText(NumberFormat.getNumberInstance(Locale.US).format((int) Double.parseDouble(getItem(position).getTotal())) + " " + measurementUnit);
 
             return convertView;
