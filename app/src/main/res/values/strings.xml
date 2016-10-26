@@ -169,6 +169,7 @@
     <string name="drag_to_reorder_charts">Drag to re-order your homescreen charts</string>
     <string name="add_new_chart_button">+ Add New Chart</string>
     <string name="grabbing_breakdown_data_dialog_title">Fetching metric data</string>
+    <string name="deleting_chart_dialog_title">Deleting chart</string>
 
     <!-- BREAKDOWN ACTIVITY -->
     <string name="all_time_breakdown_bar_hint">All Time</string>
