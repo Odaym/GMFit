@@ -61,7 +61,7 @@ import com.mcsaatchi.gmfit.rest.UserMealsResponseBreakfast;
 import com.mcsaatchi.gmfit.rest.UserMealsResponseDinner;
 import com.mcsaatchi.gmfit.rest.UserMealsResponseLunch;
 import com.mcsaatchi.gmfit.rest.UserMealsResponseSnack;
-import com.mcsaatchi.gmfit.touch_helpers.SimpleDragSwipeItemTouchHelperCallback;
+import com.mcsaatchi.gmfit.touch_helpers.SimpleSwipeItemTouchHelperCallback;
 import com.squareup.otto.Subscribe;
 
 import org.joda.time.DateTime;
@@ -244,8 +244,6 @@ public class Nutrition_Fragment extends Fragment {
                     String chartTitle = data.getStringExtra(Constants.EXTRAS_CHART_FULL_NAME);
 
                     addNewBarChart(chartTitle);
-//TODO:
-//                    dataChartDAO.create(new DataChart(chartTitle, "", dataChartDAO.queryForAll().size() + 1, userEmail, Constants.EXTRAS_NUTRITION_FRAGMENT));
                 }
                 break;
             case BARCODE_CAPTURE_RC:
@@ -583,7 +581,7 @@ public class Nutrition_Fragment extends Fragment {
         ItemTouchHelper touchHelper;
 
         userMealsRecyclerAdapter = new UserMeals_RecyclerAdapterDragSwipe(getActivity(), mealItems);
-        callback = new SimpleDragSwipeItemTouchHelperCallback(userMealsRecyclerAdapter);
+        callback = new SimpleSwipeItemTouchHelperCallback(userMealsRecyclerAdapter);
         touchHelper = new ItemTouchHelper(callback);
 
         switch (mealType) {
@@ -615,84 +613,11 @@ public class Nutrition_Fragment extends Fragment {
         String ebpMessage = ebp.getMessage();
 
         switch (ebpMessage) {
+            case Constants.EXTRAS_DELETED_MEAL_ENTRY:
             case Constants.EXTRAS_UPDATED_MEAL_ENTRY:
-                Log.d(TAG, "handle_BusEvents: Updating existing meal");
-
-                if (ebp.getMealItemExtra() != null) {
-                    MealItem freshlyUpdatedMealItem = ebp.getMealItemExtra();
-
-                    switch (freshlyUpdatedMealItem.getType()) {
-                        case "Breakfast":
-                            findMealInList(finalBreakfastMeals, freshlyUpdatedMealItem);
-                            setupMealSectionsListView(finalBreakfastMeals, freshlyUpdatedMealItem.getType());
-                            break;
-                        case "Lunch":
-                            findMealInList(finalLunchMeals, freshlyUpdatedMealItem);
-                            setupMealSectionsListView(finalLunchMeals, freshlyUpdatedMealItem.getType());
-                            break;
-                        case "Dinner":
-                            findMealInList(finalDinnerMeals, freshlyUpdatedMealItem);
-                            setupMealSectionsListView(finalDinnerMeals, freshlyUpdatedMealItem.getType());
-                            break;
-                        case "Snack":
-                            findMealInList(finalSnackMeals, freshlyUpdatedMealItem);
-                            setupMealSectionsListView(finalSnackMeals, freshlyUpdatedMealItem.getType());
-                            break;
-                    }
-                }
-
-                break;
             case Constants.EXTRAS_CREATED_NEW_MEAL_ENTRY:
-                if (ebp.getMealItemExtra() != null) {
-                    MealItem chosenMealFromList = ebp.getMealItemExtra();
-
-                    MealItem newMealItem = new MealItem();
-                    newMealItem.setMeal_id(chosenMealFromList.getMeal_id());
-                    newMealItem.setInstance_id(chosenMealFromList.getInstance_id());
-                    newMealItem.setTotalCalories(chosenMealFromList.getTotalCalories());
-                    newMealItem.setAmount(chosenMealFromList.getAmount());
-                    newMealItem.setMeasurementUnit(chosenMealFromList.getMeasurementUnit());
-                    newMealItem.setName(chosenMealFromList.getName());
-                    newMealItem.setSectionType(ITEM_VIEWTYPE);
-
-                    switch (chosenMealFromList.getType()) {
-                        case "Breakfast":
-
-                            newMealItem.setType("Breakfast");
-
-                            finalBreakfastMeals.add(newMealItem);
-
-                            setupMealSectionsListView(finalBreakfastMeals, chosenMealFromList.getType());
-
-                            break;
-                        case "Lunch":
-                            newMealItem.setType("Lunch");
-
-                            finalLunchMeals.add(newMealItem);
-
-                            setupMealSectionsListView(finalLunchMeals, chosenMealFromList.getType());
-
-                            break;
-                        case "Dinner":
-                            newMealItem.setType("Dinner");
-
-                            finalDinnerMeals.add(newMealItem);
-
-                            setupMealSectionsListView(finalDinnerMeals, chosenMealFromList.getType());
-
-                            break;
-                        case "Snack":
-                            newMealItem.setType("Snack");
-
-                            finalSnackMeals.add(newMealItem);
-
-                            setupMealSectionsListView(finalSnackMeals, chosenMealFromList.getType());
-
-                            break;
-                    }
-
-                    getUiForSection("nutrition");
-                }
+                getUserAddedMeals();
+                getUiForSection("nutrition");
 
                 break;
             case Constants.EXTRAS_NUTRITION_WIDGETS_ORDER_ARRAY_CHANGED:
