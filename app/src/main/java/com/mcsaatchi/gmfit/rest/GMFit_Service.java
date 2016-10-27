@@ -101,6 +101,9 @@ public interface GMFit_Service {
     @POST("user/meals/store")
     Call<DefaultGetResponse> storeNewMeal(@Header(Constants.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken, @Body ApiCallsHandler.StoreNewMealRequest storeNewMealRequest);
 
+    @POST("user/meals/delete")
+    Call<DefaultGetResponse> deleteUserMeal(@Header(Constants.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken, @Body ApiCallsHandler.DeleteMealRequest deleteMealRequest);
+
     @GET
     Call<RecentMealsResponse> getRecentMeals(@Header(Constants.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken, @Url String fullUrl);
 

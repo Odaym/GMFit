@@ -114,6 +114,10 @@ public class DataAccessHandler {
         ApiCallsHandler.getInstance().updateUserMeals(userAccessToken, instance_id, amount, callback);
     }
 
+    public void deleteUserMeal(String userAccessToken, int instance_id, Callback<DefaultGetResponse> callback) {
+        ApiCallsHandler.getInstance().deleteUserMeal(userAccessToken, instance_id, callback);
+    }
+
     public void getUserAddedMeals(String userAccessToken, Callback<UserMealsResponse> callback) {
         ApiCallsHandler.getInstance().getUserAddedMeals(userAccessToken, callback);
     }
