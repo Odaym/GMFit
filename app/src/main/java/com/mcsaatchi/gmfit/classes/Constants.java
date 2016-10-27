@@ -59,6 +59,7 @@ public class Constants {
     public static final String EXTRAS_MAIN_MEAL_NAME = "main_meal_name";
     public static final String EXTRAS_CREATED_NEW_MEAL_ENTRY = "created_new_meal_entry";
     public static final String EXTRAS_UPDATED_MEAL_ENTRY = "updated_meal_entry";
+    public static final String EXTRAS_DELETED_MEAL_ENTRY = "deleted_meal_entry";
     public static final String EXTRAS_TEST_TITLE = "test_title";
     public static final String EXTRAS_TEST_SLUG = "test_slug";
     public static final String EXTRAS_TEST_DATE_TAKEN = "test_date_taken";
