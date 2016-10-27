@@ -14,6 +14,8 @@ import com.mcsaatchi.gmfit.activities.AddHealthTestDetails_Activity;
 import com.mcsaatchi.gmfit.classes.Constants;
 import com.mcsaatchi.gmfit.rest.TakenMedicalTestsResponseBody;
 
+import org.joda.time.DateTime;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,7 +44,9 @@ public class UserTestsRecycler_Adapter extends RecyclerView.Adapter<UserTestsRec
 
         holder.itemNameTV.setText(userTest.getName());
 
-        holder.itemSubtitleTV.setText(userTest.getDateTaken());
+        DateTime entryDate = new DateTime(userTest.getDateTaken());
+
+        holder.itemSubtitleTV.setText(entryDate.dayOfWeek().getAsText() + " " + entryDate.getDayOfMonth() + " " + entryDate.monthOfYear().getAsText() + ", " + entryDate.getYear());
     }
 
     @Override
