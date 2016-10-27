@@ -80,7 +80,6 @@
                 android:background="@android:color/white"
                 android:choiceMode="singleChoice"
                 android:dividerHeight="0.5dp"
-                android:drawSelectorOnTop="true"
                 android:gravity="center"
                 android:scrollbarStyle="outsideOverlay"/>
         </LinearLayout>
