@@ -127,7 +127,6 @@ public class SpecifyMealAmount_Activity extends Base_Activity {
                             nutritionalFacts.add(nutritionalFact);
                         }
 
-
                         if (nutritionalFacts.size() > 0) {
                             int caloriesForThisMeal = 0;
 
@@ -215,6 +214,8 @@ public class SpecifyMealAmount_Activity extends Base_Activity {
                                 resultIntent.putExtra(Constants.EXTRAS_MEAL_OBJECT_DETAILS, mealItem);
                                 setResult(MEAL_AMOUNT_SPECIFIED, resultIntent);
 
+                                EventBus_Singleton.getInstance().post(new EventBus_Poster(Constants.EXTRAS_CREATED_NEW_MEAL_ENTRY));
+
                                 finish();
 
                                 break;
@@ -240,7 +241,7 @@ public class SpecifyMealAmount_Activity extends Base_Activity {
                                 mealItem.setAmount(mealAmountET.getText().toString());
                                 mealItem.setTotalCalories(Integer.parseInt(mealItem.getAmount()) * caloriesForThisMeal);
 
-                                EventBus_Singleton.getInstance().post(new EventBus_Poster(Constants.EXTRAS_UPDATED_MEAL_ENTRY, mealItem, true));
+                                EventBus_Singleton.getInstance().post(new EventBus_Poster(Constants.EXTRAS_UPDATED_MEAL_ENTRY));
 
                                 finish();
 
