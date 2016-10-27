@@ -3,17 +3,12 @@ package com.mcsaatchi.gmfit.touch_helpers;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 
-public class SimpleDragSwipeItemTouchHelperCallback extends ItemTouchHelper.Callback {
+public class SimpleSwipeItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
     private final Drag_Swipe_ItemTouchHelperAdapter mAdapter;
 
-    public SimpleDragSwipeItemTouchHelperCallback(Drag_Swipe_ItemTouchHelperAdapter adapter) {
+    public SimpleSwipeItemTouchHelperCallback(Drag_Swipe_ItemTouchHelperAdapter adapter) {
         mAdapter = adapter;
-    }
-
-    @Override
-    public boolean isLongPressDragEnabled() {
-        return true;
     }
 
     @Override
@@ -28,15 +23,12 @@ public class SimpleDragSwipeItemTouchHelperCallback extends ItemTouchHelper.Call
 
     @Override
     public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-        int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
         int swipeFlags = ItemTouchHelper.START | ItemTouchHelper.END;
-        return makeMovementFlags(dragFlags, swipeFlags);
+        return makeMovementFlags(0, swipeFlags);
     }
 
     @Override
-    public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder,
-                          RecyclerView.ViewHolder target) {
-        mAdapter.onItemMove(viewHolder.getAdapterPosition(), target.getAdapterPosition());
-        return true;
+    public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+        return false;
     }
 }
