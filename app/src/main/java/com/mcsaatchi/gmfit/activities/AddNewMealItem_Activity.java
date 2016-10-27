@@ -27,8 +27,6 @@ import android.widget.TextView;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.adapters.SimpleSectioned_ListAdapter;
 import com.mcsaatchi.gmfit.classes.Constants;
-import com.mcsaatchi.gmfit.classes.EventBus_Poster;
-import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
 import com.mcsaatchi.gmfit.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.models.MealItem;
 import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
@@ -114,7 +112,6 @@ public class AddNewMealItem_Activity extends Base_Activity {
                     Intent intent = new Intent(AddNewMealItem_Activity.this, SpecifyMealAmount_Activity.class);
                     intent.putExtra(Constants.EXTRAS_MEAL_OBJECT_DETAILS, mealItems.get(position));
                     startActivityForResult(intent, MEAL_AMOUNT_SPECIFIED);
-
                 }
             }
         });
@@ -293,7 +290,11 @@ public class AddNewMealItem_Activity extends Base_Activity {
             if (mealItem != null) {
                 switch (resultCode) {
                     case MEAL_AMOUNT_SPECIFIED:
-                        EventBus_Singleton.getInstance().post(new EventBus_Poster(Constants.EXTRAS_CREATED_NEW_MEAL_ENTRY, mealItem, true));
+                        /**
+                         * Meal amount specified from SpecifyMealAmount_Activity and this is a new meal
+                         */
+                        finish();
+
                         break;
                 }
 
@@ -322,7 +323,7 @@ public class AddNewMealItem_Activity extends Base_Activity {
 
     private void loadRecentMealsFromServer(String mealType) {
         if (mealType.equals("Snacks"))
-            mealType = "snack";
+            mealType = "Snack";
 
         final String finalMealType = mealType;
 
