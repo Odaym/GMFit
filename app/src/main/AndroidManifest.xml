@@ -99,6 +99,11 @@
                   android:theme="@style/No_Action_Bar_Theme"
                   android:windowSoftInputMode="stateHidden"/>
 
+        <activity android:name=".activities.AddNewMealOnDate_Activity"
+                  android:screenOrientation="portrait"
+                  android:theme="@style/No_Action_Bar_Theme"
+                  android:windowSoftInputMode="stateHidden"/>
+
         <activity android:name=".activities.AddNewHealthTest_Activity"
                   android:screenOrientation="portrait"
                   android:theme="@style/No_Action_Bar_Theme"

@@ -66,7 +66,7 @@ public class SlugBreakdown_Activity extends Base_Activity {
 
             setupToolbar(toolbar, chartTitle, true);
 
-            typeOfFragmentToCustomizeFor = intentExtras.getString(Constants.EXTRAS_CUSTOMIZE_WIDGETS_CHARTS_FRAGMENT_TYPE);
+            typeOfFragmentToCustomizeFor = intentExtras.getString(Constants.EXTRAS_FRAGMENT_TYPE);
             slugBreakdownData = intentExtras.getParcelable(Constants.BUNDLE_SLUG_BREAKDOWN_DATA);
             chartType = intentExtras.getString(Constants.EXTRAS_CHART_TYPE_SELECTED, "");
             chartTitle = intentExtras.getString(Constants.EXTRAS_CHART_FULL_NAME, "");
@@ -84,7 +84,7 @@ public class SlugBreakdown_Activity extends Base_Activity {
         }
 
         SlugBreakdownViewPager_Adapter fragmentsPagerAdapter = new SlugBreakdownViewPager_Adapter(getSupportFragmentManager(), tabTitles, slugBreakdownData,
-                chartType);
+                chartType, typeOfFragmentToCustomizeFor);
 
         tabs.setDistributeEvenly(true);
         tabs.setSelectedIndicatorColors(getResources().getColor(android.R.color.white));
@@ -142,13 +142,14 @@ public class SlugBreakdown_Activity extends Base_Activity {
         private SlugBreakdownResponseInnerData slugBreakdownData;
         private String chartType;
         private String measurementUnit;
+        private String typeOfFragmentToCustomizeFor;
 
-        SlugBreakdownViewPager_Adapter(FragmentManager fm, String[] tabTitles, SlugBreakdownResponseInnerData slugBreakdownData, String chartType) {
+        SlugBreakdownViewPager_Adapter(FragmentManager fm, String[] tabTitles, SlugBreakdownResponseInnerData slugBreakdownData, String chartType, String typeOfFragmentToCustomizeFor) {
             super(fm);
 
             this.tabTitles = tabTitles;
             this.slugBreakdownData = slugBreakdownData;
-
+            this.typeOfFragmentToCustomizeFor = typeOfFragmentToCustomizeFor;
             this.chartType = chartType;
 
             switch (this.chartType) {
@@ -169,7 +170,7 @@ public class SlugBreakdown_Activity extends Base_Activity {
         @Override
         public Fragment getItem(int position) {
             Bundle fragmentArguments = new Bundle();
-//            fragmentArguments.putString(Constants.EXTRAS_CUSTOMIZE_WIDGETS_CHARTS_FRAGMENT_TYPE, typeOfFragmentToCustomizeFor);
+            fragmentArguments.putString(Constants.EXTRAS_FRAGMENT_TYPE, typeOfFragmentToCustomizeFor);
 
             Fragment slugBreakdownFragment;
 

@@ -334,6 +334,22 @@ public class ApiCallsHandler {
         });
     }
 
+    void getUserAddedMealsOnDate(String userAccessToken, String chosenDate, final Callback<UserMealsResponse> callback) {
+        Call<UserMealsResponse> apiCall = new RestClient().getGMFitService().getUserAddedMealsOnDate(userAccessToken, chosenDate, chosenDate);
+
+        apiCall.enqueue(new Callback<UserMealsResponse>() {
+            @Override
+            public void onResponse(Call<UserMealsResponse> call, Response<UserMealsResponse> response) {
+                callback.onResponse(call, response);
+            }
+
+            @Override
+            public void onFailure(Call<UserMealsResponse> call, Throwable t) {
+                callback.onFailure(call, t);
+            }
+        });
+    }
+
     void getUserPolicy(String userAccessToken, final Callback<UserPolicyResponse> callback) {
         Call<UserPolicyResponse> apiCall = new RestClient().getGMFitService().getUserPolicy(userAccessToken);
 
@@ -662,20 +678,20 @@ public class ApiCallsHandler {
         final String blood_type;
         final String country;
         final String metric_system;
-        final int medical_condition;
+        final int medical_conditions;
         final String goal;
         final int gender;
         final double height;
         final double weight;
         final double BMI;
 
-        UpdateProfileRequest(String date_of_birth, String blood_type, String country, int medical_condition, String metric_system, String goal, int
+        UpdateProfileRequest(String date_of_birth, String blood_type, String country, int medical_conditions, String metric_system, String goal, int
                 gender, double height, double weight, double BMI) {
             this.date_of_birth = date_of_birth;
             this.blood_type = blood_type;
             this.country = country;
             this.metric_system = metric_system;
-            this.medical_condition = medical_condition;
+            this.medical_conditions = medical_conditions;
             this.goal = goal;
             this.gender = gender;
             this.height = height;

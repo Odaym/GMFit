@@ -51,7 +51,7 @@ public class CustomizeCharts_Fragment extends Fragment {
 
         if (fragmentBundle != null) {
 
-            typeOfFragmentToCustomizeFor = fragmentBundle.getString(Constants.EXTRAS_CUSTOMIZE_WIDGETS_CHARTS_FRAGMENT_TYPE);
+            typeOfFragmentToCustomizeFor = fragmentBundle.getString(Constants.EXTRAS_FRAGMENT_TYPE);
 
             if (typeOfFragmentToCustomizeFor != null) {
                 switch (typeOfFragmentToCustomizeFor) {

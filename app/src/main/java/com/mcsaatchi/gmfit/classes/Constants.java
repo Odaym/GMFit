@@ -33,15 +33,20 @@ public class Constants {
     public static final String EXTRAS_NUTRITION_FRAGMENT = "NUTRITION";
     public static final String EXTRAS_HEALTH_FRAGMENT = "HEALTH";
 
+    public static final String EXTRAS_FRAGMENT_TYPE = "customize_widgets_charts_fragment_type";
     public static final String EXTRAS_ADD_CHART_WHAT_TYPE = "add_chart_what_type";
     public static final String EXTRAS_CHART_TYPE_SELECTED = "chart_type_selected";
     public static final String EXTRAS_CHART_FULL_NAME = "chart_full_name";
     public static final String EXTRAS_CHART_OBJECT = "chart_object";
     public static final String EXTRAS_MEAL_OBJECT_DETAILS = "meal_object_details";
+    public static final String EXTRAS_MEAL_ITEM_PURPOSE_ADDING_TO_DATE = "meal_item_purpose_adding_to_date";
+    public static final String EXTRAS_DATE_TO_ADD_MEAL_ON = "date_to_add_meal_on";
     public static final String EXTRAS_TEST_OBJECT_DETAILS = "test_object_details";
     public static final String EXTRAS_TEST_METRICS = "test_metrics";
     public static final String EXTRAS_TEST_IMAGES = "test_images";
     public static final String EXTRAS_TEST_INSTANCE_ID = "test_instance_id";
+    public static final String EXTRAS_CREATED_NEW_MEAL_ENTRY_ON_DATE = "created_new_meal_entry_on_date";
+    public static final String EXTRAS_UPDATED_MEAL_ENTRY_ON_DATE = "updated_meal_entry_on_date";
     public static final String EXTRAS_TEST_ITEM_PURPOSE_EDITING = "test_item_purpose_editing";
     public static final String EXTRAS_MEAL_ITEM_PURPOSE_EDITING = "meal_item_purpose_editing";
 
@@ -53,7 +58,6 @@ public class Constants {
     public static final String EXTRAS_FITNESS_CHARTS_ORDER_ARRAY_CHANGED = "fitness_charts_order_array_changed";
     public static final String EXTRAS_NUTRITION_CHARTS_ORDER_ARRAY_CHANGED = "nutrition_charts_order_array_changed";
     public static final String EXTRAS_HEALTH_CHARTS_ORDER_ARRAY_CHANGED = "health_charts_order_array_changed";
-    public static final String EXTRAS_CUSTOMIZE_WIDGETS_CHARTS_FRAGMENT_TYPE = "customize_widgets_charts_fragment_type";
     public static final String EXTRAS_ADD_FITNESS_CHART = "add_fitness_chart";
     public static final String EXTRAS_ADD_NUTRIITION_CHART = "add_nutrition_chart";
     public static final String EXTRAS_MAIN_MEAL_NAME = "main_meal_name";

@@ -284,7 +284,7 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
         switch (item.getItemId()) {
             case R.id.settings:
                 Intent intent = new Intent(getActivity(), CustomizeWidgetsAndCharts_Activity.class);
-                intent.putExtra(Constants.EXTRAS_CUSTOMIZE_WIDGETS_CHARTS_FRAGMENT_TYPE, Constants.EXTRAS_FITNESS_FRAGMENT);
+                intent.putExtra(Constants.EXTRAS_FRAGMENT_TYPE, Constants.EXTRAS_FITNESS_FRAGMENT);
                 intent.putExtra(Constants.BUNDLE_FITNESS_WIDGETS_MAP, widgetsMap);
                 intent.putExtra(Constants.BUNDLE_FITNESS_CHARTS_MAP, chartsMap);
                 startActivity(intent);
@@ -396,7 +396,7 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
                         waitingDialog.dismiss();
 
                         Intent intent = new Intent(getActivity(), SlugBreakdown_Activity.class);
-                        intent.putExtra(Constants.EXTRAS_CUSTOMIZE_WIDGETS_CHARTS_FRAGMENT_TYPE, Constants.EXTRAS_FITNESS_FRAGMENT);
+                        intent.putExtra(Constants.EXTRAS_FRAGMENT_TYPE, Constants.EXTRAS_FITNESS_FRAGMENT);
                         intent.putExtra(Constants.EXTRAS_CHART_FULL_NAME, chartTitle);
                         intent.putExtra(Constants.EXTRAS_CHART_TYPE_SELECTED, chartType);
                         intent.putExtra(Constants.BUNDLE_SLUG_BREAKDOWN_DATA, response.body().getData().getBody().getData());

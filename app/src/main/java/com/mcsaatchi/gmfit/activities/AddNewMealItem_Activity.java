@@ -76,6 +76,8 @@ public class AddNewMealItem_Activity extends Base_Activity {
     private SharedPreferences prefs;
 
     private String mealType;
+    private boolean purposeIsToAddMealToDate = false;
+    private String chosenDate;
 
     private List<MealItem> mealItems = new ArrayList<>();
 
@@ -86,6 +88,9 @@ public class AddNewMealItem_Activity extends Base_Activity {
 
         if (getIntent().getExtras() != null) {
             mealType = getIntent().getExtras().getString(Constants.EXTRAS_MAIN_MEAL_NAME);
+            purposeIsToAddMealToDate = getIntent().getExtras().getBoolean(Constants.EXTRAS_MEAL_ITEM_PURPOSE_ADDING_TO_DATE, false);
+            chosenDate = getIntent().getExtras().getString(Constants.EXTRAS_DATE_TO_ADD_MEAL_ON, "");
+
             actionBarTitle = getString(R.string.add_new_meal_item_activity_title) + " " + mealType;
         } else {
             actionBarTitle = getString(R.string.app_name);
@@ -107,9 +112,14 @@ public class AddNewMealItem_Activity extends Base_Activity {
         mealItemsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-
                 if (((MealItem) adapterView.getItemAtPosition(position)).getSectionType() == ITEM_VIEWTYPE) {
                     Intent intent = new Intent(AddNewMealItem_Activity.this, SpecifyMealAmount_Activity.class);
+
+                    if (purposeIsToAddMealToDate) {
+                        intent.putExtra(Constants.EXTRAS_MEAL_ITEM_PURPOSE_ADDING_TO_DATE, true);
+                        intent.putExtra(Constants.EXTRAS_DATE_TO_ADD_MEAL_ON, chosenDate);
+                    }
+
                     intent.putExtra(Constants.EXTRAS_MEAL_OBJECT_DETAILS, mealItems.get(position));
                     startActivityForResult(intent, MEAL_AMOUNT_SPECIFIED);
                 }

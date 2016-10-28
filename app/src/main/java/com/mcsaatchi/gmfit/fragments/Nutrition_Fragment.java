@@ -224,7 +224,7 @@ public class Nutrition_Fragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent intent = new Intent(getActivity(), CustomizeWidgetsAndCharts_Activity.class);
-        intent.putExtra(Constants.EXTRAS_CUSTOMIZE_WIDGETS_CHARTS_FRAGMENT_TYPE, Constants.EXTRAS_NUTRITION_FRAGMENT);
+        intent.putExtra(Constants.EXTRAS_FRAGMENT_TYPE, Constants.EXTRAS_NUTRITION_FRAGMENT);
         intent.putParcelableArrayListExtra(Constants.BUNDLE_NUTRITION_WIDGETS_MAP, widgetsMap);
         intent.putParcelableArrayListExtra(Constants.BUNDLE_NUTRITION_CHARTS_MAP, finalCharts);
         startActivity(intent);
@@ -664,15 +664,6 @@ public class Nutrition_Fragment extends Fragment {
         }
     }
 
-    private void findMealInList(ArrayList<MealItem> listOfMeals, MealItem item) {
-        for (int i = 0; i < listOfMeals.size(); i++) {
-            if (listOfMeals.get(i).getInstance_id() == item.getInstance_id()) {
-                listOfMeals.remove(i);
-                listOfMeals.add(i, item);
-            }
-        }
-    }
-
     public void handleScanMealEntry() {
         Intent intent = new Intent(getActivity(), BarcodeCapture_Activity.class);
         intent.putExtra(BarcodeCapture_Activity.AutoFocus, true);
@@ -769,7 +760,7 @@ public class Nutrition_Fragment extends Fragment {
                         waitingDialog.dismiss();
 
                         Intent intent = new Intent(getActivity(), SlugBreakdown_Activity.class);
-                        intent.putExtra(Constants.EXTRAS_CUSTOMIZE_WIDGETS_CHARTS_FRAGMENT_TYPE, Constants.EXTRAS_NUTRITION_FRAGMENT);
+                        intent.putExtra(Constants.EXTRAS_FRAGMENT_TYPE, Constants.EXTRAS_NUTRITION_FRAGMENT);
                         intent.putExtra(Constants.EXTRAS_CHART_FULL_NAME, chartTitle);
                         intent.putExtra(Constants.EXTRAS_CHART_TYPE_SELECTED, chartType);
                         intent.putExtra(Constants.BUNDLE_SLUG_BREAKDOWN_DATA, response.body().getData().getBody().getData());

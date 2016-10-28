@@ -135,8 +135,6 @@ public class Splash_Activity extends AppCompatActivity {
                             for (int i = 0; i < userMedicalConditions.size(); i++) {
                                 if (userMedicalConditions.get(i).getSelected().equals("1")) {
                                     prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION, userMedicalConditions.get(i).getName());
-                                } else {
-                                    prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION, "None");
                                 }
                             }
 

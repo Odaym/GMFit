@@ -59,7 +59,7 @@ public class CustomizeWidgetsAndCharts_Activity extends Base_Activity {
 
         //Grab the Fragment type from one of the three Fragments (Fitness, Nutrition, Health)
         if (intentExtras != null) {
-            typeOfFragmentToCustomiseFor = intentExtras.getString(Constants.EXTRAS_CUSTOMIZE_WIDGETS_CHARTS_FRAGMENT_TYPE);
+            typeOfFragmentToCustomiseFor = intentExtras.getString(Constants.EXTRAS_FRAGMENT_TYPE);
 
             if (typeOfFragmentToCustomiseFor != null) {
                 switch (typeOfFragmentToCustomiseFor) {
@@ -102,7 +102,7 @@ public class CustomizeWidgetsAndCharts_Activity extends Base_Activity {
         public Fragment getItem(int position) {
             Bundle fragmentArguments = new Bundle();
 
-            fragmentArguments.putString(Constants.EXTRAS_CUSTOMIZE_WIDGETS_CHARTS_FRAGMENT_TYPE, typeOfFragmentToCustomiseFor);
+            fragmentArguments.putString(Constants.EXTRAS_FRAGMENT_TYPE, typeOfFragmentToCustomiseFor);
 
             if (typeOfFragmentToCustomiseFor != null) {
                 switch (typeOfFragmentToCustomiseFor) {

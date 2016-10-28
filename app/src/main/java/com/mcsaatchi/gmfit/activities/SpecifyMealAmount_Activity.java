@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
@@ -61,6 +62,8 @@ public class SpecifyMealAmount_Activity extends Base_Activity {
 
     private MealItem mealItem;
     private boolean purposeIsEditMeal = false;
+    private boolean purposeIsToAddMealToDate = false;
+    private String chosenDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +79,10 @@ public class SpecifyMealAmount_Activity extends Base_Activity {
         if (getIntent().getExtras() != null) {
             mealItem = getIntent().getExtras().getParcelable(Constants.EXTRAS_MEAL_OBJECT_DETAILS);
             purposeIsEditMeal = getIntent().getExtras().getBoolean(Constants.EXTRAS_MEAL_ITEM_PURPOSE_EDITING);
+            purposeIsToAddMealToDate = getIntent().getExtras().getBoolean(Constants.EXTRAS_MEAL_ITEM_PURPOSE_ADDING_TO_DATE, false);
+
+            if (purposeIsToAddMealToDate)
+                chosenDate = getIntent().getExtras().getString(Constants.EXTRAS_DATE_TO_ADD_MEAL_ON, "");
 
             if (mealItem != null) {
                 setupToolbar(toolbar, mealItem.getName(), true);
@@ -179,14 +186,60 @@ public class SpecifyMealAmount_Activity extends Base_Activity {
                                 }
                             });
 
-                    if (purposeIsEditMeal) {
-                        updateUserMeal(waitingDialog, caloriesForThisMeal);
+                    if (purposeIsToAddMealToDate) {
+                        Log.d("TAG", "purpose add meal on specific date");
+                        if (purposeIsEditMeal) {
+                            updateUserMealOnCertainDate(waitingDialog, caloriesForThisMeal);
+                            Log.d("TAG", "onClick: Editing");
+                        } else {
+                            Log.d("TAG", "onClick: Storing new");
+                            storeMealOnCertainDate(waitingDialog, caloriesForThisMeal, chosenDate);
+                        }
                     } else {
-                        storeNewMeal(waitingDialog, caloriesForThisMeal);
+                        Log.d("TAG", "purpose edit meal existing for TODAY");
+                        if (purposeIsEditMeal) {
+                            Log.d("TAG", "Editing");
+                            updateUserMeal(waitingDialog, caloriesForThisMeal);
+                        } else {
+                            Log.d("TAG", "Storing new");
+                            storeNewMeal(waitingDialog, caloriesForThisMeal);
+                        }
                     }
                 }
             }
         });
+    }
+
+    private void storeMealOnCertainDate(final ProgressDialog waitingDialog, final int caloriesForThisMeal, String chosenDate) {
+        DataAccessHandler.getInstance().storeNewMeal(prefs.getString(Constants
+                        .PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), mealItem.getMeal_id(), Integer.parseInt(mealAmountET.getText().toString()),
+                mealItem.getType(), chosenDate, new Callback<DefaultGetResponse>() {
+                    @Override
+                    public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
+                        switch (response.code()) {
+                            case 200:
+                                waitingDialog.dismiss();
+
+                                mealItem.setAmount(mealAmountET.getText().toString());
+                                mealItem.setTotalCalories(Integer.parseInt(mealItem.getAmount()) * caloriesForThisMeal);
+
+                                Intent resultIntent = new Intent();
+                                resultIntent.putExtra(Constants.EXTRAS_MEAL_OBJECT_DETAILS, mealItem);
+                                setResult(MEAL_AMOUNT_SPECIFIED, resultIntent);
+
+                                EventBus_Singleton.getInstance().post(new EventBus_Poster(Constants.EXTRAS_CREATED_NEW_MEAL_ENTRY_ON_DATE));
+
+                                finish();
+
+                                break;
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+                        waitingDialog.dismiss();
+                    }
+                });
     }
 
     private void storeNewMeal(final ProgressDialog waitingDialog, final int caloriesForThisMeal) {
@@ -215,6 +268,33 @@ public class SpecifyMealAmount_Activity extends Base_Activity {
                                 setResult(MEAL_AMOUNT_SPECIFIED, resultIntent);
 
                                 EventBus_Singleton.getInstance().post(new EventBus_Poster(Constants.EXTRAS_CREATED_NEW_MEAL_ENTRY));
+
+                                finish();
+
+                                break;
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+                        waitingDialog.dismiss();
+                    }
+                });
+    }
+
+    private void updateUserMealOnCertainDate(final ProgressDialog waitingDialog, final int caloriesForThisMeal) {
+        DataAccessHandler.getInstance().updateUserMeals(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
+                mealItem.getInstance_id(), Integer.parseInt(mealAmountET.getText().toString()), new Callback<DefaultGetResponse>() {
+                    @Override
+                    public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
+                        switch (response.code()) {
+                            case 200:
+                                waitingDialog.dismiss();
+
+                                mealItem.setAmount(mealAmountET.getText().toString());
+                                mealItem.setTotalCalories(Integer.parseInt(mealItem.getAmount()) * caloriesForThisMeal);
+
+                                EventBus_Singleton.getInstance().post(new EventBus_Poster(Constants.EXTRAS_UPDATED_MEAL_ENTRY_ON_DATE));
 
                                 finish();
 

@@ -1,17 +1,20 @@
 package com.mcsaatchi.gmfit.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.mcsaatchi.gmfit.R;
+import com.mcsaatchi.gmfit.activities.AddNewMealOnDate_Activity;
 import com.mcsaatchi.gmfit.classes.Constants;
 import com.mcsaatchi.gmfit.rest.SlugBreakdownResponseDaily;
 
@@ -30,6 +33,7 @@ public class SlugBreakdown_Fragment_Daily extends Fragment {
     @Bind(R.id.allTimeValueTV)
     TextView allTimeValueTV;
 
+    private String typeOfFragmentToCustomizeFor;
     private String measurementUnitForMetric;
 
     @Override
@@ -52,6 +56,7 @@ public class SlugBreakdown_Fragment_Daily extends Fragment {
             ArrayList<Parcelable> slugBreakdownData = fragmentBundle.getParcelableArrayList(Constants.BUNDLE_SLUG_BREAKDOWN_DATA_DAILY);
 
             measurementUnitForMetric = fragmentBundle.getString(Constants.BUNDLE_SLUG_BREAKDOWN_MEASUREMENT_UNIT, "");
+            typeOfFragmentToCustomizeFor = fragmentBundle.getString(Constants.EXTRAS_FRAGMENT_TYPE, "");
 
             float slugBreakdownYearlyTotal = fragmentBundle.getFloat(Constants.BUNDLE_SLUG_BREAKDOWN_YEARLY_TOTAL, 0);
             allTimeValueTV.setText(NumberFormat.getNumberInstance(Locale.US).format((int) Double.parseDouble(String.valueOf(slugBreakdownYearlyTotal))) + " " + measurementUnitForMetric);
@@ -63,8 +68,25 @@ public class SlugBreakdown_Fragment_Daily extends Fragment {
     }
 
     private void hookupListWithItems(ArrayList<Parcelable> items, String measurementUnitForMetric) {
-        SlugBreakdown_ListAdapter slugBreakdownListAdapter = new SlugBreakdown_ListAdapter(getActivity(), items, measurementUnitForMetric);
+        final SlugBreakdown_ListAdapter slugBreakdownListAdapter = new SlugBreakdown_ListAdapter(getActivity(), items, measurementUnitForMetric);
         slugBreakdownListView.setAdapter(slugBreakdownListAdapter);
+
+        if (typeOfFragmentToCustomizeFor.equals(Constants.EXTRAS_NUTRITION_FRAGMENT)) {
+            slugBreakdownListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+//                    Log.d("TAG", "onItemClick: Item selected date : " + ((TextView) view.findViewById(R.id.slugDateTV)).getText().toString());
+//
+//                    DateTime entryDate = new DateTime(slugBreakdownListAdapter.getItem(i).getDate());
+//
+//                    Log.d("TAG", "onItemClick: " + (entryDate.getDayOfMonth() + " " + entryDate.monthOfYear().getAsText() + ", " + entryDate.getYear()));
+
+                    Intent intent = new Intent(getActivity(), AddNewMealOnDate_Activity.class);
+                    intent.putExtra(Constants.EXTRAS_DATE_TO_ADD_MEAL_ON, slugBreakdownListAdapter.getItem(i).getDate());
+                    startActivity(intent);
+                }
+            });
+        }
     }
 
     public class SlugBreakdown_ListAdapter extends BaseAdapter {

@@ -505,13 +505,6 @@ public class MainProfile_Fragment extends Fragment {
                             medicalRdGroup.addView(radioButton);
                         }
 
-                        for (int i = 0; i < userMedicalConditions.size(); i++) {
-                            RadioButton selectedRadioButton = (RadioButton) medicalRdGroup.getChildAt(i);
-
-                            if (userMedicalConditions.get(i).getName().equals(medicalConditionsValueTV.getText().toString()))
-                                selectedRadioButton.setChecked(true);
-                        }
-
                         dialogBuilder.setView(dialogView);
                         dialogBuilder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                             @Override

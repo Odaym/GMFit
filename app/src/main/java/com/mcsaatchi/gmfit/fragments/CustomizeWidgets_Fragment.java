@@ -139,7 +139,7 @@ public class CustomizeWidgets_Fragment extends Fragment {
         Bundle fragmentBundle = getArguments();
 
         if (fragmentBundle != null) {
-            typeOfFragmentToCustomiseFor = fragmentBundle.getString(Constants.EXTRAS_CUSTOMIZE_WIDGETS_CHARTS_FRAGMENT_TYPE);
+            typeOfFragmentToCustomiseFor = fragmentBundle.getString(Constants.EXTRAS_FRAGMENT_TYPE);
 
             if (typeOfFragmentToCustomiseFor != null) {
                 switch (typeOfFragmentToCustomiseFor) {

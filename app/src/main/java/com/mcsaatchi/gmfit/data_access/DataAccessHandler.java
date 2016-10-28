@@ -122,6 +122,10 @@ public class DataAccessHandler {
         ApiCallsHandler.getInstance().getUserAddedMeals(userAccessToken, callback);
     }
 
+    public void getUserAddedMealsOnDate(String userAccessToken, String chosenDate, Callback<UserMealsResponse> callback) {
+        ApiCallsHandler.getInstance().getUserAddedMealsOnDate(userAccessToken, chosenDate, callback);
+    }
+
     public void getUserPolicy(String userAccessToken, Callback<UserPolicyResponse> callback) {
         ApiCallsHandler.getInstance().getUserPolicy(userAccessToken, callback);
     }

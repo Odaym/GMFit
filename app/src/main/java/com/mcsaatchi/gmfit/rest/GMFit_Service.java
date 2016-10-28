@@ -89,6 +89,10 @@ public interface GMFit_Service {
     @GET("user/meals")
     Call<UserMealsResponse> getUserAddedMeals(@Header(Constants.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken);
 
+    @GET("user/meals")
+    Call<UserMealsResponse> getUserAddedMealsOnDate(@Header(Constants.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken, @Query("start_date") String
+            start_date, @Query("end_date") String end_date);
+
     @GET
     Call<ChartsBySectionResponse> getChartsBySection(@Header(Constants.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken, @Url String fullUrl);
 
