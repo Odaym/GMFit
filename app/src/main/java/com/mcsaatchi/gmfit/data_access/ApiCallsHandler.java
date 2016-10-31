@@ -3,6 +3,7 @@ package com.mcsaatchi.gmfit.data_access;
 import com.mcsaatchi.gmfit.classes.Constants;
 import com.mcsaatchi.gmfit.classes.Helpers;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponse;
+import com.mcsaatchi.gmfit.rest.CachingRestClient;
 import com.mcsaatchi.gmfit.rest.ChartMetricBreakdownResponse;
 import com.mcsaatchi.gmfit.rest.ChartsBySectionResponse;
 import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
@@ -45,7 +46,7 @@ public class ApiCallsHandler {
 
     void getSlugBreakdownForChart(final String chartType, String userAccessToken, final Callback<SlugBreakdownResponse> callback) {
 
-        Call<SlugBreakdownResponse> apiCall = new RestClient().getGMFitService().getBreakdownForSlug(Constants.BASE_URL_ADDRESS +
+        Call<SlugBreakdownResponse> apiCall = new CachingRestClient().getGMFitService().getBreakdownForSlug(Constants.BASE_URL_ADDRESS +
                 "user/metrics/breakdown?slug=" + chartType, userAccessToken);
 
         apiCall.enqueue(new Callback<SlugBreakdownResponse>() {
@@ -62,7 +63,7 @@ public class ApiCallsHandler {
     }
 
     void refreshAccessToken(String userAccessToken, final Callback<AuthenticationResponse> callback) {
-        Call<AuthenticationResponse> apiCall = new RestClient().getGMFitService().refreshAccessToken(userAccessToken);
+        Call<AuthenticationResponse> apiCall = new CachingRestClient().getGMFitService().refreshAccessToken(userAccessToken);
 
         apiCall.enqueue(new Callback<AuthenticationResponse>() {
             @Override
@@ -77,7 +78,7 @@ public class ApiCallsHandler {
     }
 
     void synchronizeMetricsWithServer(String userAccessToken, String[] slugsArray, int[] valuesArray) {
-        Call<DefaultGetResponse> apiCall = new RestClient().getGMFitService().updateMetrics(userAccessToken, new UpdateMetricsRequest(slugsArray, valuesArray, Helpers.getCalendarDate()));
+        Call<DefaultGetResponse> apiCall = new CachingRestClient().getGMFitService().updateMetrics(userAccessToken, new UpdateMetricsRequest(slugsArray, valuesArray, Helpers.getCalendarDate()));
 
         apiCall.enqueue(new Callback<DefaultGetResponse>() {
             @Override
@@ -91,7 +92,7 @@ public class ApiCallsHandler {
     }
 
     void signInUser(final String email, final String password, final Callback<AuthenticationResponse> callback) {
-        Call<AuthenticationResponse> apiCall = new RestClient().getGMFitService().signInUser(new SignInRequest(email,
+        Call<AuthenticationResponse> apiCall = new CachingRestClient().getGMFitService().signInUser(new SignInRequest(email,
                 password));
 
         apiCall.enqueue(new Callback<AuthenticationResponse>() {
@@ -108,7 +109,7 @@ public class ApiCallsHandler {
     }
 
     void registerUser(final String full_name, final String email, final String password, final Callback<AuthenticationResponse> callback) {
-        Call<AuthenticationResponse> apiCall = new RestClient().getGMFitService().registerUser(new RegisterRequest(full_name, email, password));
+        Call<AuthenticationResponse> apiCall = new CachingRestClient().getGMFitService().registerUser(new RegisterRequest(full_name, email, password));
 
         apiCall.enqueue(new Callback<AuthenticationResponse>() {
             @Override
@@ -124,7 +125,7 @@ public class ApiCallsHandler {
     }
 
     void signInUserSilently(String email, String password, final Callback<AuthenticationResponse> callback) {
-        Call<AuthenticationResponse> apiCall = new RestClient().getGMFitService().signInUserSilently(new SignInRequest(email,
+        Call<AuthenticationResponse> apiCall = new CachingRestClient().getGMFitService().signInUserSilently(new SignInRequest(email,
                 password));
 
         apiCall.enqueue(new Callback<AuthenticationResponse>() {
@@ -141,7 +142,7 @@ public class ApiCallsHandler {
     }
 
     void signOutUser(String userAccessToken, final Callback<DefaultGetResponse> callback) {
-        Call<DefaultGetResponse> apiCall = new RestClient().getGMFitService().signOutUser(userAccessToken);
+        Call<DefaultGetResponse> apiCall = new CachingRestClient().getGMFitService().signOutUser(userAccessToken);
 
         apiCall.enqueue(new Callback<DefaultGetResponse>() {
             @Override
@@ -158,7 +159,7 @@ public class ApiCallsHandler {
 
     void updateUserProfile(String userAccessToken, String finalDateOfBirth, String bloodType, String nationality, int medical_condition, String measurementSystem, String goal,
                            int finalGender, double height, double weight, double BMI, final Callback<DefaultGetResponse> callback) {
-        Call<DefaultGetResponse> apiCall = new RestClient().getGMFitService().updateUserProfile(userAccessToken, new UpdateProfileRequest(finalDateOfBirth, bloodType,
+        Call<DefaultGetResponse> apiCall = new CachingRestClient().getGMFitService().updateUserProfile(userAccessToken, new UpdateProfileRequest(finalDateOfBirth, bloodType,
                 nationality, medical_condition, measurementSystem, goal, finalGender, height, weight, BMI));
 
         apiCall.enqueue(new Callback<DefaultGetResponse>() {
@@ -174,6 +175,12 @@ public class ApiCallsHandler {
         });
     }
 
+    /**
+     * Non-Caching
+     * @param userAccessToken
+     * @param section
+     * @param callback
+     */
     void getUiForSection(String userAccessToken, String section, final Callback<UiResponse> callback) {
         Call<UiResponse> apiCall = new RestClient().getGMFitService().getUiForSection(userAccessToken, section);
 
@@ -191,7 +198,7 @@ public class ApiCallsHandler {
     }
 
     void getMedicalConditions(String userAccessToken, final Callback<MedicalConditionsResponse> callback) {
-        Call<MedicalConditionsResponse> apiCall = new RestClient().getGMFitService().getMedicalConditions(userAccessToken);
+        Call<MedicalConditionsResponse> apiCall = new CachingRestClient().getGMFitService().getMedicalConditions(userAccessToken);
 
         apiCall.enqueue(new Callback<MedicalConditionsResponse>() {
             @Override
@@ -207,7 +214,7 @@ public class ApiCallsHandler {
     }
 
     void sendResetPasswordLink(String userAccessToken, String email, final Callback<DefaultGetResponse> callback) {
-        Call<DefaultGetResponse> apiCall = new RestClient().getGMFitService().sendResetPasswordLink(userAccessToken, new ForgotPasswordRequest(email));
+        Call<DefaultGetResponse> apiCall = new CachingRestClient().getGMFitService().sendResetPasswordLink(userAccessToken, new ForgotPasswordRequest(email));
 
         apiCall.enqueue(new Callback<DefaultGetResponse>() {
             @Override
@@ -223,7 +230,7 @@ public class ApiCallsHandler {
     }
 
     void finalizeResetPassword(String resetPasswordToken, String newPassword, final Callback<DefaultGetResponse> callback) {
-        Call<DefaultGetResponse> apiCall = new RestClient().getGMFitService().finalizeResetPassword(new ResetPasswordRequest(resetPasswordToken, newPassword));
+        Call<DefaultGetResponse> apiCall = new CachingRestClient().getGMFitService().finalizeResetPassword(new ResetPasswordRequest(resetPasswordToken, newPassword));
 
         apiCall.enqueue(new Callback<DefaultGetResponse>() {
             @Override
@@ -239,7 +246,7 @@ public class ApiCallsHandler {
     }
 
     void findMeals(String userAccessToken, String mealName, final Callback<SearchMealItemResponse> callback) {
-        Call<SearchMealItemResponse> apiCall = new RestClient().getGMFitService().searchForMeals(userAccessToken, mealName);
+        Call<SearchMealItemResponse> apiCall = new CachingRestClient().getGMFitService().searchForMeals(userAccessToken, mealName);
 
         apiCall.enqueue(new Callback<SearchMealItemResponse>() {
             @Override
@@ -255,7 +262,7 @@ public class ApiCallsHandler {
     }
 
     void getMealMetrics(String userAccessToken, String fullUrl, final Callback<MealMetricsResponse> callback) {
-        Call<MealMetricsResponse> apiCall = new RestClient().getGMFitService().getMealMetrics(userAccessToken, fullUrl);
+        Call<MealMetricsResponse> apiCall = new CachingRestClient().getGMFitService().getMealMetrics(userAccessToken, fullUrl);
 
         apiCall.enqueue(new Callback<MealMetricsResponse>() {
             @Override
@@ -271,7 +278,7 @@ public class ApiCallsHandler {
     }
 
     void verifyUser(String userAccessToken, String verificationCode, final Callback<DefaultGetResponse> callback) {
-        Call<DefaultGetResponse> apiCall = new RestClient().getGMFitService().verifyRegistrationCode(userAccessToken, new VerificationRequest(verificationCode));
+        Call<DefaultGetResponse> apiCall = new CachingRestClient().getGMFitService().verifyRegistrationCode(userAccessToken, new VerificationRequest(verificationCode));
 
         apiCall.enqueue(new Callback<DefaultGetResponse>() {
             @Override
@@ -287,7 +294,7 @@ public class ApiCallsHandler {
     }
 
     void updateUserWidgets(String userAccessToken, int[] widgetIds, int[] widgetPositions, final Callback<DefaultGetResponse> callback) {
-        Call<DefaultGetResponse> apiCall = new RestClient().getGMFitService().updateUserWidgets(userAccessToken, new UpdateWidgetsRequest(widgetIds, widgetPositions));
+        Call<DefaultGetResponse> apiCall = new CachingRestClient().getGMFitService().updateUserWidgets(userAccessToken, new UpdateWidgetsRequest(widgetIds, widgetPositions));
 
         apiCall.enqueue(new Callback<DefaultGetResponse>() {
             @Override
@@ -303,7 +310,7 @@ public class ApiCallsHandler {
     }
 
     void updateUserCharts(String userAccessToken, int[] chartIds, int[] chartPositions, final Callback<DefaultGetResponse> callback) {
-        Call<DefaultGetResponse> apiCall = new RestClient().getGMFitService().updateUserCharts(userAccessToken, new UpdateChartsRequest(chartIds, chartPositions));
+        Call<DefaultGetResponse> apiCall = new CachingRestClient().getGMFitService().updateUserCharts(userAccessToken, new UpdateChartsRequest(chartIds, chartPositions));
 
         apiCall.enqueue(new Callback<DefaultGetResponse>() {
             @Override
@@ -318,6 +325,11 @@ public class ApiCallsHandler {
         });
     }
 
+    /**
+     * Non-Caching
+     * @param userAccessToken
+     * @param callback
+     */
     void getUserAddedMeals(String userAccessToken, final Callback<UserMealsResponse> callback) {
         Call<UserMealsResponse> apiCall = new RestClient().getGMFitService().getUserAddedMeals(userAccessToken);
 
@@ -335,7 +347,7 @@ public class ApiCallsHandler {
     }
 
     void getUserAddedMealsOnDate(String userAccessToken, String chosenDate, final Callback<UserMealsResponse> callback) {
-        Call<UserMealsResponse> apiCall = new RestClient().getGMFitService().getUserAddedMealsOnDate(userAccessToken, chosenDate, chosenDate);
+        Call<UserMealsResponse> apiCall = new CachingRestClient().getGMFitService().getUserAddedMealsOnDate(userAccessToken, chosenDate, chosenDate);
 
         apiCall.enqueue(new Callback<UserMealsResponse>() {
             @Override
@@ -351,7 +363,7 @@ public class ApiCallsHandler {
     }
 
     void getUserPolicy(String userAccessToken, final Callback<UserPolicyResponse> callback) {
-        Call<UserPolicyResponse> apiCall = new RestClient().getGMFitService().getUserPolicy(userAccessToken);
+        Call<UserPolicyResponse> apiCall = new CachingRestClient().getGMFitService().getUserPolicy(userAccessToken);
 
         apiCall.enqueue(new Callback<UserPolicyResponse>() {
             @Override
@@ -367,7 +379,7 @@ public class ApiCallsHandler {
     }
 
     void registerUserFacebook(String facebookAccessToken, final Callback<AuthenticationResponse> callback) {
-        Call<AuthenticationResponse> apiCall = new RestClient().getGMFitService().registerUserFacebook(new RegisterFacebookRequest(facebookAccessToken));
+        Call<AuthenticationResponse> apiCall = new CachingRestClient().getGMFitService().registerUserFacebook(new RegisterFacebookRequest(facebookAccessToken));
 
         apiCall.enqueue(new Callback<AuthenticationResponse>() {
             @Override
@@ -383,7 +395,7 @@ public class ApiCallsHandler {
     }
 
     void storeNewMeal(String userAccessToken, int meal_id, int servingsAmount, String when, String date, final Callback<DefaultGetResponse> callback) {
-        Call<DefaultGetResponse> apiCall = new RestClient().getGMFitService().storeNewMeal(userAccessToken, new StoreNewMealRequest(meal_id, servingsAmount, when.toLowerCase(), date));
+        Call<DefaultGetResponse> apiCall = new CachingRestClient().getGMFitService().storeNewMeal(userAccessToken, new StoreNewMealRequest(meal_id, servingsAmount, when.toLowerCase(), date));
 
         apiCall.enqueue(new Callback<DefaultGetResponse>() {
             @Override
@@ -399,7 +411,7 @@ public class ApiCallsHandler {
     }
 
     void getRecentMeals(String userAccessToken, String fullUrl, final Callback<RecentMealsResponse> callback) {
-        Call<RecentMealsResponse> apiCall = new RestClient().getGMFitService().getRecentMeals(userAccessToken, fullUrl);
+        Call<RecentMealsResponse> apiCall = new CachingRestClient().getGMFitService().getRecentMeals(userAccessToken, fullUrl);
 
         apiCall.enqueue(new Callback<RecentMealsResponse>() {
             @Override
@@ -415,7 +427,7 @@ public class ApiCallsHandler {
     }
 
     void updateUserMeals(String userAccessToken, int instance_id, int amount, final Callback<DefaultGetResponse> callback) {
-        Call<DefaultGetResponse> apiCall = new RestClient().getGMFitService().updateUserMeals(userAccessToken, new UpdateMealsRequest(instance_id, amount));
+        Call<DefaultGetResponse> apiCall = new CachingRestClient().getGMFitService().updateUserMeals(userAccessToken, new UpdateMealsRequest(instance_id, amount));
 
         apiCall.enqueue(new Callback<DefaultGetResponse>() {
             @Override
@@ -431,7 +443,7 @@ public class ApiCallsHandler {
     }
 
     void getChartsBySection(String userAccessToken, String chartSection, final Callback<ChartsBySectionResponse> callback) {
-        Call<ChartsBySectionResponse> apiCall = new RestClient().getGMFitService().getChartsBySection(userAccessToken, Constants.BASE_URL_ADDRESS +
+        Call<ChartsBySectionResponse> apiCall = new CachingRestClient().getGMFitService().getChartsBySection(userAccessToken, Constants.BASE_URL_ADDRESS +
                 "charts?section=" + chartSection);
 
         apiCall.enqueue(new Callback<ChartsBySectionResponse>() {
@@ -448,7 +460,7 @@ public class ApiCallsHandler {
     }
 
     void addMetricChart(String userAccessToken, int chart_id, final Callback<DefaultGetResponse> callback) {
-        Call<DefaultGetResponse> apiCall = new RestClient().getGMFitService().addMetricChart(userAccessToken, new AddMetricChartRequest(chart_id));
+        Call<DefaultGetResponse> apiCall = new CachingRestClient().getGMFitService().addMetricChart(userAccessToken, new AddMetricChartRequest(chart_id));
 
         apiCall.enqueue(new Callback<DefaultGetResponse>() {
             @Override
@@ -464,7 +476,7 @@ public class ApiCallsHandler {
     }
 
     void getPeriodicalChartData(String userAccessToken, String start_date, String end_date, String type, String monitored_metric, final Callback<ChartMetricBreakdownResponse> callback) {
-        Call<ChartMetricBreakdownResponse> apiCall = new RestClient().getGMFitService().getPeriodicalChartData(userAccessToken, start_date, end_date, type, monitored_metric);
+        Call<ChartMetricBreakdownResponse> apiCall = new CachingRestClient().getGMFitService().getPeriodicalChartData(userAccessToken, start_date, end_date, type, monitored_metric);
 
         apiCall.enqueue(new Callback<ChartMetricBreakdownResponse>() {
             @Override
@@ -480,7 +492,7 @@ public class ApiCallsHandler {
     }
 
     void requestNewMeal(String userAccessToken, String mealName, final Callback<DefaultGetResponse> callback) {
-        Call<DefaultGetResponse> apiCall = new RestClient().getGMFitService().requestNewMeal(userAccessToken, new RequestMealRequest(mealName));
+        Call<DefaultGetResponse> apiCall = new CachingRestClient().getGMFitService().requestNewMeal(userAccessToken, new RequestMealRequest(mealName));
 
         apiCall.enqueue(new Callback<DefaultGetResponse>() {
             @Override
@@ -496,7 +508,7 @@ public class ApiCallsHandler {
     }
 
     void getMedicalTests(String userAccessToken, final Callback<MedicalTestsResponse> callback) {
-        Call<MedicalTestsResponse> apiCall = new RestClient().getGMFitService().getMedicalTests(userAccessToken);
+        Call<MedicalTestsResponse> apiCall = new CachingRestClient().getGMFitService().getMedicalTests(userAccessToken);
 
         apiCall.enqueue(new Callback<MedicalTestsResponse>() {
             @Override
@@ -512,7 +524,7 @@ public class ApiCallsHandler {
     }
 
     void getHealthWidgets(String userAccessToken, String sectionName, final Callback<HealthWidgetsResponse> callback) {
-        Call<HealthWidgetsResponse> apiCall = new RestClient().getGMFitService().getHealthWidgets(userAccessToken, sectionName);
+        Call<HealthWidgetsResponse> apiCall = new CachingRestClient().getGMFitService().getHealthWidgets(userAccessToken, sectionName);
 
         apiCall.enqueue(new Callback<HealthWidgetsResponse>() {
             @Override
@@ -528,7 +540,7 @@ public class ApiCallsHandler {
     }
 
     void storeNewHealthTest(String userAccessToken, RequestBody test_slug, RequestBody date_taken, Map<String, RequestBody> metrics, Map<String, RequestBody> imageFiles, final Callback<DefaultGetResponse> callback) {
-        Call<DefaultGetResponse> apiCall = new RestClient().getGMFitService().storeNewHealthTest(userAccessToken, test_slug, date_taken, metrics, imageFiles);
+        Call<DefaultGetResponse> apiCall = new CachingRestClient().getGMFitService().storeNewHealthTest(userAccessToken, test_slug, date_taken, metrics, imageFiles);
 
         apiCall.enqueue(new Callback<DefaultGetResponse>() {
             @Override
@@ -544,7 +556,7 @@ public class ApiCallsHandler {
     }
 
     void editExistingHealthTest(String userAccessToken, RequestBody instance_id, Map<String, RequestBody> metrics, Map<String, RequestBody> imageFiles, Map<String, RequestBody> deletedImages, final Callback<DefaultGetResponse> callback) {
-        Call<DefaultGetResponse> apiCall = new RestClient().getGMFitService().editExistingHealthTest(userAccessToken, instance_id, metrics, deletedImages, imageFiles);
+        Call<DefaultGetResponse> apiCall = new CachingRestClient().getGMFitService().editExistingHealthTest(userAccessToken, instance_id, metrics, deletedImages, imageFiles);
 
         apiCall.enqueue(new Callback<DefaultGetResponse>() {
             @Override
@@ -560,7 +572,7 @@ public class ApiCallsHandler {
     }
 
     void getTakenMedicalTests(String userAccessToken, final Callback<TakenMedicalTestsResponse> callback) {
-        Call<TakenMedicalTestsResponse> apiCall = new RestClient().getGMFitService().getTakenMedicalTests(userAccessToken);
+        Call<TakenMedicalTestsResponse> apiCall = new CachingRestClient().getGMFitService().getTakenMedicalTests(userAccessToken);
 
         apiCall.enqueue(new Callback<TakenMedicalTestsResponse>() {
             @Override
@@ -576,7 +588,7 @@ public class ApiCallsHandler {
     }
 
     void getUserProfile(String userAccessToken, final Callback<UserProfileResponse> callback) {
-        Call<UserProfileResponse> apiCall = new RestClient().getGMFitService().getUserProfile(userAccessToken);
+        Call<UserProfileResponse> apiCall = new CachingRestClient().getGMFitService().getUserProfile(userAccessToken);
 
         apiCall.enqueue(new Callback<UserProfileResponse>() {
             @Override
@@ -592,7 +604,7 @@ public class ApiCallsHandler {
     }
 
     void getEmergencyProfile(String userAccessToken, final Callback<EmergencyProfileResponse> callback) {
-        Call<EmergencyProfileResponse> apiCall = new RestClient().getGMFitService().getEmergencyProfile(userAccessToken);
+        Call<EmergencyProfileResponse> apiCall = new CachingRestClient().getGMFitService().getEmergencyProfile(userAccessToken);
 
         apiCall.enqueue(new Callback<EmergencyProfileResponse>() {
             @Override
@@ -608,7 +620,7 @@ public class ApiCallsHandler {
     }
 
     void deleteUserChart(String userAccessToken, String chart_id, final Callback<DefaultGetResponse> callback){
-        Call<DefaultGetResponse> apiCall = new RestClient().getGMFitService().deleteUserChart(userAccessToken, new DeleteUserChartRequest(chart_id));
+        Call<DefaultGetResponse> apiCall = new CachingRestClient().getGMFitService().deleteUserChart(userAccessToken, new DeleteUserChartRequest(chart_id));
 
         apiCall.enqueue(new Callback<DefaultGetResponse>() {
             @Override
@@ -624,7 +636,7 @@ public class ApiCallsHandler {
     }
 
     void deleteUserMeal(String userAccessToken, int instance_id, final Callback<DefaultGetResponse> callback){
-        Call<DefaultGetResponse> apiCall = new RestClient().getGMFitService().deleteUserMeal(userAccessToken, new DeleteMealRequest(instance_id));
+        Call<DefaultGetResponse> apiCall = new CachingRestClient().getGMFitService().deleteUserMeal(userAccessToken, new DeleteMealRequest(instance_id));
 
         apiCall.enqueue(new Callback<DefaultGetResponse>() {
             @Override
