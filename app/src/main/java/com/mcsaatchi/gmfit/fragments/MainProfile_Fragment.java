@@ -502,6 +502,12 @@ public class MainProfile_Fragment extends Fragment {
                             radioButton.setText(userMedicalConditions.get(i).getName());
                             radioButton.setId(Integer.parseInt(userMedicalConditions.get(i).getId()));
 
+                            if (userMedicalConditions.get(i).getSelected().equals("1")) {
+                                radioButton.setChecked(true);
+                            } else {
+                                radioButton.setChecked(false);
+                            }
+
                             medicalRdGroup.addView(radioButton);
                         }
 
