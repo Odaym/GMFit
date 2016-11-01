@@ -49,6 +49,9 @@ public class UserProfileResponseDatum {
     @SerializedName("medical_conditions")
     @Expose
     private List<UserProfileResponseMedicalCondition> medicalConditions = new ArrayList<UserProfileResponseMedicalCondition>();
+    @SerializedName("profile_picture")
+    @Expose
+    private String profile_picture;
 
     /**
      * @return The name
@@ -238,5 +241,13 @@ public class UserProfileResponseDatum {
 
     public void setMedicalConditions(List<UserProfileResponseMedicalCondition> medicalConditions) {
         this.medicalConditions = medicalConditions;
+    }
+
+    public String getProfile_picture() {
+        return profile_picture;
+    }
+
+    public void setProfile_picture(String profile_picture) {
+        this.profile_picture = profile_picture;
     }
 }

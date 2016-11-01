@@ -34,6 +34,10 @@ public interface GMFit_Service {
     @POST("user/update-profile")
     Call<DefaultGetResponse> updateUserProfile(@Header(Constants.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken, @Body ApiCallsHandler.UpdateProfileRequest updateProfileRequest);
 
+    @Multipart
+    @POST("user/profile/picture")
+    Call<DefaultGetResponse> updateUserPicture(@Header(Constants.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken, @PartMap() Map<String, RequestBody> profilePicture);
+
     @GET
     Call<UiResponse> getUiForSection(@Header(Constants.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken, @Url String fullUrl);
 

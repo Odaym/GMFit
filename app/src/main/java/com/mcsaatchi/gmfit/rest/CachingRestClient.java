@@ -34,9 +34,9 @@ public class CachingRestClient {
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
 
         httpClient.addInterceptor(loggingInterceptor);
-        httpClient.addInterceptor(provideOfflineCacheInterceptor());
-        httpClient.addNetworkInterceptor(provideCacheInterceptor());
-        httpClient.cache(provideCache());
+//        httpClient.addInterceptor(provideOfflineCacheInterceptor());
+//        httpClient.addNetworkInterceptor(provideCacheInterceptor());
+//        httpClient.cache(provideCache());
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Constants.BASE_URL_ADDRESS)
