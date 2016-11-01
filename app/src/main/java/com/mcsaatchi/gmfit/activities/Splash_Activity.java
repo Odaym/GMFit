@@ -118,7 +118,9 @@ public class Splash_Activity extends AppCompatActivity {
         });
     }
 
-    private void getUserProfile(final List<AuthenticationResponseChart> chartsMap) {
+    public void getUserProfile(final List<AuthenticationResponseChart> chartsMap) {
+        prefs = getSharedPreferences(Constants.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
+
         DataAccessHandler.getInstance().getUserProfile(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), new Callback<UserProfileResponse>() {
             @Override
             public void onResponse(Call<UserProfileResponse> call, Response<UserProfileResponse> response) {
@@ -135,6 +137,7 @@ public class Splash_Activity extends AppCompatActivity {
                             for (int i = 0; i < userMedicalConditions.size(); i++) {
                                 if (userMedicalConditions.get(i).getSelected().equals("1")) {
                                     prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION, userMedicalConditions.get(i).getName());
+                                    prefsEditor.putInt(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION_ID, Integer.parseInt(userMedicalConditions.get(i).getId()));
                                 }
                             }
 
@@ -162,6 +165,10 @@ public class Splash_Activity extends AppCompatActivity {
                             if (userProfileData.getGender() != null && !userProfileData.getGender().isEmpty()) {
                                 int finalGender = userProfileData.getGender().equals("Male") ? 1 : 0;
                                 prefsEditor.putInt(Constants.EXTRAS_USER_PROFILE_GENDER, finalGender);
+                            }
+
+                            if (userProfileData.getProfile_picture() != null && !userProfileData.getProfile_picture().isEmpty()) {
+                                prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_IMAGE, userProfileData.getProfile_picture());
                             }
 
                             prefsEditor.apply();

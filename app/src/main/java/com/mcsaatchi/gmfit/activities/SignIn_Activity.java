@@ -21,8 +21,6 @@ import android.widget.TextView;
 import com.andreabaccega.widget.FormEditText;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.classes.Constants;
-import com.mcsaatchi.gmfit.classes.EventBus_Poster;
-import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
 import com.mcsaatchi.gmfit.classes.Helpers;
 import com.mcsaatchi.gmfit.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponse;
@@ -226,8 +224,7 @@ public class SignIn_Activity extends Base_Activity {
                             for (int i = 0; i < userMedicalConditions.size(); i++) {
                                 if (userMedicalConditions.get(i).getSelected().equals("1")) {
                                     prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION, userMedicalConditions.get(i).getName());
-                                } else {
-                                    prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION, "None");
+                                    prefsEditor.putInt(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION_ID, Integer.parseInt(userMedicalConditions.get(i).getId()));
                                 }
                             }
 
@@ -252,15 +249,20 @@ public class SignIn_Activity extends Base_Activity {
                             if (userProfileData.getHeight() != null && !userProfileData.getHeight().isEmpty())
                                 prefsEditor.putFloat(Constants.EXTRAS_USER_PROFILE_HEIGHT, Float.parseFloat(userProfileData.getHeight()));
 
-                            prefsEditor.apply();
+                            if (userProfileData.getGender() != null && !userProfileData.getGender().isEmpty()) {
+                                int finalGender = userProfileData.getGender().equals("Male") ? 1 : 0;
+                                prefsEditor.putInt(Constants.EXTRAS_USER_PROFILE_GENDER, finalGender);
+                            }
 
-                            EventBus_Singleton.getInstance().post(new EventBus_Poster(Constants.EVENT_SIGNNED_UP_SUCCESSFULLY_CLOSE_LOGIN_ACTIVITY));
+                            if (userProfileData.getProfile_picture() != null && !userProfileData.getProfile_picture().isEmpty()) {
+                                prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_IMAGE, userProfileData.getProfile_picture());
+                            }
+
+                            prefsEditor.apply();
 
                             Intent intent = new Intent(SignIn_Activity.this, Main_Activity.class);
                             intent.putParcelableArrayListExtra(Constants.BUNDLE_FITNESS_CHARTS_MAP, (ArrayList<AuthenticationResponseChart>) chartsMap);
                             startActivity(intent);
-
-                            waitingDialog.dismiss();
 
                             finish();
 
