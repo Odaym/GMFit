@@ -78,6 +78,10 @@ public class DataAccessHandler {
                 finalGender, height, weight, BMI, callback);
     }
 
+    public void updateUserPicture(String userAccessToken, Map<String, RequestBody> profilePicture, Callback<DefaultGetResponse> callback){
+        ApiCallsHandler.getInstance().updateUserPicture(userAccessToken, profilePicture, callback);
+    }
+
     public void getUiForSection(String userAccessToken, String section, Callback<UiResponse> callback) {
         ApiCallsHandler.getInstance().getUiForSection(userAccessToken, section, callback);
     }

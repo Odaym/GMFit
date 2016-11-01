@@ -159,7 +159,7 @@ public class ApiCallsHandler {
 
     void updateUserProfile(String userAccessToken, String finalDateOfBirth, String bloodType, String nationality, int medical_condition, String measurementSystem, String goal,
                            int finalGender, double height, double weight, double BMI, final Callback<DefaultGetResponse> callback) {
-        Call<DefaultGetResponse> apiCall = new CachingRestClient().getGMFitService().updateUserProfile(userAccessToken, new UpdateProfileRequest(finalDateOfBirth, bloodType,
+        Call<DefaultGetResponse> apiCall = new RestClient().getGMFitService().updateUserProfile(userAccessToken, new UpdateProfileRequest(finalDateOfBirth, bloodType,
                 nationality, medical_condition, measurementSystem, goal, finalGender, height, weight, BMI));
 
         apiCall.enqueue(new Callback<DefaultGetResponse>() {
@@ -588,7 +588,7 @@ public class ApiCallsHandler {
     }
 
     void getUserProfile(String userAccessToken, final Callback<UserProfileResponse> callback) {
-        Call<UserProfileResponse> apiCall = new CachingRestClient().getGMFitService().getUserProfile(userAccessToken);
+        Call<UserProfileResponse> apiCall = new RestClient().getGMFitService().getUserProfile(userAccessToken);
 
         apiCall.enqueue(new Callback<UserProfileResponse>() {
             @Override
@@ -637,6 +637,22 @@ public class ApiCallsHandler {
 
     void deleteUserMeal(String userAccessToken, int instance_id, final Callback<DefaultGetResponse> callback){
         Call<DefaultGetResponse> apiCall = new CachingRestClient().getGMFitService().deleteUserMeal(userAccessToken, new DeleteMealRequest(instance_id));
+
+        apiCall.enqueue(new Callback<DefaultGetResponse>() {
+            @Override
+            public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
+                callback.onResponse(call, response);
+            }
+
+            @Override
+            public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+                callback.onFailure(call, t);
+            }
+        });
+    }
+
+    void updateUserPicture(String userAccessToken, Map<String, RequestBody> profilePicture, final Callback<DefaultGetResponse> callback) {
+        Call<DefaultGetResponse> apiCall = new RestClient().getGMFitService().updateUserPicture(userAccessToken, profilePicture);
 
         apiCall.enqueue(new Callback<DefaultGetResponse>() {
             @Override

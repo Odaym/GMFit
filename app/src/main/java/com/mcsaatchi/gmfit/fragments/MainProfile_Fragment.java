@@ -56,11 +56,14 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -110,13 +113,13 @@ public class MainProfile_Fragment extends Fragment {
 
     private File photoFile;
     private Uri photoFileUri;
+    private boolean profilePictureChanged = false;
 
     private MenuItem saveChangesItem;
 
     private SharedPreferences prefs;
 
     private double newUserWeight;
-    private int newUserMedicalConditionId;
     private String newUserGoal;
 
     private List<MedicalConditionsResponseDatum> userMedicalConditions = new ArrayList<>();
@@ -136,7 +139,7 @@ public class MainProfile_Fragment extends Fragment {
 
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.profile_tab_title);
 
-        Picasso.with(getActivity()).load(new File(prefs.getString(Constants.EXTRAS_USER_PROFILE_IMAGE, ""))).resize(200, 200).transform(new CircleTransform()).centerInside().into(userProfileIV);
+        Picasso.with(getActivity()).load(prefs.getString(Constants.EXTRAS_USER_PROFILE_IMAGE, "")).resize(200, 200).transform(new CircleTransform()).centerInside().into(userProfileIV);
 
         userFullNameTV.setText(prefs.getString(Constants.EXTRAS_USER_PROFILE_USER_FULL_NAME, ""));
 
@@ -338,7 +341,7 @@ public class MainProfile_Fragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.save_changes:
-                saveUserProfile();
+                updateUserProfile();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -376,9 +379,13 @@ public class MainProfile_Fragment extends Fragment {
 
         switch (requestCode) {
             case CAPTURE_NEW_PICTURE_REQUEST_CODE:
+                prefs.edit().putString(Constants.EXTRAS_USER_PROFILE_IMAGE, photoFile.getAbsolutePath()).apply();
+
                 Picasso.with(getActivity()).load(new File(prefs.getString(Constants.EXTRAS_USER_PROFILE_IMAGE, ""))).resize(200, 200).transform(new CircleTransform()).centerInside().into(userProfileIV);
 
-                prefs.edit().putString(Constants.EXTRAS_USER_PROFILE_IMAGE, photoFile.getAbsolutePath()).apply();
+                profilePictureChanged = true;
+
+                showSaveChangesMenuItem();
 
                 break;
         }
@@ -424,12 +431,13 @@ public class MainProfile_Fragment extends Fragment {
         return mediaStorageDir.getPath() + File.separator + imageFileName;
     }
 
-    private void saveUserProfile() {
+    private void updateUserProfile() {
         String dateOfBirth = prefs.getString(Constants.EXTRAS_USER_PROFILE_DATE_OF_BIRTH, "");
         String bloodType = prefs.getString(Constants.EXTRAS_USER_PROFILE_BLOOD_TYPE, "");
         String nationality = prefs.getString(Constants.EXTRAS_USER_PROFILE_NATIONALITY, "");
         String measurementSystem = prefs.getString(Constants.EXTRAS_USER_PROFILE_MEASUREMENT_SYSTEM, "");
         String userGoal = prefs.getString(Constants.EXTRAS_USER_PROFILE_GOAL, "");
+        int medicalCondition = prefs.getInt(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION_ID, 0);
         int gender = prefs.getInt(Constants.EXTRAS_USER_PROFILE_GENDER, 1);
         float height = prefs.getFloat(Constants.EXTRAS_USER_PROFILE_HEIGHT, 0.0f);
         float weight = prefs.getFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, 0.0f);
@@ -452,21 +460,53 @@ public class MainProfile_Fragment extends Fragment {
                 });
 
         DataAccessHandler.getInstance().updateUserProfile(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), dateOfBirth,
-                bloodType, nationality, newUserMedicalConditionId, measurementSystem, userGoal, gender, height, weight,
+                bloodType, nationality, medicalCondition, measurementSystem, userGoal, gender, height, weight,
                 Helpers.calculateBMI(weight, height), new Callback<DefaultGetResponse>() {
                     @Override
                     public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
                         switch (response.code()) {
                             case 200:
-                                waitingDialog.dismiss();
 
-                                Toast.makeText(getActivity(), "Your profile was updated succesfully", Toast.LENGTH_SHORT).show();
+                                if (profilePictureChanged) {
+                                    updateUserPicture(waitingDialog, alertDialog);
+                                } else {
+                                    waitingDialog.dismiss();
+                                    Toast.makeText(getActivity(), "Your profile was updated succesfully", Toast.LENGTH_SHORT).show();
+                                }
+
                                 break;
-                            case 401:
-                                waitingDialog.dismiss();
+                        }
+                    }
 
-                                alertDialog.setMessage(getString(R.string.login_failed_wrong_credentials));
-                                alertDialog.show();
+                    @Override
+                    public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+                        alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
+                        alertDialog.show();
+                    }
+                });
+    }
+
+    private void updateUserPicture(final ProgressDialog waitingDialog, final AlertDialog alertDialog) {
+        HashMap<String, RequestBody> profilePictureParts = new HashMap<>();
+
+        String userPicturePath = prefs.getString(Constants.EXTRAS_USER_PROFILE_IMAGE, "");
+
+        File imageFile = new File(userPicturePath);
+
+        RequestBody imageFilePart = RequestBody.create(MediaType.parse("image/jpeg"), imageFile);
+
+        profilePictureParts.put("picture\"; filename=\"" + userPicturePath + ".jpg", imageFilePart);
+
+        DataAccessHandler.getInstance().updateUserPicture(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
+                profilePictureParts, new Callback<DefaultGetResponse>() {
+                    @Override
+                    public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
+                        switch (response.code()) {
+                            case 200:
+
+                                waitingDialog.dismiss();
+                                Toast.makeText(getActivity(), "Your profile was updated successfully", Toast.LENGTH_SHORT).show();
+
                                 break;
                         }
                     }
@@ -519,13 +559,11 @@ public class MainProfile_Fragment extends Fragment {
 
                                 medicalConditionsValueTV.setText(selectedRadioButton.getText().toString());
 
-                                newUserMedicalConditionId = selectedRadioButton.getId();
-
-                                if (!medicalConditionsValueTV.getText().toString().equals(prefs.getString(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION, ""))) {
+                                if (!(selectedRadioButton.getId() == prefs.getInt(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION_ID, 0))) {
                                     showSaveChangesMenuItem();
                                 }
 
-                                prefs.edit().putString(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION, selectedRadioButton.getText().toString()).apply();
+                                prefs.edit().putInt(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION_ID, selectedRadioButton.getId()).apply();
                             }
                         });
                         dialogBuilder.setNegativeButton(R.string.decline_cancel, new DialogInterface.OnClickListener() {
