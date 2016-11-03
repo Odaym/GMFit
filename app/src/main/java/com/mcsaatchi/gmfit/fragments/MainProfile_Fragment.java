@@ -41,8 +41,10 @@ import com.mcsaatchi.gmfit.classes.Helpers;
 import com.mcsaatchi.gmfit.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.rest.EmergencyProfileResponse;
-import com.mcsaatchi.gmfit.rest.MedicalConditionsResponse;
-import com.mcsaatchi.gmfit.rest.MedicalConditionsResponseDatum;
+import com.mcsaatchi.gmfit.rest.UserProfileResponse;
+import com.mcsaatchi.gmfit.rest.UserProfileResponseDatum;
+import com.mcsaatchi.gmfit.rest.UserProfileResponseGoal;
+import com.mcsaatchi.gmfit.rest.UserProfileResponseMedicalCondition;
 import com.mukesh.countrypicker.fragments.CountryPicker;
 import com.mukesh.countrypicker.interfaces.CountryPickerListener;
 import com.squareup.picasso.Picasso;
@@ -67,6 +69,7 @@ import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import worker8.com.github.radiogroupplus.RadioGroupPlus;
 
 public class MainProfile_Fragment extends Fragment {
     private static final int REQUEST_WRITE_STORAGE = 112;
@@ -120,9 +123,9 @@ public class MainProfile_Fragment extends Fragment {
     private SharedPreferences prefs;
 
     private double newUserWeight;
-    private String newUserGoal;
 
-    private List<MedicalConditionsResponseDatum> userMedicalConditions = new ArrayList<>();
+    private List<UserProfileResponseMedicalCondition> userMedicalConditions = new ArrayList<>();
+    private List<UserProfileResponseGoal> userGoals = new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater,
@@ -139,21 +142,7 @@ public class MainProfile_Fragment extends Fragment {
 
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.profile_tab_title);
 
-        Picasso.with(getActivity()).load(prefs.getString(Constants.EXTRAS_USER_PROFILE_IMAGE, "")).resize(200, 200).transform(new CircleTransform()).centerInside().into(userProfileIV);
-
-        userFullNameTV.setText(prefs.getString(Constants.EXTRAS_USER_PROFILE_USER_FULL_NAME, ""));
-
-        userEmailTV.setText(prefs.getString(Constants.EXTRAS_USER_PROFILE_USER_EMAIL, ""));
-
-        weightEntryValueTV.setText(String.valueOf((int) prefs.getFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, 0)));
-
-        goalsEntryValueTV.setText(prefs.getString(Constants.EXTRAS_USER_PROFILE_GOAL, "Maintain Weight"));
-
-        countryValueTV.setText(prefs.getString(Constants.EXTRAS_USER_PROFILE_NATIONALITY, ""));
-
-        metricSystemValueTV.setText(prefs.getString(Constants.EXTRAS_USER_PROFILE_MEASUREMENT_SYSTEM, ""));
-
-        medicalConditionsValueTV.setText(prefs.getString(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION, "None"));
+        getUserProfile();
 
         takePictureIV.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -227,14 +216,14 @@ public class MainProfile_Fragment extends Fragment {
 
                 final RadioGroup goalRadioButtonsGroup = (RadioGroup) dialogView.findViewById(R.id.goalRadioButtonsGroup);
 
-                /**
-                 * Initialize RadioButtonGroup with user's stored goal
-                 */
-                for (int i = 0; i < goalRadioButtonsGroup.getChildCount(); i++) {
-                    RadioButton radioButton = (RadioButton) goalRadioButtonsGroup.getChildAt(i);
+                for (int i = 0; i < userGoals.size(); i++) {
+                    View listItemRadioButton = getActivity().getLayoutInflater().inflate(R.layout.list_item_edit_goal_dialog, null);
 
-                    if (radioButton.getText().toString().equals(prefs.getString(Constants.EXTRAS_USER_PROFILE_GOAL, "")))
-                        radioButton.setChecked(true);
+                    final RadioButton radioButtonItem = (RadioButton) listItemRadioButton.findViewById(R.id.editGoalRadioBTN);
+                    radioButtonItem.setText(userGoals.get(i).getName());
+                    radioButtonItem.setId(Integer.parseInt(userGoals.get(i).getId()));
+
+                    goalRadioButtonsGroup.addView(listItemRadioButton);
                 }
 
                 dialogBuilder.setView(dialogView);
@@ -243,14 +232,16 @@ public class MainProfile_Fragment extends Fragment {
                     public void onClick(DialogInterface dialogInterface, int i) {
                         RadioButton selectedRadioButton = (RadioButton) goalRadioButtonsGroup.findViewById(goalRadioButtonsGroup.getCheckedRadioButtonId());
 
-                        newUserGoal = selectedRadioButton.getText().toString();
-                        goalsEntryValueTV.setText(newUserGoal);
+                        int newUserGoalId = selectedRadioButton.getId();
+                        String newUserGoalText = selectedRadioButton.getText().toString();
 
-                        if (!newUserGoal.equals(prefs.getString(Constants.EXTRAS_USER_PROFILE_GOAL, ""))) {
+                        goalsEntryValueTV.setText(newUserGoalText);
+
+                        if (!newUserGoalText.equals((prefs.getString(Constants.EXTRAS_USER_PROFILE_GOAL, "")))) {
                             showSaveChangesMenuItem();
                         }
 
-                        prefs.edit().putString(Constants.EXTRAS_USER_PROFILE_GOAL, newUserGoal).apply();
+                        prefs.edit().putInt(Constants.EXTRAS_USER_PROFILE_GOAL_ID, newUserGoalId).apply();
                     }
                 });
                 dialogBuilder.setNegativeButton(R.string.decline_cancel, new DialogInterface.OnClickListener() {
@@ -268,7 +259,51 @@ public class MainProfile_Fragment extends Fragment {
         medicalConditionsLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getMedicalConditionsAndShowDialog();
+                final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
+                dialogBuilder.setTitle(R.string.profile_edit_medical_conditions_dialog_title);
+
+                View dialogView = LayoutInflater.from(getActivity()).inflate(R.layout.profile_edit_medical_conditions_layout, null);
+
+                final RadioGroupPlus medicalRdGroup = (RadioGroupPlus) dialogView.findViewById(R.id.medicalConditionsRdGroup);
+
+                for (int i = 0; i < userMedicalConditions.size(); i++) {
+                    View listItemRadioButton = getActivity().getLayoutInflater().inflate(R.layout.list_item_edit_medical_condition_dialog, null);
+
+                    final RadioButton radioButtonItem = (RadioButton) listItemRadioButton.findViewById(R.id.editConditionRadioBTN);
+                    radioButtonItem.setText(userMedicalConditions.get(i).getName());
+                    radioButtonItem.setId(Integer.parseInt(userMedicalConditions.get(i).getId()));
+
+                    if (userMedicalConditions.get(i).getSelected().equals("1")) {
+                        radioButtonItem.setChecked(true);
+                    } else {
+                        radioButtonItem.setChecked(false);
+                    }
+
+                    medicalRdGroup.addView(listItemRadioButton);
+                }
+
+                dialogBuilder.setView(dialogView);
+                dialogBuilder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int position) {
+                        RadioButton selectedRadioButton = (RadioButton) medicalRdGroup.findViewById(medicalRdGroup.getCheckedRadioButtonId());
+
+                        medicalConditionsValueTV.setText(selectedRadioButton.getText().toString());
+
+                        showSaveChangesMenuItem();
+
+                        prefs.edit().putInt(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION_ID, selectedRadioButton.getId()).apply();
+                    }
+                });
+                dialogBuilder.setNegativeButton(R.string.decline_cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+
+                AlertDialog alertDialog = dialogBuilder.create();
+                alertDialog.show();
             }
         });
 
@@ -431,12 +466,96 @@ public class MainProfile_Fragment extends Fragment {
         return mediaStorageDir.getPath() + File.separator + imageFileName;
     }
 
+    private void getUserProfile() {
+        DataAccessHandler.getInstance().getUserProfile(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), new Callback<UserProfileResponse>() {
+            @Override
+            public void onResponse(Call<UserProfileResponse> call, Response<UserProfileResponse> response) {
+                switch (response.code()) {
+                    case 200:
+                        UserProfileResponseDatum userProfileData = response.body().getData().getBody().getData();
+
+                        SharedPreferences.Editor prefsEditor = prefs.edit();
+
+                        if (userProfileData != null) {
+
+                            userMedicalConditions = userProfileData.getMedicalConditions();
+                            userGoals = userProfileData.getUserGoals();
+
+                            for (int i = 0; i < userMedicalConditions.size(); i++) {
+                                if (userMedicalConditions.get(i).getSelected().equals("1")) {
+                                    prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION, userMedicalConditions.get(i).getName());
+                                    prefsEditor.putInt(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION_ID, Integer.parseInt(userMedicalConditions.get(i).getId()));
+
+                                    medicalConditionsValueTV.setText(userMedicalConditions.get(i).getName());
+                                }
+                            }
+
+                            for (int i = 0; i < userGoals.size(); i++) {
+                                if (userGoals.get(i).getSelected().equals("1")) {
+                                    prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_GOAL, userGoals.get(i).getName());
+                                    prefsEditor.putInt(Constants.EXTRAS_USER_PROFILE_GOAL_ID, Integer.parseInt(userGoals.get(i).getId()));
+
+                                    goalsEntryValueTV.setText(userGoals.get(i).getName());
+                                }
+                            }
+
+                            if (userProfileData.getName() != null && !userProfileData.getName().isEmpty()) {
+                                prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_USER_FULL_NAME, userProfileData.getName());
+                                userFullNameTV.setText(userProfileData.getName());
+                            }
+
+                            if (userProfileData.getEmail() != null && !userProfileData.getEmail().isEmpty()) {
+                                prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_USER_EMAIL, userProfileData.getEmail());
+                                userEmailTV.setText(userProfileData.getEmail());
+                            }
+
+                            if (userProfileData.getWeight() != null && !userProfileData.getWeight().isEmpty()) {
+                                prefsEditor.putFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, Float.parseFloat(userProfileData.getWeight()));
+                                weightEntryValueTV.setText(userProfileData.getWeight());
+                            }
+
+                            if (userProfileData.getCountry() != null && !userProfileData.getCountry().isEmpty()) {
+                                prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_NATIONALITY, userProfileData.getCountry());
+                                countryValueTV.setText(userProfileData.getCountry());
+                            }
+
+                            if (userProfileData.getMetricSystem() != null && !userProfileData.getMetricSystem().isEmpty()) {
+                                prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_MEASUREMENT_SYSTEM, userProfileData.getMetricSystem());
+                                metricSystemValueTV.setText(userProfileData.getMetricSystem());
+                            }
+
+                            if (userProfileData.getGender() != null && !userProfileData.getGender().isEmpty()) {
+                                int finalGender = userProfileData.getGender().equals("Male") ? 1 : 0;
+                                prefsEditor.putInt(Constants.EXTRAS_USER_PROFILE_GENDER, finalGender);
+                            }
+
+                            if (userProfileData.getProfile_picture() != null && !userProfileData.getProfile_picture().isEmpty()) {
+                                prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_IMAGE, userProfileData.getProfile_picture());
+
+                                Picasso.with(getActivity()).load(userProfileData.getProfile_picture()).resize(200, 200).transform(new CircleTransform()).centerInside().into(userProfileIV);
+                            }
+
+                            prefsEditor.apply();
+
+                            break;
+                        }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<UserProfileResponse> call, Throwable t) {
+                Log.d("TAG", "onFailure: User profile request failed!");
+            }
+        });
+    }
+
     private void updateUserProfile() {
         String dateOfBirth = prefs.getString(Constants.EXTRAS_USER_PROFILE_DATE_OF_BIRTH, "");
         String bloodType = prefs.getString(Constants.EXTRAS_USER_PROFILE_BLOOD_TYPE, "");
         String nationality = prefs.getString(Constants.EXTRAS_USER_PROFILE_NATIONALITY, "");
         String measurementSystem = prefs.getString(Constants.EXTRAS_USER_PROFILE_MEASUREMENT_SYSTEM, "");
-        String userGoal = prefs.getString(Constants.EXTRAS_USER_PROFILE_GOAL, "");
+        int userGoalId = prefs.getInt(Constants.EXTRAS_USER_PROFILE_GOAL_ID, 0);
+        int activityLevelId = prefs.getInt(Constants.EXTRAS_USER_PROFILE_ACTIVITY_LEVEL_ID, 0);
         int medicalCondition = prefs.getInt(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION_ID, 0);
         int gender = prefs.getInt(Constants.EXTRAS_USER_PROFILE_GENDER, 1);
         float height = prefs.getFloat(Constants.EXTRAS_USER_PROFILE_HEIGHT, 0.0f);
@@ -460,7 +579,7 @@ public class MainProfile_Fragment extends Fragment {
                 });
 
         DataAccessHandler.getInstance().updateUserProfile(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), dateOfBirth,
-                bloodType, nationality, medicalCondition, measurementSystem, userGoal, gender, height, weight,
+                bloodType, nationality, medicalCondition, measurementSystem, activityLevelId, userGoalId, gender, height, weight,
                 Helpers.calculateBMI(weight, height), new Callback<DefaultGetResponse>() {
                     @Override
                     public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
@@ -517,74 +636,6 @@ public class MainProfile_Fragment extends Fragment {
                         alertDialog.show();
                     }
                 });
-    }
-
-    private void getMedicalConditionsAndShowDialog() {
-        DataAccessHandler.getInstance().getMedicalConditions(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), new Callback<MedicalConditionsResponse>() {
-            @Override
-            public void onResponse(Call<MedicalConditionsResponse> call, Response<MedicalConditionsResponse> response) {
-                switch (response.code()) {
-                    case 200:
-                        userMedicalConditions = response.body().getData().getBody().getData();
-
-                        final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
-                        dialogBuilder.setTitle(R.string.profile_edit_medical_conditions_dialog_title);
-
-                        View dialogView = LayoutInflater.from(getActivity()).inflate(R.layout.profile_edit_medical_conditions_layout, null);
-
-                        final RadioGroup medicalRdGroup = (RadioGroup) dialogView.findViewById(R.id.medicalConditionsRdGroup);
-
-                        for (int i = 0; i < userMedicalConditions.size(); i++) {
-                            final RadioButton radioButton = new RadioButton(getActivity());
-                            radioButton.setLayoutParams(new RadioGroup.LayoutParams(RadioGroup.LayoutParams.MATCH_PARENT, RadioGroup.LayoutParams.MATCH_PARENT));
-                            radioButton.setPadding(0, getResources().getDimensionPixelSize(R.dimen.default_margin_1), 0, getResources().getDimensionPixelSize(R.dimen.default_margin_1));
-
-                            radioButton.setText(userMedicalConditions.get(i).getName());
-                            radioButton.setId(Integer.parseInt(userMedicalConditions.get(i).getId()));
-
-                            if (userMedicalConditions.get(i).getSelected().equals("1")) {
-                                radioButton.setChecked(true);
-                            } else {
-                                radioButton.setChecked(false);
-                            }
-
-                            medicalRdGroup.addView(radioButton);
-                        }
-
-                        dialogBuilder.setView(dialogView);
-                        dialogBuilder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int position) {
-                                RadioButton selectedRadioButton = (RadioButton) medicalRdGroup.findViewById(medicalRdGroup.getCheckedRadioButtonId());
-
-                                medicalConditionsValueTV.setText(selectedRadioButton.getText().toString());
-
-                                if (!(selectedRadioButton.getId() == prefs.getInt(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION_ID, 0))) {
-                                    showSaveChangesMenuItem();
-                                }
-
-                                prefs.edit().putInt(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION_ID, selectedRadioButton.getId()).apply();
-                            }
-                        });
-                        dialogBuilder.setNegativeButton(R.string.decline_cancel, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                dialogInterface.dismiss();
-                            }
-                        });
-
-                        AlertDialog alertDialog = dialogBuilder.create();
-                        alertDialog.show();
-
-                        break;
-                }
-            }
-
-            @Override
-            public void onFailure(Call<MedicalConditionsResponse> call, Throwable t) {
-                Log.d("TAG", "onFailure: User profile request failed!");
-            }
-        });
     }
 
     private void showSaveChangesMenuItem() {
