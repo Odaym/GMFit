@@ -130,6 +130,7 @@
     <string name="connect_google_fit_hint">Connecting to Google Fit allows automatic tracking of your daily activities</string>
     <string name="connect_google_fit_learn">Learn more about Google Fit</string>
     <string name="choose_goal_hint">Choose your goal</string>
+    <string name="choose_lifestyle_hint">Choose your Lifestyle</string>
     <string name="choose_measurement_unit">Units of Measurement</string>
     <string name="measurement_unit_metric">Metric</string>
     <string name="measurement_unit_imperial">Imperial</string>
@@ -149,15 +150,18 @@
     <string name="error_first_name_not_valid">Names cannot contain numbers</string>
     <string name="setting_up_profile_dialog_title">Setting up your profile</string>
     <string name="setup_profile_step_3_heading_hint">Tell us more about yourself</string>
-    <string name="setup_profile_step_1_title">Step 1 of 3</string>
-    <string name="setup_profile_step_2_title">Step 2 of 3</string>
-    <string name="setup_profile_step_3_title">Step 3 of 3</string>
+    <string name="setup_profile_step_1_title">Step 1 of 4</string>
+    <string name="setup_profile_step_2_title">Step 2 of 4</string>
+    <string name="setup_profile_step_3_title">Step 3 of 4</string>
+    <string name="setup_profile_step_4_title">Step 4 of 4</string>
     <string name="male_option">Male</string>
     <string name="female_option">Female</string>
     <string name="you_can_change_this_setting_hint">You can change these settings at any time from the preferences</string>
     <string name="medical_conditions_hint">Medical Condition\n(if any)</string>
     <string name="weight_or_height_empty_dialog_title">Input incomplete</string>
     <string name="weight_or_height_empty_dialog_message">Please make sure to fill in both your weight and height</string>
+    <string name="fetching_activity_levels_dialog_title">Loading activity levels</string>
+    <string name="fetching_user_goals">Loading user goals</string>
 
     <!-- CUSTOMIZE WIDGETS AND CHARTS ACTIVITY -->
     <string name="customize_widgets_and_charts_activity_title">Customize</string>

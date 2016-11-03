@@ -16,8 +16,8 @@ repositories {
     maven { url 'https://maven.fabric.io/public' }
 }
 
-def supportLibVersion = '24.2.1'
-def playServicesVersion = '9.6.1'
+def supportLibVersion = '25.0.0'
+def playServicesVersion = '9.8.0'
 def retroFitVersion = '2.1.0'
 def OkHttpVersion = '3.4.1'
 
@@ -96,6 +96,7 @@ dependencies {
     compile "com.squareup.okhttp3:okhttp:$OkHttpVersion"
     compile 'de.halfbit:pinned-section-listview:1.0.0'
     compile 'com.github.PhilJay:MPAndroidChart:v2.2.5'
+    compile 'com.github.worker8:RadioGroupPlus:v1.0.1'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'uk.co.chrisjenx:calligraphy:2.2.0'
     compile 'com.jakewharton:butterknife:7.0.1'

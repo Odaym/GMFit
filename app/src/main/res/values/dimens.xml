@@ -17,6 +17,7 @@
     <dimen name="default_margin_3">30dp</dimen>
     <dimen name="default_margin_4">40dp</dimen>
     <dimen name="default_margin_5">50dp</dimen>
+    <dimen name="default_margin_8">80dp</dimen>
     <dimen name="default_margin_10">100dp</dimen>
 
     <dimen name="default_button_text_size">20sp</dimen>
@@ -82,6 +83,7 @@
     <!-- SETUP PROFILE STEPS-->
     <dimen name="radiobutton_row_height">65dp</dimen>
     <dimen name="radiobutton_row_height_smaller">55dp</dimen>
+    <dimen name="radiobutton_row_height_larger">80dp</dimen>
     <dimen name="country_flag_image_dimen">50dp</dimen>
     <dimen name="text_input_label_width">150dp</dimen>
     <dimen name="text_input_label_width_smaller">50dp</dimen>
