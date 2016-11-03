@@ -21,6 +21,7 @@ import com.mcsaatchi.gmfit.classes.NonSwipeableViewPager;
 import com.mcsaatchi.gmfit.fragments.Setup_Profile_1_Fragment;
 import com.mcsaatchi.gmfit.fragments.Setup_Profile_2_Fragment;
 import com.mcsaatchi.gmfit.fragments.Setup_Profile_3_Fragment;
+import com.mcsaatchi.gmfit.fragments.Setup_Profile_4_Fragment;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -52,6 +53,7 @@ public class SetupProfile_Activity extends Base_Activity {
 
     private void setupViewPager(final SetupProfile_Adapter setupProfileAdapter) {
         viewPager.setAdapter(setupProfileAdapter);
+        viewPager.setOffscreenPageLimit(3);
 
         viewPager.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -79,6 +81,10 @@ public class SetupProfile_Activity extends Base_Activity {
                         break;
                     case 2:
                         toolbar.setTitle(getString(R.string.setup_profile_step_3_title));
+                        nextPageBTN.setText(getString(R.string.next_step));
+                        break;
+                    case 3:
+                        toolbar.setTitle(getString(R.string.setup_profile_step_4_title));
                         nextPageBTN.setText(getString(R.string.finish_setup));
                         break;
                 }
@@ -136,6 +142,8 @@ public class SetupProfile_Activity extends Base_Activity {
                     return new Setup_Profile_2_Fragment();
                 case 2:
                     return new Setup_Profile_3_Fragment();
+                case 3:
+                    return new Setup_Profile_4_Fragment();
                 default:
                     return null;
             }
@@ -143,7 +151,7 @@ public class SetupProfile_Activity extends Base_Activity {
 
         @Override
         public int getCount() {
-            return 3;
+            return 4;
         }
     }
 }
