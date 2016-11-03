@@ -24,6 +24,9 @@ public class Constants {
     public static final String EXTRAS_USER_PROFILE_GENDER = "user_profile_gender";
     public static final String EXTRAS_USER_PROFILE_NATIONALITY = "user_profile_nationality";
     public static final String EXTRAS_USER_PROFILE_GOAL = "user_profile_goal";
+    public static final String EXTRAS_USER_PROFILE_GOAL_ID = "user_profile_goal_id";
+    public static final String EXTRAS_USER_PROFILE_ACTIVITY_LEVEL = "user_profile_activity_level";
+    public static final String EXTRAS_USER_PROFILE_ACTIVITY_LEVEL_ID = "user_profile_activity_level_id";
     public static final String EXTRAS_USER_PROFILE_DATE_OF_BIRTH = "user_profile_date_of_birth";
     public static final String EXTRAS_USER_PROFILE_WEIGHT = "user_profile_weight";
     public static final String EXTRAS_USER_PROFILE_HEIGHT = "user_profile_height";
