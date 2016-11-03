@@ -2,6 +2,7 @@ package com.mcsaatchi.gmfit.data_access;
 
 import com.mcsaatchi.gmfit.classes.Constants;
 import com.mcsaatchi.gmfit.classes.Helpers;
+import com.mcsaatchi.gmfit.rest.ActivityLevelsResponse;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponse;
 import com.mcsaatchi.gmfit.rest.CachingRestClient;
 import com.mcsaatchi.gmfit.rest.ChartMetricBreakdownResponse;
@@ -18,6 +19,7 @@ import com.mcsaatchi.gmfit.rest.SearchMealItemResponse;
 import com.mcsaatchi.gmfit.rest.SlugBreakdownResponse;
 import com.mcsaatchi.gmfit.rest.TakenMedicalTestsResponse;
 import com.mcsaatchi.gmfit.rest.UiResponse;
+import com.mcsaatchi.gmfit.rest.UserGoalsResponse;
 import com.mcsaatchi.gmfit.rest.UserMealsResponse;
 import com.mcsaatchi.gmfit.rest.UserPolicyResponse;
 import com.mcsaatchi.gmfit.rest.UserProfileResponse;
@@ -157,10 +159,10 @@ public class ApiCallsHandler {
         });
     }
 
-    void updateUserProfile(String userAccessToken, String finalDateOfBirth, String bloodType, String nationality, int medical_condition, String measurementSystem, String goal,
-                           int finalGender, double height, double weight, double BMI, final Callback<DefaultGetResponse> callback) {
+    void updateUserProfile(String userAccessToken, String finalDateOfBirth, String bloodType, String nationality, int medical_condition, String measurementSystem,
+                           int goalId, int activityLevelId, int finalGender, double height, double weight, double BMI, final Callback<DefaultGetResponse> callback) {
         Call<DefaultGetResponse> apiCall = new RestClient().getGMFitService().updateUserProfile(userAccessToken, new UpdateProfileRequest(finalDateOfBirth, bloodType,
-                nationality, medical_condition, measurementSystem, goal, finalGender, height, weight, BMI));
+                nationality, medical_condition, measurementSystem, goalId, activityLevelId, finalGender, height, weight, BMI));
 
         apiCall.enqueue(new Callback<DefaultGetResponse>() {
             @Override
@@ -177,6 +179,7 @@ public class ApiCallsHandler {
 
     /**
      * Non-Caching
+     *
      * @param userAccessToken
      * @param section
      * @param callback
@@ -327,6 +330,7 @@ public class ApiCallsHandler {
 
     /**
      * Non-Caching
+     *
      * @param userAccessToken
      * @param callback
      */
@@ -619,7 +623,7 @@ public class ApiCallsHandler {
         });
     }
 
-    void deleteUserChart(String userAccessToken, String chart_id, final Callback<DefaultGetResponse> callback){
+    void deleteUserChart(String userAccessToken, String chart_id, final Callback<DefaultGetResponse> callback) {
         Call<DefaultGetResponse> apiCall = new CachingRestClient().getGMFitService().deleteUserChart(userAccessToken, new DeleteUserChartRequest(chart_id));
 
         apiCall.enqueue(new Callback<DefaultGetResponse>() {
@@ -635,7 +639,7 @@ public class ApiCallsHandler {
         });
     }
 
-    void deleteUserMeal(String userAccessToken, int instance_id, final Callback<DefaultGetResponse> callback){
+    void deleteUserMeal(String userAccessToken, int instance_id, final Callback<DefaultGetResponse> callback) {
         Call<DefaultGetResponse> apiCall = new CachingRestClient().getGMFitService().deleteUserMeal(userAccessToken, new DeleteMealRequest(instance_id));
 
         apiCall.enqueue(new Callback<DefaultGetResponse>() {
@@ -662,6 +666,38 @@ public class ApiCallsHandler {
 
             @Override
             public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+                callback.onFailure(call, t);
+            }
+        });
+    }
+
+    void getActivityLevels(String userAccessToken, final Callback<ActivityLevelsResponse> callback) {
+        Call<ActivityLevelsResponse> apiCall = new RestClient().getGMFitService().getActivityLevels("Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjYwLCJpc3MiOiJodHRwOlwvXC9nbWZpdC5tY3NhYXRjaGkubWVcL2FwaVwvdjFcL2xvZ2luIiwiaWF0IjoxNDc4MDkxNTk3LCJleHAiOjE0Nzg2OTYzOTcsIm5iZiI6MTQ3ODA5MTU5NywianRpIjoiZDE2MTAzNTAwNjYzOTA2M2EyYjk5ZTE0MGNmNjBiOGYifQ.9Dzd0uU6a8RBtuLt35GdP7QMlFJqF7OL895h5dLe22s");
+
+        apiCall.enqueue(new Callback<ActivityLevelsResponse>() {
+            @Override
+            public void onResponse(Call<ActivityLevelsResponse> call, Response<ActivityLevelsResponse> response) {
+                callback.onResponse(call, response);
+            }
+
+            @Override
+            public void onFailure(Call<ActivityLevelsResponse> call, Throwable t) {
+                callback.onFailure(call, t);
+            }
+        });
+    }
+
+    void getUserGoals(String userAccessToken, final Callback<UserGoalsResponse> callback) {
+        Call<UserGoalsResponse> apiCall = new RestClient().getGMFitService().getUserGoals("Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjYwLCJpc3MiOiJodHRwOlwvXC9nbWZpdC5tY3NhYXRjaGkubWVcL2FwaVwvdjFcL2xvZ2luIiwiaWF0IjoxNDc4MDkxNTk3LCJleHAiOjE0Nzg2OTYzOTcsIm5iZiI6MTQ3ODA5MTU5NywianRpIjoiZDE2MTAzNTAwNjYzOTA2M2EyYjk5ZTE0MGNmNjBiOGYifQ.9Dzd0uU6a8RBtuLt35GdP7QMlFJqF7OL895h5dLe22s");
+
+        apiCall.enqueue(new Callback<UserGoalsResponse>() {
+            @Override
+            public void onResponse(Call<UserGoalsResponse> call, Response<UserGoalsResponse> response) {
+                callback.onResponse(call, response);
+            }
+
+            @Override
+            public void onFailure(Call<UserGoalsResponse> call, Throwable t) {
                 callback.onFailure(call, t);
             }
         });
@@ -707,20 +743,22 @@ public class ApiCallsHandler {
         final String country;
         final String metric_system;
         final int medical_conditions;
-        final String goal;
+        final int user_goal;
+        final int activity_level;
         final int gender;
         final double height;
         final double weight;
         final double BMI;
 
-        UpdateProfileRequest(String date_of_birth, String blood_type, String country, int medical_conditions, String metric_system, String goal, int
-                gender, double height, double weight, double BMI) {
+        UpdateProfileRequest(String date_of_birth, String blood_type, String country, int medical_conditions, String metric_system, int user_goal, int activity_level,
+                             int gender, double height, double weight, double BMI) {
             this.date_of_birth = date_of_birth;
             this.blood_type = blood_type;
             this.country = country;
             this.metric_system = metric_system;
             this.medical_conditions = medical_conditions;
-            this.goal = goal;
+            this.user_goal = user_goal;
+            this.activity_level = activity_level;
             this.gender = gender;
             this.height = height;
             this.weight = weight;
@@ -822,7 +860,7 @@ public class ApiCallsHandler {
         }
     }
 
-    public class DeleteUserChartRequest{
+    public class DeleteUserChartRequest {
         final String chart_id;
 
         public DeleteUserChartRequest(String chart_id) {
@@ -830,7 +868,7 @@ public class ApiCallsHandler {
         }
     }
 
-    public class DeleteMealRequest{
+    public class DeleteMealRequest {
         final int instance_id;
 
         public DeleteMealRequest(int instance_id) {

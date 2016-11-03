@@ -1,6 +1,7 @@
 package com.mcsaatchi.gmfit.data_access;
 
 
+import com.mcsaatchi.gmfit.rest.ActivityLevelsResponse;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponse;
 import com.mcsaatchi.gmfit.rest.ChartMetricBreakdownResponse;
 import com.mcsaatchi.gmfit.rest.ChartsBySectionResponse;
@@ -15,6 +16,7 @@ import com.mcsaatchi.gmfit.rest.SearchMealItemResponse;
 import com.mcsaatchi.gmfit.rest.SlugBreakdownResponse;
 import com.mcsaatchi.gmfit.rest.TakenMedicalTestsResponse;
 import com.mcsaatchi.gmfit.rest.UiResponse;
+import com.mcsaatchi.gmfit.rest.UserGoalsResponse;
 import com.mcsaatchi.gmfit.rest.UserMealsResponse;
 import com.mcsaatchi.gmfit.rest.UserPolicyResponse;
 import com.mcsaatchi.gmfit.rest.UserProfileResponse;
@@ -72,13 +74,13 @@ public class DataAccessHandler {
         ApiCallsHandler.getInstance().signOutUser(userAccessToken, callback);
     }
 
-    public void updateUserProfile(String userAccessToken, String finalDateOfBirth, String bloodType, String nationality, int medical_condition, String measurementSystem, String goal,
-                                  int finalGender, double height, double weight, double BMI, Callback<DefaultGetResponse> callback) {
-        ApiCallsHandler.getInstance().updateUserProfile(userAccessToken, finalDateOfBirth, bloodType, nationality, medical_condition, measurementSystem, goal,
-                finalGender, height, weight, BMI, callback);
+    public void updateUserProfile(String userAccessToken, String finalDateOfBirth, String bloodType, String nationality, int medical_condition, String measurementSystem,
+                                  int goalId, int activityLevelId, int finalGender, double height, double weight, double BMI, Callback<DefaultGetResponse> callback) {
+        ApiCallsHandler.getInstance().updateUserProfile(userAccessToken, finalDateOfBirth, bloodType, nationality, medical_condition, measurementSystem, goalId,
+                activityLevelId, finalGender, height, weight, BMI, callback);
     }
 
-    public void updateUserPicture(String userAccessToken, Map<String, RequestBody> profilePicture, Callback<DefaultGetResponse> callback){
+    public void updateUserPicture(String userAccessToken, Map<String, RequestBody> profilePicture, Callback<DefaultGetResponse> callback) {
         ApiCallsHandler.getInstance().updateUserPicture(userAccessToken, profilePicture, callback);
     }
 
@@ -182,15 +184,23 @@ public class DataAccessHandler {
         ApiCallsHandler.getInstance().getTakenMedicalTests(userAccessToken, callback);
     }
 
-    public void getUserProfile(String userAccessToken, Callback<UserProfileResponse> callback){
+    public void getUserProfile(String userAccessToken, Callback<UserProfileResponse> callback) {
         ApiCallsHandler.getInstance().getUserProfile(userAccessToken, callback);
     }
 
-    public void getEmergencyProfile(String userAccessToken, Callback<EmergencyProfileResponse> callback){
+    public void getEmergencyProfile(String userAccessToken, Callback<EmergencyProfileResponse> callback) {
         ApiCallsHandler.getInstance().getEmergencyProfile(userAccessToken, callback);
     }
 
-    public void deleteUserChart(String userAccessToken, String chart_id, Callback<DefaultGetResponse> callback){
+    public void deleteUserChart(String userAccessToken, String chart_id, Callback<DefaultGetResponse> callback) {
         ApiCallsHandler.getInstance().deleteUserChart(userAccessToken, chart_id, callback);
+    }
+
+    public void getActivityLevels(String userAccessToken, Callback<ActivityLevelsResponse> callback) {
+        ApiCallsHandler.getInstance().getActivityLevels(userAccessToken, callback);
+    }
+
+    public void getUserGoals(String userAccessToken, Callback<UserGoalsResponse> callback) {
+        ApiCallsHandler.getInstance().getUserGoals(userAccessToken, callback);
     }
 }
