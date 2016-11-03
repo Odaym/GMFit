@@ -145,4 +145,10 @@ public interface GMFit_Service {
 
     @POST("user/charts/delete")
     Call<DefaultGetResponse> deleteUserChart(@Header(Constants.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken, @Body ApiCallsHandler.DeleteUserChartRequest chart_id);
+
+    @GET("activity_levels")
+    Call<ActivityLevelsResponse> getActivityLevels(@Header(Constants.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken);
+
+    @GET("user_goals")
+    Call<UserGoalsResponse> getUserGoals(@Header(Constants.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken);
 }

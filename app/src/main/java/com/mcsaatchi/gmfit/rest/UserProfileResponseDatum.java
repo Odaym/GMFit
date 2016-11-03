@@ -34,21 +34,12 @@ public class UserProfileResponseDatum {
     @SerializedName("metric_system")
     @Expose
     private String metricSystem;
-    @SerializedName("body_mass_index")
+    @SerializedName("user_goals")
     @Expose
-    private String bodyMassIndex;
-    @SerializedName("body_fat_percentage")
-    @Expose
-    private String bodyFatPercentage;
-    @SerializedName("lean_body_mass")
-    @Expose
-    private String leanBodyMass;
-    @SerializedName("verified")
-    @Expose
-    private Boolean verified;
+    private List<UserProfileResponseGoal> userGoals = new ArrayList<>();
     @SerializedName("medical_conditions")
     @Expose
-    private List<UserProfileResponseMedicalCondition> medicalConditions = new ArrayList<UserProfileResponseMedicalCondition>();
+    private List<UserProfileResponseMedicalCondition> medicalConditions = new ArrayList<>();
     @SerializedName("profile_picture")
     @Expose
     private String profile_picture;
@@ -179,62 +170,6 @@ public class UserProfileResponseDatum {
         this.metricSystem = metricSystem;
     }
 
-    /**
-     * @return The bodyMassIndex
-     */
-    public String getBodyMassIndex() {
-        return bodyMassIndex;
-    }
-
-    /**
-     * @param bodyMassIndex The body_mass_index
-     */
-    public void setBodyMassIndex(String bodyMassIndex) {
-        this.bodyMassIndex = bodyMassIndex;
-    }
-
-    /**
-     * @return The bodyFatPercentage
-     */
-    public String getBodyFatPercentage() {
-        return bodyFatPercentage;
-    }
-
-    /**
-     * @param bodyFatPercentage The body_fat_percentage
-     */
-    public void setBodyFatPercentage(String bodyFatPercentage) {
-        this.bodyFatPercentage = bodyFatPercentage;
-    }
-
-    /**
-     * @return The leanBodyMass
-     */
-    public String getLeanBodyMass() {
-        return leanBodyMass;
-    }
-
-    /**
-     * @param leanBodyMass The lean_body_mass
-     */
-    public void setLeanBodyMass(String leanBodyMass) {
-        this.leanBodyMass = leanBodyMass;
-    }
-
-    /**
-     * @return The verified
-     */
-    public Boolean getVerified() {
-        return verified;
-    }
-
-    /**
-     * @param verified The verified
-     */
-    public void setVerified(Boolean verified) {
-        this.verified = verified;
-    }
-
     public List<UserProfileResponseMedicalCondition> getMedicalConditions() {
         return medicalConditions;
     }
@@ -249,5 +184,13 @@ public class UserProfileResponseDatum {
 
     public void setProfile_picture(String profile_picture) {
         this.profile_picture = profile_picture;
+    }
+
+    public List<UserProfileResponseGoal> getUserGoals() {
+        return userGoals;
+    }
+
+    public void setUserGoals(List<UserProfileResponseGoal> userGoals) {
+        this.userGoals = userGoals;
     }
 }
