@@ -26,9 +26,6 @@ import com.mcsaatchi.gmfit.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponse;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponseChart;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponseInnerBody;
-import com.mcsaatchi.gmfit.rest.UserProfileResponse;
-import com.mcsaatchi.gmfit.rest.UserProfileResponseDatum;
-import com.mcsaatchi.gmfit.rest.UserProfileResponseMedicalCondition;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,8 +55,6 @@ public class SignIn_Activity extends Base_Activity {
     private boolean passwordShowing = false;
 
     private ArrayList<FormEditText> allFields = new ArrayList<>();
-
-    private List<UserProfileResponseMedicalCondition> userMedicalConditions = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -176,7 +171,11 @@ public class SignIn_Activity extends Base_Activity {
 
                         List<AuthenticationResponseChart> chartsMap = responseBody.getCharts();
 
-                        getUserProfile(chartsMap, waitingDialog);
+                        Intent intent = new Intent(SignIn_Activity.this, Main_Activity.class);
+                        intent.putParcelableArrayListExtra(Constants.BUNDLE_FITNESS_CHARTS_MAP, (ArrayList<AuthenticationResponseChart>) chartsMap);
+                        startActivity(intent);
+
+                        finish();
 
                         break;
                     case 401:
@@ -203,77 +202,6 @@ public class SignIn_Activity extends Base_Activity {
             @Override
             public void onFailure(Call<AuthenticationResponse> call, Throwable t) {
                 Log.d("TAG", "onFailure: Failed to log user in");
-            }
-        });
-    }
-
-    private void getUserProfile(final List<AuthenticationResponseChart> chartsMap, final ProgressDialog waitingDialog) {
-        DataAccessHandler.getInstance().getUserProfile(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), new Callback<UserProfileResponse>() {
-            @Override
-            public void onResponse(Call<UserProfileResponse> call, Response<UserProfileResponse> response) {
-                switch (response.code()) {
-                    case 200:
-                        UserProfileResponseDatum userProfileData = response.body().getData().getBody().getData();
-
-                        SharedPreferences.Editor prefsEditor = prefs.edit();
-
-                        if (userProfileData != null) {
-
-                            userMedicalConditions = userProfileData.getMedicalConditions();
-
-                            for (int i = 0; i < userMedicalConditions.size(); i++) {
-                                if (userMedicalConditions.get(i).getSelected().equals("1")) {
-                                    prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION, userMedicalConditions.get(i).getName());
-                                    prefsEditor.putInt(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION_ID, Integer.parseInt(userMedicalConditions.get(i).getId()));
-                                }
-                            }
-
-                            if (userProfileData.getName() != null && !userProfileData.getName().isEmpty())
-                                prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_USER_FULL_NAME, userProfileData.getName());
-
-                            if (userProfileData.getEmail() != null && !userProfileData.getEmail().isEmpty())
-                                prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_USER_EMAIL, userProfileData.getEmail());
-
-                            if (userProfileData.getWeight() != null && !userProfileData.getWeight().isEmpty())
-                                prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_DATE_OF_BIRTH, userProfileData.getBirthday());
-
-                            if (userProfileData.getCountry() != null && !userProfileData.getCountry().isEmpty())
-                                prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_NATIONALITY, userProfileData.getCountry());
-
-                            if (userProfileData.getMetricSystem() != null && !userProfileData.getMetricSystem().isEmpty())
-                                prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_MEASUREMENT_SYSTEM, userProfileData.getMetricSystem());
-
-                            if (userProfileData.getWeight() != null && !userProfileData.getWeight().isEmpty())
-                                prefsEditor.putFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, Float.parseFloat(userProfileData.getWeight()));
-
-                            if (userProfileData.getHeight() != null && !userProfileData.getHeight().isEmpty())
-                                prefsEditor.putFloat(Constants.EXTRAS_USER_PROFILE_HEIGHT, Float.parseFloat(userProfileData.getHeight()));
-
-                            if (userProfileData.getGender() != null && !userProfileData.getGender().isEmpty()) {
-                                int finalGender = userProfileData.getGender().equals("Male") ? 1 : 0;
-                                prefsEditor.putInt(Constants.EXTRAS_USER_PROFILE_GENDER, finalGender);
-                            }
-
-                            if (userProfileData.getProfile_picture() != null && !userProfileData.getProfile_picture().isEmpty()) {
-                                prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_IMAGE, userProfileData.getProfile_picture());
-                            }
-
-                            prefsEditor.apply();
-
-                            Intent intent = new Intent(SignIn_Activity.this, Main_Activity.class);
-                            intent.putParcelableArrayListExtra(Constants.BUNDLE_FITNESS_CHARTS_MAP, (ArrayList<AuthenticationResponseChart>) chartsMap);
-                            startActivity(intent);
-
-                            finish();
-
-                            break;
-                        }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<UserProfileResponse> call, Throwable t) {
-                Log.d("TAG", "onFailure: User profile request failed!");
             }
         });
     }
