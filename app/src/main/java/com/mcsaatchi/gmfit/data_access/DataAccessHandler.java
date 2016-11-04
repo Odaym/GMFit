@@ -7,7 +7,7 @@ import com.mcsaatchi.gmfit.rest.ChartMetricBreakdownResponse;
 import com.mcsaatchi.gmfit.rest.ChartsBySectionResponse;
 import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.rest.EmergencyProfileResponse;
-import com.mcsaatchi.gmfit.rest.HealthWidgetsResponse;
+import com.mcsaatchi.gmfit.rest.WidgetsResponse;
 import com.mcsaatchi.gmfit.rest.MealMetricsResponse;
 import com.mcsaatchi.gmfit.rest.MedicalConditionsResponse;
 import com.mcsaatchi.gmfit.rest.MedicalTestsResponse;
@@ -168,8 +168,12 @@ public class DataAccessHandler {
         ApiCallsHandler.getInstance().getMedicalTests(userAccessToken, callback);
     }
 
-    public void getHealthWidgets(String userAccessToken, String sectionName, Callback<HealthWidgetsResponse> callback) {
-        ApiCallsHandler.getInstance().getHealthWidgets(userAccessToken, sectionName, callback);
+    public void getWidgets(String userAccessToken, String sectionName, Callback<WidgetsResponse> callback) {
+        ApiCallsHandler.getInstance().getWidgets(userAccessToken, sectionName, callback);
+    }
+
+    public void getWidgetsWithDate(String userAccessToken, String sectionName, String date, Callback<WidgetsResponse> callback) {
+        ApiCallsHandler.getInstance().getWidgetsWithDate(userAccessToken, sectionName, date, callback);
     }
 
     public void storeNewHealthTest(String userAccessToken, RequestBody test_slug, RequestBody date_taken, Map<String, RequestBody> metrics, Map<String, RequestBody> imageFiles, Callback<DefaultGetResponse> callback) {

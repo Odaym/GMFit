@@ -279,6 +279,10 @@ public class MainProfile_Fragment extends Fragment {
                         radioButtonItem.setChecked(false);
                     }
 
+                    if (prefs.getInt(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION_ID, -1) == -1)
+                        medicalConditionsValueTV.setText("None");
+
+
                     medicalRdGroup.addView(listItemRadioButton);
                 }
 
@@ -525,7 +529,7 @@ public class MainProfile_Fragment extends Fragment {
                             }
 
                             if (userProfileData.getGender() != null && !userProfileData.getGender().isEmpty()) {
-                                int finalGender = userProfileData.getGender().equals("Male") ? 1 : 0;
+                                int finalGender = userProfileData.getGender().equals("Male") ? 0 : 1;
                                 prefsEditor.putInt(Constants.EXTRAS_USER_PROFILE_GENDER, finalGender);
                             }
 

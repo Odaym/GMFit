@@ -1,6 +1,7 @@
 package com.mcsaatchi.gmfit.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,12 +61,14 @@ public class FitnessWidgets_GridAdapter extends BaseAdapter {
         holder.metricTV.setText(String.valueOf(widgetsMap.get(position).getValue()));
         holder.measurementUnitTV.setText(widgetsMap.get(position).getMeasurementUnit());
 
+        Log.d("TAG", "getView: " + widgetsMap.get(position).getTitle());
+
         switch (widgetsMap.get(position).getTitle()) {
-            case "Distance":
-                holder.metricIcon.setImageResource(R.drawable.ic_distance_traveled);
-                break;
-            case "Calories":
+            case "Active Calories":
                 holder.metricIcon.setImageResource(R.drawable.ic_calories_spent);
+                break;
+            case "Distance Traveled":
+                holder.metricIcon.setImageResource(R.drawable.ic_distance_traveled);
                 break;
         }
 

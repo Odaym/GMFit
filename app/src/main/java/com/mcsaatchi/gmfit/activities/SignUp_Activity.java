@@ -155,18 +155,6 @@ public class SignUp_Activity extends Base_Activity {
         DataAccessHandler.getInstance().registerUser(full_name, email, password, new Callback<AuthenticationResponse>() {
             @Override
             public void onResponse(Call<AuthenticationResponse> call, Response<AuthenticationResponse> response) {
-
-            }
-
-            @Override
-            public void onFailure(Call<AuthenticationResponse> call, Throwable t) {
-
-            }
-        });
-
-        DataAccessHandler.getInstance().registerUser(full_name, email, password, new Callback<AuthenticationResponse>() {
-            @Override
-            public void onResponse(Call<AuthenticationResponse> call, Response<AuthenticationResponse> response) {
                 switch (response.code()) {
                     case 200:
                         waitingDialog.dismiss();

@@ -3,7 +3,7 @@ package com.mcsaatchi.gmfit.rest;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class HealthWidgetsResponseDatum {
+public class WidgetsResponseDatum {
 
     @SerializedName("widget_id")
     @Expose

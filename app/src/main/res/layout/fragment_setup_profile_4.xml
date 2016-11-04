@@ -71,12 +71,12 @@
                 android:text="January 1, 1990"
                 android:textColor="@android:color/white"/>
 
-            <ImageView android:layout_width="30dp"
-                       android:layout_height="30dp"
+            <ImageView android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
                        android:layout_alignParentEnd="true"
                        android:layout_centerVertical="true"
                        android:paddingEnd="@dimen/default_margin_1_5"
-                       android:src="@drawable/ic_arrow_down"/>
+                       android:src="@drawable/ic_keyboard_arrow_down_white_24dp"/>
         </RelativeLayout>
 
         <LinearLayout android:layout_width="match_parent"

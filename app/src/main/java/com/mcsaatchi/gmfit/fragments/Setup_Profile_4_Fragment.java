@@ -24,6 +24,7 @@ import com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialo
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.activities.Main_Activity;
 import com.mcsaatchi.gmfit.adapters.MedicalConditionsSpinnerAdapter;
+import com.mcsaatchi.gmfit.adapters.TextualSpinnersAdapter;
 import com.mcsaatchi.gmfit.classes.Constants;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
@@ -40,6 +41,7 @@ import com.squareup.otto.Subscribe;
 import java.text.DateFormatSymbols;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.Bind;
@@ -147,7 +149,7 @@ public class Setup_Profile_4_Fragment extends Fragment implements CalendarDatePi
                 if (!weightET.getText().toString().isEmpty() && !heightET.getText().toString().isEmpty()) {
                     int finalGender;
 
-                    finalGender = genderSpinner.getSelectedItem().toString().equals("Male") ? 1 : 0;
+                    finalGender = genderSpinner.getSelectedItem().toString().equals("Male") ? 0 : 1;
 
                     String finalDateOfBirth;
 
@@ -174,10 +176,13 @@ public class Setup_Profile_4_Fragment extends Fragment implements CalendarDatePi
                     String measurementSystem = prefs.getString(Constants.EXTRAS_USER_PROFILE_MEASUREMENT_SYSTEM, "");
                     int goalId = prefs.getInt(Constants.EXTRAS_USER_PROFILE_GOAL_ID, 0);
                     int activityLevelId = prefs.getInt(Constants.EXTRAS_USER_PROFILE_ACTIVITY_LEVEL_ID, 0);
+                    int medicalConditionId = Integer.parseInt(((MedicalConditionsResponseDatum) medicalConditionsSpinner.getSelectedItem()).getId());
 
-                    Log.d(TAG, "handle_BusEvents: Goal ID setup profile " + goalId);
+                    prefs.edit().putInt(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION_ID, medicalConditionId).apply();
 
-                    setupUserProfile(finalDateOfBirth, finalBloodType, nationality, (int) medicalConditionsSpinner.getSelectedItemId(), measurementSystem, goalId,
+                    Log.d(TAG, "handle_BusEvents: medical condition id : " + medicalConditionId);
+
+                    setupUserProfile(finalDateOfBirth, finalBloodType, nationality, medicalConditionId, measurementSystem, goalId,
                             activityLevelId, finalGender, finalHeight, finalWeight, Helpers.calculateBMI(finalWeight, finalHeight));
                 } else {
 //                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -205,15 +210,16 @@ public class Setup_Profile_4_Fragment extends Fragment implements CalendarDatePi
                     case 200:
                         ArrayList<MedicalConditionsResponseDatum> allMedicalData = (ArrayList<MedicalConditionsResponseDatum>) response.body().getData().getBody().getData();
 
-                        ArrayList<String> medicalConditions = new ArrayList<>();
+                        MedicalConditionsResponseDatum noneMedicalResponse = new MedicalConditionsResponseDatum();
 
-                        medicalConditions.add("None");
+                        noneMedicalResponse.setId(String.valueOf(-1));
+                        noneMedicalResponse.setName("None");
 
-                        for (int i = 0; i < allMedicalData.size(); i++) {
-                            medicalConditions.add(allMedicalData.get(i).getName());
-                        }
+                        allMedicalData.add(noneMedicalResponse);
 
-                        initCustomSpinner(medicalConditions, medicalConditionsSpinner);
+                        Collections.reverse(allMedicalData);
+
+                        initMedicalConditionsSpinner(allMedicalData, medicalConditionsSpinner);
 
                         break;
                     case 401:
@@ -306,12 +312,38 @@ public class Setup_Profile_4_Fragment extends Fragment implements CalendarDatePi
     }
 
     private void initCustomSpinner(ArrayList<String> listItems, Spinner spinner) {
-        MedicalConditionsSpinnerAdapter medicalConditionsSpinnerAdapter = new MedicalConditionsSpinnerAdapter(getActivity(), listItems);
+        TextualSpinnersAdapter medicalConditionsSpinnerAdapter = new TextualSpinnersAdapter(getActivity(), listItems);
         spinner.setAdapter(medicalConditionsSpinnerAdapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
+                String item = parent.getItemAtPosition(position).toString();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        spinner.setOnTouchListener(new View.OnTouchListener() {
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                inputMethodManager.hideSoftInputFromWindow(weightET.getWindowToken(), 0);
+
+                return false;
+            }
+        });
+    }
+
+    private void initMedicalConditionsSpinner(ArrayList<MedicalConditionsResponseDatum> listItems, Spinner spinner) {
+        MedicalConditionsSpinnerAdapter medicalConditionsSpinnerAdapter = new MedicalConditionsSpinnerAdapter(getActivity(), listItems);
+        spinner.setAdapter(medicalConditionsSpinnerAdapter);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String item = parent.getItemAtPosition(position).toString();
             }
 

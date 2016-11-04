@@ -122,7 +122,10 @@ public interface GMFit_Service {
     Call<MedicalTestsResponse> getMedicalTests(@Header(Constants.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken);
 
     @GET("user/widgets")
-    Call<HealthWidgetsResponse> getHealthWidgets(@Header(Constants.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken, @Query("section") String sectionName);
+    Call<WidgetsResponse> getWidgets(@Header(Constants.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken, @Query("section") String sectionName);
+
+    @GET("user/widgets")
+    Call<WidgetsResponse> getWidgetsWithDate(@Header(Constants.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken, @Query("section") String sectionName, @Query("date") String date);
 
     @Multipart
     @POST("user/medical/store")

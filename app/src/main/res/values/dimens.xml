@@ -29,7 +29,7 @@
 
     <dimen name="default_small_font_size">11sp</dimen>
 
-    <dimen name="metric_header_section_height">230dp</dimen>
+    <dimen name="metric_header_section_height">300dp</dimen>
     <dimen name="profile_section_header_height">270dp</dimen>
     <dimen name="metric_header_progress_bar_width">110dp</dimen>
     <dimen name="nutrition_widgets_main_metric_value_font_size">50sp</dimen>
@@ -63,6 +63,7 @@
     <dimen name="customize_widgets_reorder_list_item_edge_height_width">60dp</dimen>
     <dimen name="add_new_chart_list_item_edge_width">90dp</dimen>
     <dimen name="metric_image_dimen">30dp</dimen>
+    <dimen name="date_carousel_height">70dp</dimen>
     <dimen name="chart_title_headline_bar_height">60dp</dimen>
 
     <!-- BREAKDOWN ACTIVITY -->

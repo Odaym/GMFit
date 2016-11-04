@@ -22,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -66,6 +67,8 @@ import com.squareup.otto.Subscribe;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -148,6 +151,10 @@ public class Nutrition_Fragment extends Fragment {
     ProgressBar loadingMetricProgressBar;
     @Bind(R.id.loadingWidgetsProgressBar)
     ProgressBar loadingWidgetsProgressBar;
+    @Bind(R.id.dateCarousel)
+    HorizontalScrollView dateCarousel;
+    @Bind(R.id.dateCarouselContainer)
+    LinearLayout dateCarouselContainer;
 
     private boolean setDrawChartValuesEnabled = false;
     private UserMeals_RecyclerAdapterDragSwipe userMealsRecyclerAdapter;
@@ -195,6 +202,8 @@ public class Nutrition_Fragment extends Fragment {
         getUserAddedMeals();
 
         getUiForSection("nutrition");
+
+        setupDateCarousel();
 
         addNewChartBTN.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -258,6 +267,37 @@ public class Nutrition_Fragment extends Fragment {
                     }
                 }
                 break;
+        }
+    }
+
+    private void setupDateCarousel() {
+        for (int i = 17; i >= 0; i--) {
+            final View itemDateCarouselLayout = getActivity().getLayoutInflater().inflate(R.layout.item_date_carousel, null);
+            itemDateCarouselLayout.setPadding(getResources().getDimensionPixelSize(R.dimen.default_margin_1), 0,
+                    getResources().getDimensionPixelSize(R.dimen.default_margin_1), 0);
+
+            final TextView dayOfMonthTV = (TextView) itemDateCarouselLayout.findViewById(R.id.dayOfMonthTV);
+            final TextView monthOfYearTV = (TextView) itemDateCarouselLayout.findViewById(R.id.monthOfYearTV);
+
+            LocalDate dateAsLocal = dt.minusDays(i);
+            DateTimeFormatter monthFormatter = DateTimeFormat.forPattern("MMM");
+
+            dayOfMonthTV.setText(String.valueOf(dateAsLocal.getDayOfMonth()));
+            monthOfYearTV.setText(String.valueOf(monthFormatter.print(dateAsLocal)));
+
+            itemDateCarouselLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    DateTimeFormatter formatter = DateTimeFormat.forPattern("dd/MMM/yyyy");
+                    DateTime formattedDate = formatter.parseDateTime(dayOfMonthTV.getText().toString() + "/" + monthOfYearTV.getText().toString() + "/" + dt.year().getAsText());
+
+                    String finalDesiredDate = formattedDate.getYear() + "-" + formattedDate.getMonthOfYear() + "-" + formattedDate.getDayOfMonth();
+
+//                    getWidgetsWithDate(finalDesiredDate);
+                }
+            });
+
+            dateCarouselContainer.addView(itemDateCarouselLayout);
         }
     }
 

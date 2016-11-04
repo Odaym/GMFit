@@ -25,6 +25,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -51,12 +52,16 @@ import com.mcsaatchi.gmfit.rest.ChartMetricBreakdownResponse;
 import com.mcsaatchi.gmfit.rest.ChartMetricBreakdownResponseDatum;
 import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.rest.SlugBreakdownResponse;
+import com.mcsaatchi.gmfit.rest.WidgetsResponse;
+import com.mcsaatchi.gmfit.rest.WidgetsResponseDatum;
 import com.squareup.otto.Subscribe;
 
 import net.danlew.android.joda.JodaTimeAndroid;
 
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -82,6 +87,11 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
     Button addNewChartBTN;
     @Bind(R.id.metricCounterTV)
     FontTextView metricCounterTV;
+    @Bind(R.id.dateCarousel)
+    HorizontalScrollView dateCarousel;
+    @Bind(R.id.dateCarouselContainer)
+    LinearLayout dateCarouselContainer;
+
     private boolean setDrawChartValuesEnabled = false;
     private Activity parentActivity;
     private SharedPreferences prefs;
@@ -173,6 +183,8 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
 
         setupChartViews(chartsMap);
 
+        setupDateCarousel();
+
         Log.d(TAG, "onCreateView: Device info : " + Build.MANUFACTURER + " " + Build.MODEL + " (" + Build.DEVICE + ") - "
                 + Build.VERSION.RELEASE);
 
@@ -186,6 +198,55 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
         });
 
         return fragmentView;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        /**
+         * Added a new chart for Fitness, get the chart details from the result and use them to actually create that chart in the UI
+         * Save it in the DB under the user's email
+         */
+        if (requestCode == ADD_NEW_FITNESS_CHART_REQUEST_CODE) {
+            if (data != null) {
+
+                chartType = data.getStringExtra(Constants.EXTRAS_CHART_TYPE_SELECTED);
+                chartName = data.getStringExtra(Constants.EXTRAS_CHART_FULL_NAME);
+
+                addNewBarChart(chartName, chartType);
+
+                dataChartDAO.create(new DataChart(chartName, chartType, dataChartDAO.queryForAll().size() + 1, userEmail, Constants.EXTRAS_FITNESS_FRAGMENT));
+            }
+        }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+
+        inflater.inflate(R.menu.main, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.settings:
+                Intent intent = new Intent(getActivity(), CustomizeWidgetsAndCharts_Activity.class);
+                intent.putExtra(Constants.EXTRAS_FRAGMENT_TYPE, Constants.EXTRAS_FITNESS_FRAGMENT);
+                intent.putExtra(Constants.BUNDLE_FITNESS_WIDGETS_MAP, widgetsMap);
+                intent.putExtra(Constants.BUNDLE_FITNESS_CHARTS_MAP, chartsMap);
+                startActivity(intent);
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus_Singleton.getInstance().unregister(this);
     }
 
     private void getDefaultChartMonthlyBreakdown(final BarChart barchart, final TextView dateTV_1, final TextView dateTV_2, final TextView dateTV_3, final TextView dateTV_4, final String chart_slug) {
@@ -251,53 +312,90 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
                 });
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+    private void setupDateCarousel() {
+        for (int i = 17; i >= 0; i--) {
+            final View itemDateCarouselLayout = getActivity().getLayoutInflater().inflate(R.layout.item_date_carousel, null);
+            itemDateCarouselLayout.setPadding(getResources().getDimensionPixelSize(R.dimen.default_margin_1), 0,
+                    getResources().getDimensionPixelSize(R.dimen.default_margin_1), 0);
 
-        /**
-         * Added a new chart for Fitness, get the chart details from the result and use them to actually create that chart in the UI
-         * Save it in the DB under the user's email
-         */
-        if (requestCode == ADD_NEW_FITNESS_CHART_REQUEST_CODE) {
-            if (data != null) {
+            final TextView dayOfMonthTV = (TextView) itemDateCarouselLayout.findViewById(R.id.dayOfMonthTV);
+            final TextView monthOfYearTV = (TextView) itemDateCarouselLayout.findViewById(R.id.monthOfYearTV);
 
-                chartType = data.getStringExtra(Constants.EXTRAS_CHART_TYPE_SELECTED);
-                chartName = data.getStringExtra(Constants.EXTRAS_CHART_FULL_NAME);
+            LocalDate dateAsLocal = dt.minusDays(i);
+            DateTimeFormatter monthFormatter = DateTimeFormat.forPattern("MMM");
 
-                addNewBarChart(chartName, chartType);
+            dayOfMonthTV.setText(String.valueOf(dateAsLocal.getDayOfMonth()));
+            monthOfYearTV.setText(String.valueOf(monthFormatter.print(dateAsLocal)));
 
-                dataChartDAO.create(new DataChart(chartName, chartType, dataChartDAO.queryForAll().size() + 1, userEmail, Constants.EXTRAS_FITNESS_FRAGMENT));
+            itemDateCarouselLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    focusOnView(dateCarousel, itemDateCarouselLayout);
+
+                    DateTimeFormatter formatter = DateTimeFormat.forPattern("dd/MMM/yyyy");
+                    DateTime formattedDate = formatter.parseDateTime(dayOfMonthTV.getText().toString() + "/" + monthOfYearTV.getText().toString() + "/" + dt.year().getAsText());
+
+                    String finalDesiredDate = formattedDate.getYear() + "-" + formattedDate.getMonthOfYear() + "-" + formattedDate.getDayOfMonth();
+
+                    getWidgetsWithDate(finalDesiredDate);
+                }
+            });
+
+            dateCarouselContainer.addView(itemDateCarouselLayout);
+        }
+    }
+
+    private void focusOnView(final HorizontalScrollView horizontalScrollView, final View view) {
+        horizontalScrollView.post(new Runnable() {
+            @Override
+            public void run() {
+                int vLeft = view.getLeft();
+                int vRight = view.getRight();
+                int sWidth = horizontalScrollView.getWidth();
+                horizontalScrollView.smoothScrollTo(((vLeft + vRight - sWidth) / 2), 0);
             }
-        }
+        });
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
+    private void getWidgetsWithDate(String finalDate) {
+        DataAccessHandler.getInstance().getWidgetsWithDate(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), "fitness", finalDate, new Callback<WidgetsResponse>() {
+            @Override
+            public void onResponse(Call<WidgetsResponse> call, Response<WidgetsResponse> response) {
+                switch (response.code()) {
+                    case 200:
+                        List<WidgetsResponseDatum> widgetsFromResponse = response.body().getData().getBody().getData();
 
-        inflater.inflate(R.menu.main, menu);
-    }
+                        widgetsMap.clear();
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.settings:
-                Intent intent = new Intent(getActivity(), CustomizeWidgetsAndCharts_Activity.class);
-                intent.putExtra(Constants.EXTRAS_FRAGMENT_TYPE, Constants.EXTRAS_FITNESS_FRAGMENT);
-                intent.putExtra(Constants.BUNDLE_FITNESS_WIDGETS_MAP, widgetsMap);
-                intent.putExtra(Constants.BUNDLE_FITNESS_CHARTS_MAP, chartsMap);
-                startActivity(intent);
-                break;
-        }
+                        for (int i = 0; i < widgetsFromResponse.size(); i++) {
+                            if (widgetsFromResponse.get(i).getName().equals("Steps Count")) {
+                                metricCounterTV.setText(String.valueOf(widgetsFromResponse.get(i).getTotal()));
+                                continue;
+                            }
 
-        return super.onOptionsItemSelected(item);
-    }
+                            FitnessWidget widget = new FitnessWidget();
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        EventBus_Singleton.getInstance().unregister(this);
+                            widget.setId(widgetsFromResponse.get(i).getWidgetId());
+                            widget.setMeasurementUnit(widgetsFromResponse.get(i).getUnit());
+                            widget.setPosition(Integer.parseInt(widgetsFromResponse.get(i).getPosition()));
+                            widget.setValue(widgetsFromResponse.get(i).getTotal());
+                            widget.setTitle(widgetsFromResponse.get(i).getName());
+
+
+                            widgetsMap.add(widget);
+                        }
+
+                        setupWidgetViews(widgetsMap);
+
+                        break;
+                }
+            }
+
+            @Override
+            public void onFailure(Call<WidgetsResponse> call, Throwable t) {
+                Log.d(TAG, "onFailure: Request failed");
+            }
+        });
     }
 
     public void addNewBarChart(final String chartTitle, final String chartType) {
@@ -516,11 +614,11 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
                 metricCounterTV.setText(String.valueOf(prefs.getInt(Helpers.getTodayDate() + "_steps", 0)));
                 break;
             case Constants.EVENT_CALORIES_COUNTER_INCREMENTED:
-                fitnessWidget = findWidgetInGrid("Calories");
+                fitnessWidget = findWidgetInGrid("Active Calories");
                 fitnessWidget.setText(String.valueOf((int) prefs.getFloat(Helpers.getTodayDate() + "_calories", 0)));
                 break;
             case Constants.EVENT_DISTANCE_COUNTER_INCREMENTED:
-                fitnessWidget = findWidgetInGrid("Distance");
+                fitnessWidget = findWidgetInGrid("Distance Traveled");
                 fitnessWidget.setText(String.valueOf((int) (prefs.getFloat(Helpers.getTodayDate() + "_distance", 0) * 1000)));
                 break;
         }

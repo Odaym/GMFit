@@ -3,13 +3,13 @@ package com.mcsaatchi.gmfit.rest;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class HealthWidgetsResponseData {
+public class WidgetsResponseData {
     @SerializedName("message")
     @Expose
     private String message;
     @SerializedName("body")
     @Expose
-    private HealthWidgetsResponseBody body;
+    private WidgetsResponseBody body;
     @SerializedName("code")
     @Expose
     private Integer code;
@@ -31,14 +31,14 @@ public class HealthWidgetsResponseData {
     /**
      * @return The body
      */
-    public HealthWidgetsResponseBody getBody() {
+    public WidgetsResponseBody getBody() {
         return body;
     }
 
     /**
      * @param body The body
      */
-    public void setBody(HealthWidgetsResponseBody body) {
+    public void setBody(WidgetsResponseBody body) {
         this.body = body;
     }
 

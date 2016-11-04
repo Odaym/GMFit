@@ -27,8 +27,8 @@ import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
 import com.mcsaatchi.gmfit.classes.SimpleDividerItemDecoration;
 import com.mcsaatchi.gmfit.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.models.HealthWidget;
-import com.mcsaatchi.gmfit.rest.HealthWidgetsResponse;
-import com.mcsaatchi.gmfit.rest.HealthWidgetsResponseDatum;
+import com.mcsaatchi.gmfit.rest.WidgetsResponse;
+import com.mcsaatchi.gmfit.rest.WidgetsResponseDatum;
 import com.mcsaatchi.gmfit.rest.TakenMedicalTestsResponse;
 import com.mcsaatchi.gmfit.rest.TakenMedicalTestsResponseBody;
 import com.squareup.otto.Subscribe;
@@ -99,12 +99,12 @@ public class Health_Fragment extends Fragment {
     }
 
     private void getWidgets() {
-        DataAccessHandler.getInstance().getHealthWidgets(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), "medical", new Callback<HealthWidgetsResponse>() {
+        DataAccessHandler.getInstance().getWidgets(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), "medical", new Callback<WidgetsResponse>() {
             @Override
-            public void onResponse(Call<HealthWidgetsResponse> call, Response<HealthWidgetsResponse> response) {
+            public void onResponse(Call<WidgetsResponse> call, Response<WidgetsResponse> response) {
                 switch (response.code()) {
                     case 200:
-                        List<HealthWidgetsResponseDatum> widgetsFromResponse = response.body().getData().getBody().getData();
+                        List<WidgetsResponseDatum> widgetsFromResponse = response.body().getData().getBody().getData();
 
                         for (int i = 0; i < widgetsFromResponse.size(); i++) {
                             HealthWidget widget = new HealthWidget();
@@ -134,7 +134,7 @@ public class Health_Fragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<HealthWidgetsResponse> call, Throwable t) {
+            public void onFailure(Call<WidgetsResponse> call, Throwable t) {
                 Log.d(TAG, "onFailure: Request failed");
             }
         });

@@ -3,22 +3,22 @@ package com.mcsaatchi.gmfit.rest;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class HealthWidgetsResponse {
+public class WidgetsResponse {
     @SerializedName("data")
     @Expose
-    private HealthWidgetsResponseData data;
+    private WidgetsResponseData data;
 
     /**
      * @return The data
      */
-    public HealthWidgetsResponseData getData() {
+    public WidgetsResponseData getData() {
         return data;
     }
 
     /**
      * @param data The data
      */
-    public void setData(HealthWidgetsResponseData data) {
+    public void setData(WidgetsResponseData data) {
         this.data = data;
     }
 }

@@ -118,10 +118,10 @@ public class SensorListener extends Service implements SensorEventListener {
     public void findAndUpdateWidgetsInDB(List<FitnessWidget> fitnessWidgets, float calculatedCalories, float calculatedDistance) {
         for (int i = 0; i < fitnessWidgets.size(); i++) {
             switch (fitnessWidgets.get(i).getTitle()) {
-                case "Calories":
+                case "Active Calories":
                     fitnessWidgets.get(i).setValue((int) ((calculatedCalories + prefs.getFloat(todayDate + "_calories", 0)) * 1));
                     break;
-                case "Distance":
+                case "Distance Traveled":
                     fitnessWidgets.get(i).setValue((int) ((calculatedDistance + prefs.getFloat(todayDate + "_distance", 0)) * 1000));
                     break;
             }

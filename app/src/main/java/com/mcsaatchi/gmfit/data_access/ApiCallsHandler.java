@@ -9,7 +9,7 @@ import com.mcsaatchi.gmfit.rest.ChartMetricBreakdownResponse;
 import com.mcsaatchi.gmfit.rest.ChartsBySectionResponse;
 import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.rest.EmergencyProfileResponse;
-import com.mcsaatchi.gmfit.rest.HealthWidgetsResponse;
+import com.mcsaatchi.gmfit.rest.WidgetsResponse;
 import com.mcsaatchi.gmfit.rest.MealMetricsResponse;
 import com.mcsaatchi.gmfit.rest.MedicalConditionsResponse;
 import com.mcsaatchi.gmfit.rest.MedicalTestsResponse;
@@ -527,21 +527,38 @@ public class ApiCallsHandler {
         });
     }
 
-    void getHealthWidgets(String userAccessToken, String sectionName, final Callback<HealthWidgetsResponse> callback) {
-        Call<HealthWidgetsResponse> apiCall = new CachingRestClient().getGMFitService().getHealthWidgets(userAccessToken, sectionName);
+    void getWidgets(String userAccessToken, String sectionName, final Callback<WidgetsResponse> callback) {
+        Call<WidgetsResponse> apiCall = new CachingRestClient().getGMFitService().getWidgets(userAccessToken, sectionName);
 
-        apiCall.enqueue(new Callback<HealthWidgetsResponse>() {
+        apiCall.enqueue(new Callback<WidgetsResponse>() {
             @Override
-            public void onResponse(Call<HealthWidgetsResponse> call, Response<HealthWidgetsResponse> response) {
+            public void onResponse(Call<WidgetsResponse> call, Response<WidgetsResponse> response) {
                 callback.onResponse(call, response);
             }
 
             @Override
-            public void onFailure(Call<HealthWidgetsResponse> call, Throwable t) {
+            public void onFailure(Call<WidgetsResponse> call, Throwable t) {
                 callback.onFailure(call, t);
             }
         });
     }
+
+    void getWidgetsWithDate(String userAccessToken, String sectionName, String date, final Callback<WidgetsResponse> callback) {
+        Call<WidgetsResponse> apiCall = new CachingRestClient().getGMFitService().getWidgetsWithDate(userAccessToken, sectionName, date);
+
+        apiCall.enqueue(new Callback<WidgetsResponse>() {
+            @Override
+            public void onResponse(Call<WidgetsResponse> call, Response<WidgetsResponse> response) {
+                callback.onResponse(call, response);
+            }
+
+            @Override
+            public void onFailure(Call<WidgetsResponse> call, Throwable t) {
+                callback.onFailure(call, t);
+            }
+        });
+    }
+
 
     void storeNewHealthTest(String userAccessToken, RequestBody test_slug, RequestBody date_taken, Map<String, RequestBody> metrics, Map<String, RequestBody> imageFiles, final Callback<DefaultGetResponse> callback) {
         Call<DefaultGetResponse> apiCall = new CachingRestClient().getGMFitService().storeNewHealthTest(userAccessToken, test_slug, date_taken, metrics, imageFiles);
@@ -672,7 +689,7 @@ public class ApiCallsHandler {
     }
 
     void getActivityLevels(String userAccessToken, final Callback<ActivityLevelsResponse> callback) {
-        Call<ActivityLevelsResponse> apiCall = new RestClient().getGMFitService().getActivityLevels("Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjYwLCJpc3MiOiJodHRwOlwvXC9nbWZpdC5tY3NhYXRjaGkubWVcL2FwaVwvdjFcL2xvZ2luIiwiaWF0IjoxNDc4MDkxNTk3LCJleHAiOjE0Nzg2OTYzOTcsIm5iZiI6MTQ3ODA5MTU5NywianRpIjoiZDE2MTAzNTAwNjYzOTA2M2EyYjk5ZTE0MGNmNjBiOGYifQ.9Dzd0uU6a8RBtuLt35GdP7QMlFJqF7OL895h5dLe22s");
+        Call<ActivityLevelsResponse> apiCall = new RestClient().getGMFitService().getActivityLevels(userAccessToken);
 
         apiCall.enqueue(new Callback<ActivityLevelsResponse>() {
             @Override
@@ -688,7 +705,7 @@ public class ApiCallsHandler {
     }
 
     void getUserGoals(String userAccessToken, final Callback<UserGoalsResponse> callback) {
-        Call<UserGoalsResponse> apiCall = new RestClient().getGMFitService().getUserGoals("Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjYwLCJpc3MiOiJodHRwOlwvXC9nbWZpdC5tY3NhYXRjaGkubWVcL2FwaVwvdjFcL2xvZ2luIiwiaWF0IjoxNDc4MDkxNTk3LCJleHAiOjE0Nzg2OTYzOTcsIm5iZiI6MTQ3ODA5MTU5NywianRpIjoiZDE2MTAzNTAwNjYzOTA2M2EyYjk5ZTE0MGNmNjBiOGYifQ.9Dzd0uU6a8RBtuLt35GdP7QMlFJqF7OL895h5dLe22s");
+        Call<UserGoalsResponse> apiCall = new RestClient().getGMFitService().getUserGoals(userAccessToken);
 
         apiCall.enqueue(new Callback<UserGoalsResponse>() {
             @Override

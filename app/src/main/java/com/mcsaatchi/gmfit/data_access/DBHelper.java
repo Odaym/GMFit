@@ -45,8 +45,8 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTable(connectionSource, FitnessWidget.class);
             TableUtils.createTable(connectionSource, NutritionWidget.class);
 
-            FitnessWidget fw1 = new FitnessWidget("Distance", "meters", 0, R.drawable.ic_distance_traveled, 1);
-            FitnessWidget fw2 = new FitnessWidget("Calories", "Calories", 0, R.drawable.ic_calories_spent, 2);
+            FitnessWidget fw1 = new FitnessWidget("Distance Traveled", "meters", 0, R.drawable.ic_distance_traveled, 1);
+            FitnessWidget fw2 = new FitnessWidget("Active Calories", "Calories", 0, R.drawable.ic_calories_spent, 2);
 
             getFitnessWidgetsDAO().create(fw1);
             getFitnessWidgetsDAO().create(fw2);
