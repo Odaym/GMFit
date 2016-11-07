@@ -15,26 +15,33 @@
         <HorizontalScrollView
             android:id="@+id/dateCarousel"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/date_carousel_height"
-            android:layout_marginBottom="@dimen/default_margin_2"
+            android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/default_margin_1"
+            android:scrollbars="none"
             android:background="@color/offwhite_more_transparent">
 
             <LinearLayout android:id="@+id/dateCarouselContainer"
                           android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:layout_gravity="center"
-                          android:orientation="horizontal">
+                          android:layout_height="match_parent"
+                          android:gravity="center_vertical"
+                          android:orientation="horizontal"/>
 
-            </LinearLayout>
         </HorizontalScrollView>
+
+        <ImageView android:id="@+id/carouselArrowIV"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:layout_below="@+id/dateCarousel"
+                   android:layout_centerHorizontal="true"
+                   android:layout_marginBottom="@dimen/default_margin_1"
+                   android:src="@drawable/ic_keyboard_arrow_down_white_24dp"/>
 
         <ProgressBar
             android:id="@+id/metricProgressBar"
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="@dimen/metric_header_progress_bar_width"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/dateCarousel"
+            android:layout_below="@+id/carouselArrowIV"
             android:layout_centerHorizontal="true"
             android:indeterminate="false"
             android:maxHeight="@dimen/sections_progress_bar_height"

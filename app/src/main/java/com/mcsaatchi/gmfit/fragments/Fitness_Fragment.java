@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -17,6 +18,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,6 +28,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.HorizontalScrollView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -91,6 +94,8 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
     HorizontalScrollView dateCarousel;
     @Bind(R.id.dateCarouselContainer)
     LinearLayout dateCarouselContainer;
+    @Bind(R.id.carouselArrowIV)
+    ImageView carouselArrowIV;
 
     private boolean setDrawChartValuesEnabled = false;
     private Activity parentActivity;
@@ -316,7 +321,7 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
     }
 
     private void setupDateCarousel() {
-        for (int i = 17; i >= 0; i--) {
+        for (int i = 14; i >= 0; i--) {
             final View itemDateCarouselLayout = getActivity().getLayoutInflater().inflate(R.layout.item_date_carousel, null);
             itemDateCarouselLayout.setPadding(getResources().getDimensionPixelSize(R.dimen.default_margin_1), 0,
                     getResources().getDimensionPixelSize(R.dimen.default_margin_1), 0);
@@ -330,10 +335,16 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
             dayOfMonthTV.setText(String.valueOf(dateAsLocal.getDayOfMonth()));
             monthOfYearTV.setText(String.valueOf(monthFormatter.print(dateAsLocal)));
 
+            dateCarouselContainer.addView(itemDateCarouselLayout);
+
+            if (i == 0) {
+                focusOnView(dateCarousel, dateCarouselContainer, itemDateCarouselLayout);
+            }
+
             itemDateCarouselLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    focusOnView(dateCarousel, itemDateCarouselLayout);
+                    focusOnView(dateCarousel, dateCarouselContainer, view);
 
                     DateTimeFormatter formatter = DateTimeFormat.forPattern("dd/MMM/yyyy");
                     DateTime formattedDate = formatter.parseDateTime(dayOfMonthTV.getText().toString() + "/" + monthOfYearTV.getText().toString() + "/" + dt.year().getAsText());
@@ -344,19 +355,47 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
                     setupChartViews(chartsMap, finalDesiredDate);
                 }
             });
-
-            dateCarouselContainer.addView(itemDateCarouselLayout);
         }
     }
 
-    private void focusOnView(final HorizontalScrollView horizontalScrollView, final View view) {
+    private void focusOnView(final HorizontalScrollView horizontalScrollView, final LinearLayout dateCarouselContainer, final View view) {
         horizontalScrollView.post(new Runnable() {
             @Override
             public void run() {
-                int vLeft = view.getLeft();
-                int vRight = view.getRight();
-                int sWidth = horizontalScrollView.getWidth();
-                horizontalScrollView.smoothScrollTo(((vLeft + vRight - sWidth) / 2), 0);
+                TextView dayOfMonthTV;
+                TextView monthOfYearTV;
+                LinearLayout dateEntryLayout;
+
+                for (int i = 0; i < dateCarouselContainer.getChildCount(); i++) {
+
+                    dateEntryLayout = (LinearLayout) dateCarouselContainer.getChildAt(i).findViewById(R.id.dateEntryLayout);
+                    dayOfMonthTV = (TextView) dateCarouselContainer.getChildAt(i).findViewById(R.id.dayOfMonthTV);
+                    monthOfYearTV = (TextView) dateCarouselContainer.getChildAt(i).findViewById(R.id.monthOfYearTV);
+
+                    dateEntryLayout.setBackgroundColor(0);
+                    dayOfMonthTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+                    monthOfYearTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+                    dayOfMonthTV.setTypeface(null, Typeface.NORMAL);
+                    monthOfYearTV.setTypeface(null, Typeface.NORMAL);
+                }
+
+                dateEntryLayout = (LinearLayout) view.findViewById(R.id.dateEntryLayout);
+                dayOfMonthTV = (TextView) view.findViewById(R.id.dayOfMonthTV);
+                monthOfYearTV = (TextView) view.findViewById(R.id.monthOfYearTV);
+
+                if (isAdded())
+                    dateEntryLayout.setBackgroundColor(getResources().getColor(R.color.offwhite_transparent));
+                dayOfMonthTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+                monthOfYearTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+                dayOfMonthTV.setTypeface(null, Typeface.BOLD);
+                monthOfYearTV.setTypeface(null, Typeface.BOLD);
+
+//                DisplayMetrics displaymetrics = new DisplayMetrics();
+//                getActivity().getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+//                int screenWidth = displaymetrics.widthPixels;
+//                int scrollX = (screenWidth / 2);
+//
+//                horizontalScrollView.smoothScrollTo((int) carouselArrowIV.getX(), 0);
             }
         });
     }
@@ -384,7 +423,6 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
                             widget.setPosition(Integer.parseInt(widgetsFromResponse.get(i).getPosition()));
                             widget.setValue(widgetsFromResponse.get(i).getTotal());
                             widget.setTitle(widgetsFromResponse.get(i).getName());
-
 
                             widgetsMap.add(widget);
                         }

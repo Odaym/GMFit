@@ -65,6 +65,8 @@
     <dimen name="metric_image_dimen">30dp</dimen>
     <dimen name="date_carousel_height">70dp</dimen>
     <dimen name="chart_title_headline_bar_height">60dp</dimen>
+    <dimen name="date_carousel_items_font_size_normal">14sp</dimen>
+    <dimen name="date_carousel_items_font_size_large">15sp</dimen>
 
     <!-- BREAKDOWN ACTIVITY -->
     <dimen name="slug_breakdown_value_box_width">80dp</dimen>

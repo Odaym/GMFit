@@ -2,7 +2,7 @@
 <LinearLayout android:id="@+id/dateEntryLayout"
               xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
+              android:layout_height="match_parent"
               android:layout_weight="1"
               android:gravity="center"
               android:orientation="vertical">
@@ -11,13 +11,16 @@
         android:id="@+id/dayOfMonthTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/default_margin_1"
-        android:textColor="@color/white"/>
+        android:gravity="center_horizontal"
+        android:textColor="@color/white"
+        android:textSize="@dimen/date_carousel_items_font_size_normal"/>
 
     <TextView
         android:id="@+id/monthOfYearTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/white"/>
+        android:gravity="center_horizontal"
+        android:textColor="@color/white"
+        android:textSize="@dimen/date_carousel_items_font_size_normal"/>
 
 </LinearLayout>
