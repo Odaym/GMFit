@@ -4,142 +4,166 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    >
+
+  <RelativeLayout
+      android:id="@+id/mainHealthMetricDetail"
+      android:layout_width="match_parent"
+      android:layout_height="@dimen/metric_header_section_height"
+      android:background="@android:color/transparent"
+      >
+
+    <com.mcsaatchi.gmfit.classes.FontTextView
+        android:id="@+id/metricCounterTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/metricProgressBar"
+        android:layout_centerHorizontal="true"
+        android:textColor="@color/white"
+        android:textSize="@dimen/metric_counter_font_size"
+        />
+
+    <TextView
+        android:id="@+id/userWeightLabelTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/metricCounterTV"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/health_rounded_view"
+        android:paddingBottom="5dp"
+        android:paddingEnd="@dimen/default_margin_2"
+        android:paddingStart="@dimen/default_margin_2"
+        android:paddingTop="5dp"
+        android:text="@string/user_weight_label_metric"
+        android:textColor="@android:color/white"
+        />
+
+  </RelativeLayout>
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_below="@+id/mainHealthMetricDetail"
+      android:background="@android:color/white"
+      android:orientation="vertical"
+      >
 
     <RelativeLayout
-        android:id="@+id/mainHealthMetricDetail"
+        android:id="@+id/widgetsGridViewLayout"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/metric_header_section_height"
-        android:background="@android:color/transparent">
+        android:layout_height="wrap_content"
+        >
 
-        <com.mcsaatchi.gmfit.classes.FontTextView
-            android:id="@+id/metricCounterTV"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/metricProgressBar"
-            android:layout_centerHorizontal="true"
-            android:textColor="@color/white"
-            android:textSize="@dimen/metric_counter_font_size"/>
+      <ProgressBar
+          android:id="@+id/loadingWidgetsProgressBar"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_centerInParent="true"
+          android:indeterminate="true"
+          style="?android:attr/progressBarStyleLarge"
+          />
 
-        <TextView
-            android:id="@+id/userWeightLabelTV"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/metricCounterTV"
-            android:layout_centerHorizontal="true"
-            android:background="@drawable/health_rounded_view"
-            android:paddingBottom="5dp"
-            android:paddingEnd="@dimen/default_margin_2"
-            android:paddingStart="@dimen/default_margin_2"
-            android:paddingTop="5dp"
-            android:text="@string/user_weight_label_metric"
-            android:textColor="@android:color/white"/>
-
+      <GridView
+          android:id="@+id/widgetsGridView"
+          android:layout_width="match_parent"
+          android:layout_height="@dimen/health_widgets_gridview_height"
+          android:layout_marginBottom="@dimen/default_margin_2"
+          android:layout_marginEnd="@dimen/default_margin_2"
+          android:layout_marginStart="@dimen/default_margin_2"
+          android:layout_marginTop="@dimen/default_margin_2"
+          android:columnWidth="80dp"
+          android:gravity="center"
+          android:horizontalSpacing="@dimen/default_margin_2"
+          android:numColumns="2"
+          android:scrollbars="none"
+          android:stretchMode="columnWidth"
+          android:verticalSpacing="@dimen/default_margin_2"
+          />
     </RelativeLayout>
 
-    <LinearLayout android:layout_width="match_parent"
-                  android:layout_height="match_parent"
-                  android:layout_below="@+id/mainHealthMetricDetail"
-                  android:background="@android:color/white"
-                  android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
 
-        <RelativeLayout
-            android:id="@+id/widgetsGridViewLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+      <LinearLayout
+          android:id="@+id/chartTopBarLayout_MEDICAL_TESTS"
+          android:layout_width="match_parent"
+          android:layout_height="@dimen/add_medical_tests_layout_height"
+          android:background="@color/add_medical_tests_bar_background"
+          android:gravity="center_vertical"
+          android:orientation="horizontal"
+          android:paddingEnd="@dimen/activity_vertical_margin"
+          android:paddingStart="@dimen/activity_vertical_margin"
+          >
 
-            <ProgressBar
-                android:id="@+id/loadingWidgetsProgressBar"
-                style="?android:attr/progressBarStyleLarge"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:indeterminate="true"/>
+        <TextView
+            android:id="@+id/chartTitleTV_MEDICAL_TESTS"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="30"
+            android:text="@string/medical_tests_bar_title"
+            android:textAppearance="?android:textAppearanceMedium"
+            android:textColor="@android:color/white"
+            />
 
-            <GridView android:id="@+id/widgetsGridView"
-                      android:layout_width="match_parent"
-                      android:layout_height="@dimen/health_widgets_gridview_height"
-                      android:layout_marginBottom="@dimen/default_margin_2"
-                      android:layout_marginEnd="@dimen/default_margin_2"
-                      android:layout_marginStart="@dimen/default_margin_2"
-                      android:layout_marginTop="@dimen/default_margin_2"
-                      android:columnWidth="80dp"
-                      android:gravity="center"
-                      android:horizontalSpacing="@dimen/default_margin_2"
-                      android:numColumns="2"
-                      android:scrollbars="none"
-                      android:stretchMode="columnWidth"
-                      android:verticalSpacing="@dimen/default_margin_2"/>
-        </RelativeLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            >
 
-        <LinearLayout android:layout_width="match_parent"
-                      android:layout_height="wrap_content"
-                      android:orientation="vertical">
-
-            <LinearLayout android:id="@+id/chartTopBarLayout_MEDICAL_TESTS"
-                          android:layout_width="match_parent"
-                          android:layout_height="@dimen/add_medical_tests_layout_height"
-                          android:background="@color/add_medical_tests_bar_background"
-                          android:gravity="center_vertical"
-                          android:orientation="horizontal"
-                          android:paddingEnd="@dimen/activity_vertical_margin"
-                          android:paddingStart="@dimen/activity_vertical_margin">
-
-                <TextView android:id="@+id/chartTitleTV_MEDICAL_TESTS"
-                          android:layout_width="0dp"
-                          android:layout_height="wrap_content"
-                          android:layout_weight="30"
-                          android:text="@string/medical_tests_bar_title"
-                          android:textAppearance="?android:textAppearanceMedium"
-                          android:textColor="@android:color/white"/>
-
-                <LinearLayout android:layout_width="wrap_content"
-                              android:layout_height="match_parent"
-                              android:gravity="center_vertical">
-
-                    <TextView
-                        android:id="@+id/addEntryBTN_MEDICAL_TESTS"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:text="@string/add_new_meal"
-                        android:textColor="@android:color/white"/>
-
-                </LinearLayout>
-            </LinearLayout>
-
-            <RelativeLayout android:layout_width="match_parent"
-                            android:layout_height="match_parent">
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/userTestsListView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:scrollbars="vertical"/>
-
-                <ProgressBar
-                    android:id="@+id/loadingTestsProgressBar"
-                    style="?android:attr/progressBarStyleLarge"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:indeterminate="true"/>
-
-            </RelativeLayout>
-
-            <Button
-                android:id="@+id/viewMoreBTN"
-                style="?android:attr/borderlessButtonStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/default_margin_2"
-                android:layout_marginEnd="@dimen/default_margin_2"
-                android:layout_marginStart="@dimen/default_margin_2"
-                android:layout_marginTop="@dimen/default_margin_3"
-                android:background="@color/fitness_dark_blue"
-                android:text="@string/view_more_tests_btn"
-                android:textColor="@android:color/white"/>
+          <TextView
+              android:id="@+id/addEntryBTN_MEDICAL_TESTS"
+              android:layout_width="wrap_content"
+              android:layout_height="match_parent"
+              android:gravity="center"
+              android:text="@string/add_new_meal"
+              android:textColor="@android:color/white"
+              />
 
         </LinearLayout>
+      </LinearLayout>
+
+      <RelativeLayout
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          >
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/userTestsListView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="vertical"
+            />
+
+        <ProgressBar
+            android:id="@+id/loadingTestsProgressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:indeterminate="true"
+            style="?android:attr/progressBarStyleLarge"
+            />
+
+      </RelativeLayout>
+
+      <Button
+          android:id="@+id/viewMoreBTN"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginBottom="@dimen/default_margin_2"
+          android:layout_marginEnd="@dimen/default_margin_2"
+          android:layout_marginStart="@dimen/default_margin_2"
+          android:layout_marginTop="@dimen/default_margin_3"
+          android:background="@color/fitness_dark_blue"
+          android:text="@string/view_more_tests_btn"
+          android:textColor="@android:color/white"
+          style="?android:attr/borderlessButtonStyle"
+          />
+
     </LinearLayout>
+  </LinearLayout>
 </RelativeLayout>

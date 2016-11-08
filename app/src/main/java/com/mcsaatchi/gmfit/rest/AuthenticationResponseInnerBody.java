@@ -8,55 +8,51 @@ import java.util.List;
 
 public class AuthenticationResponseInnerBody {
 
-    @SerializedName("token")
-    @Expose
-    private String token;
-    @SerializedName("widgets")
-    @Expose
-    private List<AuthenticationResponseWidget> widgets = new ArrayList<>();
-    @SerializedName("charts")
-    @Expose
-    private List<AuthenticationResponseChart> charts = new ArrayList<>();
+  @SerializedName("token") @Expose private String token;
+  @SerializedName("widgets") @Expose private List<AuthenticationResponseWidget> widgets =
+      new ArrayList<>();
+  @SerializedName("charts") @Expose private List<AuthenticationResponseChart> charts =
+      new ArrayList<>();
 
-    /**
-     * @return The token
-     */
-    public String getToken() {
-        return token;
-    }
+  /**
+   * @return The token
+   */
+  public String getToken() {
+    return token;
+  }
 
-    /**
-     * @param token The token
-     */
-    public void setToken(String token) {
-        this.token = token;
-    }
+  /**
+   * @param token The token
+   */
+  public void setToken(String token) {
+    this.token = token;
+  }
 
-    /**
-     * @return The widgets
-     */
-    public List<AuthenticationResponseWidget> getWidgets() {
-        return widgets;
-    }
+  /**
+   * @return The widgets
+   */
+  public List<AuthenticationResponseWidget> getWidgets() {
+    return widgets;
+  }
 
-    /**
-     * @param widgets The widgets
-     */
-    public void setWidgets(List<AuthenticationResponseWidget> widgets) {
-        this.widgets = widgets;
-    }
+  /**
+   * @param widgets The widgets
+   */
+  public void setWidgets(List<AuthenticationResponseWidget> widgets) {
+    this.widgets = widgets;
+  }
 
-    /**
-     * @return The charts
-     */
-    public List<AuthenticationResponseChart> getCharts() {
-        return charts;
-    }
+  /**
+   * @return The charts
+   */
+  public List<AuthenticationResponseChart> getCharts() {
+    return charts;
+  }
 
-    /**
-     * @param charts The charts
-     */
-    public void setCharts(List<AuthenticationResponseChart> charts) {
-        this.charts = charts;
-    }
+  /**
+   * @param charts The charts
+   */
+  public void setCharts(List<AuthenticationResponseChart> charts) {
+    this.charts = charts;
+  }
 }

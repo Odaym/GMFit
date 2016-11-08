@@ -5,27 +5,33 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    >
 
-    <ImageView
-        android:id="@+id/introIMG"
-        android:layout_width="@dimen/intro_image_dimens"
-        android:layout_height="@dimen/intro_image_dimens"/>
+  <ImageView
+      android:id="@+id/introIMG"
+      android:layout_width="@dimen/intro_image_dimens"
+      android:layout_height="@dimen/intro_image_dimens"
+      />
 
-    <TextView android:id="@+id/introHeadlineTV" android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:gravity="center"
-              android:text="@string/get_started_title"
-              android:textAppearance="?android:textAppearanceLarge"
-              android:textColor="@android:color/white"/>
+  <TextView
+      android:id="@+id/introHeadlineTV"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:gravity="center"
+      android:text="@string/get_started_title"
+      android:textAppearance="?android:textAppearanceLarge"
+      android:textColor="@android:color/white"
+      />
 
-    <TextView
-        android:id="@+id/introTV"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/default_margin_2"
-        android:gravity="center_horizontal"
-        android:text="This is the FIRST fragment"
-        android:textColor="@android:color/white"/>
+  <TextView
+      android:id="@+id/introTV"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="@dimen/default_margin_2"
+      android:gravity="center_horizontal"
+      android:text="This is the FIRST fragment"
+      android:textColor="@android:color/white"
+      />
 
 </LinearLayout>

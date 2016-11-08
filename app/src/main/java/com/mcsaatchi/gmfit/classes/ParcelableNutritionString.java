@@ -4,80 +4,79 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class ParcelableNutritionString implements Parcelable {
-    public static final Creator CREATOR = new Creator() {
-        public ParcelableNutritionString createFromParcel(Parcel in) {
-            return new ParcelableNutritionString(in);
-        }
-
-        public ParcelableNutritionString[] newArray(int size) {
-            return new ParcelableNutritionString[size];
-        }
-    };
-
-    double value;
-    String title;
-    String measurementUnit;
-    double percentage;
-
-    public ParcelableNutritionString() {
+  public static final Creator CREATOR = new Creator() {
+    public ParcelableNutritionString createFromParcel(Parcel in) {
+      return new ParcelableNutritionString(in);
     }
 
-    public ParcelableNutritionString(Parcel in) {
-        this.value = in.readDouble();
-        this.title = in.readString();
-        this.measurementUnit = in.readString();
-        this.percentage = in.readDouble();
+    public ParcelableNutritionString[] newArray(int size) {
+      return new ParcelableNutritionString[size];
     }
+  };
 
-    public ParcelableNutritionString(String title, double value, String measurementUnit, double percentage) {
-        this.value = value;
-        this.title = title;
-        this.measurementUnit = measurementUnit;
-        this.percentage = percentage;
-    }
+  double value;
+  String title;
+  String measurementUnit;
+  double percentage;
 
-    public double getValue() {
-        return value;
-    }
+  public ParcelableNutritionString() {
+  }
 
-    public void setValue(double value) {
-        this.value = value;
-    }
+  public ParcelableNutritionString(Parcel in) {
+    this.value = in.readDouble();
+    this.title = in.readString();
+    this.measurementUnit = in.readString();
+    this.percentage = in.readDouble();
+  }
 
-    public String getTitle() {
-        return title;
-    }
+  public ParcelableNutritionString(String title, double value, String measurementUnit,
+      double percentage) {
+    this.value = value;
+    this.title = title;
+    this.measurementUnit = measurementUnit;
+    this.percentage = percentage;
+  }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+  public double getValue() {
+    return value;
+  }
 
-    public String getMeasurementUnit() {
-        return measurementUnit;
-    }
+  public void setValue(double value) {
+    this.value = value;
+  }
 
-    public void setMeasurementUnit(String measurementUnit) {
-        this.measurementUnit = measurementUnit;
-    }
+  public String getTitle() {
+    return title;
+  }
 
-    public double getPercentage() {
-        return percentage;
-    }
+  public void setTitle(String title) {
+    this.title = title;
+  }
 
-    public void setPercentage(double percentage) {
-        this.percentage = percentage;
-    }
+  public String getMeasurementUnit() {
+    return measurementUnit;
+  }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
+  public void setMeasurementUnit(String measurementUnit) {
+    this.measurementUnit = measurementUnit;
+  }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeDouble(value);
-        dest.writeString(title);
-        dest.writeString(measurementUnit);
-        dest.writeDouble(percentage);
-    }
+  public double getPercentage() {
+    return percentage;
+  }
+
+  public void setPercentage(double percentage) {
+    this.percentage = percentage;
+  }
+
+  @Override public int describeContents() {
+    return 0;
+  }
+
+  @Override public void writeToParcel(Parcel dest, int flags) {
+    dest.writeDouble(value);
+    dest.writeString(title);
+    dest.writeString(measurementUnit);
+    dest.writeDouble(percentage);
+  }
 }

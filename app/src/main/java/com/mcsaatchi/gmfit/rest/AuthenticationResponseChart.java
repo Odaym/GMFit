@@ -11,124 +11,110 @@ import java.util.List;
 
 public class AuthenticationResponseChart implements Parcelable {
 
-    @SerializedName("chart_id")
-    @Expose
-    private Integer chartId;
-    @SerializedName("name")
-    @Expose
-    private String name;
-    @SerializedName("slug")
-    @Expose
-    private String slug;
-    @SerializedName("position")
-    @Expose
-    private String position;
-    @SerializedName("data")
-    @Expose
-    private List<AuthenticationResponseChartData> data = new ArrayList<>();
-
-    protected AuthenticationResponseChart(Parcel in) {
-        chartId = in.readInt();
-        name = in.readString();
-        slug = in.readString();
-        position = in.readString();
-        data = in.createTypedArrayList(AuthenticationResponseChartData.CREATOR);
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(chartId);
-        dest.writeString(name);
-        dest.writeString(slug);
-        dest.writeString(position);
-        dest.writeTypedList(data);
-    }
-
-    public static final Creator<AuthenticationResponseChart> CREATOR = new Creator<AuthenticationResponseChart>() {
-        @Override
-        public AuthenticationResponseChart createFromParcel(Parcel in) {
-            return new AuthenticationResponseChart(in);
+  public static final Creator<AuthenticationResponseChart> CREATOR =
+      new Creator<AuthenticationResponseChart>() {
+        @Override public AuthenticationResponseChart createFromParcel(Parcel in) {
+          return new AuthenticationResponseChart(in);
         }
 
-        @Override
-        public AuthenticationResponseChart[] newArray(int size) {
-            return new AuthenticationResponseChart[size];
+        @Override public AuthenticationResponseChart[] newArray(int size) {
+          return new AuthenticationResponseChart[size];
         }
-    };
+      };
+  @SerializedName("chart_id") @Expose private Integer chartId;
+  @SerializedName("name") @Expose private String name;
+  @SerializedName("slug") @Expose private String slug;
+  @SerializedName("position") @Expose private String position;
+  @SerializedName("data") @Expose private List<AuthenticationResponseChartData> data =
+      new ArrayList<>();
 
-    /**
-     * @return The chartId
-     */
-    public Integer getChartId() {
-        return chartId;
-    }
+  protected AuthenticationResponseChart(Parcel in) {
+    chartId = in.readInt();
+    name = in.readString();
+    slug = in.readString();
+    position = in.readString();
+    data = in.createTypedArrayList(AuthenticationResponseChartData.CREATOR);
+  }
 
-    /**
-     * @param chartId The chart_id
-     */
-    public void setChartId(Integer chartId) {
-        this.chartId = chartId;
-    }
+  @Override public void writeToParcel(Parcel dest, int flags) {
+    dest.writeInt(chartId);
+    dest.writeString(name);
+    dest.writeString(slug);
+    dest.writeString(position);
+    dest.writeTypedList(data);
+  }
 
-    /**
-     * @return The name
-     */
-    public String getName() {
-        return name;
-    }
+  /**
+   * @return The chartId
+   */
+  public Integer getChartId() {
+    return chartId;
+  }
 
-    /**
-     * @param name The name
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
+  /**
+   * @param chartId The chart_id
+   */
+  public void setChartId(Integer chartId) {
+    this.chartId = chartId;
+  }
 
-    /**
-     * @return The slug
-     */
-    public String getSlug() {
-        return slug;
-    }
+  /**
+   * @return The name
+   */
+  public String getName() {
+    return name;
+  }
 
-    /**
-     * @param slug The slug
-     */
-    public void setSlug(String slug) {
-        this.slug = slug;
-    }
+  /**
+   * @param name The name
+   */
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    /**
-     * @return The position
-     */
-    public String getPosition() {
-        return position;
-    }
+  /**
+   * @return The slug
+   */
+  public String getSlug() {
+    return slug;
+  }
 
-    /**
-     * @param position The position
-     */
-    public void setPosition(String position) {
-        this.position = position;
-    }
+  /**
+   * @param slug The slug
+   */
+  public void setSlug(String slug) {
+    this.slug = slug;
+  }
 
-    /**
-     * @return The data
-     */
-    public List<AuthenticationResponseChartData> getData() {
-        return data;
-    }
+  /**
+   * @return The position
+   */
+  public String getPosition() {
+    return position;
+  }
 
-    /**
-     * @param data The data
-     */
-    public void setData(List<AuthenticationResponseChartData> data) {
-        this.data = data;
-    }
+  /**
+   * @param position The position
+   */
+  public void setPosition(String position) {
+    this.position = position;
+  }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
+  /**
+   * @return The data
+   */
+  public List<AuthenticationResponseChartData> getData() {
+    return data;
+  }
 
+  /**
+   * @param data The data
+   */
+  public void setData(List<AuthenticationResponseChartData> data) {
+    this.data = data;
+  }
+
+  @Override public int describeContents() {
+    return 0;
+  }
 }

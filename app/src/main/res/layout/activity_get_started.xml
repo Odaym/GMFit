@@ -4,75 +4,84 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/general_background"
-    android:paddingTop="@dimen/activity_horizontal_margin">
+    android:paddingTop="@dimen/activity_horizontal_margin"
+    >
 
-    <LinearLayout android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:gravity="center_horizontal"
-                  android:orientation="vertical">
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:gravity="center_horizontal"
+      android:orientation="vertical"
+      >
 
-        <ImageView
-            android:id="@+id/getStartedIMG"
-            android:layout_width="120dp"
-            android:layout_height="120dp"/>
+    <ImageView
+        android:id="@+id/getStartedIMG"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        />
 
-        <TextView
-            android:id="@+id/getStartedTaglineTV"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/get_started_title"
-            android:textAppearance="?android:textAppearanceLarge"
-            android:textColor="@android:color/white"/>
+    <TextView
+        android:id="@+id/getStartedTaglineTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/get_started_title"
+        android:textAppearance="?android:textAppearanceLarge"
+        android:textColor="@android:color/white"
+        />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/default_margin_1"
-            android:gravity="center"
-            android:text="@string/get_started_message"
-            android:textColor="@color/offwhite_transparent"/>
-
-        <com.wrapp.floatlabelededittext.FloatLabeledEditText
-            android:id="@+id/verifyCodeETFloating"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/radiobutton_row_height"
-            android:layout_marginBottom="@dimen/default_margin_0"
-            android:layout_marginTop="@dimen/default_margin_2"
-            android:background="@color/color_primary_dark_transparent"
-            android:paddingEnd="@dimen/default_margin_2"
-            app:fletPaddingLeft="@dimen/default_margin_2"
-            app:fletPaddingTop="@dimen/default_margin_1"
-            app:fletTextAppearance="@style/TextAppearence.App.TextInputLayout">
-
-            <com.andreabaccega.widget.FormEditText
-                android:id="@+id/verifyCodeET"
-                xmlns:validator="http://schemas.android.com/apk/res-auto"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:gravity="center_vertical"
-                android:hint="@string/verification_code_hint"
-                android:inputType="number"
-                android:paddingBottom="@dimen/default_margin_1_5"
-                android:paddingStart="@dimen/default_margin_2"
-                android:singleLine="true"
-                android:textAppearance="?android:textAppearanceLarge"
-                android:textColor="@android:color/white"
-                android:textColorHint="@color/offwhite_transparent"
-                android:textCursorDrawable="@null"
-                validator:emptyErrorString="@string/field_empty_error_message"
-                validator:testType="numeric"/>
-
-        </com.wrapp.floatlabelededittext.FloatLabeledEditText>
-    </LinearLayout>
-
-    <Button
-        android:id="@+id/setup_profile_button"
-        style="@style/BottomButton"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/default_button_height_1"
-        android:layout_alignParentBottom="true"
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/default_margin_1"
         android:gravity="center"
-        android:text="@string/setup_my_profile_button"/>
+        android:text="@string/get_started_message"
+        android:textColor="@color/offwhite_transparent"
+        />
+
+    <com.wrapp.floatlabelededittext.FloatLabeledEditText
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/verifyCodeETFloating"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/radiobutton_row_height"
+        android:layout_marginBottom="@dimen/default_margin_0"
+        android:layout_marginTop="@dimen/default_margin_2"
+        android:background="@color/color_primary_dark_transparent"
+        android:paddingEnd="@dimen/default_margin_2"
+        app:fletPaddingLeft="@dimen/default_margin_2"
+        app:fletPaddingTop="@dimen/default_margin_1"
+        app:fletTextAppearance="@style/TextAppearence.App.TextInputLayout"
+        >
+
+      <com.andreabaccega.widget.FormEditText
+          xmlns:validator="http://schemas.android.com/apk/res-auto"
+          android:id="@+id/verifyCodeET"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:background="@android:color/transparent"
+          android:gravity="center_vertical"
+          android:hint="@string/verification_code_hint"
+          android:inputType="number"
+          android:paddingBottom="@dimen/default_margin_1_5"
+          android:paddingStart="@dimen/default_margin_2"
+          android:singleLine="true"
+          android:textAppearance="?android:textAppearanceLarge"
+          android:textColor="@android:color/white"
+          android:textColorHint="@color/offwhite_transparent"
+          android:textCursorDrawable="@null"
+          validator:emptyErrorString="@string/field_empty_error_message"
+          validator:testType="numeric"
+          />
+
+    </com.wrapp.floatlabelededittext.FloatLabeledEditText>
+  </LinearLayout>
+
+  <Button
+      android:id="@+id/setup_profile_button"
+      android:layout_width="match_parent"
+      android:layout_height="@dimen/default_button_height_1"
+      android:layout_alignParentBottom="true"
+      android:gravity="center"
+      android:text="@string/setup_my_profile_button"
+      style="@style/BottomButton"
+      />
 </RelativeLayout>

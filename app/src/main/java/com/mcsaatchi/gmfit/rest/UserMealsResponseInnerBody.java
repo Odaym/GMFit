@@ -4,25 +4,19 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class UserMealsResponseInnerBody {
-    @SerializedName("data")
-    @Expose
-    private UserMealsResponseInnerData data;
+  @SerializedName("data") @Expose private UserMealsResponseInnerData data;
 
-    /**
-     *
-     * @return
-     * The data
-     */
-    public UserMealsResponseInnerData getData() {
-        return data;
-    }
+  /**
+   * @return The data
+   */
+  public UserMealsResponseInnerData getData() {
+    return data;
+  }
 
-    /**
-     *
-     * @param data
-     * The data
-     */
-    public void setData(UserMealsResponseInnerData data) {
-        this.data = data;
-    }
+  /**
+   * @param data The data
+   */
+  public void setData(UserMealsResponseInnerData data) {
+    this.data = data;
+  }
 }

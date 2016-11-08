@@ -37,331 +37,314 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class AddNewMealOnDate_Activity extends Base_Activity {
-    private static final int BARCODE_CAPTURE_RC = 773;
-    /**
-     * BREAKFAST CHART
-     */
-    @Bind(R.id.chartTitleTV_BREAKFAST)
-    TextView chartTitleTV_BREAKFAST;
-    @Bind(R.id.addEntryBTN_BREAKFAST)
-    TextView addNewEntryBTN_BREAKFAST;
-    @Bind(R.id.scanEntryBTN_BREAKFAST)
-    TextView scanEntryBTN_BREAKFAST;
-    @Bind(R.id.breakfastListView)
-    RecyclerView breakfastListView;
-    /**
-     * LUNCH CHART
-     */
-    @Bind(R.id.chartTitleTV_LUNCH)
-    TextView chartTitleTV_LUNCH;
-    @Bind(R.id.addEntryBTN_LUNCH)
-    TextView addNewEntryBTN_LUNCH;
-    @Bind(R.id.scanEntryBTN_LUNCH)
-    TextView scanEntryBTN_LUNCH;
-    @Bind(R.id.lunchListView)
-    RecyclerView lunchListView;
-    /**
-     * DINNER CHART
-     */
-    @Bind(R.id.chartTitleTV_DINNER)
-    TextView chartTitleTV_DINNER;
-    @Bind(R.id.addEntryBTN_DINNER)
-    TextView addNewEntryBTN_DINNER;
-    @Bind(R.id.scanEntryBTN_DINNER)
-    TextView scanEntryBTN_DINNER;
-    @Bind(R.id.dinnerListView)
-    RecyclerView dinnerListView;
-    /**
-     * SNACKS CHART
-     */
-    @Bind(R.id.chartTitleTV_SNACKS)
-    TextView chartTitleTV_SNACKS;
-    @Bind(R.id.addEntryBTN_SNACKS)
-    TextView addNewEntryBTN_SNACKS;
-    @Bind(R.id.scanEntryBTN_SNACKS)
-    TextView scanEntryBTN_SNACKS;
-    @Bind(R.id.snacksListView)
-    RecyclerView snacksListView;
-    @Bind(R.id.toolbar)
-    Toolbar toolbar;
-    private SharedPreferences prefs;
-    private String chosenDate;
-    private ArrayList<MealItem> finalBreakfastMeals = new ArrayList<>();
-    private ArrayList<MealItem> finalLunchMeals = new ArrayList<>();
-    private ArrayList<MealItem> finalDinnerMeals = new ArrayList<>();
-    private ArrayList<MealItem> finalSnackMeals = new ArrayList<>();
-    private UserMeals_RecyclerAdapterDragSwipe userMealsRecyclerAdapter;
+  private static final int BARCODE_CAPTURE_RC = 773;
+  /**
+   * BREAKFAST CHART
+   */
+  @Bind(R.id.chartTitleTV_BREAKFAST) TextView chartTitleTV_BREAKFAST;
+  @Bind(R.id.addEntryBTN_BREAKFAST) TextView addNewEntryBTN_BREAKFAST;
+  @Bind(R.id.scanEntryBTN_BREAKFAST) TextView scanEntryBTN_BREAKFAST;
+  @Bind(R.id.breakfastListView) RecyclerView breakfastListView;
+  /**
+   * LUNCH CHART
+   */
+  @Bind(R.id.chartTitleTV_LUNCH) TextView chartTitleTV_LUNCH;
+  @Bind(R.id.addEntryBTN_LUNCH) TextView addNewEntryBTN_LUNCH;
+  @Bind(R.id.scanEntryBTN_LUNCH) TextView scanEntryBTN_LUNCH;
+  @Bind(R.id.lunchListView) RecyclerView lunchListView;
+  /**
+   * DINNER CHART
+   */
+  @Bind(R.id.chartTitleTV_DINNER) TextView chartTitleTV_DINNER;
+  @Bind(R.id.addEntryBTN_DINNER) TextView addNewEntryBTN_DINNER;
+  @Bind(R.id.scanEntryBTN_DINNER) TextView scanEntryBTN_DINNER;
+  @Bind(R.id.dinnerListView) RecyclerView dinnerListView;
+  /**
+   * SNACKS CHART
+   */
+  @Bind(R.id.chartTitleTV_SNACKS) TextView chartTitleTV_SNACKS;
+  @Bind(R.id.addEntryBTN_SNACKS) TextView addNewEntryBTN_SNACKS;
+  @Bind(R.id.scanEntryBTN_SNACKS) TextView scanEntryBTN_SNACKS;
+  @Bind(R.id.snacksListView) RecyclerView snacksListView;
+  @Bind(R.id.toolbar) Toolbar toolbar;
+  private SharedPreferences prefs;
+  private String chosenDate;
+  private ArrayList<MealItem> finalBreakfastMeals = new ArrayList<>();
+  private ArrayList<MealItem> finalLunchMeals = new ArrayList<>();
+  private ArrayList<MealItem> finalDinnerMeals = new ArrayList<>();
+  private ArrayList<MealItem> finalSnackMeals = new ArrayList<>();
+  private UserMeals_RecyclerAdapterDragSwipe userMealsRecyclerAdapter;
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+  @Override public void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_add_meal_on_date);
+    setContentView(R.layout.activity_add_meal_on_date);
 
-        ButterKnife.bind(this);
+    ButterKnife.bind(this);
 
-        EventBus_Singleton.getInstance().register(this);
+    EventBus_Singleton.getInstance().register(this);
 
-        prefs = getSharedPreferences(Constants.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
+    prefs = getSharedPreferences(Constants.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
 
-        if (getIntent().getExtras() != null) {
-            chosenDate = getIntent().getExtras().getString(Constants.EXTRAS_DATE_TO_ADD_MEAL_ON, "");
-        }
+    if (getIntent().getExtras() != null) {
+      chosenDate = getIntent().getExtras().getString(Constants.EXTRAS_DATE_TO_ADD_MEAL_ON, "");
+    }
 
-        setupToolbar(toolbar, chosenDate, true);
+    setupToolbar(toolbar, chosenDate, true);
 
-        hookupMealSectionRowsClickListeners();
+    hookupMealSectionRowsClickListeners();
 
+    getUserAddedMealsOnDate(chosenDate);
+  }
+
+  @Override protected void onDestroy() {
+    super.onDestroy();
+
+    EventBus_Singleton.getInstance().unregister(this);
+  }
+
+  @Subscribe public void handle_BusEvents(final EventBus_Poster ebp) {
+    String ebpMessage = ebp.getMessage();
+
+    switch (ebpMessage) {
+      case Constants.EXTRAS_CREATED_NEW_MEAL_ENTRY_ON_DATE:
+      case Constants.EXTRAS_UPDATED_MEAL_ENTRY_ON_DATE:
         getUserAddedMealsOnDate(chosenDate);
+        break;
     }
+  }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
+  public void handleScanMealEntry() {
+    Intent intent = new Intent(AddNewMealOnDate_Activity.this, BarcodeCapture_Activity.class);
+    intent.putExtra(BarcodeCapture_Activity.AutoFocus, true);
+    intent.putExtra(BarcodeCapture_Activity.UseFlash, false);
+    startActivityForResult(intent, BARCODE_CAPTURE_RC);
+  }
 
-        EventBus_Singleton.getInstance().unregister(this);
-    }
+  private void openMealEntryPickerActivity(String mainMealName) {
+    Intent intent = new Intent(AddNewMealOnDate_Activity.this, AddNewMealItem_Activity.class);
+    intent.putExtra(Constants.EXTRAS_MAIN_MEAL_NAME, mainMealName);
+    intent.putExtra(Constants.EXTRAS_DATE_TO_ADD_MEAL_ON, chosenDate);
+    startActivity(intent);
+  }
 
-    @Subscribe
-    public void handle_BusEvents(final EventBus_Poster ebp) {
-        String ebpMessage = ebp.getMessage();
+  private void hookupMealSectionRowsClickListeners() {
+    addNewEntryBTN_BREAKFAST.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View view) {
+        openMealEntryPickerActivity(chartTitleTV_BREAKFAST.getText().toString());
+      }
+    });
+    scanEntryBTN_BREAKFAST.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View view) {
+        handleScanMealEntry();
+      }
+    });
 
-        switch (ebpMessage) {
-            case Constants.EXTRAS_CREATED_NEW_MEAL_ENTRY_ON_DATE:
-            case Constants.EXTRAS_UPDATED_MEAL_ENTRY_ON_DATE:
-                getUserAddedMealsOnDate(chosenDate);
-                break;
-        }
-    }
+    addNewEntryBTN_LUNCH.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View view) {
+        openMealEntryPickerActivity(chartTitleTV_LUNCH.getText().toString());
+      }
+    });
+    scanEntryBTN_LUNCH.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View view) {
+        handleScanMealEntry();
+      }
+    });
 
-    public void handleScanMealEntry() {
-        Intent intent = new Intent(AddNewMealOnDate_Activity.this, BarcodeCapture_Activity.class);
-        intent.putExtra(BarcodeCapture_Activity.AutoFocus, true);
-        intent.putExtra(BarcodeCapture_Activity.UseFlash, false);
-        startActivityForResult(intent, BARCODE_CAPTURE_RC);
-    }
+    addNewEntryBTN_DINNER.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View view) {
+        openMealEntryPickerActivity(chartTitleTV_DINNER.getText().toString());
+      }
+    });
+    scanEntryBTN_DINNER.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View view) {
+        handleScanMealEntry();
+      }
+    });
 
-    private void openMealEntryPickerActivity(String mainMealName) {
-        Intent intent = new Intent(AddNewMealOnDate_Activity.this, AddNewMealItem_Activity.class);
-        intent.putExtra(Constants.EXTRAS_MAIN_MEAL_NAME, mainMealName);
-        intent.putExtra(Constants.EXTRAS_MEAL_ITEM_PURPOSE_ADDING_TO_DATE, true);
-        intent.putExtra(Constants.EXTRAS_DATE_TO_ADD_MEAL_ON, chosenDate);
-        startActivity(intent);
-    }
+    addNewEntryBTN_SNACKS.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View view) {
+        openMealEntryPickerActivity(chartTitleTV_SNACKS.getText().toString());
+      }
+    });
+    scanEntryBTN_SNACKS.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View view) {
+        handleScanMealEntry();
+      }
+    });
+  }
 
-    private void hookupMealSectionRowsClickListeners() {
-        addNewEntryBTN_BREAKFAST.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openMealEntryPickerActivity(chartTitleTV_BREAKFAST.getText().toString());
-            }
-        });
-        scanEntryBTN_BREAKFAST.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                handleScanMealEntry();
-            }
-        });
-
-        addNewEntryBTN_LUNCH.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openMealEntryPickerActivity(chartTitleTV_LUNCH.getText().toString());
-            }
-        });
-        scanEntryBTN_LUNCH.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                handleScanMealEntry();
-            }
-        });
-
-        addNewEntryBTN_DINNER.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openMealEntryPickerActivity(chartTitleTV_DINNER.getText().toString());
-            }
-        });
-        scanEntryBTN_DINNER.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                handleScanMealEntry();
-            }
-        });
-
-        addNewEntryBTN_SNACKS.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openMealEntryPickerActivity(chartTitleTV_SNACKS.getText().toString());
-            }
-        });
-        scanEntryBTN_SNACKS.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                handleScanMealEntry();
-            }
-        });
-    }
-
-    private void getUserAddedMealsOnDate(String chosenDate) {
-        DataAccessHandler.getInstance().getUserAddedMealsOnDate(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN,
-                Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), chosenDate, new Callback<UserMealsResponse>() {
-            @Override
-            public void onResponse(Call<UserMealsResponse> call, Response<UserMealsResponse> response) {
+  private void getUserAddedMealsOnDate(String chosenDate) {
+    DataAccessHandler.getInstance()
+        .getUserAddedMealsOnDate(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN,
+            Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), chosenDate,
+            new Callback<UserMealsResponse>() {
+              @Override public void onResponse(Call<UserMealsResponse> call,
+                  Response<UserMealsResponse> response) {
                 switch (response.code()) {
-                    case 200:
+                  case 200:
 
-                        /**
-                         * Grab all meals from the API
-                         */
-                        List<UserMealsResponseBreakfast> breakfastMeals = response.body().getData().getBody().getData().getBreakfast();
-                        List<UserMealsResponseLunch> lunchMeals = response.body().getData().getBody().getData().getLunch();
-                        List<UserMealsResponseDinner> dinnerMeals = response.body().getData().getBody().getData().getDinner();
-                        List<UserMealsResponseSnack> snackMeals = response.body().getData().getBody().getData().getSnack();
+                    /**
+                     * Grab all meals from the API
+                     */
+                    List<UserMealsResponseBreakfast> breakfastMeals =
+                        response.body().getData().getBody().getData().getBreakfast();
+                    List<UserMealsResponseLunch> lunchMeals =
+                        response.body().getData().getBody().getData().getLunch();
+                    List<UserMealsResponseDinner> dinnerMeals =
+                        response.body().getData().getBody().getData().getDinner();
+                    List<UserMealsResponseSnack> snackMeals =
+                        response.body().getData().getBody().getData().getSnack();
 
-                        finalBreakfastMeals.clear();
-                        finalLunchMeals.clear();
-                        finalDinnerMeals.clear();
-                        finalSnackMeals.clear();
+                    finalBreakfastMeals.clear();
+                    finalLunchMeals.clear();
+                    finalDinnerMeals.clear();
+                    finalSnackMeals.clear();
 
-                        /**
-                         * Insert Breakfast meals
-                         */
-                        for (int i = 0; i < breakfastMeals.size(); i++) {
-                            MealItem breakfastMeal = new MealItem();
-                            breakfastMeal.setMeal_id(breakfastMeals.get(i).getId());
-                            breakfastMeal.setCreated_at(breakfastMeals.get(i).getCreatedAt());
-                            breakfastMeal.setInstance_id(breakfastMeals.get(i).getInstance_id());
-                            breakfastMeal.setType("Breakfast");
-                            breakfastMeal.setName(breakfastMeals.get(i).getName());
-                            breakfastMeal.setMeasurementUnit(breakfastMeals.get(i).getMeasurementUnit());
-                            breakfastMeal.setAmount(breakfastMeals.get(i).getAmount());
-                            breakfastMeal.setSectionType(2);
+                    /**
+                     * Insert Breakfast meals
+                     */
+                    for (int i = 0; i < breakfastMeals.size(); i++) {
+                      MealItem breakfastMeal = new MealItem();
+                      breakfastMeal.setMeal_id(breakfastMeals.get(i).getId());
+                      breakfastMeal.setCreated_at(breakfastMeals.get(i).getCreatedAt());
+                      breakfastMeal.setInstance_id(breakfastMeals.get(i).getInstance_id());
+                      breakfastMeal.setType("Breakfast");
+                      breakfastMeal.setName(breakfastMeals.get(i).getName());
+                      breakfastMeal.setMeasurementUnit(breakfastMeals.get(i).getMeasurementUnit());
+                      breakfastMeal.setAmount(breakfastMeals.get(i).getAmount());
+                      breakfastMeal.setSectionType(2);
 
-                            if (breakfastMeals.get(i).getTotalCalories() != null)
-                                breakfastMeal.setTotalCalories(breakfastMeals.get(i).getTotalCalories());
-                            else
-                                breakfastMeal.setTotalCalories(0);
+                      if (breakfastMeals.get(i).getTotalCalories() != null) {
+                        breakfastMeal.setTotalCalories(breakfastMeals.get(i).getTotalCalories());
+                      } else {
+                        breakfastMeal.setTotalCalories(0);
+                      }
 
-                            finalBreakfastMeals.add(breakfastMeal);
-                        }
+                      finalBreakfastMeals.add(breakfastMeal);
+                    }
 
-                        setupMealSectionsListView(finalBreakfastMeals, "Breakfast");
+                    setupMealSectionsListView(finalBreakfastMeals, "Breakfast");
 
-                        /**
-                         * Insert Lunch meals
-                         */
-                        for (int i = 0; i < lunchMeals.size(); i++) {
-                            MealItem lunchMeal = new MealItem();
-                            lunchMeal.setMeal_id(lunchMeals.get(i).getId());
-                            lunchMeal.setCreated_at(lunchMeals.get(i).getCreatedAt());
-                            lunchMeal.setInstance_id(lunchMeals.get(i).getInstance_id());
-                            lunchMeal.setType("Lunch");
-                            lunchMeal.setName(lunchMeals.get(i).getName());
-                            lunchMeal.setMeasurementUnit(lunchMeals.get(i).getMeasurementUnit());
-                            lunchMeal.setAmount(lunchMeals.get(i).getAmount());
-                            lunchMeal.setSectionType(2);
+                    /**
+                     * Insert Lunch meals
+                     */
+                    for (int i = 0; i < lunchMeals.size(); i++) {
+                      MealItem lunchMeal = new MealItem();
+                      lunchMeal.setMeal_id(lunchMeals.get(i).getId());
+                      lunchMeal.setCreated_at(lunchMeals.get(i).getCreatedAt());
+                      lunchMeal.setInstance_id(lunchMeals.get(i).getInstance_id());
+                      lunchMeal.setType("Lunch");
+                      lunchMeal.setName(lunchMeals.get(i).getName());
+                      lunchMeal.setMeasurementUnit(lunchMeals.get(i).getMeasurementUnit());
+                      lunchMeal.setAmount(lunchMeals.get(i).getAmount());
+                      lunchMeal.setSectionType(2);
 
-                            if (lunchMeals.get(i).getTotalCalories() != null)
-                                lunchMeal.setTotalCalories(lunchMeals.get(i).getTotalCalories());
-                            else
-                                lunchMeal.setTotalCalories(0);
+                      if (lunchMeals.get(i).getTotalCalories() != null) {
+                        lunchMeal.setTotalCalories(lunchMeals.get(i).getTotalCalories());
+                      } else {
+                        lunchMeal.setTotalCalories(0);
+                      }
 
-                            finalLunchMeals.add(lunchMeal);
-                        }
+                      finalLunchMeals.add(lunchMeal);
+                    }
 
-                        setupMealSectionsListView(finalLunchMeals, "Lunch");
+                    setupMealSectionsListView(finalLunchMeals, "Lunch");
 
-                        /**
-                         * Insert Dinner meals
-                         */
-                        for (int i = 0; i < dinnerMeals.size(); i++) {
-                            MealItem dinnerMeal = new MealItem();
-                            dinnerMeal.setMeal_id(dinnerMeals.get(i).getId());
-                            dinnerMeal.setCreated_at(dinnerMeals.get(i).getCreatedAt());
-                            dinnerMeal.setInstance_id(dinnerMeals.get(i).getInstance_id());
-                            dinnerMeal.setType("Dinner");
-                            dinnerMeal.setName(dinnerMeals.get(i).getName());
-                            dinnerMeal.setMeasurementUnit(dinnerMeals.get(i).getMeasurementUnit());
-                            dinnerMeal.setAmount(dinnerMeals.get(i).getAmount());
-                            dinnerMeal.setSectionType(2);
+                    /**
+                     * Insert Dinner meals
+                     */
+                    for (int i = 0; i < dinnerMeals.size(); i++) {
+                      MealItem dinnerMeal = new MealItem();
+                      dinnerMeal.setMeal_id(dinnerMeals.get(i).getId());
+                      dinnerMeal.setCreated_at(dinnerMeals.get(i).getCreatedAt());
+                      dinnerMeal.setInstance_id(dinnerMeals.get(i).getInstance_id());
+                      dinnerMeal.setType("Dinner");
+                      dinnerMeal.setName(dinnerMeals.get(i).getName());
+                      dinnerMeal.setMeasurementUnit(dinnerMeals.get(i).getMeasurementUnit());
+                      dinnerMeal.setAmount(dinnerMeals.get(i).getAmount());
+                      dinnerMeal.setSectionType(2);
 
-                            if (dinnerMeals.get(i).getTotalCalories() != null)
-                                dinnerMeal.setTotalCalories(dinnerMeals.get(i).getTotalCalories());
-                            else
-                                dinnerMeal.setTotalCalories(0);
+                      if (dinnerMeals.get(i).getTotalCalories() != null) {
+                        dinnerMeal.setTotalCalories(dinnerMeals.get(i).getTotalCalories());
+                      } else {
+                        dinnerMeal.setTotalCalories(0);
+                      }
 
-                            finalDinnerMeals.add(dinnerMeal);
-                        }
+                      finalDinnerMeals.add(dinnerMeal);
+                    }
 
-                        setupMealSectionsListView(finalDinnerMeals, "Dinner");
+                    setupMealSectionsListView(finalDinnerMeals, "Dinner");
 
-                        /**
-                         * Insert Snack meals
-                         */
-                        for (int i = 0; i < snackMeals.size(); i++) {
-                            MealItem snackMeal = new MealItem();
-                            snackMeal.setMeal_id(snackMeals.get(i).getId());
-                            snackMeal.setInstance_id(snackMeals.get(i).getInstance_id());
-                            snackMeal.setCreated_at(snackMeals.get(i).getCreatedAt());
-                            snackMeal.setType("Snack");
-                            snackMeal.setName(snackMeals.get(i).getName());
-                            snackMeal.setMeasurementUnit(snackMeals.get(i).getMeasurementUnit());
-                            snackMeal.setAmount(snackMeals.get(i).getAmount());
-                            snackMeal.setSectionType(2);
+                    /**
+                     * Insert Snack meals
+                     */
+                    for (int i = 0; i < snackMeals.size(); i++) {
+                      MealItem snackMeal = new MealItem();
+                      snackMeal.setMeal_id(snackMeals.get(i).getId());
+                      snackMeal.setInstance_id(snackMeals.get(i).getInstance_id());
+                      snackMeal.setCreated_at(snackMeals.get(i).getCreatedAt());
+                      snackMeal.setType("Snack");
+                      snackMeal.setName(snackMeals.get(i).getName());
+                      snackMeal.setMeasurementUnit(snackMeals.get(i).getMeasurementUnit());
+                      snackMeal.setAmount(snackMeals.get(i).getAmount());
+                      snackMeal.setSectionType(2);
 
-                            if (snackMeals.get(i).getTotalCalories() != null)
-                                snackMeal.setTotalCalories(snackMeals.get(i).getTotalCalories());
-                            else
-                                snackMeal.setTotalCalories(0);
+                      if (snackMeals.get(i).getTotalCalories() != null) {
+                        snackMeal.setTotalCalories(snackMeals.get(i).getTotalCalories());
+                      } else {
+                        snackMeal.setTotalCalories(0);
+                      }
 
-                            finalSnackMeals.add(snackMeal);
-                        }
+                      finalSnackMeals.add(snackMeal);
+                    }
 
-                        setupMealSectionsListView(finalSnackMeals, "Snack");
+                    setupMealSectionsListView(finalSnackMeals, "Snack");
 
-                        break;
+                    break;
                 }
-            }
+              }
 
-            @Override
-            public void onFailure(Call<UserMealsResponse> call, Throwable t) {
+              @Override public void onFailure(Call<UserMealsResponse> call, Throwable t) {
 
-            }
-        });
+              }
+            });
+  }
+
+  private void setupMealSectionsListView(ArrayList<MealItem> mealItems, String mealType) {
+    RecyclerView.LayoutManager mLayoutManager =
+        new LinearLayoutManager(AddNewMealOnDate_Activity.this);
+
+    ItemTouchHelper.Callback callback;
+    ItemTouchHelper touchHelper;
+
+    userMealsRecyclerAdapter =
+        new UserMeals_RecyclerAdapterDragSwipe(AddNewMealOnDate_Activity.this, mealItems);
+    callback = new SimpleSwipeItemTouchHelperCallback(userMealsRecyclerAdapter);
+    touchHelper = new ItemTouchHelper(callback);
+
+    switch (mealType) {
+      case "Breakfast":
+        hookUpMealSectionListViews(breakfastListView, mLayoutManager, touchHelper);
+        break;
+      case "Lunch":
+        hookUpMealSectionListViews(lunchListView, mLayoutManager, touchHelper);
+        break;
+      case "Dinner":
+        hookUpMealSectionListViews(dinnerListView, mLayoutManager, touchHelper);
+        break;
+      case "Snack":
+        hookUpMealSectionListViews(snacksListView, mLayoutManager, touchHelper);
+        break;
     }
+  }
 
-    private void setupMealSectionsListView(ArrayList<MealItem> mealItems, String mealType) {
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(AddNewMealOnDate_Activity.this);
-
-        ItemTouchHelper.Callback callback;
-        ItemTouchHelper touchHelper;
-
-        userMealsRecyclerAdapter = new UserMeals_RecyclerAdapterDragSwipe(AddNewMealOnDate_Activity.this, mealItems);
-        callback = new SimpleSwipeItemTouchHelperCallback(userMealsRecyclerAdapter);
-        touchHelper = new ItemTouchHelper(callback);
-
-        switch (mealType) {
-            case "Breakfast":
-                hookUpMealSectionListViews(breakfastListView, mLayoutManager, touchHelper);
-                break;
-            case "Lunch":
-                hookUpMealSectionListViews(lunchListView, mLayoutManager, touchHelper);
-                break;
-            case "Dinner":
-                hookUpMealSectionListViews(dinnerListView, mLayoutManager, touchHelper);
-                break;
-            case "Snack":
-                hookUpMealSectionListViews(snacksListView, mLayoutManager, touchHelper);
-                break;
-        }
-    }
-
-    private void hookUpMealSectionListViews(RecyclerView mealListView, RecyclerView.LayoutManager layoutManager, ItemTouchHelper touchHelper) {
-        mealListView.addItemDecoration(new SimpleDividerItemDecoration(AddNewMealOnDate_Activity.this));
-        mealListView.setNestedScrollingEnabled(false);
-        mealListView.setLayoutManager(layoutManager);
-        mealListView.setAdapter(userMealsRecyclerAdapter);
-        touchHelper.attachToRecyclerView(mealListView);
-    }
+  private void hookUpMealSectionListViews(RecyclerView mealListView,
+      RecyclerView.LayoutManager layoutManager, ItemTouchHelper touchHelper) {
+    mealListView.addItemDecoration(new SimpleDividerItemDecoration(AddNewMealOnDate_Activity.this));
+    mealListView.setNestedScrollingEnabled(false);
+    mealListView.setLayoutManager(layoutManager);
+    mealListView.setAdapter(userMealsRecyclerAdapter);
+    touchHelper.attachToRecyclerView(mealListView);
+  }
 }

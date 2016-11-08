@@ -1,33 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/fitness_widget_cell_height"
-                android:background="@color/fitness_dark_blue"
-                android:gravity="center"
-                android:orientation="horizontal">
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/fitness_widget_cell_height"
+    android:background="@color/fitness_dark_blue"
+    android:gravity="center"
+    android:orientation="horizontal"
+    >
 
-    <ImageView
-        android:id="@+id/metricIMG"
-        android:layout_width="@dimen/metric_image_dimen"
-        android:layout_height="@dimen/metric_image_dimen"
-        android:layout_above="@+id/measurementUnitTV"
-        android:layout_marginBottom="@dimen/default_margin_1"
-        android:layout_marginEnd="@dimen/default_margin_2"/>
+  <ImageView
+      android:id="@+id/metricIMG"
+      android:layout_width="@dimen/metric_image_dimen"
+      android:layout_height="@dimen/metric_image_dimen"
+      android:layout_above="@+id/measurementUnitTV"
+      android:layout_marginBottom="@dimen/default_margin_1"
+      android:layout_marginEnd="@dimen/default_margin_2"
+      />
 
-    <com.mcsaatchi.gmfit.classes.FontTextView
-        android:id="@+id/metricTV"
-        android:layout_width="70dp"
-        android:layout_height="50dp"
-        android:layout_toEndOf="@id/metricIMG"
-        android:gravity="center_vertical"
-        android:textColor="@android:color/white"
-        android:textSize="@dimen/fitness_widgets_main_metric_value_font_size"/>
+  <com.mcsaatchi.gmfit.classes.FontTextView
+      android:id="@+id/metricTV"
+      android:layout_width="70dp"
+      android:layout_height="50dp"
+      android:layout_toEndOf="@id/metricIMG"
+      android:gravity="center_vertical"
+      android:textColor="@android:color/white"
+      android:textSize="@dimen/fitness_widgets_main_metric_value_font_size"
+      />
 
-    <TextView
-        android:id="@+id/measurementUnitTV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/metricTV"
-        android:layout_below="@+id/metricTV"
-        android:textColor="@android:color/white"/>
+  <TextView
+      android:id="@+id/measurementUnitTV"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignStart="@+id/metricTV"
+      android:layout_below="@+id/metricTV"
+      android:textColor="@android:color/white"
+      />
 </RelativeLayout>

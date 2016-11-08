@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <tabs>
-    <tab
-        barColorWhenSelected="@color/fitness_pink"
-        icon="@drawable/ic_bottom_bar_fitness_inactive"
-        id="@+id/item_one"
-        title="@string/fitness_tab_title"/>
+  <tab
+      barColorWhenSelected="@color/fitness_pink"
+      icon="@drawable/ic_bottom_bar_fitness_inactive"
+      id="@+id/item_one"
+      title="@string/fitness_tab_title"/>
 
-    <tab
-        barColorWhenSelected="@color/nutrition_red"
-        icon="@drawable/ic_bottom_bar_nutrition_inactive"
-        id="@+id/item_two"
-        title="@string/nutrition_tab_title"/>
+  <tab
+      barColorWhenSelected="@color/nutrition_red"
+      icon="@drawable/ic_bottom_bar_nutrition_inactive"
+      id="@+id/item_two"
+      title="@string/nutrition_tab_title"/>
 
-    <tab
-        barColorWhenSelected="@color/health_green"
-        icon="@drawable/ic_bottom_bar_health_inactive"
-        id="@+id/item_three"
-        title="@string/health_tab_title"/>
+  <tab
+      barColorWhenSelected="@color/health_green"
+      icon="@drawable/ic_bottom_bar_health_inactive"
+      id="@+id/item_three"
+      title="@string/health_tab_title"/>
 
-    <tab
-        barColorWhenSelected="@color/profile_blue"
-        icon="@drawable/ic_bottom_bar_profile"
-        id="@+id/item_four"
-        title="@string/profile_tab_title"/>
+  <tab
+      barColorWhenSelected="@color/profile_blue"
+      icon="@drawable/ic_bottom_bar_profile"
+      id="@+id/item_four"
+      title="@string/profile_tab_title"/>
 
 </tabs>

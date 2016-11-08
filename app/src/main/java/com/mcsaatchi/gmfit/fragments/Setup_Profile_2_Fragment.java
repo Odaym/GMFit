@@ -30,74 +30,77 @@ import worker8.com.github.radiogroupplus.RadioGroupPlus;
 
 public class Setup_Profile_2_Fragment extends Fragment {
 
-    @Bind(R.id.goalRadioButtonsGroup)
-    RadioGroupPlus goalRadioButtonsGroup;
+  @Bind(R.id.goalRadioButtonsGroup) RadioGroupPlus goalRadioButtonsGroup;
 
-    private SharedPreferences prefs;
+  private SharedPreferences prefs;
 
-    @Override
-    public View onCreateView(LayoutInflater inflater,
-                             ViewGroup container,
-                             Bundle savedInstanceState) {
+  @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
+      Bundle savedInstanceState) {
 
-        View fragmentView = inflater.inflate(R.layout.fragment_setup_profile_2, container, false);
+    View fragmentView = inflater.inflate(R.layout.fragment_setup_profile_2, container, false);
 
-        ButterKnife.bind(this, fragmentView);
+    ButterKnife.bind(this, fragmentView);
 
-        prefs = getActivity().getSharedPreferences(Constants.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
+    prefs = getActivity().getSharedPreferences(Constants.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
 
-        getUserGoals();
+    getUserGoals();
 
-        return fragmentView;
-    }
+    return fragmentView;
+  }
 
-    private void getUserGoals() {
-        final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
-        alertDialog.setTitle(R.string.fetching_user_goals);
-        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
+  private void getUserGoals() {
+    final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+    alertDialog.setTitle(R.string.fetching_user_goals);
+    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
+        new DialogInterface.OnClickListener() {
+          public void onClick(DialogInterface dialog, int which) {
+            dialog.dismiss();
+          }
+        });
+
+    DataAccessHandler.getInstance()
+        .getUserGoals(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN,
+            Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), new Callback<UserGoalsResponse>() {
+          @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP) @Override
+          public void onResponse(Call<UserGoalsResponse> call,
+              Response<UserGoalsResponse> response) {
+            switch (response.code()) {
+              case 200:
+
+                List<UserGoalsResponseBody> activityLevels = response.body().getData().getBody();
+
+                for (int i = 0; i < activityLevels.size(); i++) {
+                  View listItemRadioButton = getActivity().getLayoutInflater()
+                      .inflate(R.layout.user_goals_list_item_radio_button_row, null);
+
+                  final RadioButton radioButtonItem =
+                      (RadioButton) listItemRadioButton.findViewById(R.id.goalRadioButtonItem);
+                  radioButtonItem.setText(activityLevels.get(i).getName());
+                  radioButtonItem.setId(activityLevels.get(i).getId());
+
+                  radioButtonItem.setOnClickListener(new View.OnClickListener() {
+                    @Override public void onClick(View view) {
+                      prefs.edit()
+                          .putInt(Constants.EXTRAS_USER_PROFILE_GOAL_ID, radioButtonItem.getId())
+                          .apply();
+                      prefs.edit()
+                          .putString(Constants.EXTRAS_USER_PROFILE_GOAL,
+                              radioButtonItem.getText().toString())
+                          .apply();
                     }
-                });
+                  });
 
-        DataAccessHandler.getInstance().getUserGoals(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
-                new Callback<UserGoalsResponse>() {
-                    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-                    @Override
-                    public void onResponse(Call<UserGoalsResponse> call, Response<UserGoalsResponse> response) {
-                        switch (response.code()) {
-                            case 200:
+                  goalRadioButtonsGroup.addView(listItemRadioButton);
+                }
 
-                                List<UserGoalsResponseBody> activityLevels = response.body().getData().getBody();
+                break;
+            }
+          }
 
-                                for (int i = 0; i < activityLevels.size(); i++) {
-                                    View listItemRadioButton = getActivity().getLayoutInflater().inflate(R.layout.user_goals_list_item_radio_button_row, null);
-
-                                    final RadioButton radioButtonItem = (RadioButton) listItemRadioButton.findViewById(R.id.goalRadioButtonItem);
-                                    radioButtonItem.setText(activityLevels.get(i).getName());
-                                    radioButtonItem.setId(activityLevels.get(i).getId());
-
-                                    radioButtonItem.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View view) {
-                                            prefs.edit().putInt(Constants.EXTRAS_USER_PROFILE_GOAL_ID, radioButtonItem.getId()).apply();
-                                            prefs.edit().putString(Constants.EXTRAS_USER_PROFILE_GOAL, radioButtonItem.getText().toString()).apply();
-                                        }
-                                    });
-
-                                    goalRadioButtonsGroup.addView(listItemRadioButton);
-                                }
-
-                                break;
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<UserGoalsResponse> call, Throwable t) {
-                        alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
-                        alertDialog.show();
-                    }
-                });
-    }
+          @Override public void onFailure(Call<UserGoalsResponse> call, Throwable t) {
+            alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
+            alertDialog.show();
+          }
+        });
+  }
 }

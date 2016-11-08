@@ -6,47 +6,45 @@ import android.widget.HorizontalScrollView;
 
 public class ResponsiveScrollView extends HorizontalScrollView {
 
-    private Runnable scrollerTask;
-    private int initialPosition;
+  private static final String TAG = "MyScrollView";
+  private Runnable scrollerTask;
+  private int initialPosition;
+  private int newCheck = 100;
+  private OnScrollStoppedListener onScrollStoppedListener;
 
-    private int newCheck = 100;
-    private static final String TAG = "MyScrollView";
+  public ResponsiveScrollView(Context context, AttributeSet attrs) {
+    super(context, attrs);
 
-    public interface OnScrollStoppedListener {
-        void onScrollStopped();
-    }
+    scrollerTask = new Runnable() {
 
-    private OnScrollStoppedListener onScrollStoppedListener;
+      public void run() {
 
-    public ResponsiveScrollView(Context context, AttributeSet attrs) {
-        super(context, attrs);
+        int newPosition = getScrollY();
+        if (initialPosition - newPosition == 0) {
 
-        scrollerTask = new Runnable() {
+          if (onScrollStoppedListener != null) {
 
-            public void run() {
+            onScrollStoppedListener.onScrollStopped();
+          }
+        } else {
+          initialPosition = getScrollY();
+          ResponsiveScrollView.this.postDelayed(scrollerTask, newCheck);
+        }
+      }
+    };
+  }
 
-                int newPosition = getScrollY();
-                if (initialPosition - newPosition == 0) {
+  public void setOnScrollStoppedListener(ResponsiveScrollView.OnScrollStoppedListener listener) {
+    onScrollStoppedListener = listener;
+  }
 
-                    if (onScrollStoppedListener != null) {
+  public void startScrollerTask() {
 
-                        onScrollStoppedListener.onScrollStopped();
-                    }
-                } else {
-                    initialPosition = getScrollY();
-                    ResponsiveScrollView.this.postDelayed(scrollerTask, newCheck);
-                }
-            }
-        };
-    }
+    initialPosition = getScrollY();
+    ResponsiveScrollView.this.postDelayed(scrollerTask, newCheck);
+  }
 
-    public void setOnScrollStoppedListener(ResponsiveScrollView.OnScrollStoppedListener listener) {
-        onScrollStoppedListener = listener;
-    }
-
-    public void startScrollerTask() {
-
-        initialPosition = getScrollY();
-        ResponsiveScrollView.this.postDelayed(scrollerTask, newCheck);
-    }
+  public interface OnScrollStoppedListener {
+    void onScrollStopped();
+  }
 }

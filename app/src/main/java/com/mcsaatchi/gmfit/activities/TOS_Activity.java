@@ -12,22 +12,19 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class TOS_Activity extends Base_Activity {
-    @Bind(R.id.termsOfUseTV)
-    TextView termsOfUseTV;
-    @Bind(R.id.toolbar)
-    Toolbar toolbar;
+  @Bind(R.id.termsOfUseTV) TextView termsOfUseTV;
+  @Bind(R.id.toolbar) Toolbar toolbar;
 
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+  @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_terms_of_use);
+    setContentView(R.layout.activity_terms_of_use);
 
-        ButterKnife.bind(this);
+    ButterKnife.bind(this);
 
-        termsOfUseTV.setMovementMethod(LinkMovementMethod.getInstance());
+    termsOfUseTV.setMovementMethod(LinkMovementMethod.getInstance());
 
-        setupToolbar(toolbar, R.string.tos_activity_title, true);
-        addTopPaddingToolbar(toolbar);
-    }
+    setupToolbar(toolbar, R.string.tos_activity_title, true);
+    addTopPaddingToolbar(toolbar);
+  }
 }

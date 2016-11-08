@@ -1,26 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
-    android:id="@+id/itemLayout"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/itemLayout"
     android:layout_width="match_parent"
     android:layout_height="@dimen/login_button_height"
-    android:paddingStart="@dimen/activity_vertical_margin">
+    android:paddingStart="@dimen/activity_vertical_margin"
+    >
 
-    <TextView
-        android:id="@+id/itemNameTV"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center_vertical"
-        android:textColor="@android:color/black"/>
+  <TextView
+      android:id="@+id/itemNameTV"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:gravity="center_vertical"
+      android:textColor="@android:color/black"
+      />
 
-    <RelativeLayout android:layout_width="@dimen/customize_widgets_reorder_list_item_edge_height_width"
-                    android:layout_height="@dimen/customize_widgets_reorder_list_item_edge_height_width"
-                    android:layout_alignParentEnd="true"
-                    android:background="@color/much_lighter_gray">
-        <ImageView
-            android:id="@+id/itemIconRightIMG"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"/>
-    </RelativeLayout>
+  <RelativeLayout
+      android:layout_width="@dimen/customize_widgets_reorder_list_item_edge_height_width"
+      android:layout_height="@dimen/customize_widgets_reorder_list_item_edge_height_width"
+      android:layout_alignParentEnd="true"
+      android:background="@color/much_lighter_gray"
+      >
+    <ImageView
+        android:id="@+id/itemIconRightIMG"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        />
+  </RelativeLayout>
 </RelativeLayout>

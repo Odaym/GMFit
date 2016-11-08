@@ -13,39 +13,38 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class UserPolicy_Activity extends Base_Activity {
-    @Bind(R.id.userPolicyWebView)
-    WebView userPolicyWebView;
+  @Bind(R.id.userPolicyWebView) WebView userPolicyWebView;
 
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(Helpers.createActivityBundleWithProperties(R.string.user_policy_activity_title, true));
+  @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(
+        Helpers.createActivityBundleWithProperties(R.string.user_policy_activity_title, true));
 
-        setContentView(R.layout.activity_user_policy);
+    setContentView(R.layout.activity_user_policy);
 
-        ButterKnife.bind(this);
+    ButterKnife.bind(this);
 
-        if (getIntent().getExtras() != null) {
-            String userPolicyString = getIntent().getExtras().getString(Constants.EXTRAS_USER_POLICY);
+    if (getIntent().getExtras() != null) {
+      String userPolicyString = getIntent().getExtras().getString(Constants.EXTRAS_USER_POLICY);
 
-            WebSettings settings = userPolicyWebView.getSettings();
-            settings.setLoadWithOverviewMode(true);
-            settings.setBuiltInZoomControls(true);
-            settings.setUseWideViewPort(true);
-            userPolicyWebView.setVerticalScrollBarEnabled(false);
-            userPolicyWebView.setHorizontalScrollBarEnabled(false);
+      WebSettings settings = userPolicyWebView.getSettings();
+      settings.setLoadWithOverviewMode(true);
+      settings.setBuiltInZoomControls(true);
+      settings.setUseWideViewPort(true);
+      userPolicyWebView.setVerticalScrollBarEnabled(false);
+      userPolicyWebView.setHorizontalScrollBarEnabled(false);
 
-            //No effect
-            settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
-            userPolicyWebView.setInitialScale(1);
+      //No effect
+      settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
+      userPolicyWebView.setInitialScale(1);
 
-            String finalHTMLString = "<!DOCTYPE html>\n" +
-                    "<html>\n" +
-                    "<body>\n" +
-                    userPolicyString +
-                    "</body>\n" +
-                    "</html>\n";
+      String finalHTMLString = "<!DOCTYPE html>\n" +
+          "<html>\n" +
+          "<body>\n" +
+          userPolicyString +
+          "</body>\n" +
+          "</html>\n";
 
-            userPolicyWebView.loadData(finalHTMLString, "text/html", "UTF-8");
-        }
+      userPolicyWebView.loadData(finalHTMLString, "text/html", "UTF-8");
     }
+  }
 }

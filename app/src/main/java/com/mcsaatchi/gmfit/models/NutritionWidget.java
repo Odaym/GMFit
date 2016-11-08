@@ -4,108 +4,104 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class NutritionWidget implements Parcelable {
-    public static final Creator<NutritionWidget> CREATOR = new Creator<NutritionWidget>() {
-        @Override
-        public NutritionWidget createFromParcel(Parcel source) {
-            return new NutritionWidget(source);
-        }
-
-        @Override
-        public NutritionWidget[] newArray(int size) {
-            return new NutritionWidget[size];
-        }
-    };
-
-    private int id;
-    private double value;
-    private String title;
-    private String measurementUnit;
-    private double percentage;
-    private int position;
-    private int widget_id;
-
-    public NutritionWidget() {
+  public static final Creator<NutritionWidget> CREATOR = new Creator<NutritionWidget>() {
+    @Override public NutritionWidget createFromParcel(Parcel source) {
+      return new NutritionWidget(source);
     }
 
-    protected NutritionWidget(Parcel in) {
-        this.id = in.readInt();
-        this.value = in.readDouble();
-        this.title = in.readString();
-        this.measurementUnit = in.readString();
-        this.percentage = in.readDouble();
-        this.position = in.readInt();
-        this.widget_id = in.readInt();
+    @Override public NutritionWidget[] newArray(int size) {
+      return new NutritionWidget[size];
     }
+  };
 
-    public int getId() {
-        return id;
-    }
+  private int id;
+  private double value;
+  private String title;
+  private String measurementUnit;
+  private double percentage;
+  private int position;
+  private int widget_id;
 
-    public void setId(int id) {
-        this.id = id;
-    }
+  public NutritionWidget() {
+  }
 
-    public double getValue() {
-        return value;
-    }
+  protected NutritionWidget(Parcel in) {
+    this.id = in.readInt();
+    this.value = in.readDouble();
+    this.title = in.readString();
+    this.measurementUnit = in.readString();
+    this.percentage = in.readDouble();
+    this.position = in.readInt();
+    this.widget_id = in.readInt();
+  }
 
-    public void setValue(double value) {
-        this.value = value;
-    }
+  public int getId() {
+    return id;
+  }
 
-    public String getTitle() {
-        return title;
-    }
+  public void setId(int id) {
+    this.id = id;
+  }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+  public double getValue() {
+    return value;
+  }
 
-    public String getMeasurementUnit() {
-        return measurementUnit;
-    }
+  public void setValue(double value) {
+    this.value = value;
+  }
 
-    public void setMeasurementUnit(String measurementUnit) {
-        this.measurementUnit = measurementUnit;
-    }
+  public String getTitle() {
+    return title;
+  }
 
-    public double getPercentage() {
-        return percentage;
-    }
+  public void setTitle(String title) {
+    this.title = title;
+  }
 
-    public void setPercentage(double percentage) {
-        this.percentage = percentage;
-    }
+  public String getMeasurementUnit() {
+    return measurementUnit;
+  }
 
-    public int getPosition() {
-        return position;
-    }
+  public void setMeasurementUnit(String measurementUnit) {
+    this.measurementUnit = measurementUnit;
+  }
 
-    public void setPosition(int position) {
-        this.position = position;
-    }
+  public double getPercentage() {
+    return percentage;
+  }
 
-    public int getWidget_id() {
-        return widget_id;
-    }
+  public void setPercentage(double percentage) {
+    this.percentage = percentage;
+  }
 
-    public void setWidget_id(int widget_id) {
-        this.widget_id = widget_id;
-    }
+  public int getPosition() {
+    return position;
+  }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
+  public void setPosition(int position) {
+    this.position = position;
+  }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(this.id);
-        dest.writeDouble(this.value);
-        dest.writeString(this.title);
-        dest.writeString(this.measurementUnit);
-        dest.writeDouble(this.percentage);
-        dest.writeInt(this.position);
-        dest.writeInt(this.widget_id);
-    }
+  public int getWidget_id() {
+    return widget_id;
+  }
+
+  public void setWidget_id(int widget_id) {
+    this.widget_id = widget_id;
+  }
+
+  @Override public int describeContents() {
+    return 0;
+  }
+
+  @Override public void writeToParcel(Parcel dest, int flags) {
+    dest.writeInt(this.id);
+    dest.writeDouble(this.value);
+    dest.writeString(this.title);
+    dest.writeString(this.measurementUnit);
+    dest.writeDouble(this.percentage);
+    dest.writeInt(this.position);
+    dest.writeInt(this.widget_id);
+  }
 }

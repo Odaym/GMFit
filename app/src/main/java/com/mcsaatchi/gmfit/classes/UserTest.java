@@ -3,75 +3,71 @@ package com.mcsaatchi.gmfit.classes;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class UserTest implements Parcelable{
-    public static final Creator<UserTest> CREATOR = new Creator<UserTest>() {
-        @Override
-        public UserTest createFromParcel(Parcel source) {
-            return new UserTest(source);
-        }
-
-        @Override
-        public UserTest[] newArray(int size) {
-            return new UserTest[size];
-        }
-    };
-    private String test_slug;
-    private String name;
-    private String category;
-    private String dateTaken;
-
-    public UserTest() {
+public class UserTest implements Parcelable {
+  public static final Creator<UserTest> CREATOR = new Creator<UserTest>() {
+    @Override public UserTest createFromParcel(Parcel source) {
+      return new UserTest(source);
     }
 
-    protected UserTest(Parcel in) {
-        this.name = in.readString();
-        this.category = in.readString();
-        this.dateTaken = in.readString();
-        this.test_slug = in.readString();
+    @Override public UserTest[] newArray(int size) {
+      return new UserTest[size];
     }
+  };
+  private String test_slug;
+  private String name;
+  private String category;
+  private String dateTaken;
 
-    public String getName() {
-        return name;
-    }
+  public UserTest() {
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  protected UserTest(Parcel in) {
+    this.name = in.readString();
+    this.category = in.readString();
+    this.dateTaken = in.readString();
+    this.test_slug = in.readString();
+  }
 
-    public String getTest_slug() {
-        return test_slug;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public void setTest_slug(String test_slug) {
-        this.test_slug = test_slug;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    public String getCategory() {
-        return category;
-    }
+  public String getTest_slug() {
+    return test_slug;
+  }
 
-    public void setCategory(String category) {
-        this.category = category;
-    }
+  public void setTest_slug(String test_slug) {
+    this.test_slug = test_slug;
+  }
 
-    public String getDateTaken() {
-        return dateTaken;
-    }
+  public String getCategory() {
+    return category;
+  }
 
-    public void setDateTaken(String dateTaken) {
-        this.dateTaken = dateTaken;
-    }
+  public void setCategory(String category) {
+    this.category = category;
+  }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
+  public String getDateTaken() {
+    return dateTaken;
+  }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.name);
-        dest.writeString(this.category);
-        dest.writeString(this.dateTaken);
-        dest.writeString(this.test_slug);
-    }
+  public void setDateTaken(String dateTaken) {
+    this.dateTaken = dateTaken;
+  }
+
+  @Override public int describeContents() {
+    return 0;
+  }
+
+  @Override public void writeToParcel(Parcel dest, int flags) {
+    dest.writeString(this.name);
+    dest.writeString(this.category);
+    dest.writeString(this.dateTaken);
+    dest.writeString(this.test_slug);
+  }
 }

@@ -55,258 +55,243 @@ import retrofit2.Response;
 
 public class Login_Activity extends Base_Activity {
 
-    private static final String TAG = "Login_Activity";
-    @Bind(R.id.viewpager)
-    ViewPager viewPager;
-    @Bind(R.id.loginFacebookBTN)
-    LoginButton loginFacebookBTN;
-    @Bind(R.id.signUpBTN)
-    Button signUpBTN;
-    @Bind(R.id.signInBTN)
-    Button signInBTN;
+  private static final String TAG = "Login_Activity";
+  @Bind(R.id.viewpager) ViewPager viewPager;
+  @Bind(R.id.loginFacebookBTN) LoginButton loginFacebookBTN;
+  @Bind(R.id.signUpBTN) Button signUpBTN;
+  @Bind(R.id.signInBTN) Button signInBTN;
 
-    private DefaultIndicator_Controller indicatorController;
-    private CallbackManager callbackManager;
-    private SharedPreferences prefs;
+  private DefaultIndicator_Controller indicatorController;
+  private CallbackManager callbackManager;
+  private SharedPreferences prefs;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(Helpers.createActivityBundleWithProperties(0, false));
-        Fabric.with(this, new Crashlytics());
+  @Override protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(Helpers.createActivityBundleWithProperties(0, false));
+    Fabric.with(this, new Crashlytics());
 
-        FacebookSdk.sdkInitialize(this);
-        callbackManager = CallbackManager.Factory.create();
+    FacebookSdk.sdkInitialize(this);
+    callbackManager = CallbackManager.Factory.create();
 
-        setContentView(R.layout.activity_login);
+    setContentView(R.layout.activity_login);
 
-        ButterKnife.bind(this);
+    ButterKnife.bind(this);
 
-        EventBus_Singleton.getInstance().register(this);
+    EventBus_Singleton.getInstance().register(this);
 
-        prefs = getSharedPreferences(Constants.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
+    prefs = getSharedPreferences(Constants.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
 
-        signInBTN.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(Login_Activity.this, SignIn_Activity.class);
-                startActivity(intent);
-            }
-        });
+    signInBTN.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View view) {
+        Intent intent = new Intent(Login_Activity.this, SignIn_Activity.class);
+        startActivity(intent);
+      }
+    });
 
-        signUpBTN.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Login_Activity.this, SignUp_Activity.class);
-                startActivity(intent);
-            }
-        });
+    signUpBTN.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View v) {
+        Intent intent = new Intent(Login_Activity.this, SignUp_Activity.class);
+        startActivity(intent);
+      }
+    });
 
-        initializeFacebookLogin();
+    initializeFacebookLogin();
 
-        setupViewPager();
+    setupViewPager();
+  }
+
+  @Override protected void onDestroy() {
+    super.onDestroy();
+
+    EventBus_Singleton.getInstance().unregister(this);
+  }
+
+  @Subscribe public void handle_BusEvents(EventBus_Poster ebp) {
+    String ebpMessage = ebp.getMessage();
+
+    switch (ebpMessage) {
+      case Constants.EVENT_SIGNNED_UP_SUCCESSFULLY_CLOSE_LOGIN_ACTIVITY:
+        finish();
+        break;
     }
+  }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
+  private void setupViewPager() {
+    viewPager.setAdapter(new IntroAdapter(getSupportFragmentManager()));
 
-        EventBus_Singleton.getInstance().unregister(this);
-    }
+    viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+      @Override
+      public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
-    @Subscribe
-    public void handle_BusEvents(EventBus_Poster ebp) {
-        String ebpMessage = ebp.getMessage();
+      }
 
-        switch (ebpMessage) {
-            case Constants.EVENT_SIGNNED_UP_SUCCESSFULLY_CLOSE_LOGIN_ACTIVITY:
-                finish();
-                break;
-        }
-    }
+      @Override public void onPageSelected(int position) {
+        indicatorController.selectPosition(position);
+      }
 
-    private void setupViewPager() {
-        viewPager.setAdapter(new IntroAdapter(getSupportFragmentManager()));
+      @Override public void onPageScrollStateChanged(int state) {
 
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+      }
+    });
 
-            }
+    initController();
+  }
 
-            @Override
-            public void onPageSelected(int position) {
-                indicatorController.selectPosition(position);
-            }
+  private void initializeFacebookLogin() {
+    loginFacebookBTN.setReadPermissions("email", "public_profile", "user_friends");
+    loginFacebookBTN.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+    loginFacebookBTN.setCompoundDrawablePadding(0);
+    loginFacebookBTN.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+      @Override public void onSuccess(LoginResult loginResult) {
+        final AccessToken accessToken = loginResult.getAccessToken();
 
-            @Override
-            public void onPageScrollStateChanged(int state) {
+        Log.d("TAGTAG", "onSuccess: FACEBOOK ACCESS TOKEN IS : " + accessToken.getToken());
 
-            }
-        });
+        prefs.edit().putString(Constants.EXTRAS_USER_FACEBOOK_TOKEN, accessToken.getToken());
 
-        initController();
-    }
+        GraphRequest request =
+            GraphRequest.newMeRequest(accessToken, new GraphRequest.GraphJSONObjectCallback() {
+              @Override public void onCompleted(JSONObject object, GraphResponse response) {
+                try {
 
-    private void initializeFacebookLogin() {
-        loginFacebookBTN.setReadPermissions("email", "public_profile", "user_friends");
-        loginFacebookBTN.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
-        loginFacebookBTN.setCompoundDrawablePadding(0);
-        loginFacebookBTN.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-                final AccessToken accessToken = loginResult.getAccessToken();
+                  String userID = (String) object.get("id");
+                  String userName = (String) object.get("name");
+                  String userEmail = (String) object.get("email");
 
-                Log.d("TAGTAG", "onSuccess: FACEBOOK ACCESS TOKEN IS : " + accessToken.getToken());
+                  SharedPreferences.Editor prefsEditor = prefs.edit();
 
-                prefs.edit().putString(Constants.EXTRAS_USER_FACEBOOK_TOKEN, accessToken.getToken());
+                  prefsEditor.putBoolean(Constants.EXTRAS_USER_LOGGED_IN, true);
 
-                GraphRequest request = GraphRequest.newMeRequest(
-                        accessToken,
-                        new GraphRequest.GraphJSONObjectCallback() {
-                            @Override
-                            public void onCompleted(
-                                    JSONObject object,
-                                    GraphResponse response) {
-                                try {
+                  prefsEditor.putString(Constants.EXTRAS_USER_FULL_NAME, userName);
+                  prefsEditor.putString(Constants.EXTRAS_USER_DISPLAY_PHOTO,
+                      "https://graph.facebook.com/" + userID + "/picture?type=large");
+                  prefsEditor.putString(Constants.EXTRAS_USER_EMAIL, userEmail);
 
-                                    String userID = (String) object.get("id");
-                                    String userName = (String) object.get("name");
-                                    String userEmail = (String) object.get("email");
+                  prefsEditor.apply();
 
-                                    SharedPreferences.Editor prefsEditor = prefs.edit();
-
-                                    prefsEditor.putBoolean(Constants.EXTRAS_USER_LOGGED_IN, true);
-
-                                    prefsEditor.putString(Constants.EXTRAS_USER_FULL_NAME, userName);
-                                    prefsEditor.putString(Constants.EXTRAS_USER_DISPLAY_PHOTO, "https://graph.facebook.com/" + userID + "/picture?type=large");
-                                    prefsEditor.putString(Constants.EXTRAS_USER_EMAIL, userEmail);
-
-                                    prefsEditor.apply();
-
-                                    registerUserWithFacebook(accessToken.getToken());
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        });
-
-                Bundle parameters = new Bundle();
-                parameters.putString("fields", "id,name,email,link,birthday,picture");
-                request.setParameters(parameters);
-                request.executeAsync();
-
-                Toast.makeText(Login_Activity.this, "Facebook logged in successfully", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onCancel() {
-                // App code
-            }
-
-            @Override
-            public void onError(FacebookException exception) {
-                // App code
-            }
-        });
-    }
-
-    private void registerUserWithFacebook(String accessToken){
-        final ProgressDialog waitingDialog = new ProgressDialog(this);
-        waitingDialog.setTitle(getString(R.string.signing_in_dialog_title));
-        waitingDialog.setMessage(getString(R.string.please_wait_dialog_message));
-        waitingDialog.show();
-
-        final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-        alertDialog.setTitle(R.string.signing_in_dialog_title);
-        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-
-                        if (waitingDialog.isShowing())
-                            waitingDialog.dismiss();
-                    }
-                });
-
-        DataAccessHandler.getInstance().registerUserFacebook(accessToken, new Callback<AuthenticationResponse>() {
-            @Override
-            public void onResponse(Call<AuthenticationResponse> call, Response<AuthenticationResponse> response) {
-                switch (response.code()) {
-                    case 200:
-                        waitingDialog.dismiss();
-
-                        AuthenticationResponseInnerBody responseBody = response.body().getData().getBody();
-
-                        //Refreshes access token
-                        prefs.edit().putString(Constants.PREF_USER_ACCESS_TOKEN, "Bearer " + responseBody.getToken()).apply();
-
-                        List<AuthenticationResponseChart> chartsMap = responseBody.getCharts();
-
-                        EventBus_Singleton.getInstance().post(new EventBus_Poster(Constants.EVENT_SIGNNED_UP_SUCCESSFULLY_CLOSE_LOGIN_ACTIVITY));
-
-                        Intent intent = new Intent(Login_Activity.this, Main_Activity.class);
-                        intent.putParcelableArrayListExtra(Constants.BUNDLE_FITNESS_CHARTS_MAP, (ArrayList<AuthenticationResponseChart>) chartsMap);
-                        startActivity(intent);
-
-                        finish();
-
-                        break;
-                    case 401:
-                        alertDialog.setMessage(getString(R.string.login_failed_wrong_credentials));
-                        alertDialog.show();
-                        break;
+                  registerUserWithFacebook(accessToken.getToken());
+                } catch (JSONException e) {
+                  e.printStackTrace();
                 }
-            }
+              }
+            });
 
-            @Override
-            public void onFailure(Call<AuthenticationResponse> call, Throwable t) {
-                alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
-                alertDialog.show();
-            }
+        Bundle parameters = new Bundle();
+        parameters.putString("fields", "id,name,email,link,birthday,picture");
+        request.setParameters(parameters);
+        request.executeAsync();
+
+        Toast.makeText(Login_Activity.this, "Facebook logged in successfully", Toast.LENGTH_SHORT)
+            .show();
+      }
+
+      @Override public void onCancel() {
+        // App code
+      }
+
+      @Override public void onError(FacebookException exception) {
+        // App code
+      }
+    });
+  }
+
+  private void registerUserWithFacebook(String accessToken) {
+    final ProgressDialog waitingDialog = new ProgressDialog(this);
+    waitingDialog.setTitle(getString(R.string.signing_in_dialog_title));
+    waitingDialog.setMessage(getString(R.string.please_wait_dialog_message));
+    waitingDialog.show();
+
+    final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+    alertDialog.setTitle(R.string.signing_in_dialog_title);
+    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
+        new DialogInterface.OnClickListener() {
+          public void onClick(DialogInterface dialog, int which) {
+            dialog.dismiss();
+
+            if (waitingDialog.isShowing()) waitingDialog.dismiss();
+          }
         });
-    }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        callbackManager.onActivityResult(requestCode, resultCode, data);
-    }
+    DataAccessHandler.getInstance()
+        .registerUserFacebook(accessToken, new Callback<AuthenticationResponse>() {
+          @Override public void onResponse(Call<AuthenticationResponse> call,
+              Response<AuthenticationResponse> response) {
+            switch (response.code()) {
+              case 200:
+                waitingDialog.dismiss();
 
-    private void initController() {
-        if (indicatorController == null)
-            indicatorController = new DefaultIndicator_Controller();
+                AuthenticationResponseInnerBody responseBody = response.body().getData().getBody();
 
-        FrameLayout indicatorContainer = (FrameLayout) findViewById(R.id.indicator_container);
-        indicatorContainer.addView(indicatorController.newInstance(this));
+                //Refreshes access token
+                prefs.edit()
+                    .putString(Constants.PREF_USER_ACCESS_TOKEN,
+                        "Bearer " + responseBody.getToken())
+                    .apply();
 
-        indicatorController.initialize(4);
-    }
+                List<AuthenticationResponseChart> chartsMap = responseBody.getCharts();
 
-    public class IntroAdapter extends FragmentPagerAdapter {
+                EventBus_Singleton.getInstance()
+                    .post(new EventBus_Poster(
+                        Constants.EVENT_SIGNNED_UP_SUCCESSFULLY_CLOSE_LOGIN_ACTIVITY));
 
-        public IntroAdapter(FragmentManager fm) {
-            super(fm);
-        }
+                Intent intent = new Intent(Login_Activity.this, Main_Activity.class);
+                intent.putParcelableArrayListExtra(Constants.BUNDLE_FITNESS_CHARTS_MAP,
+                    (ArrayList<AuthenticationResponseChart>) chartsMap);
+                startActivity(intent);
 
-        @Override
-        public Fragment getItem(int position) {
-            switch (position) {
-                case 0:
-                    return IntroSlider_Fragment.newInstance(R.layout.fragment_intro_slide_1);
-                case 1:
-                    return IntroSlider_Fragment.newInstance(R.layout.fragment_intro_slide_2);
-                case 2:
-                    return IntroSlider_Fragment.newInstance(R.layout.fragment_intro_slide_3);
-                case 3:
-                    return IntroSlider_Fragment.newInstance(R.layout.fragment_intro_slide_4);
-                default:
-                    return null;
+                finish();
+
+                break;
+              case 401:
+                alertDialog.setMessage(getString(R.string.login_failed_wrong_credentials));
+                alertDialog.show();
+                break;
             }
-        }
+          }
 
-        @Override
-        public int getCount() {
-            return 4;
-        }
+          @Override public void onFailure(Call<AuthenticationResponse> call, Throwable t) {
+            alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
+            alertDialog.show();
+          }
+        });
+  }
+
+  @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+    callbackManager.onActivityResult(requestCode, resultCode, data);
+  }
+
+  private void initController() {
+    if (indicatorController == null) indicatorController = new DefaultIndicator_Controller();
+
+    FrameLayout indicatorContainer = (FrameLayout) findViewById(R.id.indicator_container);
+    indicatorContainer.addView(indicatorController.newInstance(this));
+
+    indicatorController.initialize(4);
+  }
+
+  public class IntroAdapter extends FragmentPagerAdapter {
+
+    public IntroAdapter(FragmentManager fm) {
+      super(fm);
     }
+
+    @Override public Fragment getItem(int position) {
+      switch (position) {
+        case 0:
+          return IntroSlider_Fragment.newInstance(R.layout.fragment_intro_slide_1);
+        case 1:
+          return IntroSlider_Fragment.newInstance(R.layout.fragment_intro_slide_2);
+        case 2:
+          return IntroSlider_Fragment.newInstance(R.layout.fragment_intro_slide_3);
+        case 3:
+          return IntroSlider_Fragment.newInstance(R.layout.fragment_intro_slide_4);
+        default:
+          return null;
+      }
+    }
+
+    @Override public int getCount() {
+      return 4;
+    }
+  }
 }

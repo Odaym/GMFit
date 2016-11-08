@@ -23,104 +23,103 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class SlugBreakdown_Fragment_Yearly extends Fragment {
-    @Bind(R.id.slugBreakdownListView)
-    ListView slugBreakdownListView;
-    @Bind(R.id.allTimeValueTV)
-    TextView allTimeValueTV;
+  @Bind(R.id.slugBreakdownListView) ListView slugBreakdownListView;
+  @Bind(R.id.allTimeValueTV) TextView allTimeValueTV;
 
-    private String measurementUnitForMetric;
+  private String measurementUnitForMetric;
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
+  @Override public void onAttach(Context context) {
+    super.onAttach(context);
+  }
+
+  @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
+      Bundle savedInstanceState) {
+
+    View fragmentView = inflater.inflate(R.layout.fragment_slug_breakdown_yearly, null);
+
+    ButterKnife.bind(this, fragmentView);
+
+    Bundle fragmentBundle = getArguments();
+
+    if (fragmentBundle != null) {
+      ArrayList<Parcelable> slugBreakdownData =
+          fragmentBundle.getParcelableArrayList(Constants.BUNDLE_SLUG_BREAKDOWN_DATA_YEARLY);
+
+      measurementUnitForMetric =
+          fragmentBundle.getString(Constants.BUNDLE_SLUG_BREAKDOWN_MEASUREMENT_UNIT, "");
+
+      float slugBreakdownYearlyTotal =
+          fragmentBundle.getFloat(Constants.BUNDLE_SLUG_BREAKDOWN_YEARLY_TOTAL, 0);
+      allTimeValueTV.setText(NumberFormat.getNumberInstance(Locale.US)
+          .format((int) Double.parseDouble(String.valueOf(slugBreakdownYearlyTotal)))
+          + " "
+          + measurementUnitForMetric);
+
+      hookupListWithItems(slugBreakdownData, measurementUnitForMetric);
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater,
-                             ViewGroup container,
-                             Bundle savedInstanceState) {
+    return fragmentView;
+  }
 
-        View fragmentView = inflater.inflate(R.layout.fragment_slug_breakdown_yearly, null);
+  private void hookupListWithItems(ArrayList<Parcelable> items, String measurementUnit) {
+    SlugBreakdown_ListAdapter slugBreakdownListAdapter =
+        new SlugBreakdown_ListAdapter(getActivity(), items, measurementUnit);
+    slugBreakdownListView.setAdapter(slugBreakdownListAdapter);
+  }
 
-        ButterKnife.bind(this, fragmentView);
+  public class SlugBreakdown_ListAdapter extends BaseAdapter {
 
-        Bundle fragmentBundle = getArguments();
+    private ArrayList<Parcelable> slugBreakdownData;
+    private Context context;
+    private String measurementUnit;
 
-        if (fragmentBundle != null) {
-            ArrayList<Parcelable> slugBreakdownData = fragmentBundle.getParcelableArrayList(Constants.BUNDLE_SLUG_BREAKDOWN_DATA_YEARLY);
-
-            measurementUnitForMetric = fragmentBundle.getString(Constants.BUNDLE_SLUG_BREAKDOWN_MEASUREMENT_UNIT, "");
-
-            float slugBreakdownYearlyTotal =  fragmentBundle.getFloat(Constants.BUNDLE_SLUG_BREAKDOWN_YEARLY_TOTAL, 0);
-            allTimeValueTV.setText(NumberFormat.getNumberInstance(Locale.US).format((int) Double.parseDouble(String.valueOf(slugBreakdownYearlyTotal))) + " " + measurementUnitForMetric);
-
-            hookupListWithItems(slugBreakdownData, measurementUnitForMetric);
-        }
-
-        return fragmentView;
+    public SlugBreakdown_ListAdapter(Context context, ArrayList<Parcelable> slugBreakdownData,
+        String measurementUnit) {
+      super();
+      this.context = context;
+      this.slugBreakdownData = slugBreakdownData;
+      this.measurementUnit = measurementUnit;
     }
 
-    private void hookupListWithItems(ArrayList<Parcelable> items, String measurementUnit) {
-        SlugBreakdown_ListAdapter slugBreakdownListAdapter = new SlugBreakdown_ListAdapter(getActivity(), items, measurementUnit);
-        slugBreakdownListView.setAdapter(slugBreakdownListAdapter);
+    @Override public int getCount() {
+      return slugBreakdownData.size();
     }
 
-    public class SlugBreakdown_ListAdapter extends BaseAdapter {
-
-        private ArrayList<Parcelable> slugBreakdownData;
-        private Context context;
-        private String measurementUnit;
-
-        public SlugBreakdown_ListAdapter(Context context, ArrayList<Parcelable> slugBreakdownData, String measurementUnit) {
-            super();
-            this.context = context;
-            this.slugBreakdownData = slugBreakdownData;
-            this.measurementUnit = measurementUnit;
-        }
-
-        @Override
-        public int getCount() {
-            return slugBreakdownData.size();
-        }
-
-        @Override
-        public SlugBreakdownResponseYearly getItem(int index) {
-            return (SlugBreakdownResponseYearly) slugBreakdownData.get(index);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            ViewHolder holder;
-            if (convertView == null) {
-                LayoutInflater inflater = (LayoutInflater) context
-                        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                convertView = inflater.inflate(R.layout.list_item_slug_yearly_breakdown, parent,
-                        false);
-
-                holder = new ViewHolder();
-
-                holder.slugDateTV = (TextView) convertView.findViewById(R.id.slugDateTV);
-                holder.slugTotalTV = (TextView) convertView.findViewById(R.id.slugTotalTV);
-
-                convertView.setTag(holder);
-            } else {
-                holder = (ViewHolder) convertView.getTag();
-            }
-
-            holder.slugDateTV.setText(getItem(position).getDate());
-            holder.slugTotalTV.setText(NumberFormat.getNumberInstance(Locale.US).format((int) Double.parseDouble(getItem(position).getTotal())) + " " + measurementUnit);
-
-            return convertView;
-        }
-
-        class ViewHolder {
-            TextView slugDateTV;
-            TextView slugTotalTV;
-        }
+    @Override public SlugBreakdownResponseYearly getItem(int index) {
+      return (SlugBreakdownResponseYearly) slugBreakdownData.get(index);
     }
+
+    @Override public long getItemId(int position) {
+      return position;
+    }
+
+    @Override public View getView(int position, View convertView, ViewGroup parent) {
+      ViewHolder holder;
+      if (convertView == null) {
+        LayoutInflater inflater =
+            (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        convertView = inflater.inflate(R.layout.list_item_slug_yearly_breakdown, parent, false);
+
+        holder = new ViewHolder();
+
+        holder.slugDateTV = (TextView) convertView.findViewById(R.id.slugDateTV);
+        holder.slugTotalTV = (TextView) convertView.findViewById(R.id.slugTotalTV);
+
+        convertView.setTag(holder);
+      } else {
+        holder = (ViewHolder) convertView.getTag();
+      }
+
+      holder.slugDateTV.setText(getItem(position).getDate());
+      holder.slugTotalTV.setText(NumberFormat.getNumberInstance(Locale.US)
+          .format((int) Double.parseDouble(getItem(position).getTotal())) + " " + measurementUnit);
+
+      return convertView;
+    }
+
+    class ViewHolder {
+      TextView slugDateTV;
+      TextView slugTotalTV;
+    }
+  }
 }

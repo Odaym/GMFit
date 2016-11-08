@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -14,6 +15,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -84,787 +86,864 @@ import static com.mcsaatchi.gmfit.classes.Constants.EXTRAS_NUTRITION_CHARTS_ORDE
 
 public class Nutrition_Fragment extends Fragment {
 
-    public static final int ADD_NEW_NUTRITION_CHART_REQUEST = 2;
-    private static final String TAG = "Nutrition_Fragment";
-    private static final int ITEM_VIEWTYPE = 2;
-    private static final int BARCODE_CAPTURE_RC = 773;
-    private final LocalDate dt = new LocalDate();
-    @Bind(R.id.widgetsGridView)
-    GridView widgetsGridView;
-    @Bind(R.id.metricCounterTV)
-    FontTextView metricCounterTV;
-    /**
-     * CHARTS
-     */
-    @Bind(R.id.cards_container)
-    LinearLayout cards_container;
-    /**
-     * BREAKFAST CHART
-     */
-    @Bind(R.id.chartTitleTV_BREAKFAST)
-    TextView chartTitleTV_BREAKFAST;
-    @Bind(R.id.addEntryBTN_BREAKFAST)
-    TextView addNewEntryBTN_BREAKFAST;
-    @Bind(R.id.scanEntryBTN_BREAKFAST)
-    TextView scanEntryBTN_BREAKFAST;
-    @Bind(R.id.breakfastListView)
-    RecyclerView breakfastListView;
-    /**
-     * LUNCH CHART
-     */
-    @Bind(R.id.chartTitleTV_LUNCH)
-    TextView chartTitleTV_LUNCH;
-    @Bind(R.id.addEntryBTN_LUNCH)
-    TextView addNewEntryBTN_LUNCH;
-    @Bind(R.id.scanEntryBTN_LUNCH)
-    TextView scanEntryBTN_LUNCH;
-    @Bind(R.id.lunchListView)
-    RecyclerView lunchListView;
-    /**
-     * DINNER CHART
-     */
-    @Bind(R.id.chartTitleTV_DINNER)
-    TextView chartTitleTV_DINNER;
-    @Bind(R.id.addEntryBTN_DINNER)
-    TextView addNewEntryBTN_DINNER;
-    @Bind(R.id.scanEntryBTN_DINNER)
-    TextView scanEntryBTN_DINNER;
-    @Bind(R.id.dinnerListView)
-    RecyclerView dinnerListView;
-    /**
-     * SNACKS CHART
-     */
-    @Bind(R.id.chartTitleTV_SNACKS)
-    TextView chartTitleTV_SNACKS;
-    @Bind(R.id.addEntryBTN_SNACKS)
-    TextView addNewEntryBTN_SNACKS;
-    @Bind(R.id.scanEntryBTN_SNACKS)
-    TextView scanEntryBTN_SNACKS;
-    @Bind(R.id.snacksListView)
-    RecyclerView snacksListView;
-    /**
-     * ADD CHART BUTTON
-     */
-    @Bind(R.id.addChartBTN)
-    Button addNewChartBTN;
-    @Bind(R.id.loadingMetricProgressBar)
-    ProgressBar loadingMetricProgressBar;
-    @Bind(R.id.loadingWidgetsProgressBar)
-    ProgressBar loadingWidgetsProgressBar;
-    @Bind(R.id.dateCarousel)
-    HorizontalScrollView dateCarousel;
-    @Bind(R.id.dateCarouselContainer)
-    LinearLayout dateCarouselContainer;
+  public static final int ADD_NEW_NUTRITION_CHART_REQUEST = 2;
+  private static final String TAG = "Nutrition_Fragment";
+  private static final int ITEM_VIEWTYPE = 2;
+  private static final int BARCODE_CAPTURE_RC = 773;
+  private final LocalDate dt = new LocalDate();
+  @Bind(R.id.widgetsGridView) GridView widgetsGridView;
+  @Bind(R.id.metricCounterTV) FontTextView metricCounterTV;
+  /**
+   * CHARTS
+   */
+  @Bind(R.id.cards_container) LinearLayout cards_container;
+  /**
+   * BREAKFAST CHART
+   */
+  @Bind(R.id.chartTitleTV_BREAKFAST) TextView chartTitleTV_BREAKFAST;
+  @Bind(R.id.addEntryBTN_BREAKFAST) TextView addNewEntryBTN_BREAKFAST;
+  @Bind(R.id.scanEntryBTN_BREAKFAST) TextView scanEntryBTN_BREAKFAST;
+  @Bind(R.id.breakfastListView) RecyclerView breakfastListView;
+  /**
+   * LUNCH CHART
+   */
+  @Bind(R.id.chartTitleTV_LUNCH) TextView chartTitleTV_LUNCH;
+  @Bind(R.id.addEntryBTN_LUNCH) TextView addNewEntryBTN_LUNCH;
+  @Bind(R.id.scanEntryBTN_LUNCH) TextView scanEntryBTN_LUNCH;
+  @Bind(R.id.lunchListView) RecyclerView lunchListView;
+  /**
+   * DINNER CHART
+   */
+  @Bind(R.id.chartTitleTV_DINNER) TextView chartTitleTV_DINNER;
+  @Bind(R.id.addEntryBTN_DINNER) TextView addNewEntryBTN_DINNER;
+  @Bind(R.id.scanEntryBTN_DINNER) TextView scanEntryBTN_DINNER;
+  @Bind(R.id.dinnerListView) RecyclerView dinnerListView;
+  /**
+   * SNACKS CHART
+   */
+  @Bind(R.id.chartTitleTV_SNACKS) TextView chartTitleTV_SNACKS;
+  @Bind(R.id.addEntryBTN_SNACKS) TextView addNewEntryBTN_SNACKS;
+  @Bind(R.id.scanEntryBTN_SNACKS) TextView scanEntryBTN_SNACKS;
+  @Bind(R.id.snacksListView) RecyclerView snacksListView;
+  /**
+   * ADD CHART BUTTON
+   */
+  @Bind(R.id.addChartBTN) Button addNewChartBTN;
+  @Bind(R.id.loadingMetricProgressBar) ProgressBar loadingMetricProgressBar;
+  @Bind(R.id.loadingWidgetsProgressBar) ProgressBar loadingWidgetsProgressBar;
+  @Bind(R.id.dateCarousel) HorizontalScrollView dateCarousel;
+  @Bind(R.id.dateCarouselContainer) LinearLayout dateCarouselContainer;
+  private String finalDesiredDate;
+  private boolean setDrawChartValuesEnabled = false;
+  private UserMeals_RecyclerAdapterDragSwipe userMealsRecyclerAdapter;
+  private ArrayList<NutritionWidget> widgetsMap;
+  private SharedPreferences prefs;
+  private ArrayList<MealItem> finalBreakfastMeals = new ArrayList<>();
+  private ArrayList<MealItem> finalLunchMeals = new ArrayList<>();
+  private ArrayList<MealItem> finalDinnerMeals = new ArrayList<>();
+  private ArrayList<MealItem> finalSnackMeals = new ArrayList<>();
 
-    private boolean setDrawChartValuesEnabled = false;
-    private UserMeals_RecyclerAdapterDragSwipe userMealsRecyclerAdapter;
-    private ArrayList<NutritionWidget> widgetsMap;
-    private SharedPreferences prefs;
-    private ArrayList<MealItem> finalBreakfastMeals = new ArrayList<>();
-    private ArrayList<MealItem> finalLunchMeals = new ArrayList<>();
-    private ArrayList<MealItem> finalDinnerMeals = new ArrayList<>();
-    private ArrayList<MealItem> finalSnackMeals = new ArrayList<>();
+  private ArrayList<NutritionWidget> finalWidgets;
+  private ArrayList<DataChart> finalCharts;
 
-    private ArrayList<NutritionWidget> finalWidgets;
-    private ArrayList<DataChart> finalCharts;
+  /**
+   * TOP LAYOUT WITH WIDGETS
+   */
+  private Activity parentActivity;
 
-    /**
-     * TOP LAYOUT WITH WIDGETS
-     */
-    private Activity parentActivity;
+  @Override public void onAttach(Context context) {
+    super.onAttach(context);
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
+    parentActivity = (Activity) context;
 
-        parentActivity = (Activity) context;
+    EventBus_Singleton.getInstance().register(this);
 
-        EventBus_Singleton.getInstance().register(this);
+    prefs = getActivity().getSharedPreferences(Constants.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
+  }
 
-        prefs = getActivity().getSharedPreferences(Constants.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
+  @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
+      Bundle savedInstanceState) {
+
+    View fragmentView = inflater.inflate(R.layout.fragment_nutrition, container, false);
+
+    ((AppCompatActivity) getActivity()).getSupportActionBar()
+        .setTitle(R.string.nutrition_tab_title);
+
+    ButterKnife.bind(this, fragmentView);
+
+    setHasOptionsMenu(true);
+
+    hookupMealSectionRowsClickListeners();
+
+    finalDesiredDate = Helpers.prepareDateForAPIRequest(new LocalDate());
+
+    getUserAddedMeals(finalDesiredDate);
+
+    getUiForSection("nutrition", finalDesiredDate);
+
+    setupDateCarousel();
+
+    addNewChartBTN.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View v) {
+        Intent intent = new Intent(getActivity(), AddNewChart_Activity.class);
+        intent.putExtra(Constants.EXTRAS_ADD_CHART_WHAT_TYPE,
+            Constants.EXTRAS_ADD_NUTRIITION_CHART);
+        startActivityForResult(intent, ADD_NEW_NUTRITION_CHART_REQUEST);
+      }
+    });
+
+    return fragmentView;
+  }
+
+  @Override public void onDestroy() {
+    super.onDestroy();
+    EventBus_Singleton.getInstance().unregister(this);
+  }
+
+  @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    super.onCreateOptionsMenu(menu, inflater);
+    inflater.inflate(R.menu.main, menu);
+  }
+
+  @Override public boolean onOptionsItemSelected(MenuItem item) {
+    Intent intent = new Intent(getActivity(), CustomizeWidgetsAndCharts_Activity.class);
+    intent.putExtra(Constants.EXTRAS_FRAGMENT_TYPE, Constants.EXTRAS_NUTRITION_FRAGMENT);
+    intent.putParcelableArrayListExtra(Constants.BUNDLE_NUTRITION_WIDGETS_MAP, widgetsMap);
+    intent.putParcelableArrayListExtra(Constants.BUNDLE_NUTRITION_CHARTS_MAP, finalCharts);
+    startActivity(intent);
+
+    return super.onOptionsItemSelected(item);
+  }
+
+  @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+
+    String scanContent;
+
+    switch (requestCode) {
+      case ADD_NEW_NUTRITION_CHART_REQUEST:
+        if (data != null) {
+          String chartTitle = data.getStringExtra(Constants.EXTRAS_CHART_FULL_NAME);
+
+          addNewBarChart(chartTitle);
+        }
+        break;
+      case BARCODE_CAPTURE_RC:
+        if (resultCode == CommonStatusCodes.SUCCESS) {
+          if (data != null) {
+            Barcode barcode = data.getParcelableExtra(BarcodeCapture_Activity.BarcodeObject);
+            scanContent = barcode.displayValue;
+
+            Toast.makeText(getActivity(), "Barcode value: " + scanContent, Toast.LENGTH_SHORT)
+                .show();
+          } else {
+            Toast.makeText(getActivity(), getString(R.string.no_barcode_detected_here),
+                Toast.LENGTH_LONG).show();
+          }
+        }
+        break;
+    }
+  }
+
+  private void setupDateCarousel() {
+    for (int i = 14; i >= 0; i--) {
+      final View itemDateCarouselLayout =
+          getActivity().getLayoutInflater().inflate(R.layout.item_date_carousel, null);
+      itemDateCarouselLayout.setPadding(
+          getResources().getDimensionPixelSize(R.dimen.default_margin_1), 0,
+          getResources().getDimensionPixelSize(R.dimen.default_margin_1), 0);
+
+      final TextView dayOfMonthTV =
+          (TextView) itemDateCarouselLayout.findViewById(R.id.dayOfMonthTV);
+      final TextView monthOfYearTV =
+          (TextView) itemDateCarouselLayout.findViewById(R.id.monthOfYearTV);
+
+      LocalDate dateAsLocal = dt.minusDays(i);
+      DateTimeFormatter monthFormatter = DateTimeFormat.forPattern("MMM");
+
+      dayOfMonthTV.setText(String.valueOf(dateAsLocal.getDayOfMonth()));
+      monthOfYearTV.setText(String.valueOf(monthFormatter.print(dateAsLocal)));
+
+      dateCarouselContainer.addView(itemDateCarouselLayout);
+
+      if (i == 0) {
+        focusOnView(dateCarousel, dateCarouselContainer, itemDateCarouselLayout);
+      }
+
+      itemDateCarouselLayout.setOnClickListener(new View.OnClickListener() {
+        @Override public void onClick(View view) {
+          focusOnView(dateCarousel, dateCarouselContainer, view);
+
+          DateTimeFormatter formatter = DateTimeFormat.forPattern("dd/MMM/yyyy");
+          DateTime formattedDate = formatter.parseDateTime(dayOfMonthTV.getText().toString()
+              + "/"
+              + monthOfYearTV.getText().toString()
+              + "/"
+              + dt.year().getAsText());
+
+          finalDesiredDate = Helpers.prepareDateForAPIRequest(formattedDate.toLocalDate());
+
+          getUserAddedMeals(finalDesiredDate);
+          getUiForSection("nutrition", finalDesiredDate);
+        }
+      });
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater,
-                             ViewGroup container,
-                             Bundle savedInstanceState) {
+    dateCarousel.post(new Runnable() {
+      @Override public void run() {
+        dateCarousel.setSmoothScrollingEnabled(true);
+        dateCarousel.fullScroll(HorizontalScrollView.FOCUS_RIGHT);
+      }
+    });
+  }
 
-        View fragmentView = inflater.inflate(R.layout.fragment_nutrition, container, false);
+  private void focusOnView(final HorizontalScrollView horizontalScrollView,
+      final LinearLayout dateCarouselContainer, final View view) {
+    TextView dayOfMonthTV;
+    TextView monthOfYearTV;
+    LinearLayout dateEntryLayout;
 
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.nutrition_tab_title);
+    for (int i = 0; i < dateCarouselContainer.getChildCount(); i++) {
 
-        ButterKnife.bind(this, fragmentView);
+      dateEntryLayout =
+          (LinearLayout) dateCarouselContainer.getChildAt(i).findViewById(R.id.dateEntryLayout);
+      dayOfMonthTV = (TextView) dateCarouselContainer.getChildAt(i).findViewById(R.id.dayOfMonthTV);
+      monthOfYearTV =
+          (TextView) dateCarouselContainer.getChildAt(i).findViewById(R.id.monthOfYearTV);
 
-        setHasOptionsMenu(true);
-
-        hookupMealSectionRowsClickListeners();
-
-        getUserAddedMeals();
-
-        getUiForSection("nutrition");
-
-        setupDateCarousel();
-
-        addNewChartBTN.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), AddNewChart_Activity.class);
-                intent.putExtra(Constants.EXTRAS_ADD_CHART_WHAT_TYPE, Constants.EXTRAS_ADD_NUTRIITION_CHART);
-                startActivityForResult(intent,
-                        ADD_NEW_NUTRITION_CHART_REQUEST);
-            }
-        });
-
-        return fragmentView;
+      dateEntryLayout.setBackgroundColor(0);
+      dayOfMonthTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+      monthOfYearTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+      dayOfMonthTV.setTypeface(null, Typeface.NORMAL);
+      monthOfYearTV.setTypeface(null, Typeface.NORMAL);
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        EventBus_Singleton.getInstance().unregister(this);
+    dateEntryLayout = (LinearLayout) view.findViewById(R.id.dateEntryLayout);
+    dayOfMonthTV = (TextView) view.findViewById(R.id.dayOfMonthTV);
+    monthOfYearTV = (TextView) view.findViewById(R.id.monthOfYearTV);
+
+    if (isAdded()) {
+      dateEntryLayout.setBackgroundColor(getResources().getColor(R.color.offwhite_transparent));
+    }
+    dayOfMonthTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+    monthOfYearTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+    dayOfMonthTV.setTypeface(null, Typeface.BOLD);
+    monthOfYearTV.setTypeface(null, Typeface.BOLD);
+
+    //                DisplayMetrics displaymetrics = new DisplayMetrics();
+    //                getActivity().getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+    //                int screenWidth = displaymetrics.widthPixels;
+    //                int scrollX = (screenWidth / 2);
+    //
+
+    horizontalScrollView.post(new Runnable() {
+      @Override public void run() {
+      }
+    });
+  }
+
+  private void getUiForSection(String section, String desiredDate) {
+    String finalUrl;
+
+    if (desiredDate == null) {
+      finalUrl = "http://gmfit.mcsaatchi.me/api/v1/user/ui?section=" + section;
+    } else {
+      finalUrl =
+          "http://gmfit.mcsaatchi.me/api/v1/user/ui?section=" + section + "&date=" + desiredDate;
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.main, menu);
-    }
+    DataAccessHandler.getInstance()
+        .getUiForSection(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN,
+            Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), finalUrl, new Callback<UiResponse>() {
+          @Override public void onResponse(Call<UiResponse> call, Response<UiResponse> response) {
+            switch (response.code()) {
+              case 200:
+                List<AuthenticationResponseWidget> widgetsMapFromAPI =
+                    response.body().getData().getBody().getWidgets();
+                List<AuthenticationResponseChart> chartsMapFromAPI =
+                    response.body().getData().getBody().getCharts();
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        Intent intent = new Intent(getActivity(), CustomizeWidgetsAndCharts_Activity.class);
-        intent.putExtra(Constants.EXTRAS_FRAGMENT_TYPE, Constants.EXTRAS_NUTRITION_FRAGMENT);
-        intent.putParcelableArrayListExtra(Constants.BUNDLE_NUTRITION_WIDGETS_MAP, widgetsMap);
-        intent.putParcelableArrayListExtra(Constants.BUNDLE_NUTRITION_CHARTS_MAP, finalCharts);
-        startActivity(intent);
+                /**
+                 * Update or create widgets and datacharts into the DB
+                 */
+                finalWidgets = new ArrayList<>();
 
-        return super.onOptionsItemSelected(item);
-    }
+                for (int i = 0; i < widgetsMapFromAPI.size(); i++) {
+                  NutritionWidget nutritionWidget = new NutritionWidget();
+                  nutritionWidget.setTitle(widgetsMapFromAPI.get(i).getName());
+                  nutritionWidget.setPosition(
+                      Integer.parseInt(widgetsMapFromAPI.get(i).getPosition()));
+                  nutritionWidget.setMeasurementUnit(widgetsMapFromAPI.get(i).getUnit());
+                  nutritionWidget.setWidget_id(widgetsMapFromAPI.get(i).getWidgetId());
+                  nutritionWidget.setValue(Double.parseDouble(widgetsMapFromAPI.get(i).getTotal()));
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        String scanContent;
-
-        switch (requestCode) {
-            case ADD_NEW_NUTRITION_CHART_REQUEST:
-                if (data != null) {
-                    String chartTitle = data.getStringExtra(Constants.EXTRAS_CHART_FULL_NAME);
-
-                    addNewBarChart(chartTitle);
+                  finalWidgets.add(nutritionWidget);
                 }
-                break;
-            case BARCODE_CAPTURE_RC:
-                if (resultCode == CommonStatusCodes.SUCCESS) {
-                    if (data != null) {
-                        Barcode barcode = data.getParcelableExtra(BarcodeCapture_Activity.BarcodeObject);
-                        scanContent = barcode.displayValue;
 
-                        Toast.makeText(getActivity(), "Barcode value: " + scanContent, Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(getActivity(), getString(R.string.no_barcode_detected_here), Toast.LENGTH_LONG).show();
+                finalCharts = new ArrayList<>();
+
+                for (int i = 0; i < chartsMapFromAPI.size(); i++) {
+                  DataChart nutritionDataChart = new DataChart();
+                  nutritionDataChart.setName(chartsMapFromAPI.get(i).getName());
+                  nutritionDataChart.setPosition(
+                      Integer.parseInt(chartsMapFromAPI.get(i).getPosition()));
+                  nutritionDataChart.setType(chartsMapFromAPI.get(i).getSlug());
+                  nutritionDataChart.setUsername(chartsMapFromAPI.get(i).getSlug());
+                  nutritionDataChart.setChart_id(chartsMapFromAPI.get(i).getChartId());
+                  nutritionDataChart.setChartData(
+                      (ArrayList<AuthenticationResponseChartData>) chartsMapFromAPI.get(i)
+                          .getData());
+
+                  finalCharts.add(nutritionDataChart);
+                }
+
+                if (isAdded()) {
+                  getActivity().runOnUiThread(new Runnable() {
+                    @Override public void run() {
+                      setupWidgetViews(finalWidgets);
+
+                      setupChartViews(finalCharts);
                     }
+                  });
                 }
+
                 break;
-        }
-    }
+            }
+          }
 
-    private void setupDateCarousel() {
-        for (int i = 17; i >= 0; i--) {
-            final View itemDateCarouselLayout = getActivity().getLayoutInflater().inflate(R.layout.item_date_carousel, null);
-            itemDateCarouselLayout.setPadding(getResources().getDimensionPixelSize(R.dimen.default_margin_1), 0,
-                    getResources().getDimensionPixelSize(R.dimen.default_margin_1), 0);
+          @Override public void onFailure(Call<UiResponse> call, Throwable t) {
 
-            final TextView dayOfMonthTV = (TextView) itemDateCarouselLayout.findViewById(R.id.dayOfMonthTV);
-            final TextView monthOfYearTV = (TextView) itemDateCarouselLayout.findViewById(R.id.monthOfYearTV);
+          }
+        });
+  }
 
-            LocalDate dateAsLocal = dt.minusDays(i);
-            DateTimeFormatter monthFormatter = DateTimeFormat.forPattern("MMM");
-
-            dayOfMonthTV.setText(String.valueOf(dateAsLocal.getDayOfMonth()));
-            monthOfYearTV.setText(String.valueOf(monthFormatter.print(dateAsLocal)));
-
-            itemDateCarouselLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    DateTimeFormatter formatter = DateTimeFormat.forPattern("dd/MMM/yyyy");
-                    DateTime formattedDate = formatter.parseDateTime(dayOfMonthTV.getText().toString() + "/" + monthOfYearTV.getText().toString() + "/" + dt.year().getAsText());
-
-                    String finalDesiredDate = formattedDate.getYear() + "-" + formattedDate.getMonthOfYear() + "-" + formattedDate.getDayOfMonth();
-
-//                    getWidgetsWithDate(finalDesiredDate);
+  private void updateUserWidgets(int[] widgetIds, int[] widgetPositions) {
+    DataAccessHandler.getInstance()
+        .updateUserWidgets(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN,
+            Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), widgetIds, widgetPositions,
+            new Callback<DefaultGetResponse>() {
+              @Override public void onResponse(Call<DefaultGetResponse> call,
+                  Response<DefaultGetResponse> response) {
+                switch (response.code()) {
+                  case 200:
+                    Log.d(TAG, "onResponse: User's widgets updated successfully");
+                    break;
                 }
+              }
+
+              @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+
+              }
             });
+  }
 
-            dateCarouselContainer.addView(itemDateCarouselLayout);
+  private void updateUserCharts(int[] chartIds, int[] chartPositions) {
+    DataAccessHandler.getInstance()
+        .updateUserCharts(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN,
+            Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), chartIds, chartPositions,
+            new Callback<DefaultGetResponse>() {
+              @Override public void onResponse(Call<DefaultGetResponse> call,
+                  Response<DefaultGetResponse> response) {
+                switch (response.code()) {
+                  case 200:
+                    Log.d(TAG, "onResponse: User's charts updated successfully");
+                    break;
+                }
+              }
+
+              @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+
+              }
+            });
+  }
+
+  private void getUserAddedMeals(String desiredDate) {
+    DataAccessHandler.getInstance()
+        .getUserAddedMealsOnDate(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN,
+            Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), desiredDate,
+            new Callback<UserMealsResponse>() {
+              @Override public void onResponse(Call<UserMealsResponse> call,
+                  Response<UserMealsResponse> response) {
+                switch (response.code()) {
+                  case 200:
+
+                    /**
+                     * Grab all meals from the API
+                     */
+                    List<UserMealsResponseBreakfast> breakfastMeals =
+                        response.body().getData().getBody().getData().getBreakfast();
+                    List<UserMealsResponseLunch> lunchMeals =
+                        response.body().getData().getBody().getData().getLunch();
+                    List<UserMealsResponseDinner> dinnerMeals =
+                        response.body().getData().getBody().getData().getDinner();
+                    List<UserMealsResponseSnack> snackMeals =
+                        response.body().getData().getBody().getData().getSnack();
+
+                    finalBreakfastMeals.clear();
+                    finalLunchMeals.clear();
+                    finalDinnerMeals.clear();
+                    finalSnackMeals.clear();
+
+                    /**
+                     * Insert Breakfast meals
+                     */
+                    for (int i = 0; i < breakfastMeals.size(); i++) {
+                      MealItem breakfastMeal = new MealItem();
+                      breakfastMeal.setMeal_id(breakfastMeals.get(i).getId());
+                      breakfastMeal.setCreated_at(breakfastMeals.get(i).getCreatedAt());
+                      breakfastMeal.setInstance_id(breakfastMeals.get(i).getInstance_id());
+                      breakfastMeal.setType("Breakfast");
+                      breakfastMeal.setName(breakfastMeals.get(i).getName());
+                      breakfastMeal.setMeasurementUnit(breakfastMeals.get(i).getMeasurementUnit());
+                      breakfastMeal.setAmount(breakfastMeals.get(i).getAmount());
+                      breakfastMeal.setSectionType(2);
+
+                      if (breakfastMeals.get(i).getTotalCalories() != null) {
+                        breakfastMeal.setTotalCalories(breakfastMeals.get(i).getTotalCalories());
+                      } else {
+                        breakfastMeal.setTotalCalories(0);
+                      }
+
+                      finalBreakfastMeals.add(breakfastMeal);
+                    }
+
+                    setupMealSectionsListView(finalBreakfastMeals, "Breakfast");
+
+                    /**
+                     * Insert Lunch meals
+                     */
+                    for (int i = 0; i < lunchMeals.size(); i++) {
+                      MealItem lunchMeal = new MealItem();
+                      lunchMeal.setMeal_id(lunchMeals.get(i).getId());
+                      lunchMeal.setCreated_at(lunchMeals.get(i).getCreatedAt());
+                      lunchMeal.setInstance_id(lunchMeals.get(i).getInstance_id());
+                      lunchMeal.setType("Lunch");
+                      lunchMeal.setName(lunchMeals.get(i).getName());
+                      lunchMeal.setMeasurementUnit(lunchMeals.get(i).getMeasurementUnit());
+                      lunchMeal.setAmount(lunchMeals.get(i).getAmount());
+                      lunchMeal.setSectionType(2);
+
+                      if (lunchMeals.get(i).getTotalCalories() != null) {
+                        lunchMeal.setTotalCalories(lunchMeals.get(i).getTotalCalories());
+                      } else {
+                        lunchMeal.setTotalCalories(0);
+                      }
+
+                      finalLunchMeals.add(lunchMeal);
+                    }
+
+                    setupMealSectionsListView(finalLunchMeals, "Lunch");
+
+                    /**
+                     * Insert Dinner meals
+                     */
+                    for (int i = 0; i < dinnerMeals.size(); i++) {
+                      MealItem dinnerMeal = new MealItem();
+                      dinnerMeal.setMeal_id(dinnerMeals.get(i).getId());
+                      dinnerMeal.setCreated_at(dinnerMeals.get(i).getCreatedAt());
+                      dinnerMeal.setInstance_id(dinnerMeals.get(i).getInstance_id());
+                      dinnerMeal.setType("Dinner");
+                      dinnerMeal.setName(dinnerMeals.get(i).getName());
+                      dinnerMeal.setMeasurementUnit(dinnerMeals.get(i).getMeasurementUnit());
+                      dinnerMeal.setAmount(dinnerMeals.get(i).getAmount());
+                      dinnerMeal.setSectionType(2);
+
+                      if (dinnerMeals.get(i).getTotalCalories() != null) {
+                        dinnerMeal.setTotalCalories(dinnerMeals.get(i).getTotalCalories());
+                      } else {
+                        dinnerMeal.setTotalCalories(0);
+                      }
+
+                      finalDinnerMeals.add(dinnerMeal);
+                    }
+
+                    setupMealSectionsListView(finalDinnerMeals, "Dinner");
+
+                    /**
+                     * Insert Snack meals
+                     */
+                    for (int i = 0; i < snackMeals.size(); i++) {
+                      MealItem snackMeal = new MealItem();
+                      snackMeal.setMeal_id(snackMeals.get(i).getId());
+                      snackMeal.setInstance_id(snackMeals.get(i).getInstance_id());
+                      snackMeal.setCreated_at(snackMeals.get(i).getCreatedAt());
+                      snackMeal.setType("Snack");
+                      snackMeal.setName(snackMeals.get(i).getName());
+                      snackMeal.setMeasurementUnit(snackMeals.get(i).getMeasurementUnit());
+                      snackMeal.setAmount(snackMeals.get(i).getAmount());
+                      snackMeal.setSectionType(2);
+
+                      if (snackMeals.get(i).getTotalCalories() != null) {
+                        snackMeal.setTotalCalories(snackMeals.get(i).getTotalCalories());
+                      } else {
+                        snackMeal.setTotalCalories(0);
+                      }
+
+                      finalSnackMeals.add(snackMeal);
+                    }
+
+                    setupMealSectionsListView(finalSnackMeals, "Snack");
+
+                    break;
+                }
+              }
+
+              @Override public void onFailure(Call<UserMealsResponse> call, Throwable t) {
+
+              }
+            });
+  }
+
+  private void hookupMealSectionRowsClickListeners() {
+    addNewEntryBTN_BREAKFAST.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View view) {
+        openMealEntryPickerActivity(chartTitleTV_BREAKFAST.getText().toString());
+      }
+    });
+    scanEntryBTN_BREAKFAST.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View view) {
+        handleScanMealEntry();
+      }
+    });
+
+    addNewEntryBTN_LUNCH.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View view) {
+        openMealEntryPickerActivity(chartTitleTV_LUNCH.getText().toString());
+      }
+    });
+    scanEntryBTN_LUNCH.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View view) {
+        handleScanMealEntry();
+      }
+    });
+
+    addNewEntryBTN_DINNER.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View view) {
+        openMealEntryPickerActivity(chartTitleTV_DINNER.getText().toString());
+      }
+    });
+    scanEntryBTN_DINNER.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View view) {
+        handleScanMealEntry();
+      }
+    });
+
+    addNewEntryBTN_SNACKS.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View view) {
+        openMealEntryPickerActivity(chartTitleTV_SNACKS.getText().toString());
+      }
+    });
+    scanEntryBTN_SNACKS.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View view) {
+        handleScanMealEntry();
+      }
+    });
+  }
+
+  private void setupWidgetViews(ArrayList<NutritionWidget> widgetsFromResponse) {
+
+    for (int i = 0; i < widgetsFromResponse.size(); i++) {
+      if (widgetsFromResponse.get(i).getTitle().equals("Calories")) {
+        metricCounterTV.setText(String.valueOf((int) widgetsFromResponse.get(i).getValue()));
+      }
+    }
+
+    loadingMetricProgressBar.setVisibility(View.GONE);
+
+    widgetsMap = new ArrayList<>(widgetsFromResponse.subList(0, 4));
+
+    NutritionWidgets_GridAdapter nutritionWidgets_GridAdapter =
+        new NutritionWidgets_GridAdapter(getActivity(), widgetsMap,
+            R.layout.grid_item_nutrition_widgets);
+
+    widgetsGridView.setAdapter(nutritionWidgets_GridAdapter);
+
+    loadingWidgetsProgressBar.setVisibility(View.GONE);
+  }
+
+  private void setupChartViews(ArrayList<DataChart> chartsMap) {
+    cards_container.removeAllViews();
+
+    if (!chartsMap.isEmpty()) {
+      for (DataChart chart : chartsMap) {
+
+        addNewBarChart(chart.getName());
+      }
+    }
+  }
+
+  private void setupMealSectionsListView(ArrayList<MealItem> mealItems, String mealType) {
+    RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+
+    ItemTouchHelper.Callback callback;
+    ItemTouchHelper touchHelper;
+
+    userMealsRecyclerAdapter = new UserMeals_RecyclerAdapterDragSwipe(getActivity(), mealItems);
+    callback = new SimpleSwipeItemTouchHelperCallback(userMealsRecyclerAdapter);
+    touchHelper = new ItemTouchHelper(callback);
+
+    switch (mealType) {
+      case "Breakfast":
+        hookUpMealSectionListViews(breakfastListView, mLayoutManager, touchHelper);
+        break;
+      case "Lunch":
+        hookUpMealSectionListViews(lunchListView, mLayoutManager, touchHelper);
+        break;
+      case "Dinner":
+        hookUpMealSectionListViews(dinnerListView, mLayoutManager, touchHelper);
+        break;
+      case "Snack":
+        hookUpMealSectionListViews(snacksListView, mLayoutManager, touchHelper);
+        break;
+    }
+  }
+
+  private void hookUpMealSectionListViews(RecyclerView mealListView,
+      RecyclerView.LayoutManager layoutManager, ItemTouchHelper touchHelper) {
+    Log.d(TAG, "hookUpMealSectionListViews: Setting up listviews here");
+    mealListView.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
+    mealListView.setNestedScrollingEnabled(false);
+    mealListView.setLayoutManager(layoutManager);
+    mealListView.setAdapter(userMealsRecyclerAdapter);
+    touchHelper.attachToRecyclerView(mealListView);
+  }
+
+  @Subscribe public void handle_BusEvents(final EventBus_Poster ebp) {
+    String ebpMessage = ebp.getMessage();
+
+    switch (ebpMessage) {
+      case Constants.EXTRAS_DELETED_MEAL_ENTRY:
+      case Constants.EXTRAS_UPDATED_MEAL_ENTRY:
+      case Constants.EXTRAS_CREATED_NEW_MEAL_ENTRY:
+      case Constants.EXTRAS_CREATED_NEW_MEAL_ENTRY_ON_DATE:
+        getUserAddedMeals(finalDesiredDate);
+        getUiForSection("nutrition", finalDesiredDate);
+
+        break;
+      case Constants.EXTRAS_NUTRITION_WIDGETS_ORDER_ARRAY_CHANGED:
+        if (ebp.getNutritionWidgetsMap() != null) {
+          widgetsMap = ebp.getNutritionWidgetsMap();
+          setupWidgetViews(ebp.getNutritionWidgetsMap());
+
+          int[] widgets = new int[widgetsMap.size()];
+          int[] positions = new int[widgetsMap.size()];
+
+          for (int i = 0; i < widgetsMap.size(); i++) {
+            widgets[i] = widgetsMap.get(i).getWidget_id();
+            positions[i] = widgetsMap.get(i).getPosition();
+          }
+
+          updateUserWidgets(widgets, positions);
         }
-    }
 
-    private void getUiForSection(String section) {
-        DataAccessHandler.getInstance().getUiForSection(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN,
-                Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), "http://gmfit.mcsaatchi.me/api/v1/user/ui?section=" + section, new Callback<UiResponse>() {
-            @Override
-            public void onResponse(Call<UiResponse> call, Response<UiResponse> response) {
-                switch (response.code()) {
-                    case 200:
-                        List<AuthenticationResponseWidget> widgetsMapFromAPI = response.body().getData().getBody().getWidgets();
-                        List<AuthenticationResponseChart> chartsMapFromAPI = response.body().getData().getBody().getCharts();
+        break;
+      case EXTRAS_NUTRITION_CHARTS_ORDER_ARRAY_CHANGED:
+        List<DataChart> allDataCharts = ebp.getDataChartsListExtra();
 
-                        /**
-                         * Update or create widgets and datacharts into the DB
-                         */
-                        finalWidgets = new ArrayList<>();
-
-                        for (int i = 0; i < widgetsMapFromAPI.size(); i++) {
-                            NutritionWidget nutritionWidget = new NutritionWidget();
-                            nutritionWidget.setTitle(widgetsMapFromAPI.get(i).getName());
-                            nutritionWidget.setPosition(Integer.parseInt(widgetsMapFromAPI.get(i).getPosition()));
-                            nutritionWidget.setMeasurementUnit(widgetsMapFromAPI.get(i).getUnit());
-                            nutritionWidget.setWidget_id(widgetsMapFromAPI.get(i).getWidgetId());
-                            nutritionWidget.setValue(Double.parseDouble(widgetsMapFromAPI.get(i).getTotal()));
-
-                            finalWidgets.add(nutritionWidget);
-                        }
-
-                        finalCharts = new ArrayList<>();
-
-                        for (int i = 0; i < chartsMapFromAPI.size(); i++) {
-                            DataChart nutritionDataChart = new DataChart();
-                            nutritionDataChart.setName(chartsMapFromAPI.get(i).getName());
-                            nutritionDataChart.setPosition(Integer.parseInt(chartsMapFromAPI.get(i).getPosition()));
-                            nutritionDataChart.setType(chartsMapFromAPI.get(i).getSlug());
-                            nutritionDataChart.setUsername(chartsMapFromAPI.get(i).getSlug());
-                            nutritionDataChart.setChart_id(chartsMapFromAPI.get(i).getChartId());
-                            nutritionDataChart.setChartData((ArrayList<AuthenticationResponseChartData>) chartsMapFromAPI.get(i).getData());
-
-                            finalCharts.add(nutritionDataChart);
-                        }
-
-                        if (isAdded()) {
-                            getActivity().runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    setupWidgetViews(finalWidgets);
-
-                                    setupChartViews(finalCharts);
-                                }
-                            });
-                        }
-
-                        break;
-                }
-            }
-
-            @Override
-            public void onFailure(Call<UiResponse> call, Throwable t) {
-
-            }
-        });
-    }
-
-    private void updateUserWidgets(int[] widgetIds, int[] widgetPositions) {
-        DataAccessHandler.getInstance().updateUserWidgets(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN,
-                Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), widgetIds, widgetPositions, new Callback<DefaultGetResponse>() {
-            @Override
-            public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
-                switch (response.code()) {
-                    case 200:
-                        Log.d(TAG, "onResponse: User's widgets updated successfully");
-                        break;
-                }
-            }
-
-            @Override
-            public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
-
-            }
-        });
-    }
-
-    private void updateUserCharts(int[] chartIds, int[] chartPositions) {
-        DataAccessHandler.getInstance().updateUserCharts(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN,
-                Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), chartIds, chartPositions, new Callback<DefaultGetResponse>() {
-            @Override
-            public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
-                switch (response.code()) {
-                    case 200:
-                        Log.d(TAG, "onResponse: User's charts updated successfully");
-                        break;
-                }
-            }
-
-            @Override
-            public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
-
-            }
-        });
-    }
-
-    private void getUserAddedMeals() {
-        DataAccessHandler.getInstance().getUserAddedMeals(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN,
-                Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), new Callback<UserMealsResponse>() {
-            @Override
-            public void onResponse(Call<UserMealsResponse> call, Response<UserMealsResponse> response) {
-                switch (response.code()) {
-                    case 200:
-
-                        /**
-                         * Grab all meals from the API
-                         */
-                        List<UserMealsResponseBreakfast> breakfastMeals = response.body().getData().getBody().getData().getBreakfast();
-                        List<UserMealsResponseLunch> lunchMeals = response.body().getData().getBody().getData().getLunch();
-                        List<UserMealsResponseDinner> dinnerMeals = response.body().getData().getBody().getData().getDinner();
-                        List<UserMealsResponseSnack> snackMeals = response.body().getData().getBody().getData().getSnack();
-
-                        finalBreakfastMeals.clear();
-                        finalLunchMeals.clear();
-                        finalDinnerMeals.clear();
-                        finalSnackMeals.clear();
-
-                        /**
-                         * Insert Breakfast meals
-                         */
-                        for (int i = 0; i < breakfastMeals.size(); i++) {
-                            MealItem breakfastMeal = new MealItem();
-                            breakfastMeal.setMeal_id(breakfastMeals.get(i).getId());
-                            breakfastMeal.setCreated_at(breakfastMeals.get(i).getCreatedAt());
-                            breakfastMeal.setInstance_id(breakfastMeals.get(i).getInstance_id());
-                            breakfastMeal.setType("Breakfast");
-                            breakfastMeal.setName(breakfastMeals.get(i).getName());
-                            breakfastMeal.setMeasurementUnit(breakfastMeals.get(i).getMeasurementUnit());
-                            breakfastMeal.setAmount(breakfastMeals.get(i).getAmount());
-                            breakfastMeal.setSectionType(2);
-
-                            if (breakfastMeals.get(i).getTotalCalories() != null)
-                                breakfastMeal.setTotalCalories(breakfastMeals.get(i).getTotalCalories());
-                            else
-                                breakfastMeal.setTotalCalories(0);
-
-                            finalBreakfastMeals.add(breakfastMeal);
-                        }
-
-                        setupMealSectionsListView(finalBreakfastMeals, "Breakfast");
-
-                        /**
-                         * Insert Lunch meals
-                         */
-                        for (int i = 0; i < lunchMeals.size(); i++) {
-                            MealItem lunchMeal = new MealItem();
-                            lunchMeal.setMeal_id(lunchMeals.get(i).getId());
-                            lunchMeal.setCreated_at(lunchMeals.get(i).getCreatedAt());
-                            lunchMeal.setInstance_id(lunchMeals.get(i).getInstance_id());
-                            lunchMeal.setType("Lunch");
-                            lunchMeal.setName(lunchMeals.get(i).getName());
-                            lunchMeal.setMeasurementUnit(lunchMeals.get(i).getMeasurementUnit());
-                            lunchMeal.setAmount(lunchMeals.get(i).getAmount());
-                            lunchMeal.setSectionType(2);
-
-                            if (lunchMeals.get(i).getTotalCalories() != null)
-                                lunchMeal.setTotalCalories(lunchMeals.get(i).getTotalCalories());
-                            else
-                                lunchMeal.setTotalCalories(0);
-
-                            finalLunchMeals.add(lunchMeal);
-                        }
-
-                        setupMealSectionsListView(finalLunchMeals, "Lunch");
-
-                        /**
-                         * Insert Dinner meals
-                         */
-                        for (int i = 0; i < dinnerMeals.size(); i++) {
-                            MealItem dinnerMeal = new MealItem();
-                            dinnerMeal.setMeal_id(dinnerMeals.get(i).getId());
-                            dinnerMeal.setCreated_at(dinnerMeals.get(i).getCreatedAt());
-                            dinnerMeal.setInstance_id(dinnerMeals.get(i).getInstance_id());
-                            dinnerMeal.setType("Dinner");
-                            dinnerMeal.setName(dinnerMeals.get(i).getName());
-                            dinnerMeal.setMeasurementUnit(dinnerMeals.get(i).getMeasurementUnit());
-                            dinnerMeal.setAmount(dinnerMeals.get(i).getAmount());
-                            dinnerMeal.setSectionType(2);
-
-                            if (dinnerMeals.get(i).getTotalCalories() != null)
-                                dinnerMeal.setTotalCalories(dinnerMeals.get(i).getTotalCalories());
-                            else
-                                dinnerMeal.setTotalCalories(0);
-
-                            finalDinnerMeals.add(dinnerMeal);
-                        }
-
-                        setupMealSectionsListView(finalDinnerMeals, "Dinner");
-
-                        /**
-                         * Insert Snack meals
-                         */
-                        for (int i = 0; i < snackMeals.size(); i++) {
-                            MealItem snackMeal = new MealItem();
-                            snackMeal.setMeal_id(snackMeals.get(i).getId());
-                            snackMeal.setInstance_id(snackMeals.get(i).getInstance_id());
-                            snackMeal.setCreated_at(snackMeals.get(i).getCreatedAt());
-                            snackMeal.setType("Snack");
-                            snackMeal.setName(snackMeals.get(i).getName());
-                            snackMeal.setMeasurementUnit(snackMeals.get(i).getMeasurementUnit());
-                            snackMeal.setAmount(snackMeals.get(i).getAmount());
-                            snackMeal.setSectionType(2);
-
-                            if (snackMeals.get(i).getTotalCalories() != null)
-                                snackMeal.setTotalCalories(snackMeals.get(i).getTotalCalories());
-                            else
-                                snackMeal.setTotalCalories(0);
-
-                            finalSnackMeals.add(snackMeal);
-                        }
-
-                        setupMealSectionsListView(finalSnackMeals, "Snack");
-
-                        break;
-                }
-            }
-
-            @Override
-            public void onFailure(Call<UserMealsResponse> call, Throwable t) {
-
-            }
-        });
-    }
-
-    private void hookupMealSectionRowsClickListeners() {
-        addNewEntryBTN_BREAKFAST.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openMealEntryPickerActivity(chartTitleTV_BREAKFAST.getText().toString());
-            }
-        });
-        scanEntryBTN_BREAKFAST.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                handleScanMealEntry();
-            }
-        });
-
-        addNewEntryBTN_LUNCH.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openMealEntryPickerActivity(chartTitleTV_LUNCH.getText().toString());
-            }
-        });
-        scanEntryBTN_LUNCH.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                handleScanMealEntry();
-            }
-        });
-
-        addNewEntryBTN_DINNER.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openMealEntryPickerActivity(chartTitleTV_DINNER.getText().toString());
-            }
-        });
-        scanEntryBTN_DINNER.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                handleScanMealEntry();
-            }
-        });
-
-        addNewEntryBTN_SNACKS.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openMealEntryPickerActivity(chartTitleTV_SNACKS.getText().toString());
-            }
-        });
-        scanEntryBTN_SNACKS.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                handleScanMealEntry();
-            }
-        });
-    }
-
-    private void setupWidgetViews(ArrayList<NutritionWidget> widgetsFromResponse) {
-
-        for (int i = 0; i < widgetsFromResponse.size(); i++) {
-            if (widgetsFromResponse.get(i).getTitle().equals("Calories")) {
-                metricCounterTV.setText(String.valueOf((int) widgetsFromResponse.get(i).getValue()));
-            }
-        }
-
-        loadingMetricProgressBar.setVisibility(View.GONE);
-
-        widgetsMap = new ArrayList<>(widgetsFromResponse.subList(0, 4));
-
-        NutritionWidgets_GridAdapter nutritionWidgets_GridAdapter = new NutritionWidgets_GridAdapter(getActivity(), widgetsMap, R.layout.grid_item_nutrition_widgets);
-
-        widgetsGridView.setAdapter(nutritionWidgets_GridAdapter);
-
-        loadingWidgetsProgressBar.setVisibility(View.GONE);
-    }
-
-    private void setupChartViews(ArrayList<DataChart> chartsMap) {
         cards_container.removeAllViews();
 
-        if (!chartsMap.isEmpty()) {
-            for (DataChart chart :
-                    chartsMap) {
-
-                addNewBarChart(chart.getName());
-            }
+        for (DataChart chart : allDataCharts) {
+          addNewBarChart(chart.getName());
         }
-    }
 
-    private void setupMealSectionsListView(ArrayList<MealItem> mealItems, String mealType) {
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+        int[] charts = new int[allDataCharts.size()];
+        int[] chartPositions = new int[allDataCharts.size()];
 
-        ItemTouchHelper.Callback callback;
-        ItemTouchHelper touchHelper;
-
-        userMealsRecyclerAdapter = new UserMeals_RecyclerAdapterDragSwipe(getActivity(), mealItems);
-        callback = new SimpleSwipeItemTouchHelperCallback(userMealsRecyclerAdapter);
-        touchHelper = new ItemTouchHelper(callback);
-
-        switch (mealType) {
-            case "Breakfast":
-                hookUpMealSectionListViews(breakfastListView, mLayoutManager, touchHelper);
-                break;
-            case "Lunch":
-                hookUpMealSectionListViews(lunchListView, mLayoutManager, touchHelper);
-                break;
-            case "Dinner":
-                hookUpMealSectionListViews(dinnerListView, mLayoutManager, touchHelper);
-                break;
-            case "Snack":
-                hookUpMealSectionListViews(snacksListView, mLayoutManager, touchHelper);
-                break;
+        for (int i = 0; i < allDataCharts.size(); i++) {
+          charts[i] = allDataCharts.get(i).getChart_id();
+          chartPositions[i] = allDataCharts.get(i).getPosition();
         }
+
+        updateUserCharts(charts, chartPositions);
+
+        break;
+      case Constants.EXTRAS_NUTRITION_CHART_DELETED:
+
+        break;
     }
+  }
 
-    private void hookUpMealSectionListViews(RecyclerView mealListView, RecyclerView.LayoutManager layoutManager, ItemTouchHelper touchHelper) {
-        mealListView.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
-        mealListView.setNestedScrollingEnabled(false);
-        mealListView.setLayoutManager(layoutManager);
-        mealListView.setAdapter(userMealsRecyclerAdapter);
-        touchHelper.attachToRecyclerView(mealListView);
-    }
+  public void handleScanMealEntry() {
+    Intent intent = new Intent(getActivity(), BarcodeCapture_Activity.class);
+    intent.putExtra(BarcodeCapture_Activity.AutoFocus, true);
+    intent.putExtra(BarcodeCapture_Activity.UseFlash, false);
 
-    @Subscribe
-    public void handle_BusEvents(final EventBus_Poster ebp) {
-        String ebpMessage = ebp.getMessage();
+    startActivityForResult(intent, BARCODE_CAPTURE_RC);
+  }
 
-        switch (ebpMessage) {
-            case Constants.EXTRAS_DELETED_MEAL_ENTRY:
-            case Constants.EXTRAS_UPDATED_MEAL_ENTRY:
-            case Constants.EXTRAS_CREATED_NEW_MEAL_ENTRY:
-                getUserAddedMeals();
-                getUiForSection("nutrition");
+  private void openMealEntryPickerActivity(String mainMealName) {
+    Intent intent = new Intent(parentActivity, AddNewMealItem_Activity.class);
+    intent.putExtra(Constants.EXTRAS_MAIN_MEAL_NAME, mainMealName);
+    intent.putExtra(Constants.EXTRAS_DATE_TO_ADD_MEAL_ON, finalDesiredDate);
+    startActivity(intent);
+  }
 
-                break;
-            case Constants.EXTRAS_NUTRITION_WIDGETS_ORDER_ARRAY_CHANGED:
-                if (ebp.getNutritionWidgetsMap() != null) {
-                    widgetsMap = ebp.getNutritionWidgetsMap();
-                    setupWidgetViews(ebp.getNutritionWidgetsMap());
+  private void addNewBarChart(final String chartTitle) {
+    final TextView dateTV_1, dateTV_2, dateTV_3, dateTV_4;
 
-                    int[] widgets = new int[widgetsMap.size()];
-                    int[] positions = new int[widgetsMap.size()];
+    final View barChartLayout =
+        parentActivity.getLayoutInflater().inflate(R.layout.view_barchart_container, null);
 
-                    for (int i = 0; i < widgetsMap.size(); i++) {
-                        widgets[i] = widgetsMap.get(i).getWidget_id();
-                        positions[i] = widgetsMap.get(i).getPosition();
-                    }
+    dateTV_1 = (TextView) barChartLayout.findViewById(R.id.dateTV_1);
+    dateTV_2 = (TextView) barChartLayout.findViewById(R.id.dateTV_2);
+    dateTV_3 = (TextView) barChartLayout.findViewById(R.id.dateTV_3);
+    dateTV_4 = (TextView) barChartLayout.findViewById(R.id.dateTV_4);
 
-                    updateUserWidgets(widgets, positions);
-                }
+    TextView chartTitleTV = (TextView) barChartLayout.findViewById(R.id.chartTitleTV);
+    final BarChart barChart = (BarChart) barChartLayout.findViewById(R.id.barChart);
+    Button showChartValuesBTN = (Button) barChartLayout.findViewById(R.id.showChartValuesBTN);
 
-                break;
-            case EXTRAS_NUTRITION_CHARTS_ORDER_ARRAY_CHANGED:
-                List<DataChart> allDataCharts = ebp.getDataChartsListExtra();
+    showChartValuesBTN.setBackgroundResource(R.drawable.ic_format_list_numbered_white_24dp);
 
-                cards_container.removeAllViews();
+    if (chartTitle != null) chartTitleTV.setText(chartTitle);
 
-                for (DataChart chart :
-                        allDataCharts) {
-                    addNewBarChart(chart.getName());
-                }
+    getDefaultChartMonthlyBreakdown(barChart, dateTV_1, dateTV_2, dateTV_3, dateTV_4, chartTitle);
 
-                int[] charts = new int[allDataCharts.size()];
-                int[] chartPositions = new int[allDataCharts.size()];
+    if (isAdded()) {
+      LinearLayout.LayoutParams lp =
+          new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+              getResources().getDimensionPixelSize(R.dimen.chart_height_2));
+      lp.topMargin = getResources().getDimensionPixelSize(R.dimen.default_margin_2);
+      barChartLayout.setLayoutParams(lp);
 
-                for (int i = 0; i < allDataCharts.size(); i++) {
-                    charts[i] = allDataCharts.get(i).getChart_id();
-                    chartPositions[i] = allDataCharts.get(i).getPosition();
-                }
+      cards_container.addView(barChartLayout);
 
-                updateUserCharts(charts, chartPositions);
-
-                break;
-            case Constants.EXTRAS_NUTRITION_CHART_DELETED:
-
-                break;
+      /**
+       * Open the breakdown for the chart
+       */
+      barChart.setOnClickListener(new View.OnClickListener() {
+        @Override public void onClick(View view) {
+          getSlugBreakdownForChart(chartTitle, chartTitle);
         }
-    }
+      });
 
-    public void handleScanMealEntry() {
-        Intent intent = new Intent(getActivity(), BarcodeCapture_Activity.class);
-        intent.putExtra(BarcodeCapture_Activity.AutoFocus, true);
-        intent.putExtra(BarcodeCapture_Activity.UseFlash, false);
+      showChartValuesBTN.setOnClickListener(new View.OnClickListener() {
+        @Override public void onClick(View view) {
+          if (setDrawChartValuesEnabled) {
+            barChart.getBarData().setDrawValues(true);
+          } else {
+            barChart.getBarData().setDrawValues(false);
+          }
 
-        startActivityForResult(intent, BARCODE_CAPTURE_RC);
-    }
+          setDrawChartValuesEnabled = !setDrawChartValuesEnabled;
 
-    private void openMealEntryPickerActivity(String mainMealName) {
-        Intent intent = new Intent(parentActivity, AddNewMealItem_Activity.class);
-        intent.putExtra(Constants.EXTRAS_MAIN_MEAL_NAME, mainMealName);
-        startActivity(intent);
-    }
-
-    private void addNewBarChart(final String chartTitle) {
-        final TextView dateTV_1, dateTV_2, dateTV_3, dateTV_4;
-
-        final View barChartLayout = parentActivity.getLayoutInflater().inflate(R.layout.view_barchart_container, null);
-
-        dateTV_1 = (TextView) barChartLayout.findViewById(R.id.dateTV_1);
-        dateTV_2 = (TextView) barChartLayout.findViewById(R.id.dateTV_2);
-        dateTV_3 = (TextView) barChartLayout.findViewById(R.id.dateTV_3);
-        dateTV_4 = (TextView) barChartLayout.findViewById(R.id.dateTV_4);
-
-        TextView chartTitleTV = (TextView) barChartLayout.findViewById(R.id.chartTitleTV);
-        final BarChart barChart = (BarChart) barChartLayout.findViewById(R.id.barChart);
-        Button showChartValuesBTN = (Button) barChartLayout.findViewById(R.id.showChartValuesBTN);
-
-        showChartValuesBTN.setBackgroundResource(R.drawable.ic_format_list_numbered_white_24dp);
-
-        if (chartTitle != null)
-            chartTitleTV.setText(chartTitle);
-
-        getDefaultChartMonthlyBreakdown(barChart, dateTV_1, dateTV_2, dateTV_3, dateTV_4, chartTitle);
-
-        if (isAdded()) {
-            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, getResources().getDimensionPixelSize(R
-                    .dimen.chart_height_2));
-            lp.topMargin = getResources().getDimensionPixelSize(R.dimen.default_margin_2);
-            barChartLayout.setLayoutParams(lp);
-
-            cards_container.addView(barChartLayout);
-
-            /**
-             * Open the breakdown for the chart
-             */
-            barChart.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    getSlugBreakdownForChart(chartTitle, chartTitle);
-                }
-            });
-
-            showChartValuesBTN.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if (setDrawChartValuesEnabled) {
-                        barChart.getBarData().setDrawValues(true);
-                    } else {
-                        barChart.getBarData().setDrawValues(false);
-                    }
-
-                    setDrawChartValuesEnabled = !setDrawChartValuesEnabled;
-
-                    barChart.invalidate();
-                }
-            });
+          barChart.invalidate();
         }
+      });
     }
+  }
 
-    private void getSlugBreakdownForChart(final String chartTitle, final String chartType) {
-        final ProgressDialog waitingDialog = new ProgressDialog(getActivity());
-        waitingDialog.setTitle(getActivity().getResources().getString(R.string.grabbing_breakdown_data_dialog_title));
-        waitingDialog.setMessage(getActivity().getResources().getString(R.string.please_wait_dialog_message));
-        waitingDialog.show();
+  private void getSlugBreakdownForChart(final String chartTitle, final String chartType) {
+    final ProgressDialog waitingDialog = new ProgressDialog(getActivity());
+    waitingDialog.setTitle(
+        getActivity().getResources().getString(R.string.grabbing_breakdown_data_dialog_title));
+    waitingDialog.setMessage(
+        getActivity().getResources().getString(R.string.please_wait_dialog_message));
+    waitingDialog.show();
 
-        final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
-        alertDialog.setTitle(R.string.grabbing_breakdown_data_dialog_title);
-        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getActivity().getResources().getString(R.string.ok),
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
+    final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+    alertDialog.setTitle(R.string.grabbing_breakdown_data_dialog_title);
+    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE,
+        getActivity().getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
+          public void onClick(DialogInterface dialog, int which) {
+            dialog.dismiss();
 
-                        if (waitingDialog.isShowing())
-                            waitingDialog.dismiss();
-                    }
-                });
-
-        DataAccessHandler.getInstance().getSlugBreakdownForChart(chartType, prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), new Callback<SlugBreakdownResponse>() {
-            @Override
-            public void onResponse(Call<SlugBreakdownResponse> call, Response<SlugBreakdownResponse> response) {
-                switch (response.code()) {
-                    case 200:
-                        waitingDialog.dismiss();
-
-                        Intent intent = new Intent(getActivity(), SlugBreakdown_Activity.class);
-                        intent.putExtra(Constants.EXTRAS_FRAGMENT_TYPE, Constants.EXTRAS_NUTRITION_FRAGMENT);
-                        intent.putExtra(Constants.EXTRAS_CHART_FULL_NAME, chartTitle);
-                        intent.putExtra(Constants.EXTRAS_CHART_TYPE_SELECTED, chartType);
-                        intent.putExtra(Constants.BUNDLE_SLUG_BREAKDOWN_DATA, response.body().getData().getBody().getData());
-                        getActivity().startActivity(intent);
-                        break;
-                }
-            }
-
-            @Override
-            public void onFailure(Call<SlugBreakdownResponse> call, Throwable t) {
-                alertDialog.setMessage(getActivity().getString(R.string.error_response_from_server_incorrect));
-                alertDialog.show();
-            }
+            if (waitingDialog.isShowing()) waitingDialog.dismiss();
+          }
         });
-    }
 
-    private void getDefaultChartMonthlyBreakdown(final BarChart barchart, final TextView dateTV_1, final TextView dateTV_2, final TextView dateTV_3, final TextView dateTV_4, final String chart_slug) {
-        final String todayDate;
-        todayDate = dt.toString();
+    DataAccessHandler.getInstance()
+        .getSlugBreakdownForChart(chartType, prefs.getString(Constants.PREF_USER_ACCESS_TOKEN,
+            Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), new Callback<SlugBreakdownResponse>() {
+          @Override public void onResponse(Call<SlugBreakdownResponse> call,
+              Response<SlugBreakdownResponse> response) {
+            switch (response.code()) {
+              case 200:
+                waitingDialog.dismiss();
 
-        DataAccessHandler.getInstance().getPeriodicalChartData(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
-                dt.minusMonths(1).toString(), todayDate, "nutrition", chart_slug, new Callback<ChartMetricBreakdownResponse>() {
-                    @Override
-                    public void onResponse(Call<ChartMetricBreakdownResponse> call, Response<ChartMetricBreakdownResponse> response) {
-                        List<ChartMetricBreakdownResponseDatum> rawChartData = response.body().getData().getBody().getData();
+                Intent intent = new Intent(getActivity(), SlugBreakdown_Activity.class);
+                intent.putExtra(Constants.EXTRAS_FRAGMENT_TYPE,
+                    Constants.EXTRAS_NUTRITION_FRAGMENT);
+                intent.putExtra(Constants.EXTRAS_CHART_FULL_NAME, chartTitle);
+                intent.putExtra(Constants.EXTRAS_CHART_TYPE_SELECTED, chartType);
+                intent.putExtra(Constants.BUNDLE_SLUG_BREAKDOWN_DATA,
+                    response.body().getData().getBody().getData());
+                getActivity().startActivity(intent);
+                break;
+            }
+          }
 
-                        if (rawChartData != null && rawChartData.size() > 0) {
-                            List<AuthenticationResponseChartData> newChartData = new ArrayList<>();
+          @Override public void onFailure(Call<SlugBreakdownResponse> call, Throwable t) {
+            alertDialog.setMessage(
+                getActivity().getString(R.string.error_response_from_server_incorrect));
+            alertDialog.show();
+          }
+        });
+  }
 
-                            for (int i = 0; i < rawChartData.size(); i++) {
-                                newChartData.add(new AuthenticationResponseChartData(rawChartData.get(i).getDate(), rawChartData.get(i).getValue()));
-                            }
+  private void getDefaultChartMonthlyBreakdown(final BarChart barchart, final TextView dateTV_1,
+      final TextView dateTV_2, final TextView dateTV_3, final TextView dateTV_4,
+      final String chart_slug) {
+    final String todayDate;
+    todayDate = dt.toString();
 
-                            DateTime date;
+    DataAccessHandler.getInstance()
+        .getPeriodicalChartData(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN,
+            Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), dt.minusMonths(1).toString(), todayDate,
+            "nutrition", chart_slug, new Callback<ChartMetricBreakdownResponse>() {
+              @Override public void onResponse(Call<ChartMetricBreakdownResponse> call,
+                  Response<ChartMetricBreakdownResponse> response) {
+                List<ChartMetricBreakdownResponseDatum> rawChartData =
+                    response.body().getData().getBody().getData();
 
-                            Collections.reverse(newChartData);
+                if (rawChartData != null && rawChartData.size() > 0) {
+                  List<AuthenticationResponseChartData> newChartData = new ArrayList<>();
 
-                            for (int i = 0; i < newChartData.size(); i++) {
-                                date = new DateTime(newChartData.get(i).getDate());
+                  for (int i = 0; i < rawChartData.size(); i++) {
+                    newChartData.add(
+                        new AuthenticationResponseChartData(rawChartData.get(i).getDate(),
+                            rawChartData.get(i).getValue()));
+                  }
 
-                                switch (i) {
-                                    case 0:
-                                        dateTV_1.setText(date.getDayOfMonth() + " " + date.monthOfYear().getAsText().substring(0, 3));
-                                        break;
-                                    case 7:
-                                        dateTV_2.setText(date.getDayOfMonth() + " " + date.monthOfYear().getAsText().substring(0, 3));
-                                        break;
-                                    case 14:
-                                        dateTV_3.setText(date.getDayOfMonth() + " " + date.monthOfYear().getAsText().substring(0, 3));
-                                        break;
-                                    case 21:
-                                        dateTV_4.setText(date.getDayOfMonth() + " " + date.monthOfYear().getAsText().substring(0, 3));
-                                        break;
-                                }
-                            }
+                  DateTime date;
 
-                            Helpers.setBarChartData(barchart, newChartData);
-                        }
+                  Collections.reverse(newChartData);
+
+                  for (int i = 0; i < newChartData.size(); i++) {
+                    date = new DateTime(newChartData.get(i).getDate());
+
+                    switch (i) {
+                      case 0:
+                        dateTV_1.setText(date.getDayOfMonth() + " " + date.monthOfYear()
+                            .getAsText()
+                            .substring(0, 3));
+                        break;
+                      case 7:
+                        dateTV_2.setText(date.getDayOfMonth() + " " + date.monthOfYear()
+                            .getAsText()
+                            .substring(0, 3));
+                        break;
+                      case 14:
+                        dateTV_3.setText(date.getDayOfMonth() + " " + date.monthOfYear()
+                            .getAsText()
+                            .substring(0, 3));
+                        break;
+                      case 21:
+                        dateTV_4.setText(date.getDayOfMonth() + " " + date.monthOfYear()
+                            .getAsText()
+                            .substring(0, 3));
+                        break;
                     }
+                  }
 
-                    @Override
-                    public void onFailure(Call<ChartMetricBreakdownResponse> call, Throwable t) {
-                        //TODO: Add failure code
-                    }
-                });
-    }
+                  Helpers.setBarChartData(barchart, newChartData);
+                }
+              }
+
+              @Override
+              public void onFailure(Call<ChartMetricBreakdownResponse> call, Throwable t) {
+                //TODO: Add failure code
+              }
+            });
+  }
 }

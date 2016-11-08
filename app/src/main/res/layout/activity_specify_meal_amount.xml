@@ -1,87 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              xmlns:validator="http://schemas.android.com/apk/res-auto"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@drawable/nutrition_background"
-              android:fitsSystemWindows="true"
-              android:orientation="vertical">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:validator="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/nutrition_background"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    >
 
-    <include layout="@layout/app_toolbar"/>
+  <include layout="@layout/app_toolbar"/>
 
-    <LinearLayout android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:orientation="horizontal"
-                  android:paddingEnd="@dimen/activity_vertical_margin"
-                  android:paddingStart="@dimen/activity_vertical_margin">
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal"
+      android:paddingEnd="@dimen/activity_vertical_margin"
+      android:paddingStart="@dimen/activity_vertical_margin"
+      >
 
-        <com.wrapp.floatlabelededittext.FloatLabeledEditText
-            android:id="@+id/mealAmountFloatingET"
-            android:layout_width="0dp"
-            android:layout_height="@dimen/radiobutton_row_height"
-            android:layout_marginBottom="@dimen/default_margin_0"
-            android:layout_weight="1"
-            android:paddingBottom="@dimen/default_margin_0"
-            app:fletPaddingLeft="@dimen/default_margin_2"
-            app:fletPaddingTop="@dimen/default_margin_1"
-            app:fletTextAppearance="@style/TextAppearence.App.TextInputLayout">
+    <com.wrapp.floatlabelededittext.FloatLabeledEditText
+        android:id="@+id/mealAmountFloatingET"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/radiobutton_row_height"
+        android:layout_marginBottom="@dimen/default_margin_0"
+        android:layout_weight="1"
+        android:paddingBottom="@dimen/default_margin_0"
+        app:fletPaddingLeft="@dimen/default_margin_2"
+        app:fletPaddingTop="@dimen/default_margin_1"
+        app:fletTextAppearance="@style/TextAppearence.App.TextInputLayout"
+        >
 
-            <com.andreabaccega.widget.FormEditText
-                android:id="@+id/mealAmountET"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:hint="@string/add_meal_amount_hint"
-                android:inputType="number"
-                android:maxLines="1"
-                android:paddingBottom="@dimen/default_margin_1"
-                android:paddingStart="@dimen/default_margin_2"
-                android:textAppearance="?android:textAppearanceSmall"
-                android:textColor="@android:color/white"
-                android:textColorHint="@color/offwhite_transparent"
-                android:textCursorDrawable="@null"
-                validator:emptyErrorString="@string/field_empty_error_message"/>
+      <com.andreabaccega.widget.FormEditText
+          android:id="@+id/mealAmountET"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:hint="@string/add_meal_amount_hint"
+          android:inputType="number"
+          android:maxLines="1"
+          android:paddingBottom="@dimen/default_margin_1"
+          android:paddingStart="@dimen/default_margin_2"
+          android:textAppearance="?android:textAppearanceSmall"
+          android:textColor="@android:color/white"
+          android:textColorHint="@color/offwhite_transparent"
+          android:textCursorDrawable="@null"
+          validator:emptyErrorString="@string/field_empty_error_message"
+          />
 
-        </com.wrapp.floatlabelededittext.FloatLabeledEditText>
-    </LinearLayout>
+    </com.wrapp.floatlabelededittext.FloatLabeledEditText>
+  </LinearLayout>
 
-    <Button android:id="@+id/addToDiaryBTN"
-            style="?android:attr/borderlessButtonStyle"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/radiobutton_row_height"
-            android:layout_margin="@dimen/activity_vertical_margin"
-            android:background="@color/fitness_dark_blue"
-            android:text="@string/add_meal_to_diary"
-            android:textColor="@android:color/white"/>
+  <Button
+      android:id="@+id/addToDiaryBTN"
+      android:layout_width="match_parent"
+      android:layout_height="@dimen/radiobutton_row_height"
+      android:layout_margin="@dimen/activity_vertical_margin"
+      android:background="@color/fitness_dark_blue"
+      android:text="@string/add_meal_to_diary"
+      android:textColor="@android:color/white"
+      style="?android:attr/borderlessButtonStyle"
+      />
 
-    <TextView android:id="@+id/nutritionFactsHintTV"
-              xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:background="@color/nutrition_red"
-              android:gravity="center_vertical"
-              android:minHeight="?android:attr/listPreferredItemHeightSmall"
-              android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
-              android:paddingStart="?android:attr/listPreferredItemPaddingStart"
-              android:text="@string/nutrition_facts_hint"
-              android:textAppearance="?android:attr/textAppearanceListItemSmall"
-              android:textColor="@android:color/white"/>
+  <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+      android:id="@+id/nutritionFactsHintTV"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:background="@color/nutrition_red"
+      android:gravity="center_vertical"
+      android:minHeight="?android:attr/listPreferredItemHeightSmall"
+      android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
+      android:paddingStart="?android:attr/listPreferredItemPaddingStart"
+      android:text="@string/nutrition_facts_hint"
+      android:textAppearance="?android:attr/textAppearanceListItemSmall"
+      android:textColor="@android:color/white"
+      />
 
-    <ListView
-        android:id="@+id/nutritionFactsList"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@android:color/white"
-        android:drawSelectorOnTop="true"/>
+  <ListView
+      android:id="@+id/nutritionFactsList"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:background="@android:color/white"
+      android:drawSelectorOnTop="true"
+      />
 
-    <!--<de.halfbit.pinnedsection.PinnedSectionListView-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:background="@android:color/white"-->
-    <!--android:choiceMode="singleChoice"-->
-    <!--android:drawSelectorOnTop="true"-->
-    <!--android:focusable="false"-->
-    <!--android:gravity="center"-->
-    <!--android:scrollbarStyle="outsideOverlay"/>-->
+  <!--<de.halfbit.pinnedsection.PinnedSectionListView-->
+  <!--android:layout_width="match_parent"-->
+  <!--android:layout_height="match_parent"-->
+  <!--android:background="@android:color/white"-->
+  <!--android:choiceMode="singleChoice"-->
+  <!--android:drawSelectorOnTop="true"-->
+  <!--android:focusable="false"-->
+  <!--android:gravity="center"-->
+  <!--android:scrollbarStyle="outsideOverlay"/>-->
 
 </LinearLayout>

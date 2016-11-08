@@ -4,116 +4,113 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class FitnessWidget implements Parcelable {
-    public static final Creator<FitnessWidget> CREATOR = new Creator<FitnessWidget>() {
-        @Override
-        public FitnessWidget createFromParcel(Parcel source) {
-            return new FitnessWidget(source);
-        }
-
-        @Override
-        public FitnessWidget[] newArray(int size) {
-            return new FitnessWidget[size];
-        }
-    };
-
-    int id;
-    String title;
-    String measurementUnit;
-    int value;
-    int metricIconDrawableId;
-    int position;
-    int widget_id;
-
-    public FitnessWidget() {
+  public static final Creator<FitnessWidget> CREATOR = new Creator<FitnessWidget>() {
+    @Override public FitnessWidget createFromParcel(Parcel source) {
+      return new FitnessWidget(source);
     }
 
-    public FitnessWidget(String title, String measurementUnit, int value, int metricIconDrawableId, int position) {
-        this.title = title;
-        this.measurementUnit = measurementUnit;
-        this.value = value;
-        this.metricIconDrawableId = metricIconDrawableId;
-        this.position = position;
+    @Override public FitnessWidget[] newArray(int size) {
+      return new FitnessWidget[size];
     }
+  };
 
-    protected FitnessWidget(Parcel in) {
-        this.id = in.readInt();
-        this.title = in.readString();
-        this.measurementUnit = in.readString();
-        this.value = in.readInt();
-        this.metricIconDrawableId = in.readInt();
-        this.position = in.readInt();
-        this.widget_id = in.readInt();
-    }
+  int id;
+  String title;
+  String measurementUnit;
+  int value;
+  int metricIconDrawableId;
+  int position;
+  int widget_id;
 
-    public int getId() {
-        return id;
-    }
+  public FitnessWidget() {
+  }
 
-    public void setId(int id) {
-        this.id = id;
-    }
+  public FitnessWidget(String title, String measurementUnit, int value, int metricIconDrawableId,
+      int position) {
+    this.title = title;
+    this.measurementUnit = measurementUnit;
+    this.value = value;
+    this.metricIconDrawableId = metricIconDrawableId;
+    this.position = position;
+  }
 
-    public String getTitle() {
-        return title;
-    }
+  protected FitnessWidget(Parcel in) {
+    this.id = in.readInt();
+    this.title = in.readString();
+    this.measurementUnit = in.readString();
+    this.value = in.readInt();
+    this.metricIconDrawableId = in.readInt();
+    this.position = in.readInt();
+    this.widget_id = in.readInt();
+  }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+  public int getId() {
+    return id;
+  }
 
-    public String getMeasurementUnit() {
-        return measurementUnit;
-    }
+  public void setId(int id) {
+    this.id = id;
+  }
 
-    public void setMeasurementUnit(String measurementUnit) {
-        this.measurementUnit = measurementUnit;
-    }
+  public String getTitle() {
+    return title;
+  }
 
-    public int getValue() {
-        return value;
-    }
+  public void setTitle(String title) {
+    this.title = title;
+  }
 
-    public void setValue(int value) {
-        this.value = value;
-    }
+  public String getMeasurementUnit() {
+    return measurementUnit;
+  }
 
-    public int getMetricIconDrawableId() {
-        return metricIconDrawableId;
-    }
+  public void setMeasurementUnit(String measurementUnit) {
+    this.measurementUnit = measurementUnit;
+  }
 
-    public void setMetricIconDrawableId(int metricIconDrawableId) {
-        this.metricIconDrawableId = metricIconDrawableId;
-    }
+  public int getValue() {
+    return value;
+  }
 
-    public int getPosition() {
-        return position;
-    }
+  public void setValue(int value) {
+    this.value = value;
+  }
 
-    public void setPosition(int position) {
-        this.position = position;
-    }
+  public int getMetricIconDrawableId() {
+    return metricIconDrawableId;
+  }
 
-    public int getWidget_id() {
-        return widget_id;
-    }
+  public void setMetricIconDrawableId(int metricIconDrawableId) {
+    this.metricIconDrawableId = metricIconDrawableId;
+  }
 
-    public void setWidget_id(int widget_id) {
-        this.widget_id = widget_id;
-    }
+  public int getPosition() {
+    return position;
+  }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
+  public void setPosition(int position) {
+    this.position = position;
+  }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(this.id);
-        dest.writeString(this.title);
-        dest.writeString(this.measurementUnit);
-        dest.writeInt(this.value);
-        dest.writeInt(this.metricIconDrawableId);
-        dest.writeInt(this.position);
-        dest.writeInt(this.widget_id);
-    }
+  public int getWidget_id() {
+    return widget_id;
+  }
+
+  public void setWidget_id(int widget_id) {
+    this.widget_id = widget_id;
+  }
+
+  @Override public int describeContents() {
+    return 0;
+  }
+
+  @Override public void writeToParcel(Parcel dest, int flags) {
+    dest.writeInt(this.id);
+    dest.writeString(this.title);
+    dest.writeString(this.measurementUnit);
+    dest.writeInt(this.value);
+    dest.writeInt(this.metricIconDrawableId);
+    dest.writeInt(this.position);
+    dest.writeInt(this.widget_id);
+  }
 }

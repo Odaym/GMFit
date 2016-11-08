@@ -28,126 +28,129 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class SlugBreakdown_Fragment_Daily extends Fragment {
-    @Bind(R.id.slugBreakdownListView)
-    ListView slugBreakdownListView;
-    @Bind(R.id.allTimeValueTV)
-    TextView allTimeValueTV;
+  @Bind(R.id.slugBreakdownListView) ListView slugBreakdownListView;
+  @Bind(R.id.allTimeValueTV) TextView allTimeValueTV;
 
-    private String typeOfFragmentToCustomizeFor;
-    private String measurementUnitForMetric;
+  private String typeOfFragmentToCustomizeFor;
+  private String measurementUnitForMetric;
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
+  @Override public void onAttach(Context context) {
+    super.onAttach(context);
+  }
+
+  @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
+      Bundle savedInstanceState) {
+
+    View fragmentView = inflater.inflate(R.layout.fragment_slug_breakdown_daily, null);
+
+    ButterKnife.bind(this, fragmentView);
+
+    Bundle fragmentBundle = getArguments();
+
+    if (fragmentBundle != null) {
+      ArrayList<Parcelable> slugBreakdownData =
+          fragmentBundle.getParcelableArrayList(Constants.BUNDLE_SLUG_BREAKDOWN_DATA_DAILY);
+
+      measurementUnitForMetric =
+          fragmentBundle.getString(Constants.BUNDLE_SLUG_BREAKDOWN_MEASUREMENT_UNIT, "");
+      typeOfFragmentToCustomizeFor = fragmentBundle.getString(Constants.EXTRAS_FRAGMENT_TYPE, "");
+
+      float slugBreakdownYearlyTotal =
+          fragmentBundle.getFloat(Constants.BUNDLE_SLUG_BREAKDOWN_YEARLY_TOTAL, 0);
+      allTimeValueTV.setText(NumberFormat.getNumberInstance(Locale.US)
+          .format((int) Double.parseDouble(String.valueOf(slugBreakdownYearlyTotal)))
+          + " "
+          + measurementUnitForMetric);
+
+      hookupListWithItems(slugBreakdownData, measurementUnitForMetric);
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater,
-                             ViewGroup container,
-                             Bundle savedInstanceState) {
+    return fragmentView;
+  }
 
-        View fragmentView = inflater.inflate(R.layout.fragment_slug_breakdown_daily, null);
+  private void hookupListWithItems(ArrayList<Parcelable> items, String measurementUnitForMetric) {
+    final SlugBreakdown_ListAdapter slugBreakdownListAdapter =
+        new SlugBreakdown_ListAdapter(getActivity(), items, measurementUnitForMetric);
+    slugBreakdownListView.setAdapter(slugBreakdownListAdapter);
 
-        ButterKnife.bind(this, fragmentView);
+    if (typeOfFragmentToCustomizeFor.equals(Constants.EXTRAS_NUTRITION_FRAGMENT)) {
+      slugBreakdownListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        @Override public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+          //                    Log.d("TAG", "onItemClick: Item selected date : " + ((TextView) view.findViewById(R.id.slugDateTV)).getText().toString());
+          //
+          //                    DateTime entryDate = new DateTime(slugBreakdownListAdapter.getItem(i).getDate());
+          //
+          //                    Log.d("TAG", "onItemClick: " + (entryDate.getDayOfMonth() + " " + entryDate.monthOfYear().getAsText() + ", " + entryDate.getYear()));
 
-        Bundle fragmentBundle = getArguments();
-
-        if (fragmentBundle != null) {
-            ArrayList<Parcelable> slugBreakdownData = fragmentBundle.getParcelableArrayList(Constants.BUNDLE_SLUG_BREAKDOWN_DATA_DAILY);
-
-            measurementUnitForMetric = fragmentBundle.getString(Constants.BUNDLE_SLUG_BREAKDOWN_MEASUREMENT_UNIT, "");
-            typeOfFragmentToCustomizeFor = fragmentBundle.getString(Constants.EXTRAS_FRAGMENT_TYPE, "");
-
-            float slugBreakdownYearlyTotal = fragmentBundle.getFloat(Constants.BUNDLE_SLUG_BREAKDOWN_YEARLY_TOTAL, 0);
-            allTimeValueTV.setText(NumberFormat.getNumberInstance(Locale.US).format((int) Double.parseDouble(String.valueOf(slugBreakdownYearlyTotal))) + " " + measurementUnitForMetric);
-
-            hookupListWithItems(slugBreakdownData, measurementUnitForMetric);
+          Intent intent = new Intent(getActivity(), AddNewMealOnDate_Activity.class);
+          intent.putExtra(Constants.EXTRAS_DATE_TO_ADD_MEAL_ON,
+              slugBreakdownListAdapter.getItem(i).getDate());
+          startActivity(intent);
         }
+      });
+    }
+  }
 
-        return fragmentView;
+  public class SlugBreakdown_ListAdapter extends BaseAdapter {
+
+    private ArrayList<Parcelable> slugBreakdownData;
+    private Context context;
+    private String measurementUnit;
+
+    public SlugBreakdown_ListAdapter(Context context, ArrayList<Parcelable> slugBreakdownData,
+        String measurementUnit) {
+      super();
+      this.context = context;
+      this.slugBreakdownData = slugBreakdownData;
+      this.measurementUnit = measurementUnit;
     }
 
-    private void hookupListWithItems(ArrayList<Parcelable> items, String measurementUnitForMetric) {
-        final SlugBreakdown_ListAdapter slugBreakdownListAdapter = new SlugBreakdown_ListAdapter(getActivity(), items, measurementUnitForMetric);
-        slugBreakdownListView.setAdapter(slugBreakdownListAdapter);
-
-        if (typeOfFragmentToCustomizeFor.equals(Constants.EXTRAS_NUTRITION_FRAGMENT)) {
-            slugBreakdownListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-//                    Log.d("TAG", "onItemClick: Item selected date : " + ((TextView) view.findViewById(R.id.slugDateTV)).getText().toString());
-//
-//                    DateTime entryDate = new DateTime(slugBreakdownListAdapter.getItem(i).getDate());
-//
-//                    Log.d("TAG", "onItemClick: " + (entryDate.getDayOfMonth() + " " + entryDate.monthOfYear().getAsText() + ", " + entryDate.getYear()));
-
-                    Intent intent = new Intent(getActivity(), AddNewMealOnDate_Activity.class);
-                    intent.putExtra(Constants.EXTRAS_DATE_TO_ADD_MEAL_ON, slugBreakdownListAdapter.getItem(i).getDate());
-                    startActivity(intent);
-                }
-            });
-        }
+    @Override public int getCount() {
+      return slugBreakdownData.size();
     }
 
-    public class SlugBreakdown_ListAdapter extends BaseAdapter {
-
-        private ArrayList<Parcelable> slugBreakdownData;
-        private Context context;
-        private String measurementUnit;
-
-        public SlugBreakdown_ListAdapter(Context context, ArrayList<Parcelable> slugBreakdownData, String measurementUnit) {
-            super();
-            this.context = context;
-            this.slugBreakdownData = slugBreakdownData;
-            this.measurementUnit = measurementUnit;
-        }
-
-        @Override
-        public int getCount() {
-            return slugBreakdownData.size();
-        }
-
-        @Override
-        public SlugBreakdownResponseDaily getItem(int index) {
-            return (SlugBreakdownResponseDaily) slugBreakdownData.get(index);
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            ViewHolder holder;
-            if (convertView == null) {
-                LayoutInflater inflater = (LayoutInflater) context
-                        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                convertView = inflater.inflate(R.layout.list_item_slug_daily_breakdown, parent,
-                        false);
-
-                holder = new ViewHolder();
-
-                holder.slugDateTV = (TextView) convertView.findViewById(R.id.slugDateTV);
-                holder.slugTotalTV = (TextView) convertView.findViewById(R.id.slugTotalTV);
-
-                convertView.setTag(holder);
-            } else {
-                holder = (ViewHolder) convertView.getTag();
-            }
-
-            DateTime entryDate = new DateTime(getItem(position).getDate());
-
-            holder.slugDateTV.setText(entryDate.getDayOfMonth() + " " + entryDate.monthOfYear().getAsText() + ", " + entryDate.getYear());
-
-            holder.slugTotalTV.setText(NumberFormat.getNumberInstance(Locale.US).format((int) Double.parseDouble(getItem(position).getTotal())) + " " + measurementUnit);
-
-            return convertView;
-        }
-
-        class ViewHolder {
-            TextView slugDateTV;
-            TextView slugTotalTV;
-        }
+    @Override public SlugBreakdownResponseDaily getItem(int index) {
+      return (SlugBreakdownResponseDaily) slugBreakdownData.get(index);
     }
+
+    @Override public long getItemId(int position) {
+      return position;
+    }
+
+    @Override public View getView(int position, View convertView, ViewGroup parent) {
+      ViewHolder holder;
+      if (convertView == null) {
+        LayoutInflater inflater =
+            (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        convertView = inflater.inflate(R.layout.list_item_slug_daily_breakdown, parent, false);
+
+        holder = new ViewHolder();
+
+        holder.slugDateTV = (TextView) convertView.findViewById(R.id.slugDateTV);
+        holder.slugTotalTV = (TextView) convertView.findViewById(R.id.slugTotalTV);
+
+        convertView.setTag(holder);
+      } else {
+        holder = (ViewHolder) convertView.getTag();
+      }
+
+      DateTime entryDate = new DateTime(getItem(position).getDate());
+
+      holder.slugDateTV.setText(entryDate.getDayOfMonth()
+          + " "
+          + entryDate.monthOfYear().getAsText()
+          + ", "
+          + entryDate.getYear());
+
+      holder.slugTotalTV.setText(NumberFormat.getNumberInstance(Locale.US)
+          .format((int) Double.parseDouble(getItem(position).getTotal())) + " " + measurementUnit);
+
+      return convertView;
+    }
+
+    class ViewHolder {
+      TextView slugDateTV;
+      TextView slugTotalTV;
+    }
+  }
 }

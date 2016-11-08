@@ -18,78 +18,79 @@ import com.mcsaatchi.gmfit.models.User;
 import java.sql.SQLException;
 
 /**
- * Database helper class used to manage the creation and upgrading of your database. This class also usually provides
+ * Database helper class used to manage the creation and upgrading of your database. This class also
+ * usually provides
  * the DAOs used by the other classes.
  */
 public class DBHelper extends OrmLiteSqliteOpenHelper {
-    private static final String DATABASE_NAME = "GMFit.db";
+  private static final String DATABASE_NAME = "GMFit.db";
 
-    private static final int DATABASE_VERSION = 1;
+  private static final int DATABASE_VERSION = 1;
 
-    private RuntimeExceptionDao<MealItem, Integer> mealItemRunTimeDAO = null;
-    private RuntimeExceptionDao<FitnessWidget, Integer> fitnessWidgetsRunTimeDAO = null;
-    private RuntimeExceptionDao<NutritionWidget, Integer> nutritionWidgetsRunTimeDAO = null;
-    private RuntimeExceptionDao<DataChart, Integer> dataChartRunTimeDAO = null;
-    private RuntimeExceptionDao<User, Integer> userRunTimeDAO = null;
+  private RuntimeExceptionDao<MealItem, Integer> mealItemRunTimeDAO = null;
+  private RuntimeExceptionDao<FitnessWidget, Integer> fitnessWidgetsRunTimeDAO = null;
+  private RuntimeExceptionDao<NutritionWidget, Integer> nutritionWidgetsRunTimeDAO = null;
+  private RuntimeExceptionDao<DataChart, Integer> dataChartRunTimeDAO = null;
+  private RuntimeExceptionDao<User, Integer> userRunTimeDAO = null;
 
-    public DBHelper(Context context) {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION, R.raw.ormlite_config);
+  public DBHelper(Context context) {
+    super(context, DATABASE_NAME, null, DATABASE_VERSION, R.raw.ormlite_config);
+  }
+
+  @Override public void onCreate(SQLiteDatabase db, ConnectionSource connectionSource) {
+    try {
+      TableUtils.createTable(connectionSource, MealItem.class);
+      TableUtils.createTable(connectionSource, DataChart.class);
+      TableUtils.createTable(connectionSource, User.class);
+      TableUtils.createTable(connectionSource, FitnessWidget.class);
+      TableUtils.createTable(connectionSource, NutritionWidget.class);
+
+      FitnessWidget fw1 =
+          new FitnessWidget("Distance Traveled", "meters", 0, R.drawable.ic_distance_traveled, 1);
+      FitnessWidget fw2 =
+          new FitnessWidget("Active Calories", "Calories", 0, R.drawable.ic_calories_spent, 2);
+
+      getFitnessWidgetsDAO().create(fw1);
+      getFitnessWidgetsDAO().create(fw2);
+    } catch (SQLException e) {
+      Log.e(DBHelper.class.getName(), "Can't create database", e);
+      throw new RuntimeException(e);
     }
+  }
 
-    @Override
-    public void onCreate(SQLiteDatabase db, ConnectionSource connectionSource) {
-        try {
-            TableUtils.createTable(connectionSource, MealItem.class);
-            TableUtils.createTable(connectionSource, DataChart.class);
-            TableUtils.createTable(connectionSource, User.class);
-            TableUtils.createTable(connectionSource, FitnessWidget.class);
-            TableUtils.createTable(connectionSource, NutritionWidget.class);
+  @Override
+  public void onUpgrade(SQLiteDatabase sqLiteDatabase, ConnectionSource connectionSource, int i,
+      int i1) {
 
-            FitnessWidget fw1 = new FitnessWidget("Distance Traveled", "meters", 0, R.drawable.ic_distance_traveled, 1);
-            FitnessWidget fw2 = new FitnessWidget("Active Calories", "Calories", 0, R.drawable.ic_calories_spent, 2);
+  }
 
-            getFitnessWidgetsDAO().create(fw1);
-            getFitnessWidgetsDAO().create(fw2);
-
-        } catch (SQLException e) {
-            Log.e(DBHelper.class.getName(), "Can't create database", e);
-            throw new RuntimeException(e);
-        }
+  public RuntimeExceptionDao<FitnessWidget, Integer> getFitnessWidgetsDAO() {
+    if (fitnessWidgetsRunTimeDAO == null) {
+      fitnessWidgetsRunTimeDAO = getRuntimeExceptionDao(FitnessWidget.class);
     }
+    return fitnessWidgetsRunTimeDAO;
+  }
 
-    @Override
-    public void onUpgrade(SQLiteDatabase sqLiteDatabase, ConnectionSource connectionSource, int i, int i1) {
-
+  public RuntimeExceptionDao<NutritionWidget, Integer> getNutritionWidgetsDAO() {
+    if (nutritionWidgetsRunTimeDAO == null) {
+      nutritionWidgetsRunTimeDAO = getRuntimeExceptionDao(NutritionWidget.class);
     }
+    return nutritionWidgetsRunTimeDAO;
+  }
 
-    public RuntimeExceptionDao<FitnessWidget, Integer> getFitnessWidgetsDAO() {
-        if (fitnessWidgetsRunTimeDAO == null) {
-            fitnessWidgetsRunTimeDAO = getRuntimeExceptionDao(FitnessWidget.class);
-        }
-        return fitnessWidgetsRunTimeDAO;
+  public RuntimeExceptionDao<DataChart, Integer> getDataChartDAO() {
+    if (dataChartRunTimeDAO == null) {
+      dataChartRunTimeDAO = getRuntimeExceptionDao(DataChart.class);
     }
+    return dataChartRunTimeDAO;
+  }
 
-    public RuntimeExceptionDao<NutritionWidget, Integer> getNutritionWidgetsDAO() {
-        if (nutritionWidgetsRunTimeDAO == null) {
-            nutritionWidgetsRunTimeDAO = getRuntimeExceptionDao(NutritionWidget.class);
-        }
-        return nutritionWidgetsRunTimeDAO;
-    }
-
-    public RuntimeExceptionDao<DataChart, Integer> getDataChartDAO() {
-        if (dataChartRunTimeDAO == null) {
-            dataChartRunTimeDAO = getRuntimeExceptionDao(DataChart.class);
-        }
-        return dataChartRunTimeDAO;
-    }
-
-    @Override
-    public void close() {
-        super.close();
-        mealItemRunTimeDAO = null;
-        dataChartRunTimeDAO = null;
-        userRunTimeDAO = null;
-        nutritionWidgetsRunTimeDAO = null;
-        fitnessWidgetsRunTimeDAO = null;
-    }
+  @Override public void close() {
+    super.close();
+    mealItemRunTimeDAO = null;
+    dataChartRunTimeDAO = null;
+    userRunTimeDAO = null;
+    nutritionWidgetsRunTimeDAO = null;
+    fitnessWidgetsRunTimeDAO = null;
+  }
 }

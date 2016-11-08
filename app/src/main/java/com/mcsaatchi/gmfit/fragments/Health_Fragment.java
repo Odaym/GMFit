@@ -44,145 +44,143 @@ import retrofit2.Response;
 
 public class Health_Fragment extends Fragment {
 
-    private static final String TAG = "Health_Fragment";
-    @Bind(R.id.metricCounterTV)
-    TextView metricCounterTV;
-    @Bind(R.id.widgetsGridView)
-    GridView widgetsGridView;
-    @Bind(R.id.addEntryBTN_MEDICAL_TESTS)
-    TextView addEntryBTN_MEDICAL_TESTS;
-    @Bind(R.id.userTestsListView)
-    RecyclerView userTestsListView;
-    @Bind(R.id.loadingWidgetsProgressBar)
-    ProgressBar loadingWidgetsProgressBar;
-    @Bind(R.id.loadingTestsProgressBar)
-    ProgressBar loadingTestsProgressBar;
+  private static final String TAG = "Health_Fragment";
+  @Bind(R.id.metricCounterTV) TextView metricCounterTV;
+  @Bind(R.id.widgetsGridView) GridView widgetsGridView;
+  @Bind(R.id.addEntryBTN_MEDICAL_TESTS) TextView addEntryBTN_MEDICAL_TESTS;
+  @Bind(R.id.userTestsListView) RecyclerView userTestsListView;
+  @Bind(R.id.loadingWidgetsProgressBar) ProgressBar loadingWidgetsProgressBar;
+  @Bind(R.id.loadingTestsProgressBar) ProgressBar loadingTestsProgressBar;
 
-    private ArrayList<HealthWidget> healthWidgetsMap = new ArrayList<>();
-    private SharedPreferences prefs;
+  private ArrayList<HealthWidget> healthWidgetsMap = new ArrayList<>();
+  private SharedPreferences prefs;
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
+  @Override public void onAttach(Context context) {
+    super.onAttach(context);
 
-        prefs = getActivity().getSharedPreferences(Constants.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
-    }
+    prefs = getActivity().getSharedPreferences(Constants.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
+  }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+  @Override public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+      @Nullable Bundle savedInstanceState) {
 
-        View fragmentView = inflater.inflate(R.layout.fragment_health, container, false);
+    View fragmentView = inflater.inflate(R.layout.fragment_health, container, false);
 
-        ButterKnife.bind(this, fragmentView);
+    ButterKnife.bind(this, fragmentView);
 
-        EventBus_Singleton.getInstance().register(this);
+    EventBus_Singleton.getInstance().register(this);
 
-        setHasOptionsMenu(true);
+    setHasOptionsMenu(true);
 
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.health_tab_title);
+    ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.health_tab_title);
 
-        getWidgets();
+    getWidgets();
 
-        getTakenMedicalTests();
+    getTakenMedicalTests();
 
-        metricCounterTV.setText(String.valueOf((int) prefs.getFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, 0)));
+    metricCounterTV.setText(
+        String.valueOf((int) prefs.getFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, 0)));
 
-        addEntryBTN_MEDICAL_TESTS.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), AddNewHealthTest_Activity.class);
-                startActivity(intent);
-            }
-        });
+    addEntryBTN_MEDICAL_TESTS.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View view) {
+        Intent intent = new Intent(getActivity(), AddNewHealthTest_Activity.class);
+        startActivity(intent);
+      }
+    });
 
-        return fragmentView;
-    }
+    return fragmentView;
+  }
 
-    private void getWidgets() {
-        DataAccessHandler.getInstance().getWidgets(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), "medical", new Callback<WidgetsResponse>() {
-            @Override
-            public void onResponse(Call<WidgetsResponse> call, Response<WidgetsResponse> response) {
-                switch (response.code()) {
-                    case 200:
-                        List<WidgetsResponseDatum> widgetsFromResponse = response.body().getData().getBody().getData();
+  private void getWidgets() {
+    DataAccessHandler.getInstance()
+        .getWidgets(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN,
+            Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), "medical", new Callback<WidgetsResponse>() {
+          @Override
+          public void onResponse(Call<WidgetsResponse> call, Response<WidgetsResponse> response) {
+            switch (response.code()) {
+              case 200:
+                List<WidgetsResponseDatum> widgetsFromResponse =
+                    response.body().getData().getBody().getData();
 
-                        for (int i = 0; i < widgetsFromResponse.size(); i++) {
-                            HealthWidget widget = new HealthWidget();
+                for (int i = 0; i < widgetsFromResponse.size(); i++) {
+                  HealthWidget widget = new HealthWidget();
 
-                            widget.setId(widgetsFromResponse.get(i).getWidgetId());
-                            widget.setMeasurementUnit(widgetsFromResponse.get(i).getUnit());
-                            widget.setPosition(Integer.parseInt(widgetsFromResponse.get(i).getPosition()));
-                            widget.setValue(widgetsFromResponse.get(i).getTotal());
-                            widget.setTitle(widgetsFromResponse.get(i).getName());
-                            widget.setSlug(widgetsFromResponse.get(i).getSlug());
+                  widget.setId(widgetsFromResponse.get(i).getWidgetId());
+                  widget.setMeasurementUnit(widgetsFromResponse.get(i).getUnit());
+                  widget.setPosition(Integer.parseInt(widgetsFromResponse.get(i).getPosition()));
+                  widget.setValue(widgetsFromResponse.get(i).getTotal());
+                  widget.setTitle(widgetsFromResponse.get(i).getName());
+                  widget.setSlug(widgetsFromResponse.get(i).getSlug());
 
-                            healthWidgetsMap.add(widget);
-                        }
-
-                        if (!healthWidgetsMap.isEmpty() && healthWidgetsMap.size() > 4) {
-                            healthWidgetsMap = new ArrayList<>(healthWidgetsMap.subList(0, 4));
-
-                            HealthWidgets_GridAdapter healthWidgetsGridAdapter = new HealthWidgets_GridAdapter(getActivity(), healthWidgetsMap, R.layout.grid_item_health_widgets);
-
-                            widgetsGridView.setAdapter(healthWidgetsGridAdapter);
-
-                            loadingWidgetsProgressBar.setVisibility(View.GONE);
-                        }
-
-                        break;
+                  healthWidgetsMap.add(widget);
                 }
-            }
 
-            @Override
-            public void onFailure(Call<WidgetsResponse> call, Throwable t) {
-                Log.d(TAG, "onFailure: Request failed");
-            }
-        });
-    }
+                if (!healthWidgetsMap.isEmpty() && healthWidgetsMap.size() > 4) {
+                  healthWidgetsMap = new ArrayList<>(healthWidgetsMap.subList(0, 4));
 
-    private void getTakenMedicalTests() {
-        DataAccessHandler.getInstance().getTakenMedicalTests(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), new Callback<TakenMedicalTestsResponse>() {
-            @Override
-            public void onResponse(Call<TakenMedicalTestsResponse> call, Response<TakenMedicalTestsResponse> response) {
-                switch (response.code()) {
-                    case 200:
-                        List<TakenMedicalTestsResponseBody> takenMedicalTests = response.body().getData().getBody();
+                  HealthWidgets_GridAdapter healthWidgetsGridAdapter =
+                      new HealthWidgets_GridAdapter(getActivity(), healthWidgetsMap,
+                          R.layout.grid_item_health_widgets);
 
-                        loadingTestsProgressBar.setVisibility(View.GONE);
+                  widgetsGridView.setAdapter(healthWidgetsGridAdapter);
 
-                        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
-                        UserTestsRecycler_Adapter userTestsRecyclerAdapter = new UserTestsRecycler_Adapter(getActivity(), takenMedicalTests);
-
-                        userTestsListView.setLayoutManager(mLayoutManager);
-                        userTestsListView.setNestedScrollingEnabled(false);
-                        userTestsListView.setAdapter(userTestsRecyclerAdapter);
-                        userTestsListView.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
-
-                        break;
+                  loadingWidgetsProgressBar.setVisibility(View.GONE);
                 }
-            }
 
-            @Override
-            public void onFailure(Call<TakenMedicalTestsResponse> call, Throwable t) {
-
-            }
-        });
-    }
-
-    @Subscribe
-    public void handle_BusEvents(EventBus_Poster ebp) {
-        String ebpMessage = ebp.getMessage();
-
-        switch (ebpMessage) {
-            case Constants.EXTRAS_TEST_EDIT_OR_CREATE_DONE:
-                getTakenMedicalTests();
                 break;
-        }
-    }
+            }
+          }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        EventBus_Singleton.getInstance().unregister(this);
+          @Override public void onFailure(Call<WidgetsResponse> call, Throwable t) {
+            Log.d(TAG, "onFailure: Request failed");
+          }
+        });
+  }
+
+  private void getTakenMedicalTests() {
+    DataAccessHandler.getInstance()
+        .getTakenMedicalTests(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN,
+            Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), new Callback<TakenMedicalTestsResponse>() {
+          @Override public void onResponse(Call<TakenMedicalTestsResponse> call,
+              Response<TakenMedicalTestsResponse> response) {
+            switch (response.code()) {
+              case 200:
+                List<TakenMedicalTestsResponseBody> takenMedicalTests =
+                    response.body().getData().getBody();
+
+                loadingTestsProgressBar.setVisibility(View.GONE);
+
+                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+                UserTestsRecycler_Adapter userTestsRecyclerAdapter =
+                    new UserTestsRecycler_Adapter(getActivity(), takenMedicalTests);
+
+                userTestsListView.setLayoutManager(mLayoutManager);
+                userTestsListView.setNestedScrollingEnabled(false);
+                userTestsListView.setAdapter(userTestsRecyclerAdapter);
+                userTestsListView.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
+
+                break;
+            }
+          }
+
+          @Override public void onFailure(Call<TakenMedicalTestsResponse> call, Throwable t) {
+
+          }
+        });
+  }
+
+  @Subscribe public void handle_BusEvents(EventBus_Poster ebp) {
+    String ebpMessage = ebp.getMessage();
+
+    switch (ebpMessage) {
+      case Constants.EXTRAS_TEST_EDIT_OR_CREATE_DONE:
+        getTakenMedicalTests();
+        break;
     }
+  }
+
+  @Override public void onDestroy() {
+    super.onDestroy();
+    EventBus_Singleton.getInstance().unregister(this);
+  }
 }

@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="gender">
-        <item>Male</item>
-        <item>Female</item>
-    </string-array>
+  <string-array name="gender">
+    <item>Male</item>
+    <item>Female</item>
+  </string-array>
 
-    <string-array name="weight_measurements">
-        <item>kg</item>
-        <item>lb</item>
-    </string-array>
+  <string-array name="weight_measurements">
+    <item>kg</item>
+    <item>lb</item>
+  </string-array>
 
-    <string-array name="height_measurements">
-        <item>cm</item>
-        <item>ft</item>
-    </string-array>
+  <string-array name="height_measurements">
+    <item>cm</item>
+    <item>ft</item>
+  </string-array>
 
-    <string-array name="blood_types">
-        <item>O-</item>
-        <item>O+</item>
-        <item>A-</item>
-        <item>A+</item>
-        <item>B-</item>
-        <item>B+</item>
-        <item>AB-</item>
-        <item>AB+</item>
-    </string-array>
+  <string-array name="blood_types">
+    <item>O-</item>
+    <item>O+</item>
+    <item>A-</item>
+    <item>A+</item>
+    <item>B-</item>
+    <item>B+</item>
+    <item>AB-</item>
+    <item>AB+</item>
+  </string-array>
 </resources>

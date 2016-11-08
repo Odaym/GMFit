@@ -1,24 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:id="@+id/topLayout"
-              xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@drawable/nutrition_background"
-              android:keepScreenOn="true"
-              android:orientation="vertical">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/topLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/nutrition_background"
+    android:keepScreenOn="true"
+    android:orientation="vertical"
+    >
 
-    <include layout="@layout/app_toolbar"/>
+  <include layout="@layout/app_toolbar"/>
 
-    <com.mcsaatchi.gmfit.barcode_reader.CameraSourcePreview
-        android:id="@+id/preview"
+  <com.mcsaatchi.gmfit.barcode_reader.CameraSourcePreview
+      android:id="@+id/preview"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      >
+
+    <com.mcsaatchi.gmfit.barcode_reader.GraphicOverlay
+        android:id="@+id/graphicOverlay"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        />
 
-        <com.mcsaatchi.gmfit.barcode_reader.GraphicOverlay
-            android:id="@+id/graphicOverlay"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-
-    </com.mcsaatchi.gmfit.barcode_reader.CameraSourcePreview>
+  </com.mcsaatchi.gmfit.barcode_reader.CameraSourcePreview>
 
 </LinearLayout>

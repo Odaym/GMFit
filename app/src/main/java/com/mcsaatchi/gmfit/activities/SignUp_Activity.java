@@ -37,156 +37,146 @@ import retrofit2.Response;
 
 public class SignUp_Activity extends Base_Activity {
 
-    @Bind(R.id.emailET)
-    FormEditText emailET;
-    @Bind(R.id.passwordET)
-    FormEditText passwordET;
-    @Bind(R.id.firstNameET)
-    FormEditText firstNameET;
-    @Bind(R.id.lastNameET)
-    FormEditText lastNameET;
-    @Bind(R.id.showPasswordTV)
-    TextView showPasswordTV;
-    @Bind(R.id.createAccountBTN)
-    Button createAccountBTN;
-    @Bind(R.id.creatingAccountTOSTV)
-    TextView creatingAccountTOSTV;
-    @Bind(R.id.toolbar)
-    Toolbar toolbar;
+  @Bind(R.id.emailET) FormEditText emailET;
+  @Bind(R.id.passwordET) FormEditText passwordET;
+  @Bind(R.id.firstNameET) FormEditText firstNameET;
+  @Bind(R.id.lastNameET) FormEditText lastNameET;
+  @Bind(R.id.showPasswordTV) TextView showPasswordTV;
+  @Bind(R.id.createAccountBTN) Button createAccountBTN;
+  @Bind(R.id.creatingAccountTOSTV) TextView creatingAccountTOSTV;
+  @Bind(R.id.toolbar) Toolbar toolbar;
 
-    private boolean passwordShowing = false;
+  private boolean passwordShowing = false;
 
-    private ArrayList<FormEditText> allFields = new ArrayList<>();
+  private ArrayList<FormEditText> allFields = new ArrayList<>();
 
-    private SharedPreferences prefs;
+  private SharedPreferences prefs;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+  @Override protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_sign_up);
+    setContentView(R.layout.activity_sign_up);
 
-        ButterKnife.bind(this);
+    ButterKnife.bind(this);
 
-        setupToolbar(toolbar, R.string.sign_up_activity_title, true);
-        addTopPaddingToolbar(toolbar);
+    setupToolbar(toolbar, R.string.sign_up_activity_title, true);
+    addTopPaddingToolbar(toolbar);
 
-        prefs = getSharedPreferences(Constants.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
+    prefs = getSharedPreferences(Constants.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
 
-        allFields.add(firstNameET);
-        allFields.add(lastNameET);
-        allFields.add(emailET);
-        allFields.add(passwordET);
+    allFields.add(firstNameET);
+    allFields.add(lastNameET);
+    allFields.add(emailET);
+    allFields.add(passwordET);
 
-        passwordET.setTypeface(Typeface.DEFAULT);
+    passwordET.setTypeface(Typeface.DEFAULT);
 
-        createAccountBTN.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (Helpers.validateFields(allFields)) {
-                    registerUser(firstNameET.getText().toString() + " " + lastNameET.getText().toString(), emailET.getText().toString(), passwordET.getText().toString());
-                } else {
-                    showPasswordTV.setVisibility(View.GONE);
-                }
-            }
+    createAccountBTN.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View v) {
+        if (Helpers.validateFields(allFields)) {
+          registerUser(firstNameET.getText().toString() + " " + lastNameET.getText().toString(),
+              emailET.getText().toString(), passwordET.getText().toString());
+        } else {
+          showPasswordTV.setVisibility(View.GONE);
+        }
+      }
+    });
+
+    creatingAccountTOSTV.setText(Html.fromHtml(getString(R.string.creating_account_TOS)));
+    creatingAccountTOSTV.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View view) {
+        startActivity(new Intent(SignUp_Activity.this, TOS_Activity.class));
+      }
+    });
+
+    showPasswordTV.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View view) {
+        if (passwordShowing) {
+          passwordET.setTransformationMethod(new PasswordTransformationMethod());
+          showPasswordTV.setText(R.string.show_password);
+        } else {
+          passwordET.setTransformationMethod(null);
+          showPasswordTV.setText(R.string.hide_password);
+        }
+
+        passwordET.setSelection(passwordET.getText().length());
+
+        passwordShowing = !passwordShowing;
+      }
+    });
+
+    passwordET.addTextChangedListener(new TextWatcher() {
+      @Override public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+      }
+
+      @Override public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        showPasswordTV.setVisibility(View.VISIBLE);
+      }
+
+      @Override public void afterTextChanged(Editable editable) {
+
+      }
+    });
+  }
+
+  private void registerUser(final String full_name, final String email, final String password) {
+    final ProgressDialog waitingDialog = new ProgressDialog(this);
+    waitingDialog.setTitle(getString(R.string.signing_up_dialog_title));
+    waitingDialog.setMessage(getString(R.string.please_wait_dialog_message));
+    waitingDialog.show();
+
+    final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+    alertDialog.setTitle(R.string.signing_up_dialog_title);
+    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
+        new DialogInterface.OnClickListener() {
+          public void onClick(DialogInterface dialog, int which) {
+            dialog.dismiss();
+
+            if (waitingDialog.isShowing()) waitingDialog.dismiss();
+          }
         });
 
-        creatingAccountTOSTV.setText(Html.fromHtml(getString(R.string.creating_account_TOS)));
-        creatingAccountTOSTV.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(SignUp_Activity.this, TOS_Activity.class));
-            }
-        });
+    DataAccessHandler.getInstance()
+        .registerUser(full_name, email, password, new Callback<AuthenticationResponse>() {
+          @Override public void onResponse(Call<AuthenticationResponse> call,
+              Response<AuthenticationResponse> response) {
+            switch (response.code()) {
+              case 200:
+                waitingDialog.dismiss();
 
-        showPasswordTV.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (passwordShowing) {
-                    passwordET.setTransformationMethod(new PasswordTransformationMethod());
-                    showPasswordTV.setText(R.string.show_password);
-                } else {
-                    passwordET.setTransformationMethod(null);
-                    showPasswordTV.setText(R.string.hide_password);
-                }
+                AuthenticationResponseInnerBody responseBody = response.body().getData().getBody();
 
-                passwordET.setSelection(passwordET.getText().length());
+                //Refreshes access token
+                prefs.edit()
+                    .putString(Constants.PREF_USER_ACCESS_TOKEN,
+                        "Bearer " + responseBody.getToken())
+                    .apply();
+                prefs.edit().putString(Constants.EXTRAS_USER_FULL_NAME, full_name).apply();
+                prefs.edit().putString(Constants.EXTRAS_USER_EMAIL, email).apply();
+                prefs.edit().putString(Constants.EXTRAS_USER_PASSWORD, password).apply();
 
-                passwordShowing = !passwordShowing;
-            }
-        });
+                EventBus_Singleton.getInstance()
+                    .post(new EventBus_Poster(
+                        Constants.EVENT_SIGNNED_UP_SUCCESSFULLY_CLOSE_LOGIN_ACTIVITY));
 
-        passwordET.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                Intent intent = new Intent(SignUp_Activity.this, GetStarted_Activity.class);
+                startActivity(intent);
 
-            }
+                finish();
 
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                showPasswordTV.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-            }
-        });
-    }
-
-    private void registerUser(final String full_name, final String email, final String password) {
-        final ProgressDialog waitingDialog = new ProgressDialog(this);
-        waitingDialog.setTitle(getString(R.string.signing_up_dialog_title));
-        waitingDialog.setMessage(getString(R.string.please_wait_dialog_message));
-        waitingDialog.show();
-
-        final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-        alertDialog.setTitle(R.string.signing_up_dialog_title);
-        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-
-                        if (waitingDialog.isShowing())
-                            waitingDialog.dismiss();
-                    }
-                });
-
-        DataAccessHandler.getInstance().registerUser(full_name, email, password, new Callback<AuthenticationResponse>() {
-            @Override
-            public void onResponse(Call<AuthenticationResponse> call, Response<AuthenticationResponse> response) {
-                switch (response.code()) {
-                    case 200:
-                        waitingDialog.dismiss();
-
-                        AuthenticationResponseInnerBody responseBody = response.body().getData().getBody();
-
-                        //Refreshes access token
-                        prefs.edit().putString(Constants.PREF_USER_ACCESS_TOKEN, "Bearer " + responseBody.getToken()).apply();
-                        prefs.edit().putString(Constants.EXTRAS_USER_FULL_NAME, full_name).apply();
-                        prefs.edit().putString(Constants.EXTRAS_USER_EMAIL, email).apply();
-                        prefs.edit().putString(Constants.EXTRAS_USER_PASSWORD, password).apply();
-
-                        EventBus_Singleton.getInstance().post(new EventBus_Poster(Constants.EVENT_SIGNNED_UP_SUCCESSFULLY_CLOSE_LOGIN_ACTIVITY));
-
-                        Intent intent = new Intent(SignUp_Activity.this, GetStarted_Activity.class);
-                        startActivity(intent);
-
-                        finish();
-
-                        break;
-                    case 449:
-                        alertDialog.setMessage(getString(R.string.email_already_taken_api_response));
-                        alertDialog.show();
-                        break;
-                }
-            }
-
-            @Override
-            public void onFailure(Call<AuthenticationResponse> call, Throwable t) {
-                alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
+                break;
+              case 449:
+                alertDialog.setMessage(getString(R.string.email_already_taken_api_response));
                 alertDialog.show();
+                break;
             }
+          }
+
+          @Override public void onFailure(Call<AuthenticationResponse> call, Throwable t) {
+            alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
+            alertDialog.show();
+          }
         });
-    }
+  }
 }

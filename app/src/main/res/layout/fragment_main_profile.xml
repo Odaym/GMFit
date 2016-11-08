@@ -2,515 +2,642 @@
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    >
 
-    <RelativeLayout android:id="@+id/userPictureAndNameLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+  <RelativeLayout
+      android:id="@+id/userPictureAndNameLayout"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      >
 
-        <LinearLayout android:id="@+id/userProfileBasicInfoLayout"
-                      android:layout_width="match_parent"
-                      android:layout_height="@dimen/profile_section_header_height"
-                      android:gravity="center_horizontal"
-                      android:orientation="vertical">
+    <LinearLayout
+        android:id="@+id/userProfileBasicInfoLayout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/profile_section_header_height"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        >
 
-            <RelativeLayout android:layout_width="@dimen/intro_image_dimens"
-                            android:layout_height="@dimen/intro_image_dimens">
+      <RelativeLayout
+          android:layout_width="@dimen/intro_image_dimens"
+          android:layout_height="@dimen/intro_image_dimens"
+          >
 
-                <ImageView android:id="@+id/userProfileIV"
-                           android:layout_width="match_parent"
-                           android:layout_height="match_parent"
-                           android:layout_centerHorizontal="true"
-                           android:layout_centerVertical="true"/>
+        <ImageView
+            android:id="@+id/userProfileIV"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            />
 
-                <ImageView android:id="@+id/takePictureIV"
-                           android:layout_width="25dp"
-                           android:layout_height="25dp"
-                           android:layout_alignParentBottom="true"
-                           android:layout_alignParentEnd="true"
-                           android:src="@drawable/ic_photo_camera_white_24dp"/>
+        <ImageView
+            android:id="@+id/takePictureIV"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:src="@drawable/ic_photo_camera_white_24dp"
+            />
 
-            </RelativeLayout>
-            <TextView
-                android:id="@+id/userFullNameTV"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/default_margin_1"
-                android:layout_marginTop="@dimen/default_margin_2"
-                android:textColor="@color/white"
-                android:textSize="30sp"/>
+      </RelativeLayout>
+      <TextView
+          android:id="@+id/userFullNameTV"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginBottom="@dimen/default_margin_1"
+          android:layout_marginTop="@dimen/default_margin_2"
+          android:textColor="@color/white"
+          android:textSize="30sp"
+          />
 
-            <TextView
-                android:id="@+id/userEmailTV"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/default_margin_1"
-                android:textAppearance="?android:textAppearanceMedium"
-                android:textColor="@color/white"/>
+      <TextView
+          android:id="@+id/userEmailTV"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginBottom="@dimen/default_margin_1"
+          android:textAppearance="?android:textAppearanceMedium"
+          android:textColor="@color/white"
+          />
+    </LinearLayout>
+
+    <!-- BEGINNING OF PROFILE INFORMATION COLLECTION -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/userProfileBasicInfoLayout"
+        android:background="@color/white"
+        android:orientation="vertical"
+        >
+
+      <!-- PROFILE INFORMATION SECTION -->
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:orientation="vertical"
+          >
+
+        <!-- PROFILE INFORMATION TITLE HEADER -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/add_meal_item_layout_height"
+            android:background="@color/profile_blue"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingEnd="@dimen/activity_vertical_margin"
+            android:paddingStart="@dimen/activity_vertical_margin"
+            >
+
+          <TextView
+              android:layout_width="0dp"
+              android:layout_height="wrap_content"
+              android:layout_weight="30"
+              android:text="@string/profile_information_section_title"
+              android:textAppearance="?android:textAppearanceMedium"
+              android:textColor="@android:color/white"
+              />
         </LinearLayout>
 
-        <!-- BEGINNING OF PROFILE INFORMATION COLLECTION -->
-        <LinearLayout android:layout_width="match_parent"
-                      android:layout_height="wrap_content"
-                      android:layout_below="@+id/userProfileBasicInfoLayout"
-                      android:background="@color/white"
-                      android:orientation="vertical">
+        <!-- WEIGHT ENTRY -->
+        <RelativeLayout
+            android:id="@+id/weightLayout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/add_meal_item_layout_height"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:paddingStart="@dimen/activity_vertical_margin"
+            >
 
-            <!-- PROFILE INFORMATION SECTION -->
-            <LinearLayout android:layout_width="match_parent"
-                          android:layout_height="wrap_content"
-                          android:orientation="vertical">
+          <TextView
+              android:id="@+id/weightEntryTitleTV"
+              android:layout_width="@dimen/meal_item_name_width"
+              android:layout_height="match_parent"
+              android:ellipsize="end"
+              android:gravity="center_vertical"
+              android:maxLines="1"
+              android:text="@string/current_weight_entry"
+              />
 
-                <!-- PROFILE INFORMATION TITLE HEADER -->
-                <LinearLayout android:layout_width="match_parent"
-                              android:layout_height="@dimen/add_meal_item_layout_height"
-                              android:background="@color/profile_blue"
-                              android:gravity="center_vertical"
-                              android:orientation="horizontal"
-                              android:paddingEnd="@dimen/activity_vertical_margin"
-                              android:paddingStart="@dimen/activity_vertical_margin">
+          <TextView
+              android:id="@+id/weightEntryValueTV"
+              android:layout_width="@dimen/add_new_chart_list_item_edge_width"
+              android:layout_height="match_parent"
+              android:layout_alignParentEnd="true"
+              android:background="@color/much_lighter_gray"
+              android:gravity="center"
+              android:textColor="@color/fitness_dark_blue"
+              />
+        </RelativeLayout>
 
-                    <TextView android:layout_width="0dp"
-                              android:layout_height="wrap_content"
-                              android:layout_weight="30"
-                              android:text="@string/profile_information_section_title"
-                              android:textAppearance="?android:textAppearanceMedium"
-                              android:textColor="@android:color/white"/>
-                </LinearLayout>
+        <!-- SEPARATOR -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/offwhite_background_gray"
+            />
 
-                <!-- WEIGHT ENTRY -->
-                <RelativeLayout android:id="@+id/weightLayout"
-                                android:layout_width="match_parent"
-                                android:layout_height="@dimen/add_meal_item_layout_height"
-                                android:background="?android:attr/selectableItemBackground"
-                                android:clickable="true"
-                                android:focusable="true"
-                                android:paddingStart="@dimen/activity_vertical_margin">
+        <!-- GOALS ENTRY -->
+        <RelativeLayout
+            android:id="@+id/goalsLayout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/add_meal_item_layout_height"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:paddingStart="@dimen/activity_vertical_margin"
+            >
 
-                    <TextView android:id="@+id/weightEntryTitleTV"
-                              android:layout_width="@dimen/meal_item_name_width"
-                              android:layout_height="match_parent"
-                              android:ellipsize="end"
-                              android:gravity="center_vertical"
-                              android:maxLines="1"
-                              android:text="@string/current_weight_entry"/>
+          <TextView
+              android:id="@+id/goalsEntryTitleTV"
+              android:layout_width="@dimen/meal_item_name_width"
+              android:layout_height="match_parent"
+              android:ellipsize="end"
+              android:gravity="center_vertical"
+              android:maxLines="1"
+              android:text="@string/my_goal_entry"
+              />
 
-                    <TextView android:id="@+id/weightEntryValueTV"
-                              android:layout_width="@dimen/add_new_chart_list_item_edge_width"
-                              android:layout_height="match_parent"
-                              android:layout_alignParentEnd="true"
-                              android:background="@color/much_lighter_gray"
-                              android:gravity="center"
-                              android:textColor="@color/fitness_dark_blue"/>
-                </RelativeLayout>
+          <TextView
+              android:id="@+id/goalsEntryValueTV"
+              android:layout_width="@dimen/add_new_chart_list_item_edge_width"
+              android:layout_height="match_parent"
+              android:layout_alignParentEnd="true"
+              android:background="@color/much_lighter_gray"
+              android:gravity="center"
+              android:textColor="@color/fitness_dark_blue"
+              />
+        </RelativeLayout>
 
-                <!-- SEPARATOR -->
-                <View android:layout_width="match_parent"
-                      android:layout_height="0.5dp"
-                      android:background="@color/offwhite_background_gray"/>
+        <!-- SEPARATOR -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/offwhite_background_gray"
+            />
 
-                <!-- GOALS ENTRY -->
-                <RelativeLayout android:id="@+id/goalsLayout"
-                                android:layout_width="match_parent"
-                                android:layout_height="@dimen/add_meal_item_layout_height"
-                                android:background="?android:attr/selectableItemBackground"
-                                android:clickable="true"
-                                android:focusable="true"
-                                android:paddingStart="@dimen/activity_vertical_margin">
+        <!-- MEDICAL CONDITIONS ENTRY -->
+        <RelativeLayout
+            android:id="@+id/medicalConditionsLayout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/add_meal_item_layout_height"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:paddingStart="@dimen/activity_vertical_margin"
+            >
 
-                    <TextView android:id="@+id/goalsEntryTitleTV"
-                              android:layout_width="@dimen/meal_item_name_width"
-                              android:layout_height="match_parent"
-                              android:ellipsize="end"
-                              android:gravity="center_vertical"
-                              android:maxLines="1"
-                              android:text="@string/my_goal_entry"/>
+          <TextView
+              android:id="@+id/medicalConditionsTitleTV"
+              android:layout_width="@dimen/meal_item_name_width"
+              android:layout_height="match_parent"
+              android:ellipsize="end"
+              android:gravity="center_vertical"
+              android:maxLines="1"
+              android:text="@string/medical_conditions_entry"
+              />
 
-                    <TextView android:id="@+id/goalsEntryValueTV"
-                              android:layout_width="@dimen/add_new_chart_list_item_edge_width"
-                              android:layout_height="match_parent"
-                              android:layout_alignParentEnd="true"
-                              android:background="@color/much_lighter_gray"
-                              android:gravity="center"
-                              android:textColor="@color/fitness_dark_blue"/>
-                </RelativeLayout>
+          <TextView
+              android:id="@+id/medicalConditionsValueTV"
+              android:layout_width="@dimen/add_new_chart_list_item_edge_width"
+              android:layout_height="match_parent"
+              android:layout_alignParentEnd="true"
+              android:background="@color/much_lighter_gray"
+              android:gravity="center"
+              android:textColor="@color/fitness_dark_blue"
+              />
+        </RelativeLayout>
 
-                <!-- SEPARATOR -->
-                <View android:layout_width="match_parent"
-                      android:layout_height="0.5dp"
-                      android:background="@color/offwhite_background_gray"/>
+        <!-- SEPARATOR -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/offwhite_background_gray"
+            />
+      </LinearLayout>
 
-                <!-- MEDICAL CONDITIONS ENTRY -->
-                <RelativeLayout android:id="@+id/medicalConditionsLayout"
-                                android:layout_width="match_parent"
-                                android:layout_height="@dimen/add_meal_item_layout_height"
-                                android:background="?android:attr/selectableItemBackground"
-                                android:clickable="true"
-                                android:focusable="true"
-                                android:paddingStart="@dimen/activity_vertical_margin">
+      <!-- EMERGENCY PROFILE SECTION -->
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="@dimen/default_margin_2"
+          android:orientation="vertical"
+          >
 
-                    <TextView android:id="@+id/medicalConditionsTitleTV"
-                              android:layout_width="@dimen/meal_item_name_width"
-                              android:layout_height="match_parent"
-                              android:ellipsize="end"
-                              android:gravity="center_vertical"
-                              android:maxLines="1"
-                              android:text="@string/medical_conditions_entry"/>
+        <!-- EMERGENCY PROFILE SECTION TITLE -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/add_meal_item_layout_height"
+            android:background="@color/profile_blue"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingEnd="@dimen/activity_vertical_margin"
+            android:paddingStart="@dimen/activity_vertical_margin"
+            >
 
-                    <TextView android:id="@+id/medicalConditionsValueTV"
-                              android:layout_width="@dimen/add_new_chart_list_item_edge_width"
-                              android:layout_height="match_parent"
-                              android:layout_alignParentEnd="true"
-                              android:background="@color/much_lighter_gray"
-                              android:gravity="center"
-                              android:textColor="@color/fitness_dark_blue"/>
-                </RelativeLayout>
-
-                <!-- SEPARATOR -->
-                <View android:layout_width="match_parent"
-                      android:layout_height="0.5dp"
-                      android:background="@color/offwhite_background_gray"/>
-            </LinearLayout>
-
-            <!-- EMERGENCY PROFILE SECTION -->
-            <LinearLayout android:layout_width="match_parent"
-                          android:layout_height="wrap_content"
-                          android:layout_marginTop="@dimen/default_margin_2"
-                          android:orientation="vertical">
-
-                <!-- EMERGENCY PROFILE SECTION TITLE -->
-                <LinearLayout android:layout_width="match_parent"
-                              android:layout_height="@dimen/add_meal_item_layout_height"
-                              android:background="@color/profile_blue"
-                              android:gravity="center_vertical"
-                              android:orientation="horizontal"
-                              android:paddingEnd="@dimen/activity_vertical_margin"
-                              android:paddingStart="@dimen/activity_vertical_margin">
-
-                    <TextView android:layout_width="0dp"
-                              android:layout_height="wrap_content"
-                              android:layout_weight="30"
-                              android:text="@string/emergency_profile_section_title"
-                              android:textAppearance="?android:textAppearanceMedium"
-                              android:textColor="@android:color/white"/>
-                </LinearLayout>
-
-                <!-- EMERGENCY PROFILE SECTION HINT -->
-                <TextView android:layout_width="match_parent"
-                          android:layout_height="wrap_content"
-                          android:layout_marginTop="@dimen/default_margin_2"
-                          android:paddingEnd="@dimen/activity_vertical_margin"
-                          android:paddingStart="@dimen/activity_vertical_margin"
-                          android:text="@string/emergency_profile_section_hint"/>
-
-                <!-- SHARE EMERGENCY PROFILE BUTTON -->
-                <Button
-                    android:id="@+id/shareEmergencyProfileBTN"
-                    style="?android:attr/borderlessButtonStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/default_margin_2"
-                    android:layout_marginEnd="@dimen/default_margin_2"
-                    android:layout_marginStart="@dimen/default_margin_2"
-                    android:layout_marginTop="@dimen/default_margin_3"
-                    android:background="@color/fitness_dark_blue"
-                    android:text="@string/share_emergency_profile_btn"
-                    android:textColor="@android:color/white"/>
-            </LinearLayout>
-
-            <!-- APPLICATION SETTINGS SECTION -->
-            <LinearLayout android:layout_width="match_parent"
-                          android:layout_height="wrap_content"
-                          android:orientation="vertical">
-
-                <!-- APPLICATION SETTINGS SECTION TITLE -->
-                <LinearLayout android:layout_width="match_parent"
-                              android:layout_height="@dimen/add_meal_item_layout_height"
-                              android:background="@color/profile_blue"
-                              android:gravity="center_vertical"
-                              android:orientation="horizontal"
-                              android:paddingEnd="@dimen/activity_vertical_margin"
-                              android:paddingStart="@dimen/activity_vertical_margin">
-
-                    <TextView android:layout_width="0dp"
-                              android:layout_height="wrap_content"
-                              android:layout_weight="30"
-                              android:text="@string/application_settings_section_title"
-                              android:textAppearance="?android:textAppearanceMedium"
-                              android:textColor="@android:color/white"/>
-                </LinearLayout>
-
-                <RelativeLayout android:id="@+id/appRemindersLayout"
-                                android:layout_width="match_parent"
-                                android:layout_height="@dimen/add_meal_item_layout_height"
-                                android:background="?android:attr/selectableItemBackground"
-                                android:clickable="true"
-                                android:focusable="true"
-                                android:paddingStart="@dimen/activity_vertical_margin">
-
-                    <!-- APP REMINDERS ENTRY -->
-                    <TextView android:id="@+id/appRemindersTitleTV"
-                              android:layout_width="@dimen/meal_item_name_width"
-                              android:layout_height="match_parent"
-                              android:ellipsize="end"
-                              android:gravity="center_vertical"
-                              android:maxLines="1"
-                              android:text="@string/set_reminders_entry"/>
-
-                    <TextView android:id="@+id/appRemindersValueTV"
-                              android:layout_width="@dimen/add_new_chart_list_item_edge_width"
-                              android:layout_height="match_parent"
-                              android:layout_alignParentEnd="true"
-                              android:background="@color/much_lighter_gray"
-                              android:gravity="center"
-                              android:text="On"
-                              android:textColor="@color/fitness_dark_blue"/>
-                </RelativeLayout>
-
-                <!-- SEPARATOR -->
-                <View android:layout_width="match_parent"
-                      android:layout_height="0.5dp"
-                      android:background="@color/offwhite_background_gray"/>
-
-                <RelativeLayout android:id="@+id/countryLayout"
-                                android:layout_width="match_parent"
-                                android:layout_height="@dimen/add_meal_item_layout_height"
-                                android:background="?android:attr/selectableItemBackground"
-                                android:clickable="true"
-                                android:focusable="true"
-                                android:paddingStart="@dimen/activity_vertical_margin">
-
-                    <!-- COUNTRY ENTRY -->
-                    <TextView android:id="@+id/countryTitleTV"
-                              android:layout_width="@dimen/meal_item_name_width"
-                              android:layout_height="match_parent"
-                              android:ellipsize="end"
-                              android:gravity="center_vertical"
-                              android:maxLines="1"
-                              android:text="@string/country_entry"/>
-
-                    <TextView android:id="@+id/countryValueTV"
-                              android:layout_width="@dimen/add_new_chart_list_item_edge_width"
-                              android:layout_height="match_parent"
-                              android:layout_alignParentEnd="true"
-                              android:background="@color/much_lighter_gray"
-                              android:gravity="center"
-                              android:text="Lebanon"
-                              android:textColor="@color/fitness_dark_blue"/>
-                </RelativeLayout>
-
-                <!-- SEPARATOR -->
-                <View android:layout_width="match_parent"
-                      android:layout_height="0.5dp"
-                      android:background="@color/offwhite_background_gray"/>
-
-                <RelativeLayout android:id="@+id/metricLayout"
-                                android:layout_width="match_parent"
-                                android:layout_height="@dimen/add_meal_item_layout_height"
-                                android:background="?android:attr/selectableItemBackground"
-                                android:clickable="true"
-                                android:focusable="true"
-                                android:paddingStart="@dimen/activity_vertical_margin">
-
-                    <!-- METRIC SYSTEM ENTRY-->
-                    <TextView android:id="@+id/metricSystemTitleTV"
-                              android:layout_width="@dimen/meal_item_name_width"
-                              android:layout_height="match_parent"
-                              android:ellipsize="end"
-                              android:gravity="center_vertical"
-                              android:maxLines="1"
-                              android:text="@string/units_entry"/>
-
-                    <TextView android:id="@+id/metricSystemValueTV"
-                              android:layout_width="@dimen/add_new_chart_list_item_edge_width"
-                              android:layout_height="match_parent"
-                              android:layout_alignParentEnd="true"
-                              android:background="@color/much_lighter_gray"
-                              android:gravity="center"
-                              android:text="Metric"
-                              android:textColor="@color/fitness_dark_blue"/>
-                </RelativeLayout>
-
-                <!-- SEPARATOR -->
-                <View android:layout_width="match_parent"
-                      android:layout_height="0.5dp"
-                      android:background="@color/offwhite_background_gray"/>
-
-            </LinearLayout>
-
-            <!-- ABOUT APP SECTION -->
-            <LinearLayout android:layout_width="match_parent"
-                          android:layout_height="wrap_content"
-                          android:layout_marginTop="@dimen/default_margin_2"
-                          android:orientation="vertical">
-
-                <!-- ABOUT APP SECTION TITLE -->
-                <LinearLayout android:layout_width="match_parent"
-                              android:layout_height="@dimen/add_meal_item_layout_height"
-                              android:background="@color/profile_blue"
-                              android:gravity="center_vertical"
-                              android:orientation="horizontal"
-                              android:paddingEnd="@dimen/activity_vertical_margin"
-                              android:paddingStart="@dimen/activity_vertical_margin">
-
-                    <TextView android:layout_width="0dp"
-                              android:layout_height="wrap_content"
-                              android:layout_weight="30"
-                              android:text="@string/about_app_section_title"
-                              android:textAppearance="?android:textAppearanceMedium"
-                              android:textColor="@android:color/white"/>
-                </LinearLayout>
-
-                <RelativeLayout android:layout_width="match_parent"
-                                android:layout_height="@dimen/add_meal_item_layout_height"
-                                android:background="?android:attr/selectableItemBackground"
-                                android:clickable="true"
-                                android:focusable="true"
-                                android:paddingStart="@dimen/activity_vertical_margin">
-
-                    <!-- TERMS AND CONDITIONS ENTRY -->
-                    <TextView android:id="@+id/termsConditionsTitleTV"
-                              android:layout_width="@dimen/meal_item_name_width"
-                              android:layout_height="match_parent"
-                              android:ellipsize="end"
-                              android:gravity="center_vertical"
-                              android:maxLines="1"
-                              android:text="@string/terms_and_conditions_entry"/>
-
-                    <LinearLayout
-                        android:layout_width="@dimen/add_new_chart_list_item_edge_width"
-                        android:layout_height="match_parent"
-                        android:layout_alignParentEnd="true"
-                        android:background="@color/much_lighter_gray"
-                        android:gravity="center">
-
-                        <ImageView android:layout_width="15dp"
-                                   android:layout_height="15dp"
-                                   android:src="@drawable/ic_medical_tests_item_arrow"/>
-                    </LinearLayout>
-                </RelativeLayout>
-
-                <!-- SEPARATOR -->
-                <View android:layout_width="match_parent"
-                      android:layout_height="0.5dp"
-                      android:background="@color/offwhite_background_gray"/>
-
-                <RelativeLayout android:layout_width="match_parent"
-                                android:layout_height="@dimen/add_meal_item_layout_height"
-                                android:background="?android:attr/selectableItemBackground"
-                                android:clickable="true"
-                                android:focusable="true"
-                                android:paddingStart="@dimen/activity_vertical_margin">
-
-                    <!-- PRIVACY AND SECURITY ENTRY -->
-                    <TextView android:id="@+id/privacySecurityTitleTV"
-                              android:layout_width="@dimen/meal_item_name_width"
-                              android:layout_height="match_parent"
-                              android:ellipsize="end"
-                              android:gravity="center_vertical"
-                              android:maxLines="1"
-                              android:text="@string/privacy_and_security_entry"/>
-
-                    <LinearLayout
-                        android:layout_width="@dimen/add_new_chart_list_item_edge_width"
-                        android:layout_height="match_parent"
-                        android:layout_alignParentEnd="true"
-                        android:background="@color/much_lighter_gray"
-                        android:gravity="center">
-
-                        <ImageView android:layout_width="15dp"
-                                   android:layout_height="15dp"
-                                   android:src="@drawable/ic_medical_tests_item_arrow"/>
-                    </LinearLayout>
-                </RelativeLayout>
-
-                <!-- SEPARATOR -->
-                <View android:layout_width="match_parent"
-                      android:layout_height="0.5dp"
-                      android:background="@color/offwhite_background_gray"/>
-
-                <RelativeLayout android:layout_width="match_parent"
-                                android:layout_height="@dimen/add_meal_item_layout_height"
-                                android:background="?android:attr/selectableItemBackground"
-                                android:clickable="true"
-                                android:focusable="true"
-                                android:paddingStart="@dimen/activity_vertical_margin">
-
-                    <!-- CONTACT US ENTRY -->
-                    <TextView android:id="@+id/contactUsTitleTV"
-                              android:layout_width="@dimen/meal_item_name_width"
-                              android:layout_height="match_parent"
-                              android:ellipsize="end"
-                              android:gravity="center_vertical"
-                              android:maxLines="1"
-                              android:text="@string/contact_us_entry"/>
-
-                    <LinearLayout
-                        android:layout_width="@dimen/add_new_chart_list_item_edge_width"
-                        android:layout_height="match_parent"
-                        android:layout_alignParentEnd="true"
-                        android:background="@color/much_lighter_gray"
-                        android:gravity="center">
-
-                        <ImageView android:layout_width="15dp"
-                                   android:layout_height="15dp"
-                                   android:src="@drawable/ic_medical_tests_item_arrow"/>
-                    </LinearLayout>
-                </RelativeLayout>
-
-                <!-- SEPARATOR -->
-                <View android:layout_width="match_parent"
-                      android:layout_height="0.5dp"
-                      android:background="@color/offwhite_background_gray"/>
-
-                <RelativeLayout android:layout_width="match_parent"
-                                android:layout_height="@dimen/add_meal_item_layout_height"
-                                android:background="?android:attr/selectableItemBackground"
-                                android:clickable="true"
-                                android:focusable="true"
-                                android:paddingStart="@dimen/activity_vertical_margin">
-
-                    <!-- SHARE THE APP ENTRY -->
-                    <TextView android:id="@+id/shareTheAppTitleTV"
-                              android:layout_width="@dimen/meal_item_name_width"
-                              android:layout_height="match_parent"
-                              android:ellipsize="end"
-                              android:gravity="center_vertical"
-                              android:maxLines="1"
-                              android:text="@string/share_the_app_entry"/>
-
-                    <LinearLayout
-                        android:layout_width="@dimen/add_new_chart_list_item_edge_width"
-                        android:layout_height="match_parent"
-                        android:layout_alignParentEnd="true"
-                        android:background="@color/much_lighter_gray"
-                        android:gravity="center">
-
-                        <ImageView android:layout_width="15dp"
-                                   android:layout_height="15dp"
-                                   android:src="@drawable/ic_medical_tests_item_arrow"/>
-                    </LinearLayout>
-                </RelativeLayout>
-
-                <!-- SEPARATOR -->
-                <View android:layout_width="match_parent"
-                      android:layout_height="0.5dp"
-                      android:background="@color/offwhite_background_gray"/>
-            </LinearLayout>
-
-            <Button
-                android:id="@+id/logoutBTN"
-                style="?android:attr/borderlessButtonStyle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/default_margin_2"
-                android:layout_marginEnd="@dimen/default_margin_2"
-                android:layout_marginStart="@dimen/default_margin_2"
-                android:layout_marginTop="@dimen/default_margin_3"
-                android:background="@color/fitness_dark_blue"
-                android:text="@string/log_out_button"
-                android:textColor="@android:color/white"/>
-
+          <TextView
+              android:layout_width="0dp"
+              android:layout_height="wrap_content"
+              android:layout_weight="30"
+              android:text="@string/emergency_profile_section_title"
+              android:textAppearance="?android:textAppearanceMedium"
+              android:textColor="@android:color/white"
+              />
         </LinearLayout>
-    </RelativeLayout>
+
+        <!-- EMERGENCY PROFILE SECTION HINT -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/default_margin_2"
+            android:paddingEnd="@dimen/activity_vertical_margin"
+            android:paddingStart="@dimen/activity_vertical_margin"
+            android:text="@string/emergency_profile_section_hint"
+            />
+
+        <!-- SHARE EMERGENCY PROFILE BUTTON -->
+        <Button
+            android:id="@+id/shareEmergencyProfileBTN"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/default_margin_2"
+            android:layout_marginEnd="@dimen/default_margin_2"
+            android:layout_marginStart="@dimen/default_margin_2"
+            android:layout_marginTop="@dimen/default_margin_3"
+            android:background="@color/fitness_dark_blue"
+            android:text="@string/share_emergency_profile_btn"
+            android:textColor="@android:color/white"
+            style="?android:attr/borderlessButtonStyle"
+            />
+      </LinearLayout>
+
+      <!-- APPLICATION SETTINGS SECTION -->
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:orientation="vertical"
+          >
+
+        <!-- APPLICATION SETTINGS SECTION TITLE -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/add_meal_item_layout_height"
+            android:background="@color/profile_blue"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingEnd="@dimen/activity_vertical_margin"
+            android:paddingStart="@dimen/activity_vertical_margin"
+            >
+
+          <TextView
+              android:layout_width="0dp"
+              android:layout_height="wrap_content"
+              android:layout_weight="30"
+              android:text="@string/application_settings_section_title"
+              android:textAppearance="?android:textAppearanceMedium"
+              android:textColor="@android:color/white"
+              />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/appRemindersLayout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/add_meal_item_layout_height"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:paddingStart="@dimen/activity_vertical_margin"
+            >
+
+          <!-- APP REMINDERS ENTRY -->
+          <TextView
+              android:id="@+id/appRemindersTitleTV"
+              android:layout_width="@dimen/meal_item_name_width"
+              android:layout_height="match_parent"
+              android:ellipsize="end"
+              android:gravity="center_vertical"
+              android:maxLines="1"
+              android:text="@string/set_reminders_entry"
+              />
+
+          <TextView
+              android:id="@+id/appRemindersValueTV"
+              android:layout_width="@dimen/add_new_chart_list_item_edge_width"
+              android:layout_height="match_parent"
+              android:layout_alignParentEnd="true"
+              android:background="@color/much_lighter_gray"
+              android:gravity="center"
+              android:text="On"
+              android:textColor="@color/fitness_dark_blue"
+              />
+        </RelativeLayout>
+
+        <!-- SEPARATOR -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/offwhite_background_gray"
+            />
+
+        <RelativeLayout
+            android:id="@+id/countryLayout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/add_meal_item_layout_height"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:paddingStart="@dimen/activity_vertical_margin"
+            >
+
+          <!-- COUNTRY ENTRY -->
+          <TextView
+              android:id="@+id/countryTitleTV"
+              android:layout_width="@dimen/meal_item_name_width"
+              android:layout_height="match_parent"
+              android:ellipsize="end"
+              android:gravity="center_vertical"
+              android:maxLines="1"
+              android:text="@string/country_entry"
+              />
+
+          <TextView
+              android:id="@+id/countryValueTV"
+              android:layout_width="@dimen/add_new_chart_list_item_edge_width"
+              android:layout_height="match_parent"
+              android:layout_alignParentEnd="true"
+              android:background="@color/much_lighter_gray"
+              android:gravity="center"
+              android:text="Lebanon"
+              android:textColor="@color/fitness_dark_blue"
+              />
+        </RelativeLayout>
+
+        <!-- SEPARATOR -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/offwhite_background_gray"
+            />
+
+        <RelativeLayout
+            android:id="@+id/metricLayout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/add_meal_item_layout_height"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:paddingStart="@dimen/activity_vertical_margin"
+            >
+
+          <!-- METRIC SYSTEM ENTRY-->
+          <TextView
+              android:id="@+id/metricSystemTitleTV"
+              android:layout_width="@dimen/meal_item_name_width"
+              android:layout_height="match_parent"
+              android:ellipsize="end"
+              android:gravity="center_vertical"
+              android:maxLines="1"
+              android:text="@string/units_entry"
+              />
+
+          <TextView
+              android:id="@+id/metricSystemValueTV"
+              android:layout_width="@dimen/add_new_chart_list_item_edge_width"
+              android:layout_height="match_parent"
+              android:layout_alignParentEnd="true"
+              android:background="@color/much_lighter_gray"
+              android:gravity="center"
+              android:text="Metric"
+              android:textColor="@color/fitness_dark_blue"
+              />
+        </RelativeLayout>
+
+        <!-- SEPARATOR -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/offwhite_background_gray"
+            />
+
+      </LinearLayout>
+
+      <!-- ABOUT APP SECTION -->
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="@dimen/default_margin_2"
+          android:orientation="vertical"
+          >
+
+        <!-- ABOUT APP SECTION TITLE -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/add_meal_item_layout_height"
+            android:background="@color/profile_blue"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingEnd="@dimen/activity_vertical_margin"
+            android:paddingStart="@dimen/activity_vertical_margin"
+            >
+
+          <TextView
+              android:layout_width="0dp"
+              android:layout_height="wrap_content"
+              android:layout_weight="30"
+              android:text="@string/about_app_section_title"
+              android:textAppearance="?android:textAppearanceMedium"
+              android:textColor="@android:color/white"
+              />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/add_meal_item_layout_height"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:paddingStart="@dimen/activity_vertical_margin"
+            >
+
+          <!-- TERMS AND CONDITIONS ENTRY -->
+          <TextView
+              android:id="@+id/termsConditionsTitleTV"
+              android:layout_width="@dimen/meal_item_name_width"
+              android:layout_height="match_parent"
+              android:ellipsize="end"
+              android:gravity="center_vertical"
+              android:maxLines="1"
+              android:text="@string/terms_and_conditions_entry"
+              />
+
+          <LinearLayout
+              android:layout_width="@dimen/add_new_chart_list_item_edge_width"
+              android:layout_height="match_parent"
+              android:layout_alignParentEnd="true"
+              android:background="@color/much_lighter_gray"
+              android:gravity="center"
+              >
+
+            <ImageView
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:src="@drawable/ic_medical_tests_item_arrow"
+                />
+          </LinearLayout>
+        </RelativeLayout>
+
+        <!-- SEPARATOR -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/offwhite_background_gray"
+            />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/add_meal_item_layout_height"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:paddingStart="@dimen/activity_vertical_margin"
+            >
+
+          <!-- PRIVACY AND SECURITY ENTRY -->
+          <TextView
+              android:id="@+id/privacySecurityTitleTV"
+              android:layout_width="@dimen/meal_item_name_width"
+              android:layout_height="match_parent"
+              android:ellipsize="end"
+              android:gravity="center_vertical"
+              android:maxLines="1"
+              android:text="@string/privacy_and_security_entry"
+              />
+
+          <LinearLayout
+              android:layout_width="@dimen/add_new_chart_list_item_edge_width"
+              android:layout_height="match_parent"
+              android:layout_alignParentEnd="true"
+              android:background="@color/much_lighter_gray"
+              android:gravity="center"
+              >
+
+            <ImageView
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:src="@drawable/ic_medical_tests_item_arrow"
+                />
+          </LinearLayout>
+        </RelativeLayout>
+
+        <!-- SEPARATOR -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/offwhite_background_gray"
+            />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/add_meal_item_layout_height"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:paddingStart="@dimen/activity_vertical_margin"
+            >
+
+          <!-- CONTACT US ENTRY -->
+          <TextView
+              android:id="@+id/contactUsTitleTV"
+              android:layout_width="@dimen/meal_item_name_width"
+              android:layout_height="match_parent"
+              android:ellipsize="end"
+              android:gravity="center_vertical"
+              android:maxLines="1"
+              android:text="@string/contact_us_entry"
+              />
+
+          <LinearLayout
+              android:layout_width="@dimen/add_new_chart_list_item_edge_width"
+              android:layout_height="match_parent"
+              android:layout_alignParentEnd="true"
+              android:background="@color/much_lighter_gray"
+              android:gravity="center"
+              >
+
+            <ImageView
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:src="@drawable/ic_medical_tests_item_arrow"
+                />
+          </LinearLayout>
+        </RelativeLayout>
+
+        <!-- SEPARATOR -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/offwhite_background_gray"
+            />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/add_meal_item_layout_height"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:paddingStart="@dimen/activity_vertical_margin"
+            >
+
+          <!-- SHARE THE APP ENTRY -->
+          <TextView
+              android:id="@+id/shareTheAppTitleTV"
+              android:layout_width="@dimen/meal_item_name_width"
+              android:layout_height="match_parent"
+              android:ellipsize="end"
+              android:gravity="center_vertical"
+              android:maxLines="1"
+              android:text="@string/share_the_app_entry"
+              />
+
+          <LinearLayout
+              android:layout_width="@dimen/add_new_chart_list_item_edge_width"
+              android:layout_height="match_parent"
+              android:layout_alignParentEnd="true"
+              android:background="@color/much_lighter_gray"
+              android:gravity="center"
+              >
+
+            <ImageView
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:src="@drawable/ic_medical_tests_item_arrow"
+                />
+          </LinearLayout>
+        </RelativeLayout>
+
+        <!-- SEPARATOR -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/offwhite_background_gray"
+            />
+      </LinearLayout>
+
+      <Button
+          android:id="@+id/logoutBTN"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginBottom="@dimen/default_margin_2"
+          android:layout_marginEnd="@dimen/default_margin_2"
+          android:layout_marginStart="@dimen/default_margin_2"
+          android:layout_marginTop="@dimen/default_margin_3"
+          android:background="@color/fitness_dark_blue"
+          android:text="@string/log_out_button"
+          android:textColor="@android:color/white"
+          style="?android:attr/borderlessButtonStyle"
+          />
+
+    </LinearLayout>
+  </RelativeLayout>
 </ScrollView>

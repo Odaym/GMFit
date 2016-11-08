@@ -7,11 +7,10 @@ import android.util.Log;
 
 public class BootReceiver extends BroadcastReceiver {
 
-    @Override
-    public void onReceive(final Context context, final Intent intent) {
+  @Override public void onReceive(final Context context, final Intent intent) {
 
-        Log.d("TAGTAG", "DEVICE IS BOOTING!");
+    Log.d("TAGTAG", "DEVICE IS BOOTING!");
 
-        context.startService(new Intent(context, SensorListener.class));
-    }
+    context.startService(new Intent(context, SensorListener.class));
+  }
 }

@@ -14,61 +14,61 @@ import com.mcsaatchi.gmfit.models.NutritionWidget;
 import java.util.ArrayList;
 
 public class NutritionWidgets_GridAdapter extends BaseAdapter {
-    private Context context;
-    private ArrayList<NutritionWidget> widgetsMap;
-    private int layoutResourceId;
+  private Context context;
+  private ArrayList<NutritionWidget> widgetsMap;
+  private int layoutResourceId;
 
-    public NutritionWidgets_GridAdapter(Context context, ArrayList<NutritionWidget> widgetsMap, int layoutResourceId) {
-        this.context = context;
-        this.widgetsMap = widgetsMap;
-        this.layoutResourceId = layoutResourceId;
+  public NutritionWidgets_GridAdapter(Context context, ArrayList<NutritionWidget> widgetsMap,
+      int layoutResourceId) {
+    this.context = context;
+    this.widgetsMap = widgetsMap;
+    this.layoutResourceId = layoutResourceId;
+  }
+
+  public int getCount() {
+    return widgetsMap.size();
+  }
+
+  public NutritionWidget getItem(int position) {
+    return widgetsMap.get(position);
+  }
+
+  public long getItemId(int position) {
+    return 0;
+  }
+
+  public View getView(int position, View convertView, ViewGroup parent) {
+    ViewHolder holder;
+
+    if (convertView == null) {
+      LayoutInflater inflater =
+          (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+      convertView = inflater.inflate(layoutResourceId, parent, false);
+
+      holder = new ViewHolder();
+
+      holder.metricTV = (FontTextView) convertView.findViewById(R.id.metricTV);
+      holder.metricPercentageTV = (TextView) convertView.findViewById(R.id.metricPercentageTV);
+      holder.measurementUnitTV = (TextView) convertView.findViewById(R.id.measurementUnitTV);
+      holder.metricTitleTV = (FontTextView) convertView.findViewById(R.id.metricTitleTV);
+
+      convertView.setTag(holder);
+    } else {
+      holder = (ViewHolder) convertView.getTag();
     }
 
-    public int getCount() {
-        return widgetsMap.size();
-    }
+    holder.metricTitleTV.setText((widgetsMap.get(position)).getTitle());
+    holder.metricTV.setText(String.valueOf((int) widgetsMap.get(position).getValue()));
+    holder.metricPercentageTV.setText("(" + (widgetsMap.get(position)).getPercentage() + "%)");
+    holder.measurementUnitTV.setText((widgetsMap.get(position)).getMeasurementUnit());
 
-    public NutritionWidget getItem(int position) {
-        return widgetsMap.get(position);
-    }
+    return convertView;
+  }
 
-    public long getItemId(int position) {
-        return 0;
-    }
-
-    public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder;
-
-        if (convertView == null) {
-            LayoutInflater inflater = (LayoutInflater) context
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(layoutResourceId, parent,
-                    false);
-
-            holder = new ViewHolder();
-
-            holder.metricTV = (FontTextView) convertView.findViewById(R.id.metricTV);
-            holder.metricPercentageTV = (TextView) convertView.findViewById(R.id.metricPercentageTV);
-            holder.measurementUnitTV = (TextView) convertView.findViewById(R.id.measurementUnitTV);
-            holder.metricTitleTV = (FontTextView) convertView.findViewById(R.id.metricTitleTV);
-
-            convertView.setTag(holder);
-        } else {
-            holder = (ViewHolder) convertView.getTag();
-        }
-
-        holder.metricTitleTV.setText((widgetsMap.get(position)).getTitle());
-        holder.metricTV.setText(String.valueOf((int) widgetsMap.get(position).getValue()));
-        holder.metricPercentageTV.setText("(" + (widgetsMap.get(position)).getPercentage() + "%)");
-        holder.measurementUnitTV.setText((widgetsMap.get(position)).getMeasurementUnit());
-
-        return convertView;
-    }
-
-    class ViewHolder {
-        FontTextView metricTV;
-        TextView measurementUnitTV;
-        TextView metricPercentageTV;
-        FontTextView metricTitleTV;
-    }
+  class ViewHolder {
+    FontTextView metricTV;
+    TextView measurementUnitTV;
+    TextView metricPercentageTV;
+    FontTextView metricTitleTV;
+  }
 }

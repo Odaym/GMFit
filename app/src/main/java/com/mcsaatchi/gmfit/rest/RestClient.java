@@ -9,29 +9,28 @@ import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RestClient {
-    private static final String TAG = "CachingRestClient";
-    private GMFit_Service apiService;
+  private static final String TAG = "CachingRestClient";
+  private GMFit_Service apiService;
 
-    public RestClient() {
+  public RestClient() {
 
-        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
-        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+    HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
+    loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
-        OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+    OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
 
-        httpClient.addInterceptor(loggingInterceptor);
+    httpClient.addInterceptor(loggingInterceptor);
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Constants.BASE_URL_ADDRESS)
-                .client(httpClient.build())
-                .addConverterFactory(GsonConverterFactory.create())
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                .build();
+    Retrofit retrofit = new Retrofit.Builder().baseUrl(Constants.BASE_URL_ADDRESS)
+        .client(httpClient.build())
+        .addConverterFactory(GsonConverterFactory.create())
+        .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+        .build();
 
-        apiService = retrofit.create(GMFit_Service.class);
-    }
+    apiService = retrofit.create(GMFit_Service.class);
+  }
 
-    public GMFit_Service getGMFitService() {
-        return apiService;
-    }
+  public GMFit_Service getGMFitService() {
+    return apiService;
+  }
 }

@@ -24,121 +24,122 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class CustomizeWidgetsAndCharts_Activity extends Base_Activity {
-    @Bind(R.id.pager)
-    ViewPager pager;
-    @Bind(R.id.tabs)
-    SlidingTabLayout tabs;
-    @Bind(R.id.toolbar)
-    Toolbar toolbar;
-    @Bind(R.id.mainLayoutTop)
-    LinearLayout mainLayoutTop;
+  @Bind(R.id.pager) ViewPager pager;
+  @Bind(R.id.tabs) SlidingTabLayout tabs;
+  @Bind(R.id.toolbar) Toolbar toolbar;
+  @Bind(R.id.mainLayoutTop) LinearLayout mainLayoutTop;
 
-    private CustomizerViewPager_Adapter fragmentsPagerAdapter;
+  private CustomizerViewPager_Adapter fragmentsPagerAdapter;
 
-    private String typeOfFragmentToCustomiseFor;
+  private String typeOfFragmentToCustomiseFor;
 
-    private ArrayList<FitnessWidget> fitnessWidgetsMapExtra;
-    private ArrayList<NutritionWidget> nutritionWidgetsMapExtra;
-    private ArrayList<DataChart> dataChartsMapExtra;
+  private ArrayList<FitnessWidget> fitnessWidgetsMapExtra;
+  private ArrayList<NutritionWidget> nutritionWidgetsMapExtra;
+  private ArrayList<DataChart> dataChartsMapExtra;
 
-    private String[] tabTitles = new String[]{
-            "Widgets", "Charts"
-    };
+  private String[] tabTitles = new String[] {
+      "Widgets", "Charts"
+  };
 
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+  @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_customize_widgets_and_charts);
+    setContentView(R.layout.activity_customize_widgets_and_charts);
 
-        ButterKnife.bind(this);
+    ButterKnife.bind(this);
 
-        setupToolbar(toolbar, R.string.customize_widgets_and_charts_activity_title, true);
+    setupToolbar(toolbar, R.string.customize_widgets_and_charts_activity_title, true);
 
-        Bundle intentExtras = getIntent().getExtras();
+    Bundle intentExtras = getIntent().getExtras();
 
-        //Grab the Fragment type from one of the three Fragments (Fitness, Nutrition, Health)
-        if (intentExtras != null) {
-            typeOfFragmentToCustomiseFor = intentExtras.getString(Constants.EXTRAS_FRAGMENT_TYPE);
+    //Grab the Fragment type from one of the three Fragments (Fitness, Nutrition, Health)
+    if (intentExtras != null) {
+      typeOfFragmentToCustomiseFor = intentExtras.getString(Constants.EXTRAS_FRAGMENT_TYPE);
 
-            if (typeOfFragmentToCustomiseFor != null) {
-                switch (typeOfFragmentToCustomiseFor) {
-                    case Constants.EXTRAS_FITNESS_FRAGMENT:
-                        fitnessWidgetsMapExtra = intentExtras.getParcelableArrayList(Constants.BUNDLE_FITNESS_WIDGETS_MAP);
-                        dataChartsMapExtra = intentExtras.getParcelableArrayList(Constants.BUNDLE_FITNESS_CHARTS_MAP);
-                        mainLayoutTop.setBackground(getResources().getDrawable(R.drawable.fitness_background));
-                        break;
-                    case Constants.EXTRAS_NUTRITION_FRAGMENT:
-                        dataChartsMapExtra = intentExtras.getParcelableArrayList(Constants.BUNDLE_NUTRITION_CHARTS_MAP);
-                        nutritionWidgetsMapExtra = intentExtras.getParcelableArrayList(Constants.BUNDLE_NUTRITION_WIDGETS_MAP);
-                        mainLayoutTop.setBackground(getResources().getDrawable(R.drawable.nutrition_background));
-                        break;
-                }
-            }
+      if (typeOfFragmentToCustomiseFor != null) {
+        switch (typeOfFragmentToCustomiseFor) {
+          case Constants.EXTRAS_FITNESS_FRAGMENT:
+            fitnessWidgetsMapExtra =
+                intentExtras.getParcelableArrayList(Constants.BUNDLE_FITNESS_WIDGETS_MAP);
+            dataChartsMapExtra =
+                intentExtras.getParcelableArrayList(Constants.BUNDLE_FITNESS_CHARTS_MAP);
+            mainLayoutTop.setBackground(getResources().getDrawable(R.drawable.fitness_background));
+            break;
+          case Constants.EXTRAS_NUTRITION_FRAGMENT:
+            dataChartsMapExtra =
+                intentExtras.getParcelableArrayList(Constants.BUNDLE_NUTRITION_CHARTS_MAP);
+            nutritionWidgetsMapExtra =
+                intentExtras.getParcelableArrayList(Constants.BUNDLE_NUTRITION_WIDGETS_MAP);
+            mainLayoutTop.setBackground(
+                getResources().getDrawable(R.drawable.nutrition_background));
+            break;
         }
-
-        fragmentsPagerAdapter = new CustomizerViewPager_Adapter(getSupportFragmentManager(), tabTitles);
-
-        tabs.setDistributeEvenly(true);
-        tabs.setSelectedIndicatorColors(getResources().getColor(android.R.color.white));
-
-        pager.setAdapter(fragmentsPagerAdapter);
-        pager.setCurrentItem(0);
-
-        tabs.setViewPager(pager);
+      }
     }
 
-    public class CustomizerViewPager_Adapter extends FragmentStatePagerAdapter {
+    fragmentsPagerAdapter = new CustomizerViewPager_Adapter(getSupportFragmentManager(), tabTitles);
 
-        private String[] tabTitles;
+    tabs.setDistributeEvenly(true);
+    tabs.setSelectedIndicatorColors(getResources().getColor(android.R.color.white));
 
-        public CustomizerViewPager_Adapter(FragmentManager fm, String[] tabTitles) {
-            super(fm);
+    pager.setAdapter(fragmentsPagerAdapter);
+    pager.setCurrentItem(0);
 
-            this.tabTitles = tabTitles;
-        }
+    tabs.setViewPager(pager);
+  }
 
-        @Override
-        public Fragment getItem(int position) {
-            Bundle fragmentArguments = new Bundle();
+  public class CustomizerViewPager_Adapter extends FragmentStatePagerAdapter {
 
-            fragmentArguments.putString(Constants.EXTRAS_FRAGMENT_TYPE, typeOfFragmentToCustomiseFor);
+    private String[] tabTitles;
 
-            if (typeOfFragmentToCustomiseFor != null) {
-                switch (typeOfFragmentToCustomiseFor) {
-                    case Constants.EXTRAS_FITNESS_FRAGMENT:
-                        fragmentArguments.putParcelableArrayList(Constants.BUNDLE_FITNESS_WIDGETS_MAP, fitnessWidgetsMapExtra);
-                        fragmentArguments.putParcelableArrayList(Constants.BUNDLE_FITNESS_CHARTS_MAP, dataChartsMapExtra);
-                        break;
-                    case Constants.EXTRAS_NUTRITION_FRAGMENT:
-                        fragmentArguments.putParcelableArrayList(Constants.BUNDLE_NUTRITION_WIDGETS_MAP, nutritionWidgetsMapExtra);
-                        fragmentArguments.putParcelableArrayList(Constants.BUNDLE_NUTRITION_CHARTS_MAP, dataChartsMapExtra);
-                        break;
-                }
-            }
+    public CustomizerViewPager_Adapter(FragmentManager fm, String[] tabTitles) {
+      super(fm);
 
-            switch (position) {
-                case 0:
-                    Fragment customizeWidgetFragment = new CustomizeWidgets_Fragment();
-                    customizeWidgetFragment.setArguments(fragmentArguments);
-                    return customizeWidgetFragment;
-                case 1:
-                    Fragment customizeChartsFragment = new CustomizeCharts_Fragment();
-                    customizeChartsFragment.setArguments(fragmentArguments);
-                    return customizeChartsFragment;
-            }
-
-            return null;
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return tabTitles[position];
-        }
-
-        @Override
-        public int getCount() {
-            return tabTitles.length;
-        }
+      this.tabTitles = tabTitles;
     }
+
+    @Override public Fragment getItem(int position) {
+      Bundle fragmentArguments = new Bundle();
+
+      fragmentArguments.putString(Constants.EXTRAS_FRAGMENT_TYPE, typeOfFragmentToCustomiseFor);
+
+      if (typeOfFragmentToCustomiseFor != null) {
+        switch (typeOfFragmentToCustomiseFor) {
+          case Constants.EXTRAS_FITNESS_FRAGMENT:
+            fragmentArguments.putParcelableArrayList(Constants.BUNDLE_FITNESS_WIDGETS_MAP,
+                fitnessWidgetsMapExtra);
+            fragmentArguments.putParcelableArrayList(Constants.BUNDLE_FITNESS_CHARTS_MAP,
+                dataChartsMapExtra);
+            break;
+          case Constants.EXTRAS_NUTRITION_FRAGMENT:
+            fragmentArguments.putParcelableArrayList(Constants.BUNDLE_NUTRITION_WIDGETS_MAP,
+                nutritionWidgetsMapExtra);
+            fragmentArguments.putParcelableArrayList(Constants.BUNDLE_NUTRITION_CHARTS_MAP,
+                dataChartsMapExtra);
+            break;
+        }
+      }
+
+      switch (position) {
+        case 0:
+          Fragment customizeWidgetFragment = new CustomizeWidgets_Fragment();
+          customizeWidgetFragment.setArguments(fragmentArguments);
+          return customizeWidgetFragment;
+        case 1:
+          Fragment customizeChartsFragment = new CustomizeCharts_Fragment();
+          customizeChartsFragment.setArguments(fragmentArguments);
+          return customizeChartsFragment;
+      }
+
+      return null;
+    }
+
+    @Override public CharSequence getPageTitle(int position) {
+      return tabTitles[position];
+    }
+
+    @Override public int getCount() {
+      return tabTitles.length;
+    }
+  }
 }

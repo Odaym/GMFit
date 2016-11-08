@@ -29,85 +29,80 @@ import retrofit2.Response;
 
 public class ForgotPassword_Activity extends Base_Activity {
 
-    @Bind(R.id.emailET)
-    FormEditText emailET;
-    @Bind(R.id.submitForgotPasswordEmailBTN)
-    Button submitForgotPasswordEmailBTN;
-    @Bind(R.id.toolbar)
-    Toolbar toolbar;
+  @Bind(R.id.emailET) FormEditText emailET;
+  @Bind(R.id.submitForgotPasswordEmailBTN) Button submitForgotPasswordEmailBTN;
+  @Bind(R.id.toolbar) Toolbar toolbar;
 
-    private SharedPreferences prefs;
+  private SharedPreferences prefs;
 
-    private ArrayList<FormEditText> allFields = new ArrayList<>();
+  private ArrayList<FormEditText> allFields = new ArrayList<>();
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+  @Override protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_forgot_password);
+    setContentView(R.layout.activity_forgot_password);
 
-        ButterKnife.bind(this);
+    ButterKnife.bind(this);
 
-        prefs = getSharedPreferences(Constants.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
+    prefs = getSharedPreferences(Constants.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
 
-        setupToolbar(toolbar, R.string.forgot_password_activity_title, true);
-        addTopPaddingToolbar(toolbar);
+    setupToolbar(toolbar, R.string.forgot_password_activity_title, true);
+    addTopPaddingToolbar(toolbar);
 
-        allFields.add(emailET);
+    allFields.add(emailET);
 
-        submitForgotPasswordEmailBTN.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (Helpers.validateFields(allFields)) {
-                    forgotPasswordSendToken(emailET.getText().toString());
-                }
-            }
+    submitForgotPasswordEmailBTN.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View v) {
+        if (Helpers.validateFields(allFields)) {
+          forgotPasswordSendToken(emailET.getText().toString());
+        }
+      }
+    });
+  }
+
+  private void forgotPasswordSendToken(String email) {
+    final ProgressDialog waitingDialog = new ProgressDialog(this);
+    waitingDialog.setTitle(getString(R.string.sending_reset_password_dialog_title));
+    waitingDialog.setMessage(getString(R.string.please_wait_dialog_message));
+    waitingDialog.show();
+
+    final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+    alertDialog.setTitle(R.string.sending_reset_password_dialog_title);
+    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
+        new DialogInterface.OnClickListener() {
+          public void onClick(DialogInterface dialog, int which) {
+            dialog.dismiss();
+
+            if (waitingDialog.isShowing()) waitingDialog.dismiss();
+          }
         });
-    }
 
-    private void forgotPasswordSendToken(String email) {
-        final ProgressDialog waitingDialog = new ProgressDialog(this);
-        waitingDialog.setTitle(getString(R.string.sending_reset_password_dialog_title));
-        waitingDialog.setMessage(getString(R.string.please_wait_dialog_message));
-        waitingDialog.show();
+    DataAccessHandler.getInstance()
+        .sendResetPasswordLink(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN,
+            Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), email, new Callback<DefaultGetResponse>() {
+          @Override public void onResponse(Call<DefaultGetResponse> call,
+              Response<DefaultGetResponse> response) {
+            switch (response.code()) {
+              case 200:
+                waitingDialog.dismiss();
 
-        final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-        alertDialog.setTitle(R.string.sending_reset_password_dialog_title);
-        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
+                Intent intent =
+                    new Intent(ForgotPassword_Activity.this, ResetPassword_Activity.class);
+                startActivity(intent);
 
-                        if (waitingDialog.isShowing())
-                            waitingDialog.dismiss();
-                    }
-                });
+                Toast.makeText(ForgotPassword_Activity.this, R.string.password_change_successful,
+                    Toast.LENGTH_SHORT).show();
 
+                finish();
 
-        DataAccessHandler.getInstance().sendResetPasswordLink(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants
-                .NO_ACCESS_TOKEN_FOUND_IN_PREFS), email, new Callback<DefaultGetResponse>() {
-            @Override
-            public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
-                switch (response.code()) {
-                    case 200:
-                        waitingDialog.dismiss();
-
-                        Intent intent = new Intent(ForgotPassword_Activity.this, ResetPassword_Activity.class);
-                        startActivity(intent);
-
-                        Toast.makeText(ForgotPassword_Activity.this, R.string.password_change_successful, Toast.LENGTH_SHORT).show();
-
-                        finish();
-
-                        break;
-                }
+                break;
             }
+          }
 
-            @Override
-            public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
-                alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
-                alertDialog.show();
-            }
+          @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+            alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
+            alertDialog.show();
+          }
         });
-    }
+  }
 }

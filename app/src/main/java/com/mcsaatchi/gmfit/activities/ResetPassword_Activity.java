@@ -27,83 +27,77 @@ import retrofit2.Response;
 
 public class ResetPassword_Activity extends Base_Activity {
 
-    @Bind(R.id.passwordET)
-    FormEditText passwordET;
-    @Bind(R.id.verifyCodeET)
-    FormEditText verifyCodeET;
-    @Bind(R.id.submitResetPasswordBTN)
-    Button submitResetPasswordBTN;
-    @Bind(R.id.toolbar)
-    Toolbar toolbar;
+  @Bind(R.id.passwordET) FormEditText passwordET;
+  @Bind(R.id.verifyCodeET) FormEditText verifyCodeET;
+  @Bind(R.id.submitResetPasswordBTN) Button submitResetPasswordBTN;
+  @Bind(R.id.toolbar) Toolbar toolbar;
 
-    private SharedPreferences prefs;
+  private SharedPreferences prefs;
 
-    private ArrayList<FormEditText> allFields = new ArrayList<>();
+  private ArrayList<FormEditText> allFields = new ArrayList<>();
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+  @Override protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_reset_password);
+    setContentView(R.layout.activity_reset_password);
 
-        ButterKnife.bind(this);
+    ButterKnife.bind(this);
 
-        prefs = getSharedPreferences(Constants.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
+    prefs = getSharedPreferences(Constants.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
 
-        setupToolbar(toolbar, R.string.reset_password_activity_title, true);
-        addTopPaddingToolbar(toolbar);
+    setupToolbar(toolbar, R.string.reset_password_activity_title, true);
+    addTopPaddingToolbar(toolbar);
 
-        allFields.add(passwordET);
-        allFields.add(verifyCodeET);
+    allFields.add(passwordET);
+    allFields.add(verifyCodeET);
 
-        submitResetPasswordBTN.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (Helpers.isInternetAvailable(ResetPassword_Activity.this)) {
-                    if (Helpers.validateFields(allFields)) {
-                        finalizeResetPassword(verifyCodeET.getText().toString(), passwordET.getText().toString());
-                    }
-                }
-            }
+    submitResetPasswordBTN.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View view) {
+        if (Helpers.isInternetAvailable(ResetPassword_Activity.this)) {
+          if (Helpers.validateFields(allFields)) {
+            finalizeResetPassword(verifyCodeET.getText().toString(),
+                passwordET.getText().toString());
+          }
+        }
+      }
+    });
+  }
+
+  private void finalizeResetPassword(String token, String newPassword) {
+    final ProgressDialog waitingDialog = new ProgressDialog(this);
+    waitingDialog.setTitle(getString(R.string.resetting_password_dialog_title));
+    waitingDialog.setMessage(getString(R.string.please_wait_dialog_message));
+    waitingDialog.show();
+
+    final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+    alertDialog.setTitle(R.string.resetting_password_dialog_title);
+    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
+        new DialogInterface.OnClickListener() {
+          public void onClick(DialogInterface dialog, int which) {
+            dialog.dismiss();
+
+            if (waitingDialog.isShowing()) waitingDialog.dismiss();
+          }
         });
-    }
 
-    private void finalizeResetPassword(String token, String newPassword) {
-        final ProgressDialog waitingDialog = new ProgressDialog(this);
-        waitingDialog.setTitle(getString(R.string.resetting_password_dialog_title));
-        waitingDialog.setMessage(getString(R.string.please_wait_dialog_message));
-        waitingDialog.show();
+    DataAccessHandler.getInstance()
+        .finalizeResetPassword(token, newPassword, new Callback<DefaultGetResponse>() {
+          @Override public void onResponse(Call<DefaultGetResponse> call,
+              Response<DefaultGetResponse> response) {
+            switch (response.code()) {
+              case 200:
+                waitingDialog.dismiss();
 
-        final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-        alertDialog.setTitle(R.string.resetting_password_dialog_title);
-        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
+                finish();
 
-                        if (waitingDialog.isShowing())
-                            waitingDialog.dismiss();
-                    }
-                });
-
-        DataAccessHandler.getInstance().finalizeResetPassword(token, newPassword, new Callback<DefaultGetResponse>() {
-            @Override
-            public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
-                switch (response.code()) {
-                    case 200:
-                        waitingDialog.dismiss();
-
-                        finish();
-
-                        break;
-                }
+                break;
             }
+          }
 
-            @Override
-            public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
-                alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
-                alertDialog.show();
-            }
+          @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+            alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
+            alertDialog.show();
+          }
         });
-    }
+  }
 }

@@ -1,32 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
 
-    <TextView android:id="@+id/chooseGoalHintTV"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:layout_marginBottom="@dimen/default_margin_2"
-              android:layout_marginStart="@dimen/default_margin_2_5"
-              android:fontFamily="sans-serif-light"
-              android:text="@string/choose_goal_hint"
-              android:textColor="@android:color/white"/>
+  <TextView
+      android:id="@+id/chooseGoalHintTV"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="@dimen/default_margin_2"
+      android:layout_marginStart="@dimen/default_margin_2_5"
+      android:fontFamily="sans-serif-light"
+      android:text="@string/choose_goal_hint"
+      android:textColor="@android:color/white"
+      />
 
-    <worker8.com.github.radiogroupplus.RadioGroupPlus
-        android:id="@+id/goalRadioButtonsGroup"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/chooseGoalHintTV"
-        android:orientation="vertical">
+  <worker8.com.github.radiogroupplus.RadioGroupPlus
+      android:id="@+id/goalRadioButtonsGroup"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_below="@+id/chooseGoalHintTV"
+      android:orientation="vertical"
+      >
 
-    </worker8.com.github.radiogroupplus.RadioGroupPlus>
+  </worker8.com.github.radiogroupplus.RadioGroupPlus>
 
-    <TextView android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:layout_below="@+id/goalRadioButtonsGroup"
-              android:layout_marginTop="@dimen/default_margin_2"
-              android:paddingStart="@dimen/default_margin_2"
-              android:text="@string/you_can_change_this_setting_hint"
-              android:textColor="@color/offwhite_transparent"/>
+  <TextView
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_below="@+id/goalRadioButtonsGroup"
+      android:layout_marginTop="@dimen/default_margin_2"
+      android:paddingStart="@dimen/default_margin_2"
+      android:text="@string/you_can_change_this_setting_hint"
+      android:textColor="@color/offwhite_transparent"
+      />
 </RelativeLayout>

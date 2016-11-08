@@ -1,32 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    >
 
-    <View android:layout_width="match_parent"
-          android:layout_height="@dimen/radiobutton_row_height_larger"
-          android:layout_marginBottom="@dimen/default_margin_0"
-          android:background="@color/color_primary_dark_transparent"/>
+  <View
+      android:layout_width="match_parent"
+      android:layout_height="@dimen/radiobutton_row_height_larger"
+      android:layout_marginBottom="@dimen/default_margin_0"
+      android:background="@color/color_primary_dark_transparent"
+      />
 
-    <LinearLayout android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:layout_marginStart="@dimen/default_margin_2"
-                  android:layout_marginTop="@dimen/default_margin_1"
-                  android:orientation="vertical">
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="@dimen/default_margin_2"
+      android:layout_marginTop="@dimen/default_margin_1"
+      android:orientation="vertical"
+      >
 
-        <RadioButton android:id="@+id/activityLevelRadioButtonItem"
-                     android:layout_width="match_parent"
-                     android:layout_height="wrap_content"
-                     android:buttonTint="@android:color/white"
-                     android:paddingStart="@dimen/default_margin_1"
-                     android:textColor="@android:color/white"/>
+    <RadioButton
+        android:id="@+id/activityLevelRadioButtonItem"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:buttonTint="@android:color/white"
+        android:paddingStart="@dimen/default_margin_1"
+        android:textColor="@android:color/white"
+        />
 
-        <TextView android:id="@+id/radioButtonHintTV"
-                  android:layout_width="match_parent"
-                  android:layout_height="wrap_content"
-                  android:layout_marginStart="45dp"
-                  android:textColor="@color/light_gray"/>
+    <TextView
+        android:id="@+id/radioButtonHintTV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="45dp"
+        android:textColor="@color/light_gray"
+        />
 
-    </LinearLayout>
+  </LinearLayout>
 
 </RelativeLayout>

@@ -2,22 +2,22 @@ package com.mcsaatchi.gmfit.models;
 
 public class NutritionalFact {
 
-    private String name;
-    private String unit;
+  private String name;
+  private String unit;
 
-    public String getName() {
-        return name;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    public String getUnit() {
-        return unit;
-    }
+  public String getUnit() {
+    return unit;
+  }
 
-    public void setUnit(String unit) {
-        this.unit = unit;
-    }
+  public void setUnit(String unit) {
+    this.unit = unit;
+  }
 }

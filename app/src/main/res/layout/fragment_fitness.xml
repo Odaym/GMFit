@@ -4,124 +4,141 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    >
 
-    <RelativeLayout
-        android:id="@+id/mainFitnessMetricDetail"
+  <RelativeLayout
+      android:id="@+id/mainFitnessMetricDetail"
+      android:layout_width="match_parent"
+      android:layout_height="@dimen/metric_header_section_height"
+      android:background="@android:color/transparent"
+      >
+
+    <HorizontalScrollView
+        android:id="@+id/dateCarousel"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/metric_header_section_height"
-        android:background="@android:color/transparent">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/default_margin_1"
+        android:background="@color/offwhite_more_transparent"
+        android:scrollbars="none"
+        >
 
-        <HorizontalScrollView
-            android:id="@+id/dateCarousel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/default_margin_1"
-            android:scrollbars="none"
-            android:background="@color/offwhite_more_transparent">
+      <LinearLayout
+          android:id="@+id/dateCarouselContainer"
+          android:layout_width="wrap_content"
+          android:layout_height="match_parent"
+          android:gravity="center_vertical"
+          android:orientation="horizontal"
+          />
 
-            <LinearLayout android:id="@+id/dateCarouselContainer"
-                          android:layout_width="wrap_content"
-                          android:layout_height="match_parent"
-                          android:gravity="center_vertical"
-                          android:orientation="horizontal"/>
+    </HorizontalScrollView>
 
-        </HorizontalScrollView>
+    <ImageView
+        android:id="@+id/carouselArrowIV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/dateCarousel"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/default_margin_1"
+        android:src="@drawable/ic_keyboard_arrow_down_white_24dp"
+        />
 
-        <ImageView android:id="@+id/carouselArrowIV"
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-                   android:layout_below="@+id/dateCarousel"
-                   android:layout_centerHorizontal="true"
-                   android:layout_marginBottom="@dimen/default_margin_1"
-                   android:src="@drawable/ic_keyboard_arrow_down_white_24dp"/>
+    <ProgressBar
+        android:id="@+id/metricProgressBar"
+        android:layout_width="@dimen/metric_header_progress_bar_width"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/carouselArrowIV"
+        android:layout_centerHorizontal="true"
+        android:indeterminate="false"
+        android:maxHeight="@dimen/sections_progress_bar_height"
+        android:minHeight="@dimen/sections_progress_bar_height"
+        android:progress="70"
+        android:progressDrawable="@drawable/fitness_progress_bar"
+        style="?android:attr/progressBarStyleHorizontal"
+        />
 
-        <ProgressBar
-            android:id="@+id/metricProgressBar"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="@dimen/metric_header_progress_bar_width"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/carouselArrowIV"
-            android:layout_centerHorizontal="true"
-            android:indeterminate="false"
-            android:maxHeight="@dimen/sections_progress_bar_height"
-            android:minHeight="@dimen/sections_progress_bar_height"
-            android:progress="70"
-            android:progressDrawable="@drawable/fitness_progress_bar"/>
+    <com.mcsaatchi.gmfit.classes.FontTextView
+        android:id="@+id/metricCounterTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/metricProgressBar"
+        android:layout_centerHorizontal="true"
+        android:textColor="@color/white"
+        android:textSize="@dimen/metric_counter_font_size"
+        />
 
-        <com.mcsaatchi.gmfit.classes.FontTextView
-            android:id="@+id/metricCounterTV"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/metricProgressBar"
-            android:layout_centerHorizontal="true"
-            android:textColor="@color/white"
-            android:textSize="@dimen/metric_counter_font_size"/>
+    <TextView
+        android:id="@+id/metricCounterLabelTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/metricCounterTV"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/fitness_rounded_view"
+        android:paddingBottom="5dp"
+        android:paddingEnd="@dimen/default_margin_2"
+        android:paddingStart="@dimen/default_margin_2"
+        android:paddingTop="5dp"
+        android:text="Steps Today"
+        android:textColor="@android:color/white"
+        />
 
-        <TextView
-            android:id="@+id/metricCounterLabelTV"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/metricCounterTV"
-            android:layout_centerHorizontal="true"
-            android:background="@drawable/fitness_rounded_view"
-            android:paddingBottom="5dp"
-            android:paddingEnd="@dimen/default_margin_2"
-            android:paddingStart="@dimen/default_margin_2"
-            android:paddingTop="5dp"
-            android:text="Steps Today"
-            android:textColor="@android:color/white"/>
+  </RelativeLayout>
 
-    </RelativeLayout>
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_below="@+id/mainFitnessMetricDetail"
+      android:background="@android:color/white"
+      android:orientation="vertical"
+      >
 
-    <LinearLayout android:layout_width="match_parent"
-                  android:layout_height="match_parent"
-                  android:layout_below="@+id/mainFitnessMetricDetail"
-                  android:background="@android:color/white"
-                  android:orientation="vertical">
+    <LinearLayout
+        android:id="@+id/widgetsGridViewLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
 
-        <LinearLayout
-            android:id="@+id/widgetsGridViewLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <GridView android:id="@+id/widgetsGridView"
-                      android:layout_width="match_parent"
-                      android:layout_height="@dimen/fitness_widgets_gridview_height"
-                      android:layout_marginBottom="@dimen/default_margin_2"
-                      android:layout_marginEnd="@dimen/default_margin_2"
-                      android:layout_marginStart="@dimen/default_margin_2"
-                      android:layout_marginTop="@dimen/default_margin_2"
-                      android:columnWidth="80dp"
-                      android:gravity="center"
-                      android:horizontalSpacing="@dimen/default_margin_2"
-                      android:numColumns="2"
-                      android:scrollbars="none"
-                      android:stretchMode="columnWidth"
-                      android:verticalSpacing="@dimen/default_margin_2"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/cards_container"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:animateLayoutChanges="true"
-            android:orientation="vertical">
-
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/addChartBTN"
-            style="?android:attr/borderlessButtonStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/default_margin_2"
-            android:layout_marginEnd="@dimen/default_margin_2"
-            android:layout_marginStart="@dimen/default_margin_2"
-            android:layout_marginTop="@dimen/default_margin_3"
-            android:background="@color/fitness_dark_blue"
-            android:text="@string/add_new_chart_button"
-            android:textColor="@android:color/white"/>
+      <GridView
+          android:id="@+id/widgetsGridView"
+          android:layout_width="match_parent"
+          android:layout_height="@dimen/fitness_widgets_gridview_height"
+          android:layout_marginBottom="@dimen/default_margin_2"
+          android:layout_marginEnd="@dimen/default_margin_2"
+          android:layout_marginStart="@dimen/default_margin_2"
+          android:layout_marginTop="@dimen/default_margin_2"
+          android:columnWidth="80dp"
+          android:gravity="center"
+          android:horizontalSpacing="@dimen/default_margin_2"
+          android:numColumns="2"
+          android:scrollbars="none"
+          android:stretchMode="columnWidth"
+          android:verticalSpacing="@dimen/default_margin_2"
+          />
     </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/cards_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:animateLayoutChanges="true"
+        android:orientation="vertical"
+        >
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/addChartBTN"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/default_margin_2"
+        android:layout_marginEnd="@dimen/default_margin_2"
+        android:layout_marginStart="@dimen/default_margin_2"
+        android:layout_marginTop="@dimen/default_margin_3"
+        android:background="@color/fitness_dark_blue"
+        android:text="@string/add_new_chart_button"
+        android:textColor="@android:color/white"
+        style="?android:attr/borderlessButtonStyle"
+        />
+  </LinearLayout>
 
 </RelativeLayout>

@@ -4,67 +4,49 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class SlugBreakdownResponseData {
-    @SerializedName("message")
-    @Expose
-    private String message;
-    @SerializedName("body")
-    @Expose
-    private SlugBreakdownResponseBody body;
-    @SerializedName("code")
-    @Expose
-    private Integer code;
+  @SerializedName("message") @Expose private String message;
+  @SerializedName("body") @Expose private SlugBreakdownResponseBody body;
+  @SerializedName("code") @Expose private Integer code;
 
-    /**
-     *
-     * @return
-     * The message
-     */
-    public String getMessage() {
-        return message;
-    }
+  /**
+   * @return The message
+   */
+  public String getMessage() {
+    return message;
+  }
 
-    /**
-     *
-     * @param message
-     * The message
-     */
-    public void setMessage(String message) {
-        this.message = message;
-    }
+  /**
+   * @param message The message
+   */
+  public void setMessage(String message) {
+    this.message = message;
+  }
 
-    /**
-     *
-     * @return
-     * The body
-     */
-    public SlugBreakdownResponseBody getBody() {
-        return body;
-    }
+  /**
+   * @return The body
+   */
+  public SlugBreakdownResponseBody getBody() {
+    return body;
+  }
 
-    /**
-     *
-     * @param body
-     * The body
-     */
-    public void setBody(SlugBreakdownResponseBody body) {
-        this.body = body;
-    }
+  /**
+   * @param body The body
+   */
+  public void setBody(SlugBreakdownResponseBody body) {
+    this.body = body;
+  }
 
-    /**
-     *
-     * @return
-     * The code
-     */
-    public Integer getCode() {
-        return code;
-    }
+  /**
+   * @return The code
+   */
+  public Integer getCode() {
+    return code;
+  }
 
-    /**
-     *
-     * @param code
-     * The code
-     */
-    public void setCode(Integer code) {
-        this.code = code;
-    }
+  /**
+   * @param code The code
+   */
+  public void setCode(Integer code) {
+    this.code = code;
+  }
 }

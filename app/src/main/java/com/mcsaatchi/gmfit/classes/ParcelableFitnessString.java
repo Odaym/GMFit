@@ -4,80 +4,79 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class ParcelableFitnessString implements Parcelable {
-    public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
-        public ParcelableFitnessString createFromParcel(Parcel in) {
-            return new ParcelableFitnessString(in);
-        }
-
-        public ParcelableFitnessString[] newArray(int size) {
-            return new ParcelableFitnessString[size];
-        }
-    };
-
-    int value;
-    int drawableResId;
-    String title;
-    String measurementUnit;
-
-    public ParcelableFitnessString() {
+  public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
+    public ParcelableFitnessString createFromParcel(Parcel in) {
+      return new ParcelableFitnessString(in);
     }
 
-    public ParcelableFitnessString(Parcel in) {
-        this.drawableResId = in.readInt();
-        this.value = in.readInt();
-        this.title = in.readString();
-        this.measurementUnit = in.readString();
+    public ParcelableFitnessString[] newArray(int size) {
+      return new ParcelableFitnessString[size];
     }
+  };
 
-    public ParcelableFitnessString(int drawableResId, int value, String title, String measurementUnit) {
-        this.value = value;
-        this.drawableResId = drawableResId;
-        this.title = title;
-        this.measurementUnit = measurementUnit;
-    }
+  int value;
+  int drawableResId;
+  String title;
+  String measurementUnit;
 
-    public int getValue() {
-        return value;
-    }
+  public ParcelableFitnessString() {
+  }
 
-    public void setValue(int value) {
-        this.value = value;
-    }
+  public ParcelableFitnessString(Parcel in) {
+    this.drawableResId = in.readInt();
+    this.value = in.readInt();
+    this.title = in.readString();
+    this.measurementUnit = in.readString();
+  }
 
-    public int getDrawableResId() {
-        return drawableResId;
-    }
+  public ParcelableFitnessString(int drawableResId, int value, String title,
+      String measurementUnit) {
+    this.value = value;
+    this.drawableResId = drawableResId;
+    this.title = title;
+    this.measurementUnit = measurementUnit;
+  }
 
-    public void setDrawableResId(int drawableResId) {
-        this.drawableResId = drawableResId;
-    }
+  public int getValue() {
+    return value;
+  }
 
-    public String getTitle() {
-        return title;
-    }
+  public void setValue(int value) {
+    this.value = value;
+  }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+  public int getDrawableResId() {
+    return drawableResId;
+  }
 
-    public String getMeasurementUnit() {
-        return measurementUnit;
-    }
+  public void setDrawableResId(int drawableResId) {
+    this.drawableResId = drawableResId;
+  }
 
-    public void setMeasurementUnit(String measurementUnit) {
-        this.measurementUnit = measurementUnit;
-    }
+  public String getTitle() {
+    return title;
+  }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
+  public void setTitle(String title) {
+    this.title = title;
+  }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(drawableResId);
-        dest.writeInt(value);
-        dest.writeString(title);
-        dest.writeString(measurementUnit);
-    }
+  public String getMeasurementUnit() {
+    return measurementUnit;
+  }
+
+  public void setMeasurementUnit(String measurementUnit) {
+    this.measurementUnit = measurementUnit;
+  }
+
+  @Override public int describeContents() {
+    return 0;
+  }
+
+  @Override public void writeToParcel(Parcel dest, int flags) {
+    dest.writeInt(drawableResId);
+    dest.writeInt(value);
+    dest.writeString(title);
+    dest.writeString(measurementUnit);
+  }
 }

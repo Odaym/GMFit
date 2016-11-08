@@ -9,4 +9,5 @@
     android:paddingStart="@dimen/default_margin_1"
     android:paddingTop="@dimen/default_margin_1"
     android:textAppearance="?android:textAppearanceSmall"
-    android:textColor="@android:color/white"/>
+    android:textColor="@android:color/white"
+    />

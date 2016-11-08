@@ -16,68 +16,68 @@ import com.mcsaatchi.gmfit.models.FitnessWidget;
 import java.util.ArrayList;
 
 public class FitnessWidgets_GridAdapter extends BaseAdapter {
-    private Context context;
-    private ArrayList<FitnessWidget> widgetsMap;
-    private int layoutResourceId;
+  private Context context;
+  private ArrayList<FitnessWidget> widgetsMap;
+  private int layoutResourceId;
 
-    public FitnessWidgets_GridAdapter(Context context, ArrayList<FitnessWidget> widgetsMap, int layoutResourceId) {
-        this.context = context;
-        this.widgetsMap = widgetsMap;
-        this.layoutResourceId = layoutResourceId;
+  public FitnessWidgets_GridAdapter(Context context, ArrayList<FitnessWidget> widgetsMap,
+      int layoutResourceId) {
+    this.context = context;
+    this.widgetsMap = widgetsMap;
+    this.layoutResourceId = layoutResourceId;
+  }
+
+  public int getCount() {
+    return widgetsMap.size();
+  }
+
+  public FitnessWidget getItem(int position) {
+    return widgetsMap.get(position);
+  }
+
+  public long getItemId(int position) {
+    return 0;
+  }
+
+  public View getView(int position, View convertView, ViewGroup parent) {
+    ViewHolder holder;
+
+    if (convertView == null) {
+      LayoutInflater inflater =
+          (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+      convertView = inflater.inflate(layoutResourceId, parent, false);
+
+      holder = new ViewHolder();
+
+      holder.metricTV = (FontTextView) convertView.findViewById(R.id.metricTV);
+      holder.metricIcon = (ImageView) convertView.findViewById(R.id.metricIMG);
+      holder.measurementUnitTV = (TextView) convertView.findViewById(R.id.measurementUnitTV);
+
+      convertView.setTag(holder);
+    } else {
+      holder = (ViewHolder) convertView.getTag();
     }
 
-    public int getCount() {
-        return widgetsMap.size();
+    holder.metricTV.setText(String.valueOf(widgetsMap.get(position).getValue()));
+    holder.measurementUnitTV.setText(widgetsMap.get(position).getMeasurementUnit());
+
+    Log.d("TAG", "getView: " + widgetsMap.get(position).getTitle());
+
+    switch (widgetsMap.get(position).getTitle()) {
+      case "Active Calories":
+        holder.metricIcon.setImageResource(R.drawable.ic_calories_spent);
+        break;
+      case "Distance Traveled":
+        holder.metricIcon.setImageResource(R.drawable.ic_distance_traveled);
+        break;
     }
 
-    public FitnessWidget getItem(int position) {
-        return widgetsMap.get(position);
-    }
+    return convertView;
+  }
 
-    public long getItemId(int position) {
-        return 0;
-    }
-
-    public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder;
-
-        if (convertView == null) {
-            LayoutInflater inflater = (LayoutInflater) context
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(layoutResourceId, parent,
-                    false);
-
-            holder = new ViewHolder();
-
-            holder.metricTV = (FontTextView) convertView.findViewById(R.id.metricTV);
-            holder.metricIcon = (ImageView) convertView.findViewById(R.id.metricIMG);
-            holder.measurementUnitTV = (TextView) convertView.findViewById(R.id.measurementUnitTV);
-
-            convertView.setTag(holder);
-        } else {
-            holder = (ViewHolder) convertView.getTag();
-        }
-
-        holder.metricTV.setText(String.valueOf(widgetsMap.get(position).getValue()));
-        holder.measurementUnitTV.setText(widgetsMap.get(position).getMeasurementUnit());
-
-        Log.d("TAG", "getView: " + widgetsMap.get(position).getTitle());
-
-        switch (widgetsMap.get(position).getTitle()) {
-            case "Active Calories":
-                holder.metricIcon.setImageResource(R.drawable.ic_calories_spent);
-                break;
-            case "Distance Traveled":
-                holder.metricIcon.setImageResource(R.drawable.ic_distance_traveled);
-                break;
-        }
-
-        return convertView;
-    }
-
-    class ViewHolder {
-        ImageView metricIcon;
-        FontTextView metricTV;
-        TextView measurementUnitTV;
-    }
+  class ViewHolder {
+    ImageView metricIcon;
+    FontTextView metricTV;
+    TextView measurementUnitTV;
+  }
 }

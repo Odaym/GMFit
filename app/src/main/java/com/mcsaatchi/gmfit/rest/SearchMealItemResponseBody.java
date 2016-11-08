@@ -7,25 +7,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SearchMealItemResponseBody {
-    @SerializedName("data")
-    @Expose
-    private List<SearchMealItemResponseDatum> data = new ArrayList<>();
+  @SerializedName("data") @Expose private List<SearchMealItemResponseDatum> data =
+      new ArrayList<>();
 
-    /**
-     *
-     * @return
-     * The data
-     */
-    public List<SearchMealItemResponseDatum> getData() {
-        return data;
-    }
+  /**
+   * @return The data
+   */
+  public List<SearchMealItemResponseDatum> getData() {
+    return data;
+  }
 
-    /**
-     *
-     * @param data
-     * The data
-     */
-    public void setData(List<SearchMealItemResponseDatum> data) {
-        this.data = data;
-    }
+  /**
+   * @param data The data
+   */
+  public void setData(List<SearchMealItemResponseDatum> data) {
+    this.data = data;
+  }
 }
