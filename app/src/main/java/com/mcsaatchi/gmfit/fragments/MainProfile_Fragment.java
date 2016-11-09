@@ -77,7 +77,6 @@ public class MainProfile_Fragment extends Fragment {
   private static final int CAPTURE_NEW_PICTURE_REQUEST_CODE = 871;
 
   @Bind(R.id.userProfileIV) ImageView userProfileIV;
-  @Bind(R.id.takePictureIV) ImageView takePictureIV;
   @Bind(R.id.userFullNameTV) TextView userFullNameTV;
   @Bind(R.id.userEmailTV) TextView userEmailTV;
   @Bind(R.id.countryValueTV) TextView countryValueTV;
@@ -125,7 +124,7 @@ public class MainProfile_Fragment extends Fragment {
 
     getUserProfile();
 
-    takePictureIV.setOnClickListener(new View.OnClickListener() {
+    userProfileIV.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View view) {
         String[] neededPermissions = new String[] {
             Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE

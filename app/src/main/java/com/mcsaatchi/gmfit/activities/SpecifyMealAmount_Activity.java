@@ -12,7 +12,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
-
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import com.andreabaccega.widget.FormEditText;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.adapters.NutritionalFactsList_Adapter;
@@ -26,18 +27,8 @@ import com.mcsaatchi.gmfit.models.NutritionalFact;
 import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.rest.MealMetricsResponse;
 import com.mcsaatchi.gmfit.rest.MealMetricsResponseDatum;
-
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-import org.joda.time.LocalDateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
-
 import java.util.ArrayList;
 import java.util.List;
-
-import butterknife.Bind;
-import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -236,49 +227,6 @@ public class SpecifyMealAmount_Activity extends Base_Activity {
 
                     EventBus_Singleton.getInstance()
                         .post(new EventBus_Poster(Constants.EXTRAS_CREATED_NEW_MEAL_ENTRY_ON_DATE));
-
-                    finish();
-
-                    break;
-                }
-              }
-
-              @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
-                waitingDialog.dismiss();
-              }
-            });
-  }
-
-  private void storeNewMeal(final ProgressDialog waitingDialog, final int caloriesForThisMeal) {
-    LocalDateTime ld = new LocalDateTime();
-
-    DateTime dateTime = new LocalDateTime(ld.toString()).toDateTime(DateTimeZone.UTC);
-
-    DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("YYYY-MM-dd HH:mm:ss");
-
-    String finalDateTime = dateTimeFormatter.print(dateTime);
-
-    DataAccessHandler.getInstance()
-        .storeNewMeal(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN,
-            Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), mealItem.getMeal_id(),
-            Integer.parseInt(mealAmountET.getText().toString()), mealItem.getType(), finalDateTime,
-            new Callback<DefaultGetResponse>() {
-              @Override public void onResponse(Call<DefaultGetResponse> call,
-                  Response<DefaultGetResponse> response) {
-                switch (response.code()) {
-                  case 200:
-                    waitingDialog.dismiss();
-
-                    mealItem.setAmount(mealAmountET.getText().toString());
-                    mealItem.setTotalCalories(
-                        Integer.parseInt(mealItem.getAmount()) * caloriesForThisMeal);
-
-                    Intent resultIntent = new Intent();
-                    resultIntent.putExtra(Constants.EXTRAS_MEAL_OBJECT_DETAILS, mealItem);
-                    setResult(MEAL_AMOUNT_SPECIFIED, resultIntent);
-
-                    EventBus_Singleton.getInstance()
-                        .post(new EventBus_Poster(Constants.EXTRAS_CREATED_NEW_MEAL_ENTRY));
 
                     finish();
 

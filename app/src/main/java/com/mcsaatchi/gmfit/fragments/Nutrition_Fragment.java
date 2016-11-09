@@ -267,12 +267,14 @@ public class Nutrition_Fragment extends Fragment {
       dateCarouselContainer.addView(itemDateCarouselLayout);
 
       if (i == 0) {
-        focusOnView(dateCarousel, dateCarouselContainer, itemDateCarouselLayout);
+        focusOnView(dateCarouselContainer, itemDateCarouselLayout);
       }
 
       itemDateCarouselLayout.setOnClickListener(new View.OnClickListener() {
         @Override public void onClick(View view) {
-          focusOnView(dateCarousel, dateCarouselContainer, view);
+          focusOnView(dateCarouselContainer, view);
+
+          showProgressBarsForLoading();
 
           DateTimeFormatter formatter = DateTimeFormat.forPattern("dd/MMM/yyyy");
           DateTime formattedDate = formatter.parseDateTime(dayOfMonthTV.getText().toString()
@@ -297,8 +299,7 @@ public class Nutrition_Fragment extends Fragment {
     });
   }
 
-  private void focusOnView(final HorizontalScrollView horizontalScrollView,
-      final LinearLayout dateCarouselContainer, final View view) {
+  private void focusOnView(final LinearLayout dateCarouselContainer, final View view) {
     TextView dayOfMonthTV;
     TextView monthOfYearTV;
     LinearLayout dateEntryLayout;
@@ -329,17 +330,6 @@ public class Nutrition_Fragment extends Fragment {
     monthOfYearTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
     dayOfMonthTV.setTypeface(null, Typeface.BOLD);
     monthOfYearTV.setTypeface(null, Typeface.BOLD);
-
-    //                DisplayMetrics displaymetrics = new DisplayMetrics();
-    //                getActivity().getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
-    //                int screenWidth = displaymetrics.widthPixels;
-    //                int scrollX = (screenWidth / 2);
-    //
-
-    horizontalScrollView.post(new Runnable() {
-      @Override public void run() {
-      }
-    });
   }
 
   private void getUiForSection(String section, String desiredDate) {
@@ -403,6 +393,8 @@ public class Nutrition_Fragment extends Fragment {
                       setupWidgetViews(finalWidgets);
 
                       setupChartViews(finalCharts);
+
+                      hideProgressBarsForLoading();
                     }
                   });
                 }
@@ -583,6 +575,11 @@ public class Nutrition_Fragment extends Fragment {
                     }
 
                     setupMealSectionsListView(finalSnackMeals, "Snack");
+
+                    Log.d(TAG, "onResponse: breakfast " + finalBreakfastMeals.size());
+                    Log.d(TAG, "onResponse: lunch " + finalLunchMeals.size());
+                    Log.d(TAG, "onResponse: dinner " + finalDinnerMeals.size());
+                    Log.d(TAG, "onResponse: snack " + finalSnackMeals.size());
 
                     break;
                 }
@@ -945,5 +942,21 @@ public class Nutrition_Fragment extends Fragment {
                 //TODO: Add failure code
               }
             });
+  }
+
+  private void showProgressBarsForLoading(){
+    widgetsGridView.setVisibility(View.INVISIBLE);
+    metricCounterTV.setVisibility(View.INVISIBLE);
+
+    loadingMetricProgressBar.setVisibility(View.VISIBLE);
+    loadingWidgetsProgressBar.setVisibility(View.VISIBLE);
+  }
+
+  private void hideProgressBarsForLoading(){
+    widgetsGridView.setVisibility(View.VISIBLE);
+    metricCounterTV.setVisibility(View.VISIBLE);
+
+    loadingMetricProgressBar.setVisibility(View.INVISIBLE);
+    loadingWidgetsProgressBar.setVisibility(View.INVISIBLE);
   }
 }

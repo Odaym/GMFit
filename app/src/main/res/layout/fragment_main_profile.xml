@@ -32,15 +32,6 @@
             android:layout_centerVertical="true"
             />
 
-        <ImageView
-            android:id="@+id/takePictureIV"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:src="@drawable/ic_photo_camera_white_24dp"
-            />
-
       </RelativeLayout>
       <TextView
           android:id="@+id/userFullNameTV"

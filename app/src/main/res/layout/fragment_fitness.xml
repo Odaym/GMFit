@@ -18,6 +18,7 @@
         android:id="@+id/dateCarousel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/default_margin_2"
         android:layout_marginTop="@dimen/default_margin_1"
         android:background="@color/offwhite_more_transparent"
         android:scrollbars="none"
@@ -33,21 +34,11 @@
 
     </HorizontalScrollView>
 
-    <ImageView
-        android:id="@+id/carouselArrowIV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/dateCarousel"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="@dimen/default_margin_1"
-        android:src="@drawable/ic_keyboard_arrow_down_white_24dp"
-        />
-
     <ProgressBar
         android:id="@+id/metricProgressBar"
         android:layout_width="@dimen/metric_header_progress_bar_width"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/carouselArrowIV"
+        android:layout_below="@+id/dateCarousel"
         android:layout_centerHorizontal="true"
         android:indeterminate="false"
         android:maxHeight="@dimen/sections_progress_bar_height"

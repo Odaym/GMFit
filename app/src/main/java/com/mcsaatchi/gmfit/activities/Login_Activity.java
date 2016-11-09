@@ -146,7 +146,7 @@ public class Login_Activity extends Base_Activity {
 
         Log.d("TAGTAG", "onSuccess: FACEBOOK ACCESS TOKEN IS : " + accessToken.getToken());
 
-        prefs.edit().putString(Constants.EXTRAS_USER_FACEBOOK_TOKEN, accessToken.getToken());
+        prefs.edit().putString(Constants.EXTRAS_USER_FACEBOOK_TOKEN, accessToken.getToken()).apply();
 
         GraphRequest request =
             GraphRequest.newMeRequest(accessToken, new GraphRequest.GraphJSONObjectCallback() {
