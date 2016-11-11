@@ -24,7 +24,6 @@ public class TOS_Activity extends Base_Activity {
 
     termsOfUseTV.setMovementMethod(LinkMovementMethod.getInstance());
 
-    setupToolbar(toolbar, R.string.tos_activity_title, true);
-    addTopPaddingToolbar(toolbar);
+    setupToolbar(toolbar, getResources().getString(R.string.tos_activity_title), true);
   }
 }

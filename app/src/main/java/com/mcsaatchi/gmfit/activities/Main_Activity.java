@@ -55,7 +55,7 @@ public class Main_Activity extends Base_Activity {
 
     ButterKnife.bind(this);
 
-    setupToolbar(toolbar, R.string.app_name, false);
+    setupToolbar(toolbar, getResources().getString(R.string.app_name), false);
 
     SharedPreferences prefs =
         getSharedPreferences(Constants.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);

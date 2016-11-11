@@ -30,6 +30,7 @@
   <dimen name="default_small_font_size">11sp</dimen>
 
   <dimen name="metric_header_section_height">300dp</dimen>
+  <dimen name="metric_header_section_height_health_exception">200dp</dimen>
   <dimen name="profile_section_header_height">270dp</dimen>
   <dimen name="metric_header_progress_bar_width">110dp</dimen>
   <dimen name="nutrition_widgets_main_metric_value_font_size">50sp</dimen>

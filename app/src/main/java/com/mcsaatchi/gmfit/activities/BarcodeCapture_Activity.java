@@ -92,7 +92,7 @@ public final class BarcodeCapture_Activity extends Base_Activity {
 
     ButterKnife.bind(this);
 
-    setupToolbar(toolbar, R.string.barcode_capture_activity_title, true);
+    setupToolbar(toolbar, getResources().getString(R.string.barcode_capture_activity_title), true);
 
     mPreview = (CameraSourcePreview) findViewById(R.id.preview);
     mGraphicOverlay = (GraphicOverlay<BarcodeGraphic>) findViewById(R.id.graphicOverlay);

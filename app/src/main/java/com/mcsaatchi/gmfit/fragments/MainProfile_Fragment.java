@@ -32,15 +32,19 @@ import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import com.mcsaatchi.gmfit.R;
+import com.mcsaatchi.gmfit.activities.ContactUs_Activity;
 import com.mcsaatchi.gmfit.activities.Login_Activity;
+import com.mcsaatchi.gmfit.activities.UserPolicy_Activity;
 import com.mcsaatchi.gmfit.classes.CircleTransform;
 import com.mcsaatchi.gmfit.classes.Constants;
 import com.mcsaatchi.gmfit.classes.Helpers;
 import com.mcsaatchi.gmfit.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.rest.EmergencyProfileResponse;
+import com.mcsaatchi.gmfit.rest.UserPolicyResponse;
 import com.mcsaatchi.gmfit.rest.UserProfileResponse;
 import com.mcsaatchi.gmfit.rest.UserProfileResponseDatum;
 import com.mcsaatchi.gmfit.rest.UserProfileResponseGoal;
@@ -48,7 +52,6 @@ import com.mcsaatchi.gmfit.rest.UserProfileResponseMedicalCondition;
 import com.mukesh.countrypicker.fragments.CountryPicker;
 import com.mukesh.countrypicker.interfaces.CountryPickerListener;
 import com.squareup.picasso.Picasso;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -61,9 +64,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-
-import butterknife.Bind;
-import butterknife.ButterKnife;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -91,6 +91,10 @@ public class MainProfile_Fragment extends Fragment {
   @Bind(R.id.appRemindersLayout) RelativeLayout appRemindersLayout;
   @Bind(R.id.countryLayout) RelativeLayout countryLayout;
   @Bind(R.id.metricLayout) RelativeLayout metricLayout;
+  @Bind(R.id.termsConditionsLayout) RelativeLayout termsConditionsLayout;
+  @Bind(R.id.privacyLayout) RelativeLayout privacyLayout;
+  @Bind(R.id.contactUsLayout) RelativeLayout contactUsLayout;
+  @Bind(R.id.shareAppLayout) RelativeLayout shareAppLayout;
 
   @Bind(R.id.shareEmergencyProfileBTN) Button shareEmergencyProfileBTN;
 
@@ -107,6 +111,11 @@ public class MainProfile_Fragment extends Fragment {
   private double newUserWeight;
 
   private List<UserProfileResponseMedicalCondition> userMedicalConditions = new ArrayList<>();
+  private ArrayList userMetricSystems = new ArrayList<String>() {{
+    add(0, "Metric");
+    add(1, "Imperial");
+  }};
+
   private List<UserProfileResponseGoal> userGoals = new ArrayList<>();
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -208,6 +217,12 @@ public class MainProfile_Fragment extends Fragment {
           radioButtonItem.setText(userGoals.get(i).getName());
           radioButtonItem.setId(Integer.parseInt(userGoals.get(i).getId()));
 
+          if (radioButtonItem.getText()
+              .toString()
+              .equals(prefs.getString(Constants.EXTRAS_USER_PROFILE_GOAL, ""))) {
+            radioButtonItem.setChecked(true);
+          }
+
           goalRadioButtonsGroup.addView(listItemRadioButton);
         }
 
@@ -262,14 +277,10 @@ public class MainProfile_Fragment extends Fragment {
           radioButtonItem.setText(userMedicalConditions.get(i).getName());
           radioButtonItem.setId(Integer.parseInt(userMedicalConditions.get(i).getId()));
 
-          if (userMedicalConditions.get(i).getSelected().equals("1")) {
+          if (radioButtonItem.getText()
+              .toString()
+              .equals(prefs.getString(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION, ""))) {
             radioButtonItem.setChecked(true);
-          } else {
-            radioButtonItem.setChecked(false);
-          }
-
-          if (prefs.getInt(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION_ID, -1) == -1) {
-            medicalConditionsValueTV.setText("None");
           }
 
           medicalRdGroup.addView(listItemRadioButton);
@@ -286,8 +297,70 @@ public class MainProfile_Fragment extends Fragment {
             showSaveChangesMenuItem();
 
             prefs.edit()
+                .putString(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION,
+                    selectedRadioButton.getText().toString())
+                .apply();
+            prefs.edit()
                 .putInt(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION_ID,
                     selectedRadioButton.getId())
+                .apply();
+          }
+        });
+        dialogBuilder.setNegativeButton(R.string.decline_cancel,
+            new DialogInterface.OnClickListener() {
+              @Override public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+              }
+            });
+
+        AlertDialog alertDialog = dialogBuilder.create();
+        alertDialog.show();
+      }
+    });
+
+    metricLayout.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View view) {
+        final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
+        dialogBuilder.setTitle(R.string.profile_edit_measurement_unit_dialog_title);
+
+        View dialogView = LayoutInflater.from(getActivity())
+            .inflate(R.layout.profile_edit_measurement_unit_layout, null);
+
+        final RadioGroupPlus metricRadioGroup =
+            (RadioGroupPlus) dialogView.findViewById(R.id.measuremeantUnitRdGroup);
+
+        for (int i = 0; i < userMetricSystems.size(); i++) {
+          View listItemRadioButton = getActivity().getLayoutInflater()
+              .inflate(R.layout.list_item_edit_metric_system_dialog, null);
+
+          final RadioButton radioButtonItem =
+              (RadioButton) listItemRadioButton.findViewById(R.id.editMetricSystemRadioBTN);
+          radioButtonItem.setText(userMetricSystems.get(i).toString());
+          radioButtonItem.setId(userMetricSystems.indexOf(radioButtonItem.getText().toString()));
+
+          if (radioButtonItem.getText()
+              .toString()
+              .equalsIgnoreCase(
+                  prefs.getString(Constants.EXTRAS_USER_PROFILE_MEASUREMENT_SYSTEM, ""))) {
+            radioButtonItem.setChecked(true);
+          }
+
+          metricRadioGroup.addView(listItemRadioButton);
+        }
+
+        dialogBuilder.setView(dialogView);
+        dialogBuilder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+          @Override public void onClick(DialogInterface dialogInterface, int position) {
+            RadioButton selectedRadioButton = (RadioButton) metricRadioGroup.findViewById(
+                metricRadioGroup.getCheckedRadioButtonId());
+
+            metricSystemValueTV.setText(selectedRadioButton.getText().toString());
+
+            showSaveChangesMenuItem();
+
+            prefs.edit()
+                .putString(Constants.EXTRAS_USER_PROFILE_MEASUREMENT_SYSTEM,
+                    selectedRadioButton.getText().toString())
                 .apply();
           }
         });
@@ -352,6 +425,41 @@ public class MainProfile_Fragment extends Fragment {
             picker.dismiss();
           }
         });
+      }
+    });
+
+    termsConditionsLayout.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View view) {
+        getUserPolicyAndOpenActivity();
+      }
+    });
+
+    privacyLayout.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View view) {
+        getUserPolicyAndOpenActivity();
+      }
+    });
+
+    contactUsLayout.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View view) {
+        Intent intent = new Intent(getActivity(), ContactUs_Activity.class);
+        startActivity(intent);
+      }
+    });
+
+    shareAppLayout.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View view) {
+        try {
+          Intent i = new Intent(Intent.ACTION_SEND);
+          i.setType("text/plain");
+          i.putExtra(Intent.EXTRA_SUBJECT, "GMFit");
+          String sAux = "\nCheck out GlobeMed's new application!\n\n";
+          sAux = sAux + "https://play.google.com/store/apps/details?id=Orion.Soft \n\n";
+          i.putExtra(Intent.EXTRA_TEXT, sAux);
+          startActivity(Intent.createChooser(i, "Choose sharing method"));
+        } catch (Exception e) {
+          //e.toString();
+        }
       }
     });
 
@@ -469,6 +577,46 @@ public class MainProfile_Fragment extends Fragment {
     return mediaStorageDir.getPath() + File.separator + imageFileName;
   }
 
+  private void getUserPolicyAndOpenActivity() {
+    final ProgressDialog waitingDialog = new ProgressDialog(getActivity());
+    waitingDialog.setTitle(getResources().getString(R.string.loading_data_dialog_title));
+    waitingDialog.setMessage(getResources().getString(R.string.please_wait_dialog_message));
+    waitingDialog.show();
+
+    final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+    alertDialog.setTitle(R.string.loading_data_dialog_title);
+    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getResources().getString(R.string.ok),
+        new DialogInterface.OnClickListener() {
+          public void onClick(DialogInterface dialog, int which) {
+            dialog.dismiss();
+
+            if (waitingDialog.isShowing()) waitingDialog.dismiss();
+          }
+        });
+
+    DataAccessHandler.getInstance()
+        .getUserPolicy(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN,
+            Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), new Callback<UserPolicyResponse>() {
+          @Override public void onResponse(Call<UserPolicyResponse> call,
+              Response<UserPolicyResponse> response) {
+
+            switch (response.code()) {
+              case 200:
+                waitingDialog.dismiss();
+
+                Intent intent = new Intent(getActivity(), UserPolicy_Activity.class);
+                intent.putExtra(Constants.EXTRAS_USER_POLICY,
+                    response.body().getData().getBody().getUserPolicy());
+                startActivity(intent);
+            }
+          }
+
+          @Override public void onFailure(Call<UserPolicyResponse> call, Throwable t) {
+            Log.d("TAG", "onFailure: User profile request failed!");
+          }
+        });
+  }
+
   private void getUserProfile() {
     DataAccessHandler.getInstance()
         .getUserProfile(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN,
@@ -487,14 +635,19 @@ public class MainProfile_Fragment extends Fragment {
                   userMedicalConditions = userProfileData.getMedicalConditions();
                   userGoals = userProfileData.getUserGoals();
 
-                  for (int i = 0; i < userMedicalConditions.size(); i++) {
-                    if (userMedicalConditions.get(i).getSelected().equals("1")) {
-                      prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION,
-                          userMedicalConditions.get(i).getName());
-                      prefsEditor.putInt(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION_ID,
-                          Integer.parseInt(userMedicalConditions.get(i).getId()));
+                  if (prefs.getInt(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION_ID, -1)
+                      == -1) {
+                    medicalConditionsValueTV.setText("None");
+                  } else {
+                    for (int i = 0; i < userMedicalConditions.size(); i++) {
+                      if (userMedicalConditions.get(i).getSelected().equals("1")) {
+                        prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION,
+                            userMedicalConditions.get(i).getName());
+                        prefsEditor.putInt(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION_ID,
+                            Integer.parseInt(userMedicalConditions.get(i).getId()));
 
-                      medicalConditionsValueTV.setText(userMedicalConditions.get(i).getName());
+                        medicalConditionsValueTV.setText(userMedicalConditions.get(i).getName());
+                      }
                     }
                   }
 
@@ -539,7 +692,11 @@ public class MainProfile_Fragment extends Fragment {
                       && !userProfileData.getMetricSystem().isEmpty()) {
                     prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_MEASUREMENT_SYSTEM,
                         userProfileData.getMetricSystem());
-                    metricSystemValueTV.setText(userProfileData.getMetricSystem());
+
+                    String cap = userProfileData.getMetricSystem().substring(0, 1).toUpperCase()
+                        + userProfileData.getMetricSystem().substring(1);
+
+                    metricSystemValueTV.setText(cap);
                   }
 
                   if (userProfileData.getGender() != null && !userProfileData.getGender()

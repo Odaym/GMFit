@@ -10,7 +10,7 @@
   <RelativeLayout
       android:id="@+id/mainHealthMetricDetail"
       android:layout_width="match_parent"
-      android:layout_height="@dimen/metric_header_section_height"
+      android:layout_height="@dimen/metric_header_section_height_health_exception"
       android:background="@android:color/transparent"
       >
 

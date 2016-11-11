@@ -443,6 +443,7 @@
         </LinearLayout>
 
         <RelativeLayout
+            android:id="@+id/termsConditionsLayout"
             android:layout_width="match_parent"
             android:layout_height="@dimen/add_meal_item_layout_height"
             android:background="?android:attr/selectableItemBackground"
@@ -486,6 +487,7 @@
             />
 
         <RelativeLayout
+            android:id="@+id/privacyLayout"
             android:layout_width="match_parent"
             android:layout_height="@dimen/add_meal_item_layout_height"
             android:background="?android:attr/selectableItemBackground"
@@ -529,6 +531,7 @@
             />
 
         <RelativeLayout
+            android:id="@+id/contactUsLayout"
             android:layout_width="match_parent"
             android:layout_height="@dimen/add_meal_item_layout_height"
             android:background="?android:attr/selectableItemBackground"
@@ -572,6 +575,7 @@
             />
 
         <RelativeLayout
+            android:id="@+id/shareAppLayout"
             android:layout_width="match_parent"
             android:layout_height="@dimen/add_meal_item_layout_height"
             android:background="?android:attr/selectableItemBackground"

@@ -47,7 +47,7 @@ public class AddNewHealthTest_Activity extends Base_Activity {
 
     prefs = getSharedPreferences(Constants.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
 
-    setupToolbar(toolbar, R.string.add_new_test_activity_title, true);
+    setupToolbar(toolbar, getResources().getString(R.string.add_new_test_activity_title), true);
 
     getMedicalTests();
   }

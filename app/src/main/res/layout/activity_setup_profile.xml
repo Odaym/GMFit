@@ -4,23 +4,32 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/general_background"
+    android:fitsSystemWindows="true"
     android:orientation="vertical"
     >
 
-  <android.support.v7.widget.Toolbar
+  <FrameLayout
       xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto"
-      android:id="@+id/toolbar"
+      android:id="@+id/toolbarFrameLayout"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      app:theme="@style/TransparentToolbar"
-      />
+      >
+
+    <android.support.v7.widget.Toolbar
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:theme="@style/TransparentToolbar"
+        />
+  </FrameLayout>
 
   <com.mcsaatchi.gmfit.classes.NonSwipeableViewPager
       android:id="@+id/viewpager"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:layout_below="@id/toolbar"
+      android:layout_below="@id/toolbarFrameLayout"
       />
 
   <Button

@@ -128,18 +128,11 @@
             />
       </LinearLayout>
 
-      <TextView
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:padding="@dimen/default_margin_2"
-          android:text="@string/request_new_meal_hint"
-          />
-
       <Button
           android:id="@+id/requestMealBTN"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:layout_marginBottom="@dimen/default_margin_2"
+          android:layout_marginBottom="@dimen/default_margin_1"
           android:layout_marginEnd="@dimen/default_margin_2"
           android:layout_marginStart="@dimen/default_margin_2"
           android:layout_marginTop="@dimen/default_margin_3"
@@ -148,6 +141,14 @@
           android:textColor="@android:color/white"
           style="?android:attr/borderlessButtonStyle"
           />
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:padding="@dimen/default_margin_2"
+          android:text="@string/request_new_meal_hint"
+          />
+
 
     </LinearLayout>
   </RelativeLayout>

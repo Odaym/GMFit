@@ -13,23 +13,6 @@ import com.mcsaatchi.gmfit.data_access.DBHelper;
 public class Base_Activity extends AppCompatActivity {
   private DBHelper dbHelper = null;
 
-  public void setupToolbar(Toolbar toolbar, int toolbarTitleResId, boolean backEnabled) {
-    if (toolbarTitleResId == 0) {
-      toolbar.setTitle(R.string.app_name);
-    } else {
-      toolbar.setTitle(toolbarTitleResId);
-    }
-
-    setSupportActionBar(toolbar);
-
-    if (backEnabled) {
-      getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-      toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_arrow_left));
-    }
-
-    toolbar.setTitleTextAppearance(this, R.style.Toolbar_TitleTextStyle);
-  }
-
   public void setupToolbar(Toolbar toolbar, String toolbarTitle, boolean backEnabled) {
     if (toolbarTitle == null) {
       toolbar.setTitle(R.string.app_name);
@@ -45,19 +28,6 @@ public class Base_Activity extends AppCompatActivity {
     }
 
     toolbar.setTitleTextAppearance(this, R.style.Toolbar_TitleTextStyle);
-  }
-
-  public void addTopPaddingToolbar(Toolbar toolbar) {
-    toolbar.setPadding(0, getStatusBarHeight(), 0, 0);
-  }
-
-  public int getStatusBarHeight() {
-    int result = 0;
-    int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
-    if (resourceId > 0) {
-      result = getResources().getDimensionPixelSize(resourceId);
-    }
-    return result;
   }
 
   @Override protected void onSaveInstanceState(Bundle outState) {

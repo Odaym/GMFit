@@ -41,8 +41,7 @@ public class SetupProfile_Activity extends Base_Activity {
 
     setupProfileAdapter = new SetupProfile_Adapter(getSupportFragmentManager());
 
-    setupToolbar(toolbar, R.string.setup_profile_step_1_title, true);
-    addTopPaddingToolbar(toolbar);
+    setupToolbar(toolbar, getResources().getString(R.string.setup_profile_step_1_title), true);
 
     setupViewPager(setupProfileAdapter);
   }

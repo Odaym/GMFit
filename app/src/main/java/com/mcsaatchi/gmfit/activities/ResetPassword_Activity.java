@@ -45,8 +45,7 @@ public class ResetPassword_Activity extends Base_Activity {
 
     prefs = getSharedPreferences(Constants.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
 
-    setupToolbar(toolbar, R.string.reset_password_activity_title, true);
-    addTopPaddingToolbar(toolbar);
+    setupToolbar(toolbar, getResources().getString(R.string.reset_password_activity_title), true);
 
     allFields.add(passwordET);
     allFields.add(verifyCodeET);

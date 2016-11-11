@@ -59,8 +59,7 @@ public class SignUp_Activity extends Base_Activity {
 
     ButterKnife.bind(this);
 
-    setupToolbar(toolbar, R.string.sign_up_activity_title, true);
-    addTopPaddingToolbar(toolbar);
+    setupToolbar(toolbar, getResources().getString(R.string.sign_up_activity_title), true);
 
     prefs = getSharedPreferences(Constants.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
 

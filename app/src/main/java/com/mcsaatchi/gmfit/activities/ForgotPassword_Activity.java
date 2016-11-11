@@ -46,8 +46,7 @@ public class ForgotPassword_Activity extends Base_Activity {
 
     prefs = getSharedPreferences(Constants.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
 
-    setupToolbar(toolbar, R.string.forgot_password_activity_title, true);
-    addTopPaddingToolbar(toolbar);
+    setupToolbar(toolbar, getResources().getString(R.string.forgot_password_activity_title), true);
 
     allFields.add(emailET);
 

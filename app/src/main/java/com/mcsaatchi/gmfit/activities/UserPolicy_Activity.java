@@ -2,26 +2,26 @@ package com.mcsaatchi.gmfit.activities;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.Toolbar;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-
-import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.classes.Constants;
-import com.mcsaatchi.gmfit.classes.Helpers;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import com.mcsaatchi.gmfit.R;
+import com.mcsaatchi.gmfit.classes.Constants;
 
 public class UserPolicy_Activity extends Base_Activity {
   @Bind(R.id.userPolicyWebView) WebView userPolicyWebView;
+  @Bind(R.id.toolbar) Toolbar toolbar;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
-    super.onCreate(
-        Helpers.createActivityBundleWithProperties(R.string.user_policy_activity_title, true));
+    super.onCreate(savedInstanceState);
 
     setContentView(R.layout.activity_user_policy);
 
     ButterKnife.bind(this);
+
+    setupToolbar(toolbar, getResources().getString(R.string.user_policy_activity_title), true);
 
     if (getIntent().getExtras() != null) {
       String userPolicyString = getIntent().getExtras().getString(Constants.EXTRAS_USER_POLICY);
@@ -35,7 +35,7 @@ public class UserPolicy_Activity extends Base_Activity {
 
       //No effect
       settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
-      userPolicyWebView.setInitialScale(1);
+      userPolicyWebView.setInitialScale(300);
 
       String finalHTMLString = "<!DOCTYPE html>\n" +
           "<html>\n" +

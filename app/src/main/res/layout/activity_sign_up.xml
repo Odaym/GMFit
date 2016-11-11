@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<ScrollView
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:validator="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="@drawable/general_background"
-    android:fillViewport="true"
+    android:fitsSystemWindows="true"
     >
 
-  <RelativeLayout
+
+  <FrameLayout
+      xmlns:android="http://schemas.android.com/apk/res/android"
+      android:id="@+id/toolbarFrameLayout"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       >
@@ -24,10 +27,17 @@
         app:theme="@style/TransparentToolbar"
         />
 
+  </FrameLayout>
+
+  <ScrollView
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_below="@+id/toolbarFrameLayout"
+      >
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         >
 
@@ -232,16 +242,15 @@
           />
 
     </LinearLayout>
+  </ScrollView>
 
-    <Button
-        android:id="@+id/createAccountBTN"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/default_button_height_1"
-        android:layout_alignParentBottom="true"
-        android:layout_gravity="bottom"
-        android:text="@string/create_account_button"
-        style="@style/BottomButton"
-        />
-
-  </RelativeLayout>
-</ScrollView>
+  <Button
+      android:id="@+id/createAccountBTN"
+      android:layout_width="match_parent"
+      android:layout_height="@dimen/default_button_height_1"
+      android:layout_alignParentBottom="true"
+      android:layout_gravity="bottom"
+      android:text="@string/create_account_button"
+      style="@style/BottomButton"
+      />
+</RelativeLayout>

@@ -55,7 +55,7 @@ public class AddNewChart_Activity extends Base_Activity {
 
     ButterKnife.bind(this);
 
-    setupToolbar(toolbar, R.string.add_new_chart_activity_title, true);
+    setupToolbar(toolbar, getResources().getString(R.string.add_new_chart_activity_title), true);
 
     prefs = getSharedPreferences(Constants.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
 

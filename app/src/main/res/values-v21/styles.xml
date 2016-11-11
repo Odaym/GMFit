@@ -14,6 +14,7 @@
     <item name="android:windowActionBarOverlay">true</item>
     <item name="windowActionBarOverlay">true</item>
     <item name="android:titleTextStyle">@style/Toolbar.TitleTextStyle</item>
+    <item name="android:fitsSystemWindows">true</item>
   </style>
 
   <style name="Toolbar.TitleTextStyle" parent="@style/TransparentToolbar">
