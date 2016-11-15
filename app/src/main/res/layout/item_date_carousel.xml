@@ -14,7 +14,7 @@
       android:layout_height="wrap_content"
       android:gravity="center_horizontal"
       android:textColor="@color/white"
-      android:textSize="@dimen/date_carousel_items_font_size_normal"
+      android:textSize="@dimen/date_carousel_items_font_size_large"
       />
 
   <TextView

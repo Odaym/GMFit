@@ -13,7 +13,7 @@
       android:layout_width="@dimen/intro_image_dimens"
       android:layout_height="@dimen/intro_image_dimens"
       android:layout_marginBottom="@dimen/default_margin_3"
-      android:src="@drawable/fitness_slider_banner"
+      android:src="@drawable/recommendations_slider_banner"
       />
 
   <TextView
@@ -21,7 +21,7 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:gravity="center"
-      android:text="@string/fitness_tracking_title"
+      android:text="@string/recommendations_section_title"
       android:textAppearance="?android:textAppearanceLarge"
       android:textColor="@android:color/white"
       />
@@ -32,7 +32,7 @@
       android:layout_height="wrap_content"
       android:layout_marginTop="@dimen/default_margin_2"
       android:gravity="center_horizontal"
-      android:text="@string/fitness_tracking_message"
+      android:text="@string/recommendations_section_message"
       android:textColor="@color/offwhite_transparent"
       />
 

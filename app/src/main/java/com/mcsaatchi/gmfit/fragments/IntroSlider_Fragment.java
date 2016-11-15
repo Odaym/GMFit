@@ -5,10 +5,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-
-import com.mcsaatchi.gmfit.R;
-import com.squareup.picasso.Picasso;
 
 public class IntroSlider_Fragment extends Fragment {
 
@@ -39,22 +35,29 @@ public class IntroSlider_Fragment extends Fragment {
       Bundle savedInstanceState) {
     View view = getActivity().getLayoutInflater().inflate(layoutResId, container, false);
 
-    ImageView introIMG = (ImageView) view.findViewById(R.id.introIMG);
-
-    switch (layoutResId) {
-      case R.layout.fragment_intro_slide_1:
-        Picasso.with(getActivity()).load(R.drawable.fragment_intro_picture).into(introIMG);
-        break;
-      case R.layout.fragment_intro_slide_2:
-        Picasso.with(getActivity()).load(R.drawable.fragment_intro_picture).into(introIMG);
-        break;
-      case R.layout.fragment_intro_slide_3:
-        Picasso.with(getActivity()).load(R.drawable.fragment_intro_picture).into(introIMG);
-        break;
-      case R.layout.fragment_intro_slide_4:
-        Picasso.with(getActivity()).load(R.drawable.fragment_intro_picture).into(introIMG);
-        break;
-    }
+    //ImageView introIMG = (ImageView) view.findViewById(R.id.introIMG);
+    //
+    //switch (layoutResId) {
+    //  case R.layout.fragment_intro_slide_1:
+    //    Picasso.with(getActivity()).load(R.drawable.fragment_intro_picture).into(introIMG);
+    //    break;
+    //  case R.layout.fragment_intro_slide_2:
+    //    Picasso.with(getActivity()).load(R.drawable.fragment_intro_picture).into(introIMG);
+    //    break;
+    //  case R.layout.fragment_intro_slide_3:
+    //    Picasso.with(getActivity()).load(R.drawable.fragment_intro_picture).into(introIMG);
+    //    break;
+    //  case R.layout.fragment_intro_slide_4:
+    //    Picasso.with(getActivity()).load(R.drawable.fragment_intro_picture).into(introIMG);
+    //    break;
+    //  case R.layout.fragment_intro_slide_4:
+    //    Picasso.with(getActivity()).load(R.drawable.fragment_intro_picture).into(introIMG);
+    //    break;
+    //  case R.layout.fragment_intro_slide_4:
+    //    Picasso.with(getActivity()).load(R.drawable.fragment_intro_picture).into(introIMG);
+    //    break;
+    //
+    //}
 
     return view;
   }

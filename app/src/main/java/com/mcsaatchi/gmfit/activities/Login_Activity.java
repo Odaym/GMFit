@@ -266,7 +266,7 @@ public class Login_Activity extends Base_Activity {
     FrameLayout indicatorContainer = (FrameLayout) findViewById(R.id.indicator_container);
     indicatorContainer.addView(indicatorController.newInstance(this));
 
-    indicatorController.initialize(4);
+    indicatorController.initialize(7);
   }
 
   public class IntroAdapter extends FragmentPagerAdapter {
@@ -285,13 +285,19 @@ public class Login_Activity extends Base_Activity {
           return IntroSlider_Fragment.newInstance(R.layout.fragment_intro_slide_3);
         case 3:
           return IntroSlider_Fragment.newInstance(R.layout.fragment_intro_slide_4);
+        case 4:
+          return IntroSlider_Fragment.newInstance(R.layout.fragment_intro_slide_5);
+        case 5:
+          return IntroSlider_Fragment.newInstance(R.layout.fragment_intro_slide_6);
+        case 6:
+          return IntroSlider_Fragment.newInstance(R.layout.fragment_intro_slide_7);
         default:
           return null;
       }
     }
 
     @Override public int getCount() {
-      return 4;
+      return 7;
     }
   }
 }

@@ -4,7 +4,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:gravity="center"
+    android:gravity="center_horizontal"
     android:orientation="vertical"
     >
 
@@ -12,6 +12,8 @@
       android:id="@+id/introIMG"
       android:layout_width="@dimen/intro_image_dimens"
       android:layout_height="@dimen/intro_image_dimens"
+      android:layout_marginBottom="@dimen/default_margin_3"
+      android:src="@drawable/health_slider_banner"
       />
 
   <TextView
@@ -19,7 +21,7 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:gravity="center"
-      android:text="@string/get_started_title"
+      android:text="@string/health_tracking_title"
       android:textAppearance="?android:textAppearanceLarge"
       android:textColor="@android:color/white"
       />
@@ -30,8 +32,8 @@
       android:layout_height="wrap_content"
       android:layout_marginTop="@dimen/default_margin_2"
       android:gravity="center_horizontal"
-      android:text="This is the FIRST fragment"
-      android:textColor="@android:color/white"
+      android:text="@string/health_tracking_message"
+      android:textColor="@color/offwhite_transparent"
       />
 
 </LinearLayout>

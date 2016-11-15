@@ -46,8 +46,8 @@
   <!-- LOGIN ACTIVITY -->
   <dimen name="intro_image_dimens">150dp</dimen>
   <dimen name="login_button_height">50dp</dimen>
-  <dimen name="intro_viewpager_height">250dp</dimen>
-  <dimen name="intro_viewpager_padding_top">120dp</dimen>
+  <dimen name="intro_viewpager_height">300dp</dimen>
+  <dimen name="intro_viewpager_padding_top">100dp</dimen>
 
   <!-- DASHBOARD CHARTS -->
   <dimen name="remove_chart_button_dimens">35dp</dimen>
@@ -66,7 +66,7 @@
   <dimen name="metric_image_dimen">30dp</dimen>
   <dimen name="date_carousel_height">70dp</dimen>
   <dimen name="chart_title_headline_bar_height">60dp</dimen>
-  <dimen name="date_carousel_items_font_size_normal">14sp</dimen>
+  <dimen name="date_carousel_items_font_size_normal">12sp</dimen>
   <dimen name="date_carousel_items_font_size_large">15sp</dimen>
 
   <!-- BREAKDOWN ACTIVITY -->
@@ -78,6 +78,8 @@
   <dimen name="nutrition_widgets_gridview_height">200dp</dimen>
   <dimen name="meal_item_name_width">250dp</dimen>
   <dimen name="add_and_scan_icons_dimens">20dp</dimen>
+  <dimen name="user_goal_labels_font_size">30sp</dimen>
+  <dimen name="user_goals_section_height">110dp</dimen>
 
   <!-- TOP OF DASHBOARD-->
   <dimen name="metric_cell_padding_horizontal">25dp</dimen>

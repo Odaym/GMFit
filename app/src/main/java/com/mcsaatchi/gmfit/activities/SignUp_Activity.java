@@ -159,7 +159,7 @@ public class SignUp_Activity extends Base_Activity {
                     .post(new EventBus_Poster(
                         Constants.EVENT_SIGNNED_UP_SUCCESSFULLY_CLOSE_LOGIN_ACTIVITY));
 
-                Intent intent = new Intent(SignUp_Activity.this, GetStarted_Activity.class);
+                Intent intent = new Intent(SignUp_Activity.this, AccountVerification_Activity.class);
                 startActivity(intent);
 
                 finish();

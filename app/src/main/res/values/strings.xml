@@ -94,6 +94,9 @@
   <string name="verification_code_hint">6-digit code</string>
   <string name="wrong_verification_code">The code you provided is incorrect.</string>
   <string name="verifying_email_dialog_title">Verifying email address</string>
+  <string name="verification_required_title">Verification Required</string>
+  <string name="verification_required_message">Please enter the 6-digit verification code we sent\nyou via e-mail.</string>
+  <string name="setup_my_profile_button">Setup My Profile</string>
 
   <!-- TERMS OF USAGE ACTIVITY -->
   <string name="tos_activity_title">Terms of Use</string>
@@ -117,11 +120,20 @@
     </string>
 
   <!-- GET STARTED ACTIVITY -->
+  <string name="welcome_globemed_title">Welcome to GlobeMed Fit</string>
+  <string name="welcome_globemed_message">An all-in-one app that helps you manage your health.\nSwipe left for more details.</string>
+  <string name="fitness_tracking_title">Automatic Fitness Tracking</string>
+  <string name="fitness_tracking_message">Keep an eye on your day-to-day activities through\nthe customizable widgets and charts.</string>
+  <string name="food_logging_title">Food Logging\n&amp; Recommendations</string>
+  <string name="food_logging_message">Search, scan or log your meals and track your daily\ninstake of calories, protein, carbs and more.</string>
+  <string name="health_tracking_title">Health Tracking &amp; Monitoring</string>
+  <string name="health_tracking_message">Monitor your health and keep a record of all\nyour medical tests.</string>
+  <string name="recommendations_section_title">Recommandations,\nJust For You</string>
+  <string name="recommendations_section_message">Benefit from the smart cross-section recommendations,\nbased on your profile and activities.</string>
+  <string name="daily_goals_section_title">Daily Goals &amp; Achievements</string>
+  <string name="daily_goals_section_message">Complete your daily goals and unlock achievements and rewards.</string>
   <string name="get_started_title">Let\'s Get Started</string>
-    <string name="get_started_message">Lorem ipsum dolor sit amet, accumsan praesent vulputate has ad, vel ne liber zril. Ea qui audire suavitate, ut stet
-        debitis complectitur nec. Ex vim wisi mutat denique, his sint congue ne.
-    </string>
-  <string name="setup_my_profile_button">Setup My Profile</string>
+  <string name="get_started_message">Sign up for the GM Fit app via e-mail\nor through Facebook. If you\'ve already signed up,\nyou can sign in below.</string>
 
   <!-- SETUP PROFILE ACTIVITY -->
   <string name="setup_profile_activity_title">Setup Profile</string>
@@ -174,6 +186,8 @@
   <string name="add_new_chart_button">+ Add New Chart</string>
   <string name="grabbing_breakdown_data_dialog_title">Loading chart data</string>
   <string name="deleting_chart_dialog_title">Deleting chart</string>
+  <string name="steps_today_title">Steps</string>
+  <string name="steps_shorthand_unit">steps</string>
 
   <!-- BREAKDOWN ACTIVITY -->
   <string name="all_time_breakdown_bar_hint">All Time</string>
@@ -187,6 +201,13 @@
   <string name="meal_headline_title_lunch">Lunch</string>
   <string name="meal_headline_title_dinner">Dinner</string>
   <string name="meal_headline_title_snacks">Snacks</string>
+  <string name="goal_title">Goal</string>
+  <string name="active_title">Active</string>
+  <string name="calories_today_title">Calories</string>
+  <string name="today_title">Today</string>
+  <string name="remaining_title">Remaining</string>
+  <string name="kilocalories_shorthand_unit">kcal</string>
+
 
   <!-- HEALTH FRAGMENT -->
   <string name="user_weight_label_metric">Kilograms</string>

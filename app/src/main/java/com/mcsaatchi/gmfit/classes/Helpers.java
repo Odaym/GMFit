@@ -153,6 +153,9 @@ public class Helpers {
     chart.getAxisLeft().setAxisMinValue(0);
 
     chart.setData(data);
+
+    chart.getBarData().setDrawValues(false);
+
     chart.invalidate();
   }
 

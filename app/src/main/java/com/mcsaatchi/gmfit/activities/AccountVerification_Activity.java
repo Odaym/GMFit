@@ -29,7 +29,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class GetStarted_Activity extends Base_Activity {
+public class AccountVerification_Activity extends Base_Activity {
 
   @Bind(R.id.getStartedIMG) ImageView getStartedIMG;
   @Bind(R.id.setup_profile_button) Button setupProfileBTN;
@@ -42,7 +42,7 @@ public class GetStarted_Activity extends Base_Activity {
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    setContentView(R.layout.activity_get_started);
+    setContentView(R.layout.activity_account_verification);
 
     ButterKnife.bind(this);
 
@@ -58,10 +58,10 @@ public class GetStarted_Activity extends Base_Activity {
     setupProfileBTN.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
         if (Helpers.validateFields(allFields)) {
-          if (Helpers.isInternetAvailable(GetStarted_Activity.this)) {
+          if (Helpers.isInternetAvailable(AccountVerification_Activity.this)) {
             verifyRegistrationCode(verifyCodeET.getText().toString());
           } else {
-            Helpers.showNoInternetDialog(GetStarted_Activity.this);
+            Helpers.showNoInternetDialog(AccountVerification_Activity.this);
           }
         }
       }
@@ -97,7 +97,7 @@ public class GetStarted_Activity extends Base_Activity {
                     prefs.edit().putBoolean(Constants.EXTRAS_USER_LOGGED_IN, true).apply();
 
                     Intent intent =
-                        new Intent(GetStarted_Activity.this, SetupProfile_Activity.class);
+                        new Intent(AccountVerification_Activity.this, SetupProfile_Activity.class);
                     startActivity(intent);
                     finish();
                     break;

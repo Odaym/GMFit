@@ -83,7 +83,7 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
   @Bind(R.id.dateCarousel) HorizontalScrollView dateCarousel;
   @Bind(R.id.dateCarouselContainer) LinearLayout dateCarouselContainer;
 
-  private boolean setDrawChartValuesEnabled = false;
+  private boolean setDrawValuesDisabled = true;
   private Activity parentActivity;
   private SharedPreferences prefs;
   private FitnessWidgets_GridAdapter widgets_GridAdapter;
@@ -343,7 +343,7 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
       DateTimeFormatter monthFormatter = DateTimeFormat.forPattern("MMM");
 
       dayOfMonthTV.setText(String.valueOf(dateAsLocal.getDayOfMonth()));
-      monthOfYearTV.setText(String.valueOf(monthFormatter.print(dateAsLocal)));
+      monthOfYearTV.setText(String.valueOf(monthFormatter.print(dateAsLocal).toUpperCase()));
 
       dateCarouselContainer.addView(itemDateCarouselLayout);
 
@@ -519,13 +519,13 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
     showChartValuesBTN.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View view) {
         if (barChart.getBarData() != null) {
-          if (setDrawChartValuesEnabled) {
+          if (setDrawValuesDisabled) {
             barChart.getBarData().setDrawValues(true);
           } else {
             barChart.getBarData().setDrawValues(false);
           }
 
-          setDrawChartValuesEnabled = !setDrawChartValuesEnabled;
+          setDrawValuesDisabled = !setDrawValuesDisabled;
 
           barChart.invalidate();
         }

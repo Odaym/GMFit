@@ -134,7 +134,7 @@ public class Nutrition_Fragment extends Fragment {
   @Bind(R.id.dateCarousel) HorizontalScrollView dateCarousel;
   @Bind(R.id.dateCarouselContainer) LinearLayout dateCarouselContainer;
   private String finalDesiredDate;
-  private boolean setDrawChartValuesEnabled = false;
+  private boolean setDrawValuesDisabled = true;
   private UserMeals_RecyclerAdapterDragSwipe userMealsRecyclerAdapter;
   private ArrayList<NutritionWidget> widgetsMap;
   private SharedPreferences prefs;
@@ -262,7 +262,7 @@ public class Nutrition_Fragment extends Fragment {
       DateTimeFormatter monthFormatter = DateTimeFormat.forPattern("MMM");
 
       dayOfMonthTV.setText(String.valueOf(dateAsLocal.getDayOfMonth()));
-      monthOfYearTV.setText(String.valueOf(monthFormatter.print(dateAsLocal)));
+      monthOfYearTV.setText(String.valueOf(monthFormatter.print(dateAsLocal).toUpperCase()));
 
       dateCarouselContainer.addView(itemDateCarouselLayout);
 
@@ -816,13 +816,13 @@ public class Nutrition_Fragment extends Fragment {
 
       showChartValuesBTN.setOnClickListener(new View.OnClickListener() {
         @Override public void onClick(View view) {
-          if (setDrawChartValuesEnabled) {
+          if (setDrawValuesDisabled) {
             barChart.getBarData().setDrawValues(true);
           } else {
             barChart.getBarData().setDrawValues(false);
           }
 
-          setDrawChartValuesEnabled = !setDrawChartValuesEnabled;
+          setDrawValuesDisabled = !setDrawValuesDisabled;
 
           barChart.invalidate();
         }

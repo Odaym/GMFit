@@ -75,7 +75,7 @@
         android:theme="@style/No_Action_Bar_Theme"/>
 
     <activity
-        android:name=".activities.GetStarted_Activity"
+        android:name=".activities.AccountVerification_Activity"
         android:screenOrientation="portrait"
         android:theme="@style/No_Status_Or_Action_Bar_Theme"
         android:windowSoftInputMode="stateVisible|adjustPan"/>

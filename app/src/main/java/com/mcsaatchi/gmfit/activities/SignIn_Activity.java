@@ -183,7 +183,7 @@ public class SignIn_Activity extends Base_Activity {
                 waitingDialog.dismiss();
 
                 Intent userNotVerifiedIntent =
-                    new Intent(SignIn_Activity.this, GetStarted_Activity.class);
+                    new Intent(SignIn_Activity.this, AccountVerification_Activity.class);
                 startActivity(userNotVerifiedIntent);
 
                 finish();

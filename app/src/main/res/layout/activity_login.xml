@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/general_background"
-    android:paddingTop="@dimen/intro_viewpager_padding_top"
     >
 
   <android.support.v4.view.ViewPager
@@ -12,6 +11,8 @@
       android:layout_width="match_parent"
       android:layout_height="@dimen/intro_viewpager_height"
       android:layout_centerHorizontal="true"
+      android:layout_marginBottom="@dimen/default_margin_1"
+      android:layout_marginTop="@dimen/intro_viewpager_padding_top"
       />
 
   <FrameLayout

@@ -2,7 +2,7 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
 
-  <solid android:color="@color/fitness_pink"/>
+  <solid android:color="@color/nutrition_goals_pink"/>
 
   <corners android:radius="20dip"/>
 
