@@ -285,7 +285,11 @@ public class Nutrition_Fragment extends Fragment {
                           activeTV.getText().toString()) - Integer.parseInt(
                           todayTV.getText().toString());
 
-                  remainingTV.setText(String.valueOf(remainingValue));
+                  if (remainingValue < 0) {
+                    remainingTV.setText(String.valueOf(0));
+                  } else {
+                    remainingTV.setText(String.valueOf(remainingValue));
+                  }
                 }
               }
 
@@ -940,50 +944,52 @@ public class Nutrition_Fragment extends Fragment {
             "nutrition", chart_slug, new Callback<ChartMetricBreakdownResponse>() {
               @Override public void onResponse(Call<ChartMetricBreakdownResponse> call,
                   Response<ChartMetricBreakdownResponse> response) {
-                List<ChartMetricBreakdownResponseDatum> rawChartData =
-                    response.body().getData().getBody().getData();
+                if (response.body().getData().getBody() != null) {
+                  List<ChartMetricBreakdownResponseDatum> rawChartData =
+                      response.body().getData().getBody().getData();
 
-                if (rawChartData != null && rawChartData.size() > 0) {
-                  List<AuthenticationResponseChartData> newChartData = new ArrayList<>();
+                  if (rawChartData != null && rawChartData.size() > 0) {
+                    List<AuthenticationResponseChartData> newChartData = new ArrayList<>();
 
-                  for (int i = 0; i < rawChartData.size(); i++) {
-                    newChartData.add(
-                        new AuthenticationResponseChartData(rawChartData.get(i).getDate(),
-                            rawChartData.get(i).getValue()));
-                  }
-
-                  DateTime date;
-
-                  Collections.reverse(newChartData);
-
-                  for (int i = 0; i < newChartData.size(); i++) {
-                    date = new DateTime(newChartData.get(i).getDate());
-
-                    switch (i) {
-                      case 0:
-                        dateTV_1.setText(date.getDayOfMonth() + " " + date.monthOfYear()
-                            .getAsText()
-                            .substring(0, 3));
-                        break;
-                      case 7:
-                        dateTV_2.setText(date.getDayOfMonth() + " " + date.monthOfYear()
-                            .getAsText()
-                            .substring(0, 3));
-                        break;
-                      case 14:
-                        dateTV_3.setText(date.getDayOfMonth() + " " + date.monthOfYear()
-                            .getAsText()
-                            .substring(0, 3));
-                        break;
-                      case 21:
-                        dateTV_4.setText(date.getDayOfMonth() + " " + date.monthOfYear()
-                            .getAsText()
-                            .substring(0, 3));
-                        break;
+                    for (int i = 0; i < rawChartData.size(); i++) {
+                      newChartData.add(
+                          new AuthenticationResponseChartData(rawChartData.get(i).getDate(),
+                              rawChartData.get(i).getValue()));
                     }
-                  }
 
-                  Helpers.setBarChartData(barchart, newChartData);
+                    DateTime date;
+
+                    Collections.reverse(newChartData);
+
+                    for (int i = 0; i < newChartData.size(); i++) {
+                      date = new DateTime(newChartData.get(i).getDate());
+
+                      switch (i) {
+                        case 0:
+                          dateTV_1.setText(date.getDayOfMonth() + " " + date.monthOfYear()
+                              .getAsText()
+                              .substring(0, 3));
+                          break;
+                        case 7:
+                          dateTV_2.setText(date.getDayOfMonth() + " " + date.monthOfYear()
+                              .getAsText()
+                              .substring(0, 3));
+                          break;
+                        case 14:
+                          dateTV_3.setText(date.getDayOfMonth() + " " + date.monthOfYear()
+                              .getAsText()
+                              .substring(0, 3));
+                          break;
+                        case 21:
+                          dateTV_4.setText(date.getDayOfMonth() + " " + date.monthOfYear()
+                              .getAsText()
+                              .substring(0, 3));
+                          break;
+                      }
+                    }
+
+                    Helpers.setBarChartData(barchart, newChartData);
+                  }
                 }
               }
 

@@ -263,7 +263,8 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
                 String maxValue =
                     response.body().getData().getBody().getMetrics().getStepsCount().getMaxValue();
 
-                String currentValue = response.body().getData().getBody().getMetrics().getStepsCount().getValue();
+                String currentValue =
+                    response.body().getData().getBody().getMetrics().getStepsCount().getValue();
 
                 todayTV.setText(String.valueOf((int) Double.parseDouble(currentValue)));
                 goalTV.setText(maxValue);
@@ -271,7 +272,11 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
                 int remainingValue =
                     (int) (Integer.parseInt(maxValue) - Double.parseDouble(currentValue));
 
-                remainingTV.setText(String.valueOf(remainingValue));
+                if (remainingValue < 0) {
+                  remainingTV.setText(String.valueOf(0));
+                } else {
+                  remainingTV.setText(String.valueOf(remainingValue));
+                }
               }
 
               @Override public void onFailure(Call<UserGoalMetricsResponse> call, Throwable t) {
