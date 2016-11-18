@@ -5,6 +5,8 @@
   <dimen name="default_padding_1">10dp</dimen>
   <dimen name="margin_medium">16dp</dimen>
 
+  <dimen name="goal_metrics_viewpager_height">90dp</dimen>
+
   <dimen name="bottom_bar_navigation_height">60dp</dimen>
   <dimen name="sections_progress_bar_height">7dp</dimen>
   <dimen name="metric_counter_font_size">140sp</dimen>
@@ -78,8 +80,8 @@
   <dimen name="nutrition_widgets_gridview_height">200dp</dimen>
   <dimen name="meal_item_name_width">250dp</dimen>
   <dimen name="add_and_scan_icons_dimens">20dp</dimen>
-  <dimen name="user_goal_labels_font_size">30sp</dimen>
-  <dimen name="user_goals_section_height">110dp</dimen>
+  <dimen name="user_goal_labels_font_size">45sp</dimen>
+  <dimen name="user_goals_section_height">140dp</dimen>
 
   <!-- TOP OF DASHBOARD-->
   <dimen name="metric_cell_padding_horizontal">25dp</dimen>
