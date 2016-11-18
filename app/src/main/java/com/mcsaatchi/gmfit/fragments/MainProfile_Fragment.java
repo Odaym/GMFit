@@ -19,9 +19,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -37,14 +34,14 @@ import butterknife.ButterKnife;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.activities.ContactUs_Activity;
 import com.mcsaatchi.gmfit.activities.Login_Activity;
-import com.mcsaatchi.gmfit.activities.UserPolicy_Activity;
+import com.mcsaatchi.gmfit.activities.MetaTexts_Activity;
 import com.mcsaatchi.gmfit.classes.CircleTransform;
 import com.mcsaatchi.gmfit.classes.Constants;
 import com.mcsaatchi.gmfit.classes.Helpers;
 import com.mcsaatchi.gmfit.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.rest.EmergencyProfileResponse;
-import com.mcsaatchi.gmfit.rest.UserPolicyResponse;
+import com.mcsaatchi.gmfit.rest.MetaTextsResponse;
 import com.mcsaatchi.gmfit.rest.UserProfileResponse;
 import com.mcsaatchi.gmfit.rest.UserProfileResponseDatum;
 import com.mcsaatchi.gmfit.rest.UserProfileResponseGoal;
@@ -104,8 +101,6 @@ public class MainProfile_Fragment extends Fragment {
   private Uri photoFileUri;
   private boolean profilePictureChanged = false;
 
-  private MenuItem saveChangesItem;
-
   private SharedPreferences prefs;
 
   private double newUserWeight;
@@ -133,6 +128,9 @@ public class MainProfile_Fragment extends Fragment {
 
     getUserProfile();
 
+    /**
+     * PROFILE IMAGE EDITOR
+     */
     userProfileIV.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View view) {
         String[] neededPermissions = new String[] {
@@ -154,6 +152,9 @@ public class MainProfile_Fragment extends Fragment {
       }
     });
 
+    /**
+     * WEIGHT EDITOR
+     */
     weightLayout.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View view) {
         final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
@@ -163,9 +164,6 @@ public class MainProfile_Fragment extends Fragment {
             LayoutInflater.from(getActivity()).inflate(R.layout.profile_edit_weight_dialog, null);
         final EditText editWeightET = (EditText) dialogView.findViewById(R.id.dialogWeightET);
 
-        /**
-         * Initialize weight edit text with user's stored weight
-         */
         editWeightET.setText(
             String.valueOf((int) prefs.getFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, 0)));
         editWeightET.setSelection(editWeightET.getText().toString().length());
@@ -176,13 +174,11 @@ public class MainProfile_Fragment extends Fragment {
             newUserWeight = Double.parseDouble(editWeightET.getText().toString());
             weightEntryValueTV.setText(String.valueOf((int) newUserWeight));
 
-            if (newUserWeight != prefs.getFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, 0)) {
-              showSaveChangesMenuItem();
-            }
-
             prefs.edit()
                 .putFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, (float) newUserWeight)
                 .apply();
+
+            updateUserProfile();
           }
         });
         dialogBuilder.setNegativeButton(R.string.decline_cancel,
@@ -197,6 +193,9 @@ public class MainProfile_Fragment extends Fragment {
       }
     });
 
+    /**
+     * USER GOALS EDITOR
+     */
     goalsLayout.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View view) {
         final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
@@ -237,12 +236,10 @@ public class MainProfile_Fragment extends Fragment {
 
             goalsEntryValueTV.setText(newUserGoalText);
 
-            if (!newUserGoalText.equals(
-                (prefs.getString(Constants.EXTRAS_USER_PROFILE_GOAL, "")))) {
-              showSaveChangesMenuItem();
-            }
-
             prefs.edit().putInt(Constants.EXTRAS_USER_PROFILE_GOAL_ID, newUserGoalId).apply();
+            prefs.edit().putString(Constants.EXTRAS_USER_PROFILE_GOAL, newUserGoalText).apply();
+
+            updateUserProfile();
           }
         });
         dialogBuilder.setNegativeButton(R.string.decline_cancel,
@@ -257,6 +254,9 @@ public class MainProfile_Fragment extends Fragment {
       }
     });
 
+    /**
+     * MEDICAL CONDITIONS EDITOR
+     */
     medicalConditionsLayout.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View view) {
         final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
@@ -294,8 +294,6 @@ public class MainProfile_Fragment extends Fragment {
 
             medicalConditionsValueTV.setText(selectedRadioButton.getText().toString());
 
-            showSaveChangesMenuItem();
-
             prefs.edit()
                 .putString(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION,
                     selectedRadioButton.getText().toString())
@@ -304,8 +302,11 @@ public class MainProfile_Fragment extends Fragment {
                 .putInt(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION_ID,
                     selectedRadioButton.getId())
                 .apply();
+
+            updateUserProfile();
           }
         });
+
         dialogBuilder.setNegativeButton(R.string.decline_cancel,
             new DialogInterface.OnClickListener() {
               @Override public void onClick(DialogInterface dialogInterface, int i) {
@@ -318,6 +319,9 @@ public class MainProfile_Fragment extends Fragment {
       }
     });
 
+    /**
+     * METRIC SYSTEM EDITOR
+     */
     metricLayout.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View view) {
         final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
@@ -356,12 +360,12 @@ public class MainProfile_Fragment extends Fragment {
 
             metricSystemValueTV.setText(selectedRadioButton.getText().toString());
 
-            showSaveChangesMenuItem();
-
             prefs.edit()
                 .putString(Constants.EXTRAS_USER_PROFILE_MEASUREMENT_SYSTEM,
                     selectedRadioButton.getText().toString())
                 .apply();
+
+            updateUserProfile();
           }
         });
         dialogBuilder.setNegativeButton(R.string.decline_cancel,
@@ -376,6 +380,9 @@ public class MainProfile_Fragment extends Fragment {
       }
     });
 
+    /**
+     * LOGOUT FROM THE APP
+     */
     logoutBTN.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View view) {
         if (Helpers.isInternetAvailable(getActivity())) {
@@ -386,6 +393,33 @@ public class MainProfile_Fragment extends Fragment {
       }
     });
 
+    /**
+     * COUNTRY OF ORIGIN EDITOR
+     */
+    countryLayout.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View view) {
+        final CountryPicker picker =
+            CountryPicker.newInstance(getString(R.string.choose_country_hint));
+
+        picker.show(getActivity().getSupportFragmentManager(), "COUNTRY_PICKER");
+        picker.setListener(new CountryPickerListener() {
+          @Override public void onSelectCountry(String countryName, String code, String dialCode,
+              int flagDrawableResID) {
+            countryValueTV.setText(countryName);
+
+            prefs.edit().putString(Constants.EXTRAS_USER_PROFILE_NATIONALITY, countryName).apply();
+
+            picker.dismiss();
+
+            updateUserProfile();
+          }
+        });
+      }
+    });
+
+    /**
+     * SHOW EMERGENCY PROFILE
+     */
     shareEmergencyProfileBTN.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View view) {
         if (Helpers.isInternetAvailable(getActivity())) {
@@ -404,42 +438,27 @@ public class MainProfile_Fragment extends Fragment {
       }
     });
 
-    countryLayout.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View view) {
-        final CountryPicker picker =
-            CountryPicker.newInstance(getString(R.string.choose_country_hint));
-
-        picker.show(getActivity().getSupportFragmentManager(), "COUNTRY_PICKER");
-        picker.setListener(new CountryPickerListener() {
-          @Override public void onSelectCountry(String countryName, String code, String dialCode,
-              int flagDrawableResID) {
-            countryValueTV.setText(countryName);
-
-            if (!countryName.equals(
-                prefs.getString(Constants.EXTRAS_USER_PROFILE_NATIONALITY, ""))) {
-              showSaveChangesMenuItem();
-            }
-
-            prefs.edit().putString(Constants.EXTRAS_USER_PROFILE_NATIONALITY, countryName).apply();
-
-            picker.dismiss();
-          }
-        });
-      }
-    });
-
+    /**
+     * TERMS AND CONDITIONS
+     */
     termsConditionsLayout.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View view) {
-        getUserPolicyAndOpenActivity();
+        getMetaTexts("terms");
       }
     });
 
+    /**
+     * PRIVACY POLICY
+     */
     privacyLayout.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View view) {
-        getUserPolicyAndOpenActivity();
+        getMetaTexts("privacy");
       }
     });
 
+    /**
+     * CONTACT US
+     */
     contactUsLayout.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View view) {
         Intent intent = new Intent(getActivity(), ContactUs_Activity.class);
@@ -447,6 +466,9 @@ public class MainProfile_Fragment extends Fragment {
       }
     });
 
+    /**
+     * SHARE THE APP
+     */
     shareAppLayout.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View view) {
         try {
@@ -464,23 +486,6 @@ public class MainProfile_Fragment extends Fragment {
     });
 
     return fragmentView;
-  }
-
-  @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-    super.onCreateOptionsMenu(menu, inflater);
-
-    inflater.inflate(R.menu.user_profile, menu);
-
-    saveChangesItem = menu.findItem(R.id.save_changes);
-  }
-
-  @Override public boolean onOptionsItemSelected(MenuItem item) {
-    switch (item.getItemId()) {
-      case R.id.save_changes:
-        updateUserProfile();
-        break;
-    }
-    return super.onOptionsItemSelected(item);
   }
 
   @Override public void onRequestPermissionsResult(int requestCode, String[] permissions,
@@ -523,14 +528,14 @@ public class MainProfile_Fragment extends Fragment {
 
         Picasso.with(getActivity())
             .load(new File(prefs.getString(Constants.EXTRAS_USER_PROFILE_IMAGE, "")))
-            .resize(200, 200)
+            .resize(500, 500)
             .transform(new CircleTransform())
             .centerInside()
             .into(userProfileIV);
 
         profilePictureChanged = true;
 
-        showSaveChangesMenuItem();
+        updateUserProfile();
 
         break;
     }
@@ -577,7 +582,7 @@ public class MainProfile_Fragment extends Fragment {
     return mediaStorageDir.getPath() + File.separator + imageFileName;
   }
 
-  private void getUserPolicyAndOpenActivity() {
+  private void getMetaTexts(final String section) {
     final ProgressDialog waitingDialog = new ProgressDialog(getActivity());
     waitingDialog.setTitle(getResources().getString(R.string.loading_data_dialog_title));
     waitingDialog.setMessage(getResources().getString(R.string.please_wait_dialog_message));
@@ -595,23 +600,34 @@ public class MainProfile_Fragment extends Fragment {
         });
 
     DataAccessHandler.getInstance()
-        .getUserPolicy(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN,
-            Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), new Callback<UserPolicyResponse>() {
-          @Override public void onResponse(Call<UserPolicyResponse> call,
-              Response<UserPolicyResponse> response) {
+        .getMetaTexts(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN,
+            Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), section, new Callback<MetaTextsResponse>() {
+          @Override public void onResponse(Call<MetaTextsResponse> call,
+              Response<MetaTextsResponse> response) {
 
             switch (response.code()) {
               case 200:
                 waitingDialog.dismiss();
 
-                Intent intent = new Intent(getActivity(), UserPolicy_Activity.class);
-                intent.putExtra(Constants.EXTRAS_USER_POLICY,
-                    response.body().getData().getBody().getUserPolicy());
+                Intent intent = new Intent(getActivity(), MetaTexts_Activity.class);
+                switch (section) {
+                  case "terms":
+                    intent.putExtra(Constants.BUNDLE_ACTIVITY_TITLE,
+                        getResources().getString(R.string.terms_and_conditions_entry));
+                    break;
+                  case "privacy":
+                    intent.putExtra(Constants.BUNDLE_ACTIVITY_TITLE,
+                        getResources().getString(R.string.privacy_and_security_entry));
+                    break;
+                }
+
+                intent.putExtra(Constants.EXTRAS_META_HTML_CONTENT,
+                    response.body().getData().getBody());
                 startActivity(intent);
             }
           }
 
-          @Override public void onFailure(Call<UserPolicyResponse> call, Throwable t) {
+          @Override public void onFailure(Call<MetaTextsResponse> call, Throwable t) {
             Log.d("TAG", "onFailure: User profile request failed!");
           }
         });
@@ -763,13 +779,13 @@ public class MainProfile_Fragment extends Fragment {
     DataAccessHandler.getInstance()
         .updateUserProfile(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN,
             Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), dateOfBirth, bloodType, nationality,
-            medicalCondition, measurementSystem, activityLevelId, userGoalId, gender, height,
-            weight, Helpers.calculateBMI(weight, height), new Callback<DefaultGetResponse>() {
+            medicalCondition, measurementSystem.toLowerCase(), userGoalId, activityLevelId, gender,
+            height, weight, Helpers.calculateBMI(weight, height),
+            new Callback<DefaultGetResponse>() {
               @Override public void onResponse(Call<DefaultGetResponse> call,
                   Response<DefaultGetResponse> response) {
                 switch (response.code()) {
                   case 200:
-
                     if (profilePictureChanged) {
                       updateUserPicture(waitingDialog, alertDialog);
                     } else {
@@ -823,10 +839,6 @@ public class MainProfile_Fragment extends Fragment {
                 alertDialog.show();
               }
             });
-  }
-
-  private void showSaveChangesMenuItem() {
-    if (!saveChangesItem.isVisible()) saveChangesItem.setVisible(true);
   }
 
   private void signOutUser() {
