@@ -259,37 +259,45 @@ public class Nutrition_Fragment extends Fragment {
               @Override public void onResponse(Call<UserGoalMetricsResponse> call,
                   Response<UserGoalMetricsResponse> response) {
 
-                UserGoalMetricsResponseActiveCalories activeCaloriesResponse =
-                    response.body().getData().getBody().getMetrics().getActiveCalories();
+                switch (response.code()) {
+                  case 200:
+                    UserGoalMetricsResponseActiveCalories activeCaloriesResponse =
+                        response.body().getData().getBody().getMetrics().getActiveCalories();
 
-                if (activeCaloriesResponse == null) {
-                  String maxValue =
-                      response.body().getData().getBody().getMetrics().getCalories().getMaxValue();
+                    if (activeCaloriesResponse == null) {
+                      String maxValue = response.body()
+                          .getData()
+                          .getBody()
+                          .getMetrics()
+                          .getCalories()
+                          .getMaxValue();
 
-                  String currentValue =
-                      response.body().getData().getBody().getMetrics().getCalories().getValue();
+                      String currentValue =
+                          response.body().getData().getBody().getMetrics().getCalories().getValue();
 
-                  todayTV.setText(String.valueOf((int) Double.parseDouble(currentValue)));
-                  goalTV.setText(maxValue);
+                      todayTV.setText(String.valueOf((int) Double.parseDouble(currentValue)));
+                      goalTV.setText(maxValue);
 
-                  getUserGoalMetrics(date, "fitness");
-                } else {
-                  String activeCalories = activeCaloriesResponse.getValue();
+                      getUserGoalMetrics(date, "fitness");
+                    } else {
+                      String activeCalories = activeCaloriesResponse.getValue();
 
-                  activeTV.setText(String.valueOf((int) Double.parseDouble(activeCalories)));
-                }
+                      activeTV.setText(String.valueOf((int) Double.parseDouble(activeCalories)));
+                    }
 
-                if (!activeTV.getText().toString().isEmpty()) {
-                  int remainingValue =
-                      Integer.parseInt(goalTV.getText().toString()) + Integer.parseInt(
-                          activeTV.getText().toString()) - Integer.parseInt(
-                          todayTV.getText().toString());
+                    if (!activeTV.getText().toString().isEmpty()) {
+                      int remainingValue =
+                          Integer.parseInt(goalTV.getText().toString()) + Integer.parseInt(
+                              activeTV.getText().toString()) - Integer.parseInt(
+                              todayTV.getText().toString());
 
-                  if (remainingValue < 0) {
-                    remainingTV.setText(String.valueOf(0));
-                  } else {
-                    remainingTV.setText(String.valueOf(remainingValue));
-                  }
+                      if (remainingValue < 0) {
+                        remainingTV.setText(String.valueOf(0));
+                      } else {
+                        remainingTV.setText(String.valueOf(remainingValue));
+                      }
+                    }
+                    break;
                 }
               }
 

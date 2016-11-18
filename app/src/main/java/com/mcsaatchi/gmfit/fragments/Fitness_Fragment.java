@@ -260,22 +260,30 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
               @Override public void onResponse(Call<UserGoalMetricsResponse> call,
                   Response<UserGoalMetricsResponse> response) {
 
-                String maxValue =
-                    response.body().getData().getBody().getMetrics().getStepsCount().getMaxValue();
+                switch (response.code()) {
+                  case 200:
+                    String maxValue = response.body()
+                        .getData()
+                        .getBody()
+                        .getMetrics()
+                        .getStepsCount()
+                        .getMaxValue();
 
-                String currentValue =
-                    response.body().getData().getBody().getMetrics().getStepsCount().getValue();
+                    String currentValue =
+                        response.body().getData().getBody().getMetrics().getStepsCount().getValue();
 
-                todayTV.setText(String.valueOf((int) Double.parseDouble(currentValue)));
-                goalTV.setText(maxValue);
+                    todayTV.setText(String.valueOf((int) Double.parseDouble(currentValue)));
+                    goalTV.setText(maxValue);
 
-                int remainingValue =
-                    (int) (Integer.parseInt(maxValue) - Double.parseDouble(currentValue));
+                    int remainingValue =
+                        (int) (Integer.parseInt(maxValue) - Double.parseDouble(currentValue));
 
-                if (remainingValue < 0) {
-                  remainingTV.setText(String.valueOf(0));
-                } else {
-                  remainingTV.setText(String.valueOf(remainingValue));
+                    if (remainingValue < 0) {
+                      remainingTV.setText(String.valueOf(0));
+                    } else {
+                      remainingTV.setText(String.valueOf(remainingValue));
+                    }
+                    break;
                 }
               }
 
