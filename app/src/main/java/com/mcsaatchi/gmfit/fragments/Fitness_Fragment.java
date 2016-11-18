@@ -55,6 +55,7 @@ import com.mcsaatchi.gmfit.rest.ChartMetricBreakdownResponse;
 import com.mcsaatchi.gmfit.rest.ChartMetricBreakdownResponseDatum;
 import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.rest.SlugBreakdownResponse;
+import com.mcsaatchi.gmfit.rest.UserGoalMetricsResponse;
 import com.mcsaatchi.gmfit.rest.WidgetsResponse;
 import com.mcsaatchi.gmfit.rest.WidgetsResponseDatum;
 import com.squareup.otto.Subscribe;
@@ -82,22 +83,23 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
   @Bind(R.id.metricCounterTV) FontTextView metricCounterTV;
   @Bind(R.id.dateCarousel) HorizontalScrollView dateCarousel;
   @Bind(R.id.dateCarouselContainer) LinearLayout dateCarouselContainer;
-
+  @Bind(R.id.goalTV) FontTextView goalTV;
+  @Bind(R.id.remainingTV) FontTextView remainingTV;
+  @Bind(R.id.todayTV) FontTextView todayTV;
   private boolean setDrawValuesDisabled = true;
   private Activity parentActivity;
   private SharedPreferences prefs;
-  private FitnessWidgets_GridAdapter widgets_GridAdapter;
+
   private String chartName;
   private String chartType;
-  private RuntimeExceptionDao<DataChart, Integer> dataChartDAO;
+  private String todayDate;
+  private String userEmail;
 
+  private FitnessWidgets_GridAdapter widgets_GridAdapter;
   private ArrayList<FitnessWidget> widgetsMap;
   private ArrayList<DataChart> chartsMap;
-
-  private String todayDate;
-
-  private String userEmail;
   private RuntimeExceptionDao<FitnessWidget, Integer> fitnessWidgetsDAO;
+  private RuntimeExceptionDao<DataChart, Integer> dataChartDAO;
   private QueryBuilder<FitnessWidget, Integer> fitnessQB;
 
   @RequiresApi(api = Build.VERSION_CODES.KITKAT) @Override public void onAttach(Context context) {
@@ -115,7 +117,12 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
 
       JodaTimeAndroid.init(getActivity());
 
+      prefs =
+          getActivity().getSharedPreferences(Constants.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
+
       todayDate = dt.toString();
+
+      getUserGoalMetrics(todayDate, "fitness");
 
       SensorManager sm = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
       Sensor sensor = sm.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
@@ -142,9 +149,6 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
         ((AppCompatActivity) getActivity()).getSupportActionBar()
             .setTitle(R.string.fitness_tab_title);
       }
-
-      prefs =
-          getActivity().getSharedPreferences(Constants.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
 
       userEmail = prefs.getString(Constants.EXTRAS_USER_EMAIL, "");
 
@@ -248,17 +252,36 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
     EventBus_Singleton.getInstance().unregister(this);
   }
 
+  private void getUserGoalMetrics(String date, String type) {
+    DataAccessHandler.getInstance()
+        .getUserGoalMetrics(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN,
+            Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), date, type,
+            new Callback<UserGoalMetricsResponse>() {
+              @Override public void onResponse(Call<UserGoalMetricsResponse> call,
+                  Response<UserGoalMetricsResponse> response) {
+
+                String maxValue =
+                    response.body().getData().getBody().getMetrics().getStepsCount().getMaxValue();
+
+                String currentValue = response.body().getData().getBody().getMetrics().getStepsCount().getValue();
+
+                todayTV.setText(String.valueOf((int) Double.parseDouble(currentValue)));
+                goalTV.setText(maxValue);
+
+                int remainingValue =
+                    (int) (Integer.parseInt(maxValue) - Double.parseDouble(currentValue));
+
+                remainingTV.setText(String.valueOf(remainingValue));
+              }
+
+              @Override public void onFailure(Call<UserGoalMetricsResponse> call, Throwable t) {
+              }
+            });
+  }
+
   private void getPeriodicalChartData(final BarChart barchart, String desiredDate,
       final TextView dateTV_1, final TextView dateTV_2, final TextView dateTV_3,
       final TextView dateTV_4, final String chart_slug) {
-    final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
-    alertDialog.setTitle(R.string.loading_user_profile_dialog_title);
-    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
-        new DialogInterface.OnClickListener() {
-          public void onClick(DialogInterface dialog, int which) {
-            dialog.dismiss();
-          }
-        });
 
     DataAccessHandler.getInstance()
         .getPeriodicalChartData(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN,
@@ -317,11 +340,6 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
 
               @Override
               public void onFailure(Call<ChartMetricBreakdownResponse> call, Throwable t) {
-                if (isAdded()) {
-                  alertDialog.setMessage(
-                      getActivity().getString(R.string.error_response_from_server_incorrect));
-                  alertDialog.show();
-                }
               }
             });
   }
@@ -367,6 +385,8 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
               + formattedDate.getMonthOfYear()
               + "-"
               + formattedDate.getDayOfMonth();
+
+          getUserGoalMetrics(finalDesiredDate, "fitness");
 
           getWidgetsWithDate(finalDesiredDate);
           setupChartViews(chartsMap, finalDesiredDate);
@@ -486,16 +506,16 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
      */
     switch (chartType) {
       case "steps-count":
-        getPeriodicalChartData(barChart, desiredDate, dateTV_1, dateTV_2, dateTV_3,
-            dateTV_4, "steps-count");
+        getPeriodicalChartData(barChart, desiredDate, dateTV_1, dateTV_2, dateTV_3, dateTV_4,
+            "steps-count");
         break;
       case "active-calories":
-        getPeriodicalChartData(barChart, desiredDate, dateTV_1, dateTV_2, dateTV_3,
-            dateTV_4, "active-calories");
+        getPeriodicalChartData(barChart, desiredDate, dateTV_1, dateTV_2, dateTV_3, dateTV_4,
+            "active-calories");
         break;
       case "distance-traveled":
-        getPeriodicalChartData(barChart, desiredDate, dateTV_1, dateTV_2, dateTV_3,
-            dateTV_4, "distance-traveled");
+        getPeriodicalChartData(barChart, desiredDate, dateTV_1, dateTV_2, dateTV_3, dateTV_4,
+            "distance-traveled");
         break;
     }
 

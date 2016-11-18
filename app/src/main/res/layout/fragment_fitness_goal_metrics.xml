@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/userGoalsSection"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/user_goals_section_height"
+    android:background="@color/fitness_pink"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    >
+
+  <LinearLayout
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_weight="2"
+      android:orientation="vertical"
+      >
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="@string/goal_title"
+        android:textAppearance="?android:textAppearanceSmall"
+        android:textColor="@color/fitness_teal"
+        />
+
+    <com.mcsaatchi.gmfit.classes.FontTextView
+        android:id="@+id/goalTV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:textColor="@color/white"
+        android:textSize="@dimen/user_goal_labels_font_size"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="@string/steps_shorthand_unit"
+        android:textColor="@color/white"
+        />
+
+  </LinearLayout>
+
+  <TextView
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_weight="0.5"
+      android:gravity="center_horizontal"
+      android:text="-"
+      android:textAppearance="?android:textAppearanceMedium"
+      android:textColor="@color/white"
+      />
+
+  <LinearLayout
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_weight="2"
+      android:orientation="vertical"
+      >
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="@string/today_title"
+        android:textAppearance="?android:textAppearanceSmall"
+        android:textColor="@color/fitness_teal"
+        />
+
+    <com.mcsaatchi.gmfit.classes.FontTextView
+        android:id="@+id/todayTV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:textColor="@color/white"
+        android:textSize="@dimen/user_goal_labels_font_size"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="@string/steps_shorthand_unit"
+        android:textColor="@color/white"
+        />
+
+  </LinearLayout>
+
+  <TextView
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_weight="0.5"
+      android:gravity="center_horizontal"
+      android:text="="
+      android:textAppearance="?android:textAppearanceMedium"
+      android:textColor="@color/white"
+      />
+
+  <LinearLayout
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_weight="2"
+      android:orientation="vertical"
+      >
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="@string/remaining_title"
+        android:textAppearance="?android:textAppearanceSmall"
+        android:textColor="@color/white"
+        />
+
+    <com.mcsaatchi.gmfit.classes.FontTextView
+        android:id="@+id/remainingTV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:textColor="@android:color/white"
+        android:textSize="@dimen/user_goal_labels_font_size"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="@string/steps_shorthand_unit"
+        android:textColor="@color/white"
+        />
+
+  </LinearLayout>
+
+</LinearLayout>

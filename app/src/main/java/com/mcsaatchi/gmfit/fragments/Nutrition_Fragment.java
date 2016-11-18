@@ -29,7 +29,8 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import com.github.mikephil.charting.charts.BarChart;
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.vision.barcode.Barcode;
@@ -59,6 +60,8 @@ import com.mcsaatchi.gmfit.rest.ChartMetricBreakdownResponseDatum;
 import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.rest.SlugBreakdownResponse;
 import com.mcsaatchi.gmfit.rest.UiResponse;
+import com.mcsaatchi.gmfit.rest.UserGoalMetricsResponse;
+import com.mcsaatchi.gmfit.rest.UserGoalMetricsResponseActiveCalories;
 import com.mcsaatchi.gmfit.rest.UserMealsResponse;
 import com.mcsaatchi.gmfit.rest.UserMealsResponseBreakfast;
 import com.mcsaatchi.gmfit.rest.UserMealsResponseDinner;
@@ -66,18 +69,13 @@ import com.mcsaatchi.gmfit.rest.UserMealsResponseLunch;
 import com.mcsaatchi.gmfit.rest.UserMealsResponseSnack;
 import com.mcsaatchi.gmfit.touch_helpers.SimpleSwipeItemTouchHelperCallback;
 import com.squareup.otto.Subscribe;
-
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import butterknife.Bind;
-import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -133,6 +131,12 @@ public class Nutrition_Fragment extends Fragment {
   @Bind(R.id.loadingWidgetsProgressBar) ProgressBar loadingWidgetsProgressBar;
   @Bind(R.id.dateCarousel) HorizontalScrollView dateCarousel;
   @Bind(R.id.dateCarouselContainer) LinearLayout dateCarouselContainer;
+
+  @Bind(R.id.goalTV) FontTextView goalTV;
+  @Bind(R.id.remainingTV) FontTextView remainingTV;
+  @Bind(R.id.todayTV) FontTextView todayTV;
+  @Bind(R.id.activeTV) FontTextView activeTV;
+
   private String finalDesiredDate;
   private boolean setDrawValuesDisabled = true;
   private UserMeals_RecyclerAdapterDragSwipe userMealsRecyclerAdapter;
@@ -176,6 +180,8 @@ public class Nutrition_Fragment extends Fragment {
     hookupMealSectionRowsClickListeners();
 
     finalDesiredDate = Helpers.prepareDateForAPIRequest(new LocalDate());
+
+    getUserGoalMetrics(finalDesiredDate, "nutrition");
 
     getUserAddedMeals(finalDesiredDate);
 
@@ -245,6 +251,49 @@ public class Nutrition_Fragment extends Fragment {
     }
   }
 
+  private void getUserGoalMetrics(final String date, final String type) {
+    DataAccessHandler.getInstance()
+        .getUserGoalMetrics(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN,
+            Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), date, type,
+            new Callback<UserGoalMetricsResponse>() {
+              @Override public void onResponse(Call<UserGoalMetricsResponse> call,
+                  Response<UserGoalMetricsResponse> response) {
+
+                UserGoalMetricsResponseActiveCalories activeCaloriesResponse =
+                    response.body().getData().getBody().getMetrics().getActiveCalories();
+
+                if (activeCaloriesResponse == null) {
+                  String maxValue =
+                      response.body().getData().getBody().getMetrics().getCalories().getMaxValue();
+
+                  String currentValue =
+                      response.body().getData().getBody().getMetrics().getCalories().getValue();
+
+                  todayTV.setText(String.valueOf((int) Double.parseDouble(currentValue)));
+                  goalTV.setText(maxValue);
+
+                  getUserGoalMetrics(date, "fitness");
+                } else {
+                  String activeCalories = activeCaloriesResponse.getValue();
+
+                  activeTV.setText(String.valueOf((int) Double.parseDouble(activeCalories)));
+                }
+
+                if (!activeTV.getText().toString().isEmpty()) {
+                  int remainingValue =
+                      Integer.parseInt(goalTV.getText().toString()) + Integer.parseInt(
+                          activeTV.getText().toString()) - Integer.parseInt(
+                          todayTV.getText().toString());
+
+                  remainingTV.setText(String.valueOf(remainingValue));
+                }
+              }
+
+              @Override public void onFailure(Call<UserGoalMetricsResponse> call, Throwable t) {
+              }
+            });
+  }
+
   private void setupDateCarousel() {
     for (int i = 14; i >= 0; i--) {
       final View itemDateCarouselLayout =
@@ -285,6 +334,7 @@ public class Nutrition_Fragment extends Fragment {
 
           finalDesiredDate = Helpers.prepareDateForAPIRequest(formattedDate.toLocalDate());
 
+          getUserGoalMetrics(finalDesiredDate, "nutrition");
           getUserAddedMeals(finalDesiredDate);
           getUiForSection("nutrition", finalDesiredDate);
         }
@@ -944,7 +994,7 @@ public class Nutrition_Fragment extends Fragment {
             });
   }
 
-  private void showProgressBarsForLoading(){
+  private void showProgressBarsForLoading() {
     widgetsGridView.setVisibility(View.INVISIBLE);
     metricCounterTV.setVisibility(View.INVISIBLE);
 
@@ -952,7 +1002,7 @@ public class Nutrition_Fragment extends Fragment {
     loadingWidgetsProgressBar.setVisibility(View.VISIBLE);
   }
 
-  private void hideProgressBarsForLoading(){
+  private void hideProgressBarsForLoading() {
     widgetsGridView.setVisibility(View.VISIBLE);
     metricCounterTV.setVisibility(View.VISIBLE);
 
