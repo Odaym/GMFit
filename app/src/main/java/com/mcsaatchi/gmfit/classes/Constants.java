@@ -9,7 +9,7 @@ public class Constants {
   public static final String EXTRAS_USER_EMAIL = "user_email_address";
   public static final String EXTRAS_USER_PASSWORD = "user_password";
   public static final String EXTRAS_USER_DISPLAY_PHOTO = "user_display_photo";
-  public static final String EXTRAS_USER_POLICY = "user_policy";
+  public static final String EXTRAS_META_HTML_CONTENT = "meta_html_content";
   public static final String EXTRAS_USER_FACEBOOK_TOKEN = "user_facebook_token";
 
   public static final String EXTRAS_FIRST_APP_LAUNCH = "first_app_launch";
@@ -100,7 +100,7 @@ public class Constants {
   public static final String BUNDLE_SLUG_BREAKDOWN_MEASUREMENT_UNIT =
       "slug_breakdown_measurement_unit";
 
-  public static final String BASE_URL_ADDRESS = "http://gmfit.mcsaatchi.me/api/v1/";
+  public static final String BASE_URL_ADDRESS = "http://146.185.164.182/api/v1/";
 
   public static final String EVENT_USER_FINALIZE_SETUP_PROFILE = "user_finalize_setup_profile";
   public static final String EVENT_STEP_COUNTER_INCREMENTED = "step_counter_incremented";
