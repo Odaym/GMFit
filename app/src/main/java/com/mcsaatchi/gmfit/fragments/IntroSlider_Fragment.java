@@ -33,32 +33,7 @@ public class IntroSlider_Fragment extends Fragment {
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
-    View view = getActivity().getLayoutInflater().inflate(layoutResId, container, false);
 
-    //ImageView introIMG = (ImageView) view.findViewById(R.id.introIMG);
-    //
-    //switch (layoutResId) {
-    //  case R.layout.fragment_intro_slide_1:
-    //    Picasso.with(getActivity()).load(R.drawable.fragment_intro_picture).into(introIMG);
-    //    break;
-    //  case R.layout.fragment_intro_slide_2:
-    //    Picasso.with(getActivity()).load(R.drawable.fragment_intro_picture).into(introIMG);
-    //    break;
-    //  case R.layout.fragment_intro_slide_3:
-    //    Picasso.with(getActivity()).load(R.drawable.fragment_intro_picture).into(introIMG);
-    //    break;
-    //  case R.layout.fragment_intro_slide_4:
-    //    Picasso.with(getActivity()).load(R.drawable.fragment_intro_picture).into(introIMG);
-    //    break;
-    //  case R.layout.fragment_intro_slide_4:
-    //    Picasso.with(getActivity()).load(R.drawable.fragment_intro_picture).into(introIMG);
-    //    break;
-    //  case R.layout.fragment_intro_slide_4:
-    //    Picasso.with(getActivity()).load(R.drawable.fragment_intro_picture).into(introIMG);
-    //    break;
-    //
-    //}
-
-    return view;
+    return getActivity().getLayoutInflater().inflate(layoutResId, container, false);
   }
 }
