@@ -9,23 +9,22 @@ import com.mcsaatchi.gmfit.rest.ChartMetricBreakdownResponse;
 import com.mcsaatchi.gmfit.rest.ChartsBySectionResponse;
 import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.rest.EmergencyProfileResponse;
-import com.mcsaatchi.gmfit.rest.WidgetsResponse;
 import com.mcsaatchi.gmfit.rest.MealMetricsResponse;
 import com.mcsaatchi.gmfit.rest.MedicalConditionsResponse;
 import com.mcsaatchi.gmfit.rest.MedicalTestsResponse;
+import com.mcsaatchi.gmfit.rest.MetaTextsResponse;
 import com.mcsaatchi.gmfit.rest.RecentMealsResponse;
 import com.mcsaatchi.gmfit.rest.RestClient;
 import com.mcsaatchi.gmfit.rest.SearchMealItemResponse;
 import com.mcsaatchi.gmfit.rest.SlugBreakdownResponse;
 import com.mcsaatchi.gmfit.rest.TakenMedicalTestsResponse;
 import com.mcsaatchi.gmfit.rest.UiResponse;
+import com.mcsaatchi.gmfit.rest.UserGoalMetricsResponse;
 import com.mcsaatchi.gmfit.rest.UserGoalsResponse;
 import com.mcsaatchi.gmfit.rest.UserMealsResponse;
-import com.mcsaatchi.gmfit.rest.UserPolicyResponse;
 import com.mcsaatchi.gmfit.rest.UserProfileResponse;
-
+import com.mcsaatchi.gmfit.rest.WidgetsResponse;
 import java.util.Map;
-
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -375,17 +374,18 @@ public class ApiCallsHandler {
     });
   }
 
-  void getUserPolicy(String userAccessToken, final Callback<UserPolicyResponse> callback) {
-    Call<UserPolicyResponse> apiCall =
-        new CachingRestClient().getGMFitService().getUserPolicy(userAccessToken);
+  void getMetaTexts(String userAccessToken, String section,
+      final Callback<MetaTextsResponse> callback) {
+    Call<MetaTextsResponse> apiCall =
+        new RestClient().getGMFitService().getMetaTexts(userAccessToken, section);
 
-    apiCall.enqueue(new Callback<UserPolicyResponse>() {
+    apiCall.enqueue(new Callback<MetaTextsResponse>() {
       @Override
-      public void onResponse(Call<UserPolicyResponse> call, Response<UserPolicyResponse> response) {
+      public void onResponse(Call<MetaTextsResponse> call, Response<MetaTextsResponse> response) {
         callback.onResponse(call, response);
       }
 
-      @Override public void onFailure(Call<UserPolicyResponse> call, Throwable t) {
+      @Override public void onFailure(Call<MetaTextsResponse> call, Throwable t) {
         callback.onFailure(call, t);
       }
     });
@@ -507,6 +507,23 @@ public class ApiCallsHandler {
       }
 
       @Override public void onFailure(Call<ChartMetricBreakdownResponse> call, Throwable t) {
+        callback.onFailure(call, t);
+      }
+    });
+  }
+
+  void getUserGoalMetrics(String userAccessToken, String date, String type,
+      final Callback<UserGoalMetricsResponse> callback) {
+    Call<UserGoalMetricsResponse> apiCall = new RestClient().getGMFitService()
+        .getUserGoalMetrics(userAccessToken, date, type);
+
+    apiCall.enqueue(new Callback<UserGoalMetricsResponse>() {
+      @Override public void onResponse(Call<UserGoalMetricsResponse> call,
+          Response<UserGoalMetricsResponse> response) {
+        callback.onResponse(call, response);
+      }
+
+      @Override public void onFailure(Call<UserGoalMetricsResponse> call, Throwable t) {
         callback.onFailure(call, t);
       }
     });

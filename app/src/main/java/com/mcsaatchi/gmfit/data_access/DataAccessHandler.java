@@ -6,22 +6,21 @@ import com.mcsaatchi.gmfit.rest.ChartMetricBreakdownResponse;
 import com.mcsaatchi.gmfit.rest.ChartsBySectionResponse;
 import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.rest.EmergencyProfileResponse;
-import com.mcsaatchi.gmfit.rest.WidgetsResponse;
 import com.mcsaatchi.gmfit.rest.MealMetricsResponse;
 import com.mcsaatchi.gmfit.rest.MedicalConditionsResponse;
 import com.mcsaatchi.gmfit.rest.MedicalTestsResponse;
+import com.mcsaatchi.gmfit.rest.MetaTextsResponse;
 import com.mcsaatchi.gmfit.rest.RecentMealsResponse;
 import com.mcsaatchi.gmfit.rest.SearchMealItemResponse;
 import com.mcsaatchi.gmfit.rest.SlugBreakdownResponse;
 import com.mcsaatchi.gmfit.rest.TakenMedicalTestsResponse;
 import com.mcsaatchi.gmfit.rest.UiResponse;
+import com.mcsaatchi.gmfit.rest.UserGoalMetricsResponse;
 import com.mcsaatchi.gmfit.rest.UserGoalsResponse;
 import com.mcsaatchi.gmfit.rest.UserMealsResponse;
-import com.mcsaatchi.gmfit.rest.UserPolicyResponse;
 import com.mcsaatchi.gmfit.rest.UserProfileResponse;
-
+import com.mcsaatchi.gmfit.rest.WidgetsResponse;
 import java.util.Map;
-
 import okhttp3.RequestBody;
 import retrofit2.Callback;
 
@@ -120,6 +119,11 @@ public class DataAccessHandler {
     ApiCallsHandler.getInstance().getMealMetrics(userAccessToken, fullUrl, callback);
   }
 
+  public void getUserGoalMetrics(String userAccessToken, String date, String type,
+      Callback<UserGoalMetricsResponse> callback) {
+    ApiCallsHandler.getInstance().getUserGoalMetrics(userAccessToken, date, type, callback);
+  }
+
   public void verifyUser(String userAccessToken, String verificationCode,
       Callback<DefaultGetResponse> callback) {
     ApiCallsHandler.getInstance().verifyUser(userAccessToken, verificationCode, callback);
@@ -156,8 +160,9 @@ public class DataAccessHandler {
     ApiCallsHandler.getInstance().getUserAddedMealsOnDate(userAccessToken, chosenDate, callback);
   }
 
-  public void getUserPolicy(String userAccessToken, Callback<UserPolicyResponse> callback) {
-    ApiCallsHandler.getInstance().getUserPolicy(userAccessToken, callback);
+  public void getMetaTexts(String userAccessToken, String section,
+      Callback<MetaTextsResponse> callback) {
+    ApiCallsHandler.getInstance().getMetaTexts(userAccessToken, section, callback);
   }
 
   public void registerUserFacebook(String facebookAccessToken,

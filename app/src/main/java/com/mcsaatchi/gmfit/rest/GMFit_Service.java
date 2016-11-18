@@ -43,9 +43,6 @@ public interface GMFit_Service {
       @Header(Constants.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken,
       @Url String fullUrl);
 
-  @GET("user-policy") Call<UserPolicyResponse> getUserPolicy(
-      @Header(Constants.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken);
-
   @GET("refresh-token") Call<AuthenticationResponse> refreshAccessToken(
       @Header(Constants.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken);
 
@@ -57,6 +54,14 @@ public interface GMFit_Service {
       @Header(Constants.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken,
       @Query("start_date") String start_date, @Query("end_date") String end_date,
       @Query("type") String type, @Query("monitored_metrics") String monitored_metrics);
+
+  @GET("user/goals/metrics") Call<UserGoalMetricsResponse> getUserGoalMetrics(
+      @Header(Constants.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken,
+      @Query("date") String start_date, @Query("type") String type);
+
+  @GET("meta") Call<MetaTextsResponse> getMetaTexts(
+      @Header(Constants.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken,
+      @Query("section") String section);
 
   @POST("verify") Call<DefaultGetResponse> verifyRegistrationCode(
       @Header(Constants.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken,
