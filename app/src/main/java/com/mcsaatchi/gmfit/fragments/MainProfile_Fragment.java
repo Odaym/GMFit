@@ -35,6 +35,7 @@ import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.activities.ContactUs_Activity;
 import com.mcsaatchi.gmfit.activities.Login_Activity;
 import com.mcsaatchi.gmfit.activities.MetaTexts_Activity;
+import com.mcsaatchi.gmfit.activities.Reminders_Activity;
 import com.mcsaatchi.gmfit.classes.CircleTransform;
 import com.mcsaatchi.gmfit.classes.Constants;
 import com.mcsaatchi.gmfit.classes.Helpers;
@@ -462,6 +463,16 @@ public class MainProfile_Fragment extends Fragment {
     contactUsLayout.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View view) {
         Intent intent = new Intent(getActivity(), ContactUs_Activity.class);
+        startActivity(intent);
+      }
+    });
+
+    /**
+     * SET APP REMINDERS
+     */
+    appRemindersLayout.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View view) {
+        Intent intent = new Intent(getActivity(), Reminders_Activity.class);
         startActivity(intent);
       }
     });
