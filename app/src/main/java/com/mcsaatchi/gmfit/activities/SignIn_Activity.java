@@ -21,6 +21,8 @@ import android.widget.TextView;
 import com.andreabaccega.widget.FormEditText;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.classes.Constants;
+import com.mcsaatchi.gmfit.classes.EventBus_Poster;
+import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
 import com.mcsaatchi.gmfit.classes.Helpers;
 import com.mcsaatchi.gmfit.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponse;
@@ -152,6 +154,10 @@ public class SignIn_Activity extends Base_Activity {
                 prefs.edit().putString(Constants.EXTRAS_USER_EMAIL, email).apply();
                 prefs.edit().putString(Constants.EXTRAS_USER_PASSWORD, password).apply();
                 prefs.edit().putBoolean(Constants.EXTRAS_USER_LOGGED_IN, true).apply();
+
+                EventBus_Singleton.getInstance()
+                    .post(new EventBus_Poster(
+                        Constants.EVENT_SIGNNED_UP_SUCCESSFULLY_CLOSE_LOGIN_ACTIVITY));
 
                 /**
                  * Case where the user already has an account and they just logged in with it on a new installation
