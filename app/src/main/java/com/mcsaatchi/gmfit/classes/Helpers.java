@@ -1,11 +1,13 @@
 package com.mcsaatchi.gmfit.classes;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-
 import com.andreabaccega.widget.FormEditText;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.data.BarData;
@@ -17,14 +19,12 @@ import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponseChartData;
-
-import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
-
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
@@ -191,6 +191,34 @@ public class Helpers {
           }
         });
     alertDialog.show();
+  }
+
+  public static void setupMealRemindersAlarm(Context context, String mealType, int hourOfDay,
+      int minute) {
+    Calendar calendar = Calendar.getInstance();
+    calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+    calendar.set(Calendar.MINUTE, minute);
+
+    Intent intent = new Intent(context, AlarmReceiver.class);
+
+    switch (mealType) {
+      case "Breakfast":
+        intent.putExtra("MEAL_TYPE", "Breakfast");
+        break;
+      case "Lunch":
+        intent.putExtra("MEAL_TYPE", "Lunch");
+        break;
+      case "Dinner":
+        intent.putExtra("MEAL_TYPE", "Dinner");
+        break;
+    }
+
+    PendingIntent pendingIntent =
+        PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+    AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+    am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY,
+        pendingIntent);
   }
 
   public static class MyValueFormatter implements ValueFormatter {
