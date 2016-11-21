@@ -638,11 +638,6 @@ public class Nutrition_Fragment extends Fragment {
 
                     setupMealSectionsListView(finalSnackMeals, "Snack");
 
-                    Log.d(TAG, "onResponse: breakfast " + finalBreakfastMeals.size());
-                    Log.d(TAG, "onResponse: lunch " + finalLunchMeals.size());
-                    Log.d(TAG, "onResponse: dinner " + finalDinnerMeals.size());
-                    Log.d(TAG, "onResponse: snack " + finalSnackMeals.size());
-
                     break;
                 }
               }
