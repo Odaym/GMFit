@@ -98,6 +98,7 @@
 
   <!-- FORM FIELDS -->
   <dimen name="material_textfield_collapsed_height">10dp</dimen>
+  <dimen name="reminders_value_row_width">120dp</dimen>
 
   <!-- HEALTH FRAGMENT-->
   <dimen name="health_widgets_gridview_height">200dp</dimen>
