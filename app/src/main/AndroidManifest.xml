@@ -8,6 +8,7 @@
   <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
   <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
   <uses-permission android:name="android.permission.CAMERA"/>
+  <uses-permission android:name="com.android.alarm.permission.SET_ALARM"/>
   <uses-permission android:name="android.permission.INTERNET"/>
 
   <uses-feature
@@ -137,6 +138,11 @@
         android:theme="@style/No_Action_Bar_Theme"/>
 
     <activity
+        android:name=".activities.Reminders_Activity"
+        android:screenOrientation="portrait"
+        android:theme="@style/No_Action_Bar_Theme"/>
+
+    <activity
         android:name=".activities.SlugBreakdown_Activity"
         android:screenOrientation="portrait"
         android:theme="@style/No_Action_Bar_Theme"/>
@@ -145,6 +151,8 @@
         android:name=".activities.ContactUs_Activity"
         android:screenOrientation="portrait"
         android:theme="@style/No_Action_Bar_Theme"/>
+
+    <receiver android:name=".classes.AlarmReceiver"/>
 
     <receiver android:name=".pedometer.BootReceiver">
       <intent-filter>
