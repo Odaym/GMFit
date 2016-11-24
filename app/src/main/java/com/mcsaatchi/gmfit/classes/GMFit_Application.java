@@ -70,37 +70,34 @@ public class GMFit_Application extends Application {
 
     switch (mealType) {
       case "Breakfast":
-        pendingIntent =
-            PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
         calendar.set(Calendar.HOUR_OF_DAY, 9);
         calendar.set(Calendar.MINUTE, 0);
 
+        intent.putExtra("MEAL_TYPE", "Breakfast");
+        pendingIntent =
+            PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         prefs.edit().putString(Constants.BREAKFAST_REMINDER_ALARM_TIME, "09:00:am").apply();
 
-        intent.putExtra("MEAL_TYPE", "Breakfast");
         break;
       case "Lunch":
-        pendingIntent =
-            PendingIntent.getBroadcast(this, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
         calendar.set(Calendar.HOUR_OF_DAY, 14);
         calendar.set(Calendar.MINUTE, 45);
 
+        intent.putExtra("MEAL_TYPE", "Lunch");
+        pendingIntent =
+            PendingIntent.getBroadcast(this, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         prefs.edit().putString(Constants.BREAKFAST_REMINDER_ALARM_TIME, "02:45:pm").apply();
 
-        intent.putExtra("MEAL_TYPE", "Lunch");
         break;
       case "Dinner":
-        pendingIntent =
-            PendingIntent.getBroadcast(this, 2, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-
         calendar.set(Calendar.HOUR_OF_DAY, 20);
         calendar.set(Calendar.MINUTE, 0);
 
+        intent.putExtra("MEAL_TYPE", "Dinner");
+        pendingIntent =
+            PendingIntent.getBroadcast(this, 2, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         prefs.edit().putString(Constants.BREAKFAST_REMINDER_ALARM_TIME, "08:00:pm").apply();
 
-        intent.putExtra("MEAL_TYPE", "Dinner");
         break;
     }
 
