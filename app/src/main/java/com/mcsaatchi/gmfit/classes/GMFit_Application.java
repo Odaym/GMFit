@@ -11,6 +11,7 @@ import android.net.NetworkInfo;
 import com.crashlytics.android.Crashlytics;
 import io.fabric.sdk.android.Fabric;
 import java.util.Calendar;
+import timber.log.BuildConfig;
 import timber.log.Timber;
 
 public class GMFit_Application extends Application {
@@ -34,9 +35,16 @@ public class GMFit_Application extends Application {
 
     instance = this;
 
-    Timber.plant(new Timber.DebugTree());
-
-    Fabric.with(this, new Crashlytics());
+    if (BuildConfig.DEBUG) {
+      Timber.plant(new Timber.DebugTree() {
+        @Override protected String createStackElementTag(StackTraceElement element) {
+          return super.createStackElementTag(element) + " - " + element.getLineNumber();
+        }
+      });
+    } else {
+      Timber.plant(new TimberReleaseTree());
+      Fabric.with(this, new Crashlytics());
+    }
 
     addMealAlarms();
   }
