@@ -148,6 +148,8 @@ public class Reminders_Activity extends Base_Activity {
               public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
                 String finalTime = formatFinalTime(selectedHour, selectedMinute);
 
+                breakfastAlarmTime = finalTime;
+
                 String[] timeValues = finalTime.split(":");
 
                 breakfastReminderValueTV.setText(
@@ -180,6 +182,8 @@ public class Reminders_Activity extends Base_Activity {
               public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
                 String finalTime = formatFinalTime(selectedHour, selectedMinute);
 
+                lunchAlarmTime = finalTime;
+
                 String[] timeValues = finalTime.split(":");
 
                 lunchReminderValueTV.setText(
@@ -211,6 +215,8 @@ public class Reminders_Activity extends Base_Activity {
               @Override
               public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
                 String finalTime = formatFinalTime(selectedHour, selectedMinute);
+
+                dinnerAlarmTime = finalTime;
 
                 String[] timeValues = finalTime.split(":");
 
