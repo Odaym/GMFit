@@ -293,7 +293,11 @@ public class MainProfile_Fragment extends Fragment {
             RadioButton selectedRadioButton =
                 (RadioButton) medicalRdGroup.findViewById(medicalRdGroup.getCheckedRadioButtonId());
 
-            medicalConditionsValueTV.setText(selectedRadioButton.getText().toString());
+            if (selectedRadioButton != null) {
+              medicalConditionsValueTV.setText(selectedRadioButton.getText().toString());
+            }else{
+              Log.d("TAG", "onClick: Selected Radio Button was null!");
+            }
 
             prefs.edit()
                 .putString(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION,
@@ -737,12 +741,14 @@ public class MainProfile_Fragment extends Fragment {
                     prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_IMAGE,
                         userProfileData.getProfile_picture());
 
-                    Picasso.with(getActivity())
-                        .load(userProfileData.getProfile_picture())
-                        .resize(200, 200)
-                        .transform(new CircleTransform())
-                        .centerInside()
-                        .into(userProfileIV);
+                    if (getActivity() != null) {
+                      Picasso.with(getActivity())
+                          .load(userProfileData.getProfile_picture())
+                          .resize(200, 200)
+                          .transform(new CircleTransform())
+                          .centerInside()
+                          .into(userProfileIV);
+                    }
                   }
 
                   prefsEditor.apply();
