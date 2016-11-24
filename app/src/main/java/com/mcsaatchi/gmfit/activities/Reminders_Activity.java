@@ -1,5 +1,6 @@
 package com.mcsaatchi.gmfit.activities;
 
+import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.Context;
@@ -19,9 +20,9 @@ import butterknife.ButterKnife;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.classes.AlarmReceiver;
 import com.mcsaatchi.gmfit.classes.Constants;
-import com.mcsaatchi.gmfit.classes.Helpers;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 public class Reminders_Activity extends Base_Activity {
@@ -40,6 +41,46 @@ public class Reminders_Activity extends Base_Activity {
   private String breakfastAlarmTime;
   private String lunchAlarmTime;
   private String dinnerAlarmTime;
+
+  public static void setupMealRemindersAlarm(Context context, SharedPreferences prefs,
+      String mealType, String finalTime) {
+    Calendar calendar = Calendar.getInstance();
+    calendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(finalTime.split(":")[0]));
+    calendar.set(Calendar.MINUTE, Integer.parseInt(finalTime.split(":")[1]));
+
+    Intent intent = new Intent(context, AlarmReceiver.class);
+
+    PendingIntent pendingIntent = null;
+
+    /**
+     * Concatenate the alarm instance ID to the final time of the alarm,
+     * so that it can be grabbed later
+     */
+    switch (mealType) {
+      case "Breakfast":
+        intent.putExtra("MEAL_TYPE", "Breakfast");
+        pendingIntent =
+            PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        prefs.edit().putString(Constants.BREAKFAST_REMINDER_ALARM_TIME, finalTime).apply();
+        break;
+      case "Lunch":
+        intent.putExtra("MEAL_TYPE", "Lunch");
+        pendingIntent =
+            PendingIntent.getBroadcast(context, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        prefs.edit().putString(Constants.LUNCH_REMINDER_ALARM_TIME, finalTime).apply();
+        break;
+      case "Dinner":
+        intent.putExtra("MEAL_TYPE", "Dinner");
+        pendingIntent =
+            PendingIntent.getBroadcast(context, 2, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        prefs.edit().putString(Constants.DINNER_REMINDER_ALARM_TIME, finalTime).apply();
+        break;
+    }
+
+    AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+    am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY,
+        pendingIntent);
+  }
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -79,10 +120,10 @@ public class Reminders_Activity extends Base_Activity {
         if (checked) {
           triggerAlarmsState(true);
 
-          Helpers.setupMealRemindersAlarm(Reminders_Activity.this, prefs, "Breakfast",
+          setupMealRemindersAlarm(Reminders_Activity.this, prefs, "Breakfast",
               breakfastAlarmTime);
-          Helpers.setupMealRemindersAlarm(Reminders_Activity.this, prefs, "Lunch", lunchAlarmTime);
-          Helpers.setupMealRemindersAlarm(Reminders_Activity.this, prefs, "Dinner",
+          setupMealRemindersAlarm(Reminders_Activity.this, prefs, "Lunch", lunchAlarmTime);
+          setupMealRemindersAlarm(Reminders_Activity.this, prefs, "Dinner",
               dinnerAlarmTime);
         } else {
           triggerAlarmsState(false);
@@ -113,7 +154,7 @@ public class Reminders_Activity extends Base_Activity {
                     timeValues[0] + ":" + timeValues[1] + " " + timeValues[2]);
 
                 if (areAlarmsEnabled) {
-                  Helpers.setupMealRemindersAlarm(Reminders_Activity.this, prefs, "Breakfast",
+                  setupMealRemindersAlarm(Reminders_Activity.this, prefs, "Breakfast",
                       finalTime);
                 }
               }
@@ -145,7 +186,7 @@ public class Reminders_Activity extends Base_Activity {
                     timeValues[0] + ":" + timeValues[1] + " " + timeValues[2]);
 
                 if (areAlarmsEnabled) {
-                  Helpers.setupMealRemindersAlarm(Reminders_Activity.this, prefs, "Lunch",
+                  setupMealRemindersAlarm(Reminders_Activity.this, prefs, "Lunch",
                       finalTime);
                 }
               }
@@ -177,7 +218,7 @@ public class Reminders_Activity extends Base_Activity {
                     timeValues[0] + ":" + timeValues[1] + " " + timeValues[2]);
 
                 if (areAlarmsEnabled) {
-                  Helpers.setupMealRemindersAlarm(Reminders_Activity.this, prefs, "Dinner",
+                  setupMealRemindersAlarm(Reminders_Activity.this, prefs, "Dinner",
                       finalTime);
                 }
               }
