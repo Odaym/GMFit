@@ -116,4 +116,12 @@ public class Constants {
   public static final String NO_ACCESS_TOKEN_FOUND_IN_PREFS = "no_access_token_in_prefs";
   public static final String PREF_USER_ACCESS_TOKEN = "user_access_token";
   public static final String USER_ACCESS_TOKEN_HEADER_PARAMETER = "Authorization";
+
+  /**
+   * REMINDERS ACTIVITY
+   */
+  public static final String ARE_ALARMS_ENABLED = "are_alarms_enabled";
+  public static final String BREAKFAST_REMINDER_ALARM_TIME = "breakfast_reminder_alarm_time";
+  public static final String LUNCH_REMINDER_ALARM_TIME = "lunch_reminder_alarm_time";
+  public static final String DINNER_REMINDER_ALARM_TIME = "dinner_reminder_alarm_time";
 }
