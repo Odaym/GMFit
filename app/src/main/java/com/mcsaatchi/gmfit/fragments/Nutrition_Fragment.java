@@ -1,6 +1,7 @@
 package com.mcsaatchi.gmfit.fragments;
 
 import android.app.Activity;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -42,6 +43,7 @@ import com.mcsaatchi.gmfit.activities.CustomizeWidgetsAndCharts_Activity;
 import com.mcsaatchi.gmfit.activities.SlugBreakdown_Activity;
 import com.mcsaatchi.gmfit.adapters.NutritionWidgets_GridAdapter;
 import com.mcsaatchi.gmfit.adapters.UserMeals_RecyclerAdapterDragSwipe;
+import com.mcsaatchi.gmfit.classes.AlarmReceiver;
 import com.mcsaatchi.gmfit.classes.Constants;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
@@ -773,6 +775,7 @@ public class Nutrition_Fragment extends Fragment {
         getUserAddedMeals(finalDesiredDate);
         getUiForSection("nutrition", finalDesiredDate);
 
+        cancelAllPendingAlarms();
         break;
       case Constants.EXTRAS_NUTRITION_WIDGETS_ORDER_ARRAY_CHANGED:
         if (ebp.getNutritionWidgetsMap() != null) {
@@ -815,6 +818,22 @@ public class Nutrition_Fragment extends Fragment {
 
         break;
     }
+  }
+
+  private void cancelAllPendingAlarms() {
+    Intent intent = new Intent(getActivity(), AlarmReceiver.class);
+    PendingIntent breakfastPendingAlarm =
+        PendingIntent.getBroadcast(getActivity(), 0, intent,
+            PendingIntent.FLAG_UPDATE_CURRENT);
+    PendingIntent lunchPendingAlarm = PendingIntent.getBroadcast(getActivity(), 1, intent,
+        PendingIntent.FLAG_UPDATE_CURRENT);
+    PendingIntent dinnerPendingAlarm =
+        PendingIntent.getBroadcast(getActivity(), 2, intent,
+            PendingIntent.FLAG_UPDATE_CURRENT);
+
+    breakfastPendingAlarm.cancel();
+    lunchPendingAlarm.cancel();
+    dinnerPendingAlarm.cancel();
   }
 
   public void handleScanMealEntry() {
