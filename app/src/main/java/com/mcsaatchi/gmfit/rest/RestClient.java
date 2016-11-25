@@ -9,7 +9,6 @@ import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RestClient {
-  private static final String TAG = "CachingRestClient";
   private GMFit_Service apiService;
 
   public RestClient() {

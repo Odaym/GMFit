@@ -1,14 +1,11 @@
 package com.mcsaatchi.gmfit.rest;
 
 import android.util.Log;
-
 import com.mcsaatchi.gmfit.classes.Constants;
-import com.mcsaatchi.gmfit.GMFit_Application;
-
+import com.mcsaatchi.gmfit.classes.GMFit_Application;
 import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
-
 import okhttp3.Cache;
 import okhttp3.CacheControl;
 import okhttp3.Interceptor;
