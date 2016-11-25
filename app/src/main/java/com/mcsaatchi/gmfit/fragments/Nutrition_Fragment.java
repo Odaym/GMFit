@@ -142,13 +142,13 @@ public class Nutrition_Fragment extends Fragment {
   private String finalDesiredDate;
   private boolean setDrawValuesDisabled = true;
   private UserMeals_RecyclerAdapterDragSwipe userMealsRecyclerAdapter;
-  private ArrayList<NutritionWidget> widgetsMap;
   private SharedPreferences prefs;
   private ArrayList<MealItem> finalBreakfastMeals = new ArrayList<>();
   private ArrayList<MealItem> finalLunchMeals = new ArrayList<>();
   private ArrayList<MealItem> finalDinnerMeals = new ArrayList<>();
   private ArrayList<MealItem> finalSnackMeals = new ArrayList<>();
 
+  private ArrayList<NutritionWidget> widgetsMap;
   private ArrayList<NutritionWidget> finalWidgets;
   private ArrayList<DataChart> finalCharts;
 
@@ -216,7 +216,7 @@ public class Nutrition_Fragment extends Fragment {
   @Override public boolean onOptionsItemSelected(MenuItem item) {
     Intent intent = new Intent(getActivity(), CustomizeWidgetsAndCharts_Activity.class);
     intent.putExtra(Constants.EXTRAS_FRAGMENT_TYPE, Constants.EXTRAS_NUTRITION_FRAGMENT);
-    intent.putParcelableArrayListExtra(Constants.BUNDLE_NUTRITION_WIDGETS_MAP, widgetsMap);
+    intent.putParcelableArrayListExtra(Constants.BUNDLE_NUTRITION_WIDGETS_MAP, finalWidgets);
     intent.putParcelableArrayListExtra(Constants.BUNDLE_NUTRITION_CHARTS_MAP, finalCharts);
     startActivity(intent);
 
@@ -780,7 +780,7 @@ public class Nutrition_Fragment extends Fragment {
       case Constants.EXTRAS_NUTRITION_WIDGETS_ORDER_ARRAY_CHANGED:
         if (ebp.getNutritionWidgetsMap() != null) {
           widgetsMap = ebp.getNutritionWidgetsMap();
-          setupWidgetViews(ebp.getNutritionWidgetsMap());
+          setupWidgetViews(widgetsMap);
 
           int[] widgets = new int[widgetsMap.size()];
           int[] positions = new int[widgetsMap.size()];
