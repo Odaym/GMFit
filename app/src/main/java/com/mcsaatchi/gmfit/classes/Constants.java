@@ -2,6 +2,7 @@ package com.mcsaatchi.gmfit.classes;
 
 public class Constants {
   public static final String SHARED_PREFS_TITLE = "GMFIT_PREFS";
+  public static final String APP_FIRST_RUN = "app_first_run";
   public static final String TAG = "GMFIT_DEBUG";
 
   public static final String EXTRAS_USER_LOGGED_IN = "user_logged_in";
@@ -100,7 +101,7 @@ public class Constants {
   public static final String BUNDLE_SLUG_BREAKDOWN_MEASUREMENT_UNIT =
       "slug_breakdown_measurement_unit";
 
-  public static final String BASE_URL_ADDRESS = "http://146.185.164.182/api/v1/";
+  public static final String BASE_URL_ADDRESS = "http://gmfit.mcsaatchi.me/api/v1/";
 
   public static final String EVENT_USER_FINALIZE_SETUP_PROFILE = "user_finalize_setup_profile";
   public static final String EVENT_STEP_COUNTER_INCREMENTED = "step_counter_incremented";
