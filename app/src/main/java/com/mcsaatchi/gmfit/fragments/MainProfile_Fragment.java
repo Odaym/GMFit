@@ -67,6 +67,7 @@ import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import timber.log.Timber;
 import worker8.com.github.radiogroupplus.RadioGroupPlus;
 
 public class MainProfile_Fragment extends Fragment {
@@ -765,17 +766,17 @@ public class MainProfile_Fragment extends Fragment {
   }
 
   private void updateUserProfile() {
-    String dateOfBirth = prefs.getString(Constants.EXTRAS_USER_PROFILE_DATE_OF_BIRTH, "");
-    String bloodType = prefs.getString(Constants.EXTRAS_USER_PROFILE_BLOOD_TYPE, "");
+    String dateOfBirth = prefs.getString(Constants.EXTRAS_USER_PROFILE_DATE_OF_BIRTH, "1990-01-01");
+    String bloodType = prefs.getString(Constants.EXTRAS_USER_PROFILE_BLOOD_TYPE, "A+");
     String nationality = prefs.getString(Constants.EXTRAS_USER_PROFILE_NATIONALITY, "");
     String measurementSystem =
-        prefs.getString(Constants.EXTRAS_USER_PROFILE_MEASUREMENT_SYSTEM, "");
+        prefs.getString(Constants.EXTRAS_USER_PROFILE_MEASUREMENT_SYSTEM, "metric");
     int userGoalId = prefs.getInt(Constants.EXTRAS_USER_PROFILE_GOAL_ID, 0);
-    int activityLevelId = prefs.getInt(Constants.EXTRAS_USER_PROFILE_ACTIVITY_LEVEL_ID, 0);
+    int activityLevelId = prefs.getInt(Constants.EXTRAS_USER_PROFILE_ACTIVITY_LEVEL_ID, 2);
     int medicalCondition = prefs.getInt(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION_ID, 0);
     int gender = prefs.getInt(Constants.EXTRAS_USER_PROFILE_GENDER, 1);
-    float height = prefs.getFloat(Constants.EXTRAS_USER_PROFILE_HEIGHT, 0.0f);
-    float weight = prefs.getFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, 0.0f);
+    float height = prefs.getFloat(Constants.EXTRAS_USER_PROFILE_HEIGHT, 180);
+    float weight = prefs.getFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, 82);
 
     final ProgressDialog waitingDialog = new ProgressDialog(getActivity());
     waitingDialog.setTitle(getString(R.string.updating_user_profile_dialog_title));
@@ -816,6 +817,7 @@ public class MainProfile_Fragment extends Fragment {
               }
 
               @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+                Timber.d(t.getMessage());
                 alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
                 alertDialog.show();
               }
