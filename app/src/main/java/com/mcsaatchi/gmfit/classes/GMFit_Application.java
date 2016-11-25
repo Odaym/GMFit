@@ -9,9 +9,9 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import com.crashlytics.android.Crashlytics;
+import com.mcsaatchi.gmfit.BuildConfig;
 import io.fabric.sdk.android.Fabric;
 import java.util.Calendar;
-import timber.log.BuildConfig;
 import timber.log.Timber;
 
 public class GMFit_Application extends Application {
@@ -58,13 +58,12 @@ public class GMFit_Application extends Application {
   private void addMealAlarms() {
     prefs = getSharedPreferences(Constants.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
 
-    if (!prefs.contains(Constants.ARE_ALARMS_ENABLED)) {
-      prefs.edit().putBoolean(Constants.ARE_ALARMS_ENABLED, true).apply();
+    if (prefs.getBoolean(Constants.APP_FIRST_RUN, true)) {
+      prefs.edit().putBoolean(Constants.APP_FIRST_RUN, false).apply();
       setupAlarmForMeal("Breakfast");
       setupAlarmForMeal("Lunch");
       setupAlarmForMeal("Dinner");
     } else {
-      Timber.w("Alarms Enabled value already exists");
     }
   }
 
