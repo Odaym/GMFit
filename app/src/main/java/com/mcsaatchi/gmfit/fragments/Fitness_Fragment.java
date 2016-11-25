@@ -131,7 +131,7 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
             .setMessage("Your device isn't equipped with this sensor")
             .setOnDismissListener(new DialogInterface.OnDismissListener() {
               @Override public void onDismiss(final DialogInterface dialogInterface) {
-                getActivity().finish();
+                //getActivity().finish();
               }
             })
             .setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
