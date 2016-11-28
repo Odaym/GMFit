@@ -283,6 +283,8 @@
   <string name="loading_data_dialog_title">Loading data</string>
   <string name="enable_reminders_switch_hint">Enable Reminders</string>
   <string name="food_logging_section_title">Food Logging</string>
+  <string name="choose_picture_from_gallery">Choose from gallery</string>
+  <string name="take_new_picture">Take a new picture</string>
 
   <!-- CONTACT US ACTIVITY -->
   <string name="contact_us_activity_title">Contact Us</string>

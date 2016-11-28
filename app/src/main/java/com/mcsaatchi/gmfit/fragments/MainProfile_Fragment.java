@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -21,6 +22,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -72,6 +74,7 @@ import worker8.com.github.radiogroupplus.RadioGroupPlus;
 
 public class MainProfile_Fragment extends Fragment {
   private static final int REQUEST_WRITE_STORAGE = 112;
+  private static final int REQUEST_PICK_IMAGE_GALLERY = 329;
   private static final int ASK_CAMERA_AND_STORAGE_PERMISSION = 834;
   private static final int CAPTURE_NEW_PICTURE_REQUEST_CODE = 871;
 
@@ -149,7 +152,7 @@ public class MainProfile_Fragment extends Fragment {
         if (!hasCameraPermission || !hasWriteStoragePermission) {
           requestPermissions(neededPermissions, ASK_CAMERA_AND_STORAGE_PERMISSION);
         } else {
-          openTakePictureIntent();
+          showImagePickerDialog();
         }
       }
     });
@@ -296,7 +299,7 @@ public class MainProfile_Fragment extends Fragment {
 
             if (selectedRadioButton != null) {
               medicalConditionsValueTV.setText(selectedRadioButton.getText().toString());
-            }else{
+            } else {
               Log.d("TAG", "onClick: Selected Radio Button was null!");
             }
 
@@ -538,22 +541,45 @@ public class MainProfile_Fragment extends Fragment {
 
     switch (requestCode) {
       case CAPTURE_NEW_PICTURE_REQUEST_CODE:
-        prefs.edit()
-            .putString(Constants.EXTRAS_USER_PROFILE_IMAGE, photoFile.getAbsolutePath())
-            .apply();
-
-        Picasso.with(getActivity())
-            .load(new File(prefs.getString(Constants.EXTRAS_USER_PROFILE_IMAGE, "")))
-            .resize(500, 500)
-            .transform(new CircleTransform())
-            .centerInside()
-            .into(userProfileIV);
-
-        profilePictureChanged = true;
-
-        updateUserProfile();
+        if (photoFile.getTotalSpace() > 0) {
+          setProfilePicture(photoFile.getAbsolutePath());
+        } else {
+          Timber.d("No picture was taken, photoFile size : " + photoFile.getTotalSpace());
+        }
 
         break;
+      case REQUEST_PICK_IMAGE_GALLERY:
+        if (data != null) {
+          Uri selectedImageUri = data.getData();
+          String selectedImagePath = getPhotoPathFromGallery(selectedImageUri);
+
+          setProfilePicture(selectedImagePath);
+        }
+    }
+  }
+
+  private void setProfilePicture(String finalImagePath) {
+    String currentImagePath = prefs.getString(Constants.EXTRAS_USER_PROFILE_IMAGE, "");
+
+    /**
+     * If the current picture is different than the one the user just took, change it
+     */
+    if (!currentImagePath.equals(finalImagePath)) {
+      Timber.d("Profile pictures have differed");
+      prefs.edit().putString(Constants.EXTRAS_USER_PROFILE_IMAGE, finalImagePath).apply();
+
+      Picasso.with(getActivity())
+          .load(new File(prefs.getString(Constants.EXTRAS_USER_PROFILE_IMAGE, "")))
+          .resize(500, 500)
+          .transform(new CircleTransform())
+          .centerInside()
+          .into(userProfileIV);
+
+      profilePictureChanged = true;
+
+      updateUserProfile();
+    } else {
+      Timber.d("Profile pictures are the same");
     }
   }
 
@@ -573,6 +599,58 @@ public class MainProfile_Fragment extends Fragment {
         startActivityForResult(takePictureIntent, CAPTURE_NEW_PICTURE_REQUEST_CODE);
       }
     }
+  }
+
+  public String getPhotoPathFromGallery(Uri uri) {
+    if (uri == null) {
+      // TODO perform some logging or show user feedback
+      return null;
+    }
+
+    String[] projection = { MediaStore.Images.Media.DATA };
+    Cursor cursor = getActivity().getContentResolver().query(uri, projection, null, null, null);
+    if (cursor != null) {
+      int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+      cursor.moveToFirst();
+      return cursor.getString(column_index);
+    }
+
+    return uri.getPath();
+  }
+
+  private void showImagePickerDialog() {
+    AlertDialog.Builder builderSingle = new AlertDialog.Builder(getActivity());
+    builderSingle.setTitle("Set profile picture");
+
+    final ArrayAdapter<String> arrayAdapter =
+        new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1);
+    arrayAdapter.add(getResources().getString(R.string.choose_picture_from_gallery));
+    arrayAdapter.add(getResources().getString(R.string.take_new_picture));
+
+    builderSingle.setNegativeButton(R.string.decline_cancel, new DialogInterface.OnClickListener() {
+      @Override public void onClick(DialogInterface dialog, int which) {
+        dialog.dismiss();
+      }
+    });
+
+    builderSingle.setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
+      @Override public void onClick(DialogInterface dialog, int which) {
+        String strName = arrayAdapter.getItem(which);
+        if (strName != null) {
+          switch (strName) {
+            case "Choose from gallery":
+              Intent galleryIntent = new Intent(Intent.ACTION_PICK,
+                  android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+              startActivityForResult(galleryIntent, REQUEST_PICK_IMAGE_GALLERY);
+              break;
+            case "Take a new picture":
+              openTakePictureIntent();
+              break;
+          }
+        }
+      }
+    });
+    builderSingle.show();
   }
 
   private File createImageFile(String imagePath) throws IOException {
