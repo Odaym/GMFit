@@ -45,8 +45,11 @@ public class Reminders_Activity extends Base_Activity {
   public static void setupMealRemindersAlarm(Context context, SharedPreferences prefs,
       String mealType, String finalTime) {
     Calendar calendar = Calendar.getInstance();
+    calendar.setTimeInMillis(System.currentTimeMillis());
     calendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(finalTime.split(":")[0]));
     calendar.set(Calendar.MINUTE, Integer.parseInt(finalTime.split(":")[1]));
+    calendar.set(Calendar.SECOND, 0);
+    calendar.set(Calendar.MILLISECOND, 0);
 
     Intent intent = new Intent(context, AlarmReceiver.class);
 
@@ -78,8 +81,7 @@ public class Reminders_Activity extends Base_Activity {
     }
 
     AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-    am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY,
-        pendingIntent);
+    am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
   }
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -120,11 +122,9 @@ public class Reminders_Activity extends Base_Activity {
         if (checked) {
           triggerAlarmsState(true);
 
-          setupMealRemindersAlarm(Reminders_Activity.this, prefs, "Breakfast",
-              breakfastAlarmTime);
+          setupMealRemindersAlarm(Reminders_Activity.this, prefs, "Breakfast", breakfastAlarmTime);
           setupMealRemindersAlarm(Reminders_Activity.this, prefs, "Lunch", lunchAlarmTime);
-          setupMealRemindersAlarm(Reminders_Activity.this, prefs, "Dinner",
-              dinnerAlarmTime);
+          setupMealRemindersAlarm(Reminders_Activity.this, prefs, "Dinner", dinnerAlarmTime);
         } else {
           triggerAlarmsState(false);
           cancelAllPendingAlarms();
@@ -156,8 +156,7 @@ public class Reminders_Activity extends Base_Activity {
                     timeValues[0] + ":" + timeValues[1] + " " + timeValues[2]);
 
                 if (areAlarmsEnabled) {
-                  setupMealRemindersAlarm(Reminders_Activity.this, prefs, "Breakfast",
-                      finalTime);
+                  setupMealRemindersAlarm(Reminders_Activity.this, prefs, "Breakfast", finalTime);
                 }
               }
             }, Integer.parseInt(timeValues[0]), Integer.parseInt(timeValues[1]), false);
@@ -190,8 +189,7 @@ public class Reminders_Activity extends Base_Activity {
                     timeValues[0] + ":" + timeValues[1] + " " + timeValues[2]);
 
                 if (areAlarmsEnabled) {
-                  setupMealRemindersAlarm(Reminders_Activity.this, prefs, "Lunch",
-                      finalTime);
+                  setupMealRemindersAlarm(Reminders_Activity.this, prefs, "Lunch", finalTime);
                 }
               }
             }, Integer.parseInt(timeValues[0]), Integer.parseInt(timeValues[1]), false);
@@ -224,8 +222,7 @@ public class Reminders_Activity extends Base_Activity {
                     timeValues[0] + ":" + timeValues[1] + " " + timeValues[2]);
 
                 if (areAlarmsEnabled) {
-                  setupMealRemindersAlarm(Reminders_Activity.this, prefs, "Dinner",
-                      finalTime);
+                  setupMealRemindersAlarm(Reminders_Activity.this, prefs, "Dinner", finalTime);
                 }
               }
             }, Integer.parseInt(timeValues[0]), Integer.parseInt(timeValues[1]), false);
