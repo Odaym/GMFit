@@ -18,7 +18,8 @@ import com.mcsaatchi.gmfit.models.User;
 import java.sql.SQLException;
 
 /**
- * Database helper class used to manage the creation and upgrading of your database. This class also
+ * Database helper class used to manage the creation and upgrading of your database. This class
+ * also
  * usually provides
  * the DAOs used by the other classes.
  */

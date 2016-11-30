@@ -1,10 +1,8 @@
 package com.mcsaatchi.gmfit.activities;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -16,24 +14,21 @@ import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import com.andreabaccega.widget.FormEditText;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.classes.Constants;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
 import com.mcsaatchi.gmfit.classes.Helpers;
-import com.mcsaatchi.gmfit.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponse;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponseInnerBody;
-
 import java.util.ArrayList;
-
-import butterknife.Bind;
-import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import timber.log.Timber;
 
 public class SignUp_Activity extends Base_Activity {
 
@@ -50,8 +45,6 @@ public class SignUp_Activity extends Base_Activity {
 
   private ArrayList<FormEditText> allFields = new ArrayList<>();
 
-  private SharedPreferences prefs;
-
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
@@ -60,8 +53,6 @@ public class SignUp_Activity extends Base_Activity {
     ButterKnife.bind(this);
 
     setupToolbar(toolbar, getResources().getString(R.string.sign_up_activity_title), true);
-
-    prefs = getSharedPreferences(Constants.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
 
     allFields.add(firstNameET);
     allFields.add(lastNameET);
@@ -136,8 +127,8 @@ public class SignUp_Activity extends Base_Activity {
           }
         });
 
-    DataAccessHandler.getInstance()
-        .registerUser(full_name, email, password, new Callback<AuthenticationResponse>() {
+    dataAccessHandler.registerUser(full_name, email, password,
+        new Callback<AuthenticationResponse>() {
           @Override public void onResponse(Call<AuthenticationResponse> call,
               Response<AuthenticationResponse> response) {
             switch (response.code()) {
@@ -159,7 +150,8 @@ public class SignUp_Activity extends Base_Activity {
                     .post(new EventBus_Poster(
                         Constants.EVENT_SIGNNED_UP_SUCCESSFULLY_CLOSE_LOGIN_ACTIVITY));
 
-                Intent intent = new Intent(SignUp_Activity.this, AccountVerification_Activity.class);
+                Intent intent =
+                    new Intent(SignUp_Activity.this, AccountVerification_Activity.class);
                 startActivity(intent);
 
                 finish();
@@ -173,7 +165,9 @@ public class SignUp_Activity extends Base_Activity {
           }
 
           @Override public void onFailure(Call<AuthenticationResponse> call, Throwable t) {
-            alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
+            Timber.d("Call failed with error : %s", t.getMessage());
+            alertDialog.setMessage(
+                getResources().getString(R.string.error_response_from_server_incorrect));
             alertDialog.show();
           }
         });

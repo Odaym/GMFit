@@ -1,32 +1,36 @@
 package com.mcsaatchi.gmfit.activities;
 
-import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.classes.Constants;
+import com.mcsaatchi.gmfit.classes.EventBus_Poster;
+import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
+import com.mcsaatchi.gmfit.classes.GMFit_Application;
 import com.mcsaatchi.gmfit.classes.Helpers;
 import com.mcsaatchi.gmfit.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponse;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponseChart;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponseInnerBody;
 import com.mcsaatchi.gmfit.rest.UserProfileResponseMedicalCondition;
-
 import java.util.ArrayList;
 import java.util.List;
-
+import javax.inject.Inject;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import timber.log.Timber;
 
 public class Splash_Activity extends AppCompatActivity {
 
-  private SharedPreferences prefs;
+  @Inject DataAccessHandler dataAccessHandler;
+  @Inject SharedPreferences prefs;
+
   private Intent intent;
 
   private List<UserProfileResponseMedicalCondition> userMedicalConditions = new ArrayList<>();
@@ -35,12 +39,12 @@ public class Splash_Activity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_splash);
 
-    prefs = getSharedPreferences(Constants.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
+    ((GMFit_Application) getApplication()).getAppComponent().inject(this);
 
     int SPLASH_TIME_OUT = 1000;
     int NO_INTERNET_DIALOG_TIMEOUT = 3000;
 
-    Log.d("TAGTAG", "onCreate outside if : " + prefs.getBoolean(
+    Timber.d("onCreate outside if : %s", prefs.getBoolean(
         prefs.getString(Constants.EXTRAS_USER_EMAIL, "")
             + "_"
             + Constants.EVENT_FINISHED_SETTING_UP_PROFILE_SUCCESSFULLY, false));
@@ -49,7 +53,7 @@ public class Splash_Activity extends AppCompatActivity {
      * User is not logged in
      */
     if (!prefs.getBoolean(Constants.EXTRAS_USER_LOGGED_IN, false)) {
-      Log.d("TAGTAG", "User not logged in");
+      Timber.d("User not logged in");
 
       new Handler().postDelayed(new Runnable() {
 
@@ -66,7 +70,7 @@ public class Splash_Activity extends AppCompatActivity {
         + "_"
         + Constants.EVENT_FINISHED_SETTING_UP_PROFILE_SUCCESSFULLY, false)) {
 
-      Log.d("TAGTAG", "onCreate: user has not yet finished setup profile process");
+      Timber.d("onCreate: user has not yet finished setup profile process");
       intent = new Intent(Splash_Activity.this, SetupProfile_Activity.class);
       startActivity(intent);
 
@@ -75,10 +79,14 @@ public class Splash_Activity extends AppCompatActivity {
        */
     } else if (prefs.getBoolean(Constants.EXTRAS_USER_LOGGED_IN, false)) {
       if (Helpers.isInternetAvailable(Splash_Activity.this)) {
-        Log.d("TAGTAG", "onCreate: signing the user in silently now");
+        Timber.d("onCreate: signing the user in silently now");
 
-        signInUserSilently(prefs.getString(Constants.EXTRAS_USER_EMAIL, ""),
-            prefs.getString(Constants.EXTRAS_USER_PASSWORD, ""));
+        if (prefs.getString(Constants.EXTRAS_USER_FACEBOOK_TOKEN, "-1").equals("-1")) {
+          signInUserSilently(prefs.getString(Constants.EXTRAS_USER_EMAIL, ""),
+              prefs.getString(Constants.EXTRAS_USER_PASSWORD, ""));
+        } else {
+          loginUserWithFacebook(prefs.getString(Constants.EXTRAS_USER_FACEBOOK_TOKEN, "-1"));
+        }
       } else {
         Helpers.showNoInternetDialog(Splash_Activity.this);
         new Handler().postDelayed(new Runnable() {
@@ -91,37 +99,93 @@ public class Splash_Activity extends AppCompatActivity {
   }
 
   private void signInUserSilently(String email, String password) {
-    DataAccessHandler.getInstance()
-        .signInUserSilently(email, password, new Callback<AuthenticationResponse>() {
-          @Override public void onResponse(Call<AuthenticationResponse> call,
-              Response<AuthenticationResponse> response) {
-            switch (response.code()) {
-              case 200:
-                AuthenticationResponseInnerBody responseBody = response.body().getData().getBody();
+    dataAccessHandler.signInUserSilently(email, password, new Callback<AuthenticationResponse>() {
+      @Override public void onResponse(Call<AuthenticationResponse> call,
+          Response<AuthenticationResponse> response) {
+        switch (response.code()) {
+          case 200:
+            AuthenticationResponseInnerBody responseBody = response.body().getData().getBody();
 
-                //Refreshes access token
-                prefs.edit()
-                    .putString(Constants.PREF_USER_ACCESS_TOKEN,
-                        "Bearer " + responseBody.getToken())
-                    .apply();
+            //Refreshes access token
+            prefs.edit()
+                .putString(Constants.PREF_USER_ACCESS_TOKEN, "Bearer " + responseBody.getToken())
+                .apply();
 
-                /**
-                 * Don't send the widgets over to the Main Activity here
-                 */
-                List<AuthenticationResponseChart> chartsMap = responseBody.getCharts();
+            /**
+             * Don't send the widgets over to the Main Activity here
+             */
+            List<AuthenticationResponseChart> chartsMap = responseBody.getCharts();
 
-                Intent intent = new Intent(Splash_Activity.this, Main_Activity.class);
-                intent.putParcelableArrayListExtra(Constants.BUNDLE_FITNESS_CHARTS_MAP,
-                    (ArrayList<AuthenticationResponseChart>) chartsMap);
-                startActivity(intent);
+            Intent intent = new Intent(Splash_Activity.this, Main_Activity.class);
+            intent.putParcelableArrayListExtra(Constants.BUNDLE_FITNESS_CHARTS_MAP,
+                (ArrayList<AuthenticationResponseChart>) chartsMap);
+            startActivity(intent);
 
-                break;
-            }
-          }
+            break;
+        }
+      }
 
-          @Override public void onFailure(Call<AuthenticationResponse> call, Throwable t) {
-            Log.d("TAG", "onFailure: Failed to login user silently");
+      @Override public void onFailure(Call<AuthenticationResponse> call, Throwable t) {
+        Timber.d("Call failed with error : %s", t.getMessage());
+        final AlertDialog alertDialog =
+            new AlertDialog.Builder(Splash_Activity.this).create();
+        alertDialog.setMessage(
+            getResources().getString(R.string.error_response_from_server_incorrect));
+        alertDialog.show();
+      }
+    });
+  }
+
+  private void loginUserWithFacebook(String accessToken) {
+    final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+    alertDialog.setTitle(R.string.signing_in_dialog_title);
+    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
+        new DialogInterface.OnClickListener() {
+          public void onClick(DialogInterface dialog, int which) {
+            dialog.dismiss();
           }
         });
+
+    dataAccessHandler.handleFacebookProcess(accessToken, new Callback<AuthenticationResponse>() {
+      @Override public void onResponse(Call<AuthenticationResponse> call,
+          Response<AuthenticationResponse> response) {
+        switch (response.code()) {
+          case 200:
+
+            AuthenticationResponseInnerBody responseBody = response.body().getData().getBody();
+
+            //Refreshes access token
+            prefs.edit()
+                .putString(Constants.PREF_USER_ACCESS_TOKEN, "Bearer " + responseBody.getToken())
+                .apply();
+
+            List<AuthenticationResponseChart> chartsMap = responseBody.getCharts();
+
+            EventBus_Singleton.getInstance()
+                .post(new EventBus_Poster(
+                    Constants.EVENT_SIGNNED_UP_SUCCESSFULLY_CLOSE_LOGIN_ACTIVITY));
+
+            Intent intent = new Intent(Splash_Activity.this, Main_Activity.class);
+            intent.putParcelableArrayListExtra(Constants.BUNDLE_FITNESS_CHARTS_MAP,
+                (ArrayList<AuthenticationResponseChart>) chartsMap);
+            startActivity(intent);
+
+            finish();
+
+            break;
+          case 401:
+            alertDialog.setMessage(getString(R.string.login_failed_wrong_credentials));
+            alertDialog.show();
+            break;
+        }
+      }
+
+      @Override public void onFailure(Call<AuthenticationResponse> call, Throwable t) {
+        Timber.d("Call failed with error : %s", t.getMessage());
+        alertDialog.setMessage(
+            getResources().getString(R.string.error_response_from_server_incorrect));
+        alertDialog.show();
+      }
+    });
   }
 }

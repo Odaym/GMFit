@@ -1,10 +1,8 @@
 package com.mcsaatchi.gmfit.activities;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
@@ -21,7 +19,6 @@ import com.mcsaatchi.gmfit.classes.Constants;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
 import com.mcsaatchi.gmfit.classes.Helpers;
-import com.mcsaatchi.gmfit.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.models.MealItem;
 import com.mcsaatchi.gmfit.models.NutritionalFact;
 import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
@@ -32,6 +29,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import timber.log.Timber;
 
 public class SpecifyMealAmount_Activity extends Base_Activity {
   private static final int MEAL_AMOUNT_SPECIFIED = 536;
@@ -42,7 +40,6 @@ public class SpecifyMealAmount_Activity extends Base_Activity {
   @Bind(R.id.mealAmountET) FormEditText mealAmountET;
 
   private ArrayList<FormEditText> allFields = new ArrayList<>();
-  private SharedPreferences prefs;
   private NutritionalFactsList_Adapter nutritionFactsListAdapter;
 
   private List<NutritionalFact> nutritionalFacts = new ArrayList<>();
@@ -57,8 +54,6 @@ public class SpecifyMealAmount_Activity extends Base_Activity {
     setContentView(R.layout.activity_specify_meal_amount);
 
     ButterKnife.bind(this);
-
-    prefs = getSharedPreferences(Constants.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
 
     allFields.add(mealAmountET);
 
@@ -102,54 +97,54 @@ public class SpecifyMealAmount_Activity extends Base_Activity {
           }
         });
 
-    DataAccessHandler.getInstance()
-        .getMealMetrics(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN,
-            Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
-            "http://gmfit.mcsaatchi.me/api/v1/meals/" + meal_id,
-            new Callback<MealMetricsResponse>() {
-              @Override public void onResponse(Call<MealMetricsResponse> call,
-                  Response<MealMetricsResponse> response) {
-                switch (response.code()) {
-                  case 200:
-                    waitingDialog.dismiss();
+    dataAccessHandler.getMealMetrics(
+        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
+        "http://gmfit.mcsaatchi.me/api/v1/meals/" + meal_id, new Callback<MealMetricsResponse>() {
+          @Override public void onResponse(Call<MealMetricsResponse> call,
+              Response<MealMetricsResponse> response) {
+            switch (response.code()) {
+              case 200:
+                waitingDialog.dismiss();
 
-                    List<MealMetricsResponseDatum> mealMetricsResponseDatumList =
-                        response.body().getData().getBody().getMetrics();
+                List<MealMetricsResponseDatum> mealMetricsResponseDatumList =
+                    response.body().getData().getBody().getMetrics();
 
-                    for (int i = 0; i < mealMetricsResponseDatumList.size(); i++) {
-                      NutritionalFact nutritionalFact = new NutritionalFact();
+                for (int i = 0; i < mealMetricsResponseDatumList.size(); i++) {
+                  NutritionalFact nutritionalFact = new NutritionalFact();
 
-                      nutritionalFact.setName(mealMetricsResponseDatumList.get(i).getName());
-                      nutritionalFact.setUnit(
-                          (int) Double.parseDouble(mealMetricsResponseDatumList.get(i).getValue())
-                              + " "
-                              + mealMetricsResponseDatumList.get(i).getUnit());
+                  nutritionalFact.setName(mealMetricsResponseDatumList.get(i).getName());
+                  nutritionalFact.setUnit(
+                      (int) Double.parseDouble(mealMetricsResponseDatumList.get(i).getValue())
+                          + " "
+                          + mealMetricsResponseDatumList.get(i).getUnit());
 
-                      nutritionalFacts.add(nutritionalFact);
-                    }
-
-                    if (nutritionalFacts.size() > 0) {
-                      int caloriesForThisMeal = 0;
-
-                      for (int i = 0; i < nutritionalFacts.size(); i++) {
-                        if (nutritionalFacts.get(i).getName().equals("Calories")) {
-                          caloriesForThisMeal =
-                              Integer.parseInt(nutritionalFacts.get(i).getUnit().split(" ")[0]);
-                        }
-                      }
-
-                      initNutritionFactsList(nutritionalFacts, caloriesForThisMeal);
-                    }
-
-                    break;
+                  nutritionalFacts.add(nutritionalFact);
                 }
-              }
 
-              @Override public void onFailure(Call<MealMetricsResponse> call, Throwable t) {
-                alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
-                alertDialog.show();
-              }
-            });
+                if (nutritionalFacts.size() > 0) {
+                  int caloriesForThisMeal = 0;
+
+                  for (int i = 0; i < nutritionalFacts.size(); i++) {
+                    if (nutritionalFacts.get(i).getName().equals("Calories")) {
+                      caloriesForThisMeal =
+                          Integer.parseInt(nutritionalFacts.get(i).getUnit().split(" ")[0]);
+                    }
+                  }
+
+                  initNutritionFactsList(nutritionalFacts, caloriesForThisMeal);
+                }
+
+                break;
+            }
+          }
+
+          @Override public void onFailure(Call<MealMetricsResponse> call, Throwable t) {
+            Timber.d("Call failed with error : %s", t.getMessage());
+            alertDialog.setMessage(
+                getResources().getString(R.string.error_response_from_server_incorrect));
+            alertDialog.show();
+          }
+        });
   }
 
   private void initNutritionFactsList(List<NutritionalFact> nutritionalFacts,
@@ -206,100 +201,112 @@ public class SpecifyMealAmount_Activity extends Base_Activity {
 
   private void storeMealOnCertainDate(final ProgressDialog waitingDialog,
       final int caloriesForThisMeal, String chosenDate) {
-    DataAccessHandler.getInstance()
-        .storeNewMeal(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN,
-            Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), mealItem.getMeal_id(),
-            Integer.parseInt(mealAmountET.getText().toString()), mealItem.getType(), chosenDate,
-            new Callback<DefaultGetResponse>() {
-              @Override public void onResponse(Call<DefaultGetResponse> call,
-                  Response<DefaultGetResponse> response) {
-                switch (response.code()) {
-                  case 200:
-                    waitingDialog.dismiss();
-
-                    mealItem.setAmount(mealAmountET.getText().toString());
-                    mealItem.setTotalCalories(
-                        Integer.parseInt(mealItem.getAmount()) * caloriesForThisMeal);
-
-                    Intent resultIntent = new Intent();
-                    resultIntent.putExtra(Constants.EXTRAS_MEAL_OBJECT_DETAILS, mealItem);
-                    setResult(MEAL_AMOUNT_SPECIFIED, resultIntent);
-
-                    EventBus_Singleton.getInstance()
-                        .post(new EventBus_Poster(Constants.EXTRAS_CREATED_NEW_MEAL_ENTRY_ON_DATE));
-
-                    finish();
-
-                    break;
-                }
-              }
-
-              @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+    dataAccessHandler.storeNewMeal(
+        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
+        mealItem.getMeal_id(), Integer.parseInt(mealAmountET.getText().toString()),
+        mealItem.getType(), chosenDate, new Callback<DefaultGetResponse>() {
+          @Override public void onResponse(Call<DefaultGetResponse> call,
+              Response<DefaultGetResponse> response) {
+            switch (response.code()) {
+              case 200:
                 waitingDialog.dismiss();
-              }
-            });
+
+                mealItem.setAmount(mealAmountET.getText().toString());
+                mealItem.setTotalCalories(
+                    Integer.parseInt(mealItem.getAmount()) * caloriesForThisMeal);
+
+                Intent resultIntent = new Intent();
+                resultIntent.putExtra(Constants.EXTRAS_MEAL_OBJECT_DETAILS, mealItem);
+                setResult(MEAL_AMOUNT_SPECIFIED, resultIntent);
+
+                EventBus_Singleton.getInstance()
+                    .post(new EventBus_Poster(Constants.EXTRAS_CREATED_NEW_MEAL_ENTRY_ON_DATE));
+
+                finish();
+
+                break;
+            }
+          }
+
+          @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+            Timber.d("Call failed with error : %s", t.getMessage());
+            final AlertDialog alertDialog =
+                new AlertDialog.Builder(SpecifyMealAmount_Activity.this).create();
+            alertDialog.setMessage(
+                getResources().getString(R.string.error_response_from_server_incorrect));
+            alertDialog.show();
+          }
+        });
   }
 
   private void updateUserMealOnCertainDate(final ProgressDialog waitingDialog,
       final int caloriesForThisMeal) {
-    DataAccessHandler.getInstance()
-        .updateUserMeals(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN,
-            Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), mealItem.getInstance_id(),
-            Integer.parseInt(mealAmountET.getText().toString()),
-            new Callback<DefaultGetResponse>() {
-              @Override public void onResponse(Call<DefaultGetResponse> call,
-                  Response<DefaultGetResponse> response) {
-                switch (response.code()) {
-                  case 200:
-                    waitingDialog.dismiss();
-
-                    mealItem.setAmount(mealAmountET.getText().toString());
-                    mealItem.setTotalCalories(
-                        Integer.parseInt(mealItem.getAmount()) * caloriesForThisMeal);
-
-                    EventBus_Singleton.getInstance()
-                        .post(new EventBus_Poster(Constants.EXTRAS_UPDATED_MEAL_ENTRY_ON_DATE));
-
-                    finish();
-
-                    break;
-                }
-              }
-
-              @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+    dataAccessHandler.updateUserMeals(
+        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
+        mealItem.getInstance_id(), Integer.parseInt(mealAmountET.getText().toString()),
+        new Callback<DefaultGetResponse>() {
+          @Override public void onResponse(Call<DefaultGetResponse> call,
+              Response<DefaultGetResponse> response) {
+            switch (response.code()) {
+              case 200:
                 waitingDialog.dismiss();
-              }
-            });
+
+                mealItem.setAmount(mealAmountET.getText().toString());
+                mealItem.setTotalCalories(
+                    Integer.parseInt(mealItem.getAmount()) * caloriesForThisMeal);
+
+                EventBus_Singleton.getInstance()
+                    .post(new EventBus_Poster(Constants.EXTRAS_UPDATED_MEAL_ENTRY_ON_DATE));
+
+                finish();
+
+                break;
+            }
+          }
+
+          @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+            Timber.d("Call failed with error : %s", t.getMessage());
+            final AlertDialog alertDialog =
+                new AlertDialog.Builder(SpecifyMealAmount_Activity.this).create();
+            alertDialog.setMessage(
+                getResources().getString(R.string.error_response_from_server_incorrect));
+            alertDialog.show();
+          }
+        });
   }
 
   private void updateUserMeal(final ProgressDialog waitingDialog, final int caloriesForThisMeal) {
-    DataAccessHandler.getInstance()
-        .updateUserMeals(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN,
-            Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), mealItem.getInstance_id(),
-            Integer.parseInt(mealAmountET.getText().toString()),
-            new Callback<DefaultGetResponse>() {
-              @Override public void onResponse(Call<DefaultGetResponse> call,
-                  Response<DefaultGetResponse> response) {
-                switch (response.code()) {
-                  case 200:
-                    waitingDialog.dismiss();
-
-                    mealItem.setAmount(mealAmountET.getText().toString());
-                    mealItem.setTotalCalories(
-                        Integer.parseInt(mealItem.getAmount()) * caloriesForThisMeal);
-
-                    EventBus_Singleton.getInstance()
-                        .post(new EventBus_Poster(Constants.EXTRAS_UPDATED_MEAL_ENTRY));
-
-                    finish();
-
-                    break;
-                }
-              }
-
-              @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+    dataAccessHandler.updateUserMeals(
+        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
+        mealItem.getInstance_id(), Integer.parseInt(mealAmountET.getText().toString()),
+        new Callback<DefaultGetResponse>() {
+          @Override public void onResponse(Call<DefaultGetResponse> call,
+              Response<DefaultGetResponse> response) {
+            switch (response.code()) {
+              case 200:
                 waitingDialog.dismiss();
-              }
-            });
+
+                mealItem.setAmount(mealAmountET.getText().toString());
+                mealItem.setTotalCalories(
+                    Integer.parseInt(mealItem.getAmount()) * caloriesForThisMeal);
+
+                EventBus_Singleton.getInstance()
+                    .post(new EventBus_Poster(Constants.EXTRAS_UPDATED_MEAL_ENTRY));
+
+                finish();
+
+                break;
+            }
+          }
+
+          @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+            Timber.d("Call failed with error : %s", t.getMessage());
+            final AlertDialog alertDialog =
+                new AlertDialog.Builder(SpecifyMealAmount_Activity.this).create();
+            alertDialog.setMessage(
+                getResources().getString(R.string.error_response_from_server_incorrect));
+            alertDialog.show();
+          }
+        });
   }
 }

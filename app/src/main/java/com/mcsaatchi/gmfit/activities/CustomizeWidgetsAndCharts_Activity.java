@@ -48,7 +48,8 @@ public class CustomizeWidgetsAndCharts_Activity extends Base_Activity {
 
     ButterKnife.bind(this);
 
-    setupToolbar(toolbar, getResources().getString(R.string.customize_widgets_and_charts_activity_title), true);
+    setupToolbar(toolbar,
+        getResources().getString(R.string.customize_widgets_and_charts_activity_title), true);
 
     Bundle intentExtras = getIntent().getExtras();
 

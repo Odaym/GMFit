@@ -7,8 +7,7 @@ public class UserGoalMetricsResponseMetrics {
   @SerializedName("steps-count") @Expose private UserGoalMetricsResponseStepsCount stepsCount;
   @SerializedName("active-calories") @Expose private UserGoalMetricsResponseActiveCalories
       activeCalories;
-  @SerializedName("calories") @Expose private UserGoalMetricsResponseActiveCalories
-      calories;
+  @SerializedName("calories") @Expose private UserGoalMetricsResponseActiveCalories calories;
   @SerializedName("distance-traveled") @Expose private UserGoalMetricsResponseDistanceTraveled
       distanceTraveled;
 

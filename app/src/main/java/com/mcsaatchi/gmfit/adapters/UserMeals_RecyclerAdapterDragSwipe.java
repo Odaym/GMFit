@@ -3,44 +3,43 @@ package com.mcsaatchi.gmfit.adapters;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.activities.SpecifyMealAmount_Activity;
 import com.mcsaatchi.gmfit.classes.Constants;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
+import com.mcsaatchi.gmfit.classes.GMFit_Application;
 import com.mcsaatchi.gmfit.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.models.MealItem;
 import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.touch_helpers.Drag_Swipe_ItemTouchHelperAdapter;
-
 import java.util.List;
-
+import javax.inject.Inject;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import timber.log.Timber;
 
 public class UserMeals_RecyclerAdapterDragSwipe
     extends RecyclerView.Adapter<UserMeals_RecyclerAdapterDragSwipe.MyViewHolder>
     implements Drag_Swipe_ItemTouchHelperAdapter {
 
+  @Inject DataAccessHandler dataAccessHandler;
+  @Inject SharedPreferences prefs;
+  @Inject Context context;
   private List<MealItem> mealItems;
-  private Context context;
-  private SharedPreferences prefs;
 
-  public UserMeals_RecyclerAdapterDragSwipe(Context context, List<MealItem> mealItems) {
+  public UserMeals_RecyclerAdapterDragSwipe(List<MealItem> mealItems) {
     this.mealItems = mealItems;
-    this.context = context;
 
-    if (context != null) {
-      prefs = context.getSharedPreferences(Constants.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
-    }
+    ((GMFit_Application) context).getAppComponent().inject(this);
   }
 
   @Override public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -82,29 +81,32 @@ public class UserMeals_RecyclerAdapterDragSwipe
   }
 
   private void deleteUserMeal(int instance_id) {
-    DataAccessHandler.getInstance()
-        .deleteUserMeal(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN,
-            Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), instance_id,
-            new Callback<DefaultGetResponse>() {
-              @Override public void onResponse(Call<DefaultGetResponse> call,
-                  Response<DefaultGetResponse> response) {
-                Log.d("TAG", "onResponse: Response code was : " + response.code());
+    dataAccessHandler.deleteUserMeal(
+        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
+        instance_id, new Callback<DefaultGetResponse>() {
+          @Override public void onResponse(Call<DefaultGetResponse> call,
+              Response<DefaultGetResponse> response) {
+            Log.d("TAG", "onResponse: Response code was : " + response.code());
 
-                switch (response.code()) {
-                  case 200:
-                    Log.d("TAG", "onResponse: Meal item removed!");
+            switch (response.code()) {
+              case 200:
+                Log.d("TAG", "onResponse: Meal item removed!");
 
-                    EventBus_Singleton.getInstance()
-                        .post(new EventBus_Poster(Constants.EXTRAS_DELETED_MEAL_ENTRY));
+                EventBus_Singleton.getInstance()
+                    .post(new EventBus_Poster(Constants.EXTRAS_DELETED_MEAL_ENTRY));
 
-                    break;
-                }
-              }
+                break;
+            }
+          }
 
-              @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
-                Log.d("TAG", "onFailure: FAilure");
-              }
-            });
+          @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+            Timber.d("Call failed with error : %s", t.getMessage());
+            final AlertDialog alertDialog = new AlertDialog.Builder(context).create();
+            alertDialog.setMessage(
+                context.getResources().getString(R.string.error_response_from_server_incorrect));
+            alertDialog.show();
+          }
+        });
   }
 
   class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

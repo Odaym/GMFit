@@ -1,40 +1,33 @@
 package com.mcsaatchi.gmfit.activities;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.adapters.AvailableTestsRecycler_Adapter;
 import com.mcsaatchi.gmfit.classes.Constants;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
 import com.mcsaatchi.gmfit.classes.SimpleDividerItemDecoration;
-import com.mcsaatchi.gmfit.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.rest.MedicalTestsResponse;
 import com.mcsaatchi.gmfit.rest.MedicalTestsResponseBody;
 import com.squareup.otto.Subscribe;
-
 import java.util.ArrayList;
-
-import butterknife.Bind;
-import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import timber.log.Timber;
 
 public class AddNewHealthTest_Activity extends Base_Activity {
   @Bind(R.id.toolbar) Toolbar toolbar;
   @Bind(R.id.availableTestsListview) RecyclerView availableTestsListview;
-
-  private SharedPreferences prefs;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -44,8 +37,6 @@ public class AddNewHealthTest_Activity extends Base_Activity {
     ButterKnife.bind(this);
 
     EventBus_Singleton.getInstance().register(this);
-
-    prefs = getSharedPreferences(Constants.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
 
     setupToolbar(toolbar, getResources().getString(R.string.add_new_test_activity_title), true);
 
@@ -69,9 +60,9 @@ public class AddNewHealthTest_Activity extends Base_Activity {
           }
         });
 
-    DataAccessHandler.getInstance()
-        .getMedicalTests(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN,
-            Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), new Callback<MedicalTestsResponse>() {
+    dataAccessHandler.getMedicalTests(
+        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
+        new Callback<MedicalTestsResponse>() {
           @Override public void onResponse(Call<MedicalTestsResponse> call,
               Response<MedicalTestsResponse> response) {
             switch (response.code()) {
@@ -89,7 +80,9 @@ public class AddNewHealthTest_Activity extends Base_Activity {
           }
 
           @Override public void onFailure(Call<MedicalTestsResponse> call, Throwable t) {
-            alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
+            Timber.d("Call failed with error : %s", t.getMessage());
+            alertDialog.setMessage(
+                getResources().getString(R.string.error_response_from_server_incorrect));
             alertDialog.show();
           }
         });
@@ -98,7 +91,7 @@ public class AddNewHealthTest_Activity extends Base_Activity {
   private void setupAvailableTestsListView(ArrayList<MedicalTestsResponseBody> testsFromResponse) {
     RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
     AvailableTestsRecycler_Adapter userTestsRecyclerAdapter =
-        new AvailableTestsRecycler_Adapter(this, testsFromResponse);
+        new AvailableTestsRecycler_Adapter(testsFromResponse, AddNewHealthTest_Activity.this);
 
     availableTestsListview.setLayoutManager(mLayoutManager);
     availableTestsListview.setAdapter(userTestsRecyclerAdapter);

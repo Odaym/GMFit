@@ -3,7 +3,6 @@ package com.mcsaatchi.gmfit.fragments;
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -33,6 +32,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import com.facebook.FacebookSdk;
+import com.facebook.login.LoginManager;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.activities.ContactUs_Activity;
 import com.mcsaatchi.gmfit.activities.Login_Activity;
@@ -40,6 +41,7 @@ import com.mcsaatchi.gmfit.activities.MetaTexts_Activity;
 import com.mcsaatchi.gmfit.activities.Reminders_Activity;
 import com.mcsaatchi.gmfit.classes.CircleTransform;
 import com.mcsaatchi.gmfit.classes.Constants;
+import com.mcsaatchi.gmfit.classes.GMFit_Application;
 import com.mcsaatchi.gmfit.classes.Helpers;
 import com.mcsaatchi.gmfit.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
@@ -64,6 +66,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import javax.inject.Inject;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -102,11 +105,12 @@ public class MainProfile_Fragment extends Fragment {
 
   @Bind(R.id.logoutBTN) Button logoutBTN;
 
+  @Inject SharedPreferences prefs;
+  @Inject DataAccessHandler dataAccessHandler;
+
   private File photoFile;
   private Uri photoFileUri;
   private boolean profilePictureChanged = false;
-
-  private SharedPreferences prefs;
 
   private double newUserWeight;
 
@@ -124,10 +128,9 @@ public class MainProfile_Fragment extends Fragment {
     View fragmentView = inflater.inflate(R.layout.fragment_main_profile, container, false);
 
     ButterKnife.bind(this, fragmentView);
+    ((GMFit_Application) getActivity().getApplication()).getAppComponent().inject(this);
 
     setHasOptionsMenu(true);
-
-    prefs = getActivity().getSharedPreferences(Constants.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
 
     ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.profile_tab_title);
 
@@ -693,9 +696,9 @@ public class MainProfile_Fragment extends Fragment {
           }
         });
 
-    DataAccessHandler.getInstance()
-        .getMetaTexts(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN,
-            Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), section, new Callback<MetaTextsResponse>() {
+    dataAccessHandler.getMetaTexts(
+        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
+        section, new Callback<MetaTextsResponse>() {
           @Override public void onResponse(Call<MetaTextsResponse> call,
               Response<MetaTextsResponse> response) {
 
@@ -722,15 +725,17 @@ public class MainProfile_Fragment extends Fragment {
           }
 
           @Override public void onFailure(Call<MetaTextsResponse> call, Throwable t) {
-            Log.d("TAG", "onFailure: User profile request failed!");
+            Timber.d("Call failed with error : %s", t.getMessage());
+            alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
+            alertDialog.show();
           }
         });
   }
 
   private void getUserProfile() {
-    DataAccessHandler.getInstance()
-        .getUserProfile(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN,
-            Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), new Callback<UserProfileResponse>() {
+    dataAccessHandler.getUserProfile(
+        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
+        new Callback<UserProfileResponse>() {
           @Override public void onResponse(Call<UserProfileResponse> call,
               Response<UserProfileResponse> response) {
             switch (response.code()) {
@@ -838,7 +843,11 @@ public class MainProfile_Fragment extends Fragment {
           }
 
           @Override public void onFailure(Call<UserProfileResponse> call, Throwable t) {
-            Log.d("TAG", "onFailure: User profile request failed!");
+            Timber.d("Call failed with error : %s", t.getMessage());
+            final AlertDialog alertDialog =
+                new AlertDialog.Builder(getActivity()).create();
+            alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
+            alertDialog.show();
           }
         });
   }
@@ -872,38 +881,36 @@ public class MainProfile_Fragment extends Fragment {
           }
         });
 
-    DataAccessHandler.getInstance()
-        .updateUserProfile(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN,
-            Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), dateOfBirth, bloodType, nationality,
-            medicalCondition, measurementSystem.toLowerCase(), userGoalId, activityLevelId, gender,
-            height, weight, Helpers.calculateBMI(weight, height),
-            new Callback<DefaultGetResponse>() {
-              @Override public void onResponse(Call<DefaultGetResponse> call,
-                  Response<DefaultGetResponse> response) {
-                switch (response.code()) {
-                  case 200:
-                    if (profilePictureChanged) {
-                      updateUserPicture(waitingDialog, alertDialog);
-                    } else {
-                      waitingDialog.dismiss();
-                      Toast.makeText(getActivity(), "Your profile was updated succesfully",
-                          Toast.LENGTH_SHORT).show();
-                    }
-
-                    break;
+    dataAccessHandler.updateUserProfile(
+        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
+        dateOfBirth, bloodType, nationality, medicalCondition, measurementSystem.toLowerCase(),
+        userGoalId, activityLevelId, gender, height, weight, Helpers.calculateBMI(weight, height),
+        new Callback<DefaultGetResponse>() {
+          @Override public void onResponse(Call<DefaultGetResponse> call,
+              Response<DefaultGetResponse> response) {
+            switch (response.code()) {
+              case 200:
+                if (profilePictureChanged) {
+                  updateUserPicture(waitingDialog);
+                } else {
+                  waitingDialog.dismiss();
+                  Toast.makeText(getActivity(), "Your profile was updated succesfully",
+                      Toast.LENGTH_SHORT).show();
                 }
-              }
 
-              @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
-                Timber.d(t.getMessage());
-                alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
-                alertDialog.show();
-              }
-            });
+                break;
+            }
+          }
+
+          @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+            Timber.d("Call failed with error : %s", t.getMessage());
+            alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
+            alertDialog.show();
+          }
+        });
   }
 
-  private void updateUserPicture(final ProgressDialog waitingDialog,
-      final AlertDialog alertDialog) {
+  private void updateUserPicture(final ProgressDialog waitingDialog) {
     HashMap<String, RequestBody> profilePictureParts = new HashMap<>();
 
     String userPicturePath = prefs.getString(Constants.EXTRAS_USER_PROFILE_IMAGE, "");
@@ -914,28 +921,30 @@ public class MainProfile_Fragment extends Fragment {
 
     profilePictureParts.put("picture\"; filename=\"" + userPicturePath + ".jpg", imageFilePart);
 
-    DataAccessHandler.getInstance()
-        .updateUserPicture(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN,
-            Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), profilePictureParts,
-            new Callback<DefaultGetResponse>() {
-              @Override public void onResponse(Call<DefaultGetResponse> call,
-                  Response<DefaultGetResponse> response) {
-                switch (response.code()) {
-                  case 200:
+    dataAccessHandler.updateUserPicture(
+        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
+        profilePictureParts, new Callback<DefaultGetResponse>() {
+          @Override public void onResponse(Call<DefaultGetResponse> call,
+              Response<DefaultGetResponse> response) {
+            switch (response.code()) {
+              case 200:
 
-                    waitingDialog.dismiss();
-                    Toast.makeText(getActivity(), "Your profile was updated successfully",
-                        Toast.LENGTH_SHORT).show();
+                waitingDialog.dismiss();
+                Toast.makeText(getActivity(), "Your profile was updated successfully",
+                    Toast.LENGTH_SHORT).show();
 
-                    break;
-                }
-              }
+                break;
+            }
+          }
 
-              @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
-                alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
-                alertDialog.show();
-              }
-            });
+          @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+            Timber.d("Call failed with error : %s", t.getMessage());
+            final AlertDialog alertDialog =
+                new AlertDialog.Builder(getActivity()).create();
+            alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
+            alertDialog.show();
+          }
+        });
   }
 
   private void signOutUser() {
@@ -955,9 +964,9 @@ public class MainProfile_Fragment extends Fragment {
           }
         });
 
-    DataAccessHandler.getInstance()
-        .signOutUser(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN,
-            Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), new Callback<DefaultGetResponse>() {
+    dataAccessHandler.signOutUser(
+        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
+        new Callback<DefaultGetResponse>() {
           @Override public void onResponse(Call<DefaultGetResponse> call,
               Response<DefaultGetResponse> response) {
             switch (response.code()) {
@@ -970,6 +979,12 @@ public class MainProfile_Fragment extends Fragment {
                     .apply();
                 prefs.edit().putBoolean(Constants.EXTRAS_USER_LOGGED_IN, false).apply();
 
+                if (!prefs.getString(Constants.EXTRAS_USER_FACEBOOK_TOKEN, "-1").equals("-1")) {
+                  FacebookSdk.sdkInitialize(getActivity());
+                  LoginManager.getInstance().logOut();
+                  prefs.edit().putString(Constants.EXTRAS_USER_FACEBOOK_TOKEN, "-1").apply();
+                }
+
                 getActivity().finish();
 
                 Intent intent = new Intent(getActivity(), Login_Activity.class);
@@ -979,16 +994,18 @@ public class MainProfile_Fragment extends Fragment {
           }
 
           @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+            Timber.d("Call failed with error : %s", t.getMessage());
             alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
             alertDialog.show();
+            getActivity().finish();
           }
         });
   }
 
   private void requestEmergencyProfile() {
-    DataAccessHandler.getInstance()
-        .getEmergencyProfile(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN,
-            Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), new Callback<EmergencyProfileResponse>() {
+    dataAccessHandler.getEmergencyProfile(
+        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
+        new Callback<EmergencyProfileResponse>() {
           @Override public void onResponse(Call<EmergencyProfileResponse> call,
               Response<EmergencyProfileResponse> response) {
             switch (response.code()) {
@@ -1002,7 +1019,11 @@ public class MainProfile_Fragment extends Fragment {
           }
 
           @Override public void onFailure(Call<EmergencyProfileResponse> call, Throwable t) {
-
+            Timber.d("Call failed with error : %s", t.getMessage());
+            final AlertDialog alertDialog =
+                new AlertDialog.Builder(getActivity()).create();
+            alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
+            alertDialog.show();
           }
         });
   }
@@ -1060,7 +1081,7 @@ public class MainProfile_Fragment extends Fragment {
 
       File pdfFile = new File(Environment.getExternalStorageDirectory()
           + "/GMFit/"
-          + "my_emergency_profile.pdf");  // -> filename = maven.pdf
+          + "my_emergency_profile.pdf");
       Uri uri = Uri.fromFile(pdfFile);
 
       Intent i = new Intent(Intent.ACTION_SEND);

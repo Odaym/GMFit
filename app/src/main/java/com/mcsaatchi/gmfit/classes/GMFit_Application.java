@@ -7,12 +7,17 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import com.crashlytics.android.Crashlytics;
 import com.mcsaatchi.gmfit.BuildConfig;
+import com.mcsaatchi.gmfit.dagger.AppComponent;
+import com.mcsaatchi.gmfit.dagger.AppModule;
+import com.mcsaatchi.gmfit.dagger.DaggerAppComponent;
 import io.fabric.sdk.android.Fabric;
 import timber.log.Timber;
 
 public class GMFit_Application extends Application {
 
   private static GMFit_Application instance;
+
+  private AppComponent component;
 
   private SharedPreferences prefs;
 
@@ -26,6 +31,8 @@ public class GMFit_Application extends Application {
 
   @Override public void onCreate() {
     super.onCreate();
+
+    initDagger();
 
     prefs = getSharedPreferences(Constants.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
 
@@ -43,6 +50,16 @@ public class GMFit_Application extends Application {
     }
 
     addMealAlarms();
+  }
+
+  private void initDagger() {
+    component = DaggerAppComponent.builder().appModule(new AppModule(this)).build();
+
+    component.inject(this);
+  }
+
+  public AppComponent getAppComponent() {
+    return component;
   }
 
   public boolean checkIfHasNetwork() {

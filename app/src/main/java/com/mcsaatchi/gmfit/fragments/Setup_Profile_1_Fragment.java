@@ -1,6 +1,5 @@
 package com.mcsaatchi.gmfit.fragments;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,15 +10,15 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.RadioButton;
-
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.classes.Constants;
+import com.mcsaatchi.gmfit.classes.GMFit_Application;
 import com.mukesh.countrypicker.fragments.CountryPicker;
 import com.mukesh.countrypicker.interfaces.CountryPickerListener;
 import com.mukesh.countrypicker.models.Country;
-
-import butterknife.Bind;
-import butterknife.ButterKnife;
+import javax.inject.Inject;
 
 public class Setup_Profile_1_Fragment extends Fragment {
   @Bind(R.id.chooseCountryBTN) Button chooseCountryBTN;
@@ -27,7 +26,7 @@ public class Setup_Profile_1_Fragment extends Fragment {
   @Bind(R.id.metricRdBTN) RadioButton metricRdBTN;
   @Bind(R.id.imperialRdBTN) RadioButton imperialRdBTN;
 
-  private SharedPreferences prefs;
+  @Inject SharedPreferences prefs;
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
@@ -35,8 +34,7 @@ public class Setup_Profile_1_Fragment extends Fragment {
     View fragmentView = inflater.inflate(R.layout.fragment_setup_profile_1, container, false);
 
     ButterKnife.bind(this, fragmentView);
-
-    prefs = getActivity().getSharedPreferences(Constants.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
+    ((GMFit_Application) getActivity().getApplication()).getAppComponent().inject(this);
 
     final CountryPicker picker = CountryPicker.newInstance(getString(R.string.choose_country_hint));
 

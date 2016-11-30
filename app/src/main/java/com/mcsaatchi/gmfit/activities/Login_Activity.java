@@ -1,7 +1,6 @@
 package com.mcsaatchi.gmfit.activities;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -16,7 +15,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.Toast;
-
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -33,29 +33,23 @@ import com.mcsaatchi.gmfit.classes.DefaultIndicator_Controller;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
 import com.mcsaatchi.gmfit.classes.Helpers;
-import com.mcsaatchi.gmfit.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.fragments.IntroSlider_Fragment;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponse;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponseChart;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponseInnerBody;
 import com.squareup.otto.Subscribe;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
+import io.fabric.sdk.android.Fabric;
 import java.util.ArrayList;
 import java.util.List;
-
-import butterknife.Bind;
-import butterknife.ButterKnife;
-import io.fabric.sdk.android.Fabric;
+import org.json.JSONException;
+import org.json.JSONObject;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import timber.log.Timber;
 
 public class Login_Activity extends Base_Activity {
 
-  private static final String TAG = "Login_Activity";
   @Bind(R.id.viewpager) ViewPager viewPager;
   @Bind(R.id.loginFacebookBTN) LoginButton loginFacebookBTN;
   @Bind(R.id.signUpBTN) Button signUpBTN;
@@ -63,7 +57,6 @@ public class Login_Activity extends Base_Activity {
 
   private DefaultIndicator_Controller indicatorController;
   private CallbackManager callbackManager;
-  private SharedPreferences prefs;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(Helpers.createActivityBundleWithProperties(0, false));
@@ -77,8 +70,6 @@ public class Login_Activity extends Base_Activity {
     ButterKnife.bind(this);
 
     EventBus_Singleton.getInstance().register(this);
-
-    prefs = getSharedPreferences(Constants.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
 
     signInBTN.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View view) {
@@ -146,7 +137,9 @@ public class Login_Activity extends Base_Activity {
 
         Log.d("TAGTAG", "onSuccess: FACEBOOK ACCESS TOKEN IS : " + accessToken.getToken());
 
-        prefs.edit().putString(Constants.EXTRAS_USER_FACEBOOK_TOKEN, accessToken.getToken()).apply();
+        prefs.edit()
+            .putString(Constants.EXTRAS_USER_FACEBOOK_TOKEN, accessToken.getToken())
+            .apply();
 
         GraphRequest request =
             GraphRequest.newMeRequest(accessToken, new GraphRequest.GraphJSONObjectCallback() {
@@ -211,48 +204,66 @@ public class Login_Activity extends Base_Activity {
           }
         });
 
-    DataAccessHandler.getInstance()
-        .registerUserFacebook(accessToken, new Callback<AuthenticationResponse>() {
-          @Override public void onResponse(Call<AuthenticationResponse> call,
-              Response<AuthenticationResponse> response) {
-            switch (response.code()) {
-              case 200:
-                waitingDialog.dismiss();
+    dataAccessHandler.handleFacebookProcess(accessToken, new Callback<AuthenticationResponse>() {
+      @Override public void onResponse(Call<AuthenticationResponse> call,
+          Response<AuthenticationResponse> response) {
 
-                AuthenticationResponseInnerBody responseBody = response.body().getData().getBody();
+        AuthenticationResponseInnerBody responseBody;
 
-                //Refreshes access token
-                prefs.edit()
-                    .putString(Constants.PREF_USER_ACCESS_TOKEN,
-                        "Bearer " + responseBody.getToken())
-                    .apply();
+        Intent intent;
 
-                List<AuthenticationResponseChart> chartsMap = responseBody.getCharts();
+        switch (response.code()) {
+          case 200:
+            waitingDialog.dismiss();
 
-                EventBus_Singleton.getInstance()
-                    .post(new EventBus_Poster(
-                        Constants.EVENT_SIGNNED_UP_SUCCESSFULLY_CLOSE_LOGIN_ACTIVITY));
+            responseBody = response.body().getData().getBody();
 
-                Intent intent = new Intent(Login_Activity.this, Main_Activity.class);
-                intent.putParcelableArrayListExtra(Constants.BUNDLE_FITNESS_CHARTS_MAP,
-                    (ArrayList<AuthenticationResponseChart>) chartsMap);
-                startActivity(intent);
+            //Refreshes access token
+            prefs.edit()
+                .putString(Constants.PREF_USER_ACCESS_TOKEN, "Bearer " + responseBody.getToken())
+                .apply();
 
-                finish();
+            List<AuthenticationResponseChart> chartsMap = responseBody.getCharts();
 
-                break;
-              case 401:
-                alertDialog.setMessage(getString(R.string.login_failed_wrong_credentials));
-                alertDialog.show();
-                break;
-            }
-          }
+            EventBus_Singleton.getInstance()
+                .post(new EventBus_Poster(
+                    Constants.EVENT_SIGNNED_UP_SUCCESSFULLY_CLOSE_LOGIN_ACTIVITY));
 
-          @Override public void onFailure(Call<AuthenticationResponse> call, Throwable t) {
-            alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
+            intent = new Intent(Login_Activity.this, Main_Activity.class);
+            intent.putParcelableArrayListExtra(Constants.BUNDLE_FITNESS_CHARTS_MAP,
+                (ArrayList<AuthenticationResponseChart>) chartsMap);
+            startActivity(intent);
+
+            finish();
+
+            break;
+          case 201:
+            waitingDialog.dismiss();
+
+            responseBody = response.body().getData().getBody();
+
+            //Refreshes access token
+            prefs.edit()
+                .putString(Constants.PREF_USER_ACCESS_TOKEN, "Bearer " + responseBody.getToken())
+                .apply();
+
+            intent = new Intent(Login_Activity.this, SetupProfile_Activity.class);
+            startActivity(intent);
+            break;
+          case 401:
+            alertDialog.setMessage(getString(R.string.login_failed_wrong_credentials));
             alertDialog.show();
-          }
-        });
+            break;
+        }
+      }
+
+      @Override public void onFailure(Call<AuthenticationResponse> call, Throwable t) {
+        Timber.d("Call failed with error : %s", t.getMessage());
+        alertDialog.setMessage(
+            getResources().getString(R.string.error_response_from_server_incorrect));
+        alertDialog.show();
+      }
+    });
   }
 
   @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {

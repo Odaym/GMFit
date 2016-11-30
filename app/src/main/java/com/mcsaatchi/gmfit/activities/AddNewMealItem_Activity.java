@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -23,30 +22,26 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.adapters.SimpleSectioned_ListAdapter;
 import com.mcsaatchi.gmfit.classes.Constants;
-import com.mcsaatchi.gmfit.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.models.MealItem;
 import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.rest.RecentMealsResponse;
 import com.mcsaatchi.gmfit.rest.RecentMealsResponseBody;
 import com.mcsaatchi.gmfit.rest.SearchMealItemResponse;
 import com.mcsaatchi.gmfit.rest.SearchMealItemResponseDatum;
-
 import java.util.ArrayList;
 import java.util.List;
-
-import butterknife.Bind;
-import butterknife.ButterKnife;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import timber.log.Timber;
 
 public class AddNewMealItem_Activity extends Base_Activity {
 
-  private static final String TAG = "AddNewMealItem_Activity";
   private static final int SECTION_VIEWTYPE = 1;
   private static final int ITEM_VIEWTYPE = 2;
 
@@ -62,8 +57,6 @@ public class AddNewMealItem_Activity extends Base_Activity {
   @Bind(R.id.requestMealLayout) LinearLayout requestMealLayout;
   @Bind(R.id.meal_not_found_meal_title) TextView mealNotFoundTitleTV;
   @Bind(R.id.requestMealBTN) Button requestMealBTN;
-
-  private SharedPreferences prefs;
 
   private String mealType;
   private boolean purposeIsToAddMealToDate = false;
@@ -92,8 +85,6 @@ public class AddNewMealItem_Activity extends Base_Activity {
     setContentView(R.layout.activity_add_new_meal_item);
 
     ButterKnife.bind(this);
-
-    prefs = getSharedPreferences(Constants.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
 
     setupToolbar(toolbar, actionBarTitle, true);
 
@@ -236,29 +227,34 @@ public class AddNewMealItem_Activity extends Base_Activity {
                               }
                             });
 
-                        DataAccessHandler.getInstance()
-                            .requestNewMeal(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN,
+                        dataAccessHandler.requestNewMeal(
+                            prefs.getString(Constants.PREF_USER_ACCESS_TOKEN,
                                 Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), charSequence.toString(),
-                                new Callback<DefaultGetResponse>() {
-                                  @Override public void onResponse(Call<DefaultGetResponse> call,
-                                      Response<DefaultGetResponse> response) {
-                                    switch (response.code()) {
-                                      case 200:
-                                        waitingDialog.dismiss();
+                            new Callback<DefaultGetResponse>() {
+                              @Override public void onResponse(Call<DefaultGetResponse> call,
+                                  Response<DefaultGetResponse> response) {
+                                switch (response.code()) {
+                                  case 200:
+                                    waitingDialog.dismiss();
 
-                                        requestMealBTN.setText(getResources().getString(
-                                            R.string.request_new_meal_sent_thanks));
-                                        requestMealBTN.setAlpha(0.5f);
-                                        requestMealBTN.setEnabled(false);
-                                        break;
-                                    }
-                                  }
+                                    requestMealBTN.setText(getResources().getString(
+                                        R.string.request_new_meal_sent_thanks));
+                                    requestMealBTN.setAlpha(0.5f);
+                                    requestMealBTN.setEnabled(false);
+                                    break;
+                                }
+                              }
 
-                                  @Override public void onFailure(Call<DefaultGetResponse> call,
-                                      Throwable t) {
-
-                                  }
-                                });
+                              @Override
+                              public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+                                Timber.d("Call failed with error : %s", t.getMessage());
+                                final AlertDialog alertDialog =
+                                    new AlertDialog.Builder(AddNewMealItem_Activity.this).create();
+                                alertDialog.setMessage(
+                                    getString(R.string.error_response_from_server_incorrect));
+                                alertDialog.show();
+                              }
+                            });
                       }
                     });
                   } else {
@@ -270,7 +266,6 @@ public class AddNewMealItem_Activity extends Base_Activity {
                 }
 
                 @Override public void onFailure(Call<SearchMealItemResponse> call, Throwable t) {
-
                 }
               });
             }
@@ -309,23 +304,26 @@ public class AddNewMealItem_Activity extends Base_Activity {
 
   private void findMeals(String mealName,
       final Callback<SearchMealItemResponse> mealItemsResponse) {
-    DataAccessHandler.getInstance()
-        .findMeals(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN,
-            Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), mealName,
-            new Callback<SearchMealItemResponse>() {
-              @Override public void onResponse(Call<SearchMealItemResponse> call,
-                  Response<SearchMealItemResponse> response) {
-                switch (response.code()) {
-                  case 200:
-                    mealItemsResponse.onResponse(null, response);
-                    break;
-                }
-              }
+    dataAccessHandler.findMeals(
+        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
+        mealName, new Callback<SearchMealItemResponse>() {
+          @Override public void onResponse(Call<SearchMealItemResponse> call,
+              Response<SearchMealItemResponse> response) {
+            switch (response.code()) {
+              case 200:
+                mealItemsResponse.onResponse(null, response);
+                break;
+            }
+          }
 
-              @Override public void onFailure(Call<SearchMealItemResponse> call, Throwable t) {
-
-              }
-            });
+          @Override public void onFailure(Call<SearchMealItemResponse> call, Throwable t) {
+            Timber.d("Call failed with error : %s", t.getMessage());
+            final AlertDialog alertDialog =
+                new AlertDialog.Builder(AddNewMealItem_Activity.this).create();
+            alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
+            alertDialog.show();
+          }
+        });
   }
 
   private void loadRecentMealsFromServer(String mealType) {
@@ -333,13 +331,13 @@ public class AddNewMealItem_Activity extends Base_Activity {
 
     final String finalMealType = mealType;
 
-    final ProgressDialog waitingDialog = new ProgressDialog(AddNewMealItem_Activity.this);
+    final ProgressDialog waitingDialog = new ProgressDialog(this);
     waitingDialog.setTitle(
         getResources().getString(R.string.fetching_available_meals_dialog_title));
     waitingDialog.setMessage(getResources().getString(R.string.please_wait_dialog_message));
     waitingDialog.show();
 
-    final AlertDialog alertDialog = new AlertDialog.Builder(AddNewMealItem_Activity.this).create();
+    final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
     alertDialog.setTitle(R.string.fetching_available_meals_dialog_title);
     alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getResources().getString(R.string.ok),
         new DialogInterface.OnClickListener() {
@@ -350,44 +348,46 @@ public class AddNewMealItem_Activity extends Base_Activity {
           }
         });
 
-    DataAccessHandler.getInstance()
-        .getRecentMeals(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN,
-            Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
-            "http://gmfit.mcsaatchi.me/api/v1/user/meals/recent?when=" + mealType.toLowerCase(),
-            new Callback<RecentMealsResponse>() {
-              @Override public void onResponse(Call<RecentMealsResponse> call,
-                  Response<RecentMealsResponse> response) {
-                ArrayList<RecentMealsResponseBody> recentMealsFromAPI =
-                    (ArrayList<RecentMealsResponseBody>) response.body().getData().getBody();
+    dataAccessHandler.getRecentMeals(
+        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
+        "http://gmfit.mcsaatchi.me/api/v1/user/meals/recent?when=" + mealType.toLowerCase(),
+        new Callback<RecentMealsResponse>() {
+          @Override public void onResponse(Call<RecentMealsResponse> call,
+              Response<RecentMealsResponse> response) {
+            ArrayList<RecentMealsResponseBody> recentMealsFromAPI =
+                (ArrayList<RecentMealsResponseBody>) response.body().getData().getBody();
 
-                MealItem recentlyAddedMealItem = new MealItem();
-                recentlyAddedMealItem.setName("Recently Added");
-                recentlyAddedMealItem.setSectionType(1);
+            MealItem recentlyAddedMealItem = new MealItem();
+            recentlyAddedMealItem.setName("Recently Added");
+            recentlyAddedMealItem.setSectionType(1);
 
-                mealItems.clear();
+            mealItems.clear();
 
-                mealItems.add(recentlyAddedMealItem);
+            mealItems.add(recentlyAddedMealItem);
 
-                for (int i = 0; i < recentMealsFromAPI.size(); i++) {
-                  MealItem item = new MealItem();
-                  item.setType(finalMealType);
-                  item.setMeal_id(recentMealsFromAPI.get(i).getId());
-                  item.setSectionType(2);
-                  item.setMeasurementUnit(recentMealsFromAPI.get(i).getMeasurementUnit());
-                  item.setName(recentMealsFromAPI.get(i).getName());
+            for (int i = 0; i < recentMealsFromAPI.size(); i++) {
+              MealItem item = new MealItem();
+              item.setType(finalMealType);
+              item.setMeal_id(recentMealsFromAPI.get(i).getId());
+              item.setSectionType(2);
+              item.setMeasurementUnit(recentMealsFromAPI.get(i).getMeasurementUnit());
+              item.setName(recentMealsFromAPI.get(i).getName());
 
-                  mealItems.add(item);
-                }
+              mealItems.add(item);
+            }
 
-                initMealsList(mealItems);
+            initMealsList(mealItems);
 
-                waitingDialog.dismiss();
-              }
+            waitingDialog.dismiss();
+          }
 
-              @Override public void onFailure(Call<RecentMealsResponse> call, Throwable t) {
-
-              }
-            });
+          @Override public void onFailure(Call<RecentMealsResponse> call, Throwable t) {
+            Timber.d("Call failed with error : %s", t.getMessage());
+            alertDialog.setMessage(
+                getResources().getString(R.string.error_response_from_server_incorrect));
+            alertDialog.show();
+          }
+        });
   }
 
   private void initMealsList(List<MealItem> mealsToShow) {

@@ -19,7 +19,7 @@ public class TimberReleaseTree extends Timber.Tree {
   @Override protected void log(int priority, String tag, String message, Throwable t) {
     if (isLoggable(tag, priority)) {
 
-      if (priority == Log.ERROR && tag != null){
+      if (priority == Log.ERROR && tag != null) {
         Crashlytics.log(message);
       }
 

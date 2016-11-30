@@ -125,6 +125,7 @@ import java.util.Map;
    * native code later (avoids a potential copy).
    */
   private Map<byte[], ByteBuffer> mBytesToByteBuffer = new HashMap<>();
+
   /**
    * Only allow creation via the builder class.
    */
@@ -510,7 +511,8 @@ import java.util.Map;
   /**
    * Starts camera auto-focus and registers a callback function to run when
    * the camera is focused.  This method is only valid when preview is active
-   * (between {@link #start()} or {@link #start(SurfaceHolder)} and before {@link #stop()} or {@link
+   * (between {@link #start()} or {@link #start(SurfaceHolder)} and before {@link #stop()} or
+   * {@link
    * #release()}).
    * <p/>
    * <p>Callers should check

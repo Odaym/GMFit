@@ -8,24 +8,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.activities.AddHealthTestDetails_Activity;
 import com.mcsaatchi.gmfit.classes.Constants;
 import com.mcsaatchi.gmfit.rest.MedicalTestsResponseBody;
-
-import org.joda.time.LocalDate;
-
 import java.util.ArrayList;
+import org.joda.time.LocalDate;
 
 public class AvailableTestsRecycler_Adapter
     extends RecyclerView.Adapter<AvailableTestsRecycler_Adapter.MyViewHolder> {
 
   private ArrayList<MedicalTestsResponseBody> availableTests;
+
   private Context context;
 
-  public AvailableTestsRecycler_Adapter(Context context,
-      ArrayList<MedicalTestsResponseBody> availableTests) {
+  public AvailableTestsRecycler_Adapter(ArrayList<MedicalTestsResponseBody> availableTests, Context context) {
     this.availableTests = availableTests;
     this.context = context;
   }

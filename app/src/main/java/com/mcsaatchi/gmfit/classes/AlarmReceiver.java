@@ -29,8 +29,9 @@ public class AlarmReceiver extends BroadcastReceiver {
         Helpers.prepareDateForAPIRequest(new LocalDate()));
     openMealEntryPickerIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
-    PendingIntent pendingIntent = PendingIntent.getActivity(context, notificationID, openMealEntryPickerIntent,
-        PendingIntent.FLAG_UPDATE_CURRENT);
+    PendingIntent pendingIntent =
+        PendingIntent.getActivity(context, notificationID, openMealEntryPickerIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT);
 
     Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 

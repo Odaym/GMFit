@@ -37,7 +37,6 @@ public class Reminders_Activity extends Base_Activity {
 
   private boolean areAlarmsEnabled = false;
 
-  private SharedPreferences prefs;
   private String breakfastAlarmTime;
   private String lunchAlarmTime;
   private String dinnerAlarmTime;
@@ -81,7 +80,8 @@ public class Reminders_Activity extends Base_Activity {
     }
 
     AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-    am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
+    am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY,
+        pendingIntent);
   }
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -92,8 +92,6 @@ public class Reminders_Activity extends Base_Activity {
     ButterKnife.bind(this);
 
     setupToolbar(toolbar, getResources().getString(R.string.set_reminders_entry), true);
-
-    prefs = getSharedPreferences(Constants.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
 
     areAlarmsEnabled = prefs.getBoolean(Constants.ARE_ALARMS_ENABLED, false);
 

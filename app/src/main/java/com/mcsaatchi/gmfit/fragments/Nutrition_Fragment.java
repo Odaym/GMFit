@@ -48,6 +48,7 @@ import com.mcsaatchi.gmfit.classes.Constants;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
 import com.mcsaatchi.gmfit.classes.FontTextView;
+import com.mcsaatchi.gmfit.classes.GMFit_Application;
 import com.mcsaatchi.gmfit.classes.Helpers;
 import com.mcsaatchi.gmfit.classes.SimpleDividerItemDecoration;
 import com.mcsaatchi.gmfit.data_access.DataAccessHandler;
@@ -74,6 +75,7 @@ import com.squareup.otto.Subscribe;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import javax.inject.Inject;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
@@ -81,6 +83,7 @@ import org.joda.time.format.DateTimeFormatter;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import timber.log.Timber;
 
 import static com.mcsaatchi.gmfit.classes.Constants.EXTRAS_NUTRITION_CHARTS_ORDER_ARRAY_CHANGED;
 
@@ -90,7 +93,9 @@ public class Nutrition_Fragment extends Fragment {
   private static final String TAG = "Nutrition_Fragment";
   private static final int ITEM_VIEWTYPE = 2;
   private static final int BARCODE_CAPTURE_RC = 773;
-  private final LocalDate dt = new LocalDate();
+  @Inject DataAccessHandler dataAccessHandler;
+  @Inject SharedPreferences prefs;
+  @Inject LocalDate dt;
   @Bind(R.id.widgetsGridView) GridView widgetsGridView;
   @Bind(R.id.metricCounterTV) FontTextView metricCounterTV;
   /**
@@ -142,7 +147,6 @@ public class Nutrition_Fragment extends Fragment {
   private String finalDesiredDate;
   private boolean setDrawValuesDisabled = true;
   private UserMeals_RecyclerAdapterDragSwipe userMealsRecyclerAdapter;
-  private SharedPreferences prefs;
   private ArrayList<MealItem> finalBreakfastMeals = new ArrayList<>();
   private ArrayList<MealItem> finalLunchMeals = new ArrayList<>();
   private ArrayList<MealItem> finalDinnerMeals = new ArrayList<>();
@@ -163,8 +167,6 @@ public class Nutrition_Fragment extends Fragment {
     parentActivity = (Activity) context;
 
     EventBus_Singleton.getInstance().register(this);
-
-    prefs = getActivity().getSharedPreferences(Constants.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
   }
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -176,6 +178,7 @@ public class Nutrition_Fragment extends Fragment {
         .setTitle(R.string.nutrition_tab_title);
 
     ButterKnife.bind(this, fragmentView);
+    ((GMFit_Application) getActivity().getApplication()).getAppComponent().inject(this);
 
     setHasOptionsMenu(true);
 
@@ -216,7 +219,7 @@ public class Nutrition_Fragment extends Fragment {
   @Override public boolean onOptionsItemSelected(MenuItem item) {
     Intent intent = new Intent(getActivity(), CustomizeWidgetsAndCharts_Activity.class);
     intent.putExtra(Constants.EXTRAS_FRAGMENT_TYPE, Constants.EXTRAS_NUTRITION_FRAGMENT);
-    intent.putParcelableArrayListExtra(Constants.BUNDLE_NUTRITION_WIDGETS_MAP, finalWidgets);
+    intent.putParcelableArrayListExtra(Constants.BUNDLE_NUTRITION_WIDGETS_MAP, widgetsMap);
     intent.putParcelableArrayListExtra(Constants.BUNDLE_NUTRITION_CHARTS_MAP, finalCharts);
     startActivity(intent);
 
@@ -254,58 +257,53 @@ public class Nutrition_Fragment extends Fragment {
   }
 
   private void getUserGoalMetrics(final String date, final String type) {
-    DataAccessHandler.getInstance()
-        .getUserGoalMetrics(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN,
-            Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), date, type,
-            new Callback<UserGoalMetricsResponse>() {
-              @Override public void onResponse(Call<UserGoalMetricsResponse> call,
-                  Response<UserGoalMetricsResponse> response) {
+    dataAccessHandler.getUserGoalMetrics(
+        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
+        date, type, new Callback<UserGoalMetricsResponse>() {
+          @Override public void onResponse(Call<UserGoalMetricsResponse> call,
+              Response<UserGoalMetricsResponse> response) {
 
-                switch (response.code()) {
-                  case 200:
-                    UserGoalMetricsResponseActiveCalories activeCaloriesResponse =
-                        response.body().getData().getBody().getMetrics().getActiveCalories();
+            switch (response.code()) {
+              case 200:
+                UserGoalMetricsResponseActiveCalories activeCaloriesResponse =
+                    response.body().getData().getBody().getMetrics().getActiveCalories();
 
-                    if (activeCaloriesResponse == null) {
-                      String maxValue = response.body()
-                          .getData()
-                          .getBody()
-                          .getMetrics()
-                          .getCalories()
-                          .getMaxValue();
+                if (activeCaloriesResponse == null) {
+                  String maxValue =
+                      response.body().getData().getBody().getMetrics().getCalories().getMaxValue();
 
-                      String currentValue =
-                          response.body().getData().getBody().getMetrics().getCalories().getValue();
+                  String currentValue =
+                      response.body().getData().getBody().getMetrics().getCalories().getValue();
 
-                      todayTV.setText(String.valueOf((int) Double.parseDouble(currentValue)));
-                      goalTV.setText(maxValue);
+                  todayTV.setText(String.valueOf((int) Double.parseDouble(currentValue)));
+                  goalTV.setText(maxValue);
 
-                      getUserGoalMetrics(date, "fitness");
-                    } else {
-                      String activeCalories = activeCaloriesResponse.getValue();
+                  getUserGoalMetrics(date, "fitness");
+                } else {
+                  String activeCalories = activeCaloriesResponse.getValue();
 
-                      activeTV.setText(String.valueOf((int) Double.parseDouble(activeCalories)));
-                    }
-
-                    if (!activeTV.getText().toString().isEmpty()) {
-                      int remainingValue =
-                          Integer.parseInt(goalTV.getText().toString()) + Integer.parseInt(
-                              activeTV.getText().toString()) - Integer.parseInt(
-                              todayTV.getText().toString());
-
-                      if (remainingValue < 0) {
-                        remainingTV.setText(String.valueOf(0));
-                      } else {
-                        remainingTV.setText(String.valueOf(remainingValue));
-                      }
-                    }
-                    break;
+                  activeTV.setText(String.valueOf((int) Double.parseDouble(activeCalories)));
                 }
-              }
 
-              @Override public void onFailure(Call<UserGoalMetricsResponse> call, Throwable t) {
-              }
-            });
+                if (!activeTV.getText().toString().isEmpty()) {
+                  int remainingValue =
+                      Integer.parseInt(goalTV.getText().toString()) + Integer.parseInt(
+                          activeTV.getText().toString()) - Integer.parseInt(
+                          todayTV.getText().toString());
+
+                  if (remainingValue < 0) {
+                    remainingTV.setText(String.valueOf(0));
+                  } else {
+                    remainingTV.setText(String.valueOf(remainingValue));
+                  }
+                }
+                break;
+            }
+          }
+
+          @Override public void onFailure(Call<UserGoalMetricsResponse> call, Throwable t) {
+          }
+        });
   }
 
   private void setupDateCarousel() {
@@ -406,9 +404,9 @@ public class Nutrition_Fragment extends Fragment {
           "http://gmfit.mcsaatchi.me/api/v1/user/ui?section=" + section + "&date=" + desiredDate;
     }
 
-    DataAccessHandler.getInstance()
-        .getUiForSection(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN,
-            Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), finalUrl, new Callback<UiResponse>() {
+    dataAccessHandler.getUiForSection(
+        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
+        finalUrl, new Callback<UiResponse>() {
           @Override public void onResponse(Call<UiResponse> call, Response<UiResponse> response) {
             switch (response.code()) {
               case 200:
@@ -468,186 +466,193 @@ public class Nutrition_Fragment extends Fragment {
           }
 
           @Override public void onFailure(Call<UiResponse> call, Throwable t) {
+            Timber.d("Call failed with error : %s", t.getMessage());
+            final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
 
+            alertDialog.setMessage(
+                getActivity().getResources().getString(R.string.error_response_from_server_incorrect));
+            alertDialog.show();
           }
         });
   }
 
   private void updateUserWidgets(int[] widgetIds, int[] widgetPositions) {
-    DataAccessHandler.getInstance()
-        .updateUserWidgets(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN,
-            Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), widgetIds, widgetPositions,
-            new Callback<DefaultGetResponse>() {
-              @Override public void onResponse(Call<DefaultGetResponse> call,
-                  Response<DefaultGetResponse> response) {
-                switch (response.code()) {
-                  case 200:
-                    Log.d(TAG, "onResponse: User's widgets updated successfully");
-                    break;
-                }
-              }
+    dataAccessHandler.updateUserWidgets(
+        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
+        widgetIds, widgetPositions, new Callback<DefaultGetResponse>() {
+          @Override public void onResponse(Call<DefaultGetResponse> call,
+              Response<DefaultGetResponse> response) {
+            switch (response.code()) {
+              case 200:
+                Log.d(TAG, "onResponse: User's widgets updated successfully");
+                break;
+            }
+          }
 
-              @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+          @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
 
-              }
-            });
+          }
+        });
   }
 
   private void updateUserCharts(int[] chartIds, int[] chartPositions) {
-    DataAccessHandler.getInstance()
-        .updateUserCharts(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN,
-            Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), chartIds, chartPositions,
-            new Callback<DefaultGetResponse>() {
-              @Override public void onResponse(Call<DefaultGetResponse> call,
-                  Response<DefaultGetResponse> response) {
-                switch (response.code()) {
-                  case 200:
-                    Log.d(TAG, "onResponse: User's charts updated successfully");
-                    break;
-                }
-              }
+    dataAccessHandler.updateUserCharts(
+        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
+        chartIds, chartPositions, new Callback<DefaultGetResponse>() {
+          @Override public void onResponse(Call<DefaultGetResponse> call,
+              Response<DefaultGetResponse> response) {
+            switch (response.code()) {
+              case 200:
+                Log.d(TAG, "onResponse: User's charts updated successfully");
+                break;
+            }
+          }
 
-              @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+          @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
 
-              }
-            });
+          }
+        });
   }
 
   private void getUserAddedMeals(String desiredDate) {
-    DataAccessHandler.getInstance()
-        .getUserAddedMealsOnDate(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN,
-            Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), desiredDate,
-            new Callback<UserMealsResponse>() {
-              @Override public void onResponse(Call<UserMealsResponse> call,
-                  Response<UserMealsResponse> response) {
-                switch (response.code()) {
-                  case 200:
+    dataAccessHandler.getUserAddedMealsOnDate(
+        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
+        desiredDate, new Callback<UserMealsResponse>() {
+          @Override public void onResponse(Call<UserMealsResponse> call,
+              Response<UserMealsResponse> response) {
+            switch (response.code()) {
+              case 200:
 
-                    /**
-                     * Grab all meals from the API
-                     */
-                    List<UserMealsResponseBreakfast> breakfastMeals =
-                        response.body().getData().getBody().getData().getBreakfast();
-                    List<UserMealsResponseLunch> lunchMeals =
-                        response.body().getData().getBody().getData().getLunch();
-                    List<UserMealsResponseDinner> dinnerMeals =
-                        response.body().getData().getBody().getData().getDinner();
-                    List<UserMealsResponseSnack> snackMeals =
-                        response.body().getData().getBody().getData().getSnack();
+                /**
+                 * Grab all meals from the API
+                 */
+                List<UserMealsResponseBreakfast> breakfastMeals =
+                    response.body().getData().getBody().getData().getBreakfast();
+                List<UserMealsResponseLunch> lunchMeals =
+                    response.body().getData().getBody().getData().getLunch();
+                List<UserMealsResponseDinner> dinnerMeals =
+                    response.body().getData().getBody().getData().getDinner();
+                List<UserMealsResponseSnack> snackMeals =
+                    response.body().getData().getBody().getData().getSnack();
 
-                    finalBreakfastMeals.clear();
-                    finalLunchMeals.clear();
-                    finalDinnerMeals.clear();
-                    finalSnackMeals.clear();
+                finalBreakfastMeals.clear();
+                finalLunchMeals.clear();
+                finalDinnerMeals.clear();
+                finalSnackMeals.clear();
 
-                    /**
-                     * Insert Breakfast meals
-                     */
-                    for (int i = 0; i < breakfastMeals.size(); i++) {
-                      MealItem breakfastMeal = new MealItem();
-                      breakfastMeal.setMeal_id(breakfastMeals.get(i).getId());
-                      breakfastMeal.setCreated_at(breakfastMeals.get(i).getCreatedAt());
-                      breakfastMeal.setInstance_id(breakfastMeals.get(i).getInstance_id());
-                      breakfastMeal.setType("Breakfast");
-                      breakfastMeal.setName(breakfastMeals.get(i).getName());
-                      breakfastMeal.setMeasurementUnit(breakfastMeals.get(i).getMeasurementUnit());
-                      breakfastMeal.setAmount(breakfastMeals.get(i).getAmount());
-                      breakfastMeal.setSectionType(2);
+                /**
+                 * Insert Breakfast meals
+                 */
+                for (int i = 0; i < breakfastMeals.size(); i++) {
+                  MealItem breakfastMeal = new MealItem();
+                  breakfastMeal.setMeal_id(breakfastMeals.get(i).getId());
+                  breakfastMeal.setCreated_at(breakfastMeals.get(i).getCreatedAt());
+                  breakfastMeal.setInstance_id(breakfastMeals.get(i).getInstance_id());
+                  breakfastMeal.setType("Breakfast");
+                  breakfastMeal.setName(breakfastMeals.get(i).getName());
+                  breakfastMeal.setMeasurementUnit(breakfastMeals.get(i).getMeasurementUnit());
+                  breakfastMeal.setAmount(breakfastMeals.get(i).getAmount());
+                  breakfastMeal.setSectionType(2);
 
-                      if (breakfastMeals.get(i).getTotalCalories() != null) {
-                        breakfastMeal.setTotalCalories(breakfastMeals.get(i).getTotalCalories());
-                      } else {
-                        breakfastMeal.setTotalCalories(0);
-                      }
+                  if (breakfastMeals.get(i).getTotalCalories() != null) {
+                    breakfastMeal.setTotalCalories(breakfastMeals.get(i).getTotalCalories());
+                  } else {
+                    breakfastMeal.setTotalCalories(0);
+                  }
 
-                      finalBreakfastMeals.add(breakfastMeal);
-                    }
-
-                    setupMealSectionsListView(finalBreakfastMeals, "Breakfast");
-
-                    /**
-                     * Insert Lunch meals
-                     */
-                    for (int i = 0; i < lunchMeals.size(); i++) {
-                      MealItem lunchMeal = new MealItem();
-                      lunchMeal.setMeal_id(lunchMeals.get(i).getId());
-                      lunchMeal.setCreated_at(lunchMeals.get(i).getCreatedAt());
-                      lunchMeal.setInstance_id(lunchMeals.get(i).getInstance_id());
-                      lunchMeal.setType("Lunch");
-                      lunchMeal.setName(lunchMeals.get(i).getName());
-                      lunchMeal.setMeasurementUnit(lunchMeals.get(i).getMeasurementUnit());
-                      lunchMeal.setAmount(lunchMeals.get(i).getAmount());
-                      lunchMeal.setSectionType(2);
-
-                      if (lunchMeals.get(i).getTotalCalories() != null) {
-                        lunchMeal.setTotalCalories(lunchMeals.get(i).getTotalCalories());
-                      } else {
-                        lunchMeal.setTotalCalories(0);
-                      }
-
-                      finalLunchMeals.add(lunchMeal);
-                    }
-
-                    setupMealSectionsListView(finalLunchMeals, "Lunch");
-
-                    /**
-                     * Insert Dinner meals
-                     */
-                    for (int i = 0; i < dinnerMeals.size(); i++) {
-                      MealItem dinnerMeal = new MealItem();
-                      dinnerMeal.setMeal_id(dinnerMeals.get(i).getId());
-                      dinnerMeal.setCreated_at(dinnerMeals.get(i).getCreatedAt());
-                      dinnerMeal.setInstance_id(dinnerMeals.get(i).getInstance_id());
-                      dinnerMeal.setType("Dinner");
-                      dinnerMeal.setName(dinnerMeals.get(i).getName());
-                      dinnerMeal.setMeasurementUnit(dinnerMeals.get(i).getMeasurementUnit());
-                      dinnerMeal.setAmount(dinnerMeals.get(i).getAmount());
-                      dinnerMeal.setSectionType(2);
-
-                      if (dinnerMeals.get(i).getTotalCalories() != null) {
-                        dinnerMeal.setTotalCalories(dinnerMeals.get(i).getTotalCalories());
-                      } else {
-                        dinnerMeal.setTotalCalories(0);
-                      }
-
-                      finalDinnerMeals.add(dinnerMeal);
-                    }
-
-                    setupMealSectionsListView(finalDinnerMeals, "Dinner");
-
-                    /**
-                     * Insert Snack meals
-                     */
-                    for (int i = 0; i < snackMeals.size(); i++) {
-                      MealItem snackMeal = new MealItem();
-                      snackMeal.setMeal_id(snackMeals.get(i).getId());
-                      snackMeal.setInstance_id(snackMeals.get(i).getInstance_id());
-                      snackMeal.setCreated_at(snackMeals.get(i).getCreatedAt());
-                      snackMeal.setType("Snack");
-                      snackMeal.setName(snackMeals.get(i).getName());
-                      snackMeal.setMeasurementUnit(snackMeals.get(i).getMeasurementUnit());
-                      snackMeal.setAmount(snackMeals.get(i).getAmount());
-                      snackMeal.setSectionType(2);
-
-                      if (snackMeals.get(i).getTotalCalories() != null) {
-                        snackMeal.setTotalCalories(snackMeals.get(i).getTotalCalories());
-                      } else {
-                        snackMeal.setTotalCalories(0);
-                      }
-
-                      finalSnackMeals.add(snackMeal);
-                    }
-
-                    setupMealSectionsListView(finalSnackMeals, "Snack");
-
-                    break;
+                  finalBreakfastMeals.add(breakfastMeal);
                 }
-              }
 
-              @Override public void onFailure(Call<UserMealsResponse> call, Throwable t) {
+                setupMealSectionsListView(finalBreakfastMeals, "Breakfast");
 
-              }
-            });
+                /**
+                 * Insert Lunch meals
+                 */
+                for (int i = 0; i < lunchMeals.size(); i++) {
+                  MealItem lunchMeal = new MealItem();
+                  lunchMeal.setMeal_id(lunchMeals.get(i).getId());
+                  lunchMeal.setCreated_at(lunchMeals.get(i).getCreatedAt());
+                  lunchMeal.setInstance_id(lunchMeals.get(i).getInstance_id());
+                  lunchMeal.setType("Lunch");
+                  lunchMeal.setName(lunchMeals.get(i).getName());
+                  lunchMeal.setMeasurementUnit(lunchMeals.get(i).getMeasurementUnit());
+                  lunchMeal.setAmount(lunchMeals.get(i).getAmount());
+                  lunchMeal.setSectionType(2);
+
+                  if (lunchMeals.get(i).getTotalCalories() != null) {
+                    lunchMeal.setTotalCalories(lunchMeals.get(i).getTotalCalories());
+                  } else {
+                    lunchMeal.setTotalCalories(0);
+                  }
+
+                  finalLunchMeals.add(lunchMeal);
+                }
+
+                setupMealSectionsListView(finalLunchMeals, "Lunch");
+
+                /**
+                 * Insert Dinner meals
+                 */
+                for (int i = 0; i < dinnerMeals.size(); i++) {
+                  MealItem dinnerMeal = new MealItem();
+                  dinnerMeal.setMeal_id(dinnerMeals.get(i).getId());
+                  dinnerMeal.setCreated_at(dinnerMeals.get(i).getCreatedAt());
+                  dinnerMeal.setInstance_id(dinnerMeals.get(i).getInstance_id());
+                  dinnerMeal.setType("Dinner");
+                  dinnerMeal.setName(dinnerMeals.get(i).getName());
+                  dinnerMeal.setMeasurementUnit(dinnerMeals.get(i).getMeasurementUnit());
+                  dinnerMeal.setAmount(dinnerMeals.get(i).getAmount());
+                  dinnerMeal.setSectionType(2);
+
+                  if (dinnerMeals.get(i).getTotalCalories() != null) {
+                    dinnerMeal.setTotalCalories(dinnerMeals.get(i).getTotalCalories());
+                  } else {
+                    dinnerMeal.setTotalCalories(0);
+                  }
+
+                  finalDinnerMeals.add(dinnerMeal);
+                }
+
+                setupMealSectionsListView(finalDinnerMeals, "Dinner");
+
+                /**
+                 * Insert Snack meals
+                 */
+                for (int i = 0; i < snackMeals.size(); i++) {
+                  MealItem snackMeal = new MealItem();
+                  snackMeal.setMeal_id(snackMeals.get(i).getId());
+                  snackMeal.setInstance_id(snackMeals.get(i).getInstance_id());
+                  snackMeal.setCreated_at(snackMeals.get(i).getCreatedAt());
+                  snackMeal.setType("Snack");
+                  snackMeal.setName(snackMeals.get(i).getName());
+                  snackMeal.setMeasurementUnit(snackMeals.get(i).getMeasurementUnit());
+                  snackMeal.setAmount(snackMeals.get(i).getAmount());
+                  snackMeal.setSectionType(2);
+
+                  if (snackMeals.get(i).getTotalCalories() != null) {
+                    snackMeal.setTotalCalories(snackMeals.get(i).getTotalCalories());
+                  } else {
+                    snackMeal.setTotalCalories(0);
+                  }
+
+                  finalSnackMeals.add(snackMeal);
+                }
+
+                setupMealSectionsListView(finalSnackMeals, "Snack");
+
+                break;
+            }
+          }
+
+          @Override public void onFailure(Call<UserMealsResponse> call, Throwable t) {
+            Timber.d("Call failed with error : %s", t.getMessage());
+            final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+
+            alertDialog.setMessage(
+                getActivity().getResources().getString(R.string.error_response_from_server_incorrect));
+            alertDialog.show();
+          }
+        });
   }
 
   private void hookupMealSectionRowsClickListeners() {
@@ -734,7 +739,7 @@ public class Nutrition_Fragment extends Fragment {
     ItemTouchHelper.Callback callback;
     ItemTouchHelper touchHelper;
 
-    userMealsRecyclerAdapter = new UserMeals_RecyclerAdapterDragSwipe(getActivity(), mealItems);
+    userMealsRecyclerAdapter = new UserMeals_RecyclerAdapterDragSwipe(mealItems);
     callback = new SimpleSwipeItemTouchHelperCallback(userMealsRecyclerAdapter);
     touchHelper = new ItemTouchHelper(callback);
 
@@ -780,7 +785,7 @@ public class Nutrition_Fragment extends Fragment {
       case Constants.EXTRAS_NUTRITION_WIDGETS_ORDER_ARRAY_CHANGED:
         if (ebp.getNutritionWidgetsMap() != null) {
           widgetsMap = ebp.getNutritionWidgetsMap();
-          setupWidgetViews(widgetsMap);
+          setupWidgetViews(ebp.getNutritionWidgetsMap());
 
           int[] widgets = new int[widgetsMap.size()];
           int[] positions = new int[widgetsMap.size()];
@@ -823,13 +828,11 @@ public class Nutrition_Fragment extends Fragment {
   private void cancelAllPendingAlarms() {
     Intent intent = new Intent(getActivity(), AlarmReceiver.class);
     PendingIntent breakfastPendingAlarm =
-        PendingIntent.getBroadcast(getActivity(), 0, intent,
-            PendingIntent.FLAG_UPDATE_CURRENT);
-    PendingIntent lunchPendingAlarm = PendingIntent.getBroadcast(getActivity(), 1, intent,
-        PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent.getBroadcast(getActivity(), 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+    PendingIntent lunchPendingAlarm =
+        PendingIntent.getBroadcast(getActivity(), 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     PendingIntent dinnerPendingAlarm =
-        PendingIntent.getBroadcast(getActivity(), 2, intent,
-            PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent.getBroadcast(getActivity(), 2, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
     breakfastPendingAlarm.cancel();
     lunchPendingAlarm.cancel();
@@ -925,9 +928,9 @@ public class Nutrition_Fragment extends Fragment {
           }
         });
 
-    DataAccessHandler.getInstance()
-        .getSlugBreakdownForChart(chartType, prefs.getString(Constants.PREF_USER_ACCESS_TOKEN,
-            Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), new Callback<SlugBreakdownResponse>() {
+    dataAccessHandler.getSlugBreakdownForChart(chartType,
+        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
+        new Callback<SlugBreakdownResponse>() {
           @Override public void onResponse(Call<SlugBreakdownResponse> call,
               Response<SlugBreakdownResponse> response) {
             switch (response.code()) {
@@ -947,8 +950,8 @@ public class Nutrition_Fragment extends Fragment {
           }
 
           @Override public void onFailure(Call<SlugBreakdownResponse> call, Throwable t) {
-            alertDialog.setMessage(
-                getActivity().getString(R.string.error_response_from_server_incorrect));
+            Timber.d("Call failed with error : %s", t.getMessage());
+            alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
             alertDialog.show();
           }
         });
@@ -960,66 +963,68 @@ public class Nutrition_Fragment extends Fragment {
     final String todayDate;
     todayDate = dt.toString();
 
-    DataAccessHandler.getInstance()
-        .getPeriodicalChartData(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN,
-            Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), dt.minusMonths(1).toString(), todayDate,
-            "nutrition", chart_slug, new Callback<ChartMetricBreakdownResponse>() {
-              @Override public void onResponse(Call<ChartMetricBreakdownResponse> call,
-                  Response<ChartMetricBreakdownResponse> response) {
-                if (response.body().getData().getBody() != null) {
-                  List<ChartMetricBreakdownResponseDatum> rawChartData =
-                      response.body().getData().getBody().getData();
+    dataAccessHandler.getPeriodicalChartData(
+        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
+        dt.minusMonths(1).toString(), todayDate, "nutrition", chart_slug,
+        new Callback<ChartMetricBreakdownResponse>() {
+          @Override public void onResponse(Call<ChartMetricBreakdownResponse> call,
+              Response<ChartMetricBreakdownResponse> response) {
+            if (response.body().getData().getBody() != null) {
+              List<ChartMetricBreakdownResponseDatum> rawChartData =
+                  response.body().getData().getBody().getData();
 
-                  if (rawChartData != null && rawChartData.size() > 0) {
-                    List<AuthenticationResponseChartData> newChartData = new ArrayList<>();
+              if (rawChartData != null && rawChartData.size() > 0) {
+                List<AuthenticationResponseChartData> newChartData = new ArrayList<>();
 
-                    for (int i = 0; i < rawChartData.size(); i++) {
-                      newChartData.add(
-                          new AuthenticationResponseChartData(rawChartData.get(i).getDate(),
-                              rawChartData.get(i).getValue()));
-                    }
+                for (int i = 0; i < rawChartData.size(); i++) {
+                  newChartData.add(
+                      new AuthenticationResponseChartData(rawChartData.get(i).getDate(),
+                          rawChartData.get(i).getValue()));
+                }
 
-                    DateTime date;
+                DateTime date;
 
-                    Collections.reverse(newChartData);
+                Collections.reverse(newChartData);
 
-                    for (int i = 0; i < newChartData.size(); i++) {
-                      date = new DateTime(newChartData.get(i).getDate());
+                for (int i = 0; i < newChartData.size(); i++) {
+                  date = new DateTime(newChartData.get(i).getDate());
 
-                      switch (i) {
-                        case 0:
-                          dateTV_1.setText(date.getDayOfMonth() + " " + date.monthOfYear()
-                              .getAsText()
-                              .substring(0, 3));
-                          break;
-                        case 7:
-                          dateTV_2.setText(date.getDayOfMonth() + " " + date.monthOfYear()
-                              .getAsText()
-                              .substring(0, 3));
-                          break;
-                        case 14:
-                          dateTV_3.setText(date.getDayOfMonth() + " " + date.monthOfYear()
-                              .getAsText()
-                              .substring(0, 3));
-                          break;
-                        case 21:
-                          dateTV_4.setText(date.getDayOfMonth() + " " + date.monthOfYear()
-                              .getAsText()
-                              .substring(0, 3));
-                          break;
-                      }
-                    }
-
-                    Helpers.setBarChartData(barchart, newChartData);
+                  switch (i) {
+                    case 0:
+                      dateTV_1.setText(date.getDayOfMonth() + " " + date.monthOfYear()
+                          .getAsText()
+                          .substring(0, 3));
+                      break;
+                    case 7:
+                      dateTV_2.setText(date.getDayOfMonth() + " " + date.monthOfYear()
+                          .getAsText()
+                          .substring(0, 3));
+                      break;
+                    case 14:
+                      dateTV_3.setText(date.getDayOfMonth() + " " + date.monthOfYear()
+                          .getAsText()
+                          .substring(0, 3));
+                      break;
+                    case 21:
+                      dateTV_4.setText(date.getDayOfMonth() + " " + date.monthOfYear()
+                          .getAsText()
+                          .substring(0, 3));
+                      break;
                   }
                 }
-              }
 
-              @Override
-              public void onFailure(Call<ChartMetricBreakdownResponse> call, Throwable t) {
-                //TODO: Add failure code
+                Helpers.setBarChartData(barchart, newChartData);
               }
-            });
+            }
+          }
+
+          @Override public void onFailure(Call<ChartMetricBreakdownResponse> call, Throwable t) {
+            Timber.d("Call failed with error : %s", t.getMessage());
+            final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+            alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
+            alertDialog.show();
+          }
+        });
   }
 
   private void showProgressBarsForLoading() {

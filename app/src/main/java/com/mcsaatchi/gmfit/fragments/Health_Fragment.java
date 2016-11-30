@@ -1,22 +1,22 @@
 package com.mcsaatchi.gmfit.fragments;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.activities.AddNewHealthTest_Activity;
 import com.mcsaatchi.gmfit.adapters.HealthWidgets_GridAdapter;
@@ -24,27 +24,28 @@ import com.mcsaatchi.gmfit.adapters.UserTestsRecycler_Adapter;
 import com.mcsaatchi.gmfit.classes.Constants;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
+import com.mcsaatchi.gmfit.classes.GMFit_Application;
 import com.mcsaatchi.gmfit.classes.SimpleDividerItemDecoration;
 import com.mcsaatchi.gmfit.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.models.HealthWidget;
-import com.mcsaatchi.gmfit.rest.WidgetsResponse;
-import com.mcsaatchi.gmfit.rest.WidgetsResponseDatum;
 import com.mcsaatchi.gmfit.rest.TakenMedicalTestsResponse;
 import com.mcsaatchi.gmfit.rest.TakenMedicalTestsResponseBody;
+import com.mcsaatchi.gmfit.rest.WidgetsResponse;
+import com.mcsaatchi.gmfit.rest.WidgetsResponseDatum;
 import com.squareup.otto.Subscribe;
-
 import java.util.ArrayList;
 import java.util.List;
-
-import butterknife.Bind;
-import butterknife.ButterKnife;
+import javax.inject.Inject;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import timber.log.Timber;
 
 public class Health_Fragment extends Fragment {
 
-  private static final String TAG = "Health_Fragment";
+  @Inject DataAccessHandler dataAccessHandler;
+  @Inject SharedPreferences prefs;
+
   @Bind(R.id.metricCounterTV) TextView metricCounterTV;
   @Bind(R.id.widgetsGridView) GridView widgetsGridView;
   @Bind(R.id.addEntryBTN_MEDICAL_TESTS) TextView addEntryBTN_MEDICAL_TESTS;
@@ -53,13 +54,6 @@ public class Health_Fragment extends Fragment {
   @Bind(R.id.loadingTestsProgressBar) ProgressBar loadingTestsProgressBar;
 
   private ArrayList<HealthWidget> healthWidgetsMap = new ArrayList<>();
-  private SharedPreferences prefs;
-
-  @Override public void onAttach(Context context) {
-    super.onAttach(context);
-
-    prefs = getActivity().getSharedPreferences(Constants.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
-  }
 
   @Override public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
@@ -73,6 +67,7 @@ public class Health_Fragment extends Fragment {
     setHasOptionsMenu(true);
 
     ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.health_tab_title);
+    ((GMFit_Application) getActivity().getApplication()).getAppComponent().inject(this);
 
     getWidgets();
 
@@ -92,9 +87,9 @@ public class Health_Fragment extends Fragment {
   }
 
   private void getWidgets() {
-    DataAccessHandler.getInstance()
-        .getWidgets(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN,
-            Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), "medical", new Callback<WidgetsResponse>() {
+    dataAccessHandler.getWidgets(
+        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
+        "medical", new Callback<WidgetsResponse>() {
           @Override
           public void onResponse(Call<WidgetsResponse> call, Response<WidgetsResponse> response) {
             switch (response.code()) {
@@ -132,15 +127,18 @@ public class Health_Fragment extends Fragment {
           }
 
           @Override public void onFailure(Call<WidgetsResponse> call, Throwable t) {
-            Log.d(TAG, "onFailure: Request failed");
+            Timber.d("Call failed with error : %s", t.getMessage());
+            final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+            alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
+            alertDialog.show();
           }
         });
   }
 
   private void getTakenMedicalTests() {
-    DataAccessHandler.getInstance()
-        .getTakenMedicalTests(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN,
-            Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), new Callback<TakenMedicalTestsResponse>() {
+    dataAccessHandler.getTakenMedicalTests(
+        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
+        new Callback<TakenMedicalTestsResponse>() {
           @Override public void onResponse(Call<TakenMedicalTestsResponse> call,
               Response<TakenMedicalTestsResponse> response) {
             switch (response.code()) {
@@ -164,7 +162,10 @@ public class Health_Fragment extends Fragment {
           }
 
           @Override public void onFailure(Call<TakenMedicalTestsResponse> call, Throwable t) {
-
+            Timber.d("Call failed with error : %s", t.getMessage());
+            final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+            alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
+            alertDialog.show();
           }
         });
   }

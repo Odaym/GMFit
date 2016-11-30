@@ -70,8 +70,8 @@ public interface GMFit_Service {
   @GET("medical-conditions") Call<MedicalConditionsResponse> getMedicalConditions(
       @Header(Constants.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken);
 
-  @POST("facebook") Call<AuthenticationResponse> registerUserFacebook(
-      @Body ApiCallsHandler.RegisterFacebookRequest registerFacebookRequest);
+  @POST("facebook") Call<AuthenticationResponse> handleFacebookProcess(
+      @Body ApiCallsHandler.HandleFacebookRequest handleFacebookRequest);
 
   @POST("forgot-password") Call<DefaultGetResponse> sendResetPasswordLink(
       @Header(Constants.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken,

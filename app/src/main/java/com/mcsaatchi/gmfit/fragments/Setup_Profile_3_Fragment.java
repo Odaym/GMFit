@@ -1,6 +1,5 @@
 package com.mcsaatchi.gmfit.fragments;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Build;
@@ -13,26 +12,28 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioButton;
 import android.widget.TextView;
-
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.classes.Constants;
+import com.mcsaatchi.gmfit.classes.GMFit_Application;
 import com.mcsaatchi.gmfit.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.rest.ActivityLevelsResponse;
 import com.mcsaatchi.gmfit.rest.ActivityLevelsResponseBody;
-
 import java.util.List;
-
-import butterknife.Bind;
-import butterknife.ButterKnife;
+import javax.inject.Inject;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import timber.log.Timber;
 import worker8.com.github.radiogroupplus.RadioGroupPlus;
 
 public class Setup_Profile_3_Fragment extends Fragment {
 
+  @Inject DataAccessHandler dataAccessHandler;
+  @Inject SharedPreferences prefs;
+
   @Bind(R.id.activityLevelsRadioButtonsGroup) RadioGroupPlus activityLevelsRadioButtonsGroup;
-  private SharedPreferences prefs;
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
@@ -40,8 +41,7 @@ public class Setup_Profile_3_Fragment extends Fragment {
     View fragmentView = inflater.inflate(R.layout.fragment_setup_profile_3, container, false);
 
     ButterKnife.bind(this, fragmentView);
-
-    prefs = getActivity().getSharedPreferences(Constants.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
+    ((GMFit_Application) getActivity().getApplication()).getAppComponent().inject(this);
 
     getActivityLevels();
 
@@ -58,9 +58,9 @@ public class Setup_Profile_3_Fragment extends Fragment {
           }
         });
 
-    DataAccessHandler.getInstance()
-        .getActivityLevels(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN,
-            Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), new Callback<ActivityLevelsResponse>() {
+    dataAccessHandler.getActivityLevels(
+        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
+        new Callback<ActivityLevelsResponse>() {
           @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP) @Override
           public void onResponse(Call<ActivityLevelsResponse> call,
               Response<ActivityLevelsResponse> response) {
@@ -105,7 +105,9 @@ public class Setup_Profile_3_Fragment extends Fragment {
           }
 
           @Override public void onFailure(Call<ActivityLevelsResponse> call, Throwable t) {
-            alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
+            Timber.d("Call failed with error : %s", t.getMessage());
+            alertDialog.setMessage(
+                getActivity().getResources().getString(R.string.error_response_from_server_incorrect));
             alertDialog.show();
           }
         });

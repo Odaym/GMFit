@@ -1,8 +1,6 @@
 package com.mcsaatchi.gmfit.activities;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.v4.widget.NestedScrollView;
@@ -10,7 +8,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
-
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.classes.Constants;
 import com.mcsaatchi.gmfit.fragments.Fitness_Fragment;
@@ -23,11 +22,8 @@ import com.mcsaatchi.gmfit.rest.AuthenticationResponseChart;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponseChartData;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
-
 import java.util.ArrayList;
-
-import butterknife.Bind;
-import butterknife.ButterKnife;
+import timber.log.Timber;
 
 public class Main_Activity extends Base_Activity {
 
@@ -57,11 +53,8 @@ public class Main_Activity extends Base_Activity {
 
     setupToolbar(toolbar, getResources().getString(R.string.app_name), false);
 
-    SharedPreferences prefs =
-        getSharedPreferences(Constants.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
-
-    Log.d("USER_ACCESS_TOKEN",
-        "onCreate: User access token is : " + prefs.getString(Constants.PREF_USER_ACCESS_TOKEN,
+    Timber.d("onCreate: User access token is : %s ",
+        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN,
             Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS));
 
     if (getIntent().getExtras() != null) {

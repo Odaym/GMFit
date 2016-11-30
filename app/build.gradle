@@ -17,9 +17,10 @@ repositories {
 }
 
 def supportLibVersion = '25.0.1'
-def playServicesVersion = '9.8.0'
+def playServicesVersion = '10.0.0'
 def retroFitVersion = '2.1.0'
 def OkHttpVersion = '3.4.1'
+def daggerVersion = '2.8'
 
 android {
   compileSdkVersion 25
@@ -79,6 +80,8 @@ dependencies {
     exclude group: 'com.android.support', module: 'recyclerview-v7'
   }
 
+  annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
+
   compile "com.google.android.gms:play-services-vision:$playServicesVersion"
   compile "com.squareup.okhttp3:logging-interceptor:$OkHttpVersion"
   compile "com.android.support:recyclerview-v7:$supportLibVersion"
@@ -93,12 +96,13 @@ dependencies {
   compile 'com.code-troopers.betterpickers:library:2.5.3'
   compile 'com.github.florent37:materialtextfield:1.0.4'
   compile 'com.wrapp.floatlabelededittext:library:0.0.6'
-  compile 'com.jakewharton.timber:timber:4.3.1'
   compile 'com.github.nguyenhoanglam:ImagePicker:1.1.2'
   compile "com.squareup.okhttp3:okhttp:$OkHttpVersion"
   compile 'de.halfbit:pinned-section-listview:1.0.0'
   compile 'com.github.PhilJay:MPAndroidChart:v2.2.5'
   compile 'com.github.worker8:RadioGroupPlus:v1.0.1'
+  compile "com.google.dagger:dagger:$daggerVersion"
+  compile 'com.jakewharton.timber:timber:4.3.1'
   compile 'com.squareup.picasso:picasso:2.5.2'
   compile 'uk.co.chrisjenx:calligraphy:2.2.0'
   compile 'com.jakewharton:butterknife:7.0.1'

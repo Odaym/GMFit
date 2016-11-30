@@ -1,6 +1,9 @@
 package com.mcsaatchi.gmfit.data_access;
 
+import android.content.Context;
+import android.content.res.Resources;
 import com.mcsaatchi.gmfit.classes.Constants;
+import com.mcsaatchi.gmfit.classes.GMFit_Application;
 import com.mcsaatchi.gmfit.classes.Helpers;
 import com.mcsaatchi.gmfit.rest.ActivityLevelsResponse;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponse;
@@ -24,6 +27,7 @@ import com.mcsaatchi.gmfit.rest.UserMealsResponse;
 import com.mcsaatchi.gmfit.rest.UserProfileResponse;
 import com.mcsaatchi.gmfit.rest.WidgetsResponse;
 import java.util.Map;
+import javax.inject.Inject;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -31,17 +35,10 @@ import retrofit2.Response;
 
 public class ApiCallsHandler {
 
-  private static ApiCallsHandler apiCallsHandler;
+  @Inject Resources activityResources;
 
-  private ApiCallsHandler() {
-  }
-
-  public static ApiCallsHandler getInstance() {
-    if (apiCallsHandler == null) {
-      apiCallsHandler = new ApiCallsHandler();
-    }
-
-    return apiCallsHandler;
+  public ApiCallsHandler(Context app) {
+    ((GMFit_Application) app).getAppComponent().inject(this);
   }
 
   void getSlugBreakdownForChart(final String chartType, String userAccessToken,
@@ -58,7 +55,6 @@ public class ApiCallsHandler {
       }
 
       @Override public void onFailure(Call<SlugBreakdownResponse> call, Throwable t) {
-        callback.onFailure(call, t);
       }
     });
   }
@@ -106,7 +102,6 @@ public class ApiCallsHandler {
       }
 
       @Override public void onFailure(Call<AuthenticationResponse> call, Throwable t) {
-        callback.onFailure(call, t);
       }
     });
   }
@@ -123,15 +118,14 @@ public class ApiCallsHandler {
       }
 
       @Override public void onFailure(Call<AuthenticationResponse> call, Throwable t) {
-        callback.onFailure(call, t);
       }
     });
   }
 
   void signInUserSilently(String email, String password,
       final Callback<AuthenticationResponse> callback) {
-    Call<AuthenticationResponse> apiCall = new RestClient().getGMFitService()
-        .signInUserSilently(new SignInRequest(email, password));
+    Call<AuthenticationResponse> apiCall =
+        new RestClient().getGMFitService().signInUserSilently(new SignInRequest(email, password));
 
     apiCall.enqueue(new Callback<AuthenticationResponse>() {
       @Override public void onResponse(Call<AuthenticationResponse> call,
@@ -140,7 +134,6 @@ public class ApiCallsHandler {
       }
 
       @Override public void onFailure(Call<AuthenticationResponse> call, Throwable t) {
-        callback.onFailure(call, t);
       }
     });
   }
@@ -156,7 +149,6 @@ public class ApiCallsHandler {
       }
 
       @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
-        callback.onFailure(call, t);
       }
     });
   }
@@ -177,7 +169,6 @@ public class ApiCallsHandler {
       }
 
       @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
-        callback.onFailure(call, t);
       }
     });
   }
@@ -196,7 +187,6 @@ public class ApiCallsHandler {
       }
 
       @Override public void onFailure(Call<UiResponse> call, Throwable t) {
-        callback.onFailure(call, t);
       }
     });
   }
@@ -213,7 +203,6 @@ public class ApiCallsHandler {
       }
 
       @Override public void onFailure(Call<MedicalConditionsResponse> call, Throwable t) {
-        callback.onFailure(call, t);
       }
     });
   }
@@ -230,7 +219,6 @@ public class ApiCallsHandler {
       }
 
       @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
-        callback.onFailure(call, t);
       }
     });
   }
@@ -247,7 +235,6 @@ public class ApiCallsHandler {
       }
 
       @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
-        callback.onFailure(call, t);
       }
     });
   }
@@ -264,7 +251,6 @@ public class ApiCallsHandler {
       }
 
       @Override public void onFailure(Call<SearchMealItemResponse> call, Throwable t) {
-        callback.onFailure(call, t);
       }
     });
   }
@@ -281,7 +267,6 @@ public class ApiCallsHandler {
       }
 
       @Override public void onFailure(Call<MealMetricsResponse> call, Throwable t) {
-        callback.onFailure(call, t);
       }
     });
   }
@@ -298,7 +283,6 @@ public class ApiCallsHandler {
       }
 
       @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
-        callback.onFailure(call, t);
       }
     });
   }
@@ -315,7 +299,6 @@ public class ApiCallsHandler {
       }
 
       @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
-        callback.onFailure(call, t);
       }
     });
   }
@@ -332,7 +315,6 @@ public class ApiCallsHandler {
       }
 
       @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
-        callback.onFailure(call, t);
       }
     });
   }
@@ -351,7 +333,6 @@ public class ApiCallsHandler {
       }
 
       @Override public void onFailure(Call<UserMealsResponse> call, Throwable t) {
-        callback.onFailure(call, t);
       }
     });
   }
@@ -368,7 +349,6 @@ public class ApiCallsHandler {
       }
 
       @Override public void onFailure(Call<UserMealsResponse> call, Throwable t) {
-        callback.onFailure(call, t);
       }
     });
   }
@@ -385,15 +365,14 @@ public class ApiCallsHandler {
       }
 
       @Override public void onFailure(Call<MetaTextsResponse> call, Throwable t) {
-        callback.onFailure(call, t);
       }
     });
   }
 
-  void registerUserFacebook(String facebookAccessToken,
+  void handleFacebookProcess(String facebookAccessToken,
       final Callback<AuthenticationResponse> callback) {
     Call<AuthenticationResponse> apiCall = new RestClient().getGMFitService()
-        .registerUserFacebook(new RegisterFacebookRequest(facebookAccessToken));
+        .handleFacebookProcess(new HandleFacebookRequest(facebookAccessToken));
 
     apiCall.enqueue(new Callback<AuthenticationResponse>() {
       @Override public void onResponse(Call<AuthenticationResponse> call,
@@ -402,7 +381,6 @@ public class ApiCallsHandler {
       }
 
       @Override public void onFailure(Call<AuthenticationResponse> call, Throwable t) {
-        callback.onFailure(call, t);
       }
     });
   }
@@ -420,7 +398,6 @@ public class ApiCallsHandler {
       }
 
       @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
-        callback.onFailure(call, t);
       }
     });
   }
@@ -437,7 +414,6 @@ public class ApiCallsHandler {
       }
 
       @Override public void onFailure(Call<RecentMealsResponse> call, Throwable t) {
-        callback.onFailure(call, t);
       }
     });
   }
@@ -454,7 +430,6 @@ public class ApiCallsHandler {
       }
 
       @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
-        callback.onFailure(call, t);
       }
     });
   }
@@ -472,7 +447,6 @@ public class ApiCallsHandler {
       }
 
       @Override public void onFailure(Call<ChartsBySectionResponse> call, Throwable t) {
-        callback.onFailure(call, t);
       }
     });
   }
@@ -489,7 +463,6 @@ public class ApiCallsHandler {
       }
 
       @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
-        callback.onFailure(call, t);
       }
     });
   }
@@ -506,15 +479,14 @@ public class ApiCallsHandler {
       }
 
       @Override public void onFailure(Call<ChartMetricBreakdownResponse> call, Throwable t) {
-        callback.onFailure(call, t);
       }
     });
   }
 
   void getUserGoalMetrics(String userAccessToken, String date, String type,
       final Callback<UserGoalMetricsResponse> callback) {
-    Call<UserGoalMetricsResponse> apiCall = new RestClient().getGMFitService()
-        .getUserGoalMetrics(userAccessToken, date, type);
+    Call<UserGoalMetricsResponse> apiCall =
+        new RestClient().getGMFitService().getUserGoalMetrics(userAccessToken, date, type);
 
     apiCall.enqueue(new Callback<UserGoalMetricsResponse>() {
       @Override public void onResponse(Call<UserGoalMetricsResponse> call,
@@ -523,7 +495,6 @@ public class ApiCallsHandler {
       }
 
       @Override public void onFailure(Call<UserGoalMetricsResponse> call, Throwable t) {
-        callback.onFailure(call, t);
       }
     });
   }
@@ -540,7 +511,6 @@ public class ApiCallsHandler {
       }
 
       @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
-        callback.onFailure(call, t);
       }
     });
   }
@@ -556,7 +526,6 @@ public class ApiCallsHandler {
       }
 
       @Override public void onFailure(Call<MedicalTestsResponse> call, Throwable t) {
-        callback.onFailure(call, t);
       }
     });
   }
@@ -573,15 +542,14 @@ public class ApiCallsHandler {
       }
 
       @Override public void onFailure(Call<WidgetsResponse> call, Throwable t) {
-        callback.onFailure(call, t);
       }
     });
   }
 
   void getWidgetsWithDate(String userAccessToken, String sectionName, String date,
       final Callback<WidgetsResponse> callback) {
-    Call<WidgetsResponse> apiCall = new RestClient().getGMFitService()
-        .getWidgetsWithDate(userAccessToken, sectionName, date);
+    Call<WidgetsResponse> apiCall =
+        new RestClient().getGMFitService().getWidgetsWithDate(userAccessToken, sectionName, date);
 
     apiCall.enqueue(new Callback<WidgetsResponse>() {
       @Override
@@ -590,7 +558,6 @@ public class ApiCallsHandler {
       }
 
       @Override public void onFailure(Call<WidgetsResponse> call, Throwable t) {
-        callback.onFailure(call, t);
       }
     });
   }
@@ -608,7 +575,6 @@ public class ApiCallsHandler {
       }
 
       @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
-        callback.onFailure(call, t);
       }
     });
   }
@@ -626,7 +592,6 @@ public class ApiCallsHandler {
       }
 
       @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
-        callback.onFailure(call, t);
       }
     });
   }
@@ -643,7 +608,6 @@ public class ApiCallsHandler {
       }
 
       @Override public void onFailure(Call<TakenMedicalTestsResponse> call, Throwable t) {
-        callback.onFailure(call, t);
       }
     });
   }
@@ -659,7 +623,6 @@ public class ApiCallsHandler {
       }
 
       @Override public void onFailure(Call<UserProfileResponse> call, Throwable t) {
-        callback.onFailure(call, t);
       }
     });
   }
@@ -676,7 +639,6 @@ public class ApiCallsHandler {
       }
 
       @Override public void onFailure(Call<EmergencyProfileResponse> call, Throwable t) {
-        callback.onFailure(call, t);
       }
     });
   }
@@ -693,7 +655,6 @@ public class ApiCallsHandler {
       }
 
       @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
-        callback.onFailure(call, t);
       }
     });
   }
@@ -710,7 +671,6 @@ public class ApiCallsHandler {
       }
 
       @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
-        callback.onFailure(call, t);
       }
     });
   }
@@ -727,7 +687,6 @@ public class ApiCallsHandler {
       }
 
       @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
-        callback.onFailure(call, t);
       }
     });
   }
@@ -743,7 +702,6 @@ public class ApiCallsHandler {
       }
 
       @Override public void onFailure(Call<ActivityLevelsResponse> call, Throwable t) {
-        callback.onFailure(call, t);
       }
     });
   }
@@ -759,7 +717,6 @@ public class ApiCallsHandler {
       }
 
       @Override public void onFailure(Call<UserGoalsResponse> call, Throwable t) {
-        callback.onFailure(call, t);
       }
     });
   }
@@ -874,10 +831,10 @@ public class ApiCallsHandler {
     }
   }
 
-  public class RegisterFacebookRequest {
+  public class HandleFacebookRequest {
     final String access_token;
 
-    RegisterFacebookRequest(String access_token) {
+    HandleFacebookRequest(String access_token) {
       this.access_token = access_token;
     }
   }

@@ -6,21 +6,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
-
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.models.DataChart;
-
 import java.util.List;
 
 public class DataChartsListing_Adapter extends BaseAdapter {
 
-  private Context context;
   private List<DataChart> chartListItems;
 
-  public DataChartsListing_Adapter(Context context, List<DataChart> chartListItems) {
+  private Context context;
+
+  public DataChartsListing_Adapter(List<DataChart> chartListItems, Context context) {
     super();
-    this.context = context;
     this.chartListItems = chartListItems;
+    this.context = context;
   }
 
   @Override public int getCount() {

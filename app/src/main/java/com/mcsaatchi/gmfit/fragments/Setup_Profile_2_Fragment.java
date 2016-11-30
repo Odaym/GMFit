@@ -1,6 +1,5 @@
 package com.mcsaatchi.gmfit.fragments;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Build;
@@ -12,27 +11,28 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RadioButton;
-
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.classes.Constants;
+import com.mcsaatchi.gmfit.classes.GMFit_Application;
 import com.mcsaatchi.gmfit.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.rest.UserGoalsResponse;
 import com.mcsaatchi.gmfit.rest.UserGoalsResponseBody;
-
 import java.util.List;
-
-import butterknife.Bind;
-import butterknife.ButterKnife;
+import javax.inject.Inject;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import timber.log.Timber;
 import worker8.com.github.radiogroupplus.RadioGroupPlus;
 
 public class Setup_Profile_2_Fragment extends Fragment {
 
-  @Bind(R.id.goalRadioButtonsGroup) RadioGroupPlus goalRadioButtonsGroup;
+  @Inject DataAccessHandler dataAccessHandler;
+  @Inject SharedPreferences prefs;
 
-  private SharedPreferences prefs;
+  @Bind(R.id.goalRadioButtonsGroup) RadioGroupPlus goalRadioButtonsGroup;
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
@@ -40,8 +40,7 @@ public class Setup_Profile_2_Fragment extends Fragment {
     View fragmentView = inflater.inflate(R.layout.fragment_setup_profile_2, container, false);
 
     ButterKnife.bind(this, fragmentView);
-
-    prefs = getActivity().getSharedPreferences(Constants.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
+    ((GMFit_Application) getActivity().getApplication()).getAppComponent().inject(this);
 
     getUserGoals();
 
@@ -58,9 +57,9 @@ public class Setup_Profile_2_Fragment extends Fragment {
           }
         });
 
-    DataAccessHandler.getInstance()
-        .getUserGoals(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN,
-            Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), new Callback<UserGoalsResponse>() {
+    dataAccessHandler.getUserGoals(
+        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
+        new Callback<UserGoalsResponse>() {
           @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP) @Override
           public void onResponse(Call<UserGoalsResponse> call,
               Response<UserGoalsResponse> response) {
@@ -98,7 +97,9 @@ public class Setup_Profile_2_Fragment extends Fragment {
           }
 
           @Override public void onFailure(Call<UserGoalsResponse> call, Throwable t) {
-            alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
+            Timber.d("Call failed with error : %s", t.getMessage());
+            alertDialog.setMessage(
+                getActivity().getResources().getString(R.string.error_response_from_server_incorrect));
             alertDialog.show();
           }
         });

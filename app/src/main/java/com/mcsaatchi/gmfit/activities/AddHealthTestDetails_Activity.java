@@ -6,7 +6,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -29,7 +28,8 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.adapters.EditableTestMetricsRecycler_Adapter;
 import com.mcsaatchi.gmfit.adapters.TestMetricsRecycler_Adapter;
@@ -37,7 +37,6 @@ import com.mcsaatchi.gmfit.classes.Constants;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
 import com.mcsaatchi.gmfit.classes.SimpleDividerItemDecoration;
-import com.mcsaatchi.gmfit.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.rest.MedicalTestsResponseDatum;
 import com.mcsaatchi.gmfit.rest.TakenMedicalTestsResponseImagesDatum;
@@ -45,24 +44,20 @@ import com.mcsaatchi.gmfit.rest.TakenMedicalTestsResponseMetricsDatum;
 import com.nguyenhoanglam.imagepicker.activity.ImagePickerActivity;
 import com.nguyenhoanglam.imagepicker.model.Image;
 import com.squareup.picasso.Picasso;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import butterknife.Bind;
-import butterknife.ButterKnife;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import timber.log.Timber;
 
 public class AddHealthTestDetails_Activity extends Base_Activity {
 
   private static final int SELECT_PICTURE = 1;
   private static final int RC_HANDLE_STORAGE_PERM = 2;
-  private static final String TAG = "AddHealthTestDetails_Activity";
 
   @Bind(R.id.testPhotosLayout) LinearLayout testPhotosLayout;
   @Bind(R.id.toolbar) Toolbar toolbar;
@@ -74,11 +69,10 @@ public class AddHealthTestDetails_Activity extends Base_Activity {
   private String test_date_taken;
   private int test_instance_id;
 
-  private SharedPreferences prefs;
-
-  private ProgressDialog testOperationsWaitingDialog;
-
   private boolean purposeIsEditing = false;
+
+  private ProgressDialog waitingDialog;
+  private AlertDialog alertDialog;
 
   private ArrayList<MedicalTestsResponseDatum> testMetrics = new ArrayList<>();
 
@@ -102,8 +96,6 @@ public class AddHealthTestDetails_Activity extends Base_Activity {
     setContentView(R.layout.activity_add_health_test_details);
 
     ButterKnife.bind(this);
-
-    prefs = getSharedPreferences(Constants.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
 
     addNewTestPhotoBTN.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View view) {
@@ -158,26 +150,25 @@ public class AddHealthTestDetails_Activity extends Base_Activity {
 
         HashMap<String, RequestBody> metrics, imageParts, deletedImages;
 
-        testOperationsWaitingDialog = new ProgressDialog(this);
-        testOperationsWaitingDialog.setMessage(getString(R.string.please_wait_dialog_message));
+        waitingDialog = new ProgressDialog(this);
+        waitingDialog.setMessage(getString(R.string.please_wait_dialog_message));
 
-        final android.support.v7.app.AlertDialog alertDialog =
-            new android.support.v7.app.AlertDialog.Builder(this).create();
+        alertDialog = new AlertDialog.Builder(this).create();
         alertDialog.setTitle(R.string.fetching_test_data_dialog_title);
-        alertDialog.setButton(android.support.v7.app.AlertDialog.BUTTON_POSITIVE,
-            getString(R.string.ok), new DialogInterface.OnClickListener() {
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
+            new DialogInterface.OnClickListener() {
               public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
 
-                if (testOperationsWaitingDialog.isShowing()) testOperationsWaitingDialog.dismiss();
+                if (waitingDialog.isShowing()) waitingDialog.dismiss();
               }
             });
 
         if (purposeIsEditing) {
-          testOperationsWaitingDialog.setTitle(R.string.editing_existing_test_dialog_title);
+          waitingDialog.setTitle(R.string.editing_existing_test_dialog_title);
           metrics = constructEditableMetricsForRequest(editableTestMetricsRecyclerAdapter);
         } else {
-          testOperationsWaitingDialog.setTitle(R.string.creating_new_test_dialog_title);
+          waitingDialog.setTitle(R.string.creating_new_test_dialog_title);
           metrics = constructNewMetricsForRequest(testMetricsRecyclerAdapter);
         }
 
@@ -185,7 +176,7 @@ public class AddHealthTestDetails_Activity extends Base_Activity {
           Toast.makeText(this, "Please fill in the needed fields to proceed", Toast.LENGTH_SHORT)
               .show();
         } else {
-          testOperationsWaitingDialog.show();
+          waitingDialog.show();
 
           imageParts = constructSelectedImagesForRequest();
 
@@ -371,68 +362,72 @@ public class AddHealthTestDetails_Activity extends Base_Activity {
 
   private void createNewHealthTestRequest(HashMap<String, RequestBody> metrics,
       HashMap<String, RequestBody> imageParts) {
-    DataAccessHandler.getInstance()
-        .storeNewHealthTest(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN,
-            Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), toRequestBody(test_slug),
-            toRequestBody(test_date_taken), metrics, imageParts,
-            new Callback<DefaultGetResponse>() {
-              @Override public void onResponse(Call<DefaultGetResponse> call,
-                  Response<DefaultGetResponse> response) {
-                switch (response.code()) {
-                  case 200:
+    dataAccessHandler.storeNewHealthTest(
+        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
+        toRequestBody(test_slug), toRequestBody(test_date_taken), metrics, imageParts,
+        new Callback<DefaultGetResponse>() {
+          @Override public void onResponse(Call<DefaultGetResponse> call,
+              Response<DefaultGetResponse> response) {
+            switch (response.code()) {
+              case 200:
 
-                    Log.d("TAG", "onResponse: Succeeded creating new test");
+                Log.d("TAG", "onResponse: Succeeded creating new test");
 
-                    testOperationsWaitingDialog.dismiss();
+                waitingDialog.dismiss();
 
-                    hideKeyboard();
+                hideKeyboard();
 
-                    EventBus_Singleton.getInstance()
-                        .post(new EventBus_Poster(Constants.EXTRAS_TEST_EDIT_OR_CREATE_DONE));
+                EventBus_Singleton.getInstance()
+                    .post(new EventBus_Poster(Constants.EXTRAS_TEST_EDIT_OR_CREATE_DONE));
 
-                    finish();
+                finish();
 
-                    break;
-                }
-              }
+                break;
+            }
+          }
 
-              @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
-                Log.d("TAG", "onFailure: Failure");
-              }
-            });
+          @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+            Timber.d("Call failed with error : %s", t.getMessage());
+            alertDialog.setMessage(
+                getResources().getString(R.string.error_response_from_server_incorrect));
+            alertDialog.show();
+          }
+        });
   }
 
   private void editExistingHealthTestRequest(RequestBody instance_id,
       HashMap<String, RequestBody> metrics, HashMap<String, RequestBody> imageParts,
       HashMap<String, RequestBody> deletedImages) {
-    DataAccessHandler.getInstance()
-        .editExistingHealthTest(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN,
-            Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), instance_id, metrics, imageParts,
-            deletedImages, new Callback<DefaultGetResponse>() {
-              @Override public void onResponse(Call<DefaultGetResponse> call,
-                  Response<DefaultGetResponse> response) {
-                switch (response.code()) {
-                  case 200:
+    dataAccessHandler.editExistingHealthTest(
+        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
+        instance_id, metrics, imageParts, deletedImages, new Callback<DefaultGetResponse>() {
+          @Override public void onResponse(Call<DefaultGetResponse> call,
+              Response<DefaultGetResponse> response) {
+            switch (response.code()) {
+              case 200:
 
-                    Log.d("TAG", "onResponse: Succeeded editing new test");
+                Log.d("TAG", "onResponse: Succeeded editing new test");
 
-                    testOperationsWaitingDialog.dismiss();
+                waitingDialog.dismiss();
 
-                    hideKeyboard();
+                hideKeyboard();
 
-                    EventBus_Singleton.getInstance()
-                        .post(new EventBus_Poster(Constants.EXTRAS_TEST_EDIT_OR_CREATE_DONE));
+                EventBus_Singleton.getInstance()
+                    .post(new EventBus_Poster(Constants.EXTRAS_TEST_EDIT_OR_CREATE_DONE));
 
-                    finish();
+                finish();
 
-                    break;
-                }
-              }
+                break;
+            }
+          }
 
-              @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
-                Log.d("TAG", "onFailure: Failure");
-              }
-            });
+          @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+            Timber.d("Call failed with error : %s", t.getMessage());
+            alertDialog.setMessage(
+                getResources().getString(R.string.error_response_from_server_incorrect));
+            alertDialog.show();
+          }
+        });
   }
 
   private void openPictureChooser() {

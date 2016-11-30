@@ -15,24 +15,22 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
-
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.mcsaatchi.gmfit.BuildConfig;
 import com.mcsaatchi.gmfit.classes.Constants;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
+import com.mcsaatchi.gmfit.classes.GMFit_Application;
 import com.mcsaatchi.gmfit.data_access.DBHelper;
 import com.mcsaatchi.gmfit.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.models.FitnessWidget;
 import com.mcsaatchi.gmfit.rest.AuthenticationResponse;
-
-import org.joda.time.LocalDate;
-
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-
+import javax.inject.Inject;
+import org.joda.time.LocalDate;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -49,10 +47,10 @@ public class SensorListener extends Service implements SensorEventListener {
   private final static int MICROSECONDS_IN_ONE_MINUTE = 60000000;
   private static final float STEP_LENGTH = 20;
   private static float METRIC_RUNNING_FACTOR = 1.02784823f;
-
   private final Handler handler = new Handler();
+  @Inject DataAccessHandler dataAccessHandler;
+  @Inject SharedPreferences prefs;
   private Timer timer = new Timer();
-  private SharedPreferences prefs;
   private String todayDate;
   private String yesterdayDate;
 
@@ -162,12 +160,11 @@ public class SensorListener extends Service implements SensorEventListener {
   @Override public void onCreate() {
     super.onCreate();
 
+    ((GMFit_Application) getApplication()).getAppComponent().inject(this);
+
     if (BuildConfig.DEBUG) Log.d("SERVICE_TAG", "SensorListener onCreate");
 
     reRegisterSensor();
-
-    prefs = getApplicationContext().getSharedPreferences(Constants.SHARED_PREFS_TITLE,
-        Context.MODE_PRIVATE);
 
     fitnessWidgetsDAO = getDBHelper().getFitnessWidgetsDAO();
 
@@ -189,9 +186,9 @@ public class SensorListener extends Service implements SensorEventListener {
   }
 
   private void refreshAccessToken() {
-    DataAccessHandler.getInstance()
-        .refreshAccessToken(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN,
-            Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), new Callback<AuthenticationResponse>() {
+    dataAccessHandler.refreshAccessToken(
+        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
+        new Callback<AuthenticationResponse>() {
           @Override public void onResponse(Call<AuthenticationResponse> call,
               Response<AuthenticationResponse> response) {
             switch (response.code()) {
@@ -224,9 +221,9 @@ public class SensorListener extends Service implements SensorEventListener {
   }
 
   private void synchronizeMetricsWithServer(String[] slugsArray, int[] valuesArray) {
-    DataAccessHandler.getInstance()
-        .synchronizeMetricsWithServer(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN,
-            Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), slugsArray, valuesArray);
+    dataAccessHandler.synchronizeMetricsWithServer(
+        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
+        slugsArray, valuesArray);
 
     wipeOutFitnessMetricsAtMidnight();
   }
