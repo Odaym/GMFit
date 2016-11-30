@@ -10,11 +10,9 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.Toast;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.crashlytics.android.Crashlytics;
@@ -135,7 +133,7 @@ public class Login_Activity extends Base_Activity {
       @Override public void onSuccess(LoginResult loginResult) {
         final AccessToken accessToken = loginResult.getAccessToken();
 
-        Log.d("TAGTAG", "onSuccess: FACEBOOK ACCESS TOKEN IS : " + accessToken.getToken());
+        Timber.d("onSuccess: FACEBOOK ACCESS TOKEN IS : %s", accessToken.getToken());
 
         prefs.edit()
             .putString(Constants.EXTRAS_USER_FACEBOOK_TOKEN, accessToken.getToken())
@@ -172,9 +170,6 @@ public class Login_Activity extends Base_Activity {
         parameters.putString("fields", "id,name,email,link,birthday,picture");
         request.setParameters(parameters);
         request.executeAsync();
-
-        Toast.makeText(Login_Activity.this, "Facebook logged in successfully", Toast.LENGTH_SHORT)
-            .show();
       }
 
       @Override public void onCancel() {
