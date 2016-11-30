@@ -50,7 +50,7 @@
         android:name=".activities.SignUp_Activity"
         android:screenOrientation="portrait"
         android:theme="@style/No_Action_Bar_Theme"
-        android:windowSoftInputMode="stateHidden"/>
+        android:windowSoftInputMode="stateHidden|adjustPan"/>
 
     <activity
         android:name=".activities.SignIn_Activity"
@@ -85,7 +85,7 @@
         android:name=".activities.SetupProfile_Activity"
         android:screenOrientation="portrait"
         android:theme="@style/No_Action_Bar_Theme"
-        android:windowSoftInputMode="stateHidden"/>
+        android:windowSoftInputMode="stateHidden|adjustPan"/>
 
     <activity
         android:name=".activities.CustomizeWidgetsAndCharts_Activity"

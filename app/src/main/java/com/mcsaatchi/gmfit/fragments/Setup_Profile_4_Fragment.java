@@ -8,7 +8,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -181,8 +180,10 @@ public class Setup_Profile_4_Fragment extends Fragment
           prefs.edit()
               .putInt(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION_ID, medicalConditionId)
               .apply();
-
-          Log.d(TAG, "handle_BusEvents: medical condition id : " + medicalConditionId);
+          prefs.edit()
+              .putString(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION,
+                  ((MedicalConditionsResponseDatum) medicalConditionsSpinner.getSelectedItem()).getName())
+              .apply();
 
           setupUserProfile(finalDateOfBirth, finalBloodType, nationality, medicalConditionId,
               measurementSystem, goalId, activityLevelId, finalGender, finalHeight, finalWeight,
@@ -283,8 +284,8 @@ public class Setup_Profile_4_Fragment extends Fragment
 
           @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
             Timber.d("Call failed with error : %s", t.getMessage());
-            alertDialog.setMessage(
-                getActivity().getResources().getString(R.string.error_response_from_server_incorrect));
+            alertDialog.setMessage(getActivity().getResources()
+                .getString(R.string.error_response_from_server_incorrect));
             alertDialog.show();
           }
         });
@@ -327,8 +328,8 @@ public class Setup_Profile_4_Fragment extends Fragment
           @Override public void onFailure(Call<UiResponse> call, Throwable t) {
             Timber.d("Call failed with error : %s", t.getMessage());
             final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
-            alertDialog.setMessage(
-                getActivity().getResources().getString(R.string.error_response_from_server_incorrect));
+            alertDialog.setMessage(getActivity().getResources()
+                .getString(R.string.error_response_from_server_incorrect));
             alertDialog.show();
           }
         });
