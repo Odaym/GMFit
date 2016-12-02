@@ -34,7 +34,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import timber.log.Timber;
 
-public class AddNewHealthTest_Activity extends Base_Activity {
+public class AddNewHealthTest_Part2_Activity extends Base_Activity {
   @Bind(R.id.toolbar) Toolbar toolbar;
   @Bind(R.id.availableTestMetricsListview) RecyclerView availableTestMetricsListview;
   @Bind(R.id.searchTestsAutoCompleTV) EditText searchTestsAutoCompleTV;

@@ -10,6 +10,7 @@ import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.rest.EmergencyProfileResponse;
 import com.mcsaatchi.gmfit.rest.MealMetricsResponse;
 import com.mcsaatchi.gmfit.rest.MedicalConditionsResponse;
+import com.mcsaatchi.gmfit.rest.MedicalTestMetricsResponse;
 import com.mcsaatchi.gmfit.rest.MedicalTestsResponse;
 import com.mcsaatchi.gmfit.rest.MetaTextsResponse;
 import com.mcsaatchi.gmfit.rest.RecentMealsResponse;
@@ -190,6 +191,10 @@ public class DataAccessHandler {
   public void requestNewMeal(String userAccessToken, String mealName,
       Callback<DefaultGetResponse> callback) {
     apiCallsHandler.requestNewMeal(userAccessToken, mealName, callback);
+  }
+
+  public void getTesticularMetrics(String userAccessToken, Callback<MedicalTestMetricsResponse> callback) {
+    apiCallsHandler.getTesticularMetrics(userAccessToken, callback);
   }
 
   public void getMedicalTests(String userAccessToken, Callback<MedicalTestsResponse> callback) {

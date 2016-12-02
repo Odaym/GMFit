@@ -8,16 +8,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.activities.AddHealthTestDetails_Activity;
 import com.mcsaatchi.gmfit.classes.Constants;
 import com.mcsaatchi.gmfit.rest.TakenMedicalTestsResponseBody;
-
-import org.joda.time.DateTime;
-
 import java.util.ArrayList;
 import java.util.List;
+import org.joda.time.DateTime;
+import org.joda.time.IllegalFieldValueException;
+import timber.log.Timber;
 
 public class UserTestsRecycler_Adapter
     extends RecyclerView.Adapter<UserTestsRecycler_Adapter.MyViewHolder> {
@@ -43,15 +42,19 @@ public class UserTestsRecycler_Adapter
 
     holder.itemNameTV.setText(userTest.getName());
 
-    DateTime entryDate = new DateTime(userTest.getDateTaken());
+    try {
+      DateTime entryDate = new DateTime(userTest.getDateTaken());
 
-    holder.itemSubtitleTV.setText(entryDate.dayOfWeek().getAsText()
-        + " "
-        + entryDate.getDayOfMonth()
-        + " "
-        + entryDate.monthOfYear().getAsText()
-        + ", "
-        + entryDate.getYear());
+      holder.itemSubtitleTV.setText(entryDate.dayOfWeek().getAsText()
+          + " "
+          + entryDate.getDayOfMonth()
+          + " "
+          + entryDate.monthOfYear().getAsText()
+          + ", "
+          + entryDate.getYear());
+    } catch (IllegalFieldValueException e) {
+      Timber.d("Date taken for this test was returned as 0000-00-00");
+    }
   }
 
   @Override public int getItemCount() {
