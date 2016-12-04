@@ -6,7 +6,6 @@
 
   <item
       android:id="@+id/doneBTN"
-      android:icon="@drawable/ic_check_white_24dp"
-      android:title="Store"
+      android:title="@string/next_step"
       app:showAsAction="always"/>
 </menu>

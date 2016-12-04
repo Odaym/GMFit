@@ -137,6 +137,9 @@ public interface GMFit_Service {
   @GET("medical-tests") Call<MedicalTestsResponse> getMedicalTests(
       @Header(Constants.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken);
 
+  @GET("user/medical/metrics") Call<MedicalTestMetricsResponse> getTesticularMetrics(
+      @Header(Constants.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken);
+
   @GET("user/widgets") Call<WidgetsResponse> getWidgets(
       @Header(Constants.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken,
       @Query("section") String sectionName);

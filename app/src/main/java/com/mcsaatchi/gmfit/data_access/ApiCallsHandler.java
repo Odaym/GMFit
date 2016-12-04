@@ -13,6 +13,7 @@ import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.rest.EmergencyProfileResponse;
 import com.mcsaatchi.gmfit.rest.MealMetricsResponse;
 import com.mcsaatchi.gmfit.rest.MedicalConditionsResponse;
+import com.mcsaatchi.gmfit.rest.MedicalTestMetricsResponse;
 import com.mcsaatchi.gmfit.rest.MedicalTestsResponse;
 import com.mcsaatchi.gmfit.rest.MetaTextsResponse;
 import com.mcsaatchi.gmfit.rest.RecentMealsResponse;
@@ -526,6 +527,21 @@ public class ApiCallsHandler {
       }
 
       @Override public void onFailure(Call<MedicalTestsResponse> call, Throwable t) {
+      }
+    });
+  }
+
+  void getTesticularMetrics(String userAccessToken, final Callback<MedicalTestMetricsResponse> callback) {
+    Call<MedicalTestMetricsResponse> apiCall =
+        new RestClient().getGMFitService().getTesticularMetrics(userAccessToken);
+
+    apiCall.enqueue(new Callback<MedicalTestMetricsResponse>() {
+      @Override public void onResponse(Call<MedicalTestMetricsResponse> call,
+          Response<MedicalTestMetricsResponse> response) {
+        callback.onResponse(call, response);
+      }
+
+      @Override public void onFailure(Call<MedicalTestMetricsResponse> call, Throwable t) {
       }
     });
   }

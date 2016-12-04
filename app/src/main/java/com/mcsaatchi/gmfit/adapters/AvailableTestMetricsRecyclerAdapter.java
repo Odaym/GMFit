@@ -2,7 +2,6 @@ package com.mcsaatchi.gmfit.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Parcelable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,19 +10,19 @@ import android.widget.TextView;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.activities.AddHealthTestDetails_Activity;
 import com.mcsaatchi.gmfit.classes.Constants;
-import com.mcsaatchi.gmfit.rest.MedicalTestsResponseBody;
+import com.mcsaatchi.gmfit.rest.MedicalTestMetricsResponseBody;
 import java.util.ArrayList;
 import org.joda.time.LocalDate;
 
-public class AvailableTestsRecycler_Adapter
-    extends RecyclerView.Adapter<AvailableTestsRecycler_Adapter.MyViewHolder> {
+public class AvailableTestMetricsRecyclerAdapter
+    extends RecyclerView.Adapter<AvailableTestMetricsRecyclerAdapter.MyViewHolder> {
 
-  private ArrayList<MedicalTestsResponseBody> availableTests;
+  private ArrayList<MedicalTestMetricsResponseBody> availableTestMetrics;
 
   private Context context;
 
-  public AvailableTestsRecycler_Adapter(ArrayList<MedicalTestsResponseBody> availableTests, Context context) {
-    this.availableTests = availableTests;
+  public AvailableTestMetricsRecyclerAdapter(ArrayList<MedicalTestMetricsResponseBody> availableTestMetrics, Context context) {
+    this.availableTestMetrics = availableTestMetrics;
     this.context = context;
   }
 
@@ -36,13 +35,13 @@ public class AvailableTestsRecycler_Adapter
 
   @Override public void onBindViewHolder(MyViewHolder holder, int position) {
 
-    MedicalTestsResponseBody testResponseBody = availableTests.get(position);
+    MedicalTestMetricsResponseBody testResponseBody = availableTestMetrics.get(position);
 
     holder.itemNameTV.setText(testResponseBody.getName());
   }
 
   @Override public int getItemCount() {
-    return availableTests.size();
+    return availableTestMetrics.size();
   }
 
   class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -57,12 +56,12 @@ public class AvailableTestsRecycler_Adapter
     @Override public void onClick(View view) {
       Intent intent = new Intent(context, AddHealthTestDetails_Activity.class);
       intent.putExtra(Constants.EXTRAS_TEST_TITLE,
-          availableTests.get(getAdapterPosition()).getName());
-      intent.putExtra(Constants.EXTRAS_TEST_SLUG,
-          availableTests.get(getAdapterPosition()).getSlug());
+          availableTestMetrics.get(getAdapterPosition()).getName());
+      //intent.putExtra(Constants.EXTRAS_TEST_SLUG,
+          //availableTestMetrics.get(getAdapterPosition()).getSlug());
       intent.putExtra(Constants.EXTRAS_TEST_DATE_TAKEN, new LocalDate().toString());
-      intent.putParcelableArrayListExtra(Constants.EXTRAS_TEST_OBJECT_DETAILS,
-          (ArrayList<? extends Parcelable>) availableTests.get(getAdapterPosition()).getMetrics());
+      //intent.putParcelableArrayListExtra(Constants.EXTRAS_TEST_OBJECT_DETAILS,
+      //    (ArrayList<? extends Parcelable>) availableTestMetrics.get(getAdapterPosition()).getMetrics());
       context.startActivity(intent);
     }
   }
