@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:validator="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/topLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/health_background"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    >
+
+  <include layout="@layout/app_toolbar"/>
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:background="@color/offwhite_background_gray"
+      android:orientation="vertical"
+      >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="@dimen/radiobutton_row_height"
+          android:gravity="center_vertical"
+          android:orientation="horizontal"
+          >
+
+        <TextView
+            android:layout_width="@dimen/text_input_label_width"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:gravity="center_vertical|start"
+            android:paddingStart="@dimen/default_margin_2"
+            android:text="@string/test_name_hint"
+            android:textAppearance="?android:textAppearanceSmall"
+            android:textColor="@color/black"
+            />
+
+        <com.wrapp.floatlabelededittext.FloatLabeledEditText
+            android:id="@+id/testNameETFloating"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/another_gray"
+            android:paddingBottom="@dimen/default_margin_0"
+            app:fletPaddingLeft="@dimen/default_margin_2"
+            app:fletPaddingTop="@dimen/default_margin_1"
+            app:fletTextAppearance="@style/TextAppearence.App.TextInputLayout"
+            >
+
+          <com.andreabaccega.widget.FormEditText
+              android:id="@+id/testNameET"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@android:color/transparent"
+              android:hint="@string/enter_test_name_hint"
+              android:inputType="text"
+              android:longClickable="false"
+              android:maxLines="1"
+              android:paddingBottom="@dimen/default_margin_1"
+              android:paddingEnd="@dimen/default_margin_2"
+              android:paddingStart="@dimen/default_margin_2"
+              android:textAppearance="?android:textAppearanceSmall"
+              android:textColor="@color/black"
+              android:textColorHint="@color/edittext_hint_color"
+              android:textCursorDrawable="@null"
+              validator:emptyErrorString="@string/test_name_empty_error"
+              />
+
+        </com.wrapp.floatlabelededittext.FloatLabeledEditText>
+      </LinearLayout>
+
+      <View
+          android:id="@+id/viewSeparator"
+          android:layout_width="match_parent"
+          android:layout_height="1dp"
+          android:background="@color/light_gray"
+          />
+
+      <RelativeLayout
+          android:layout_width="match_parent"
+          android:layout_height="@dimen/radiobutton_row_height"
+          android:layout_marginBottom="@dimen/default_margin_0"
+          >
+
+        <TextView
+            android:id="@+id/testDateTakenTVHint"
+            android:layout_width="@dimen/text_input_label_width"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:gravity="center_vertical|start"
+            android:paddingStart="@dimen/default_margin_2"
+            android:text="@string/test_date_taken"
+            android:textAppearance="?android:textAppearanceSmall"
+            android:textColor="@color/black"
+            />
+
+        <TextView
+            android:id="@+id/dateTakenTV"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toEndOf="@+id/testDateTakenTVHint"
+            android:background="@color/another_gray"
+            android:gravity="center_vertical"
+            android:paddingStart="@dimen/default_margin_2"
+            android:text="January 1, 1990"
+            android:textColor="@color/black"
+            />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:paddingEnd="@dimen/default_margin_2"
+            android:src="@drawable/ic_arrow_down_green"
+            />
+      </RelativeLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/add_medical_tests_layout_height"
+        android:layout_marginTop="@dimen/default_margin_2"
+        android:background="@color/add_medical_tests_bar_background"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingEnd="@dimen/activity_vertical_margin"
+        android:paddingStart="@dimen/activity_vertical_margin"
+        >
+
+      <TextView
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="30"
+          android:text="@string/add_test_photos_bar_title"
+          android:textColor="@android:color/white"
+          />
+
+    </LinearLayout>
+
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/test_photos_horizontal_scoller_height"
+        >
+      <LinearLayout
+          android:id="@+id/testPhotosLayout"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center_vertical"
+          android:orientation="horizontal"
+          >
+
+        <ImageView
+            android:id="@+id/addPic1"
+            android:onClick="triggerAddPicture"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/ic_insert_photo_black_24dp"
+            />
+
+        <ImageView
+            android:id="@+id/addPic2"
+            android:onClick="triggerAddPicture"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/ic_insert_photo_black_24dp"
+            />
+
+        <ImageView
+            android:id="@+id/addPic3"
+            android:onClick="triggerAddPicture"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/ic_insert_photo_black_24dp"
+            />
+
+        <ImageView
+            android:id="@+id/addPic4"
+            android:onClick="triggerAddPicture"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/ic_insert_photo_black_24dp"
+            />
+
+        <ImageView
+            android:id="@+id/addPic5"
+            android:onClick="triggerAddPicture"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/ic_insert_photo_black_24dp"
+            />
+      </LinearLayout>
+
+    </HorizontalScrollView>
+
+  </LinearLayout>
+</LinearLayout>

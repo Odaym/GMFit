@@ -208,12 +208,15 @@
   <string name="remaining_title">Remaining</string>
   <string name="kilocalories_shorthand_unit">kcal</string>
 
-
   <!-- HEALTH FRAGMENT -->
   <string name="user_weight_label_metric">Kilograms</string>
   <string name="user_weight_label_imperial">Pounds</string>
   <string name="medical_tests_bar_title">Medical Tests</string>
   <string name="view_more_tests_btn">View More</string>
+  <string name="test_name_hint">Test Name</string>
+  <string name="test_name_empty_error">Test name cannot be empty</string>
+  <string name="enter_test_name_hint">Set a name for your test</string>
+  <string name="test_date_taken">Date</string>
 
   <!-- ADD NEW CHART -->
   <string name="add_new_chart_activity_title">Add New Chart</string>

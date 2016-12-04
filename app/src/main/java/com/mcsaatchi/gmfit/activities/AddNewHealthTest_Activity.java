@@ -3,6 +3,7 @@ package com.mcsaatchi.gmfit.activities;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
@@ -40,6 +41,8 @@ public class AddNewHealthTest_Activity extends Base_Activity {
   @Bind(R.id.searchTestsAutoCompleTV) EditText searchTestsAutoCompleTV;
   @Bind(R.id.searchIconIV) ImageView searchIconIV;
 
+  private ArrayList<MedicalTestMetricsResponseBody> testicularMetrics = new ArrayList<>();
+
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
@@ -62,10 +65,16 @@ public class AddNewHealthTest_Activity extends Base_Activity {
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
-      case R.id.doneBTN:
-
+      case R.id.nextBTN:
+        if (testicularMetrics != null) {
+          Intent intent =
+              new Intent(AddNewHealthTest_Activity.this, AddNewHealthTest_Part2_Activity.class);
+          intent.putParcelableArrayListExtra(Constants.TESTICULAR_METRICS_ARRAY, testicularMetrics);
+          startActivity(intent);
+        }
         break;
     }
+
     return super.onOptionsItemSelected(item);
   }
 
@@ -164,6 +173,9 @@ public class AddNewHealthTest_Activity extends Base_Activity {
 
   private void setupAvailableTestMetrics(
       ArrayList<MedicalTestMetricsResponseBody> testsFromResponse) {
+
+    testicularMetrics = testsFromResponse;
+
     RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
     TesticularMetricsRecycler_Adapter editableTestMetricsRecyclerAdapter =
         new TesticularMetricsRecycler_Adapter(this, testsFromResponse);

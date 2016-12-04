@@ -146,7 +146,7 @@ public class AddHealthTestDetails_Activity extends Base_Activity {
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
-      case R.id.doneBTN:
+      case R.id.nextBTN:
 
         HashMap<String, RequestBody> metrics, imageParts, deletedImages;
 

@@ -117,6 +117,12 @@
         android:windowSoftInputMode="stateHidden"/>
 
     <activity
+        android:name=".activities.AddNewHealthTest_Part2_Activity"
+        android:screenOrientation="portrait"
+        android:theme="@style/No_Action_Bar_Theme"
+        android:windowSoftInputMode="stateHidden"/>
+
+    <activity
         android:name=".activities.SpecifyMealAmount_Activity"
         android:screenOrientation="portrait"
         android:theme="@style/No_Action_Bar_Theme"

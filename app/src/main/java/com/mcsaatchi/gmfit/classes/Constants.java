@@ -101,6 +101,8 @@ public class Constants {
   public static final String BUNDLE_SLUG_BREAKDOWN_MEASUREMENT_UNIT =
       "slug_breakdown_measurement_unit";
 
+  public static final String TESTICULAR_METRICS_ARRAY = "testicular_metrics_array";
+
   public static final String BASE_URL_ADDRESS = "http://gmfit.mcsaatchi.me/api/v1/";
 
   public static final String EVENT_USER_FINALIZE_SETUP_PROFILE = "user_finalize_setup_profile";

@@ -7,6 +7,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -37,7 +38,7 @@ public class TesticularMetricsRecycler_Adapter
     return testMetrics.get(position);
   }
 
-  @Override public void onBindViewHolder(MyViewHolder holder, final int position) {
+  @Override public void onBindViewHolder(final MyViewHolder holder, final int position) {
 
     holder.metricNameTV.setText(testMetrics.get(position).getName());
 
@@ -54,8 +55,22 @@ public class TesticularMetricsRecycler_Adapter
     TestMetricUnitsSpinnerAdapter adapter = new TestMetricUnitsSpinnerAdapter(context, metricUnits);
     holder.metricUnitsSpinner.setAdapter(adapter);
 
+    holder.metricUnitsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+      @Override public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        testMetrics.get(position).setUnit_position(i);
+        testMetrics.get(position).setUnit(holder.metricUnitsSpinner.getSelectedItem().toString());
+      }
+
+      @Override public void onNothingSelected(AdapterView<?> adapterView) {
+
+      }
+    });
+
     holder.metricValueET.setTextColor(context.getResources().getColor(R.color.health_green));
+
     holder.metricValueET.setText(testMetrics.get(position).getValue());
+
+    holder.metricUnitsSpinner.setSelection(testMetrics.get(position).getUnit_position());
 
     holder.metricValueET.addTextChangedListener(new TextWatcher() {
       @Override public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -63,11 +78,10 @@ public class TesticularMetricsRecycler_Adapter
       }
 
       @Override public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-        testMetrics.get(i).setValue(charSequence.toString());
       }
 
       @Override public void afterTextChanged(Editable editable) {
-
+        testMetrics.get(position).setValue(editable.toString());
       }
     });
   }

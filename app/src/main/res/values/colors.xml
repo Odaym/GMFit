@@ -29,6 +29,7 @@
 
   <color name="offwhite_transparent">#80FFFFFF</color>
   <color name="offwhite_more_transparent">#33FFFFFF</color>
+  <color name="another_gray">#FAFAFA</color>
   <color name="separator_gray">#806a6cff</color>
   <color name="offwhite_background_gray">#EDEDED</color>
   <color name="edittext_hint_color">#401E1E1E</color>
