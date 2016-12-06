@@ -20,6 +20,9 @@ public class TakenMedicalTestsResponseImagesDatum implements Parcelable {
   @SerializedName("id") @Expose private Integer id;
   @SerializedName("image") @Expose private String image;
 
+  public TakenMedicalTestsResponseImagesDatum() {
+  }
+
   protected TakenMedicalTestsResponseImagesDatum(Parcel in) {
     this.id = (Integer) in.readValue(Integer.class.getClassLoader());
     this.image = in.readString();

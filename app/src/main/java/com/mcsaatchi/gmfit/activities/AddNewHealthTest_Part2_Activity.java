@@ -37,6 +37,7 @@ import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
 import com.mcsaatchi.gmfit.classes.Helpers;
 import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.rest.MedicalTestMetricsResponseBody;
+import com.mcsaatchi.gmfit.rest.TakenMedicalTestsResponseBody;
 import com.squareup.picasso.Picasso;
 import java.io.File;
 import java.io.IOException;
@@ -50,6 +51,8 @@ import java.util.HashMap;
 import java.util.Locale;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
+import org.joda.time.DateTime;
+import org.joda.time.IllegalFieldValueException;
 import org.joda.time.LocalDate;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -70,11 +73,24 @@ public class AddNewHealthTest_Part2_Activity extends Base_Activity
   @Bind(R.id.addPic3) ImageView addPic3;
   @Bind(R.id.addPic4) ImageView addPic4;
   @Bind(R.id.addPic5) ImageView addPic5;
-  private String addPic1_picturePath;
-  private String addPic2_picturePath;
-  private String addPic3_picturePath;
-  private String addPic4_picturePath;
-  private String addPic5_picturePath;
+
+  @Bind(R.id.deletePic1) ImageView deletePic1;
+  @Bind(R.id.deletePic2) ImageView deletePic2;
+  @Bind(R.id.deletePic3) ImageView deletePic3;
+  @Bind(R.id.deletePic4) ImageView deletePic4;
+  @Bind(R.id.deletePic5) ImageView deletePic5;
+
+  private ArrayList<String> picturePaths = new ArrayList<String>() {{
+    add(null);
+    add(null);
+    add(null);
+    add(null);
+    add(null);
+  }};
+
+  private ArrayList<ImageView> imageViewElements;
+  private ArrayList<ImageView> deleteButtonElements;
+
   private File photoFile;
   private Uri photoFileUri;
   private String test_date_taken;
@@ -101,19 +117,100 @@ public class AddNewHealthTest_Part2_Activity extends Base_Activity
 
     allFields.add(testNameET);
 
-    final LocalDate dt = new LocalDate();
+    imageViewElements = new ArrayList<ImageView>() {{
+      add(addPic1);
+      add(addPic2);
+      add(addPic3);
+      add(addPic4);
+      add(addPic5);
+    }};
 
+    deleteButtonElements = new ArrayList<ImageView>() {{
+      add(deletePic1);
+      add(deletePic2);
+      add(deletePic3);
+      add(deletePic4);
+      add(deletePic5);
+    }};
+
+    for (int i = 0; i < deleteButtonElements.size(); i++) {
+      final int finalI = i;
+      deleteButtonElements.get(i).setOnClickListener(new View.OnClickListener() {
+        @Override public void onClick(View view) {
+          imageViewElements.get(finalI).setImageResource(R.drawable.ic_insert_photo_black_24dp);
+        }
+      });
+    }
+
+    /**
+     * Figure out which objects are available, from that figure out if this is for editing or creating
+     */
     if (getIntent().getExtras() != null) {
+      int day = 0, month = 0, year = 0;
+
+      final LocalDate dt = new LocalDate();
+
       testicularMetrics =
           getIntent().getExtras().getParcelableArrayList(Constants.TESTICULAR_METRICS_ARRAY);
 
+      TakenMedicalTestsResponseBody existingMedicaltest =
+          getIntent().getExtras().getParcelable(Constants.EXTRAS_TEST_OBJECT_DETAILS);
+
       try {
-        dateTakenTV.setText(new SimpleDateFormat("MMMM dd, yyyy").format(
-            new SimpleDateFormat("yyyyMMdd").parse(
-                dt.getYear() + "" + dt.getMonthOfYear() + "" + dt.getDayOfMonth())));
+        String finalDateTaken = null;
+
+        if (testicularMetrics != null) {
+          /**
+           * Metrics from Server were available, we're creating here.
+           */
+          day = dt.getDayOfMonth();
+          month = dt.getMonthOfYear();
+          year = dt.getYear();
+
+          finalDateTaken = new SimpleDateFormat("MMMM dd, yyyy").format(
+              new SimpleDateFormat("yyyyMMdd").parse(
+                  dt.getYear() + "" + dt.getMonthOfYear() + "" + dt.getDayOfMonth()));
+        } else if (existingMedicaltest != null) {
+          /**
+           * Existing medical test was passed, we're editing here.
+           */
+          testNameET.setText(existingMedicaltest.getName());
+          testNameET.setSelection(existingMedicaltest.getName().length());
+
+          for (int i = 0; i < existingMedicaltest.getImages().size(); i++) {
+            if (existingMedicaltest.getImages().get(i) != null
+                && imageViewElements.get(i) != null) {
+              Picasso.with(this)
+                  .load(existingMedicaltest.getImages().get(i).getImage())
+                  .into(imageViewElements.get(i));
+            }
+          }
+
+          try {
+            DateTime entryDate = new DateTime(existingMedicaltest.getDateTaken());
+
+            finalDateTaken = entryDate.monthOfYear().getAsText()
+                + " "
+                + entryDate.getDayOfMonth()
+                + ", "
+                + entryDate.getYear();
+
+            day = entryDate.getDayOfMonth();
+            month = entryDate.getMonthOfYear();
+            year = entryDate.getYear();
+          } catch (IllegalFieldValueException e) {
+            Timber.d("Date taken for this test was returned as 0000-00-00");
+          }
+        }
+
+        dateTakenTV.setText(finalDateTaken);
       } catch (ParseException e) {
         e.printStackTrace();
       }
+
+      final int finalYear = year;
+      final int finalMonth = month;
+      final int finalDay = day;
 
       dateTakenTV.setOnClickListener(new View.OnClickListener() {
         @Override public void onClick(View view) {
@@ -123,7 +220,7 @@ public class AddNewHealthTest_Part2_Activity extends Base_Activity
                   .setFirstDayOfWeek(Calendar.MONDAY)
                   .setDoneText(getString(R.string.accept_ok))
                   .setCancelText(getString(R.string.decline_cancel))
-                  .setPreselectedDate(dt.getYear(), dt.getMonthOfYear() - 1, dt.getDayOfMonth())
+                  .setPreselectedDate(finalYear, finalMonth - 1, finalDay)
                   .setThemeLight();
           cdp.show(getSupportFragmentManager(), ACTIVITY_TAG_TIME_PICKER);
         }
@@ -219,23 +316,23 @@ public class AddNewHealthTest_Part2_Activity extends Base_Activity
     switch (viewIdForTestPicture) {
       case R.id.addPic1:
         finalViewForPicture = (ImageView) findViewById(R.id.addPic1);
-        addPic1_picturePath = finalImagePath;
+        picturePaths.set(0, finalImagePath);
         break;
       case R.id.addPic2:
         finalViewForPicture = (ImageView) findViewById(R.id.addPic2);
-        addPic2_picturePath = finalImagePath;
+        picturePaths.set(1, finalImagePath);
         break;
       case R.id.addPic3:
         finalViewForPicture = (ImageView) findViewById(R.id.addPic3);
-        addPic3_picturePath = finalImagePath;
+        picturePaths.set(2, finalImagePath);
         break;
       case R.id.addPic4:
         finalViewForPicture = (ImageView) findViewById(R.id.addPic4);
-        addPic4_picturePath = finalImagePath;
+        picturePaths.set(3, finalImagePath);
         break;
       case R.id.addPic5:
         finalViewForPicture = (ImageView) findViewById(R.id.addPic5);
-        addPic5_picturePath = finalImagePath;
+        picturePaths.set(4, finalImagePath);
         break;
     }
 
@@ -441,40 +538,54 @@ public class AddNewHealthTest_Part2_Activity extends Base_Activity
         });
   }
 
+  private void createEditedHealthRequest(HashMap<String, RequestBody> metrics,
+      HashMap<String, RequestBody> imageParts) {
+    //dataAccessHandler.editExistingHealthTest(
+    //    prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
+    //    toRequestBody(existingMedicaltest.getName()), toRequestBody(test_date_taken),
+    //    toRequestBody(testNameET.getText().toString()), metrics, imageParts,
+    //    new Callback<DefaultGetResponse>() {
+    //      @Override public void onResponse(Call<DefaultGetResponse> call,
+    //          Response<DefaultGetResponse> response) {
+    //        switch (response.code()) {
+    //          case 200:
+    //
+    //            Log.d("TAG", "onResponse: Succeeded creating new test");
+    //
+    //            waitingDialog.dismiss();
+    //
+    //            hideKeyboard();
+    //
+    //            EventBus_Singleton.getInstance()
+    //                .post(new EventBus_Poster(Constants.EXTRAS_TEST_EDIT_OR_CREATE_DONE));
+    //
+    //            finish();
+    //
+    //            break;
+    //        }
+    //      }
+    //
+    //      @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+    //        Timber.d("Call failed with error : %s", t.getMessage());
+    //        alertDialog.setMessage(
+    //            getResources().getString(R.string.error_response_from_server_incorrect));
+    //        alertDialog.show();
+    //      }
+    //    });
+  }
+
   private HashMap<String, RequestBody> constructSelectedImagesForRequest() {
     HashMap<String, RequestBody> imageParts = new HashMap<>();
 
     RequestBody file;
     File imageFile;
 
-    if (addPic1_picturePath != null) {
-      imageFile = new File(addPic1_picturePath);
-      file = RequestBody.create(MediaType.parse("image/jpeg"), imageFile);
-      imageParts.put("images[" + 0 + "]\"; filename=\"" + addPic1_picturePath, file);
-    }
-
-    if (addPic2_picturePath != null) {
-      imageFile = new File(addPic2_picturePath);
-      file = RequestBody.create(MediaType.parse("image/jpeg"), imageFile);
-      imageParts.put("images[" + 1 + "]\"; filename=\"" + addPic2_picturePath, file);
-    }
-
-    if (addPic3_picturePath != null) {
-      imageFile = new File(addPic3_picturePath);
-      file = RequestBody.create(MediaType.parse("image/jpeg"), imageFile);
-      imageParts.put("images[" + 2 + "]\"; filename=\"" + addPic3_picturePath, file);
-    }
-
-    if (addPic4_picturePath != null) {
-      imageFile = new File(addPic4_picturePath);
-      file = RequestBody.create(MediaType.parse("image/jpeg"), imageFile);
-      imageParts.put("images[" + 3 + "]\"; filename=\"" + addPic4_picturePath, file);
-    }
-
-    if (addPic5_picturePath != null) {
-      imageFile = new File(addPic5_picturePath);
-      file = RequestBody.create(MediaType.parse("image/jpeg"), imageFile);
-      imageParts.put("images[" + 4 + "]\"; filename=\"" + addPic5_picturePath, file);
+    for (int i = 0; i < imageViewElements.size(); i++) {
+      if (picturePaths.get(i) != null) {
+        imageFile = new File(picturePaths.get(i));
+        file = RequestBody.create(MediaType.parse("image/jpeg"), imageFile);
+        imageParts.put("images[" + 0 + "]\"; filename=\"" + picturePaths.get(i), file);
+      }
     }
 
     return imageParts;

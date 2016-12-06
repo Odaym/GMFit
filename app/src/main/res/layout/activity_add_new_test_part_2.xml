@@ -157,48 +157,116 @@
           android:orientation="horizontal"
           >
 
-        <ImageView
-            android:id="@+id/addPic1"
+        <RelativeLayout
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:onClick="triggerAddPicture"
-            android:src="@drawable/ic_insert_photo_black_24dp"
-            />
+            >
 
-        <ImageView
-            android:id="@+id/addPic2"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:onClick="triggerAddPicture"
-            android:src="@drawable/ic_insert_photo_black_24dp"
-            />
+          <ImageView
+              android:id="@+id/addPic1"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:onClick="triggerAddPicture"
+              android:src="@drawable/ic_insert_photo_black_24dp"
+              />
 
-        <ImageView
-            android:id="@+id/addPic3"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:onClick="triggerAddPicture"
-            android:src="@drawable/ic_insert_photo_black_24dp"
-            />
+          <ImageView
+              android:id="@+id/deletePic1"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_alignParentEnd="true"
+              android:src="@drawable/ic_remove_circle_black_24dp"
+              />
+        </RelativeLayout>
 
-        <ImageView
-            android:id="@+id/addPic4"
+        <RelativeLayout
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:onClick="triggerAddPicture"
-            android:src="@drawable/ic_insert_photo_black_24dp"
-            />
+            >
 
-        <ImageView
-            android:id="@+id/addPic5"
+          <ImageView
+              android:id="@+id/addPic2"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:onClick="triggerAddPicture"
+              android:src="@drawable/ic_insert_photo_black_24dp"
+              />
+
+          <ImageView
+              android:id="@+id/deletePic2"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_alignParentEnd="true"
+              android:src="@drawable/ic_remove_circle_black_24dp"
+              />
+        </RelativeLayout>
+
+        <RelativeLayout
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:onClick="triggerAddPicture"
-            android:src="@drawable/ic_insert_photo_black_24dp"
-            />
+            >
+
+          <ImageView
+              android:id="@+id/addPic3"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:onClick="triggerAddPicture"
+              android:src="@drawable/ic_insert_photo_black_24dp"
+              />
+
+          <ImageView
+              android:id="@+id/deletePic3"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_alignParentEnd="true"
+              android:src="@drawable/ic_remove_circle_black_24dp"
+              />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            >
+
+          <ImageView
+              android:id="@+id/addPic4"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:onClick="triggerAddPicture"
+              android:src="@drawable/ic_insert_photo_black_24dp"
+              />
+
+          <ImageView
+              android:id="@+id/deletePic4"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_alignParentEnd="true"
+              android:src="@drawable/ic_remove_circle_black_24dp"
+              />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            >
+
+          <ImageView
+              android:id="@+id/addPic5"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:onClick="triggerAddPicture"
+              android:src="@drawable/ic_insert_photo_black_24dp"
+              />
+
+          <ImageView
+              android:id="@+id/deletePic5"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_alignParentEnd="true"
+              android:src="@drawable/ic_remove_circle_black_24dp"
+              />
+        </RelativeLayout>
       </LinearLayout>
-
     </HorizontalScrollView>
-
   </LinearLayout>
 </LinearLayout>

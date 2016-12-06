@@ -150,12 +150,13 @@ public interface GMFit_Service {
 
   @Multipart @POST("user/medical/store") Call<DefaultGetResponse> storeNewHealthTest(
       @Header(Constants.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken,
-      @Part("name") RequestBody test_slug, @Part("date_taken") RequestBody date_taken,
+      @Part("name") RequestBody test_name, @Part("date_taken") RequestBody date_taken,
       @PartMap() Map<String, RequestBody> metrics, @PartMap() Map<String, RequestBody> imageFiles);
 
   @Multipart @POST("user/medical/edit") Call<DefaultGetResponse> editExistingHealthTest(
       @Header(Constants.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken,
-      @Part("instance_id") RequestBody instance_id, @PartMap() Map<String, RequestBody> metrics,
+      @Part("instance_id") RequestBody instance_id, @Part("name") RequestBody test_name,
+      @Part("date_taken") RequestBody date_taken, @PartMap() Map<String, RequestBody> metrics,
       @PartMap() Map<String, RequestBody> imageFiles,
       @PartMap() Map<String, RequestBody> deletedImages);
 

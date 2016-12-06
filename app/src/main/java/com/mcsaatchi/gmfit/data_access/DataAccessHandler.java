@@ -193,7 +193,8 @@ public class DataAccessHandler {
     apiCallsHandler.requestNewMeal(userAccessToken, mealName, callback);
   }
 
-  public void getTesticularMetrics(String userAccessToken, Callback<MedicalTestMetricsResponse> callback) {
+  public void getTesticularMetrics(String userAccessToken,
+      Callback<MedicalTestMetricsResponse> callback) {
     apiCallsHandler.getTesticularMetrics(userAccessToken, callback);
   }
 
@@ -219,10 +220,11 @@ public class DataAccessHandler {
   }
 
   public void editExistingHealthTest(String userAccessToken, RequestBody instance_id,
-      Map<String, RequestBody> metrics, Map<String, RequestBody> imageFiles,
-      Map<String, RequestBody> deletedImages, Callback<DefaultGetResponse> callback) {
-    apiCallsHandler.editExistingHealthTest(userAccessToken, instance_id, metrics, imageFiles,
-        deletedImages, callback);
+      RequestBody name, RequestBody date_taken, Map<String, RequestBody> metrics,
+      Map<String, RequestBody> imageFiles, Map<String, RequestBody> deletedImages,
+      Callback<DefaultGetResponse> callback) {
+    apiCallsHandler.editExistingHealthTest(userAccessToken, instance_id, name, date_taken, metrics,
+        imageFiles, deletedImages, callback);
   }
 
   public void getTakenMedicalTests(String userAccessToken,

@@ -1,12 +1,15 @@
 package com.mcsaatchi.gmfit.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import com.mcsaatchi.gmfit.R;
+import com.mcsaatchi.gmfit.activities.AddNewHealthTest_Activity;
+import com.mcsaatchi.gmfit.classes.Constants;
 import com.mcsaatchi.gmfit.rest.TakenMedicalTestsResponseBody;
 import java.util.List;
 import org.joda.time.DateTime;
@@ -67,15 +70,9 @@ public class UserTestsRecycler_Adapter
     }
 
     @Override public void onClick(View view) {
-      //Intent intent = new Intent(context, AddHealthTestDetails_Activity.class);
-      //intent.putExtra(Constants.EXTRAS_TEST_INSTANCE_ID,
-      //    userTests.get(getAdapterPosition()).getInstanceId());
-      //intent.putParcelableArrayListExtra(Constants.EXTRAS_TEST_METRICS,
-      //    (ArrayList<? extends Parcelable>) userTests.get(getAdapterPosition()).getMetrics());
-      //intent.putParcelableArrayListExtra(Constants.EXTRAS_TEST_IMAGES,
-      //    (ArrayList<? extends Parcelable>) userTests.get(getAdapterPosition()).getImages());
-      //intent.putExtra(Constants.EXTRAS_TEST_ITEM_PURPOSE_EDITING, true);
-      //context.startActivity(intent);
+      Intent intent = new Intent(context, AddNewHealthTest_Activity.class);
+      intent.putExtra(Constants.EXTRAS_TEST_OBJECT_DETAILS, userTests.get(getAdapterPosition()));
+      context.startActivity(intent);
     }
   }
 }

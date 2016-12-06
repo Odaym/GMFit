@@ -531,7 +531,8 @@ public class ApiCallsHandler {
     });
   }
 
-  void getTesticularMetrics(String userAccessToken, final Callback<MedicalTestMetricsResponse> callback) {
+  void getTesticularMetrics(String userAccessToken,
+      final Callback<MedicalTestMetricsResponse> callback) {
     Call<MedicalTestMetricsResponse> apiCall =
         new RestClient().getGMFitService().getTesticularMetrics(userAccessToken);
 
@@ -595,11 +596,12 @@ public class ApiCallsHandler {
     });
   }
 
-  void editExistingHealthTest(String userAccessToken, RequestBody instance_id,
-      Map<String, RequestBody> metrics, Map<String, RequestBody> imageFiles,
+  void editExistingHealthTest(String userAccessToken, RequestBody instance_id, RequestBody name,
+      RequestBody date_taken, Map<String, RequestBody> metrics, Map<String, RequestBody> imageFiles,
       Map<String, RequestBody> deletedImages, final Callback<DefaultGetResponse> callback) {
     Call<DefaultGetResponse> apiCall = new RestClient().getGMFitService()
-        .editExistingHealthTest(userAccessToken, instance_id, metrics, deletedImages, imageFiles);
+        .editExistingHealthTest(userAccessToken, instance_id, name, date_taken, metrics,
+            deletedImages, imageFiles);
 
     apiCall.enqueue(new Callback<DefaultGetResponse>() {
       @Override

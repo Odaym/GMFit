@@ -29,15 +29,16 @@ public class TakenMedicalTestsResponseBody implements Parcelable {
   @SerializedName("metrics") @Expose private List<TakenMedicalTestsResponseMetricsDatum> metrics =
       new ArrayList<>();
 
+  public TakenMedicalTestsResponseBody() {
+  }
+
   protected TakenMedicalTestsResponseBody(Parcel in) {
     this.instanceId = (Integer) in.readValue(Integer.class.getClassLoader());
     this.dateTaken = in.readString();
     this.name = in.readString();
     this.type = in.readString();
-    this.images = new ArrayList<TakenMedicalTestsResponseImagesDatum>();
-    in.readList(this.images, Object.class.getClassLoader());
-    this.metrics = new ArrayList<TakenMedicalTestsResponseMetricsDatum>();
-    in.readList(this.metrics, TakenMedicalTestsResponseMetricsDatum.class.getClassLoader());
+    this.images = in.createTypedArrayList(TakenMedicalTestsResponseImagesDatum.CREATOR);
+    this.metrics = in.createTypedArrayList(TakenMedicalTestsResponseMetricsDatum.CREATOR);
   }
 
   /**
@@ -133,7 +134,7 @@ public class TakenMedicalTestsResponseBody implements Parcelable {
     dest.writeString(this.dateTaken);
     dest.writeString(this.name);
     dest.writeString(this.type);
-    dest.writeList(this.images);
-    dest.writeList(this.metrics);
+    dest.writeTypedList(this.images);
+    dest.writeTypedList(this.metrics);
   }
 }

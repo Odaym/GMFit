@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.mcsaatchi.gmfit.R;
+import com.mcsaatchi.gmfit.adapters.EditableTestMetricsRecycler_Adapter;
 import com.mcsaatchi.gmfit.adapters.TesticularMetricsRecycler_Adapter;
 import com.mcsaatchi.gmfit.classes.Constants;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
@@ -28,8 +29,11 @@ import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
 import com.mcsaatchi.gmfit.classes.SimpleDividerItemDecoration;
 import com.mcsaatchi.gmfit.rest.MedicalTestMetricsResponse;
 import com.mcsaatchi.gmfit.rest.MedicalTestMetricsResponseBody;
+import com.mcsaatchi.gmfit.rest.TakenMedicalTestsResponseBody;
+import com.mcsaatchi.gmfit.rest.TakenMedicalTestsResponseMetricsDatum;
 import com.squareup.otto.Subscribe;
 import java.util.ArrayList;
+import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -41,7 +45,9 @@ public class AddNewHealthTest_Activity extends Base_Activity {
   @Bind(R.id.searchTestsAutoCompleTV) EditText searchTestsAutoCompleTV;
   @Bind(R.id.searchIconIV) ImageView searchIconIV;
 
-  private ArrayList<MedicalTestMetricsResponseBody> testicularMetrics = new ArrayList<>();
+  private TakenMedicalTestsResponseBody existingMedicaltest;
+
+  private ArrayList<MedicalTestMetricsResponseBody> testicularMetrics = null;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -54,7 +60,17 @@ public class AddNewHealthTest_Activity extends Base_Activity {
 
     setupToolbar(toolbar, getResources().getString(R.string.add_new_test_activity_title), true);
 
-    getTesticularMetrics();
+    if (getIntent().getExtras() != null) {
+      existingMedicaltest = (TakenMedicalTestsResponseBody) getIntent().getExtras()
+          .get(Constants.EXTRAS_TEST_OBJECT_DETAILS);
+    }
+
+    if (existingMedicaltest != null) {
+      setupEditableTestMetrics(existingMedicaltest.getMetrics());
+      hookupSearchBar(null, existingMedicaltest.getMetrics());
+    } else {
+      getTesticularMetrics();
+    }
   }
 
   @Override public boolean onCreateOptionsMenu(Menu menu) {
@@ -70,6 +86,11 @@ public class AddNewHealthTest_Activity extends Base_Activity {
           Intent intent =
               new Intent(AddNewHealthTest_Activity.this, AddNewHealthTest_Part2_Activity.class);
           intent.putParcelableArrayListExtra(Constants.TESTICULAR_METRICS_ARRAY, testicularMetrics);
+          startActivity(intent);
+        } else {
+          Intent intent =
+              new Intent(AddNewHealthTest_Activity.this, AddNewHealthTest_Part2_Activity.class);
+          intent.putExtra(Constants.EXTRAS_TEST_OBJECT_DETAILS, existingMedicaltest);
           startActivity(intent);
         }
         break;
@@ -105,59 +126,13 @@ public class AddNewHealthTest_Activity extends Base_Activity {
 
                 waitingDialog.dismiss();
 
-                Timber.d("There are : %s", response.body().getData().getBody().size());
-
                 final ArrayList<MedicalTestMetricsResponseBody> metricsFromResponse =
                     (ArrayList<MedicalTestMetricsResponseBody>) response.body().getData().getBody();
 
                 setupAvailableTestMetrics(metricsFromResponse);
 
-                searchTestsAutoCompleTV.addTextChangedListener(new TextWatcher() {
-                  @Override
-                  public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                hookupSearchBar(metricsFromResponse, null);
 
-                  }
-
-                  @Override
-                  public void onTextChanged(CharSequence charSequence, int i1, int i2, int i3) {
-                    ArrayList<MedicalTestMetricsResponseBody> searchResults = new ArrayList<>();
-
-                    if (charSequence.toString().isEmpty()) {
-                      searchIconIV.setImageResource(R.drawable.ic_search_white_24dp);
-                      searchIconIV.setOnClickListener(null);
-                      setupAvailableTestMetrics(metricsFromResponse);
-                    } else {
-                      searchIconIV.setImageResource(R.drawable.ic_clear_search);
-                      searchIconIV.setOnClickListener(new View.OnClickListener() {
-                        @Override public void onClick(View view) {
-                          searchTestsAutoCompleTV.setText("");
-
-                          /**
-                           * Hide keyboard
-                           */
-                          InputMethodManager imm =
-                              (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                          imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                        }
-                      });
-
-                      for (int i = 0; i < metricsFromResponse.size(); i++) {
-                        if (metricsFromResponse.get(i)
-                            .getName()
-                            .toLowerCase()
-                            .contains(charSequence.toString().toLowerCase())) {
-                          searchResults.add(metricsFromResponse.get(i));
-                        }
-                      }
-
-                      setupAvailableTestMetrics(searchResults);
-                    }
-                  }
-
-                  @Override public void afterTextChanged(Editable editable) {
-
-                  }
-                });
                 break;
             }
           }
@@ -171,6 +146,74 @@ public class AddNewHealthTest_Activity extends Base_Activity {
         });
   }
 
+  private void hookupSearchBar(final ArrayList<MedicalTestMetricsResponseBody> metricsFromResponse,
+      final List<TakenMedicalTestsResponseMetricsDatum> existingMetrics) {
+    searchTestsAutoCompleTV.addTextChangedListener(new TextWatcher() {
+      @Override public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+      }
+
+      @Override public void onTextChanged(CharSequence charSequence, int i1, int i2, int i3) {
+        ArrayList<MedicalTestMetricsResponseBody> searchResults = new ArrayList<>();
+        ArrayList<TakenMedicalTestsResponseMetricsDatum> editableSearchResults = new ArrayList<>();
+
+        if (charSequence.toString().isEmpty()) {
+          searchIconIV.setImageResource(R.drawable.ic_search_white_24dp);
+          searchIconIV.setOnClickListener(null);
+
+          if (metricsFromResponse != null) {
+            setupAvailableTestMetrics(metricsFromResponse);
+          } else {
+            setupEditableTestMetrics(existingMetrics);
+          }
+        } else {
+          searchIconIV.setImageResource(R.drawable.ic_clear_search);
+          searchIconIV.setOnClickListener(new View.OnClickListener() {
+            @Override public void onClick(View view) {
+              searchTestsAutoCompleTV.setText("");
+
+              /**
+               * Hide keyboard
+               */
+              InputMethodManager imm =
+                  (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+              imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            }
+          });
+
+          if (metricsFromResponse != null) {
+            for (int i = 0; i < metricsFromResponse.size(); i++) {
+              if (metricsFromResponse.get(i)
+                  .getName()
+                  .toLowerCase()
+                  .contains(charSequence.toString().toLowerCase())) {
+                searchResults.add(metricsFromResponse.get(i));
+              }
+            }
+
+            setupAvailableTestMetrics(searchResults);
+          } else {
+            for (int i = 0; i < existingMetrics.size(); i++) {
+              if (existingMetrics.get(i)
+                  .getName()
+                  .toLowerCase()
+                  .contains(charSequence.toString().toLowerCase())) {
+
+                editableSearchResults.add(existingMetrics.get(i));
+              }
+            }
+
+            setupEditableTestMetrics(editableSearchResults);
+          }
+        }
+      }
+
+      @Override public void afterTextChanged(Editable editable) {
+
+      }
+    });
+  }
+
   private void setupAvailableTestMetrics(
       ArrayList<MedicalTestMetricsResponseBody> testsFromResponse) {
 
@@ -181,6 +224,20 @@ public class AddNewHealthTest_Activity extends Base_Activity {
         new TesticularMetricsRecycler_Adapter(this, testsFromResponse);
 
     availableTestMetricsListview.setItemViewCacheSize(testsFromResponse.size());
+
+    availableTestMetricsListview.setLayoutManager(mLayoutManager);
+    availableTestMetricsListview.setAdapter(editableTestMetricsRecyclerAdapter);
+    availableTestMetricsListview.setNestedScrollingEnabled(false);
+    availableTestMetricsListview.addItemDecoration(new SimpleDividerItemDecoration(this));
+  }
+
+  private void setupEditableTestMetrics(
+      List<TakenMedicalTestsResponseMetricsDatum> existingTestMetrics) {
+    RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
+    EditableTestMetricsRecycler_Adapter editableTestMetricsRecyclerAdapter =
+        new EditableTestMetricsRecycler_Adapter(this, existingTestMetrics);
+
+    availableTestMetricsListview.setItemViewCacheSize(existingTestMetrics.size());
 
     availableTestMetricsListview.setLayoutManager(mLayoutManager);
     availableTestMetricsListview.setAdapter(editableTestMetricsRecyclerAdapter);
