@@ -1,18 +1,16 @@
 package com.mcsaatchi.gmfit.adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.classes.FontTextView;
 import com.mcsaatchi.gmfit.models.FitnessWidget;
-
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class FitnessWidgets_GridAdapter extends BaseAdapter {
@@ -58,16 +56,16 @@ public class FitnessWidgets_GridAdapter extends BaseAdapter {
       holder = (ViewHolder) convertView.getTag();
     }
 
-    holder.metricTV.setText(String.valueOf(widgetsMap.get(position).getValue()));
-    holder.measurementUnitTV.setText(widgetsMap.get(position).getMeasurementUnit());
-
-    Log.d("TAG", "getView: " + widgetsMap.get(position).getTitle());
-
     switch (widgetsMap.get(position).getTitle()) {
       case "Active Calories":
+        holder.metricTV.setText(String.valueOf(widgetsMap.get(position).getValue()));
+        holder.measurementUnitTV.setText(widgetsMap.get(position).getMeasurementUnit());
         holder.metricIcon.setImageResource(R.drawable.ic_calories_spent);
         break;
       case "Distance Traveled":
+        holder.metricTV.setText(String.valueOf(
+            new DecimalFormat("##.###").format(widgetsMap.get(position).getValue())));
+        holder.measurementUnitTV.setText(widgetsMap.get(position).getMeasurementUnit());
         holder.metricIcon.setImageResource(R.drawable.ic_distance_traveled);
         break;
     }

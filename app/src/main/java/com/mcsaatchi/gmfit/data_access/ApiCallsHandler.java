@@ -76,7 +76,7 @@ public class ApiCallsHandler {
   }
 
   void synchronizeMetricsWithServer(String userAccessToken, String[] slugsArray,
-      int[] valuesArray) {
+      Number[] valuesArray) {
     Call<DefaultGetResponse> apiCall = new RestClient().getGMFitService()
         .updateMetrics(userAccessToken,
             new UpdateMetricsRequest(slugsArray, valuesArray, Helpers.getCalendarDate()));
@@ -578,11 +578,11 @@ public class ApiCallsHandler {
     });
   }
 
-  void storeNewHealthTest(String userAccessToken, RequestBody test_slug, RequestBody date_taken,
+  void storeNewHealthTest(String userAccessToken, RequestBody test_name, RequestBody date_taken,
       Map<String, RequestBody> metrics, Map<String, RequestBody> imageFiles,
       final Callback<DefaultGetResponse> callback) {
     Call<DefaultGetResponse> apiCall = new RestClient().getGMFitService()
-        .storeNewHealthTest(userAccessToken, test_slug, date_taken, metrics, imageFiles);
+        .storeNewHealthTest(userAccessToken, test_name, date_taken, metrics, imageFiles);
 
     apiCall.enqueue(new Callback<DefaultGetResponse>() {
       @Override
@@ -739,10 +739,10 @@ public class ApiCallsHandler {
 
   public class UpdateMetricsRequest {
     final String[] slug;
-    final int[] value;
+    final Number[] value;
     final String date;
 
-    UpdateMetricsRequest(String[] slug, int[] value, String date) {
+    UpdateMetricsRequest(String[] slug, Number[] value, String date) {
       this.slug = slug;
       this.value = value;
       this.date = date;

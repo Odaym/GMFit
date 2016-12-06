@@ -13,6 +13,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.rest.MedicalTestMetricsResponseBody;
+import com.mcsaatchi.gmfit.rest.MedicalTestMetricsResponseDatum;
 import java.util.ArrayList;
 
 public class TesticularMetricsRecycler_Adapter
@@ -42,23 +43,14 @@ public class TesticularMetricsRecycler_Adapter
 
     holder.metricNameTV.setText(testMetrics.get(position).getName());
 
-    ArrayList<String> metricUnits = new ArrayList<>();
-
-    for (int i = 0; i < testMetrics.get(position).getUnits().size(); i++) {
-      metricUnits.add(testMetrics.get(position).getUnits().get(i).getUnit());
-    }
-
-    if (metricUnits.isEmpty()) {
-      metricUnits.add("unit 1");
-    }
-
-    TestMetricUnitsSpinnerAdapter adapter = new TestMetricUnitsSpinnerAdapter(context, metricUnits);
+    TestMetricUnitsSpinnerAdapter adapter = new TestMetricUnitsSpinnerAdapter(context,
+        (ArrayList<MedicalTestMetricsResponseDatum>) testMetrics.get(position).getUnits(),
+        testMetrics.get(position).getUnits().size());
     holder.metricUnitsSpinner.setAdapter(adapter);
 
     holder.metricUnitsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
       @Override public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        testMetrics.get(position).setUnit_position(i);
-        testMetrics.get(position).setUnit(holder.metricUnitsSpinner.getSelectedItem().toString());
+        testMetrics.get(position).getUnits().get(i).setSelected(true);
       }
 
       @Override public void onNothingSelected(AdapterView<?> adapterView) {
@@ -69,8 +61,6 @@ public class TesticularMetricsRecycler_Adapter
     holder.metricValueET.setTextColor(context.getResources().getColor(R.color.health_green));
 
     holder.metricValueET.setText(testMetrics.get(position).getValue());
-
-    holder.metricUnitsSpinner.setSelection(testMetrics.get(position).getUnit_position());
 
     holder.metricValueET.addTextChangedListener(new TextWatcher() {
       @Override public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {

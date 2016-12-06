@@ -310,7 +310,7 @@ public class AddNewMealOnDate_Activity extends Base_Activity {
     ItemTouchHelper.Callback callback;
     ItemTouchHelper touchHelper;
 
-    userMealsRecyclerAdapter = new UserMeals_RecyclerAdapterDragSwipe(mealItems);
+    userMealsRecyclerAdapter = new UserMeals_RecyclerAdapterDragSwipe(this, mealItems);
     callback = new SimpleSwipeItemTouchHelperCallback(userMealsRecyclerAdapter);
     touchHelper = new ItemTouchHelper(callback);
 

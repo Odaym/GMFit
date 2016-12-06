@@ -8,10 +8,12 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
@@ -26,17 +28,20 @@ import android.widget.TextView;
 import android.widget.Toast;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import com.andreabaccega.widget.FormEditText;
 import com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialogFragment;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.classes.Constants;
 import com.mcsaatchi.gmfit.classes.EventBus_Poster;
 import com.mcsaatchi.gmfit.classes.EventBus_Singleton;
+import com.mcsaatchi.gmfit.classes.Helpers;
 import com.mcsaatchi.gmfit.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.rest.MedicalTestMetricsResponseBody;
 import com.squareup.picasso.Picasso;
 import java.io.File;
 import java.io.IOException;
 import java.text.DateFormatSymbols;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -45,44 +50,43 @@ import java.util.HashMap;
 import java.util.Locale;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
+import org.joda.time.LocalDate;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import timber.log.Timber;
 
-import static com.mcsaatchi.gmfit.activities.AddHealthTestDetails_Activity.toRequestBody;
-
 public class AddNewHealthTest_Part2_Activity extends Base_Activity
     implements CalendarDatePickerDialogFragment.OnDateSetListener {
+  private static final int ASK_CAMERA_AND_STORAGE_PERMISSION = 834;
+  private static final int REQUEST_PICK_IMAGE_GALLERY = 329;
+  private static final int CAPTURE_NEW_PICTURE_REQUEST_CODE = 871;
+  private static final String ACTIVITY_TAG_TIME_PICKER = "activity_tag_time_picker";
   @Bind(R.id.toolbar) Toolbar toolbar;
   @Bind(R.id.dateTakenTV) TextView dateTakenTV;
+  @Bind(R.id.testNameET) FormEditText testNameET;
   @Bind(R.id.addPic1) ImageView addPic1;
   @Bind(R.id.addPic2) ImageView addPic2;
   @Bind(R.id.addPic3) ImageView addPic3;
   @Bind(R.id.addPic4) ImageView addPic4;
   @Bind(R.id.addPic5) ImageView addPic5;
-
   private String addPic1_picturePath;
   private String addPic2_picturePath;
   private String addPic3_picturePath;
   private String addPic4_picturePath;
   private String addPic5_picturePath;
-
-  private static final int ASK_CAMERA_AND_STORAGE_PERMISSION = 834;
-  private static final int REQUEST_PICK_IMAGE_GALLERY = 329;
-  private static final int CAPTURE_NEW_PICTURE_REQUEST_CODE = 871;
-
   private File photoFile;
   private Uri photoFileUri;
-
+  private String test_date_taken;
   private ProgressDialog waitingDialog;
   private AlertDialog alertDialog;
-
   private int viewIdForTestPicture;
-
-  private static final String ACTIVITY_TAG_TIME_PICKER = "activity_tag_time_picker";
-
+  private ArrayList<FormEditText> allFields = new ArrayList<>();
   private ArrayList<MedicalTestMetricsResponseBody> testicularMetrics = new ArrayList<>();
+
+  public static RequestBody toRequestBody(String value) {
+    return RequestBody.create(MediaType.parse("text/plain"), value);
+  }
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -95,9 +99,21 @@ public class AddNewHealthTest_Part2_Activity extends Base_Activity
 
     setupToolbar(toolbar, getResources().getString(R.string.add_new_test_activity_title), true);
 
+    allFields.add(testNameET);
+
+    final LocalDate dt = new LocalDate();
+
     if (getIntent().getExtras() != null) {
       testicularMetrics =
           getIntent().getExtras().getParcelableArrayList(Constants.TESTICULAR_METRICS_ARRAY);
+
+      try {
+        dateTakenTV.setText(new SimpleDateFormat("MMMM dd, yyyy").format(
+            new SimpleDateFormat("yyyyMMdd").parse(
+                dt.getYear() + "" + dt.getMonthOfYear() + "" + dt.getDayOfMonth())));
+      } catch (ParseException e) {
+        e.printStackTrace();
+      }
 
       dateTakenTV.setOnClickListener(new View.OnClickListener() {
         @Override public void onClick(View view) {
@@ -107,7 +123,7 @@ public class AddNewHealthTest_Part2_Activity extends Base_Activity
                   .setFirstDayOfWeek(Calendar.MONDAY)
                   .setDoneText(getString(R.string.accept_ok))
                   .setCancelText(getString(R.string.decline_cancel))
-                  .setPreselectedDate(2000, 0, 1)
+                  .setPreselectedDate(dt.getYear(), dt.getMonthOfYear() - 1, dt.getDayOfMonth())
                   .setThemeLight();
           cdp.show(getSupportFragmentManager(), ACTIVITY_TAG_TIME_PICKER);
         }
@@ -120,6 +136,13 @@ public class AddNewHealthTest_Part2_Activity extends Base_Activity
       int dayOfMonth) {
     dateTakenTV.setText(
         new DateFormatSymbols().getMonths()[monthOfYear] + " " + dayOfMonth + ", " + year);
+
+    try {
+      test_date_taken = new SimpleDateFormat("yyyy-MM-dd").format(
+          new SimpleDateFormat("MMMM dd, yyyy").parse(dateTakenTV.getText().toString()));
+    } catch (ParseException e) {
+      e.printStackTrace();
+    }
   }
 
   @Override public boolean onCreateOptionsMenu(Menu menu) {
@@ -131,46 +154,36 @@ public class AddNewHealthTest_Part2_Activity extends Base_Activity
   @Override public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
       case R.id.doneBTN:
-        HashMap<String, RequestBody> metrics, imageParts, deletedImages;
+        if (Helpers.validateFields(allFields)) {
+          HashMap<String, RequestBody> metrics, imageParts, deletedImages;
 
-        waitingDialog = new ProgressDialog(this);
-        waitingDialog.setMessage(getString(R.string.please_wait_dialog_message));
+          waitingDialog = new ProgressDialog(this);
+          waitingDialog.setMessage(getString(R.string.please_wait_dialog_message));
 
-        alertDialog = new AlertDialog.Builder(this).create();
-        alertDialog.setTitle(R.string.fetching_test_data_dialog_title);
-        alertDialog.setButton(android.app.AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
-            new DialogInterface.OnClickListener() {
-              public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
+          alertDialog = new AlertDialog.Builder(this).create();
+          alertDialog.setTitle(R.string.fetching_test_data_dialog_title);
+          alertDialog.setButton(android.app.AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
+              new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                  dialog.dismiss();
 
-                if (waitingDialog.isShowing()) waitingDialog.dismiss();
-              }
-            });
+                  if (waitingDialog.isShowing()) waitingDialog.dismiss();
+                }
+              });
 
-        //if (purposeIsEditing) {
-        //  waitingDialog.setTitle(R.string.editing_existing_test_dialog_title);
-        //  metrics = constructEditableMetricsForRequest(editableTestMetricsRecyclerAdapter);
-        //} else {
-        waitingDialog.setTitle(R.string.creating_new_test_dialog_title);
-        metrics = constructNewMetricsForRequest();
-        //}
+          waitingDialog.setTitle(R.string.creating_new_test_dialog_title);
+          metrics = constructNewMetricsForRequest();
 
-        if (metrics.isEmpty()) {
-          Toast.makeText(this, "Please fill in the needed fields to proceed", Toast.LENGTH_SHORT)
-              .show();
-        } else {
-          waitingDialog.show();
+          if (metrics.isEmpty()) {
+            Toast.makeText(this, "Please fill in the needed fields to proceed", Toast.LENGTH_SHORT)
+                .show();
+          } else {
+            waitingDialog.show();
 
-          imageParts = constructSelectedImagesForRequest();
+            imageParts = constructSelectedImagesForRequest();
 
-          //deletedImages = constructDeletedImagesForRequest(deletedImageIds);
-
-          //if (purposeIsEditing) {
-          //  editExistingHealthTestRequest(toRequestBody(String.valueOf(test_instance_id)), metrics,
-          //      imageParts, deletedImages);
-          //} else {
-          createNewHealthTestRequest(metrics, imageParts);
-          //}
+            createNewHealthTestRequest(metrics, imageParts);
+          }
         }
         break;
     }
@@ -186,7 +199,7 @@ public class AddNewHealthTest_Part2_Activity extends Base_Activity
         if (photoFile.getTotalSpace() > 0) {
           addTestPicture(photoFile.getAbsolutePath());
         } else {
-          Timber.d("No picture was taken, photoFile size : " + photoFile.getTotalSpace());
+          Timber.d("No picture was taken, photoFile size : %s", photoFile.getTotalSpace());
         }
 
         break;
@@ -233,7 +246,7 @@ public class AddNewHealthTest_Part2_Activity extends Base_Activity
         .into(finalViewForPicture);
   }
 
-  public void triggerAddPicture(View view) {
+  @RequiresApi(api = Build.VERSION_CODES.M) public void triggerAddPicture(View view) {
     String[] neededPermissions = new String[] {
         Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
@@ -373,12 +386,21 @@ public class AddNewHealthTest_Part2_Activity extends Base_Activity
     HashMap<String, RequestBody> metrics = new HashMap<>();
 
     for (int i = 0; i < testicularMetrics.size(); i++) {
-      metrics.put("metrics[" + i + "][id]",
-          toRequestBody(String.valueOf(testicularMetrics.get(i).getId())));
+      if (testicularMetrics.get(i).getValue() != null) {
 
-      metrics.put("metrics[" + i + "][value]", toRequestBody(testicularMetrics.get(i).getValue()));
+        metrics.put("metrics[" + i + "][id]",
+            toRequestBody(String.valueOf(testicularMetrics.get(i).getId())));
 
-      metrics.put("metrics[" + i + "][unit_id]", toRequestBody(testicularMetrics.get(i).getUnit()));
+        metrics.put("metrics[" + i + "][value]",
+            toRequestBody(testicularMetrics.get(i).getValue()));
+
+        for (int j = 0; j < testicularMetrics.get(i).getUnits().size(); j++) {
+          if (testicularMetrics.get(j).getUnits().get(j).isSelected()) {
+            metrics.put("metrics[" + i + "][unit_id]",
+                toRequestBody(String.valueOf(testicularMetrics.get(j).getUnits().get(j).getId())));
+          }
+        }
+      }
     }
 
     return metrics;
@@ -388,8 +410,8 @@ public class AddNewHealthTest_Part2_Activity extends Base_Activity
       HashMap<String, RequestBody> imageParts) {
     dataAccessHandler.storeNewHealthTest(
         prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
-        toRequestBody(dateTakenTV.getText().toString()), metrics, imageParts,
-        new Callback<DefaultGetResponse>() {
+        toRequestBody(testNameET.getText().toString()), toRequestBody(test_date_taken), metrics,
+        imageParts, new Callback<DefaultGetResponse>() {
           @Override public void onResponse(Call<DefaultGetResponse> call,
               Response<DefaultGetResponse> response) {
             switch (response.code()) {
@@ -425,15 +447,35 @@ public class AddNewHealthTest_Part2_Activity extends Base_Activity
     RequestBody file;
     File imageFile;
 
-    imageFile = new File(addPic1.);
+    if (addPic1_picturePath != null) {
+      imageFile = new File(addPic1_picturePath);
+      file = RequestBody.create(MediaType.parse("image/jpeg"), imageFile);
+      imageParts.put("images[" + 0 + "]\"; filename=\"" + addPic1_picturePath, file);
+    }
 
-    file = RequestBody.create(MediaType.parse("image/jpeg"), imageFile);
+    if (addPic2_picturePath != null) {
+      imageFile = new File(addPic2_picturePath);
+      file = RequestBody.create(MediaType.parse("image/jpeg"), imageFile);
+      imageParts.put("images[" + 1 + "]\"; filename=\"" + addPic2_picturePath, file);
+    }
 
-    imageParts.put("images[" + 0 + "]\"; filename=\"" + addPic1_picturePath, file);
-    imageParts.put("images[" + 1 + "]\"; filename=\"" + addPic2_picturePath, file);
-    imageParts.put("images[" + 2 + "]\"; filename=\"" + addPic3_picturePath, file);
-    imageParts.put("images[" + 3 + "]\"; filename=\"" + addPic4_picturePath, file);
-    imageParts.put("images[" + 4 + "]\"; filename=\"" + addPic5_picturePath, file);
+    if (addPic3_picturePath != null) {
+      imageFile = new File(addPic3_picturePath);
+      file = RequestBody.create(MediaType.parse("image/jpeg"), imageFile);
+      imageParts.put("images[" + 2 + "]\"; filename=\"" + addPic3_picturePath, file);
+    }
+
+    if (addPic4_picturePath != null) {
+      imageFile = new File(addPic4_picturePath);
+      file = RequestBody.create(MediaType.parse("image/jpeg"), imageFile);
+      imageParts.put("images[" + 3 + "]\"; filename=\"" + addPic4_picturePath, file);
+    }
+
+    if (addPic5_picturePath != null) {
+      imageFile = new File(addPic5_picturePath);
+      file = RequestBody.create(MediaType.parse("image/jpeg"), imageFile);
+      imageParts.put("images[" + 4 + "]\"; filename=\"" + addPic5_picturePath, file);
+    }
 
     return imageParts;
   }

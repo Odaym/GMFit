@@ -52,7 +52,7 @@ public class DataAccessHandler {
   }
 
   public void synchronizeMetricsWithServer(String userAccessToken, String[] slugsArray,
-      int[] valuesArray) {
+      Number[] valuesArray) {
     apiCallsHandler.synchronizeMetricsWithServer(userAccessToken, slugsArray, valuesArray);
   }
 
@@ -211,10 +211,10 @@ public class DataAccessHandler {
     apiCallsHandler.getWidgetsWithDate(userAccessToken, sectionName, date, callback);
   }
 
-  public void storeNewHealthTest(String userAccessToken, RequestBody test_slug,
+  public void storeNewHealthTest(String userAccessToken, RequestBody test_name,
       RequestBody date_taken, Map<String, RequestBody> metrics, Map<String, RequestBody> imageFiles,
       Callback<DefaultGetResponse> callback) {
-    apiCallsHandler.storeNewHealthTest(userAccessToken, test_slug, date_taken, metrics, imageFiles,
+    apiCallsHandler.storeNewHealthTest(userAccessToken, test_name, date_taken, metrics, imageFiles,
         callback);
   }
 

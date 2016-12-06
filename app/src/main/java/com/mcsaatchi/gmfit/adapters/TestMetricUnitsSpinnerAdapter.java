@@ -7,23 +7,24 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
-
 import com.mcsaatchi.gmfit.R;
-
+import com.mcsaatchi.gmfit.rest.MedicalTestMetricsResponseDatum;
 import java.util.ArrayList;
 
 public class TestMetricUnitsSpinnerAdapter extends BaseAdapter implements SpinnerAdapter {
 
   private final Context activity;
-  private ArrayList<String> listItems;
+  private ArrayList<MedicalTestMetricsResponseDatum> listItems;
+  private int unitsSize;
 
-  public TestMetricUnitsSpinnerAdapter(Context context, ArrayList<String> listItems) {
+  public TestMetricUnitsSpinnerAdapter(Context context, ArrayList<MedicalTestMetricsResponseDatum> listItems, int unitsSize) {
     this.listItems = listItems;
+    this.unitsSize = unitsSize;
     activity = context;
   }
 
   public int getCount() {
-    return listItems.size();
+    return unitsSize;
   }
 
   public Object getItem(int i) {
@@ -39,7 +40,7 @@ public class TestMetricUnitsSpinnerAdapter extends BaseAdapter implements Spinne
     txt.setPadding(activity.getResources().getDimensionPixelSize(R.dimen.default_margin_2), 16, 16,
         16);
     txt.setGravity(Gravity.CENTER_VERTICAL);
-    txt.setText(listItems.get(position));
+    txt.setText(listItems.get(position).getUnit());
     txt.setTextColor(activity.getResources().getColor(R.color.health_green));
     return txt;
   }
@@ -50,7 +51,7 @@ public class TestMetricUnitsSpinnerAdapter extends BaseAdapter implements Spinne
     txt.setPadding(activity.getResources().getDimensionPixelSize(R.dimen.default_margin_2), 16, 16,
         16);
     txt.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_arrow_down_green, 0);
-    txt.setText(listItems.get(i));
+    txt.setText(listItems.get(i).getUnit());
     txt.setTextColor(activity.getResources().getColor(R.color.health_green));
     return txt;
   }

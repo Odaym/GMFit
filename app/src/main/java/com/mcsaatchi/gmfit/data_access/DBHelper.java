@@ -28,11 +28,9 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
 
   private static final int DATABASE_VERSION = 1;
 
-  private RuntimeExceptionDao<MealItem, Integer> mealItemRunTimeDAO = null;
   private RuntimeExceptionDao<FitnessWidget, Integer> fitnessWidgetsRunTimeDAO = null;
   private RuntimeExceptionDao<NutritionWidget, Integer> nutritionWidgetsRunTimeDAO = null;
   private RuntimeExceptionDao<DataChart, Integer> dataChartRunTimeDAO = null;
-  private RuntimeExceptionDao<User, Integer> userRunTimeDAO = null;
 
   public DBHelper(Context context) {
     super(context, DATABASE_NAME, null, DATABASE_VERSION, R.raw.ormlite_config);
@@ -47,7 +45,7 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
       TableUtils.createTable(connectionSource, NutritionWidget.class);
 
       FitnessWidget fw1 =
-          new FitnessWidget("Distance Traveled", "meters", 0, R.drawable.ic_distance_traveled, 1);
+          new FitnessWidget("Distance Traveled", "Km", 0, R.drawable.ic_distance_traveled, 1);
       FitnessWidget fw2 =
           new FitnessWidget("Active Calories", "Calories", 0, R.drawable.ic_calories_spent, 2);
 
@@ -88,9 +86,7 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
 
   @Override public void close() {
     super.close();
-    mealItemRunTimeDAO = null;
     dataChartRunTimeDAO = null;
-    userRunTimeDAO = null;
     nutritionWidgetsRunTimeDAO = null;
     fitnessWidgetsRunTimeDAO = null;
   }

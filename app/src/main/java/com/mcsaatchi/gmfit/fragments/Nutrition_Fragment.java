@@ -739,7 +739,7 @@ public class Nutrition_Fragment extends Fragment {
     ItemTouchHelper.Callback callback;
     ItemTouchHelper touchHelper;
 
-    userMealsRecyclerAdapter = new UserMeals_RecyclerAdapterDragSwipe(mealItems);
+    userMealsRecyclerAdapter = new UserMeals_RecyclerAdapterDragSwipe(getActivity(), mealItems);
     callback = new SimpleSwipeItemTouchHelperCallback(userMealsRecyclerAdapter);
     touchHelper = new ItemTouchHelper(callback);
 

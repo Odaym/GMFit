@@ -33,13 +33,14 @@ public class UserMeals_RecyclerAdapterDragSwipe
 
   @Inject DataAccessHandler dataAccessHandler;
   @Inject SharedPreferences prefs;
-  @Inject Context context;
   private List<MealItem> mealItems;
+  private Context context;
 
-  public UserMeals_RecyclerAdapterDragSwipe(List<MealItem> mealItems) {
+  public UserMeals_RecyclerAdapterDragSwipe(Context context, List<MealItem> mealItems) {
     this.mealItems = mealItems;
+    this.context = context;
 
-    ((GMFit_Application) context).getAppComponent().inject(this);
+    ((GMFit_Application) context.getApplicationContext()).getAppComponent().inject(this);
   }
 
   @Override public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

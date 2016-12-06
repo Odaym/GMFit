@@ -60,6 +60,7 @@ import com.mcsaatchi.gmfit.rest.WidgetsResponse;
 import com.mcsaatchi.gmfit.rest.WidgetsResponseDatum;
 import com.squareup.otto.Subscribe;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -142,7 +143,7 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
             .create()
             .show();
       } else {
-        sm.registerListener(this, sensor, SensorManager.SENSOR_DELAY_UI, 0);
+        sm.registerListener(this, sensor, 0, 0);
       }
 
       if (((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
@@ -181,14 +182,8 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
 
     setupDateCarousel();
 
-    Timber.d("onCreateView: Device info : "
-        + Build.MANUFACTURER
-        + " "
-        + Build.MODEL
-        + " ("
-        + Build.DEVICE
-        + ") - "
-        + Build.VERSION.RELEASE);
+    Timber.d("onCreateView: Device info : %s %s (%s) - %s", Build.MANUFACTURER, Build.MODEL,
+        Build.DEVICE, Build.VERSION.RELEASE);
 
     addNewChartBTN.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
@@ -708,8 +703,7 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
         break;
       case Constants.EVENT_DISTANCE_COUNTER_INCREMENTED:
         fitnessWidget = findWidgetInGrid("Distance Traveled");
-        fitnessWidget.setText(
-            String.valueOf((int) (prefs.getFloat(Helpers.getTodayDate() + "_distance", 0) * 1000)));
+        fitnessWidget.setText(new DecimalFormat("##.###").format((prefs.getFloat(Helpers.getTodayDate() + "_distance", 0))));
         break;
     }
   }

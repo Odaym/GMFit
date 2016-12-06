@@ -197,48 +197,68 @@ public class Helpers {
   public static void setupAlarmForMeal(Context context, SharedPreferences prefs, String mealType) {
     Intent intent = new Intent(context, AlarmReceiver.class);
 
-    PendingIntent pendingIntent =
-        PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+    PendingIntent pendingIntent = null;
 
     Calendar calendar = Calendar.getInstance();
 
+    DateTime timeNow = new DateTime(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+        calendar.get(Calendar.DAY_OF_MONTH), calendar.get(Calendar.HOUR_OF_DAY),
+        calendar.get(Calendar.MINUTE), calendar.get(Calendar.MINUTE));
+
+    DateTime desiredAlarmTime;
+
     switch (mealType) {
       case "Breakfast":
-        calendar.set(Calendar.HOUR_OF_DAY, 9);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
-        calendar.set(Calendar.DAY_OF_YEAR, 1);
+        desiredAlarmTime = new DateTime(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+            calendar.get(Calendar.DAY_OF_MONTH), 9, 0, 0);
+
+        if (desiredAlarmTime.isAfter(timeNow)) {
+          calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+              calendar.get(Calendar.DAY_OF_MONTH), 9, 0, 0);
+        } else {
+          calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+              calendar.get(Calendar.DAY_OF_MONTH) + 1, 9, 0, 0);
+        }
 
         intent.putExtra("MEAL_TYPE", "Breakfast");
         pendingIntent =
-            PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         prefs.edit().putString(Constants.BREAKFAST_REMINDER_ALARM_TIME, "09:00:am").apply();
 
         break;
       case "Lunch":
-        calendar.set(Calendar.HOUR_OF_DAY, 14);
-        calendar.set(Calendar.MINUTE, 45);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
-        calendar.set(Calendar.DAY_OF_YEAR, 1);
+        desiredAlarmTime = new DateTime(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+            calendar.get(Calendar.DAY_OF_MONTH), 14, 45, 0);
+
+        if (desiredAlarmTime.isAfter(timeNow)) {
+          calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+              calendar.get(Calendar.DAY_OF_MONTH), 14, 45, 0);
+        } else {
+          calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+              calendar.get(Calendar.DAY_OF_MONTH) + 1, 14, 45, 0);
+        }
 
         intent.putExtra("MEAL_TYPE", "Lunch");
         pendingIntent =
-            PendingIntent.getBroadcast(context, 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            PendingIntent.getBroadcast(context, 1, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         prefs.edit().putString(Constants.BREAKFAST_REMINDER_ALARM_TIME, "02:45:pm").apply();
 
         break;
       case "Dinner":
-        calendar.set(Calendar.HOUR_OF_DAY, 20);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-        calendar.set(Calendar.MILLISECOND, 0);
-        calendar.set(Calendar.DAY_OF_YEAR, 1);
+        desiredAlarmTime = new DateTime(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+            calendar.get(Calendar.DAY_OF_MONTH), 20, 0, 0);
+
+        if (desiredAlarmTime.isAfter(timeNow)) {
+          calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+              calendar.get(Calendar.DAY_OF_MONTH), 20, 0, 0);
+        } else {
+          calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+              calendar.get(Calendar.DAY_OF_MONTH) + 1, 20, 0, 0);
+        }
 
         intent.putExtra("MEAL_TYPE", "Dinner");
         pendingIntent =
-            PendingIntent.getBroadcast(context, 2, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            PendingIntent.getBroadcast(context, 2, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         prefs.edit().putString(Constants.BREAKFAST_REMINDER_ALARM_TIME, "08:00:pm").apply();
 
         break;

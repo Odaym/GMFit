@@ -109,7 +109,6 @@
             android:background="@color/another_gray"
             android:gravity="center_vertical"
             android:paddingStart="@dimen/default_margin_2"
-            android:text="January 1, 1990"
             android:textColor="@color/black"
             />
 
@@ -160,41 +159,41 @@
 
         <ImageView
             android:id="@+id/addPic1"
-            android:onClick="triggerAddPicture"
             android:layout_width="100dp"
             android:layout_height="100dp"
+            android:onClick="triggerAddPicture"
             android:src="@drawable/ic_insert_photo_black_24dp"
             />
 
         <ImageView
             android:id="@+id/addPic2"
-            android:onClick="triggerAddPicture"
             android:layout_width="100dp"
             android:layout_height="100dp"
+            android:onClick="triggerAddPicture"
             android:src="@drawable/ic_insert_photo_black_24dp"
             />
 
         <ImageView
             android:id="@+id/addPic3"
-            android:onClick="triggerAddPicture"
             android:layout_width="100dp"
             android:layout_height="100dp"
+            android:onClick="triggerAddPicture"
             android:src="@drawable/ic_insert_photo_black_24dp"
             />
 
         <ImageView
             android:id="@+id/addPic4"
-            android:onClick="triggerAddPicture"
             android:layout_width="100dp"
             android:layout_height="100dp"
+            android:onClick="triggerAddPicture"
             android:src="@drawable/ic_insert_photo_black_24dp"
             />
 
         <ImageView
             android:id="@+id/addPic5"
-            android:onClick="triggerAddPicture"
             android:layout_width="100dp"
             android:layout_height="100dp"
+            android:onClick="triggerAddPicture"
             android:src="@drawable/ic_insert_photo_black_24dp"
             />
       </LinearLayout>

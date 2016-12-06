@@ -17,7 +17,7 @@ public class FitnessWidget implements Parcelable {
   int id;
   String title;
   String measurementUnit;
-  int value;
+  float value;
   int metricIconDrawableId;
   int position;
   int widget_id;
@@ -38,7 +38,7 @@ public class FitnessWidget implements Parcelable {
     this.id = in.readInt();
     this.title = in.readString();
     this.measurementUnit = in.readString();
-    this.value = in.readInt();
+    this.value = in.readFloat();
     this.metricIconDrawableId = in.readInt();
     this.position = in.readInt();
     this.widget_id = in.readInt();
@@ -68,11 +68,11 @@ public class FitnessWidget implements Parcelable {
     this.measurementUnit = measurementUnit;
   }
 
-  public int getValue() {
+  public float getValue() {
     return value;
   }
 
-  public void setValue(int value) {
+  public void setValue(float value) {
     this.value = value;
   }
 
@@ -108,7 +108,7 @@ public class FitnessWidget implements Parcelable {
     dest.writeInt(this.id);
     dest.writeString(this.title);
     dest.writeString(this.measurementUnit);
-    dest.writeInt(this.value);
+    dest.writeFloat(this.value);
     dest.writeInt(this.metricIconDrawableId);
     dest.writeInt(this.position);
     dest.writeInt(this.widget_id);

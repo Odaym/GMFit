@@ -76,7 +76,7 @@ public class SensorListener extends Service implements SensorEventListener {
 
       prefs.edit().putInt(todayDate + "_steps", 0).apply();
       prefs.edit().putFloat(todayDate + "_calories", 0).apply();
-      prefs.edit().putFloat(todayDate + "_distance", 0).apply();
+      prefs.edit().putFloat(todayDate + "_distance", 0.00f).apply();
     } else {
       float caloriesToday =
           calculateCalories(prefs.getFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, 70),
@@ -126,8 +126,7 @@ public class SensorListener extends Service implements SensorEventListener {
           break;
         case "Distance Traveled":
           fitnessWidgets.get(i)
-              .setValue(
-                  (int) ((calculatedDistance + prefs.getFloat(todayDate + "_distance", 0)) * 1000));
+              .setValue((calculatedDistance + prefs.getFloat(todayDate + "_distance", 0)));
           break;
       }
 
@@ -202,10 +201,10 @@ public class SensorListener extends Service implements SensorEventListener {
                     "steps-count", "active-calories", "distance-traveled"
                 };
 
-                int[] valuesArray = new int[] {
+                Number[] valuesArray = new Number[] {
                     prefs.getInt(todayDate + "_steps", 0),
                     (int) prefs.getFloat(todayDate + "_calories", 0),
-                    (int) (prefs.getFloat(todayDate + "_distance", 0) * 1000)
+                    prefs.getFloat(todayDate + "_distance", 0)
                 };
 
                 synchronizeMetricsWithServer(slugsArray, valuesArray);
@@ -220,7 +219,7 @@ public class SensorListener extends Service implements SensorEventListener {
         });
   }
 
-  private void synchronizeMetricsWithServer(String[] slugsArray, int[] valuesArray) {
+  private void synchronizeMetricsWithServer(String[] slugsArray, Number[] valuesArray) {
     dataAccessHandler.synchronizeMetricsWithServer(
         prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
         slugsArray, valuesArray);
@@ -283,13 +282,12 @@ public class SensorListener extends Service implements SensorEventListener {
 
     if (BuildConfig.DEBUG) {
       Log.d("SERVICE_TAG", "step sensors: " + sm.getSensorList(Sensor.TYPE_STEP_COUNTER).size());
-      if (sm.getSensorList(Sensor.TYPE_STEP_COUNTER).size() < 1) return; // emulator
+      if (sm.getSensorList(Sensor.TYPE_STEP_COUNTER).size() < 1) return;
       Log.d("SERVICE_TAG", "default: " + sm.getDefaultSensor(Sensor.TYPE_STEP_COUNTER).getName());
     }
 
     // enable batching with delay of max 5 min
-    sm.registerListener(this, sm.getDefaultSensor(Sensor.TYPE_STEP_COUNTER),
-        SensorManager.SENSOR_DELAY_NORMAL, 5 * MICROSECONDS_IN_ONE_MINUTE);
+    sm.registerListener(this, sm.getDefaultSensor(Sensor.TYPE_STEP_COUNTER), 0, 0);
   }
 
   public DBHelper getDBHelper() {
