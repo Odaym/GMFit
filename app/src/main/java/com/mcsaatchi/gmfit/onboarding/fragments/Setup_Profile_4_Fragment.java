@@ -21,21 +21,20 @@ import butterknife.ButterKnife;
 import com.andreabaccega.widget.FormEditText;
 import com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialogFragment;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.onboarding.activities.Main_Activity;
-import com.mcsaatchi.gmfit.onboarding.adapters.MedicalConditionsSpinnerAdapter;
-import com.mcsaatchi.gmfit.onboarding.adapters.TextualSpinnersAdapter;
-import com.mcsaatchi.gmfit.common.Constants;
+import com.mcsaatchi.gmfit.architecture.GMFit_Application;
+import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.architecture.otto.EventBus_Poster;
 import com.mcsaatchi.gmfit.architecture.otto.EventBus_Singleton;
-import com.mcsaatchi.gmfit.architecture.GMFit_Application;
-import com.mcsaatchi.gmfit.common.classes.Helpers;
-import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponseChart;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponseWidget;
 import com.mcsaatchi.gmfit.architecture.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.architecture.rest.MedicalConditionsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.MedicalConditionsResponseDatum;
 import com.mcsaatchi.gmfit.architecture.rest.UiResponse;
+import com.mcsaatchi.gmfit.common.Constants;
+import com.mcsaatchi.gmfit.onboarding.activities.Main_Activity;
+import com.mcsaatchi.gmfit.onboarding.adapters.MedicalConditionsSpinnerAdapter;
+import com.mcsaatchi.gmfit.onboarding.adapters.TextualSpinnersAdapter;
 import com.squareup.otto.Subscribe;
 import java.text.DateFormatSymbols;
 import java.util.ArrayList;
@@ -186,8 +185,7 @@ public class Setup_Profile_4_Fragment extends Fragment
               .apply();
 
           setupUserProfile(finalDateOfBirth, finalBloodType, nationality, medicalConditionId,
-              measurementSystem, goalId, activityLevelId, finalGender, finalHeight, finalWeight,
-              Helpers.calculateBMI(finalWeight, finalHeight));
+              measurementSystem, goalId, activityLevelId, finalGender, finalHeight, finalWeight);
         } else {
           //                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
           //                    builder.setTitle(R.string.weight_or_height_empty_dialog_title)
@@ -247,7 +245,7 @@ public class Setup_Profile_4_Fragment extends Fragment
 
   private void setupUserProfile(String finalDateOfBirth, String bloodType, String nationality,
       int medical_condition, String measurementSystem, int goalId, int activityLevelId,
-      int finalGender, double height, double weight, double BMI) {
+      int finalGender, double height, double weight) {
 
     final ProgressDialog waitingDialog = new ProgressDialog(getActivity());
     waitingDialog.setTitle(getString(R.string.signing_up_dialog_title));
@@ -268,7 +266,7 @@ public class Setup_Profile_4_Fragment extends Fragment
     dataAccessHandler.updateUserProfile(
         prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
         finalDateOfBirth, bloodType, nationality, medical_condition, measurementSystem, goalId,
-        activityLevelId, finalGender, height, weight, BMI, new Callback<DefaultGetResponse>() {
+        activityLevelId, finalGender, height, weight, new Callback<DefaultGetResponse>() {
           @Override public void onResponse(Call<DefaultGetResponse> call,
               Response<DefaultGetResponse> response) {
             switch (response.code()) {

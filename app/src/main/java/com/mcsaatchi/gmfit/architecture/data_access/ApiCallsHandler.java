@@ -156,12 +156,12 @@ public class ApiCallsHandler {
 
   void updateUserProfile(String userAccessToken, String finalDateOfBirth, String bloodType,
       String nationality, int medical_condition, String measurementSystem, int goalId,
-      int activityLevelId, int finalGender, double height, double weight, double BMI,
+      int activityLevelId, int finalGender, double height, double weight,
       final Callback<DefaultGetResponse> callback) {
     Call<DefaultGetResponse> apiCall = new RestClient().getGMFitService()
         .updateUserProfile(userAccessToken,
             new UpdateProfileRequest(finalDateOfBirth, bloodType, nationality, medical_condition,
-                measurementSystem, goalId, activityLevelId, finalGender, height, weight, BMI));
+                measurementSystem, goalId, activityLevelId, finalGender, height, weight));
 
     apiCall.enqueue(new Callback<DefaultGetResponse>() {
       @Override
@@ -598,10 +598,10 @@ public class ApiCallsHandler {
 
   void editExistingHealthTest(String userAccessToken, RequestBody instance_id, RequestBody name,
       RequestBody date_taken, Map<String, RequestBody> metrics, Map<String, RequestBody> imageFiles,
-      Map<String, RequestBody> deletedImages, final Callback<DefaultGetResponse> callback) {
+      RequestBody deletedImages, final Callback<DefaultGetResponse> callback) {
     Call<DefaultGetResponse> apiCall = new RestClient().getGMFitService()
         .editExistingHealthTest(userAccessToken, instance_id, name, date_taken, metrics,
-            deletedImages, imageFiles);
+            imageFiles, deletedImages);
 
     apiCall.enqueue(new Callback<DefaultGetResponse>() {
       @Override
@@ -784,11 +784,10 @@ public class ApiCallsHandler {
     final int gender;
     final double height;
     final double weight;
-    final double BMI;
 
     UpdateProfileRequest(String date_of_birth, String blood_type, String country,
         int medical_conditions, String metric_system, int user_goal, int activity_level, int gender,
-        double height, double weight, double BMI) {
+        double height, double weight) {
       this.date_of_birth = date_of_birth;
       this.blood_type = blood_type;
       this.country = country;
@@ -799,7 +798,6 @@ public class ApiCallsHandler {
       this.gender = gender;
       this.height = height;
       this.weight = weight;
-      this.BMI = BMI;
     }
   }
 

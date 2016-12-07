@@ -72,6 +72,10 @@ public class UserTestsRecycler_Adapter
     @Override public void onClick(View view) {
       Intent intent = new Intent(context, AddNewHealthTest_Activity.class);
       intent.putExtra(Constants.EXTRAS_TEST_OBJECT_DETAILS, userTests.get(getAdapterPosition()));
+      for (int i = 0; i < userTests.get(getAdapterPosition()).getImages().size(); i++) {
+        Timber.d("Test images are : %s",
+            userTests.get(getAdapterPosition()).getImages().get(i).getImage());
+      }
       context.startActivity(intent);
     }
   }

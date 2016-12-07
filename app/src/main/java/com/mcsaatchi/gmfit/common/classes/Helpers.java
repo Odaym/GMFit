@@ -45,13 +45,6 @@ public class Helpers {
     return helpers;
   }
 
-  public static double calculateBMI(double weight, double height) {
-    //centimeters to meters
-    double finalHeight = height / 100;
-
-    return weight / (finalHeight * finalHeight);
-  }
-
   public static boolean validateFields(ArrayList<FormEditText> allFields) {
     boolean allValid = true;
 

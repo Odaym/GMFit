@@ -76,11 +76,11 @@ public class DataAccessHandler {
 
   public void updateUserProfile(String userAccessToken, String finalDateOfBirth, String bloodType,
       String nationality, int medical_condition, String measurementSystem, int goalId,
-      int activityLevelId, int finalGender, double height, double weight, double BMI,
+      int activityLevelId, int finalGender, double height, double weight,
       Callback<DefaultGetResponse> callback) {
     apiCallsHandler.updateUserProfile(userAccessToken, finalDateOfBirth, bloodType, nationality,
         medical_condition, measurementSystem, goalId, activityLevelId, finalGender, height, weight,
-        BMI, callback);
+        callback);
   }
 
   public void updateUserPicture(String userAccessToken, Map<String, RequestBody> profilePicture,
@@ -221,7 +221,7 @@ public class DataAccessHandler {
 
   public void editExistingHealthTest(String userAccessToken, RequestBody instance_id,
       RequestBody name, RequestBody date_taken, Map<String, RequestBody> metrics,
-      Map<String, RequestBody> imageFiles, Map<String, RequestBody> deletedImages,
+      Map<String, RequestBody> imageFiles, RequestBody deletedImages,
       Callback<DefaultGetResponse> callback) {
     apiCallsHandler.editExistingHealthTest(userAccessToken, instance_id, name, date_taken, metrics,
         imageFiles, deletedImages, callback);

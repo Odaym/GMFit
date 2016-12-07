@@ -245,6 +245,9 @@ public class Login_Activity extends Base_Activity {
 
             intent = new Intent(Login_Activity.this, SetupProfile_Activity.class);
             startActivity(intent);
+
+            finish();
+
             break;
           case 401:
             alertDialog.setMessage(getString(R.string.login_failed_wrong_credentials));

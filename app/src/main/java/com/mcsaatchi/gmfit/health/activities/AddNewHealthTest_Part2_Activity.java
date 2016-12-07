@@ -31,14 +31,14 @@ import butterknife.ButterKnife;
 import com.andreabaccega.widget.FormEditText;
 import com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialogFragment;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.common.activities.Base_Activity;
-import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.architecture.otto.EventBus_Poster;
 import com.mcsaatchi.gmfit.architecture.otto.EventBus_Singleton;
-import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.architecture.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.architecture.rest.MedicalTestMetricsResponseBody;
 import com.mcsaatchi.gmfit.architecture.rest.TakenMedicalTestsResponseBody;
+import com.mcsaatchi.gmfit.common.Constants;
+import com.mcsaatchi.gmfit.common.activities.Base_Activity;
+import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.squareup.picasso.Picasso;
 import java.io.File;
 import java.io.IOException;
@@ -81,6 +81,8 @@ public class AddNewHealthTest_Part2_Activity extends Base_Activity
   @Bind(R.id.deletePic4) ImageView deletePic4;
   @Bind(R.id.deletePic5) ImageView deletePic5;
 
+  private ArrayList<Integer> deletedImages = new ArrayList<>();
+
   private ArrayList<String> picturePaths = new ArrayList<String>() {{
     add(null);
     add(null);
@@ -94,12 +96,14 @@ public class AddNewHealthTest_Part2_Activity extends Base_Activity
 
   private File photoFile;
   private Uri photoFileUri;
-  private String test_date_taken;
+  private String dateTakenForRequest;
   private ProgressDialog waitingDialog;
   private AlertDialog alertDialog;
   private int viewIdForTestPicture;
   private ArrayList<FormEditText> allFields = new ArrayList<>();
+
   private ArrayList<MedicalTestMetricsResponseBody> testicularMetrics = new ArrayList<>();
+  private TakenMedicalTestsResponseBody existingMedicaltest;
 
   public static RequestBody toRequestBody(String value) {
     return RequestBody.create(MediaType.parse("text/plain"), value);
@@ -134,15 +138,6 @@ public class AddNewHealthTest_Part2_Activity extends Base_Activity
       add(deletePic5);
     }};
 
-    for (int i = 0; i < deleteButtonElements.size(); i++) {
-      final int finalI = i;
-      deleteButtonElements.get(i).setOnClickListener(new View.OnClickListener() {
-        @Override public void onClick(View view) {
-          imageViewElements.get(finalI).setImageResource(R.drawable.ic_insert_photo_black_24dp);
-        }
-      });
-    }
-
     /**
      * Figure out which objects are available, from that figure out if this is for editing or creating
      */
@@ -154,11 +149,11 @@ public class AddNewHealthTest_Part2_Activity extends Base_Activity
       testicularMetrics =
           getIntent().getExtras().getParcelableArrayList(Constants.TESTICULAR_METRICS_ARRAY);
 
-      TakenMedicalTestsResponseBody existingMedicaltest =
+      existingMedicaltest =
           getIntent().getExtras().getParcelable(Constants.EXTRAS_TEST_OBJECT_DETAILS);
 
       try {
-        String finalDateTaken = null;
+        String dateTakenForDisplay = null;
 
         if (testicularMetrics != null) {
           /**
@@ -168,9 +163,11 @@ public class AddNewHealthTest_Part2_Activity extends Base_Activity
           month = dt.getMonthOfYear();
           year = dt.getYear();
 
-          finalDateTaken = new SimpleDateFormat("MMMM dd, yyyy").format(
+          dateTakenForDisplay = new SimpleDateFormat("MMMM dd, yyyy").format(
               new SimpleDateFormat("yyyyMMdd").parse(
                   dt.getYear() + "" + dt.getMonthOfYear() + "" + dt.getDayOfMonth()));
+
+          dateTakenForRequest = year + "-" + month + "-" + day;
         } else if (existingMedicaltest != null) {
           /**
            * Existing medical test was passed, we're editing here.
@@ -184,13 +181,14 @@ public class AddNewHealthTest_Part2_Activity extends Base_Activity
               Picasso.with(this)
                   .load(existingMedicaltest.getImages().get(i).getImage())
                   .into(imageViewElements.get(i));
+              deleteButtonElements.get(i).setVisibility(View.VISIBLE);
             }
           }
 
           try {
             DateTime entryDate = new DateTime(existingMedicaltest.getDateTaken());
 
-            finalDateTaken = entryDate.monthOfYear().getAsText()
+            dateTakenForDisplay = entryDate.monthOfYear().getAsText()
                 + " "
                 + entryDate.getDayOfMonth()
                 + ", "
@@ -199,12 +197,14 @@ public class AddNewHealthTest_Part2_Activity extends Base_Activity
             day = entryDate.getDayOfMonth();
             month = entryDate.getMonthOfYear();
             year = entryDate.getYear();
+
+            dateTakenForRequest = year + "-" + month + "-" + day;
           } catch (IllegalFieldValueException e) {
             Timber.d("Date taken for this test was returned as 0000-00-00");
           }
         }
 
-        dateTakenTV.setText(finalDateTaken);
+        dateTakenTV.setText(dateTakenForDisplay);
       } catch (ParseException e) {
         e.printStackTrace();
       }
@@ -226,6 +226,29 @@ public class AddNewHealthTest_Part2_Activity extends Base_Activity
           cdp.show(getSupportFragmentManager(), ACTIVITY_TAG_TIME_PICKER);
         }
       });
+
+      for (int i = 0; i < deleteButtonElements.size(); i++) {
+        final int finalI = i;
+        deleteButtonElements.get(i).setOnClickListener(new View.OnClickListener() {
+          @Override public void onClick(View view) {
+            imageViewElements.get(finalI).setImageResource(R.drawable.ic_insert_photo_black_24dp);
+
+            deleteButtonElements.get(finalI).setVisibility(View.GONE);
+
+            picturePaths.set(finalI, null);
+
+            if (existingMedicaltest != null
+                && existingMedicaltest.getImages().size() > 0
+                && existingMedicaltest.getImages().get(finalI) != null) {
+              deletedImages.add(existingMedicaltest.getImages().get(finalI).getId());
+            }
+
+            for (int i = 0; i < deletedImages.size(); i++) {
+              Timber.d("Deleted images: " + deletedImages.get(i));
+            }
+          }
+        });
+      }
     }
   }
 
@@ -236,7 +259,7 @@ public class AddNewHealthTest_Part2_Activity extends Base_Activity
         new DateFormatSymbols().getMonths()[monthOfYear] + " " + dayOfMonth + ", " + year);
 
     try {
-      test_date_taken = new SimpleDateFormat("yyyy-MM-dd").format(
+      dateTakenForRequest = new SimpleDateFormat("yyyy-MM-dd").format(
           new SimpleDateFormat("MMMM dd, yyyy").parse(dateTakenTV.getText().toString()));
     } catch (ParseException e) {
       e.printStackTrace();
@@ -253,7 +276,8 @@ public class AddNewHealthTest_Part2_Activity extends Base_Activity
     switch (item.getItemId()) {
       case R.id.doneBTN:
         if (Helpers.validateFields(allFields)) {
-          HashMap<String, RequestBody> metrics, imageParts, deletedImages;
+          HashMap<String, RequestBody> metrics, imageParts;
+          String deletedImages;
 
           waitingDialog = new ProgressDialog(this);
           waitingDialog.setMessage(getString(R.string.please_wait_dialog_message));
@@ -270,17 +294,28 @@ public class AddNewHealthTest_Part2_Activity extends Base_Activity
               });
 
           waitingDialog.setTitle(R.string.creating_new_test_dialog_title);
-          metrics = constructNewMetricsForRequest();
 
-          if (metrics.isEmpty()) {
-            Toast.makeText(this, "Please fill in the needed fields to proceed", Toast.LENGTH_SHORT)
-                .show();
+          if (existingMedicaltest == null) {
+            metrics = constructNewMetricsForRequest();
+
+            if (metrics.isEmpty()) {
+              Toast.makeText(this, "Please fill in the needed fields to proceed",
+                  Toast.LENGTH_SHORT).show();
+            } else {
+              waitingDialog.show();
+
+              imageParts = constructSelectedImagesForRequest();
+
+              createNewHealthTestRequest(metrics, imageParts);
+            }
           } else {
-            waitingDialog.show();
+            metrics = constructEditableMetricsForRequest();
+
+            deletedImages = constructDeletedImagesForRequest();
 
             imageParts = constructSelectedImagesForRequest();
 
-            createNewHealthTestRequest(metrics, imageParts);
+            createEditedHealthRequest(metrics, imageParts, toRequestBody(deletedImages));
           }
         }
         break;
@@ -318,22 +353,27 @@ public class AddNewHealthTest_Part2_Activity extends Base_Activity
       case R.id.addPic1:
         finalViewForPicture = (ImageView) findViewById(R.id.addPic1);
         picturePaths.set(0, finalImagePath);
+        deleteButtonElements.get(0).setVisibility(View.VISIBLE);
         break;
       case R.id.addPic2:
         finalViewForPicture = (ImageView) findViewById(R.id.addPic2);
         picturePaths.set(1, finalImagePath);
+        deleteButtonElements.get(1).setVisibility(View.VISIBLE);
         break;
       case R.id.addPic3:
         finalViewForPicture = (ImageView) findViewById(R.id.addPic3);
         picturePaths.set(2, finalImagePath);
+        deleteButtonElements.get(2).setVisibility(View.VISIBLE);
         break;
       case R.id.addPic4:
         finalViewForPicture = (ImageView) findViewById(R.id.addPic4);
         picturePaths.set(3, finalImagePath);
+        deleteButtonElements.get(3).setVisibility(View.VISIBLE);
         break;
       case R.id.addPic5:
         finalViewForPicture = (ImageView) findViewById(R.id.addPic5);
         picturePaths.set(4, finalImagePath);
+        deleteButtonElements.get(4).setVisibility(View.VISIBLE);
         break;
     }
 
@@ -504,11 +544,35 @@ public class AddNewHealthTest_Part2_Activity extends Base_Activity
     return metrics;
   }
 
+  private HashMap<String, RequestBody> constructEditableMetricsForRequest() {
+    HashMap<String, RequestBody> metrics = new HashMap<>();
+
+    for (int i = 0; i < existingMedicaltest.getMetrics().size(); i++) {
+      if (Integer.parseInt(existingMedicaltest.getMetrics().get(i).getValue()) != -1) {
+
+        metrics.put("metrics[" + i + "][id]",
+            toRequestBody(String.valueOf(existingMedicaltest.getMetrics().get(i).getId())));
+
+        metrics.put("metrics[" + i + "][value]",
+            toRequestBody(existingMedicaltest.getMetrics().get(i).getValue()));
+
+        for (int j = 0; j < existingMedicaltest.getMetrics().get(i).getUnits().size(); j++) {
+          if (existingMedicaltest.getMetrics().get(j).getUnits().get(j).getSelected()) {
+            metrics.put("metrics[" + i + "][unit_id]", toRequestBody(
+                String.valueOf(existingMedicaltest.getMetrics().get(j).getUnits().get(j).getId())));
+          }
+        }
+      }
+    }
+
+    return metrics;
+  }
+
   private void createNewHealthTestRequest(HashMap<String, RequestBody> metrics,
       HashMap<String, RequestBody> imageParts) {
     dataAccessHandler.storeNewHealthTest(
         prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
-        toRequestBody(testNameET.getText().toString()), toRequestBody(test_date_taken), metrics,
+        toRequestBody(testNameET.getText().toString()), toRequestBody(dateTakenForRequest), metrics,
         imageParts, new Callback<DefaultGetResponse>() {
           @Override public void onResponse(Call<DefaultGetResponse> call,
               Response<DefaultGetResponse> response) {
@@ -540,39 +604,39 @@ public class AddNewHealthTest_Part2_Activity extends Base_Activity
   }
 
   private void createEditedHealthRequest(HashMap<String, RequestBody> metrics,
-      HashMap<String, RequestBody> imageParts) {
-    //dataAccessHandler.editExistingHealthTest(
-    //    prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
-    //    toRequestBody(existingMedicaltest.getName()), toRequestBody(test_date_taken),
-    //    toRequestBody(testNameET.getText().toString()), metrics, imageParts,
-    //    new Callback<DefaultGetResponse>() {
-    //      @Override public void onResponse(Call<DefaultGetResponse> call,
-    //          Response<DefaultGetResponse> response) {
-    //        switch (response.code()) {
-    //          case 200:
-    //
-    //            Log.d("TAG", "onResponse: Succeeded creating new test");
-    //
-    //            waitingDialog.dismiss();
-    //
-    //            hideKeyboard();
-    //
-    //            EventBus_Singleton.getInstance()
-    //                .post(new EventBus_Poster(Constants.EXTRAS_TEST_EDIT_OR_CREATE_DONE));
-    //
-    //            finish();
-    //
-    //            break;
-    //        }
-    //      }
-    //
-    //      @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
-    //        Timber.d("Call failed with error : %s", t.getMessage());
-    //        alertDialog.setMessage(
-    //            getResources().getString(R.string.error_response_from_server_incorrect));
-    //        alertDialog.show();
-    //      }
-    //    });
+      HashMap<String, RequestBody> imageParts, RequestBody deletedImagesForRequest) {
+    dataAccessHandler.editExistingHealthTest(
+        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
+        toRequestBody(String.valueOf(existingMedicaltest.getInstanceId())),
+        toRequestBody(existingMedicaltest.getName()), toRequestBody(dateTakenForRequest), metrics,
+        imageParts, deletedImagesForRequest, new Callback<DefaultGetResponse>() {
+          @Override public void onResponse(Call<DefaultGetResponse> call,
+              Response<DefaultGetResponse> response) {
+            switch (response.code()) {
+              case 200:
+
+                Log.d("TAG", "onResponse: Succeeded creating new test");
+
+                waitingDialog.dismiss();
+
+                hideKeyboard();
+
+                EventBus_Singleton.getInstance()
+                    .post(new EventBus_Poster(Constants.EXTRAS_TEST_EDIT_OR_CREATE_DONE));
+
+                finish();
+
+                break;
+            }
+          }
+
+          @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+            Timber.d("Call failed with error : %s", t.getMessage());
+            alertDialog.setMessage(
+                getResources().getString(R.string.error_response_from_server_incorrect));
+            alertDialog.show();
+          }
+        });
   }
 
   private HashMap<String, RequestBody> constructSelectedImagesForRequest() {
@@ -590,6 +654,16 @@ public class AddNewHealthTest_Part2_Activity extends Base_Activity
     }
 
     return imageParts;
+  }
+
+  private String constructDeletedImagesForRequest() {
+    String deletedImagesString = "";
+
+    for (int i = 0; i < deletedImages.size(); i++) {
+      deletedImagesString += deletedImages.get(i) + ",";
+    }
+
+    return deletedImagesString;
   }
 
   private void hideKeyboard() {

@@ -752,6 +752,10 @@ public class MainProfile_Fragment extends Fragment {
 
                   if (prefs.getInt(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION_ID, -1)
                       == -1) {
+                    prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION,
+                        "None");
+                    prefsEditor.putInt(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION_ID, -1);
+
                     medicalConditionsValueTV.setText("None");
                   } else {
                     for (int i = 0; i < userMedicalConditions.size(); i++) {
@@ -844,8 +848,7 @@ public class MainProfile_Fragment extends Fragment {
 
           @Override public void onFailure(Call<UserProfileResponse> call, Throwable t) {
             Timber.d("Call failed with error : %s", t.getMessage());
-            final AlertDialog alertDialog =
-                new AlertDialog.Builder(getActivity()).create();
+            final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
             alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
             alertDialog.show();
           }
@@ -860,7 +863,8 @@ public class MainProfile_Fragment extends Fragment {
         prefs.getString(Constants.EXTRAS_USER_PROFILE_MEASUREMENT_SYSTEM, "metric");
     int userGoalId = prefs.getInt(Constants.EXTRAS_USER_PROFILE_GOAL_ID, 0);
     int activityLevelId = prefs.getInt(Constants.EXTRAS_USER_PROFILE_ACTIVITY_LEVEL_ID, 2);
-    int medicalCondition = prefs.getInt(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION_ID, 0);
+    int medicalCondition =
+        prefs.getInt(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION_ID, -1);
     int gender = prefs.getInt(Constants.EXTRAS_USER_PROFILE_GENDER, 1);
     float height = prefs.getFloat(Constants.EXTRAS_USER_PROFILE_HEIGHT, 180);
     float weight = prefs.getFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, 82);
@@ -884,8 +888,7 @@ public class MainProfile_Fragment extends Fragment {
     dataAccessHandler.updateUserProfile(
         prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
         dateOfBirth, bloodType, nationality, medicalCondition, measurementSystem.toLowerCase(),
-        userGoalId, activityLevelId, gender, height, weight, Helpers.calculateBMI(weight, height),
-        new Callback<DefaultGetResponse>() {
+        userGoalId, activityLevelId, gender, height, weight, new Callback<DefaultGetResponse>() {
           @Override public void onResponse(Call<DefaultGetResponse> call,
               Response<DefaultGetResponse> response) {
             switch (response.code()) {
@@ -941,8 +944,7 @@ public class MainProfile_Fragment extends Fragment {
 
           @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
             Timber.d("Call failed with error : %s", t.getMessage());
-            final AlertDialog alertDialog =
-                new AlertDialog.Builder(getActivity()).create();
+            final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
             alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
             alertDialog.show();
           }
@@ -1022,8 +1024,7 @@ public class MainProfile_Fragment extends Fragment {
 
           @Override public void onFailure(Call<EmergencyProfileResponse> call, Throwable t) {
             Timber.d("Call failed with error : %s", t.getMessage());
-            final AlertDialog alertDialog =
-                new AlertDialog.Builder(getActivity()).create();
+            final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
             alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
             alertDialog.show();
           }
@@ -1081,9 +1082,8 @@ public class MainProfile_Fragment extends Fragment {
     @Override protected void onPostExecute(Void aVoid) {
       super.onPostExecute(aVoid);
 
-      File pdfFile = new File(Environment.getExternalStorageDirectory()
-          + "/GMFit/"
-          + "my_emergency_profile.pdf");
+      File pdfFile = new File(
+          Environment.getExternalStorageDirectory() + "/GMFit/" + "my_emergency_profile.pdf");
       Uri uri = Uri.fromFile(pdfFile);
 
       Intent i = new Intent(Intent.ACTION_SEND);

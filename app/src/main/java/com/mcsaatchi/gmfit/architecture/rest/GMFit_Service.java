@@ -158,7 +158,7 @@ public interface GMFit_Service {
       @Part("instance_id") RequestBody instance_id, @Part("name") RequestBody test_name,
       @Part("date_taken") RequestBody date_taken, @PartMap() Map<String, RequestBody> metrics,
       @PartMap() Map<String, RequestBody> imageFiles,
-      @PartMap() Map<String, RequestBody> deletedImages);
+      @Part("delete_image_ids") RequestBody deletedImages);
 
   @GET("user/medical") Call<TakenMedicalTestsResponse> getTakenMedicalTests(
       @Header(Constants.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken);
