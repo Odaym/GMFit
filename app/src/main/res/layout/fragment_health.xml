@@ -14,7 +14,7 @@
       android:background="@android:color/transparent"
       >
 
-    <com.mcsaatchi.gmfit.classes.FontTextView
+    <com.mcsaatchi.gmfit.common.classes.FontTextView
         android:id="@+id/metricCounterTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

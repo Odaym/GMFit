@@ -10,18 +10,18 @@
 
   <include layout="@layout/app_toolbar"/>
 
-  <com.mcsaatchi.gmfit.barcode_reader.CameraSourcePreview
+  <com.mcsaatchi.gmfit.nutrition.barcode_reader.CameraSourcePreview
       android:id="@+id/preview"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       >
 
-    <com.mcsaatchi.gmfit.barcode_reader.GraphicOverlay
+    <com.mcsaatchi.gmfit.nutrition.barcode_reader.GraphicOverlay
         android:id="@+id/graphicOverlay"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         />
 
-  </com.mcsaatchi.gmfit.barcode_reader.CameraSourcePreview>
+  </com.mcsaatchi.gmfit.nutrition.barcode_reader.CameraSourcePreview>
 
 </LinearLayout>

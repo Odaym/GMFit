@@ -2,7 +2,7 @@
 # generated on 2016/09/08 01:18:45
 #
 # --table-start--
-dataClass=com.mcsaatchi.gmfit.models.MealItem
+dataClass=com.mcsaatchi.gmfit.nutrition.models.MealItem
 tableName=MealItem
 # --table-fields-start--
 # --field-start--
@@ -35,7 +35,7 @@ fieldName=totalCalories
 # --table-end--
 #################################
 # --table-start--
-dataClass=com.mcsaatchi.gmfit.models.DataChart
+dataClass=com.mcsaatchi.gmfit.common.models.DataChart
 tableName=DataChart
 # --table-fields-start--
 # --field-start--
@@ -69,7 +69,7 @@ fieldName=whichFragment
 # --table-end--
 #################################
 # --table-start--
-dataClass=com.mcsaatchi.gmfit.models.NutritionWidget
+dataClass=com.mcsaatchi.gmfit.nutrition.models.NutritionWidget
 tableName=NutritionWidget
 # --table-fields-start--
 # --field-start--
@@ -99,28 +99,7 @@ fieldName=widget_id
 # --table-end--
 #################################
 # --table-start--
-dataClass=com.mcsaatchi.gmfit.models.User
-tableName=User
-# --table-fields-start--
-# --field-start--
-fieldName=id
-generatedId=true
-indexName=User_id_idx
-# --field-end--
-# --field-start--
-fieldName=full_name
-# --field-end--
-# --field-start--
-fieldName=email_address
-# --field-end--
-# --field-start--
-fieldName=photo_url
-# --field-end--
-# --table-fields-end--
-# --table-end--
-#################################
-# --table-start--
-dataClass=com.mcsaatchi.gmfit.models.FitnessWidget
+dataClass=com.mcsaatchi.gmfit.fitness.models.FitnessWidget
 tableName=FitnessWidget
 # --table-fields-start--
 # --field-start--

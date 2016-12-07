@@ -16,7 +16,7 @@
       android:required="true"/>
 
   <application
-      android:name=".classes.GMFit_Application"
+      android:name=".architecture.GMFit_Application"
       android:allowBackup="true"
       android:icon="@mipmap/ic_launcher"
       android:label="@string/app_name"
@@ -24,7 +24,7 @@
       android:theme="@style/AppTheme">
 
     <activity
-        android:name=".activities.Splash_Activity"
+        android:name=".onboarding.activities.Splash_Activity"
         android:noHistory="true"
         android:screenOrientation="portrait"
         android:theme="@style/No_Status_Or_Action_Bar_Theme">
@@ -36,132 +36,132 @@
     </activity>
 
     <activity
-        android:name=".activities.Main_Activity"
+        android:name=".onboarding.activities.Main_Activity"
         android:screenOrientation="portrait"
         android:theme="@style/No_Action_Bar_Theme"
         android:windowSoftInputMode="stateAlwaysHidden|adjustNothing"/>
 
     <activity
-        android:name=".activities.Login_Activity"
+        android:name=".onboarding.activities.Login_Activity"
         android:screenOrientation="portrait"
         android:theme="@style/No_Status_Or_Action_Bar_Theme"/>
 
     <activity
-        android:name=".activities.SignUp_Activity"
+        android:name=".onboarding.activities.SignUp_Activity"
         android:screenOrientation="portrait"
         android:theme="@style/No_Action_Bar_Theme"
         android:windowSoftInputMode="stateHidden|adjustPan"/>
 
     <activity
-        android:name=".activities.SignIn_Activity"
+        android:name=".onboarding.activities.SignIn_Activity"
         android:screenOrientation="portrait"
         android:theme="@style/No_Action_Bar_Theme"
         android:windowSoftInputMode="stateHidden"/>
 
     <activity
-        android:name=".activities.ForgotPassword_Activity"
+        android:name=".onboarding.activities.ForgotPassword_Activity"
         android:screenOrientation="portrait"
         android:theme="@style/No_Action_Bar_Theme"
         android:windowSoftInputMode="stateHidden"/>
 
     <activity
-        android:name=".activities.ResetPassword_Activity"
+        android:name=".onboarding.activities.ResetPassword_Activity"
         android:screenOrientation="portrait"
         android:theme="@style/No_Action_Bar_Theme"
         android:windowSoftInputMode="stateVisible"/>
 
     <activity
-        android:name=".activities.TOS_Activity"
+        android:name=".profile.activities.TOS_Activity"
         android:screenOrientation="portrait"
         android:theme="@style/No_Action_Bar_Theme"/>
 
     <activity
-        android:name=".activities.AccountVerification_Activity"
+        android:name=".onboarding.activities.AccountVerification_Activity"
         android:screenOrientation="portrait"
         android:theme="@style/No_Status_Or_Action_Bar_Theme"
         android:windowSoftInputMode="stateVisible|adjustPan"/>
 
     <activity
-        android:name=".activities.SetupProfile_Activity"
+        android:name=".onboarding.activities.SetupProfile_Activity"
         android:screenOrientation="portrait"
         android:theme="@style/No_Action_Bar_Theme"
         android:windowSoftInputMode="stateHidden|adjustPan"/>
 
     <activity
-        android:name=".activities.CustomizeWidgetsAndCharts_Activity"
+        android:name=".common.activities.CustomizeWidgetsAndCharts_Activity"
         android:screenOrientation="portrait"
         android:theme="@style/No_Action_Bar_Theme"/>
 
     <activity
-        android:name=".activities.AddNewMealItem_Activity"
+        android:name=".nutrition.activities.AddNewMealItem_Activity"
         android:screenOrientation="portrait"
         android:theme="@style/No_Action_Bar_Theme"
         android:windowSoftInputMode="stateHidden"/>
 
     <activity
-        android:name=".activities.AddNewMealOnDate_Activity"
+        android:name=".nutrition.activities.AddNewMealOnDate_Activity"
         android:screenOrientation="portrait"
         android:theme="@style/No_Action_Bar_Theme"
         android:windowSoftInputMode="stateHidden"/>
 
     <activity
-        android:name=".activities.AddNewHealthTest_Activity"
+        android:name=".health.activities.AddNewHealthTest_Activity"
         android:screenOrientation="portrait"
         android:theme="@style/No_Action_Bar_Theme"
         android:windowSoftInputMode="stateHidden"/>
 
     <activity
-        android:name=".activities.AddNewHealthTest_Part2_Activity"
+        android:name=".health.activities.AddNewHealthTest_Part2_Activity"
         android:screenOrientation="portrait"
         android:theme="@style/No_Action_Bar_Theme"
         android:windowSoftInputMode="stateHidden"/>
 
     <activity
-        android:name=".activities.SpecifyMealAmount_Activity"
+        android:name=".nutrition.activities.SpecifyMealAmount_Activity"
         android:screenOrientation="portrait"
         android:theme="@style/No_Action_Bar_Theme"
         android:windowSoftInputMode="stateHidden"/>
 
     <activity
-        android:name=".activities.BarcodeCapture_Activity"
+        android:name=".nutrition.activities.BarcodeCapture_Activity"
         android:screenOrientation="portrait"
         android:theme="@style/No_Action_Bar_Theme"/>
 
     <activity
-        android:name=".activities.AddNewChart_Activity"
+        android:name=".common.activities.AddNewChart_Activity"
         android:screenOrientation="portrait"
         android:theme="@style/No_Action_Bar_Theme"/>
 
     <activity
-        android:name=".activities.MetaTexts_Activity"
+        android:name=".profile.activities.MetaTexts_Activity"
         android:screenOrientation="portrait"
         android:theme="@style/No_Action_Bar_Theme"/>
 
     <activity
-        android:name=".activities.Reminders_Activity"
+        android:name=".profile.activities.Reminders_Activity"
         android:screenOrientation="portrait"
         android:theme="@style/No_Action_Bar_Theme"/>
 
     <activity
-        android:name=".activities.SlugBreakdown_Activity"
+        android:name=".common.activities.SlugBreakdown_Activity"
         android:screenOrientation="portrait"
         android:theme="@style/No_Action_Bar_Theme"/>
 
     <activity
-        android:name=".activities.ContactUs_Activity"
+        android:name=".profile.activities.ContactUs_Activity"
         android:screenOrientation="portrait"
         android:theme="@style/No_Action_Bar_Theme"/>
 
-    <receiver android:name=".classes.AlarmReceiver"/>
+    <receiver android:name=".common.classes.AlarmReceiver"/>
 
-    <receiver android:name=".pedometer.BootReceiver">
+    <receiver android:name=".fitness.pedometer.BootReceiver">
       <intent-filter>
         <action android:name="android.intent.action.BOOT_COMPLETED"/>
       </intent-filter>
     </receiver>
 
     <service
-        android:name=".pedometer.SensorListener"/>
+        android:name=".fitness.pedometer.SensorListener"/>
 
     <meta-data
         android:name="com.facebook.sdk.ApplicationId"

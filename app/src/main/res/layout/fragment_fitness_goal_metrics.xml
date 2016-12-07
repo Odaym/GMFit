@@ -26,7 +26,7 @@
         android:textColor="@color/fitness_teal"
         />
 
-    <com.mcsaatchi.gmfit.classes.FontTextView
+    <com.mcsaatchi.gmfit.common.classes.FontTextView
         android:id="@+id/goalTV"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -71,7 +71,7 @@
         android:textColor="@color/fitness_teal"
         />
 
-    <com.mcsaatchi.gmfit.classes.FontTextView
+    <com.mcsaatchi.gmfit.common.classes.FontTextView
         android:id="@+id/todayTV"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -117,7 +117,7 @@
         android:textColor="@color/white"
         />
 
-    <com.mcsaatchi.gmfit.classes.FontTextView
+    <com.mcsaatchi.gmfit.common.classes.FontTextView
         android:id="@+id/remainingTV"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

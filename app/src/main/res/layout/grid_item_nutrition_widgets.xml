@@ -9,7 +9,7 @@
     android:paddingTop="@dimen/default_margin_1"
     >
 
-  <com.mcsaatchi.gmfit.classes.FontTextView
+  <com.mcsaatchi.gmfit.common.classes.FontTextView
       android:id="@+id/metricTitleTV"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
@@ -17,7 +17,7 @@
       android:textSize="@dimen/nutrition_metric_title_font_size"
       />
 
-  <com.mcsaatchi.gmfit.classes.FontTextView
+  <com.mcsaatchi.gmfit.common.classes.FontTextView
       android:id="@+id/metricTV"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"

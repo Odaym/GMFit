@@ -9,7 +9,7 @@
 
   <include layout="@layout/app_toolbar"/>
 
-  <com.mcsaatchi.gmfit.classes.SlidingTabLayout
+  <com.mcsaatchi.gmfit.common.classes.SlidingTabLayout
       android:id="@+id/tabs"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"

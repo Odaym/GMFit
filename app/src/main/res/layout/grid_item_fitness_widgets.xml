@@ -16,7 +16,7 @@
       android:layout_marginEnd="@dimen/default_margin_2"
       />
 
-  <com.mcsaatchi.gmfit.classes.FontTextView
+  <com.mcsaatchi.gmfit.common.classes.FontTextView
       android:id="@+id/metricTV"
       android:layout_width="70dp"
       android:layout_height="50dp"
