@@ -8,6 +8,7 @@
   <color name="color_primary_dark_transparent">#99474ae6</color>
 
   <color name="white">#FFFFFF</color>
+  <color name="half_transparent_white">#88FFFFFF</color>
 
   <color name="directory_dark_purple">#4d50ec</color>
   <color name="fitness_pink">#b077f8</color>
