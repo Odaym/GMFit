@@ -1,4 +1,4 @@
-package com.mcsaatchi.gmfit.onboarding.activities;
+package com.mcsaatchi.gmfit.common.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,16 +11,16 @@ import android.widget.LinearLayout;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.common.activities.Base_Activity;
-import com.mcsaatchi.gmfit.common.Constants;
-import com.mcsaatchi.gmfit.fitness.fragments.Fitness_Fragment;
-import com.mcsaatchi.gmfit.health.fragments.Health_Fragment;
-import com.mcsaatchi.gmfit.profile.fragments.MainProfile_Fragment;
-import com.mcsaatchi.gmfit.nutrition.fragments.Nutrition_Fragment;
-import com.mcsaatchi.gmfit.common.models.DataChart;
-import com.mcsaatchi.gmfit.fitness.pedometer.SensorListener;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponseChart;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponseChartData;
+import com.mcsaatchi.gmfit.common.Constants;
+import com.mcsaatchi.gmfit.common.models.DataChart;
+import com.mcsaatchi.gmfit.fitness.fragments.Fitness_Fragment;
+import com.mcsaatchi.gmfit.fitness.pedometer.SensorListener;
+import com.mcsaatchi.gmfit.health.fragments.Health_Fragment;
+import com.mcsaatchi.gmfit.insurance.fragments.InsuranceFragment;
+import com.mcsaatchi.gmfit.nutrition.fragments.Nutrition_Fragment;
+import com.mcsaatchi.gmfit.profile.fragments.MainProfile_Fragment;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
 import java.util.ArrayList;
@@ -37,6 +37,7 @@ public class Main_Activity extends Base_Activity {
   private Fitness_Fragment fitnessFragment;
   private Nutrition_Fragment nutritionFragment;
   private Health_Fragment healthFragment;
+  private InsuranceFragment insuranceFragment;
   private MainProfile_Fragment mainProfileFragment;
 
   private ArrayList<AuthenticationResponseChart> chartsMap;
@@ -81,6 +82,7 @@ public class Main_Activity extends Base_Activity {
     fitnessFragment = new Fitness_Fragment();
     nutritionFragment = new Nutrition_Fragment();
     healthFragment = new Health_Fragment();
+    insuranceFragment = new InsuranceFragment();
     mainProfileFragment = new MainProfile_Fragment();
 
     bottomBar.setOnTabSelectListener(new OnTabSelectListener() {
@@ -120,6 +122,13 @@ public class Main_Activity extends Base_Activity {
                 getResources().getDrawable(R.drawable.health_background));
             break;
           case R.id.item_four:
+            getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, new InsuranceFragment())
+                .commit();
+            mainContentLayout.setBackground(
+                getResources().getDrawable(R.drawable.general_background));
+            break;
+          case R.id.item_five:
             getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, mainProfileFragment)
                 .commit();

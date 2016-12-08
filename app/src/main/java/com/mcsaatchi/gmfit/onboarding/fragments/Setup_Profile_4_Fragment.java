@@ -32,7 +32,7 @@ import com.mcsaatchi.gmfit.architecture.rest.MedicalConditionsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.MedicalConditionsResponseDatum;
 import com.mcsaatchi.gmfit.architecture.rest.UiResponse;
 import com.mcsaatchi.gmfit.common.Constants;
-import com.mcsaatchi.gmfit.onboarding.activities.Main_Activity;
+import com.mcsaatchi.gmfit.common.activities.Main_Activity;
 import com.mcsaatchi.gmfit.onboarding.adapters.MedicalConditionsSpinnerAdapter;
 import com.mcsaatchi.gmfit.onboarding.adapters.TextualSpinnersAdapter;
 import com.squareup.otto.Subscribe;
