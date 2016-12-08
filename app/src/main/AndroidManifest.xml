@@ -132,6 +132,10 @@
             android:name=".insurance.activities.Claim_Reimbursement_Activity"
             android:screenOrientation="portrait"
             android:theme="@style/No_Action_Bar_Theme"/>
+        <activity
+            android:name=".insurance.activities.Submit_Reimbursement_Activity"
+            android:screenOrientation="portrait"
+            android:theme="@style/No_Action_Bar_Theme"/>
 
         <receiver android:name=".common.classes.AlarmReceiver"/>
         <receiver android:name=".fitness.pedometer.BootReceiver">
