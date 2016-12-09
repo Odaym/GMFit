@@ -3,6 +3,7 @@ package com.mcsaatchi.gmfit.profile.fragments;
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -21,6 +22,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -35,24 +37,28 @@ import butterknife.ButterKnife;
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.profile.activities.ContactUs_Activity;
-import com.mcsaatchi.gmfit.onboarding.activities.Login_Activity;
-import com.mcsaatchi.gmfit.profile.activities.MetaTexts_Activity;
-import com.mcsaatchi.gmfit.profile.activities.Reminders_Activity;
-import com.mcsaatchi.gmfit.architecture.picasso.CircleTransform;
-import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.architecture.GMFit_Application;
-import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
+import com.mcsaatchi.gmfit.architecture.otto.EventBus_Poster;
+import com.mcsaatchi.gmfit.architecture.otto.EventBus_Singleton;
+import com.mcsaatchi.gmfit.architecture.picasso.CircleTransform;
 import com.mcsaatchi.gmfit.architecture.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.architecture.rest.EmergencyProfileResponse;
 import com.mcsaatchi.gmfit.architecture.rest.MetaTextsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.UserProfileResponse;
+import com.mcsaatchi.gmfit.architecture.rest.UserProfileResponseActivityLevel;
 import com.mcsaatchi.gmfit.architecture.rest.UserProfileResponseDatum;
 import com.mcsaatchi.gmfit.architecture.rest.UserProfileResponseGoal;
 import com.mcsaatchi.gmfit.architecture.rest.UserProfileResponseMedicalCondition;
+import com.mcsaatchi.gmfit.common.Constants;
+import com.mcsaatchi.gmfit.common.classes.Helpers;
+import com.mcsaatchi.gmfit.onboarding.activities.Login_Activity;
+import com.mcsaatchi.gmfit.profile.activities.ContactUs_Activity;
+import com.mcsaatchi.gmfit.profile.activities.MetaTexts_Activity;
+import com.mcsaatchi.gmfit.profile.activities.Reminders_Activity;
 import com.mukesh.countrypicker.fragments.CountryPicker;
 import com.mukesh.countrypicker.interfaces.CountryPickerListener;
+import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -89,6 +95,8 @@ public class MainProfile_Fragment extends Fragment {
   @Bind(R.id.goalsEntryValueTV) TextView goalsEntryValueTV;
   @Bind(R.id.medicalConditionsValueTV) TextView medicalConditionsValueTV;
   @Bind(R.id.metricSystemValueTV) TextView metricSystemValueTV;
+  @Bind(R.id.activityLevelsEntryValueTV) TextView activityLevelsEntryValueTV;
+  @Bind(R.id.appRemindersValueTV) TextView appRemindersValueTV;
 
   @Bind(R.id.weightLayout) RelativeLayout weightLayout;
   @Bind(R.id.goalsLayout) RelativeLayout goalsLayout;
@@ -115,6 +123,8 @@ public class MainProfile_Fragment extends Fragment {
   private double newUserWeight;
 
   private List<UserProfileResponseMedicalCondition> userMedicalConditions = new ArrayList<>();
+  private List<UserProfileResponseActivityLevel> userActivityLevels = new ArrayList<>();
+
   private ArrayList userMetricSystems = new ArrayList<String>() {{
     add(0, "Metric");
     add(1, "Imperial");
@@ -129,6 +139,8 @@ public class MainProfile_Fragment extends Fragment {
 
     ButterKnife.bind(this, fragmentView);
     ((GMFit_Application) getActivity().getApplication()).getAppComponent().inject(this);
+
+    EventBus_Singleton.getInstance().register(this);
 
     setHasOptionsMenu(true);
 
@@ -173,14 +185,14 @@ public class MainProfile_Fragment extends Fragment {
         final EditText editWeightET = (EditText) dialogView.findViewById(R.id.dialogWeightET);
 
         editWeightET.setText(
-            String.valueOf((int) prefs.getFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, 0)));
+            String.valueOf(prefs.getFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, 0)));
         editWeightET.setSelection(editWeightET.getText().toString().length());
 
         dialogBuilder.setView(dialogView);
         dialogBuilder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
           @Override public void onClick(DialogInterface dialogInterface, int i) {
             newUserWeight = Double.parseDouble(editWeightET.getText().toString());
-            weightEntryValueTV.setText(String.valueOf((int) newUserWeight));
+            weightEntryValueTV.setText(String.valueOf(newUserWeight));
 
             prefs.edit()
                 .putFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, (float) newUserWeight)
@@ -263,6 +275,75 @@ public class MainProfile_Fragment extends Fragment {
     });
 
     /**
+     * ACTIVITY LEVELS EDITOR
+     */
+    activityLevelsEntryValueTV.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View view) {
+        final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
+        dialogBuilder.setTitle(R.string.profile_edit_activity_levels_dialog_title);
+
+        View dialogView = LayoutInflater.from(getActivity())
+            .inflate(R.layout.profile_edit_radio_options_layout, null);
+
+        final RadioGroupPlus activityLevelRadioGRP =
+            (RadioGroupPlus) dialogView.findViewById(R.id.collectionsRadioGroup);
+
+        for (int i = 0; i < userActivityLevels.size(); i++) {
+          View listItemRadioButton = getActivity().getLayoutInflater()
+              .inflate(R.layout.list_item_edit_radio_options_dialog, null);
+
+          final RadioButton radioButtonItem =
+              (RadioButton) listItemRadioButton.findViewById(R.id.editRadioOptionsRadioBTN);
+          radioButtonItem.setText(userActivityLevels.get(i).getName());
+          radioButtonItem.setId(Integer.parseInt(userActivityLevels.get(i).getId()));
+
+          if (radioButtonItem.getText()
+              .toString()
+              .equals(prefs.getString(Constants.EXTRAS_USER_PROFILE_ACTIVITY_LEVEL, ""))) {
+            radioButtonItem.setChecked(true);
+          }
+
+          activityLevelRadioGRP.addView(listItemRadioButton);
+        }
+
+        dialogBuilder.setView(dialogView);
+        dialogBuilder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+          @Override public void onClick(DialogInterface dialogInterface, int position) {
+            RadioButton selectedRadioButton = (RadioButton) activityLevelRadioGRP.findViewById(
+                activityLevelRadioGRP.getCheckedRadioButtonId());
+
+            if (selectedRadioButton != null) {
+              activityLevelsEntryValueTV.setText(selectedRadioButton.getText().toString());
+
+              prefs.edit()
+                  .putString(Constants.EXTRAS_USER_PROFILE_ACTIVITY_LEVEL,
+                      selectedRadioButton.getText().toString())
+                  .apply();
+              prefs.edit()
+                  .putInt(Constants.EXTRAS_USER_PROFILE_ACTIVITY_LEVEL_ID,
+                      selectedRadioButton.getId())
+                  .apply();
+
+              updateUserProfile();
+            } else {
+              Log.d("TAG", "onClick: Selected Radio Button was null!");
+            }
+          }
+        });
+
+        dialogBuilder.setNegativeButton(R.string.decline_cancel,
+            new DialogInterface.OnClickListener() {
+              @Override public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+              }
+            });
+
+        AlertDialog alertDialog = dialogBuilder.create();
+        alertDialog.show();
+      }
+    });
+
+    /**
      * MEDICAL CONDITIONS EDITOR
      */
     medicalConditionsLayout.setOnClickListener(new View.OnClickListener() {
@@ -271,17 +352,17 @@ public class MainProfile_Fragment extends Fragment {
         dialogBuilder.setTitle(R.string.profile_edit_medical_conditions_dialog_title);
 
         View dialogView = LayoutInflater.from(getActivity())
-            .inflate(R.layout.profile_edit_medical_conditions_layout, null);
+            .inflate(R.layout.profile_edit_radio_options_layout, null);
 
         final RadioGroupPlus medicalRdGroup =
-            (RadioGroupPlus) dialogView.findViewById(R.id.medicalConditionsRdGroup);
+            (RadioGroupPlus) dialogView.findViewById(R.id.collectionsRadioGroup);
 
         for (int i = 0; i < userMedicalConditions.size(); i++) {
           View listItemRadioButton = getActivity().getLayoutInflater()
-              .inflate(R.layout.list_item_edit_medical_condition_dialog, null);
+              .inflate(R.layout.list_item_edit_radio_options_dialog, null);
 
           final RadioButton radioButtonItem =
-              (RadioButton) listItemRadioButton.findViewById(R.id.editConditionRadioBTN);
+              (RadioButton) listItemRadioButton.findViewById(R.id.editRadioOptionsRadioBTN);
           radioButtonItem.setText(userMedicalConditions.get(i).getName());
           radioButtonItem.setId(Integer.parseInt(userMedicalConditions.get(i).getId()));
 
@@ -510,6 +591,11 @@ public class MainProfile_Fragment extends Fragment {
     return fragmentView;
   }
 
+  @Override public void onDestroy() {
+    super.onDestroy();
+    EventBus_Singleton.getInstance().unregister(this);
+  }
+
   @Override public void onRequestPermissionsResult(int requestCode, String[] permissions,
       int[] grantResults) {
     super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -558,6 +644,20 @@ public class MainProfile_Fragment extends Fragment {
 
           setProfilePicture(selectedImagePath);
         }
+    }
+  }
+
+  @Subscribe public void handle_BusEvents(EventBus_Poster ebp) {
+    String ebpMessage = ebp.getMessage();
+
+    switch (ebpMessage) {
+      case Constants.EVENT_REMINDERS_STATUS_CHANGED:
+        if (ebp.isBooleanExtra()) {
+          appRemindersValueTV.setText("On");
+        } else {
+          appRemindersValueTV.setText("Off");
+        }
+        break;
     }
   }
 
@@ -749,7 +849,11 @@ public class MainProfile_Fragment extends Fragment {
 
                   userMedicalConditions = userProfileData.getMedicalConditions();
                   userGoals = userProfileData.getUserGoals();
+                  userActivityLevels = userProfileData.getActivityLevels();
 
+                  /**
+                   * Set the medical condition
+                   */
                   if (prefs.getInt(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION_ID, -1)
                       == -1) {
                     prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION,
@@ -770,6 +874,31 @@ public class MainProfile_Fragment extends Fragment {
                     }
                   }
 
+                  /**
+                   * Set the activity level
+                   */
+                  if (prefs.getInt(Constants.EXTRAS_USER_PROFILE_ACTIVITY_LEVEL_ID, -1) == -1) {
+                    prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_ACTIVITY_LEVEL,
+                        "Lightly Active (1-3 times per week)");
+                    prefsEditor.putInt(Constants.EXTRAS_USER_PROFILE_ACTIVITY_LEVEL_ID, 2);
+
+                    medicalConditionsValueTV.setText("Lightly Active (1-3 times per week)");
+                  } else {
+                    for (int i = 0; i < userActivityLevels.size(); i++) {
+                      if (userActivityLevels.get(i).getSelected().equals("1")) {
+                        prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_ACTIVITY_LEVEL,
+                            userActivityLevels.get(i).getName());
+                        prefsEditor.putInt(Constants.EXTRAS_USER_PROFILE_ACTIVITY_LEVEL_ID,
+                            Integer.parseInt(userActivityLevels.get(i).getId()));
+
+                        activityLevelsEntryValueTV.setText(userActivityLevels.get(i).getName());
+                      }
+                    }
+                  }
+
+                  /**
+                   * Set the user goals
+                   */
                   for (int i = 0; i < userGoals.size(); i++) {
                     if (userGoals.get(i).getSelected().equals("1")) {
                       prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_GOAL,
@@ -781,18 +910,27 @@ public class MainProfile_Fragment extends Fragment {
                     }
                   }
 
+                  /**
+                   * Set the name
+                   */
                   if (userProfileData.getName() != null && !userProfileData.getName().isEmpty()) {
                     prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_USER_FULL_NAME,
                         userProfileData.getName());
                     userFullNameTV.setText(userProfileData.getName());
                   }
 
+                  /**
+                   * Set the email
+                   */
                   if (userProfileData.getEmail() != null && !userProfileData.getEmail().isEmpty()) {
                     prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_USER_EMAIL,
                         userProfileData.getEmail());
                     userEmailTV.setText(userProfileData.getEmail());
                   }
 
+                  /**
+                   * Set the weight
+                   */
                   if (userProfileData.getWeight() != null && !userProfileData.getWeight()
                       .isEmpty()) {
                     prefsEditor.putFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT,
@@ -800,6 +938,9 @@ public class MainProfile_Fragment extends Fragment {
                     weightEntryValueTV.setText(userProfileData.getWeight());
                   }
 
+                  /**
+                   * Set the country
+                   */
                   if (userProfileData.getCountry() != null && !userProfileData.getCountry()
                       .isEmpty()) {
                     prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_NATIONALITY,
@@ -807,6 +948,9 @@ public class MainProfile_Fragment extends Fragment {
                     countryValueTV.setText(userProfileData.getCountry());
                   }
 
+                  /**
+                   * Set the metric system
+                   */
                   if (userProfileData.getMetricSystem() != null
                       && !userProfileData.getMetricSystem().isEmpty()) {
                     prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_MEASUREMENT_SYSTEM,
@@ -818,12 +962,18 @@ public class MainProfile_Fragment extends Fragment {
                     metricSystemValueTV.setText(cap);
                   }
 
+                  /**
+                   * Set the gender
+                   */
                   if (userProfileData.getGender() != null && !userProfileData.getGender()
                       .isEmpty()) {
                     int finalGender = userProfileData.getGender().equals("Male") ? 0 : 1;
                     prefsEditor.putInt(Constants.EXTRAS_USER_PROFILE_GENDER, finalGender);
                   }
 
+                  /**
+                   * Set the profile picture
+                   */
                   if (userProfileData.getProfile_picture() != null
                       && !userProfileData.getProfile_picture().isEmpty()) {
                     prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_IMAGE,
@@ -900,6 +1050,10 @@ public class MainProfile_Fragment extends Fragment {
                   Toast.makeText(getActivity(), "Your profile was updated succesfully",
                       Toast.LENGTH_SHORT).show();
                 }
+
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(
+                    Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
 
                 break;
             }

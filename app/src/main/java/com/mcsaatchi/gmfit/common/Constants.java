@@ -105,6 +105,7 @@ public class Constants {
 
   public static final String BASE_URL_ADDRESS = "http://gmfit.mcsaatchi.me/api/v1/";
 
+  public static final String EVENT_REMINDERS_STATUS_CHANGED = "reminders_status_changed";
   public static final String EVENT_USER_FINALIZE_SETUP_PROFILE = "user_finalize_setup_profile";
   public static final String EVENT_STEP_COUNTER_INCREMENTED = "step_counter_incremented";
   public static final String EVENT_CALORIES_COUNTER_INCREMENTED = "calories_counter_incremented";

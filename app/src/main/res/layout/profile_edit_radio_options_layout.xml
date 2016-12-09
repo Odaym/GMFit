@@ -7,7 +7,7 @@
     >
 
   <worker8.com.github.radiogroupplus.RadioGroupPlus
-      android:id="@+id/medicalConditionsRdGroup"
+      android:id="@+id/collectionsRadioGroup"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:orientation="vertical"

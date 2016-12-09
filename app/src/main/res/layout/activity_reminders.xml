@@ -126,7 +126,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:text="10:00 am"
             android:textColor="@color/profile_blue"
             />
 
@@ -181,7 +180,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:text="2:45 pm"
             android:textColor="@color/profile_blue"
             />
 
@@ -236,7 +234,6 @@
             android:id="@+id/dinnerReminderValueTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="9:00 pm"
             android:textColor="@color/profile_blue"
             />
 

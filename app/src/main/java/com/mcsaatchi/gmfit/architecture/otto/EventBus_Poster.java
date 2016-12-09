@@ -12,6 +12,7 @@ public class EventBus_Poster {
   private String message;
   private String chart_title;
   private String[] stringsExtra;
+  private boolean booleanExtra;
   private MealItem mealItem;
   private boolean createNewMealItem;
   private List<DataChart> dataChartsListExtra;
@@ -36,6 +37,11 @@ public class EventBus_Poster {
   public EventBus_Poster(String message, String[] stringsExtra) {
     this.message = message;
     this.stringsExtra = stringsExtra;
+  }
+
+  public EventBus_Poster(String message, boolean booleanExtra) {
+    this.message = message;
+    this.booleanExtra = booleanExtra;
   }
 
   public EventBus_Poster(String message, List<DataChart> dataChartsListExtra) {
@@ -77,6 +83,14 @@ public class EventBus_Poster {
 
   public String getChart_title() {
     return chart_title;
+  }
+
+  public boolean isBooleanExtra() {
+    return booleanExtra;
+  }
+
+  public void setBooleanExtra(boolean booleanExtra) {
+    this.booleanExtra = booleanExtra;
   }
 
   public List<DataChart> getDataChartsListExtra() {

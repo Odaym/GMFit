@@ -123,7 +123,7 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
 
       todayDate = dt.toString();
 
-      getUserGoalMetrics(todayDate, "fitness");
+      getUserGoalMetrics(todayDate, "fitness", false);
 
       SensorManager sm = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
       Sensor sensor = sm.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
@@ -175,6 +175,7 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
     setHasOptionsMenu(true);
 
     metricCounterTV.setText(String.valueOf(prefs.getInt(Helpers.getTodayDate() + "_steps", 0)));
+    todayTV.setText(String.valueOf(prefs.getInt(Helpers.getTodayDate() + "_steps", 0)));
 
     setupWidgetViews(widgetsMap);
 
@@ -247,7 +248,7 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
     EventBus_Singleton.getInstance().unregister(this);
   }
 
-  private void getUserGoalMetrics(String date, String type) {
+  private void getUserGoalMetrics(String date, String type, final boolean requestingPreviousData) {
     dataAccessHandler.getUserGoalMetrics(
         prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
         date, type, new Callback<UserGoalMetricsResponse>() {
@@ -262,17 +263,32 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
                 String currentValue =
                     response.body().getData().getBody().getMetrics().getStepsCount().getValue();
 
-                todayTV.setText(String.valueOf((int) Double.parseDouble(currentValue)));
+                int remainingValue = 0;
+
                 goalTV.setText(maxValue);
 
-                int remainingValue =
-                    (int) (Integer.parseInt(maxValue) - Double.parseDouble(currentValue));
+                if (requestingPreviousData) {
+                  metricCounterTV.setText(String.valueOf((int) Double.parseDouble(currentValue)));
+                  todayTV.setText(String.valueOf((int) Double.parseDouble(currentValue)));
+
+                  remainingValue =
+                      (int) (Integer.parseInt(maxValue) - Double.parseDouble(currentValue));
+                } else {
+                  metricCounterTV.setText(
+                      String.valueOf(prefs.getInt(Helpers.getTodayDate() + "_steps", 0)));
+                  todayTV.setText(
+                      String.valueOf(prefs.getInt(Helpers.getTodayDate() + "_steps", 0)));
+
+                  remainingValue = (int) (Integer.parseInt(maxValue) - Double.parseDouble(
+                      metricCounterTV.getText().toString()));
+                }
 
                 if (remainingValue < 0) {
                   remainingTV.setText(String.valueOf(0));
                 } else {
                   remainingTV.setText(String.valueOf(remainingValue));
                 }
+
                 break;
             }
           }
@@ -375,12 +391,14 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
         @Override public void onClick(View view) {
           focusOnView(dateCarouselContainer, view);
 
-          DateTimeFormatter formatter = DateTimeFormat.forPattern("dd/MMM/yyyy");
-          DateTime formattedDate = formatter.parseDateTime(dayOfMonthTV.getText().toString()
-              + "/"
-              + monthOfYearTV.getText().toString()
-              + "/"
-              + dt.year().getAsText());
+          DateTimeFormatter formatterForDisplay = DateTimeFormat.forPattern("dd/MMM/yyyy");
+
+          DateTime formattedDate = formatterForDisplay.parseDateTime(
+              dayOfMonthTV.getText().toString()
+                  + "/"
+                  + monthOfYearTV.getText().toString()
+                  + "/"
+                  + dt.year().getAsText());
 
           String finalDesiredDate = formattedDate.getYear()
               + "-"
@@ -388,7 +406,14 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
               + "-"
               + formattedDate.getDayOfMonth();
 
-          getUserGoalMetrics(finalDesiredDate, "fitness");
+          String todaysDateFormatted =
+              dt.getYear() + "-" + dt.getMonthOfYear() + "-" + dt.getDayOfMonth();
+
+          if (new DateTime(finalDesiredDate).isEqual(new DateTime(todaysDateFormatted))) {
+            getUserGoalMetrics(finalDesiredDate, "fitness", false);
+          } else {
+            getUserGoalMetrics(finalDesiredDate, "fitness", true);
+          }
 
           getWidgetsWithDate(finalDesiredDate);
           setupChartViews(chartsMap, finalDesiredDate);
@@ -451,11 +476,6 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
                 widgetsMap.clear();
 
                 for (int i = 0; i < widgetsFromResponse.size(); i++) {
-                  if (widgetsFromResponse.get(i).getName().equals("Steps Count")) {
-                    metricCounterTV.setText(String.valueOf(widgetsFromResponse.get(i).getTotal()));
-                    continue;
-                  }
-
                   FitnessWidget widget = new FitnessWidget();
 
                   widget.setId(widgetsFromResponse.get(i).getWidgetId());
@@ -695,6 +715,7 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
         break;
       case Constants.EVENT_STEP_COUNTER_INCREMENTED:
         metricCounterTV.setText(String.valueOf(prefs.getInt(Helpers.getTodayDate() + "_steps", 0)));
+        todayTV.setText(String.valueOf(prefs.getInt(Helpers.getTodayDate() + "_steps", 0)));
         break;
       case Constants.EVENT_CALORIES_COUNTER_INCREMENTED:
         fitnessWidget = findWidgetInGrid("Active Calories");
@@ -703,7 +724,8 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
         break;
       case Constants.EVENT_DISTANCE_COUNTER_INCREMENTED:
         fitnessWidget = findWidgetInGrid("Distance Traveled");
-        fitnessWidget.setText(new DecimalFormat("##.###").format((prefs.getFloat(Helpers.getTodayDate() + "_distance", 0))));
+        fitnessWidget.setText(new DecimalFormat("##.###").format(
+            (prefs.getFloat(Helpers.getTodayDate() + "_distance", 0))));
         break;
     }
   }

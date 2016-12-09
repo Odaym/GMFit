@@ -266,6 +266,7 @@
   <string name="application_settings_section_title">Application Settings</string>
   <string name="current_weight_entry">Current Weight</string>
   <string name="my_goal_entry">My Goal</string>
+  <string name="my_activity_level_entry">Activity Levels</string>
   <string name="medical_conditions_entry">Medical Conditions</string>
   <string name="set_reminders_entry">Set Reminders</string>
   <string name="country_entry">Country</string>
@@ -281,6 +282,7 @@
   <string name="profile_edit_goal_dialog_title">Edit your goal</string>
   <string name="profile_edit_medical_conditions_dialog_title">Edit medical conditions</string>
   <string name="profile_edit_measurement_unit_dialog_title">Edit metric system</string>
+  <string name="profile_edit_activity_levels_dialog_title">Edit activity levels</string>
   <string name="user_profile_save_changes">Save</string>
   <string name="updating_user_profile_dialog_title">Updating your profile</string>
   <string name="loading_data_dialog_title">Loading data</string>

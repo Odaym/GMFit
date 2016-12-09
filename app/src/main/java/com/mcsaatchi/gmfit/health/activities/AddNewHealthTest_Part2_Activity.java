@@ -2,7 +2,6 @@ package com.mcsaatchi.gmfit.health.activities;
 
 import android.Manifest;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -21,7 +20,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -583,7 +581,7 @@ public class AddNewHealthTest_Part2_Activity extends Base_Activity
 
                 waitingDialog.dismiss();
 
-                hideKeyboard();
+                Helpers.hideKeyboard(getCurrentFocus(), AddNewHealthTest_Part2_Activity.this);
 
                 EventBus_Singleton.getInstance()
                     .post(new EventBus_Poster(Constants.EXTRAS_TEST_EDIT_OR_CREATE_DONE));
@@ -619,7 +617,7 @@ public class AddNewHealthTest_Part2_Activity extends Base_Activity
 
                 waitingDialog.dismiss();
 
-                hideKeyboard();
+                Helpers.hideKeyboard(getCurrentFocus(), AddNewHealthTest_Part2_Activity.this);
 
                 EventBus_Singleton.getInstance()
                     .post(new EventBus_Poster(Constants.EXTRAS_TEST_EDIT_OR_CREATE_DONE));
@@ -664,13 +662,5 @@ public class AddNewHealthTest_Part2_Activity extends Base_Activity
     }
 
     return deletedImagesString;
-  }
-
-  private void hideKeyboard() {
-    View view = getCurrentFocus();
-    if (view != null) {
-      InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-      imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-    }
   }
 }

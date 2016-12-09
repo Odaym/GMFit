@@ -18,13 +18,16 @@ import android.widget.TimePicker;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.mcsaatchi.gmfit.R;
+import com.mcsaatchi.gmfit.architecture.otto.EventBus_Poster;
+import com.mcsaatchi.gmfit.architecture.otto.EventBus_Singleton;
+import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.Base_Activity;
 import com.mcsaatchi.gmfit.common.classes.AlarmReceiver;
-import com.mcsaatchi.gmfit.common.Constants;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import timber.log.Timber;
 
 public class Reminders_Activity extends Base_Activity {
   @Bind(R.id.toolbar) Toolbar toolbar;
@@ -50,6 +53,9 @@ public class Reminders_Activity extends Base_Activity {
     calendar.set(Calendar.MINUTE, Integer.parseInt(finalTime.split(":")[1]));
     calendar.set(Calendar.SECOND, 0);
     calendar.set(Calendar.MILLISECOND, 0);
+
+    Timber.d("Hour for alarm : " + Integer.parseInt(finalTime.split(":")[0]));
+    Timber.d("Minute for alarm : " + Integer.parseInt(finalTime.split(":")[1]));
 
     Intent intent = new Intent(context, AlarmReceiver.class);
 
@@ -105,16 +111,24 @@ public class Reminders_Activity extends Base_Activity {
         + breakfastAlarmTime.split(":")[1]
         + " "
         + breakfastAlarmTime.split(":")[2]);
+
     lunchReminderValueTV.setText(lunchAlarmTime.split(":")[0]
         + ":"
         + lunchAlarmTime.split(":")[1]
         + " "
         + lunchAlarmTime.split(":")[2]);
+
     dinnerReminderValueTV.setText(dinnerAlarmTime.split(":")[0]
         + ":"
         + dinnerAlarmTime.split(":")[1]
         + " "
         + dinnerAlarmTime.split(":")[2]);
+
+    if (prefs.getBoolean(Constants.ARE_ALARMS_ENABLED, true)) {
+      enableRemindersSwitch.setChecked(true);
+    } else {
+      enableRemindersSwitch.setChecked(false);
+    }
 
     enableRemindersSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
       @Override public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
@@ -128,6 +142,9 @@ public class Reminders_Activity extends Base_Activity {
           triggerAlarmsState(false);
           cancelAllPendingAlarms();
         }
+
+        EventBus_Singleton.getInstance()
+            .post(new EventBus_Poster(Constants.EVENT_REMINDERS_STATUS_CHANGED, areAlarmsEnabled));
       }
     });
 
@@ -138,24 +155,24 @@ public class Reminders_Activity extends Base_Activity {
       @Override public void onClick(View view) {
 
         breakfastAlarmTime = prefs.getString(Constants.BREAKFAST_REMINDER_ALARM_TIME, "09:00:am");
-
-        String[] timeValues = breakfastAlarmTime.split(":");
+        final String[] timeValues = breakfastAlarmTime.split(":");
 
         TimePickerDialog timePicker =
             new TimePickerDialog(Reminders_Activity.this, new TimePickerDialog.OnTimeSetListener() {
               @Override
               public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                String finalTime = formatFinalTime(selectedHour, selectedMinute);
+                String finalTimeForAlarm = formatFinalTime(selectedHour, selectedMinute);
 
-                breakfastAlarmTime = finalTime;
+                String finalTimeForDisplay =
+                    reverseFormatFinalTime(selectedHour + ":" + selectedMinute);
 
-                String[] timeValues = finalTime.split(":");
+                String[] timeValuesForDisplay = finalTimeForDisplay.split(":");
 
                 breakfastReminderValueTV.setText(
-                    timeValues[0] + ":" + timeValues[1] + " " + timeValues[2]);
+                    timeValuesForDisplay[0] + ":" + timeValuesForDisplay[1] + " " + timeValuesForDisplay[2]);
 
                 if (areAlarmsEnabled) {
-                  setupMealRemindersAlarm(Reminders_Activity.this, prefs, "Breakfast", finalTime);
+                  setupMealRemindersAlarm(Reminders_Activity.this, prefs, "Breakfast", finalTimeForAlarm);
                 }
               }
             }, Integer.parseInt(timeValues[0]), Integer.parseInt(timeValues[1]), false);
@@ -171,24 +188,24 @@ public class Reminders_Activity extends Base_Activity {
       @Override public void onClick(View view) {
 
         lunchAlarmTime = prefs.getString(Constants.LUNCH_REMINDER_ALARM_TIME, "02:45:pm");
-
         String[] timeValues = lunchAlarmTime.split(":");
 
         TimePickerDialog timePicker =
             new TimePickerDialog(Reminders_Activity.this, new TimePickerDialog.OnTimeSetListener() {
               @Override
               public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                String finalTime = formatFinalTime(selectedHour, selectedMinute);
+                String finalTimeForAlarm = formatFinalTime(selectedHour, selectedMinute);
 
-                lunchAlarmTime = finalTime;
+                String finalTimeForDisplay =
+                    reverseFormatFinalTime(selectedHour + ":" + selectedMinute);
 
-                String[] timeValues = finalTime.split(":");
+                String[] timeValuesForDisplay = finalTimeForDisplay.split(":");
 
                 lunchReminderValueTV.setText(
-                    timeValues[0] + ":" + timeValues[1] + " " + timeValues[2]);
+                    timeValuesForDisplay[0] + ":" + timeValuesForDisplay[1] + " " + timeValuesForDisplay[2]);
 
                 if (areAlarmsEnabled) {
-                  setupMealRemindersAlarm(Reminders_Activity.this, prefs, "Lunch", finalTime);
+                  setupMealRemindersAlarm(Reminders_Activity.this, prefs, "Lunch", finalTimeForAlarm);
                 }
               }
             }, Integer.parseInt(timeValues[0]), Integer.parseInt(timeValues[1]), false);
@@ -211,17 +228,18 @@ public class Reminders_Activity extends Base_Activity {
             new TimePickerDialog(Reminders_Activity.this, new TimePickerDialog.OnTimeSetListener() {
               @Override
               public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                String finalTime = formatFinalTime(selectedHour, selectedMinute);
+                String finalTimeForAlarm = formatFinalTime(selectedHour, selectedMinute);
 
-                dinnerAlarmTime = finalTime;
+                String finalTimeForDisplay =
+                    reverseFormatFinalTime(selectedHour + ":" + selectedMinute);
 
-                String[] timeValues = finalTime.split(":");
+                String[] timeValuesForDisplay = finalTimeForDisplay.split(":");
 
                 dinnerReminderValueTV.setText(
-                    timeValues[0] + ":" + timeValues[1] + " " + timeValues[2]);
+                    timeValuesForDisplay[0] + ":" + timeValuesForDisplay[1] + " " + timeValuesForDisplay[2]);
 
                 if (areAlarmsEnabled) {
-                  setupMealRemindersAlarm(Reminders_Activity.this, prefs, "Dinner", finalTime);
+                  setupMealRemindersAlarm(Reminders_Activity.this, prefs, "Dinner", finalTimeForAlarm);
                 }
               }
             }, Integer.parseInt(timeValues[0]), Integer.parseInt(timeValues[1]), false);
@@ -232,7 +250,7 @@ public class Reminders_Activity extends Base_Activity {
   }
 
   private String formatFinalTime(int hour, int minute) {
-    String finalTime = "12:45:PM";
+    String finalTime = "";
 
     try {
       final SimpleDateFormat sdf = new SimpleDateFormat("H:mm");
@@ -240,6 +258,22 @@ public class Reminders_Activity extends Base_Activity {
 
       dateObj = sdf.parse(hour + ":" + minute);
       finalTime = new SimpleDateFormat("HH:mm:a").format(dateObj);
+    } catch (ParseException e) {
+      e.printStackTrace();
+    }
+
+    return finalTime;
+  }
+
+  private String reverseFormatFinalTime(String originalTime) {
+    String finalTime = "";
+
+    try {
+      final SimpleDateFormat sdf = new SimpleDateFormat("H:mm");
+      final Date dateObj;
+
+      dateObj = sdf.parse(originalTime);
+      finalTime = new SimpleDateFormat("hh:mm:a").format(dateObj);
     } catch (ParseException e) {
       e.printStackTrace();
     }

@@ -41,7 +41,6 @@ import com.squareup.otto.Subscribe;
 import java.text.DateFormatSymbols;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.List;
 import javax.inject.Inject;
 import retrofit2.Call;
@@ -246,16 +245,6 @@ public class Setup_Profile_4_Fragment extends Fragment
                         .getData()
                         .getBody()
                         .getData();
-
-                MedicalConditionsResponseDatum noneMedicalResponse =
-                    new MedicalConditionsResponseDatum();
-
-                noneMedicalResponse.setId(String.valueOf(-1));
-                noneMedicalResponse.setName("None");
-
-                allMedicalData.add(noneMedicalResponse);
-
-                Collections.reverse(allMedicalData);
 
                 initMedicalConditionsSpinner(allMedicalData, medicalConditionsSpinner);
 
