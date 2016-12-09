@@ -8,6 +8,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -62,6 +64,8 @@ public class Setup_Profile_4_Fragment extends Fragment
 
   @Inject DataAccessHandler dataAccessHandler;
   @Inject SharedPreferences prefs;
+
+  private float finalWeight = 0, finalHeight = 0;
 
   private ArrayList<FormEditText> allFields = new ArrayList<>();
   private String dateOfBirth = "";
@@ -124,6 +128,34 @@ public class Setup_Profile_4_Fragment extends Fragment
       }
     });
 
+    weightET.addTextChangedListener(new TextWatcher() {
+      @Override public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+      }
+
+      @Override public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        finalWeight = Float.parseFloat(charSequence.toString());
+      }
+
+      @Override public void afterTextChanged(Editable editable) {
+
+      }
+    });
+
+    heightET.addTextChangedListener(new TextWatcher() {
+      @Override public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+      }
+
+      @Override public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        finalHeight = Float.parseFloat(charSequence.toString());
+      }
+
+      @Override public void afterTextChanged(Editable editable) {
+
+      }
+    });
+
     return fragmentView;
   }
 
@@ -151,9 +183,6 @@ public class Setup_Profile_4_Fragment extends Fragment
           } else {
             finalDateOfBirth = "1990-01-01";
           }
-
-          float finalWeight = Float.parseFloat(weightET.getText().toString());
-          float finalHeight = Float.parseFloat(heightET.getText().toString());
 
           String finalBloodType = bloodTypeSpinner.getSelectedItem().toString();
 
@@ -388,5 +417,13 @@ public class Setup_Profile_4_Fragment extends Fragment
   @Override public void onDestroy() {
     super.onDestroy();
     EventBus_Singleton.getInstance().unregister(this);
+  }
+
+  public float getFinalWeight() {
+    return finalWeight;
+  }
+
+  public float getFinalHeight() {
+    return finalHeight;
   }
 }

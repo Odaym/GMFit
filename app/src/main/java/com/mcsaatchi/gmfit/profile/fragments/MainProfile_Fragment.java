@@ -302,20 +302,20 @@ public class MainProfile_Fragment extends Fragment {
 
             if (selectedRadioButton != null) {
               medicalConditionsValueTV.setText(selectedRadioButton.getText().toString());
+
+              prefs.edit()
+                  .putString(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION,
+                      selectedRadioButton.getText().toString())
+                  .apply();
+              prefs.edit()
+                  .putInt(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION_ID,
+                      selectedRadioButton.getId())
+                  .apply();
+
+              updateUserProfile();
             } else {
               Log.d("TAG", "onClick: Selected Radio Button was null!");
             }
-
-            prefs.edit()
-                .putString(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION,
-                    selectedRadioButton.getText().toString())
-                .apply();
-            prefs.edit()
-                .putInt(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION_ID,
-                    selectedRadioButton.getId())
-                .apply();
-
-            updateUserProfile();
           }
         });
 

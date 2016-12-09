@@ -34,6 +34,8 @@ public class Setup_Profile_2_Fragment extends Fragment {
 
   @Bind(R.id.goalRadioButtonsGroup) RadioGroupPlus goalRadioButtonsGroup;
 
+  private boolean dataWasSelected = false;
+
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
 
@@ -79,6 +81,8 @@ public class Setup_Profile_2_Fragment extends Fragment {
 
                   radioButtonItem.setOnClickListener(new View.OnClickListener() {
                     @Override public void onClick(View view) {
+                      dataWasSelected = true;
+
                       prefs.edit()
                           .putInt(Constants.EXTRAS_USER_PROFILE_GOAL_ID, radioButtonItem.getId())
                           .apply();
@@ -103,5 +107,9 @@ public class Setup_Profile_2_Fragment extends Fragment {
             alertDialog.show();
           }
         });
+  }
+
+  public boolean wasDataSelected() {
+    return dataWasSelected;
   }
 }

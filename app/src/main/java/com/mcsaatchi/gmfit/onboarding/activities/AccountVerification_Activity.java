@@ -43,7 +43,7 @@ public class AccountVerification_Activity extends Base_Activity {
     allFields.add(verifyCodeET);
 
     Picasso.with(this)
-        .load(R.drawable.fragment_intro_picture)
+        .load(R.drawable.verification_banner)
         .transform(new CircleTransform())
         .into(getStartedIMG);
 

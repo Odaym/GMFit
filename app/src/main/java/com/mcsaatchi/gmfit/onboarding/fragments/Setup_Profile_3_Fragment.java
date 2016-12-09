@@ -32,8 +32,8 @@ public class Setup_Profile_3_Fragment extends Fragment {
 
   @Inject DataAccessHandler dataAccessHandler;
   @Inject SharedPreferences prefs;
-
   @Bind(R.id.activityLevelsRadioButtonsGroup) RadioGroupPlus activityLevelsRadioButtonsGroup;
+  private boolean dataWasSelected = false;
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
@@ -86,6 +86,8 @@ public class Setup_Profile_3_Fragment extends Fragment {
 
                   radioButtonItem.setOnClickListener(new View.OnClickListener() {
                     @Override public void onClick(View view) {
+                      dataWasSelected = true;
+
                       prefs.edit()
                           .putInt(Constants.EXTRAS_USER_PROFILE_ACTIVITY_LEVEL_ID,
                               radioButtonItem.getId())
@@ -111,5 +113,9 @@ public class Setup_Profile_3_Fragment extends Fragment {
             alertDialog.show();
           }
         });
+  }
+
+  public boolean wasDataSelected() {
+    return dataWasSelected;
   }
 }

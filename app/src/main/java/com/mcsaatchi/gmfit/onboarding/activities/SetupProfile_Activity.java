@@ -7,25 +7,26 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.util.SparseArray;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
-
+import android.widget.Toast;
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.common.activities.Base_Activity;
-import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.architecture.otto.EventBus_Poster;
 import com.mcsaatchi.gmfit.architecture.otto.EventBus_Singleton;
+import com.mcsaatchi.gmfit.common.Constants;
+import com.mcsaatchi.gmfit.common.activities.Base_Activity;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.common.classes.NonSwipeableViewPager;
 import com.mcsaatchi.gmfit.onboarding.fragments.Setup_Profile_1_Fragment;
 import com.mcsaatchi.gmfit.onboarding.fragments.Setup_Profile_2_Fragment;
 import com.mcsaatchi.gmfit.onboarding.fragments.Setup_Profile_3_Fragment;
 import com.mcsaatchi.gmfit.onboarding.fragments.Setup_Profile_4_Fragment;
-
-import butterknife.Bind;
-import butterknife.ButterKnife;
 
 public class SetupProfile_Activity extends Base_Activity {
   @Bind(R.id.viewpager) NonSwipeableViewPager viewPager;
@@ -91,9 +92,63 @@ public class SetupProfile_Activity extends Base_Activity {
 
     nextPageBTN.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
-        viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
 
-        // Time for submission
+        switch (viewPager.getCurrentItem()) {
+          case 1:
+            if (setupProfileAdapter.getRegisteredFragment(viewPager.getCurrentItem()) != null) {
+              /**
+               * If no data was selected
+               */
+              if (!((Setup_Profile_2_Fragment) setupProfileAdapter.getRegisteredFragment(
+                  viewPager.getCurrentItem())).wasDataSelected()) {
+
+                Toast.makeText(SetupProfile_Activity.this, "Please make a choice to proceed",
+                    Toast.LENGTH_SHORT).show();
+              } else {
+                viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
+              }
+            }
+            break;
+          case 2:
+            if (setupProfileAdapter.getRegisteredFragment(viewPager.getCurrentItem()) != null) {
+              /**
+               * If no data was selected
+               */
+              if (!((Setup_Profile_3_Fragment) setupProfileAdapter.getRegisteredFragment(
+                  viewPager.getCurrentItem())).wasDataSelected()) {
+
+                Toast.makeText(SetupProfile_Activity.this, "Please make a choice to proceed",
+                    Toast.LENGTH_SHORT).show();
+              } else {
+                viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
+              }
+            }
+            break;
+          case 3:
+            if (setupProfileAdapter.getRegisteredFragment(viewPager.getCurrentItem()) != null) {
+              /**
+               * If no data was selected
+               */
+              if (((Setup_Profile_4_Fragment) setupProfileAdapter.getRegisteredFragment(
+                  viewPager.getCurrentItem())).getFinalHeight() == 0
+                  || ((Setup_Profile_4_Fragment) setupProfileAdapter.getRegisteredFragment(
+                  viewPager.getCurrentItem())).getFinalWeight() == 0) {
+
+                Toast.makeText(SetupProfile_Activity.this,
+                    "Please fill in your Height and Weight to proceed", Toast.LENGTH_SHORT).show();
+              } else {
+                viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
+              }
+            }
+
+            break;
+          default:
+            viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
+        }
+
+        /**
+         * Time for submission
+         */
         if (nextPageBTN.getText().toString().equals(getString(R.string.finish_setup))) {
           if (Helpers.isInternetAvailable(SetupProfile_Activity.this)) {
             EventBus_Singleton.getInstance()
@@ -110,9 +165,7 @@ public class SetupProfile_Activity extends Base_Activity {
 
     switch (item.getItemId()) {
       case android.R.id.home:
-
         viewPager.setCurrentItem(viewPager.getCurrentItem() - 1);
-
         break;
     }
 
@@ -120,6 +173,7 @@ public class SetupProfile_Activity extends Base_Activity {
   }
 
   public class SetupProfile_Adapter extends FragmentPagerAdapter {
+    SparseArray<Fragment> registeredFragments = new SparseArray<>();
 
     public SetupProfile_Adapter(FragmentManager fm) {
       super(fm);
@@ -138,6 +192,21 @@ public class SetupProfile_Activity extends Base_Activity {
         default:
           return null;
       }
+    }
+
+    @Override public Object instantiateItem(ViewGroup container, int position) {
+      Fragment fragment = (Fragment) super.instantiateItem(container, position);
+      registeredFragments.put(position, fragment);
+      return fragment;
+    }
+
+    @Override public void destroyItem(ViewGroup container, int position, Object object) {
+      registeredFragments.remove(position);
+      super.destroyItem(container, position, object);
+    }
+
+    public Fragment getRegisteredFragment(int position) {
+      return registeredFragments.get(position);
     }
 
     @Override public int getCount() {
