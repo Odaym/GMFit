@@ -8,16 +8,15 @@ import android.os.Handler;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.common.Constants;
+import com.mcsaatchi.gmfit.architecture.GMFit_Application;
+import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.architecture.otto.EventBus_Poster;
 import com.mcsaatchi.gmfit.architecture.otto.EventBus_Singleton;
-import com.mcsaatchi.gmfit.architecture.GMFit_Application;
-import com.mcsaatchi.gmfit.common.classes.Helpers;
-import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponse;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponseChart;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponseInnerBody;
-import com.mcsaatchi.gmfit.architecture.rest.UserProfileResponseMedicalCondition;
+import com.mcsaatchi.gmfit.common.Constants;
+import com.mcsaatchi.gmfit.common.classes.Helpers;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
@@ -32,8 +31,6 @@ public class Splash_Activity extends AppCompatActivity {
   @Inject SharedPreferences prefs;
 
   private Intent intent;
-
-  private List<UserProfileResponseMedicalCondition> userMedicalConditions = new ArrayList<>();
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
