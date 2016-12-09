@@ -289,6 +289,16 @@
   <string name="choose_picture_from_gallery">Choose from gallery</string>
   <string name="take_new_picture">Take a new picture</string>
 
+  <!-- INSURANCE SECTION -->
+  <string name="insurance_section_title">Insurance</string>
+  <string name="please_login_hint">Please Login</string>
+  <string name="member_id_label">Member ID</string>
+  <string name="password_label">Password</string>
+  <string name="enter_member_id_hint">Enter your membership ID</string>
+  <string name="enter_your_password_hint">Enter your password</string>
+  <string name="member_id_empty_error">Member ID cannot be empty</string>
+  <string name="login_insurance_label">Login</string>
+
   <!-- CONTACT US ACTIVITY -->
   <string name="contact_us_activity_title">Contact Us</string>
   <string name="email_addresses_header_title">Email Addresses</string>

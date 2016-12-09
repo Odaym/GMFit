@@ -26,6 +26,7 @@ import com.facebook.GraphResponse;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.mcsaatchi.gmfit.R;
+import com.mcsaatchi.gmfit.common.activities.Main_Activity;
 import com.mcsaatchi.gmfit.common.activities.Base_Activity;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.classes.DefaultIndicator_Controller;

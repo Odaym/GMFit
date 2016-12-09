@@ -24,6 +24,8 @@
 
   <color name="buttons_blue">#47589a</color>
 
+  <color name="faded_blue">#330B85DA</color>
+
   <color name="nutrition_orange_faded_transparent">#FE826D</color>
   <color name="nutrition_goals_pink">#C4458A</color>
 
@@ -33,6 +35,7 @@
   <color name="separator_gray">#806a6cff</color>
   <color name="offwhite_background_gray">#EDEDED</color>
   <color name="edittext_hint_color">#401E1E1E</color>
+  <color name="edittext_hint_color_white">#BFFFFFFF</color>
   <color name="much_lighter_gray">#F9F9F9</color>
   <color name="lighter_gray">#F2F2F2</color>
   <color name="light_gray">#D1D1D1</color>

@@ -18,6 +18,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.andreabaccega.widget.FormEditText;
 import com.mcsaatchi.gmfit.R;
+import com.mcsaatchi.gmfit.common.activities.Main_Activity;
 import com.mcsaatchi.gmfit.common.activities.Base_Activity;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.architecture.otto.EventBus_Poster;

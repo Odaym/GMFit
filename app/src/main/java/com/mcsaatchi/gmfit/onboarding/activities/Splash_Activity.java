@@ -16,6 +16,7 @@ import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponse;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponseChart;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponseInnerBody;
 import com.mcsaatchi.gmfit.common.Constants;
+import com.mcsaatchi.gmfit.common.activities.Main_Activity;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
 import java.util.ArrayList;
 import java.util.List;
