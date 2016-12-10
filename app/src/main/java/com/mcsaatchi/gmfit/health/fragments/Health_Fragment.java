@@ -103,7 +103,7 @@ public class Health_Fragment extends Fragment {
                   widget.setId(widgetsFromResponse.get(i).getWidgetId());
                   widget.setMeasurementUnit(widgetsFromResponse.get(i).getUnit());
                   widget.setPosition(Integer.parseInt(widgetsFromResponse.get(i).getPosition()));
-                  widget.setValue(widgetsFromResponse.get(i).getTotal());
+                  widget.setValue(Float.parseFloat(widgetsFromResponse.get(i).getTotal()));
                   widget.setTitle(widgetsFromResponse.get(i).getName());
                   widget.setSlug(widgetsFromResponse.get(i).getSlug());
 

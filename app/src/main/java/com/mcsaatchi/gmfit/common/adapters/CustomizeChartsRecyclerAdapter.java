@@ -39,7 +39,6 @@ public class CustomizeChartsRecyclerAdapter
   }
 
   @Override public void onBindViewHolder(MyViewHolder holder, int position) {
-
     holder.itemNameTV.setText(dataChartsMap.get(position).getName());
     holder.itemIconRightIMG.setImageResource(drawableResId);
   }

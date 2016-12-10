@@ -17,6 +17,8 @@ public class Constants {
 
   public static final int WAIT_TIME_BEFORE_CHECKING_METRICS_SERVICE = 1200000;
 
+  public static final int NUMBER_OF_DAYS_IN_DATE_CAROUSEL = 5;
+
   public static final String EXTRAS_USER_PROFILE_USER_FULL_NAME = "user_profile_user_full_name";
   public static final String EXTRAS_USER_PROFILE_USER_EMAIL = "user_profile_user_email";
   public static final String EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION =

@@ -307,7 +307,7 @@ public class Nutrition_Fragment extends Fragment {
   }
 
   private void setupDateCarousel() {
-    for (int i = 14; i >= 0; i--) {
+    for (int i = Constants.NUMBER_OF_DAYS_IN_DATE_CAROUSEL; i >= 0; i--) {
       final View itemDateCarouselLayout =
           getActivity().getLayoutInflater().inflate(R.layout.item_date_carousel, null);
       itemDateCarouselLayout.setPadding(

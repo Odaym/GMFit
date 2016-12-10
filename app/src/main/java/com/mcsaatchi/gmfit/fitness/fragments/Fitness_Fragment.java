@@ -17,6 +17,8 @@ import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -25,7 +27,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.GridView;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -36,20 +37,10 @@ import com.github.mikephil.charting.charts.BarChart;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.common.activities.AddNewChart_Activity;
-import com.mcsaatchi.gmfit.common.activities.Base_Activity;
-import com.mcsaatchi.gmfit.common.activities.CustomizeWidgetsAndCharts_Activity;
-import com.mcsaatchi.gmfit.common.activities.SlugBreakdown_Activity;
-import com.mcsaatchi.gmfit.fitness.adapters.FitnessWidgets_GridAdapter;
-import com.mcsaatchi.gmfit.common.Constants;
+import com.mcsaatchi.gmfit.architecture.GMFit_Application;
+import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.architecture.otto.EventBus_Poster;
 import com.mcsaatchi.gmfit.architecture.otto.EventBus_Singleton;
-import com.mcsaatchi.gmfit.common.classes.FontTextView;
-import com.mcsaatchi.gmfit.architecture.GMFit_Application;
-import com.mcsaatchi.gmfit.common.classes.Helpers;
-import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
-import com.mcsaatchi.gmfit.common.models.DataChart;
-import com.mcsaatchi.gmfit.fitness.models.FitnessWidget;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponseChartData;
 import com.mcsaatchi.gmfit.architecture.rest.ChartMetricBreakdownResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ChartMetricBreakdownResponseDatum;
@@ -58,9 +49,18 @@ import com.mcsaatchi.gmfit.architecture.rest.SlugBreakdownResponse;
 import com.mcsaatchi.gmfit.architecture.rest.UserGoalMetricsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.WidgetsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.WidgetsResponseDatum;
+import com.mcsaatchi.gmfit.common.Constants;
+import com.mcsaatchi.gmfit.common.activities.AddNewChart_Activity;
+import com.mcsaatchi.gmfit.common.activities.Base_Activity;
+import com.mcsaatchi.gmfit.common.activities.CustomizeWidgetsAndCharts_Activity;
+import com.mcsaatchi.gmfit.common.activities.SlugBreakdown_Activity;
+import com.mcsaatchi.gmfit.common.classes.FontTextView;
+import com.mcsaatchi.gmfit.common.classes.Helpers;
+import com.mcsaatchi.gmfit.common.models.DataChart;
+import com.mcsaatchi.gmfit.fitness.adapters.FitnessWidgets_GridAdapter;
+import com.mcsaatchi.gmfit.fitness.models.FitnessWidget;
 import com.squareup.otto.Subscribe;
 import java.sql.SQLException;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -79,7 +79,7 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
 
   private static final int ADD_NEW_FITNESS_CHART_REQUEST_CODE = 1;
 
-  @Bind(R.id.widgetsGridView) GridView widgetsGridView;
+  @Bind(R.id.widgetsGridView) RecyclerView widgetsGridView;
   @Bind(R.id.cards_container) LinearLayout cards_container;
   @Bind(R.id.addChartBTN) Button addNewChartBTN;
   @Bind(R.id.metricCounterTV) FontTextView metricCounterTV;
@@ -248,56 +248,6 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
     EventBus_Singleton.getInstance().unregister(this);
   }
 
-  private void getUserGoalMetrics(String date, String type, final boolean requestingPreviousData) {
-    dataAccessHandler.getUserGoalMetrics(
-        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
-        date, type, new Callback<UserGoalMetricsResponse>() {
-          @Override public void onResponse(Call<UserGoalMetricsResponse> call,
-              Response<UserGoalMetricsResponse> response) {
-
-            switch (response.code()) {
-              case 200:
-                String maxValue =
-                    response.body().getData().getBody().getMetrics().getStepsCount().getMaxValue();
-
-                String currentValue =
-                    response.body().getData().getBody().getMetrics().getStepsCount().getValue();
-
-                int remainingValue = 0;
-
-                goalTV.setText(maxValue);
-
-                if (requestingPreviousData) {
-                  metricCounterTV.setText(String.valueOf((int) Double.parseDouble(currentValue)));
-                  todayTV.setText(String.valueOf((int) Double.parseDouble(currentValue)));
-
-                  remainingValue =
-                      (int) (Integer.parseInt(maxValue) - Double.parseDouble(currentValue));
-                } else {
-                  metricCounterTV.setText(
-                      String.valueOf(prefs.getInt(Helpers.getTodayDate() + "_steps", 0)));
-                  todayTV.setText(
-                      String.valueOf(prefs.getInt(Helpers.getTodayDate() + "_steps", 0)));
-
-                  remainingValue = (int) (Integer.parseInt(maxValue) - Double.parseDouble(
-                      metricCounterTV.getText().toString()));
-                }
-
-                if (remainingValue < 0) {
-                  remainingTV.setText(String.valueOf(0));
-                } else {
-                  remainingTV.setText(String.valueOf(remainingValue));
-                }
-
-                break;
-            }
-          }
-
-          @Override public void onFailure(Call<UserGoalMetricsResponse> call, Throwable t) {
-          }
-        });
-  }
-
   private void getPeriodicalChartData(final BarChart barchart, String desiredDate,
       final TextView dateTV_1, final TextView dateTV_2, final TextView dateTV_3,
       final TextView dateTV_4, final String chart_slug) {
@@ -363,7 +313,7 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
   }
 
   private void setupDateCarousel() {
-    for (int i = 14; i >= 0; i--) {
+    for (int i = Constants.NUMBER_OF_DAYS_IN_DATE_CAROUSEL; i >= 0; i--) {
       final View itemDateCarouselLayout =
           getActivity().getLayoutInflater().inflate(R.layout.item_date_carousel, null);
       itemDateCarouselLayout.setPadding(
@@ -462,7 +412,7 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
     monthOfYearTV.setTypeface(null, Typeface.BOLD);
   }
 
-  private void getWidgetsWithDate(String finalDate) {
+  private void getWidgetsWithDate(final String finalDate) {
     dataAccessHandler.getWidgetsWithDate(
         prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
         "fitness", finalDate, new Callback<WidgetsResponse>() {
@@ -473,27 +423,85 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
                 List<WidgetsResponseDatum> widgetsFromResponse =
                     response.body().getData().getBody().getData();
 
-                widgetsMap.clear();
+                ArrayList<FitnessWidget> newWidgetsMap = new ArrayList<>();
 
                 for (int i = 0; i < widgetsFromResponse.size(); i++) {
                   FitnessWidget widget = new FitnessWidget();
 
-                  widget.setId(widgetsFromResponse.get(i).getWidgetId());
-                  widget.setMeasurementUnit(widgetsFromResponse.get(i).getUnit());
-                  widget.setPosition(Integer.parseInt(widgetsFromResponse.get(i).getPosition()));
-                  widget.setValue(widgetsFromResponse.get(i).getTotal());
-                  widget.setTitle(widgetsFromResponse.get(i).getName());
+                  if (!widgetsFromResponse.get(i).getName().equals("Steps Count")) {
+                    widget.setId(widgetsFromResponse.get(i).getWidgetId());
+                    widget.setMeasurementUnit(widgetsFromResponse.get(i).getUnit());
+                    widget.setPosition(Integer.parseInt(widgetsFromResponse.get(i).getPosition()));
+                    widget.setValue(Float.parseFloat(widgetsFromResponse.get(i).getTotal()));
+                    widget.setTitle(widgetsFromResponse.get(i).getName());
 
-                  widgetsMap.add(widget);
+                    newWidgetsMap.add(widget);
+                  }
                 }
 
-                setupWidgetViews(widgetsMap);
+                setupWidgetViews(newWidgetsMap);
 
                 break;
             }
           }
 
           @Override public void onFailure(Call<WidgetsResponse> call, Throwable t) {
+          }
+        });
+  }
+
+  private void getUserGoalMetrics(String date, String type, final boolean requestingPreviousData) {
+    dataAccessHandler.getUserGoalMetrics(
+        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
+        date, type, new Callback<UserGoalMetricsResponse>() {
+          @Override public void onResponse(Call<UserGoalMetricsResponse> call,
+              Response<UserGoalMetricsResponse> response) {
+
+            switch (response.code()) {
+              case 200:
+                String maxValue =
+                    response.body().getData().getBody().getMetrics().getStepsCount().getMaxValue();
+
+                String currentValue =
+                    response.body().getData().getBody().getMetrics().getStepsCount().getValue();
+
+                int remainingValue = 0;
+
+                goalTV.setText(maxValue);
+
+                /**
+                 * Requesting today's data
+                 */
+                if (!requestingPreviousData) {
+                  metricCounterTV.setText(
+                      String.valueOf(prefs.getInt(Helpers.getTodayDate() + "_steps", 0)));
+                  todayTV.setText(
+                      String.valueOf(prefs.getInt(Helpers.getTodayDate() + "_steps", 0)));
+
+                  remainingValue = (int) (Integer.parseInt(maxValue) - Double.parseDouble(
+                      metricCounterTV.getText().toString()));
+                } else {
+                  /**
+                   * Requesting data from previous days
+                   */
+                  metricCounterTV.setText(String.valueOf((int) Double.parseDouble(currentValue)));
+                  todayTV.setText(String.valueOf((int) Double.parseDouble(currentValue)));
+
+                  remainingValue =
+                      (int) (Integer.parseInt(maxValue) - Double.parseDouble(currentValue));
+                }
+
+                if (remainingValue < 0) {
+                  remainingTV.setText(String.valueOf(0));
+                } else {
+                  remainingTV.setText(String.valueOf(remainingValue));
+                }
+
+                break;
+            }
+          }
+
+          @Override public void onFailure(Call<UserGoalMetricsResponse> call, Throwable t) {
           }
         });
   }
@@ -623,7 +631,7 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
   private void setupChartViews(List<DataChart> dataChartsMap, String desiredDate) {
     cards_container.removeAllViews();
 
-    addNewBarChart("Number Of Steps", "steps-count", desiredDate);
+    addNewBarChart("Steps Count", "steps-count", desiredDate);
 
     if (!dataChartsMap.isEmpty()) {
       for (DataChart chart : dataChartsMap) {
@@ -637,32 +645,33 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
     widgets_GridAdapter = new FitnessWidgets_GridAdapter(getActivity(), widgetsMap,
         R.layout.grid_item_fitness_widgets);
 
+    widgetsGridView.setLayoutManager(new GridLayoutManager(getActivity(), widgetsMap.size()));
     widgetsGridView.setAdapter(widgets_GridAdapter);
   }
 
-  private TextView findWidgetInGrid(String widgetName) {
-    View fitnessWidgetView;
-    TextView metricCountTextView = null;
-
-    for (int i = 0; i < widgets_GridAdapter.getCount(); i++) {
-      if (widgets_GridAdapter.getItem(i).getTitle().equals(widgetName)) {
-        final int firstListItemPosition = widgetsGridView.getFirstVisiblePosition();
-        final int lastListItemPosition =
-            firstListItemPosition + widgetsGridView.getChildCount() - 1;
-
-        if (i < firstListItemPosition || i > lastListItemPosition) {
-          fitnessWidgetView = widgetsGridView.getAdapter().getView(i, null, widgetsGridView);
-        } else {
-          final int childIndex = i - firstListItemPosition;
-          fitnessWidgetView = widgetsGridView.getChildAt(childIndex);
-        }
-
-        metricCountTextView = (TextView) fitnessWidgetView.findViewById(R.id.metricTV);
-      }
-    }
-
-    return metricCountTextView;
-  }
+  //private TextView findWidgetInGrid(String widgetName) {
+  //  View fitnessWidgetView;
+  //  TextView metricCountTextView = null;
+  //
+  //  for (int i = 0; i < widgets_GridAdapter.getCount(); i++) {
+  //    if (widgets_GridAdapter.getItem(i).getTitle().equals(widgetName)) {
+  //      final int firstListItemPosition = widgetsGridView.getFirstVisiblePosition();
+  //      final int lastListItemPosition =
+  //          firstListItemPosition + widgetsGridView.getChildCount() - 1;
+  //
+  //      if (i < firstListItemPosition || i > lastListItemPosition) {
+  //        fitnessWidgetView = widgetsGridView.getAdapter().getView(i, null, widgetsGridView);
+  //      } else {
+  //        final int childIndex = i - firstListItemPosition;
+  //        fitnessWidgetView = widgetsGridView.getChildAt(childIndex);
+  //      }
+  //
+  //      metricCountTextView = (TextView) fitnessWidgetView.findViewById(R.id.metricTV);
+  //    }
+  //  }
+  //
+  //  return metricCountTextView;
+  //}
 
   /**
    * Events are received from the Event Bus and handled here.
@@ -718,14 +727,14 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
         todayTV.setText(String.valueOf(prefs.getInt(Helpers.getTodayDate() + "_steps", 0)));
         break;
       case Constants.EVENT_CALORIES_COUNTER_INCREMENTED:
-        fitnessWidget = findWidgetInGrid("Active Calories");
-        fitnessWidget.setText(
-            String.valueOf((int) prefs.getFloat(Helpers.getTodayDate() + "_calories", 0)));
+        //fitnessWidget = findWidgetInGrid("Active Calories");
+        //fitnessWidget.setText(
+        //    String.valueOf((int) prefs.getFloat(Helpers.getTodayDate() + "_calories", 0)));
         break;
       case Constants.EVENT_DISTANCE_COUNTER_INCREMENTED:
-        fitnessWidget = findWidgetInGrid("Distance Traveled");
-        fitnessWidget.setText(new DecimalFormat("##.###").format(
-            (prefs.getFloat(Helpers.getTodayDate() + "_distance", 0))));
+        //fitnessWidget = findWidgetInGrid("Distance Traveled");
+        //fitnessWidget.setText(new DecimalFormat("##.###").format(
+        //    (prefs.getFloat(Helpers.getTodayDate() + "_distance", 0))));
         break;
     }
   }

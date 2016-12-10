@@ -10,7 +10,7 @@ public class WidgetsResponseDatum {
   @SerializedName("slug") @Expose private String slug;
   @SerializedName("unit") @Expose private String unit;
   @SerializedName("position") @Expose private String position;
-  @SerializedName("total") @Expose private Integer total;
+  @SerializedName("total") @Expose private String total;
 
   /**
    * @return The widgetId
@@ -85,14 +85,14 @@ public class WidgetsResponseDatum {
   /**
    * @return The total
    */
-  public Integer getTotal() {
+  public String getTotal() {
     return total;
   }
 
   /**
    * @param total The total
    */
-  public void setTotal(Integer total) {
+  public void setTotal(String total) {
     this.total = total;
   }
 }
