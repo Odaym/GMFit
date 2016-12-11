@@ -28,7 +28,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import timber.log.Timber;
 
-public class AddNewChart_Activity extends Base_Activity {
+public class AddNewChartActivity extends Base_Activity {
   private static final int ADD_NEW_FITNESS_CHART_REQUEST_CODE = 1;
   private static final int ADD_NEW_NUTRITION_CHART_REQUEST_CODE = 2;
 
@@ -112,7 +112,7 @@ public class AddNewChart_Activity extends Base_Activity {
                   chartItemsMap.add(newChartToAdd);
                 }
 
-                chartsList.setAdapter(new DataChartsListing_Adapter(chartItemsMap, AddNewChart_Activity.this));
+                chartsList.setAdapter(new DataChartsListing_Adapter(chartItemsMap, AddNewChartActivity.this));
 
                 chartsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                   @Override
@@ -132,7 +132,7 @@ public class AddNewChart_Activity extends Base_Activity {
 
                       finish();
                     } else {
-                      Toast.makeText(AddNewChart_Activity.this, R.string.duplicate_chart_error,
+                      Toast.makeText(AddNewChartActivity.this, R.string.duplicate_chart_error,
                           Toast.LENGTH_SHORT).show();
                     }
                   }

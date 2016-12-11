@@ -128,7 +128,7 @@
         android:theme="@style/No_Action_Bar_Theme"/>
 
     <activity
-        android:name=".common.activities.AddNewChart_Activity"
+        android:name=".common.activities.AddNewChartActivity"
         android:screenOrientation="portrait"
         android:theme="@style/No_Action_Bar_Theme"/>
 
@@ -151,6 +151,13 @@
         android:name=".profile.activities.ContactUs_Activity"
         android:screenOrientation="portrait"
         android:theme="@style/No_Action_Bar_Theme"/>
+
+    <!-- INSURANCE STUFF -->
+    <activity
+        android:name=".insurance.activities.UpdatePasswordActivity"
+        android:screenOrientation="portrait"
+        android:theme="@style/No_Action_Bar_Theme"
+        android:windowSoftInputMode="stateHidden"/>
 
     <receiver android:name=".common.classes.AlarmReceiver"/>
 

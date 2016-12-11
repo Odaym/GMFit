@@ -2,10 +2,10 @@ package com.mcsaatchi.gmfit.architecture.otto;
 
 import com.squareup.otto.Bus;
 
-public class EventBus_Singleton {
+public class EventBusSingleton {
   private static final Bus BUS = new Bus();
 
-  private EventBus_Singleton() {
+  private EventBusSingleton() {
     //no instances
   }
 

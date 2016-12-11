@@ -25,8 +25,8 @@ import com.mcsaatchi.gmfit.common.activities.Base_Activity;
 import com.mcsaatchi.gmfit.health.adapters.EditableTestMetricsRecycler_Adapter;
 import com.mcsaatchi.gmfit.health.adapters.TesticularMetricsRecycler_Adapter;
 import com.mcsaatchi.gmfit.common.Constants;
-import com.mcsaatchi.gmfit.architecture.otto.EventBus_Poster;
-import com.mcsaatchi.gmfit.architecture.otto.EventBus_Singleton;
+import com.mcsaatchi.gmfit.architecture.otto.EventBusPoster;
+import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
 import com.mcsaatchi.gmfit.common.classes.SimpleDividerItemDecoration;
 import com.mcsaatchi.gmfit.architecture.rest.MedicalTestMetricsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.MedicalTestMetricsResponseBody;
@@ -57,7 +57,7 @@ public class AddNewHealthTest_Activity extends Base_Activity {
 
     ButterKnife.bind(this);
 
-    EventBus_Singleton.getInstance().register(this);
+    EventBusSingleton.getInstance().register(this);
 
     setupToolbar(toolbar, getResources().getString(R.string.add_new_test_activity_title), true);
 
@@ -246,7 +246,7 @@ public class AddNewHealthTest_Activity extends Base_Activity {
     availableTestMetricsListview.addItemDecoration(new SimpleDividerItemDecoration(this));
   }
 
-  @Subscribe public void handle_BusEvents(EventBus_Poster ebp) {
+  @Subscribe public void handle_BusEvents(EventBusPoster ebp) {
     String ebpMessage = ebp.getMessage();
 
     switch (ebpMessage) {
@@ -258,6 +258,6 @@ public class AddNewHealthTest_Activity extends Base_Activity {
 
   @Override public void onDestroy() {
     super.onDestroy();
-    EventBus_Singleton.getInstance().unregister(this);
+    EventBusSingleton.getInstance().unregister(this);
   }
 }

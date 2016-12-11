@@ -112,4 +112,9 @@
 
   <!-- PROFILE SECTION -->
   <dimen name="profile_value_fields_item_width">120dp</dimen>
+
+  <!-- INSURANCE SECTION -->
+  <dimen name="insurance_home_header_section_height">130dp</dimen>
+  <dimen name="insurance_widgets_name_font_size">20sp</dimen>
+  <dimen name="insurance_widget_icon_dimen">40dp</dimen>
 </resources>

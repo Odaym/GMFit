@@ -17,8 +17,8 @@ import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.common.activities.Base_Activity;
 import com.mcsaatchi.gmfit.nutrition.adapters.NutritionalFactsList_Adapter;
 import com.mcsaatchi.gmfit.common.Constants;
-import com.mcsaatchi.gmfit.architecture.otto.EventBus_Poster;
-import com.mcsaatchi.gmfit.architecture.otto.EventBus_Singleton;
+import com.mcsaatchi.gmfit.architecture.otto.EventBusPoster;
+import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.nutrition.models.MealItem;
 import com.mcsaatchi.gmfit.nutrition.models.NutritionalFact;
@@ -220,8 +220,8 @@ public class SpecifyMealAmount_Activity extends Base_Activity {
                 resultIntent.putExtra(Constants.EXTRAS_MEAL_OBJECT_DETAILS, mealItem);
                 setResult(MEAL_AMOUNT_SPECIFIED, resultIntent);
 
-                EventBus_Singleton.getInstance()
-                    .post(new EventBus_Poster(Constants.EXTRAS_CREATED_NEW_MEAL_ENTRY_ON_DATE));
+                EventBusSingleton.getInstance()
+                    .post(new EventBusPoster(Constants.EXTRAS_CREATED_NEW_MEAL_ENTRY_ON_DATE));
 
                 finish();
 
@@ -256,8 +256,8 @@ public class SpecifyMealAmount_Activity extends Base_Activity {
                 mealItem.setTotalCalories(
                     Integer.parseInt(mealItem.getAmount()) * caloriesForThisMeal);
 
-                EventBus_Singleton.getInstance()
-                    .post(new EventBus_Poster(Constants.EXTRAS_UPDATED_MEAL_ENTRY_ON_DATE));
+                EventBusSingleton.getInstance()
+                    .post(new EventBusPoster(Constants.EXTRAS_UPDATED_MEAL_ENTRY_ON_DATE));
 
                 finish();
 
@@ -291,8 +291,8 @@ public class SpecifyMealAmount_Activity extends Base_Activity {
                 mealItem.setTotalCalories(
                     Integer.parseInt(mealItem.getAmount()) * caloriesForThisMeal);
 
-                EventBus_Singleton.getInstance()
-                    .post(new EventBus_Poster(Constants.EXTRAS_UPDATED_MEAL_ENTRY));
+                EventBusSingleton.getInstance()
+                    .post(new EventBusPoster(Constants.EXTRAS_UPDATED_MEAL_ENTRY));
 
                 finish();
 

@@ -8,7 +8,7 @@ import com.mcsaatchi.gmfit.nutrition.models.NutritionWidget;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EventBus_Poster {
+public class EventBusPoster {
   private String message;
   private String chart_title;
   private String[] stringsExtra;
@@ -19,32 +19,32 @@ public class EventBus_Poster {
   private ArrayList<NutritionWidget> widgetsMapNutrition;
   private ArrayList<FitnessWidget> widgetsMapFitness;
 
-  public EventBus_Poster(String message) {
+  public EventBusPoster(String message) {
     this.message = message;
   }
 
-  public EventBus_Poster(String message, String chart_title) {
+  public EventBusPoster(String message, String chart_title) {
     this.message = message;
     this.chart_title = chart_title;
   }
 
-  public EventBus_Poster(String message, MealItem mealItem, boolean createNewMealItem) {
+  public EventBusPoster(String message, MealItem mealItem, boolean createNewMealItem) {
     this.message = message;
     this.mealItem = mealItem;
     this.createNewMealItem = createNewMealItem;
   }
 
-  public EventBus_Poster(String message, String[] stringsExtra) {
+  public EventBusPoster(String message, String[] stringsExtra) {
     this.message = message;
     this.stringsExtra = stringsExtra;
   }
 
-  public EventBus_Poster(String message, boolean booleanExtra) {
+  public EventBusPoster(String message, boolean booleanExtra) {
     this.message = message;
     this.booleanExtra = booleanExtra;
   }
 
-  public EventBus_Poster(String message, List<DataChart> dataChartsListExtra) {
+  public EventBusPoster(String message, List<DataChart> dataChartsListExtra) {
     this.message = message;
     this.dataChartsListExtra = dataChartsListExtra;
   }

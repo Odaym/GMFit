@@ -14,8 +14,8 @@ import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.common.activities.Base_Activity;
 import com.mcsaatchi.gmfit.nutrition.adapters.UserMeals_RecyclerAdapterDragSwipe;
 import com.mcsaatchi.gmfit.common.Constants;
-import com.mcsaatchi.gmfit.architecture.otto.EventBus_Poster;
-import com.mcsaatchi.gmfit.architecture.otto.EventBus_Singleton;
+import com.mcsaatchi.gmfit.architecture.otto.EventBusPoster;
+import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
 import com.mcsaatchi.gmfit.common.classes.SimpleDividerItemDecoration;
 import com.mcsaatchi.gmfit.nutrition.models.MealItem;
 import com.mcsaatchi.gmfit.architecture.rest.UserMealsResponse;
@@ -78,7 +78,7 @@ public class AddNewMealOnDate_Activity extends Base_Activity {
 
     ButterKnife.bind(this);
 
-    EventBus_Singleton.getInstance().register(this);
+    EventBusSingleton.getInstance().register(this);
 
     if (getIntent().getExtras() != null) {
       chosenDate = getIntent().getExtras().getString(Constants.EXTRAS_DATE_TO_ADD_MEAL_ON, "");
@@ -94,10 +94,10 @@ public class AddNewMealOnDate_Activity extends Base_Activity {
   @Override protected void onDestroy() {
     super.onDestroy();
 
-    EventBus_Singleton.getInstance().unregister(this);
+    EventBusSingleton.getInstance().unregister(this);
   }
 
-  @Subscribe public void handle_BusEvents(final EventBus_Poster ebp) {
+  @Subscribe public void handle_BusEvents(final EventBusPoster ebp) {
     String ebpMessage = ebp.getMessage();
 
     switch (ebpMessage) {

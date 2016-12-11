@@ -8,17 +8,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.otto.EventBus_Poster;
-import com.mcsaatchi.gmfit.architecture.otto.EventBus_Singleton;
+import com.mcsaatchi.gmfit.architecture.otto.EventBusPoster;
+import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
 import com.mcsaatchi.gmfit.common.models.DataChart;
-import com.mcsaatchi.gmfit.architecture.touch_helpers.Drag_ItemTouchHelperAdapter;
+import com.mcsaatchi.gmfit.architecture.touch_helpers.DragItemTouchHelperAdapter;
 
 import java.util.Collections;
 import java.util.List;
 
 public class CustomizeChartsRecyclerAdapter
     extends RecyclerView.Adapter<CustomizeChartsRecyclerAdapter.MyViewHolder>
-    implements Drag_ItemTouchHelperAdapter {
+    implements DragItemTouchHelperAdapter {
 
   private List<DataChart> dataChartsMap;
   private int drawableResId;
@@ -66,8 +66,8 @@ public class CustomizeChartsRecyclerAdapter
   }
 
   @Override public void onClearView() {
-    EventBus_Singleton.getInstance()
-        .post(new EventBus_Poster(array_order_changed_event, dataChartsMap));
+    EventBusSingleton.getInstance()
+        .post(new EventBusPoster(array_order_changed_event, dataChartsMap));
   }
 
   class MyViewHolder extends RecyclerView.ViewHolder {

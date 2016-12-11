@@ -21,8 +21,8 @@ import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.common.activities.Base_Activity;
 import com.mcsaatchi.gmfit.profile.activities.TOS_Activity;
 import com.mcsaatchi.gmfit.common.Constants;
-import com.mcsaatchi.gmfit.architecture.otto.EventBus_Poster;
-import com.mcsaatchi.gmfit.architecture.otto.EventBus_Singleton;
+import com.mcsaatchi.gmfit.architecture.otto.EventBusPoster;
+import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponse;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponseInnerBody;
@@ -148,8 +148,8 @@ public class SignUp_Activity extends Base_Activity {
                 prefs.edit().putString(Constants.EXTRAS_USER_EMAIL, email).apply();
                 prefs.edit().putString(Constants.EXTRAS_USER_PASSWORD, password).apply();
 
-                EventBus_Singleton.getInstance()
-                    .post(new EventBus_Poster(
+                EventBusSingleton.getInstance()
+                    .post(new EventBusPoster(
                         Constants.EVENT_SIGNNED_UP_SUCCESSFULLY_CLOSE_LOGIN_ACTIVITY));
 
                 Intent intent =

@@ -30,8 +30,8 @@ import com.mcsaatchi.gmfit.common.activities.Main_Activity;
 import com.mcsaatchi.gmfit.common.activities.Base_Activity;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.classes.DefaultIndicator_Controller;
-import com.mcsaatchi.gmfit.architecture.otto.EventBus_Poster;
-import com.mcsaatchi.gmfit.architecture.otto.EventBus_Singleton;
+import com.mcsaatchi.gmfit.architecture.otto.EventBusPoster;
+import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.onboarding.fragments.IntroSlider_Fragment;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponse;
@@ -69,7 +69,7 @@ public class Login_Activity extends Base_Activity {
 
     ButterKnife.bind(this);
 
-    EventBus_Singleton.getInstance().register(this);
+    EventBusSingleton.getInstance().register(this);
 
     signInBTN.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View view) {
@@ -93,10 +93,10 @@ public class Login_Activity extends Base_Activity {
   @Override protected void onDestroy() {
     super.onDestroy();
 
-    EventBus_Singleton.getInstance().unregister(this);
+    EventBusSingleton.getInstance().unregister(this);
   }
 
-  @Subscribe public void handle_BusEvents(EventBus_Poster ebp) {
+  @Subscribe public void handle_BusEvents(EventBusPoster ebp) {
     String ebpMessage = ebp.getMessage();
 
     switch (ebpMessage) {
@@ -222,8 +222,8 @@ public class Login_Activity extends Base_Activity {
 
             List<AuthenticationResponseChart> chartsMap = responseBody.getCharts();
 
-            EventBus_Singleton.getInstance()
-                .post(new EventBus_Poster(
+            EventBusSingleton.getInstance()
+                .post(new EventBusPoster(
                     Constants.EVENT_SIGNNED_UP_SUCCESSFULLY_CLOSE_LOGIN_ACTIVITY));
 
             intent = new Intent(Login_Activity.this, Main_Activity.class);

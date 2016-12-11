@@ -25,8 +25,8 @@ import com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialo
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.GMFit_Application;
 import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
-import com.mcsaatchi.gmfit.architecture.otto.EventBus_Poster;
-import com.mcsaatchi.gmfit.architecture.otto.EventBus_Singleton;
+import com.mcsaatchi.gmfit.architecture.otto.EventBusPoster;
+import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponseChart;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponseWidget;
 import com.mcsaatchi.gmfit.architecture.rest.DefaultGetResponse;
@@ -97,7 +97,7 @@ public class Setup_Profile_4_Fragment extends Fragment
 
     //When going back and forth within the 3 Setup Profile fragments, don't reregister the Eventbus
     try {
-      EventBus_Singleton.getInstance().register(this);
+      EventBusSingleton.getInstance().register(this);
     } catch (IllegalArgumentException ignored) {
     }
 
@@ -165,7 +165,7 @@ public class Setup_Profile_4_Fragment extends Fragment
         new DateFormatSymbols().getMonths()[monthOfYear] + " " + dayOfMonth + ", " + year);
   }
 
-  @Subscribe public void handle_BusEvents(EventBus_Poster ebp) {
+  @Subscribe public void handle_BusEvents(EventBusPoster ebp) {
     String ebpMessage = ebp.getMessage();
 
     switch (ebpMessage) {
@@ -405,7 +405,7 @@ public class Setup_Profile_4_Fragment extends Fragment
 
   @Override public void onDestroy() {
     super.onDestroy();
-    EventBus_Singleton.getInstance().unregister(this);
+    EventBusSingleton.getInstance().unregister(this);
   }
 
   public float getFinalWeight() {

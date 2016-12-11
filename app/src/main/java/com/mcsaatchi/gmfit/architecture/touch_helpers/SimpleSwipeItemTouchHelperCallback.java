@@ -5,9 +5,9 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 
 public class SimpleSwipeItemTouchHelperCallback extends ItemTouchHelper.Callback {
 
-  private final Drag_Swipe_ItemTouchHelperAdapter mAdapter;
+  private final DragSwipeItemTouchHelperAdapter mAdapter;
 
-  public SimpleSwipeItemTouchHelperCallback(Drag_Swipe_ItemTouchHelperAdapter adapter) {
+  public SimpleSwipeItemTouchHelperCallback(DragSwipeItemTouchHelperAdapter adapter) {
     mAdapter = adapter;
   }
 

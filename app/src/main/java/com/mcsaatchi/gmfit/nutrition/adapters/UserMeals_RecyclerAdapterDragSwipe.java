@@ -13,13 +13,13 @@ import android.widget.TextView;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.nutrition.activities.SpecifyMealAmount_Activity;
 import com.mcsaatchi.gmfit.common.Constants;
-import com.mcsaatchi.gmfit.architecture.otto.EventBus_Poster;
-import com.mcsaatchi.gmfit.architecture.otto.EventBus_Singleton;
+import com.mcsaatchi.gmfit.architecture.otto.EventBusPoster;
+import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
 import com.mcsaatchi.gmfit.architecture.GMFit_Application;
 import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.nutrition.models.MealItem;
 import com.mcsaatchi.gmfit.architecture.rest.DefaultGetResponse;
-import com.mcsaatchi.gmfit.architecture.touch_helpers.Drag_Swipe_ItemTouchHelperAdapter;
+import com.mcsaatchi.gmfit.architecture.touch_helpers.DragSwipeItemTouchHelperAdapter;
 import java.util.List;
 import javax.inject.Inject;
 import retrofit2.Call;
@@ -29,7 +29,7 @@ import timber.log.Timber;
 
 public class UserMeals_RecyclerAdapterDragSwipe
     extends RecyclerView.Adapter<UserMeals_RecyclerAdapterDragSwipe.MyViewHolder>
-    implements Drag_Swipe_ItemTouchHelperAdapter {
+    implements DragSwipeItemTouchHelperAdapter {
 
   @Inject DataAccessHandler dataAccessHandler;
   @Inject SharedPreferences prefs;
@@ -93,8 +93,8 @@ public class UserMeals_RecyclerAdapterDragSwipe
               case 200:
                 Log.d("TAG", "onResponse: Meal item removed!");
 
-                EventBus_Singleton.getInstance()
-                    .post(new EventBus_Poster(Constants.EXTRAS_DELETED_MEAL_ENTRY));
+                EventBusSingleton.getInstance()
+                    .post(new EventBusPoster(Constants.EXTRAS_DELETED_MEAL_ENTRY));
 
                 break;
             }

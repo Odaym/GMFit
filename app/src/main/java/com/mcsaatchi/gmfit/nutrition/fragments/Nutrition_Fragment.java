@@ -36,7 +36,7 @@ import com.github.mikephil.charting.charts.BarChart;
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.common.activities.AddNewChart_Activity;
+import com.mcsaatchi.gmfit.common.activities.AddNewChartActivity;
 import com.mcsaatchi.gmfit.nutrition.activities.AddNewMealItem_Activity;
 import com.mcsaatchi.gmfit.nutrition.activities.BarcodeCapture_Activity;
 import com.mcsaatchi.gmfit.common.activities.CustomizeWidgetsAndCharts_Activity;
@@ -45,8 +45,8 @@ import com.mcsaatchi.gmfit.nutrition.adapters.NutritionWidgets_GridAdapter;
 import com.mcsaatchi.gmfit.nutrition.adapters.UserMeals_RecyclerAdapterDragSwipe;
 import com.mcsaatchi.gmfit.common.classes.AlarmReceiver;
 import com.mcsaatchi.gmfit.common.Constants;
-import com.mcsaatchi.gmfit.architecture.otto.EventBus_Poster;
-import com.mcsaatchi.gmfit.architecture.otto.EventBus_Singleton;
+import com.mcsaatchi.gmfit.architecture.otto.EventBusPoster;
+import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
 import com.mcsaatchi.gmfit.common.classes.FontTextView;
 import com.mcsaatchi.gmfit.architecture.GMFit_Application;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
@@ -166,7 +166,7 @@ public class Nutrition_Fragment extends Fragment {
 
     parentActivity = (Activity) context;
 
-    EventBus_Singleton.getInstance().register(this);
+    EventBusSingleton.getInstance().register(this);
   }
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -196,7 +196,7 @@ public class Nutrition_Fragment extends Fragment {
 
     addNewChartBTN.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
-        Intent intent = new Intent(getActivity(), AddNewChart_Activity.class);
+        Intent intent = new Intent(getActivity(), AddNewChartActivity.class);
         intent.putExtra(Constants.EXTRAS_ADD_CHART_WHAT_TYPE,
             Constants.EXTRAS_ADD_NUTRIITION_CHART);
         startActivityForResult(intent, ADD_NEW_NUTRITION_CHART_REQUEST);
@@ -208,7 +208,7 @@ public class Nutrition_Fragment extends Fragment {
 
   @Override public void onDestroy() {
     super.onDestroy();
-    EventBus_Singleton.getInstance().unregister(this);
+    EventBusSingleton.getInstance().unregister(this);
   }
 
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -769,7 +769,7 @@ public class Nutrition_Fragment extends Fragment {
     touchHelper.attachToRecyclerView(mealListView);
   }
 
-  @Subscribe public void handle_BusEvents(final EventBus_Poster ebp) {
+  @Subscribe public void handle_BusEvents(final EventBusPoster ebp) {
     String ebpMessage = ebp.getMessage();
 
     switch (ebpMessage) {

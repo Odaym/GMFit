@@ -39,8 +39,8 @@ import com.facebook.login.LoginManager;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.GMFit_Application;
 import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
-import com.mcsaatchi.gmfit.architecture.otto.EventBus_Poster;
-import com.mcsaatchi.gmfit.architecture.otto.EventBus_Singleton;
+import com.mcsaatchi.gmfit.architecture.otto.EventBusPoster;
+import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
 import com.mcsaatchi.gmfit.architecture.picasso.CircleTransform;
 import com.mcsaatchi.gmfit.architecture.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.architecture.rest.EmergencyProfileResponse;
@@ -140,7 +140,7 @@ public class MainProfile_Fragment extends Fragment {
     ButterKnife.bind(this, fragmentView);
     ((GMFit_Application) getActivity().getApplication()).getAppComponent().inject(this);
 
-    EventBus_Singleton.getInstance().register(this);
+    EventBusSingleton.getInstance().register(this);
 
     setHasOptionsMenu(true);
 
@@ -593,7 +593,7 @@ public class MainProfile_Fragment extends Fragment {
 
   @Override public void onDestroy() {
     super.onDestroy();
-    EventBus_Singleton.getInstance().unregister(this);
+    EventBusSingleton.getInstance().unregister(this);
   }
 
   @Override public void onRequestPermissionsResult(int requestCode, String[] permissions,
@@ -647,7 +647,7 @@ public class MainProfile_Fragment extends Fragment {
     }
   }
 
-  @Subscribe public void handle_BusEvents(EventBus_Poster ebp) {
+  @Subscribe public void handle_BusEvents(EventBusPoster ebp) {
     String ebpMessage = ebp.getMessage();
 
     switch (ebpMessage) {

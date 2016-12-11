@@ -39,8 +39,8 @@ import com.j256.ormlite.stmt.QueryBuilder;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.GMFit_Application;
 import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
-import com.mcsaatchi.gmfit.architecture.otto.EventBus_Poster;
-import com.mcsaatchi.gmfit.architecture.otto.EventBus_Singleton;
+import com.mcsaatchi.gmfit.architecture.otto.EventBusPoster;
+import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponseChartData;
 import com.mcsaatchi.gmfit.architecture.rest.ChartMetricBreakdownResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ChartMetricBreakdownResponseDatum;
@@ -50,7 +50,7 @@ import com.mcsaatchi.gmfit.architecture.rest.UserGoalMetricsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.WidgetsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.WidgetsResponseDatum;
 import com.mcsaatchi.gmfit.common.Constants;
-import com.mcsaatchi.gmfit.common.activities.AddNewChart_Activity;
+import com.mcsaatchi.gmfit.common.activities.AddNewChartActivity;
 import com.mcsaatchi.gmfit.common.activities.Base_Activity;
 import com.mcsaatchi.gmfit.common.activities.CustomizeWidgetsAndCharts_Activity;
 import com.mcsaatchi.gmfit.common.activities.SlugBreakdown_Activity;
@@ -116,7 +116,7 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
 
       dataChartDAO = ((Base_Activity) parentActivity).getDBHelper().getDataChartDAO();
 
-      EventBus_Singleton.getInstance().register(this);
+      EventBusSingleton.getInstance().register(this);
 
       JodaTimeAndroid.init(getActivity());
       ((GMFit_Application) getActivity().getApplication()).getAppComponent().inject(this);
@@ -188,7 +188,7 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
 
     addNewChartBTN.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
-        Intent intent = new Intent(getActivity(), AddNewChart_Activity.class);
+        Intent intent = new Intent(getActivity(), AddNewChartActivity.class);
         intent.putExtra(Constants.EXTRAS_ADD_CHART_WHAT_TYPE, Constants.EXTRAS_ADD_FITNESS_CHART);
         startActivityForResult(intent, ADD_NEW_FITNESS_CHART_REQUEST_CODE);
       }
@@ -245,7 +245,7 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
 
   @Override public void onDestroy() {
     super.onDestroy();
-    EventBus_Singleton.getInstance().unregister(this);
+    EventBusSingleton.getInstance().unregister(this);
   }
 
   private void getPeriodicalChartData(final BarChart barchart, String desiredDate,
@@ -680,7 +680,7 @@ public class Fitness_Fragment extends Fragment implements SensorEventListener {
    * - Distance counter (widget needs finding in the gridview before its value can be changed)
    * - Calories counter (widget needs finding in the gridview before its value can be changed)
    */
-  @Subscribe public void handle_BusEvents(EventBus_Poster ebp) {
+  @Subscribe public void handle_BusEvents(EventBusPoster ebp) {
     String ebpMessage = ebp.getMessage();
     TextView fitnessWidget;
 

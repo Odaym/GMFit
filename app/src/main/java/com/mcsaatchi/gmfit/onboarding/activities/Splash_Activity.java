@@ -10,8 +10,8 @@ import android.support.v7.app.AppCompatActivity;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.GMFit_Application;
 import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
-import com.mcsaatchi.gmfit.architecture.otto.EventBus_Poster;
-import com.mcsaatchi.gmfit.architecture.otto.EventBus_Singleton;
+import com.mcsaatchi.gmfit.architecture.otto.EventBusPoster;
+import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponse;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponseChart;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponseInnerBody;
@@ -159,8 +159,8 @@ public class Splash_Activity extends AppCompatActivity {
 
             List<AuthenticationResponseChart> chartsMap = responseBody.getCharts();
 
-            EventBus_Singleton.getInstance()
-                .post(new EventBus_Poster(
+            EventBusSingleton.getInstance()
+                .post(new EventBusPoster(
                     Constants.EVENT_SIGNNED_UP_SUCCESSFULLY_CLOSE_LOGIN_ACTIVITY));
 
             Intent intent = new Intent(Splash_Activity.this, Main_Activity.class);

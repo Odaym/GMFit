@@ -55,7 +55,7 @@
   <string name="password_empty_error">Passsword can\'t be empty</string>
   <string name="field_invalid_email_error">Email address is not valid</string>
   <string name="field_password_too_short_error">Password too short</string>
-  <string name="email_address_hint">Email Address</string>
+  <string name="email_address_label">Email Address</string>
   <string name="password_hint">Password</string>
   <string name="confirm_password_hint">Confirm Password</string>
   <string name="create_account_button">Create Account</string>
@@ -300,6 +300,24 @@
   <string name="enter_your_password_hint">Enter your password</string>
   <string name="member_id_empty_error">Member ID cannot be empty</string>
   <string name="login_insurance_label">Login</string>
+  <string name="widget_submit">Submit</string>
+  <string name="widget_track">Track</string>
+  <string name="widget_members_guide">Member\'s Guide</string>
+  <string name="widget_coverage_description">Coverage Description</string>
+  <string name="widget_snapshot">Snapshot</string>
+
+  <!-- INSURANCE UPDATE PASSWORD ACTIVITY -->
+  <string name="insurance_update_password_activity_title">Update Password</string>
+  <string name="update_your_password_label">Please update your password</string>
+  <string name="new_password_label">New Password</string>
+  <string name="new_password_hint">Enter your password</string>
+  <string name="retype_password_label">Retype Password</string>
+  <string name="retype_password_hint">Enter your password again</string>
+  <string name="contact_information_tip_label">Keep your contact information up to date (optional)</string>
+  <string name="email_address_hint">Enter your email address</string>
+  <string name="phone_number_label">Phone Number</string>
+  <string name="phone_number_hint">Enter your phone number</string>
+  <string name="update_button_label">Update</string>
 
   <!-- CONTACT US ACTIVITY -->
   <string name="contact_us_activity_title">Contact Us</string>

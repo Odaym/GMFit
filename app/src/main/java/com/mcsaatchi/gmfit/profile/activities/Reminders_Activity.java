@@ -18,8 +18,8 @@ import android.widget.TimePicker;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.otto.EventBus_Poster;
-import com.mcsaatchi.gmfit.architecture.otto.EventBus_Singleton;
+import com.mcsaatchi.gmfit.architecture.otto.EventBusPoster;
+import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.Base_Activity;
 import com.mcsaatchi.gmfit.common.classes.AlarmReceiver;
@@ -143,8 +143,8 @@ public class Reminders_Activity extends Base_Activity {
           cancelAllPendingAlarms();
         }
 
-        EventBus_Singleton.getInstance()
-            .post(new EventBus_Poster(Constants.EVENT_REMINDERS_STATUS_CHANGED, areAlarmsEnabled));
+        EventBusSingleton.getInstance()
+            .post(new EventBusPoster(Constants.EVENT_REMINDERS_STATUS_CHANGED, areAlarmsEnabled));
       }
     });
 

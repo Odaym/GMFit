@@ -14,8 +14,8 @@ import com.mcsaatchi.gmfit.common.activities.Base_Activity;
 import com.mcsaatchi.gmfit.fitness.adapters.FitnessWidgets_ListAdapter;
 import com.mcsaatchi.gmfit.nutrition.adapters.NutritionWidgets_ListAdapter;
 import com.mcsaatchi.gmfit.common.Constants;
-import com.mcsaatchi.gmfit.architecture.otto.EventBus_Poster;
-import com.mcsaatchi.gmfit.architecture.otto.EventBus_Singleton;
+import com.mcsaatchi.gmfit.architecture.otto.EventBusPoster;
+import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
 import com.mcsaatchi.gmfit.fitness.models.FitnessWidget;
 import com.mcsaatchi.gmfit.nutrition.models.NutritionWidget;
 import com.mcsaatchi.gmfit.architecture.reorderable_listview.DragSortListView;
@@ -44,9 +44,9 @@ public class CustomizeWidgets_Fragment extends Fragment {
   private DragSortListView.DropListener onDropFitnessItems = new DragSortListView.DropListener() {
     @Override public void drop(int from, int to) {
 
-      EventBus_Poster ebp = new EventBus_Poster(WIDGETS_ORDER_ARRAY_CHANGED_EVENT);
+      EventBusPoster ebp = new EventBusPoster(WIDGETS_ORDER_ARRAY_CHANGED_EVENT);
       ebp.setWidgetsMapFitness(itemsMapFitness);
-      EventBus_Singleton.getInstance().post(ebp);
+      EventBusSingleton.getInstance().post(ebp);
 
       customizeFitnessWidgetsAdapter.notifyData();
 
@@ -59,9 +59,9 @@ public class CustomizeWidgets_Fragment extends Fragment {
   private DragSortListView.DropListener onDropNutritionItems = new DragSortListView.DropListener() {
     @Override public void drop(int from, int to) {
 
-      EventBus_Poster ebp = new EventBus_Poster(WIDGETS_ORDER_ARRAY_CHANGED_EVENT);
+      EventBusPoster ebp = new EventBusPoster(WIDGETS_ORDER_ARRAY_CHANGED_EVENT);
       ebp.setWidgetsMapNutrition(itemsMapNutrition);
-      EventBus_Singleton.getInstance().post(ebp);
+      EventBusSingleton.getInstance().post(ebp);
 
       customizeNutritionWidgetsAdapter.notifyData();
 

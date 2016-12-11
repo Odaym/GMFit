@@ -16,8 +16,8 @@ import android.widget.LinearLayout;
 
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.common.Constants;
-import com.mcsaatchi.gmfit.architecture.otto.EventBus_Poster;
-import com.mcsaatchi.gmfit.architecture.otto.EventBus_Singleton;
+import com.mcsaatchi.gmfit.architecture.otto.EventBusPoster;
+import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
 import com.mcsaatchi.gmfit.common.classes.SlidingTabLayout;
 import com.mcsaatchi.gmfit.common.fragments.SlugBreakdown_Fragment_Daily;
 import com.mcsaatchi.gmfit.common.fragments.SlugBreakdown_Fragment_Monthly;
@@ -109,13 +109,13 @@ public class SlugBreakdown_Activity extends Base_Activity {
 
                 switch (typeOfFragmentToCustomizeFor) {
                   case Constants.EXTRAS_FITNESS_FRAGMENT:
-                    EventBus_Singleton.getInstance()
-                        .post(new EventBus_Poster(Constants.EXTRAS_FITNESS_CHART_DELETED,
+                    EventBusSingleton.getInstance()
+                        .post(new EventBusPoster(Constants.EXTRAS_FITNESS_CHART_DELETED,
                             chartTitle));
                     break;
                   case Constants.EXTRAS_NUTRITION_FRAGMENT:
-                    EventBus_Singleton.getInstance()
-                        .post(new EventBus_Poster(Constants.EXTRAS_NUTRITION_CHART_DELETED,
+                    EventBusSingleton.getInstance()
+                        .post(new EventBusPoster(Constants.EXTRAS_NUTRITION_CHART_DELETED,
                             chartTitle));
                     break;
                 }

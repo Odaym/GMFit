@@ -19,8 +19,8 @@ import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.mcsaatchi.gmfit.BuildConfig;
 import com.mcsaatchi.gmfit.common.Constants;
-import com.mcsaatchi.gmfit.architecture.otto.EventBus_Poster;
-import com.mcsaatchi.gmfit.architecture.otto.EventBus_Singleton;
+import com.mcsaatchi.gmfit.architecture.otto.EventBusPoster;
+import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
 import com.mcsaatchi.gmfit.architecture.GMFit_Application;
 import com.mcsaatchi.gmfit.architecture.data_access.DBHelper;
 import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
@@ -131,12 +131,12 @@ public class SensorListener extends Service implements SensorEventListener {
   }
 
   public void sendOutEventBusEvents() {
-    EventBus_Singleton.getInstance()
-        .post(new EventBus_Poster(Constants.EVENT_STEP_COUNTER_INCREMENTED));
-    EventBus_Singleton.getInstance()
-        .post(new EventBus_Poster(Constants.EVENT_CALORIES_COUNTER_INCREMENTED));
-    EventBus_Singleton.getInstance()
-        .post(new EventBus_Poster(Constants.EVENT_DISTANCE_COUNTER_INCREMENTED));
+    EventBusSingleton.getInstance()
+        .post(new EventBusPoster(Constants.EVENT_STEP_COUNTER_INCREMENTED));
+    EventBusSingleton.getInstance()
+        .post(new EventBusPoster(Constants.EVENT_CALORIES_COUNTER_INCREMENTED));
+    EventBusSingleton.getInstance()
+        .post(new EventBusPoster(Constants.EVENT_DISTANCE_COUNTER_INCREMENTED));
   }
 
   @Override public IBinder onBind(final Intent intent) {
