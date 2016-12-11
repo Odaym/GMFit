@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    android:id="@+id/activity_claim__reimbursment_"
+    android:id="@+id/activity_claim_reimbursement"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -68,7 +68,7 @@
             android:layout_height="wrap_content"
             android:text="@string/you_did_not_submit_any_reimbursement_yet"
             android:textAlignment="center"
-            android:textColor="@color/half_transparent_white"
+            android:textColor="@color/offwhite_transparent"
             android:textSize="12sp"/>
 
         <View

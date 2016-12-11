@@ -1,41 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <color name="colorPrimary">#3F51B5</color>
-  <color name="colorPrimaryDark">#303F9F</color>
-  <color name="colorAccent">@color/nutrition_red</color>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">@color/nutrition_red</color>
 
-  <color name="bottom_bar_tabs_inactive_color">#CACFE6</color>
-  <color name="color_primary_dark_transparent">#99474ae6</color>
+    <color name="bottom_bar_tabs_inactive_color">#CACFE6</color>
+    <color name="color_primary_dark_transparent">#99474ae6</color>
 
-  <color name="white">#FFFFFF</color>
-  <color name="half_transparent_white">#88FFFFFF</color>
+    <color name="white">#FFFFFF</color>
 
-  <color name="directory_dark_purple">#4d50ec</color>
-  <color name="fitness_pink">#b077f8</color>
-  <color name="fitness_dark_blue">#4a5b9c</color>
-  <color name="fitness_teal">#5feadb</color>
-  <color name="health_green">#00cdac</color>
-  <color name="nutrition_red">#FF7054</color>
-  <color name="nutrition_meal_bars_orange">#FF7055</color>
-  <color name="profile_blue">#67a3fd</color>
-  <color name="add_medical_conditions_row_green">#1ED4A8</color>
+    <color name="directory_dark_purple">#4d50ec</color>
+    <color name="fitness_pink">#b077f8</color>
+    <color name="fitness_dark_blue">#4a5b9c</color>
+    <color name="fitness_teal">#5feadb</color>
+    <color name="health_green">#00cdac</color>
+    <color name="nutrition_red">#FF7054</color>
+    <color name="nutrition_meal_bars_orange">#FF7055</color>
+    <color name="profile_blue">#67a3fd</color>
+    <color name="add_medical_conditions_row_green">#1ED4A8</color>
 
-  <color name="health_greenish">#19e2e4</color>
-  <color name="add_medical_tests_bar_background">#1ed4a8</color>
+    <color name="health_greenish">#19e2e4</color>
+    <color name="add_medical_tests_bar_background">#1ed4a8</color>
 
-  <color name="buttons_blue">#47589a</color>
+    <color name="buttons_blue">#47589a</color>
 
-  <color name="nutrition_orange_faded_transparent">#FE826D</color>
-  <color name="nutrition_goals_pink">#C4458A</color>
+    <color name="nutrition_orange_faded_transparent">#FE826D</color>
+    <color name="nutrition_goals_pink">#C4458A</color>
 
-  <color name="offwhite_transparent">#80FFFFFF</color>
-  <color name="offwhite_more_transparent">#33FFFFFF</color>
-  <color name="another_gray">#FAFAFA</color>
-  <color name="separator_gray">#806a6cff</color>
-  <color name="offwhite_background_gray">#EDEDED</color>
-  <color name="edittext_hint_color">#401E1E1E</color>
-  <color name="much_lighter_gray">#F9F9F9</color>
-  <color name="lighter_gray">#F2F2F2</color>
-  <color name="light_gray">#D1D1D1</color>
-  <color name="buttons_text_color">#4C5269</color>
+    <color name="offwhite_transparent">#80FFFFFF</color>
+    <color name="offwhite_more_transparent">#33FFFFFF</color>
+    <color name="another_gray">#FAFAFA</color>
+    <color name="separator_gray">#806a6cff</color>
+    <color name="offwhite_background_gray">#EDEDED</color>
+    <color name="edittext_hint_color">#401E1E1E</color>
+    <color name="much_lighter_gray">#F9F9F9</color>
+    <color name="lighter_gray">#F2F2F2</color>
+    <color name="light_gray">#D1D1D1</color>
+    <color name="buttons_text_color">#4C5269</color>
+    <color name="arrow_blue">#1e83ee</color>
+    <color name="camera_gray_color">#cccccc</color>
 </resources>
