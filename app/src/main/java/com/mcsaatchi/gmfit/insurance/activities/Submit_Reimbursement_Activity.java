@@ -6,6 +6,7 @@ import android.support.v7.widget.Toolbar;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.common.activities.Base_Activity;
 import com.mcsaatchi.gmfit.insurance.widget.CustomPicker;
+import com.mcsaatchi.gmfit.insurance.widget.CustomToggle;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -23,6 +24,9 @@ public class Submit_Reimbursement_Activity extends Base_Activity {
 
     @Bind(R.id.reimbursementAmount)
     CustomPicker amount;
+
+    @Bind(R.id.categoryInOutToggle)
+    CustomToggle categoryToggle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,5 +55,11 @@ public class Submit_Reimbursement_Activity extends Base_Activity {
 
                     }
                 });
+        categoryToggle.setUp("Category", "Out", "In", new CustomToggle.OnToggleListener() {
+            @Override
+            public void selected(String option) {
+
+            }
+        });
     }
 }

@@ -39,6 +39,11 @@
                 android:layout_height="wrap_content"
                 custom:header_text="@string/fill_in_the_required_fields_below"/>
 
+            <com.mcsaatchi.gmfit.insurance.widget.CustomToggle
+                android:id="@+id/categoryInOutToggle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
             <com.mcsaatchi.gmfit.insurance.widget.CustomPicker
                 android:id="@+id/reimbursementSubcategory"
                 android:layout_width="match_parent"
