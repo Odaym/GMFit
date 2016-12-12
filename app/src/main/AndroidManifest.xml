@@ -137,6 +137,11 @@
             android:screenOrientation="portrait"
             android:theme="@style/No_Action_Bar_Theme"
             android:windowSoftInputMode="adjustPan"/>
+        <activity
+            android:name=".insurance.activities.ReimbursementStatusListActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/No_Action_Bar_Theme"
+            android:windowSoftInputMode="adjustPan"/>
 
         <receiver android:name=".common.classes.AlarmReceiver"/>
         <receiver android:name=".fitness.pedometer.BootReceiver">
