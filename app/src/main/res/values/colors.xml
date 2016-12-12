@@ -13,11 +13,12 @@
   <color name="fitness_pink">#b077f8</color>
   <color name="fitness_dark_blue">#4a5b9c</color>
   <color name="fitness_teal">#5feadb</color>
-  <color name="health_green">#00cdac</color>
+  <color name="health_green">#1ED4A8</color>
   <color name="nutrition_red">#FF7054</color>
   <color name="nutrition_meal_bars_orange">#FF7055</color>
   <color name="profile_blue">#67a3fd</color>
   <color name="add_medical_conditions_row_green">#1ED4A8</color>
+  <color name="insurance_blue">#1E83ED</color>
 
   <color name="health_greenish">#19e2e4</color>
   <color name="add_medical_tests_bar_background">#1ed4a8</color>

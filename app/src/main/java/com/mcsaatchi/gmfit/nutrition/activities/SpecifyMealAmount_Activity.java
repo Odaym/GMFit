@@ -1,6 +1,7 @@
 package com.mcsaatchi.gmfit.nutrition.activities;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,6 +9,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ListView;
 import butterknife.Bind;
@@ -222,6 +224,10 @@ public class SpecifyMealAmount_Activity extends Base_Activity {
 
                 EventBusSingleton.getInstance()
                     .post(new EventBusPoster(Constants.EXTRAS_CREATED_NEW_MEAL_ENTRY_ON_DATE));
+
+                InputMethodManager imm =
+                    (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(mealAmountET.getWindowToken(), 0);
 
                 finish();
 

@@ -57,9 +57,13 @@ public class UserMeals_RecyclerAdapterDragSwipe
     holder.entryTitleTV.setText(meal.getName());
 
     if (meal.getAmount() != null) {
-      holder.entryDescriptionTV.setText(meal.getAmount() + " servings");
+      if (Integer.parseInt(meal.getAmount()) > 1) {
+        holder.entryDescriptionTV.setText(meal.getAmount() + " servings");
+      } else {
+        holder.entryDescriptionTV.setText("1 serving");
+      }
     } else {
-      holder.entryDescriptionTV.setText("1 serving");
+      holder.entryDescriptionTV.setText("0 servings");
     }
 
     holder.entryUnitsTV.setText(meal.getTotalCalories() + " kcal");

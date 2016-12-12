@@ -36,25 +36,10 @@ import com.github.mikephil.charting.charts.BarChart;
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.common.activities.AddNewChartActivity;
-import com.mcsaatchi.gmfit.nutrition.activities.AddNewMealItem_Activity;
-import com.mcsaatchi.gmfit.nutrition.activities.BarcodeCapture_Activity;
-import com.mcsaatchi.gmfit.common.activities.CustomizeWidgetsAndCharts_Activity;
-import com.mcsaatchi.gmfit.common.activities.SlugBreakdown_Activity;
-import com.mcsaatchi.gmfit.nutrition.adapters.NutritionWidgets_GridAdapter;
-import com.mcsaatchi.gmfit.nutrition.adapters.UserMeals_RecyclerAdapterDragSwipe;
-import com.mcsaatchi.gmfit.common.classes.AlarmReceiver;
-import com.mcsaatchi.gmfit.common.Constants;
+import com.mcsaatchi.gmfit.architecture.GMFit_Application;
+import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.architecture.otto.EventBusPoster;
 import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
-import com.mcsaatchi.gmfit.common.classes.FontTextView;
-import com.mcsaatchi.gmfit.architecture.GMFit_Application;
-import com.mcsaatchi.gmfit.common.classes.Helpers;
-import com.mcsaatchi.gmfit.common.classes.SimpleDividerItemDecoration;
-import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
-import com.mcsaatchi.gmfit.common.models.DataChart;
-import com.mcsaatchi.gmfit.nutrition.models.MealItem;
-import com.mcsaatchi.gmfit.nutrition.models.NutritionWidget;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponseChart;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponseChartData;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponseWidget;
@@ -71,6 +56,21 @@ import com.mcsaatchi.gmfit.architecture.rest.UserMealsResponseDinner;
 import com.mcsaatchi.gmfit.architecture.rest.UserMealsResponseLunch;
 import com.mcsaatchi.gmfit.architecture.rest.UserMealsResponseSnack;
 import com.mcsaatchi.gmfit.architecture.touch_helpers.SimpleSwipeItemTouchHelperCallback;
+import com.mcsaatchi.gmfit.common.Constants;
+import com.mcsaatchi.gmfit.common.activities.AddNewChartActivity;
+import com.mcsaatchi.gmfit.common.activities.CustomizeWidgetsAndCharts_Activity;
+import com.mcsaatchi.gmfit.common.activities.SlugBreakdown_Activity;
+import com.mcsaatchi.gmfit.common.classes.AlarmReceiver;
+import com.mcsaatchi.gmfit.common.classes.FontTextView;
+import com.mcsaatchi.gmfit.common.classes.Helpers;
+import com.mcsaatchi.gmfit.common.classes.SimpleDividerItemDecoration;
+import com.mcsaatchi.gmfit.common.models.DataChart;
+import com.mcsaatchi.gmfit.nutrition.activities.AddNewMealItem_Activity;
+import com.mcsaatchi.gmfit.nutrition.activities.BarcodeCapture_Activity;
+import com.mcsaatchi.gmfit.nutrition.adapters.NutritionWidgets_GridAdapter;
+import com.mcsaatchi.gmfit.nutrition.adapters.UserMeals_RecyclerAdapterDragSwipe;
+import com.mcsaatchi.gmfit.nutrition.models.MealItem;
+import com.mcsaatchi.gmfit.nutrition.models.NutritionWidget;
 import com.squareup.otto.Subscribe;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -96,8 +96,11 @@ public class Nutrition_Fragment extends Fragment {
   @Inject DataAccessHandler dataAccessHandler;
   @Inject SharedPreferences prefs;
   @Inject LocalDate dt;
+
   @Bind(R.id.widgetsGridView) GridView widgetsGridView;
   @Bind(R.id.metricCounterTV) FontTextView metricCounterTV;
+  @Bind(R.id.metricProgressBar) ProgressBar metricProgressBar;
+
   /**
    * CHARTS
    */
@@ -285,7 +288,11 @@ public class Nutrition_Fragment extends Fragment {
                   activeTV.setText(String.valueOf((int) Double.parseDouble(activeCalories)));
                 }
 
-                if (!activeTV.getText().toString().isEmpty()) {
+                if (!activeTV.getText().toString().isEmpty() && !goalTV.getText()
+                    .toString()
+                    .isEmpty() && !activeTV.getText().toString().isEmpty() && !todayTV.getText()
+                    .toString()
+                    .isEmpty() && !metricCounterTV.getText().toString().isEmpty()) {
                   int remainingValue =
                       Integer.parseInt(goalTV.getText().toString()) + Integer.parseInt(
                           activeTV.getText().toString()) - Integer.parseInt(
@@ -296,7 +303,10 @@ public class Nutrition_Fragment extends Fragment {
                   } else {
                     remainingTV.setText(String.valueOf(remainingValue));
                   }
+
+                  changeMetricProgressValue();
                 }
+
                 break;
             }
           }
@@ -307,6 +317,8 @@ public class Nutrition_Fragment extends Fragment {
   }
 
   private void setupDateCarousel() {
+    LocalDate dateToStartFrom = dt.plusDays(2);
+
     for (int i = Constants.NUMBER_OF_DAYS_IN_DATE_CAROUSEL; i >= 0; i--) {
       final View itemDateCarouselLayout =
           getActivity().getLayoutInflater().inflate(R.layout.item_date_carousel, null);
@@ -319,7 +331,12 @@ public class Nutrition_Fragment extends Fragment {
       final TextView monthOfYearTV =
           (TextView) itemDateCarouselLayout.findViewById(R.id.monthOfYearTV);
 
-      LocalDate dateAsLocal = dt.minusDays(i);
+      dayOfMonthTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+      monthOfYearTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+      dayOfMonthTV.setTypeface(null, Typeface.NORMAL);
+      monthOfYearTV.setTypeface(null, Typeface.NORMAL);
+
+      LocalDate dateAsLocal = dateToStartFrom.minusDays(i);
       DateTimeFormatter monthFormatter = DateTimeFormat.forPattern("MMM");
 
       dayOfMonthTV.setText(String.valueOf(dateAsLocal.getDayOfMonth()));
@@ -327,30 +344,34 @@ public class Nutrition_Fragment extends Fragment {
 
       dateCarouselContainer.addView(itemDateCarouselLayout);
 
-      if (i == 0) {
+      if (i == 2) {
         focusOnView(dateCarouselContainer, itemDateCarouselLayout);
       }
 
-      itemDateCarouselLayout.setOnClickListener(new View.OnClickListener() {
-        @Override public void onClick(View view) {
-          focusOnView(dateCarouselContainer, view);
+      if (i < 2) {
+        fadeOutView(itemDateCarouselLayout);
+      } else if (i >= 2) {
+        itemDateCarouselLayout.setOnClickListener(new View.OnClickListener() {
+          @Override public void onClick(View view) {
+            focusOnView(dateCarouselContainer, view);
 
-          showProgressBarsForLoading();
+            showProgressBarsForLoading();
 
-          DateTimeFormatter formatter = DateTimeFormat.forPattern("dd/MMM/yyyy");
-          DateTime formattedDate = formatter.parseDateTime(dayOfMonthTV.getText().toString()
-              + "/"
-              + monthOfYearTV.getText().toString()
-              + "/"
-              + dt.year().getAsText());
+            DateTimeFormatter formatter = DateTimeFormat.forPattern("dd/MMM/yyyy");
+            DateTime formattedDate = formatter.parseDateTime(dayOfMonthTV.getText().toString()
+                + "/"
+                + monthOfYearTV.getText().toString()
+                + "/"
+                + dt.year().getAsText());
 
-          finalDesiredDate = Helpers.prepareDateForAPIRequest(formattedDate.toLocalDate());
+            finalDesiredDate = Helpers.prepareDateForAPIRequest(formattedDate.toLocalDate());
 
-          getUserGoalMetrics(finalDesiredDate, "nutrition");
-          getUserAddedMeals(finalDesiredDate);
-          getUiForSection("nutrition", finalDesiredDate);
-        }
-      });
+            getUserGoalMetrics(finalDesiredDate, "nutrition");
+            getUserAddedMeals(finalDesiredDate);
+            getUiForSection("nutrition", finalDesiredDate);
+          }
+        });
+      }
     }
 
     dateCarousel.post(new Runnable() {
@@ -392,6 +413,10 @@ public class Nutrition_Fragment extends Fragment {
     monthOfYearTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
     dayOfMonthTV.setTypeface(null, Typeface.BOLD);
     monthOfYearTV.setTypeface(null, Typeface.BOLD);
+  }
+
+  private void fadeOutView(View view) {
+    view.setAlpha(0.5f);
   }
 
   private void getUiForSection(String section, String desiredDate) {
@@ -469,8 +494,8 @@ public class Nutrition_Fragment extends Fragment {
             Timber.d("Call failed with error : %s", t.getMessage());
             final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
 
-            alertDialog.setMessage(
-                getActivity().getResources().getString(R.string.error_response_from_server_incorrect));
+            alertDialog.setMessage(getActivity().getResources()
+                .getString(R.string.error_response_from_server_incorrect));
             alertDialog.show();
           }
         });
@@ -648,8 +673,8 @@ public class Nutrition_Fragment extends Fragment {
             Timber.d("Call failed with error : %s", t.getMessage());
             final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
 
-            alertDialog.setMessage(
-                getActivity().getResources().getString(R.string.error_response_from_server_incorrect));
+            alertDialog.setMessage(getActivity().getResources()
+                .getString(R.string.error_response_from_server_incorrect));
             alertDialog.show();
           }
         });
@@ -706,6 +731,7 @@ public class Nutrition_Fragment extends Fragment {
     for (int i = 0; i < widgetsFromResponse.size(); i++) {
       if (widgetsFromResponse.get(i).getTitle().equals("Calories")) {
         metricCounterTV.setText(String.valueOf((int) widgetsFromResponse.get(i).getValue()));
+        todayTV.setText(String.valueOf((int) widgetsFromResponse.get(i).getValue()));
       }
     }
 
@@ -714,8 +740,7 @@ public class Nutrition_Fragment extends Fragment {
     widgetsMap = new ArrayList<>(widgetsFromResponse.subList(0, 4));
 
     NutritionWidgets_GridAdapter nutritionWidgets_GridAdapter =
-        new NutritionWidgets_GridAdapter(getActivity(), widgetsMap,
-            R.layout.grid_item_nutrition_widgets);
+        new NutritionWidgets_GridAdapter(getActivity(), widgetsMap);
 
     widgetsGridView.setAdapter(nutritionWidgets_GridAdapter);
 
@@ -739,29 +764,30 @@ public class Nutrition_Fragment extends Fragment {
     ItemTouchHelper.Callback callback;
     ItemTouchHelper touchHelper;
 
-    userMealsRecyclerAdapter = new UserMeals_RecyclerAdapterDragSwipe(getActivity(), mealItems);
-    callback = new SimpleSwipeItemTouchHelperCallback(userMealsRecyclerAdapter);
-    touchHelper = new ItemTouchHelper(callback);
+    if (isAdded()) {
+      userMealsRecyclerAdapter = new UserMeals_RecyclerAdapterDragSwipe(getActivity(), mealItems);
+      callback = new SimpleSwipeItemTouchHelperCallback(userMealsRecyclerAdapter);
+      touchHelper = new ItemTouchHelper(callback);
 
-    switch (mealType) {
-      case "Breakfast":
-        hookUpMealSectionListViews(breakfastListView, mLayoutManager, touchHelper);
-        break;
-      case "Lunch":
-        hookUpMealSectionListViews(lunchListView, mLayoutManager, touchHelper);
-        break;
-      case "Dinner":
-        hookUpMealSectionListViews(dinnerListView, mLayoutManager, touchHelper);
-        break;
-      case "Snack":
-        hookUpMealSectionListViews(snacksListView, mLayoutManager, touchHelper);
-        break;
+      switch (mealType) {
+        case "Breakfast":
+          hookUpMealSectionListViews(breakfastListView, mLayoutManager, touchHelper);
+          break;
+        case "Lunch":
+          hookUpMealSectionListViews(lunchListView, mLayoutManager, touchHelper);
+          break;
+        case "Dinner":
+          hookUpMealSectionListViews(dinnerListView, mLayoutManager, touchHelper);
+          break;
+        case "Snack":
+          hookUpMealSectionListViews(snacksListView, mLayoutManager, touchHelper);
+          break;
+      }
     }
   }
 
   private void hookUpMealSectionListViews(RecyclerView mealListView,
       RecyclerView.LayoutManager layoutManager, ItemTouchHelper touchHelper) {
-    Log.d(TAG, "hookUpMealSectionListViews: Setting up listviews here");
     mealListView.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
     mealListView.setNestedScrollingEnabled(false);
     mealListView.setLayoutManager(layoutManager);
@@ -779,6 +805,11 @@ public class Nutrition_Fragment extends Fragment {
       case Constants.EXTRAS_CREATED_NEW_MEAL_ENTRY_ON_DATE:
         getUserAddedMeals(finalDesiredDate);
         getUiForSection("nutrition", finalDesiredDate);
+
+        metricProgressBar.setProgress(
+            ((Integer.parseInt(metricCounterTV.getText().toString()) + Integer.parseInt(
+                activeTV.getText().toString())) * 100) / Integer.parseInt(
+                goalTV.getText().toString()));
 
         cancelAllPendingAlarms();
         break;
@@ -852,6 +883,15 @@ public class Nutrition_Fragment extends Fragment {
     intent.putExtra(Constants.EXTRAS_MAIN_MEAL_NAME, mainMealName);
     intent.putExtra(Constants.EXTRAS_DATE_TO_ADD_MEAL_ON, finalDesiredDate);
     startActivity(intent);
+  }
+
+  private void changeMetricProgressValue() {
+    int progressValue = ((Integer.parseInt(metricCounterTV.getText().toString()) + Integer.parseInt(
+        activeTV.getText().toString())) * 100) / Integer.parseInt(goalTV.getText().toString());
+
+    if (progressValue > 100) progressValue = 100;
+
+    metricProgressBar.setProgress(progressValue);
   }
 
   private void addNewBarChart(final String chartTitle) {

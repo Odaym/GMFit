@@ -16,13 +16,10 @@ import java.util.ArrayList;
 public class NutritionWidgets_GridAdapter extends BaseAdapter {
   private Context context;
   private ArrayList<NutritionWidget> widgetsMap;
-  private int layoutResourceId;
 
-  public NutritionWidgets_GridAdapter(Context context, ArrayList<NutritionWidget> widgetsMap,
-      int layoutResourceId) {
+  public NutritionWidgets_GridAdapter(Context context, ArrayList<NutritionWidget> widgetsMap) {
     this.context = context;
     this.widgetsMap = widgetsMap;
-    this.layoutResourceId = layoutResourceId;
   }
 
   public int getCount() {
@@ -43,7 +40,7 @@ public class NutritionWidgets_GridAdapter extends BaseAdapter {
     if (convertView == null) {
       LayoutInflater inflater =
           (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-      convertView = inflater.inflate(layoutResourceId, parent, false);
+      convertView = inflater.inflate(R.layout.grid_item_nutrition_widgets, parent, false);
 
       holder = new ViewHolder();
 

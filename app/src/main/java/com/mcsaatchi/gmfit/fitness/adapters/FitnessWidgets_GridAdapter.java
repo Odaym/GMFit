@@ -53,6 +53,10 @@ public class FitnessWidgets_GridAdapter
     return widgetsMap.size();
   }
 
+  public FitnessWidget getItem(int position) {
+    return widgetsMap.get(position);
+  }
+
   class RecyclerViewHolder extends RecyclerView.ViewHolder {
 
     ImageView metricIcon;

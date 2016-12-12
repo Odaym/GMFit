@@ -18,13 +18,13 @@
       android:layout_marginTop="@dimen/default_margin_1"
       />
 
-  <com.mcsaatchi.gmfit.common.classes.FontTextView
+  <TextView
       android:id="@+id/widgetNameTV"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_gravity="center"
-      android:layout_marginTop="@dimen/default_margin_1"
       android:layout_marginBottom="@dimen/default_margin_1"
+      android:layout_marginTop="@dimen/default_margin_1"
       android:gravity="center_horizontal"
       android:textColor="@android:color/white"
       android:textSize="@dimen/insurance_widgets_name_font_size"

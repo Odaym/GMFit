@@ -51,9 +51,9 @@
         android:layout_below="@+id/dateCarousel"
         android:layout_centerHorizontal="true"
         android:indeterminate="false"
+        android:max="100"
         android:maxHeight="@dimen/sections_progress_bar_height"
         android:minHeight="@dimen/sections_progress_bar_height"
-        android:progress="70"
         android:progressDrawable="@drawable/nutrition_progress_bar"
         style="?android:attr/progressBarStyleHorizontal"
         />

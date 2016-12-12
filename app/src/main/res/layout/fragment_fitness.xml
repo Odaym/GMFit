@@ -41,9 +41,9 @@
         android:layout_below="@+id/dateCarousel"
         android:layout_centerHorizontal="true"
         android:indeterminate="false"
+        android:max="100"
         android:maxHeight="@dimen/sections_progress_bar_height"
         android:minHeight="@dimen/sections_progress_bar_height"
-        android:progress="70"
         android:progressDrawable="@drawable/fitness_progress_bar"
         style="?android:attr/progressBarStyleHorizontal"
         />
@@ -87,14 +87,15 @@
     <LinearLayout
         android:id="@+id/widgetsGridViewLayout"
         android:layout_width="match_parent"
-        android:padding="@dimen/default_margin_1"
         android:layout_height="wrap_content"
+        android:padding="@dimen/default_margin_1"
         >
 
       <android.support.v7.widget.RecyclerView
           android:id="@+id/widgetsGridView"
           android:layout_width="match_parent"
           android:layout_height="@dimen/fitness_widgets_gridview_height"
+          android:nestedScrollingEnabled="false"
           />
     </LinearLayout>
 

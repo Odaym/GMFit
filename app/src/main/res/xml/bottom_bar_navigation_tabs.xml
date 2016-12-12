@@ -19,8 +19,8 @@
       title="@string/health_tab_title"/>
 
   <tab
-      barColorWhenSelected="@color/health_green"
-      icon="@drawable/ic_bottom_bar_health_inactive"
+      barColorWhenSelected="@color/insurance_blue"
+      icon="@drawable/ic_bottom_bar_insurance_inactive"
       id="@+id/item_four"
       title="@string/insurance_section_title"/>
 

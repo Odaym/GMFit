@@ -126,7 +126,7 @@ public class Main_Activity extends Base_Activity {
                 .replace(R.id.fragment_container, new InsuranceFragment())
                 .commit();
             mainContentLayout.setBackground(
-                getResources().getDrawable(R.drawable.general_background));
+                getResources().getDrawable(R.drawable.insurance_background));
             break;
           case R.id.item_five:
             getSupportFragmentManager().beginTransaction()
