@@ -192,7 +192,8 @@ public class MainProfile_Fragment extends Fragment {
         dialogBuilder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
           @Override public void onClick(DialogInterface dialogInterface, int i) {
             newUserWeight = Double.parseDouble(editWeightET.getText().toString());
-            weightEntryValueTV.setText(String.valueOf(newUserWeight));
+            weightEntryValueTV.setText(
+                String.valueOf(String.format(Locale.getDefault(), "%.1f", newUserWeight)));
 
             prefs.edit()
                 .putFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, (float) newUserWeight)
