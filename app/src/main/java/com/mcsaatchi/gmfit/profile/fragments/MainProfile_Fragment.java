@@ -883,7 +883,7 @@ public class MainProfile_Fragment extends Fragment {
                         "Lightly Active (1-3 times per week)");
                     prefsEditor.putInt(Constants.EXTRAS_USER_PROFILE_ACTIVITY_LEVEL_ID, 2);
 
-                    medicalConditionsValueTV.setText("Lightly Active (1-3 times per week)");
+                    activityLevelsEntryValueTV.setText("Lightly Active (1-3 times per week)");
                   } else {
                     for (int i = 0; i < userActivityLevels.size(); i++) {
                       if (userActivityLevels.get(i).getSelected().equals("1")) {
@@ -936,7 +936,8 @@ public class MainProfile_Fragment extends Fragment {
                       .isEmpty()) {
                     prefsEditor.putFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT,
                         Float.parseFloat(userProfileData.getWeight()));
-                    weightEntryValueTV.setText(userProfileData.getWeight());
+                    weightEntryValueTV.setText(String.valueOf(
+                        String.format(Locale.getDefault(), "%.1f", Float.parseFloat(userProfileData.getWeight()))));
                   }
 
                   /**

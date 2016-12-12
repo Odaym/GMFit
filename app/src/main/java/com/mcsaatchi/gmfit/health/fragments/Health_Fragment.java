@@ -74,7 +74,7 @@ public class Health_Fragment extends Fragment {
     getTakenMedicalTests();
 
     metricCounterTV.setText(
-        String.valueOf((int) prefs.getFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, 0)));
+        String.valueOf(prefs.getFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, 0)));
 
     addEntryBTN_MEDICAL_TESTS.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View view) {

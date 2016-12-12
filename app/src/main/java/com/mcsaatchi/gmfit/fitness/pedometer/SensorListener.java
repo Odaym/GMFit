@@ -79,7 +79,7 @@ public class SensorListener extends Service implements SensorEventListener {
               METRIC_RUNNING_FACTOR, STEP_LENGTH);
       float distanceToday = calculateDistance(STEP_LENGTH);
 
-      storeStepsToday(stepsToday, (int) event.values[0], "steps");
+      storeStepsToday(stepsToday, Math.round(event.values[0] * 1.5f), "steps");
       storeCaloriesToday(caloriesToday, prefs.getFloat(todayDate + "_calories", 0), "calories");
       storeDistanceToday(distanceToday, prefs.getFloat(todayDate + "_distance", 0), "distance");
 

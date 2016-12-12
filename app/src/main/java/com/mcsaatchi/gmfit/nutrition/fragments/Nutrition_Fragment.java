@@ -288,11 +288,12 @@ public class Nutrition_Fragment extends Fragment {
                   activeTV.setText(String.valueOf((int) Double.parseDouble(activeCalories)));
                 }
 
-                if (!activeTV.getText().toString().isEmpty() && !goalTV.getText()
+                if (!activeTV.getText().toString().isEmpty()
+                    && !goalTV.getText()
                     .toString()
-                    .isEmpty() && !activeTV.getText().toString().isEmpty() && !todayTV.getText()
-                    .toString()
-                    .isEmpty() && !metricCounterTV.getText().toString().isEmpty()) {
+                    .isEmpty()
+                    && !todayTV.getText().toString().isEmpty()
+                    && !metricCounterTV.getText().toString().isEmpty()) {
                   int remainingValue =
                       Integer.parseInt(goalTV.getText().toString()) + Integer.parseInt(
                           activeTV.getText().toString()) - Integer.parseInt(
@@ -344,13 +345,13 @@ public class Nutrition_Fragment extends Fragment {
 
       dateCarouselContainer.addView(itemDateCarouselLayout);
 
-      if (i == 2) {
+      if (i == 3) {
         focusOnView(dateCarouselContainer, itemDateCarouselLayout);
       }
 
-      if (i < 2) {
+      if (i < 3) {
         fadeOutView(itemDateCarouselLayout);
-      } else if (i >= 2) {
+      } else if (i >= 3) {
         itemDateCarouselLayout.setOnClickListener(new View.OnClickListener() {
           @Override public void onClick(View view) {
             focusOnView(dateCarouselContainer, view);
