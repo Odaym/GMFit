@@ -318,7 +318,9 @@ public class NutritionFragment extends Fragment {
   }
 
   private void setupDateCarousel() {
-    LocalDate dateToStartFrom = dt.plusDays(2);
+    int daysExtraToShow = 3;
+
+    LocalDate dateToStartFrom = dt.plusDays(daysExtraToShow);
 
     for (int i = Constants.NUMBER_OF_DAYS_IN_DATE_CAROUSEL; i >= 0; i--) {
       final View itemDateCarouselLayout =
@@ -345,13 +347,13 @@ public class NutritionFragment extends Fragment {
 
       dateCarouselContainer.addView(itemDateCarouselLayout);
 
-      if (i == 3) {
+      if (i == daysExtraToShow) {
         focusOnView(dateCarouselContainer, itemDateCarouselLayout);
       }
 
-      if (i < 3) {
+      if (i < daysExtraToShow) {
         fadeOutView(itemDateCarouselLayout);
-      } else if (i >= 3) {
+      } else if (i >= daysExtraToShow) {
         itemDateCarouselLayout.setOnClickListener(new View.OnClickListener() {
           @Override public void onClick(View view) {
             focusOnView(dateCarouselContainer, view);

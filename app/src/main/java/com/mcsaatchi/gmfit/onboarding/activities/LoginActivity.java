@@ -222,6 +222,12 @@ public class LoginActivity extends BaseActivity {
 
             List<AuthenticationResponseChart> chartsMap = responseBody.getCharts();
 
+            prefs.edit()
+                .putBoolean(prefs.getString(Constants.EXTRAS_USER_EMAIL, "")
+                    + "_"
+                    + Constants.EVENT_FINISHED_SETTING_UP_PROFILE_SUCCESSFULLY, true)
+                .apply();
+
             EventBusSingleton.getInstance()
                 .post(new EventBusPoster(
                     Constants.EVENT_SIGNNED_UP_SUCCESSFULLY_CLOSE_LOGIN_ACTIVITY));

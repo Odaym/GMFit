@@ -150,16 +150,6 @@ public class SignInActivity extends BaseActivity {
                 .post(new EventBusPoster(
                     Constants.EVENT_SIGNNED_UP_SUCCESSFULLY_CLOSE_LOGIN_ACTIVITY));
 
-            /**
-             * Case where the user already has an account and they just logged in with it on a new installation
-             * Cannot happen otherwise
-             */
-            prefs.edit()
-                .putBoolean(prefs.getString(Constants.EXTRAS_USER_EMAIL, "")
-                    + "_"
-                    + Constants.EVENT_FINISHED_SETTING_UP_PROFILE_SUCCESSFULLY, true)
-                .apply();
-
             List<AuthenticationResponseChart> chartsMap = responseBody.getCharts();
 
             Intent intent = new Intent(SignInActivity.this, MainActivity.class);
