@@ -1,7 +1,7 @@
 package com.mcsaatchi.gmfit.architecture.data_access;
 
 import android.content.Context;
-import com.mcsaatchi.gmfit.architecture.GMFit_Application;
+import com.mcsaatchi.gmfit.architecture.GMFitApplication;
 import com.mcsaatchi.gmfit.architecture.rest.ActivityLevelsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ChartMetricBreakdownResponse;
@@ -33,7 +33,7 @@ public class DataAccessHandler {
   @Inject ApiCallsHandler apiCallsHandler;
 
   public DataAccessHandler(Context app) {
-    ((GMFit_Application) app).getAppComponent().inject(this);
+    ((GMFitApplication) app).getAppComponent().inject(this);
   }
 
   public void findMeals(String userAccessToken, String mealName,

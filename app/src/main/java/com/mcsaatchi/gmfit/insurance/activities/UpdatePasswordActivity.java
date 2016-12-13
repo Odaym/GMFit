@@ -9,10 +9,10 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.andreabaccega.widget.FormEditText;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.common.activities.Base_Activity;
+import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.insurance.fragments.InsuranceLoginFragment;
 
-public class UpdatePasswordActivity extends Base_Activity {
+public class UpdatePasswordActivity extends BaseActivity {
 
   @Bind(R.id.toolbar) Toolbar toolbar;
   @Bind(R.id.newPasswordET) FormEditText newPasswordET;

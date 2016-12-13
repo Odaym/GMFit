@@ -10,7 +10,7 @@ import android.net.Uri;
 import android.support.v7.app.NotificationCompat;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.common.Constants;
-import com.mcsaatchi.gmfit.nutrition.activities.AddNewMealItem_Activity;
+import com.mcsaatchi.gmfit.nutrition.activities.AddNewMealItemActivity;
 import org.joda.time.LocalDate;
 
 public class AlarmReceiver extends BroadcastReceiver {
@@ -24,7 +24,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     String mealType = intent.getExtras().getString("MEAL_TYPE");
 
-    Intent openMealEntryPickerIntent = new Intent(context, AddNewMealItem_Activity.class);
+    Intent openMealEntryPickerIntent = new Intent(context, AddNewMealItemActivity.class);
     openMealEntryPickerIntent.putExtra(Constants.EXTRAS_MAIN_MEAL_NAME, mealType);
     openMealEntryPickerIntent.putExtra(Constants.EXTRAS_DATE_TO_ADD_MEAL_ON,
         Helpers.prepareDateForAPIRequest(new LocalDate()));

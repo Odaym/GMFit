@@ -3,8 +3,8 @@ package com.mcsaatchi.gmfit.architecture.dagger;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import com.mcsaatchi.gmfit.architecture.GMFitApplication;
 import com.mcsaatchi.gmfit.common.Constants;
-import com.mcsaatchi.gmfit.architecture.GMFit_Application;
 import com.mcsaatchi.gmfit.architecture.data_access.ApiCallsHandler;
 import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
 import dagger.Module;
@@ -13,9 +13,9 @@ import javax.inject.Singleton;
 import org.joda.time.LocalDate;
 
 @Module public class AppModule {
-  private final GMFit_Application application;
+  private final GMFitApplication application;
 
-  public AppModule(GMFit_Application app) {
+  public AppModule(GMFitApplication app) {
     this.application = app;
   }
 

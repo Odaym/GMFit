@@ -21,7 +21,7 @@ import com.mcsaatchi.gmfit.BuildConfig;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.architecture.otto.EventBusPoster;
 import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
-import com.mcsaatchi.gmfit.architecture.GMFit_Application;
+import com.mcsaatchi.gmfit.architecture.GMFitApplication;
 import com.mcsaatchi.gmfit.architecture.data_access.DBHelper;
 import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.fitness.models.FitnessWidget;
@@ -155,7 +155,7 @@ public class SensorListener extends Service implements SensorEventListener {
   @Override public void onCreate() {
     super.onCreate();
 
-    ((GMFit_Application) getApplication()).getAppComponent().inject(this);
+    ((GMFitApplication) getApplication()).getAppComponent().inject(this);
 
     if (BuildConfig.DEBUG) Log.d("SERVICE_TAG", "SensorListener onCreate");
 

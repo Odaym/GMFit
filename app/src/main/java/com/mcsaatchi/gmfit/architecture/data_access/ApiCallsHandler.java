@@ -2,8 +2,8 @@ package com.mcsaatchi.gmfit.architecture.data_access;
 
 import android.content.Context;
 import android.content.res.Resources;
+import com.mcsaatchi.gmfit.architecture.GMFitApplication;
 import com.mcsaatchi.gmfit.common.Constants;
-import com.mcsaatchi.gmfit.architecture.GMFit_Application;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.architecture.rest.ActivityLevelsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponse;
@@ -39,7 +39,7 @@ public class ApiCallsHandler {
   @Inject Resources activityResources;
 
   public ApiCallsHandler(Context app) {
-    ((GMFit_Application) app).getAppComponent().inject(this);
+    ((GMFitApplication) app).getAppComponent().inject(this);
   }
 
   void getSlugBreakdownForChart(final String chartType, String userAccessToken,

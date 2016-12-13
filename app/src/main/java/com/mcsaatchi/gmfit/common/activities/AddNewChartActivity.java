@@ -15,7 +15,7 @@ import android.widget.Toast;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.common.adapters.DataChartsListing_Adapter;
+import com.mcsaatchi.gmfit.common.adapters.DataChartsListingAdapter;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.models.DataChart;
 import com.mcsaatchi.gmfit.architecture.rest.ChartsBySectionResponse;
@@ -28,7 +28,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import timber.log.Timber;
 
-public class AddNewChartActivity extends Base_Activity {
+public class AddNewChartActivity extends BaseActivity {
   private static final int ADD_NEW_FITNESS_CHART_REQUEST_CODE = 1;
   private static final int ADD_NEW_NUTRITION_CHART_REQUEST_CODE = 2;
 
@@ -112,7 +112,7 @@ public class AddNewChartActivity extends Base_Activity {
                   chartItemsMap.add(newChartToAdd);
                 }
 
-                chartsList.setAdapter(new DataChartsListing_Adapter(chartItemsMap, AddNewChartActivity.this));
+                chartsList.setAdapter(new DataChartsListingAdapter(chartItemsMap, AddNewChartActivity.this));
 
                 chartsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                   @Override

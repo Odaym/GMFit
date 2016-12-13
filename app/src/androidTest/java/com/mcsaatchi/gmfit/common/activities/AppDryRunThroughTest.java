@@ -8,7 +8,7 @@ import android.test.suitebuilder.annotation.LargeTest;
 
 import com.mcsaatchi.gmfit.R;
 
-import com.mcsaatchi.gmfit.onboarding.activities.Login_Activity;
+import com.mcsaatchi.gmfit.onboarding.activities.LoginActivity;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,7 +27,7 @@ import static org.hamcrest.Matchers.allOf;
 public class AppDryRunThroughTest {
 
     @Rule
-    public ActivityTestRule<Login_Activity> mActivityTestRule = new ActivityTestRule<>(Login_Activity.class);
+    public ActivityTestRule<LoginActivity> mActivityTestRule = new ActivityTestRule<>(LoginActivity.class);
 
     @Test
     public void appDryRunThroughTest() {
