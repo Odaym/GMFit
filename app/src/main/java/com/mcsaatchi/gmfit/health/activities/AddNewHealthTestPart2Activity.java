@@ -6,6 +6,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -22,6 +25,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import butterknife.Bind;
@@ -38,6 +42,7 @@ import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 import java.io.File;
 import java.io.IOException;
 import java.text.DateFormatSymbols;
@@ -67,17 +72,28 @@ public class AddNewHealthTestPart2Activity extends BaseActivity
   @Bind(R.id.toolbar) Toolbar toolbar;
   @Bind(R.id.dateTakenTV) TextView dateTakenTV;
   @Bind(R.id.testNameET) FormEditText testNameET;
+
   @Bind(R.id.addPic1) ImageView addPic1;
   @Bind(R.id.addPic2) ImageView addPic2;
   @Bind(R.id.addPic3) ImageView addPic3;
   @Bind(R.id.addPic4) ImageView addPic4;
   @Bind(R.id.addPic5) ImageView addPic5;
 
+  @Bind(R.id.pictureHolder1) RelativeLayout pictureHolder1;
+  @Bind(R.id.pictureHolder2) RelativeLayout pictureHolder2;
+  @Bind(R.id.pictureHolder3) RelativeLayout pictureHolder3;
+  @Bind(R.id.pictureHolder4) RelativeLayout pictureHolder4;
+  @Bind(R.id.pictureHolder5) RelativeLayout pictureHolder5;
+
   @Bind(R.id.deletePic1) ImageView deletePic1;
   @Bind(R.id.deletePic2) ImageView deletePic2;
   @Bind(R.id.deletePic3) ImageView deletePic3;
   @Bind(R.id.deletePic4) ImageView deletePic4;
   @Bind(R.id.deletePic5) ImageView deletePic5;
+
+  private ArrayList<RelativeLayout> imageViewElements;
+  private ArrayList<ImageView> deleteButtonElements;
+  private ArrayList<ImageView> addPictureElements;
 
   private ArrayList<Integer> deletedImages = new ArrayList<>();
 
@@ -88,9 +104,6 @@ public class AddNewHealthTestPart2Activity extends BaseActivity
     add(null);
     add(null);
   }};
-
-  private ArrayList<ImageView> imageViewElements;
-  private ArrayList<ImageView> deleteButtonElements;
 
   private File photoFile;
   private Uri photoFileUri;
@@ -120,12 +133,20 @@ public class AddNewHealthTestPart2Activity extends BaseActivity
 
     allFields.add(testNameET);
 
-    imageViewElements = new ArrayList<ImageView>() {{
+    addPictureElements = new ArrayList<ImageView>() {{
       add(addPic1);
       add(addPic2);
       add(addPic3);
       add(addPic4);
       add(addPic5);
+    }};
+
+    imageViewElements = new ArrayList<RelativeLayout>() {{
+      add(pictureHolder1);
+      add(pictureHolder2);
+      add(pictureHolder3);
+      add(pictureHolder4);
+      add(pictureHolder5);
     }};
 
     deleteButtonElements = new ArrayList<ImageView>() {{
@@ -176,9 +197,9 @@ public class AddNewHealthTestPart2Activity extends BaseActivity
           for (int i = 0; i < existingMedicaltest.getImages().size(); i++) {
             if (existingMedicaltest.getImages().get(i) != null
                 && imageViewElements.get(i) != null) {
-              Picasso.with(this)
-                  .load(existingMedicaltest.getImages().get(i).getImage())
-                  .into(imageViewElements.get(i));
+              //Picasso.with(this)
+              //    .load(existingMedicaltest.getImages().get(i).getImage())
+              //    .into(imageViewElements.get(i));
               deleteButtonElements.get(i).setVisibility(View.VISIBLE);
             }
           }
@@ -229,7 +250,9 @@ public class AddNewHealthTestPart2Activity extends BaseActivity
         final int finalI = i;
         deleteButtonElements.get(i).setOnClickListener(new View.OnClickListener() {
           @Override public void onClick(View view) {
-            imageViewElements.get(finalI).setImageResource(R.drawable.ic_insert_photo_black_24dp);
+            imageViewElements.get(finalI).setBackgroundResource(0);
+
+            addPictureElements.get(finalI).setVisibility(View.VISIBLE);
 
             deleteButtonElements.get(finalI).setVisibility(View.GONE);
 
@@ -239,10 +262,6 @@ public class AddNewHealthTestPart2Activity extends BaseActivity
                 && existingMedicaltest.getImages().size() > 0
                 && existingMedicaltest.getImages().get(finalI) != null) {
               deletedImages.add(existingMedicaltest.getImages().get(finalI).getId());
-            }
-
-            for (int i = 0; i < deletedImages.size(); i++) {
-              Timber.d("Deleted images: " + deletedImages.get(i));
             }
           }
         });
@@ -345,41 +364,60 @@ public class AddNewHealthTestPart2Activity extends BaseActivity
   }
 
   private void addTestPicture(String finalImagePath) {
-    ImageView finalViewForPicture = null;
+    RelativeLayout viewForPicture = null;
 
     switch (viewIdForTestPicture) {
       case R.id.addPic1:
-        finalViewForPicture = (ImageView) findViewById(R.id.addPic1);
+        viewForPicture = (RelativeLayout) findViewById(R.id.pictureHolder1);
         picturePaths.set(0, finalImagePath);
         deleteButtonElements.get(0).setVisibility(View.VISIBLE);
+        addPic1.setVisibility(View.GONE);
         break;
       case R.id.addPic2:
-        finalViewForPicture = (ImageView) findViewById(R.id.addPic2);
+        viewForPicture = (RelativeLayout) findViewById(R.id.pictureHolder2);
         picturePaths.set(1, finalImagePath);
         deleteButtonElements.get(1).setVisibility(View.VISIBLE);
+        addPic2.setVisibility(View.GONE);
         break;
       case R.id.addPic3:
-        finalViewForPicture = (ImageView) findViewById(R.id.addPic3);
+        viewForPicture = (RelativeLayout) findViewById(R.id.pictureHolder3);
         picturePaths.set(2, finalImagePath);
         deleteButtonElements.get(2).setVisibility(View.VISIBLE);
+        addPic3.setVisibility(View.GONE);
         break;
       case R.id.addPic4:
-        finalViewForPicture = (ImageView) findViewById(R.id.addPic4);
+        viewForPicture = (RelativeLayout) findViewById(R.id.pictureHolder4);
         picturePaths.set(3, finalImagePath);
         deleteButtonElements.get(3).setVisibility(View.VISIBLE);
+        addPic4.setVisibility(View.GONE);
         break;
       case R.id.addPic5:
-        finalViewForPicture = (ImageView) findViewById(R.id.addPic5);
+        viewForPicture = (RelativeLayout) findViewById(R.id.pictureHolder5);
         picturePaths.set(4, finalImagePath);
         deleteButtonElements.get(4).setVisibility(View.VISIBLE);
+        addPic5.setVisibility(View.GONE);
         break;
     }
 
-    Picasso.with(this)
+    final RelativeLayout finalViewForPicture = viewForPicture;
+
+    Picasso.with(AddNewHealthTestPart2Activity.this)
         .load(new File(finalImagePath))
-        .resize(500, 500)
-        .centerInside()
-        .into(finalViewForPicture);
+        .into(new Target() {
+
+          @Override public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+
+            finalViewForPicture.setBackground(new BitmapDrawable(getResources(), bitmap));
+          }
+
+          @Override public void onBitmapFailed(final Drawable errorDrawable) {
+            Log.d("TAG", "FAILED");
+          }
+
+          @Override public void onPrepareLoad(final Drawable placeHolderDrawable) {
+            Log.d("TAG", "Prepare Load");
+          }
+        });
   }
 
   @RequiresApi(api = Build.VERSION_CODES.M) public void triggerAddPicture(View view) {
