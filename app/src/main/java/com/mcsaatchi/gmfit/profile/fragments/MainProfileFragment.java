@@ -146,6 +146,11 @@ public class MainProfileFragment extends Fragment {
 
     ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.profile_tab_title);
 
+    Picasso.with(getActivity())
+        .load(R.drawable.pictures_placeholder)
+        .transform(new CircleTransform())
+        .into(userProfileIV);
+
     getUserProfile();
 
     /**
@@ -669,7 +674,6 @@ public class MainProfileFragment extends Fragment {
      * If the current picture is different than the one the user just took, change it
      */
     if (!currentImagePath.equals(finalImagePath)) {
-      Timber.d("Profile pictures have differed");
       prefs.edit().putString(Constants.EXTRAS_USER_PROFILE_IMAGE, finalImagePath).apply();
 
       Picasso.with(getActivity())
@@ -937,7 +941,8 @@ public class MainProfileFragment extends Fragment {
                     prefsEditor.putFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT,
                         Float.parseFloat(userProfileData.getWeight()));
                     weightEntryValueTV.setText(String.valueOf(
-                        String.format(Locale.getDefault(), "%.1f", Float.parseFloat(userProfileData.getWeight()))));
+                        String.format(Locale.getDefault(), "%.1f",
+                            Float.parseFloat(userProfileData.getWeight()))));
                   }
 
                   /**
@@ -977,18 +982,18 @@ public class MainProfileFragment extends Fragment {
                    * Set the profile picture
                    */
                   if (userProfileData.getProfile_picture() != null
-                      && !userProfileData.getProfile_picture().isEmpty()) {
+                      && !userProfileData.getProfile_picture().equals("http://gmfit.mcsaatchi.me/")
+                      && getActivity() != null) {
+
                     prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_IMAGE,
                         userProfileData.getProfile_picture());
 
-                    if (getActivity() != null) {
-                      Picasso.with(getActivity())
-                          .load(userProfileData.getProfile_picture())
-                          .resize(200, 200)
-                          .transform(new CircleTransform())
-                          .centerInside()
-                          .into(userProfileIV);
-                    }
+                    Picasso.with(getActivity())
+                        .load(userProfileData.getProfile_picture())
+                        .resize(200, 200)
+                        .transform(new CircleTransform())
+                        .centerInside()
+                        .into(userProfileIV);
                   }
 
                   prefsEditor.apply();
@@ -1004,7 +1009,8 @@ public class MainProfileFragment extends Fragment {
             alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
             alertDialog.show();
           }
-        });
+        }
+    );
   }
 
   private void updateUserProfile() {
