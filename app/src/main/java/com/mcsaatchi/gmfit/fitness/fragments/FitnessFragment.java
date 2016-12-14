@@ -91,6 +91,7 @@ public class FitnessFragment extends Fragment implements SensorEventListener {
   @Bind(R.id.remainingTV) FontTextView remainingTV;
   @Bind(R.id.todayTV) FontTextView todayTV;
   @Bind(R.id.metricProgressBar) ProgressBar metricProgressBar;
+  @Bind(R.id.loadingMetricProgressBar) ProgressBar loadingMetricProgressBar;
 
   @Inject SharedPreferences prefs;
   @Inject LocalDate dt;
@@ -469,6 +470,11 @@ public class FitnessFragment extends Fragment implements SensorEventListener {
   }
 
   private void getUserGoalMetrics(String date, String type, final boolean requestingPreviousData) {
+    if (loadingMetricProgressBar != null) {
+      loadingMetricProgressBar.setVisibility(View.VISIBLE);
+      metricCounterTV.setVisibility(View.INVISIBLE);
+    }
+
     dataAccessHandler.getUserGoalMetrics(
         prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
         date, type, new Callback<UserGoalMetricsResponse>() {
@@ -511,6 +517,11 @@ public class FitnessFragment extends Fragment implements SensorEventListener {
 
                   remainingValue =
                       (int) (Integer.parseInt(maxValue) - Double.parseDouble(currentValue));
+                }
+
+                if (loadingMetricProgressBar != null) {
+                  loadingMetricProgressBar.setVisibility(View.INVISIBLE);
+                  metricCounterTV.setVisibility(View.VISIBLE);
                 }
 
                 if (remainingValue < 0) {
@@ -680,7 +691,8 @@ public class FitnessFragment extends Fragment implements SensorEventListener {
         fitnessWidgetViewHolder = widgetsGridView.findViewHolderForAdapterPosition(i);
 
         if (fitnessWidgetViewHolder != null) {
-          metricCountTextView = (TextView) fitnessWidgetViewHolder.itemView.findViewById(R.id.metricTV);
+          metricCountTextView =
+              (TextView) fitnessWidgetViewHolder.itemView.findViewById(R.id.metricTV);
         }
       }
     }
