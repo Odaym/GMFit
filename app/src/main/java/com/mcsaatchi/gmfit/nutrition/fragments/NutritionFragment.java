@@ -1033,22 +1033,22 @@ public class NutritionFragment extends Fragment {
                   date = new DateTime(newChartData.get(i).getDate());
 
                   switch (i) {
-                    case 0:
+                    case 5:
                       dateTV_1.setText(date.getDayOfMonth() + " " + date.monthOfYear()
                           .getAsText()
                           .substring(0, 3));
                       break;
-                    case 7:
+                    case 12:
                       dateTV_2.setText(date.getDayOfMonth() + " " + date.monthOfYear()
                           .getAsText()
                           .substring(0, 3));
                       break;
-                    case 14:
+                    case 19:
                       dateTV_3.setText(date.getDayOfMonth() + " " + date.monthOfYear()
                           .getAsText()
                           .substring(0, 3));
                       break;
-                    case 21:
+                    case 26:
                       dateTV_4.setText(date.getDayOfMonth() + " " + date.monthOfYear()
                           .getAsText()
                           .substring(0, 3));
