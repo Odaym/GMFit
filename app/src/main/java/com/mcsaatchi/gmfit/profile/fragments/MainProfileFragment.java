@@ -53,6 +53,7 @@ import com.mcsaatchi.gmfit.architecture.rest.UserProfileResponseMedicalCondition
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.onboarding.activities.LoginActivity;
+import com.mcsaatchi.gmfit.profile.activities.ChangePasswordActivity;
 import com.mcsaatchi.gmfit.profile.activities.ContactUsActivity;
 import com.mcsaatchi.gmfit.profile.activities.MetaTextsActivity;
 import com.mcsaatchi.gmfit.profile.activities.RemindersActivity;
@@ -108,6 +109,7 @@ public class MainProfileFragment extends Fragment {
   @Bind(R.id.privacyLayout) RelativeLayout privacyLayout;
   @Bind(R.id.contactUsLayout) RelativeLayout contactUsLayout;
   @Bind(R.id.shareAppLayout) RelativeLayout shareAppLayout;
+  @Bind(R.id.changePasswordLayout) RelativeLayout changePasswordLayout;
 
   @Bind(R.id.shareEmergencyProfileBTN) Button shareEmergencyProfileBTN;
 
@@ -594,6 +596,16 @@ public class MainProfileFragment extends Fragment {
       }
     });
 
+    /**
+     * CHANGE PASSWORD LAYOUT
+     */
+    changePasswordLayout.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View view) {
+        Intent intent = new Intent(getActivity(), ChangePasswordActivity.class);
+        startActivity(intent);
+      }
+    });
+
     return fragmentView;
   }
 
@@ -1009,8 +1021,7 @@ public class MainProfileFragment extends Fragment {
             alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
             alertDialog.show();
           }
-        }
-    );
+        });
   }
 
   private void updateUserProfile() {

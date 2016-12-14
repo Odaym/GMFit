@@ -103,6 +103,11 @@ public class DataAccessHandler {
     apiCallsHandler.sendResetPasswordLink(userAccessToken, email, callback);
   }
 
+  public void changePassword(String userAccessToken, String old_password, String new_password,
+      Callback<DefaultGetResponse> callback) {
+    apiCallsHandler.changePassword(userAccessToken, old_password, new_password, callback);
+  }
+
   public void finalizeResetPassword(String resetPasswordToken, String newPassword,
       Callback<DefaultGetResponse> callback) {
     apiCallsHandler.finalizeResetPassword(resetPasswordToken, newPassword, callback);

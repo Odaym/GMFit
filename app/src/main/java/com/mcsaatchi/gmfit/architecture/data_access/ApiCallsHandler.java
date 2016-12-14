@@ -224,6 +224,22 @@ public class ApiCallsHandler {
     });
   }
 
+  void changePassword(String userAccessToken, String old_password, String new_password,
+      final Callback<DefaultGetResponse> callback) {
+    Call<DefaultGetResponse> apiCall = new RestClient().getGMFitService()
+        .changePassword(userAccessToken, new ChangePasswordRequest(old_password, new_password));
+
+    apiCall.enqueue(new Callback<DefaultGetResponse>() {
+      @Override
+      public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
+        callback.onResponse(call, response);
+      }
+
+      @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+      }
+    });
+  }
+
   void finalizeResetPassword(String resetPasswordToken, String newPassword,
       final Callback<DefaultGetResponse> callback) {
     Call<DefaultGetResponse> apiCall = new RestClient().getGMFitService()
@@ -600,8 +616,8 @@ public class ApiCallsHandler {
       RequestBody date_taken, Map<String, RequestBody> metrics, Map<String, RequestBody> imageFiles,
       RequestBody deletedImages, final Callback<DefaultGetResponse> callback) {
     Call<DefaultGetResponse> apiCall = new RestClient().getGMFitService()
-        .editExistingHealthTest(userAccessToken, instance_id, name, date_taken, metrics,
-            imageFiles, deletedImages);
+        .editExistingHealthTest(userAccessToken, instance_id, name, date_taken, metrics, imageFiles,
+            deletedImages);
 
     apiCall.enqueue(new Callback<DefaultGetResponse>() {
       @Override
@@ -908,6 +924,18 @@ public class ApiCallsHandler {
 
     public DeleteMealRequest(int instance_id) {
       this.instance_id = instance_id;
+    }
+  }
+
+  public class ChangePasswordRequest {
+    final String old_password;
+    final String new_password;
+    final String confirm_new_password;
+
+    public ChangePasswordRequest(String old_password, String new_password) {
+      this.old_password = old_password;
+      this.new_password = new_password;
+      this.confirm_new_password = new_password;
     }
   }
 }

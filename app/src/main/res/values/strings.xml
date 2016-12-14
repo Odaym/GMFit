@@ -290,6 +290,13 @@
   <string name="food_logging_section_title">Food Logging</string>
   <string name="choose_picture_from_gallery">Choose from gallery</string>
   <string name="take_new_picture">Take a new picture</string>
+  <string name="change_password_entry">Change password</string>
+  <string name="old_password_hint">Old password</string>
+  <string name="retype_new_password_hint">Retype new password</string>
+  <string name="change_password_activity_title">Change Password</string>
+  <string name="change_password_dialog_title">Requesting change password</string>
+  <string name="old_password_retype_no_match">Make sure the passwords you typed in the last 2 fields are exactly the same</string>
+  <string name="old_password_conflict_existing_password">Your old password does not match your existing password</string>
 
   <!-- INSURANCE SECTION -->
   <string name="insurance_section_title">Insurance</string>
