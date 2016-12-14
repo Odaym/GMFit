@@ -19,7 +19,7 @@
         android:layout_width="@dimen/intro_image_dimens"
         android:layout_height="@dimen/intro_image_dimens"
         android:layout_marginBottom="@dimen/default_margin_2"
-        android:src="@drawable/verification_banner"
+        android:layout_marginTop="@dimen/default_margin_4"
         />
 
     <TextView

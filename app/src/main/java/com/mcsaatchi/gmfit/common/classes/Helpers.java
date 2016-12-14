@@ -9,6 +9,8 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import com.andreabaccega.widget.FormEditText;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.data.BarData;
@@ -43,6 +45,13 @@ public class Helpers {
     }
 
     return helpers;
+  }
+
+  public static void hideKeyboard(View currentFocus, Context context) {
+    if (currentFocus != null) {
+      InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+      imm.hideSoftInputFromWindow(currentFocus.getWindowToken(), 0);
+    }
   }
 
   public static boolean validateFields(ArrayList<FormEditText> allFields) {
@@ -235,7 +244,7 @@ public class Helpers {
         intent.putExtra("MEAL_TYPE", "Lunch");
         pendingIntent =
             PendingIntent.getBroadcast(context, 1, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-        prefs.edit().putString(Constants.BREAKFAST_REMINDER_ALARM_TIME, "02:45:pm").apply();
+        prefs.edit().putString(Constants.LUNCH_REMINDER_ALARM_TIME, "14:45:pm").apply();
 
         break;
       case "Dinner":
@@ -253,7 +262,7 @@ public class Helpers {
         intent.putExtra("MEAL_TYPE", "Dinner");
         pendingIntent =
             PendingIntent.getBroadcast(context, 2, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-        prefs.edit().putString(Constants.BREAKFAST_REMINDER_ALARM_TIME, "08:00:pm").apply();
+        prefs.edit().putString(Constants.DINNER_REMINDER_ALARM_TIME, "20:00:pm").apply();
 
         break;
     }

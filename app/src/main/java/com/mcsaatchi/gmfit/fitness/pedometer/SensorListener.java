@@ -19,9 +19,9 @@ import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.mcsaatchi.gmfit.BuildConfig;
 import com.mcsaatchi.gmfit.common.Constants;
-import com.mcsaatchi.gmfit.architecture.otto.EventBus_Poster;
-import com.mcsaatchi.gmfit.architecture.otto.EventBus_Singleton;
-import com.mcsaatchi.gmfit.architecture.GMFit_Application;
+import com.mcsaatchi.gmfit.architecture.otto.EventBusPoster;
+import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
+import com.mcsaatchi.gmfit.architecture.GMFitApplication;
 import com.mcsaatchi.gmfit.architecture.data_access.DBHelper;
 import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.fitness.models.FitnessWidget;
@@ -79,7 +79,7 @@ public class SensorListener extends Service implements SensorEventListener {
               METRIC_RUNNING_FACTOR, STEP_LENGTH);
       float distanceToday = calculateDistance(STEP_LENGTH);
 
-      storeStepsToday(stepsToday, (int) event.values[0], "steps");
+      storeStepsToday(stepsToday, Math.round(event.values[0] * 1.5f), "steps");
       storeCaloriesToday(caloriesToday, prefs.getFloat(todayDate + "_calories", 0), "calories");
       storeDistanceToday(distanceToday, prefs.getFloat(todayDate + "_distance", 0), "distance");
 
@@ -131,12 +131,12 @@ public class SensorListener extends Service implements SensorEventListener {
   }
 
   public void sendOutEventBusEvents() {
-    EventBus_Singleton.getInstance()
-        .post(new EventBus_Poster(Constants.EVENT_STEP_COUNTER_INCREMENTED));
-    EventBus_Singleton.getInstance()
-        .post(new EventBus_Poster(Constants.EVENT_CALORIES_COUNTER_INCREMENTED));
-    EventBus_Singleton.getInstance()
-        .post(new EventBus_Poster(Constants.EVENT_DISTANCE_COUNTER_INCREMENTED));
+    EventBusSingleton.getInstance()
+        .post(new EventBusPoster(Constants.EVENT_STEP_COUNTER_INCREMENTED));
+    EventBusSingleton.getInstance()
+        .post(new EventBusPoster(Constants.EVENT_CALORIES_COUNTER_INCREMENTED));
+    EventBusSingleton.getInstance()
+        .post(new EventBusPoster(Constants.EVENT_DISTANCE_COUNTER_INCREMENTED));
   }
 
   @Override public IBinder onBind(final Intent intent) {
@@ -155,7 +155,7 @@ public class SensorListener extends Service implements SensorEventListener {
   @Override public void onCreate() {
     super.onCreate();
 
-    ((GMFit_Application) getApplication()).getAppComponent().inject(this);
+    ((GMFitApplication) getApplication()).getAppComponent().inject(this);
 
     if (BuildConfig.DEBUG) Log.d("SERVICE_TAG", "SensorListener onCreate");
 

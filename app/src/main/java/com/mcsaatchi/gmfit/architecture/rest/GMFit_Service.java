@@ -77,6 +77,10 @@ public interface GMFit_Service {
       @Header(Constants.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken,
       @Body ApiCallsHandler.ForgotPasswordRequest sendResetPasswordLinkRequest);
 
+  @POST("user/change-password") Call<DefaultGetResponse> changePassword(
+      @Header(Constants.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken,
+      @Body ApiCallsHandler.ChangePasswordRequest changePasswordRequests);
+
   @POST("forgot-password-change") Call<DefaultGetResponse> finalizeResetPassword(
       @Body ApiCallsHandler.ResetPasswordRequest resetPasswordRequest);
 

@@ -6,7 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.common.activities.Base_Activity;
+import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.insurance.adapters.StatusAdapter;
 import com.mcsaatchi.gmfit.insurance.models.ReimbursementModel;
 
@@ -16,7 +16,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class ReimbursementStatusListActivity extends Base_Activity {
+public class ReimbursementStatusListActivity extends BaseActivity {
 
     @Bind(R.id.toolbar)
     Toolbar toolbar;

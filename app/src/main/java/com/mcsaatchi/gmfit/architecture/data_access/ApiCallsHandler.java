@@ -2,8 +2,8 @@ package com.mcsaatchi.gmfit.architecture.data_access;
 
 import android.content.Context;
 import android.content.res.Resources;
+import com.mcsaatchi.gmfit.architecture.GMFitApplication;
 import com.mcsaatchi.gmfit.common.Constants;
-import com.mcsaatchi.gmfit.architecture.GMFit_Application;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.architecture.rest.ActivityLevelsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponse;
@@ -39,7 +39,7 @@ public class ApiCallsHandler {
   @Inject Resources activityResources;
 
   public ApiCallsHandler(Context app) {
-    ((GMFit_Application) app).getAppComponent().inject(this);
+    ((GMFitApplication) app).getAppComponent().inject(this);
   }
 
   void getSlugBreakdownForChart(final String chartType, String userAccessToken,
@@ -212,6 +212,22 @@ public class ApiCallsHandler {
       final Callback<DefaultGetResponse> callback) {
     Call<DefaultGetResponse> apiCall = new RestClient().getGMFitService()
         .sendResetPasswordLink(userAccessToken, new ForgotPasswordRequest(email));
+
+    apiCall.enqueue(new Callback<DefaultGetResponse>() {
+      @Override
+      public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
+        callback.onResponse(call, response);
+      }
+
+      @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+      }
+    });
+  }
+
+  void changePassword(String userAccessToken, String old_password, String new_password,
+      final Callback<DefaultGetResponse> callback) {
+    Call<DefaultGetResponse> apiCall = new RestClient().getGMFitService()
+        .changePassword(userAccessToken, new ChangePasswordRequest(old_password, new_password));
 
     apiCall.enqueue(new Callback<DefaultGetResponse>() {
       @Override
@@ -600,8 +616,8 @@ public class ApiCallsHandler {
       RequestBody date_taken, Map<String, RequestBody> metrics, Map<String, RequestBody> imageFiles,
       RequestBody deletedImages, final Callback<DefaultGetResponse> callback) {
     Call<DefaultGetResponse> apiCall = new RestClient().getGMFitService()
-        .editExistingHealthTest(userAccessToken, instance_id, name, date_taken, metrics,
-            imageFiles, deletedImages);
+        .editExistingHealthTest(userAccessToken, instance_id, name, date_taken, metrics, imageFiles,
+            deletedImages);
 
     apiCall.enqueue(new Callback<DefaultGetResponse>() {
       @Override
@@ -908,6 +924,18 @@ public class ApiCallsHandler {
 
     public DeleteMealRequest(int instance_id) {
       this.instance_id = instance_id;
+    }
+  }
+
+  public class ChangePasswordRequest {
+    final String old_password;
+    final String new_password;
+    final String confirm_new_password;
+
+    public ChangePasswordRequest(String old_password, String new_password) {
+      this.old_password = old_password;
+      this.new_password = new_password;
+      this.confirm_new_password = new_password;
     }
   }
 }

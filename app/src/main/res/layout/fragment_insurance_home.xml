@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="@dimen/insurance_home_header_section_height"
+      android:layout_marginBottom="@dimen/default_margin_2"
+      android:gravity="center_vertical"
+      android:orientation="horizontal"
+      android:paddingBottom="@dimen/default_margin_2"
+      android:paddingTop="@dimen/default_margin_2"
+      >
+
+    <ImageView
+        android:id="@+id/cardImageIV"
+        android:layout_width="300dp"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="@dimen/default_margin_2"
+        android:layout_weight="1"
+        android:src="@drawable/fitness_background"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        >
+
+      <TextView
+          android:id="@+id/cardOwnerTV"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="Aad Elsie"
+          android:textColor="@color/white"
+          android:textSize="20sp"
+          />
+
+      <TextView
+          android:id="@+id/bankNameTV"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="@dimen/default_margin_1"
+          android:text="Libano-Suisse s.a.l"
+          android:textColor="@color/white"
+          />
+
+      <TextView
+          android:id="@+id/cardNumberTV"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="@dimen/default_margin_1"
+          android:text="Card Number: 22193109"
+          android:textColor="@color/white"
+          />
+
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="@drawable/ic_arrow_right"
+        />
+  </LinearLayout>
+
+  <android.support.v7.widget.RecyclerView
+      android:id="@+id/insurancePathsGridView"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_gravity="center"
+      android:background="@color/white"
+      android:scrollbars="vertical"
+      />
+
+</LinearLayout>

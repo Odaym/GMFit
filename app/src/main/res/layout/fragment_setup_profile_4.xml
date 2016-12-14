@@ -266,15 +266,6 @@
             />
       </com.wrapp.floatlabelededittext.FloatLabeledEditText>
 
-      <TextView
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_marginBottom="@dimen/default_margin_2_5"
-          android:layout_marginTop="@dimen/default_margin_2"
-          android:gravity="center"
-          android:text="@string/medical_conditions_hint"
-          android:textColor="@android:color/white"
-          />
     </LinearLayout>
   </ScrollView>
 </LinearLayout>

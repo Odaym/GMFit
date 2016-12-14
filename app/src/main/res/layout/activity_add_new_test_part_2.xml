@@ -149,25 +149,31 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/test_photos_horizontal_scoller_height"
         >
+
       <LinearLayout
           android:id="@+id/testPhotosLayout"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_gravity="center_vertical"
+          android:layout_marginTop="@dimen/default_margin_1"
+          android:gravity="center"
           android:orientation="horizontal"
           >
 
         <RelativeLayout
+            android:id="@+id/pictureHolder1"
             android:layout_width="100dp"
             android:layout_height="100dp"
+            android:layout_marginEnd="@dimen/default_margin_2"
+            android:layout_marginStart="@dimen/default_margin_2"
             >
 
           <ImageView
               android:id="@+id/addPic1"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
+              android:layout_width="35dp"
+              android:layout_height="35dp"
+              android:layout_centerInParent="true"
               android:onClick="triggerAddPicture"
-              android:src="@drawable/ic_insert_photo_black_24dp"
+              android:src="@drawable/ic_camera_placeholder"
               />
 
           <ImageView
@@ -175,22 +181,25 @@
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:layout_alignParentEnd="true"
-              android:src="@drawable/ic_remove_circle_black_24dp"
+              android:src="@drawable/ic_remove_circle_white_24dp"
               android:visibility="gone"
               />
         </RelativeLayout>
 
         <RelativeLayout
+            android:id="@+id/pictureHolder2"
             android:layout_width="100dp"
             android:layout_height="100dp"
+            android:layout_marginEnd="@dimen/default_margin_2"
             >
 
           <ImageView
               android:id="@+id/addPic2"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
+              android:layout_width="35dp"
+              android:layout_height="35dp"
+              android:layout_centerInParent="true"
               android:onClick="triggerAddPicture"
-              android:src="@drawable/ic_insert_photo_black_24dp"
+              android:src="@drawable/ic_camera_placeholder"
               />
 
           <ImageView
@@ -198,22 +207,25 @@
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:layout_alignParentEnd="true"
-              android:src="@drawable/ic_remove_circle_black_24dp"
+              android:src="@drawable/ic_remove_circle_white_24dp"
               android:visibility="gone"
               />
         </RelativeLayout>
 
         <RelativeLayout
+            android:id="@+id/pictureHolder3"
             android:layout_width="100dp"
             android:layout_height="100dp"
+            android:layout_marginEnd="@dimen/default_margin_2"
             >
 
           <ImageView
               android:id="@+id/addPic3"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
+              android:layout_width="35dp"
+              android:layout_height="35dp"
+              android:layout_centerInParent="true"
               android:onClick="triggerAddPicture"
-              android:src="@drawable/ic_insert_photo_black_24dp"
+              android:src="@drawable/ic_camera_placeholder"
               />
 
           <ImageView
@@ -221,22 +233,25 @@
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:layout_alignParentEnd="true"
-              android:src="@drawable/ic_remove_circle_black_24dp"
+              android:src="@drawable/ic_remove_circle_white_24dp"
               android:visibility="gone"
               />
         </RelativeLayout>
 
         <RelativeLayout
+            android:id="@+id/pictureHolder4"
             android:layout_width="100dp"
             android:layout_height="100dp"
+            android:layout_marginEnd="@dimen/default_margin_2"
             >
 
           <ImageView
               android:id="@+id/addPic4"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
+              android:layout_width="35dp"
+              android:layout_height="35dp"
+              android:layout_centerInParent="true"
               android:onClick="triggerAddPicture"
-              android:src="@drawable/ic_insert_photo_black_24dp"
+              android:src="@drawable/ic_camera_placeholder"
               />
 
           <ImageView
@@ -244,22 +259,25 @@
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:layout_alignParentEnd="true"
-              android:src="@drawable/ic_remove_circle_black_24dp"
+              android:src="@drawable/ic_remove_circle_white_24dp"
               android:visibility="gone"
               />
         </RelativeLayout>
 
         <RelativeLayout
+            android:id="@+id/pictureHolder5"
             android:layout_width="100dp"
             android:layout_height="100dp"
+            android:layout_marginEnd="@dimen/default_margin_2"
             >
 
           <ImageView
               android:id="@+id/addPic5"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
+              android:layout_width="35dp"
+              android:layout_height="35dp"
+              android:layout_centerInParent="true"
               android:onClick="triggerAddPicture"
-              android:src="@drawable/ic_insert_photo_black_24dp"
+              android:src="@drawable/ic_camera_placeholder"
               />
 
           <ImageView
@@ -267,7 +285,7 @@
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:layout_alignParentEnd="true"
-              android:src="@drawable/ic_remove_circle_black_24dp"
+              android:src="@drawable/ic_remove_circle_white_24dp"
               android:visibility="gone"
               />
         </RelativeLayout>

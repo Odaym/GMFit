@@ -15,7 +15,9 @@ public class Constants {
 
   public static final String EXTRAS_FIRST_APP_LAUNCH = "first_app_launch";
 
-  public static final int WAIT_TIME_BEFORE_CHECKING_METRICS_SERVICE = 1200000;
+  public static final int WAIT_TIME_BEFORE_CHECKING_METRICS_SERVICE = 60000;
+
+  public static final int NUMBER_OF_DAYS_IN_DATE_CAROUSEL = 8;
 
   public static final String EXTRAS_USER_PROFILE_USER_FULL_NAME = "user_profile_user_full_name";
   public static final String EXTRAS_USER_PROFILE_USER_EMAIL = "user_profile_user_email";
@@ -105,6 +107,7 @@ public class Constants {
 
   public static final String BASE_URL_ADDRESS = "http://gmfit.mcsaatchi.me/api/v1/";
 
+  public static final String EVENT_REMINDERS_STATUS_CHANGED = "reminders_status_changed";
   public static final String EVENT_USER_FINALIZE_SETUP_PROFILE = "user_finalize_setup_profile";
   public static final String EVENT_STEP_COUNTER_INCREMENTED = "step_counter_incremented";
   public static final String EVENT_CALORIES_COUNTER_INCREMENTED = "calories_counter_incremented";

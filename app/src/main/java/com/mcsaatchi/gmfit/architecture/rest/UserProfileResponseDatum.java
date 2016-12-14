@@ -18,6 +18,8 @@ public class UserProfileResponseDatum {
   @SerializedName("metric_system") @Expose private String metricSystem;
   @SerializedName("user_goals") @Expose private List<UserProfileResponseGoal> userGoals =
       new ArrayList<>();
+  @SerializedName("activity_levels") @Expose private List<UserProfileResponseActivityLevel> activityLevels =
+      new ArrayList<>();
   @SerializedName("medical_conditions") @Expose private List<UserProfileResponseMedicalCondition>
       medicalConditions = new ArrayList<>();
   @SerializedName("profile_picture") @Expose private String profile_picture;
@@ -170,5 +172,13 @@ public class UserProfileResponseDatum {
 
   public void setUserGoals(List<UserProfileResponseGoal> userGoals) {
     this.userGoals = userGoals;
+  }
+
+  public List<UserProfileResponseActivityLevel> getActivityLevels() {
+    return activityLevels;
+  }
+
+  public void setActivityLevels(List<UserProfileResponseActivityLevel> activityLevels) {
+    this.activityLevels = activityLevels;
   }
 }

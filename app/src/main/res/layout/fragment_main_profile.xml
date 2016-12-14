@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     >
@@ -113,7 +114,46 @@
 
           <TextView
               android:id="@+id/weightEntryValueTV"
-              android:layout_width="@dimen/add_new_chart_list_item_edge_width"
+              android:layout_width="@dimen/profile_value_fields_item_width"
+              android:layout_height="match_parent"
+              android:layout_alignParentEnd="true"
+              android:background="@color/much_lighter_gray"
+              android:gravity="center"
+              android:textColor="@color/fitness_dark_blue"
+              />
+        </RelativeLayout>
+
+        <!-- SEPARATOR -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/offwhite_background_gray"
+            />
+
+        <!-- ACTIVITY LEVELS ENTRY -->
+        <RelativeLayout
+            android:id="@+id/activityLevelsLayout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/add_meal_item_layout_height"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:paddingStart="@dimen/activity_vertical_margin"
+            >
+
+          <TextView
+              android:id="@+id/activityLevelsEntryTitleTV"
+              android:layout_width="@dimen/meal_item_name_width"
+              android:layout_height="match_parent"
+              android:ellipsize="end"
+              android:gravity="center_vertical"
+              android:maxLines="1"
+              android:text="@string/my_activity_level_entry"
+              />
+
+          <TextView
+              android:id="@+id/activityLevelsEntryValueTV"
+              android:layout_width="@dimen/profile_value_fields_item_width"
               android:layout_height="match_parent"
               android:layout_alignParentEnd="true"
               android:background="@color/much_lighter_gray"
@@ -152,11 +192,13 @@
 
           <TextView
               android:id="@+id/goalsEntryValueTV"
-              android:layout_width="@dimen/add_new_chart_list_item_edge_width"
+              android:layout_width="@dimen/profile_value_fields_item_width"
               android:layout_height="match_parent"
               android:layout_alignParentEnd="true"
               android:background="@color/much_lighter_gray"
               android:gravity="center"
+              android:paddingEnd="@dimen/default_margin_1"
+              android:paddingStart="@dimen/default_margin_1"
               android:textColor="@color/fitness_dark_blue"
               />
         </RelativeLayout>
@@ -191,7 +233,7 @@
 
           <TextView
               android:id="@+id/medicalConditionsValueTV"
-              android:layout_width="@dimen/add_new_chart_list_item_edge_width"
+              android:layout_width="@dimen/profile_value_fields_item_width"
               android:layout_height="match_parent"
               android:layout_alignParentEnd="true"
               android:background="@color/much_lighter_gray"
@@ -314,7 +356,7 @@
 
           <TextView
               android:id="@+id/appRemindersValueTV"
-              android:layout_width="@dimen/add_new_chart_list_item_edge_width"
+              android:layout_width="@dimen/profile_value_fields_item_width"
               android:layout_height="match_parent"
               android:layout_alignParentEnd="true"
               android:background="@color/much_lighter_gray"
@@ -354,7 +396,7 @@
 
           <TextView
               android:id="@+id/countryValueTV"
-              android:layout_width="@dimen/add_new_chart_list_item_edge_width"
+              android:layout_width="@dimen/profile_value_fields_item_width"
               android:layout_height="match_parent"
               android:layout_alignParentEnd="true"
               android:background="@color/much_lighter_gray"
@@ -394,7 +436,7 @@
 
           <TextView
               android:id="@+id/metricSystemValueTV"
-              android:layout_width="@dimen/add_new_chart_list_item_edge_width"
+              android:layout_width="@dimen/profile_value_fields_item_width"
               android:layout_height="match_parent"
               android:layout_alignParentEnd="true"
               android:background="@color/much_lighter_gray"
@@ -464,7 +506,7 @@
               />
 
           <LinearLayout
-              android:layout_width="@dimen/add_new_chart_list_item_edge_width"
+              android:layout_width="@dimen/profile_value_fields_item_width"
               android:layout_height="match_parent"
               android:layout_alignParentEnd="true"
               android:background="@color/much_lighter_gray"
@@ -508,7 +550,7 @@
               />
 
           <LinearLayout
-              android:layout_width="@dimen/add_new_chart_list_item_edge_width"
+              android:layout_width="@dimen/profile_value_fields_item_width"
               android:layout_height="match_parent"
               android:layout_alignParentEnd="true"
               android:background="@color/much_lighter_gray"
@@ -552,7 +594,7 @@
               />
 
           <LinearLayout
-              android:layout_width="@dimen/add_new_chart_list_item_edge_width"
+              android:layout_width="@dimen/profile_value_fields_item_width"
               android:layout_height="match_parent"
               android:layout_alignParentEnd="true"
               android:background="@color/much_lighter_gray"
@@ -596,7 +638,7 @@
               />
 
           <LinearLayout
-              android:layout_width="@dimen/add_new_chart_list_item_edge_width"
+              android:layout_width="@dimen/profile_value_fields_item_width"
               android:layout_height="match_parent"
               android:layout_alignParentEnd="true"
               android:background="@color/much_lighter_gray"
@@ -617,6 +659,65 @@
             android:layout_height="0.5dp"
             android:background="@color/offwhite_background_gray"
             />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/default_margin_2"
+            android:orientation="vertical"
+            >
+
+          <!-- SEPARATOR -->
+          <View
+              android:layout_width="match_parent"
+              android:layout_height="0.5dp"
+              android:background="@color/offwhite_background_gray"
+              />
+
+          <RelativeLayout
+              android:id="@+id/changePasswordLayout"
+              android:layout_width="match_parent"
+              android:layout_height="@dimen/add_meal_item_layout_height"
+              android:background="?android:attr/selectableItemBackground"
+              android:clickable="true"
+              android:focusable="true"
+              android:paddingStart="@dimen/activity_vertical_margin"
+              >
+
+            <!-- CHANGE PASSWORD ENTRY-->
+            <TextView
+                android:id="@+id/changePasswordTitleTV"
+                android:layout_width="@dimen/meal_item_name_width"
+                android:layout_height="match_parent"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:maxLines="1"
+                android:text="@string/change_password_entry"
+                />
+
+            <LinearLayout
+                android:layout_width="@dimen/profile_value_fields_item_width"
+                android:layout_height="match_parent"
+                android:layout_alignParentEnd="true"
+                android:background="@color/much_lighter_gray"
+                android:gravity="center"
+                >
+
+              <ImageView
+                  android:layout_width="15dp"
+                  android:layout_height="15dp"
+                  android:src="@drawable/ic_medical_tests_item_arrow"
+                  />
+            </LinearLayout>
+          </RelativeLayout>
+
+          <!-- SEPARATOR -->
+          <View
+              android:layout_width="match_parent"
+              android:layout_height="0.5dp"
+              android:background="@color/offwhite_background_gray"
+              />
+        </LinearLayout>
       </LinearLayout>
 
       <Button

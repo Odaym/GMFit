@@ -2,7 +2,7 @@ package com.mcsaatchi.gmfit.architecture.rest;
 
 import android.util.Log;
 import com.mcsaatchi.gmfit.common.Constants;
-import com.mcsaatchi.gmfit.architecture.GMFit_Application;
+import com.mcsaatchi.gmfit.architecture.GMFitApplication;
 import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
@@ -47,7 +47,7 @@ public class CachingRestClient {
   private static Cache provideCache() {
     Cache cache = null;
     try {
-      cache = new Cache(new File(GMFit_Application.getInstance().getCacheDir(), "http-cache"),
+      cache = new Cache(new File(GMFitApplication.getInstance().getCacheDir(), "http-cache"),
           10 * 1024 * 1024);
     } catch (Exception e) {
       Log.d(TAG, "provideCache: Could not create cache!");
@@ -73,7 +73,7 @@ public class CachingRestClient {
       @Override public Response intercept(Chain chain) throws IOException {
         Request request = chain.request();
 
-        if (!GMFit_Application.hasNetwork()) {
+        if (!GMFitApplication.hasNetwork()) {
           CacheControl cacheControl =
               new CacheControl.Builder().maxStale(1, TimeUnit.MINUTES).build();
 

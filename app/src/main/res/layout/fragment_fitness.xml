@@ -35,15 +35,24 @@
     </HorizontalScrollView>
 
     <ProgressBar
+        android:id="@+id/loadingMetricProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:indeterminate="true"
+        style="?android:attr/progressBarStyleLarge"
+        />
+
+    <ProgressBar
         android:id="@+id/metricProgressBar"
         android:layout_width="@dimen/metric_header_progress_bar_width"
         android:layout_height="wrap_content"
         android:layout_below="@+id/dateCarousel"
         android:layout_centerHorizontal="true"
         android:indeterminate="false"
+        android:max="100"
         android:maxHeight="@dimen/sections_progress_bar_height"
         android:minHeight="@dimen/sections_progress_bar_height"
-        android:progress="70"
         android:progressDrawable="@drawable/fitness_progress_bar"
         style="?android:attr/progressBarStyleHorizontal"
         />
@@ -88,23 +97,14 @@
         android:id="@+id/widgetsGridViewLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:padding="@dimen/default_margin_1"
         >
 
-      <GridView
+      <android.support.v7.widget.RecyclerView
           android:id="@+id/widgetsGridView"
           android:layout_width="match_parent"
           android:layout_height="@dimen/fitness_widgets_gridview_height"
-          android:layout_marginBottom="@dimen/default_margin_2"
-          android:layout_marginEnd="@dimen/default_margin_2"
-          android:layout_marginStart="@dimen/default_margin_2"
-          android:layout_marginTop="@dimen/default_margin_2"
-          android:columnWidth="80dp"
-          android:gravity="center"
-          android:horizontalSpacing="@dimen/default_margin_2"
-          android:numColumns="2"
-          android:scrollbars="none"
-          android:stretchMode="columnWidth"
-          android:verticalSpacing="@dimen/default_margin_2"
+          android:nestedScrollingEnabled="false"
           />
     </LinearLayout>
 

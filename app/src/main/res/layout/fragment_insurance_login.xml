@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:validator="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+
+  <ImageView
+      android:id="@+id/memberImageIV"
+      android:layout_width="120dp"
+      android:layout_height="120dp"
+      android:layout_gravity="center_horizontal"
+      android:layout_marginTop="@dimen/default_margin_2"
+      android:src="@drawable/fitness_background"
+      />
+
+  <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center_horizontal"
+      android:layout_marginBottom="@dimen/default_margin_2"
+      android:layout_marginTop="@dimen/default_margin_2"
+      android:text="@string/please_login_hint"
+      android:textColor="@color/white"
+      android:textSize="18sp"
+      />
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="@dimen/radiobutton_row_height"
+      android:gravity="center_vertical"
+      android:orientation="horizontal"
+      >
+
+    <TextView
+        android:layout_width="@dimen/text_input_label_width"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="1dp"
+        android:background="@color/faded_blue"
+        android:gravity="center_vertical|start"
+        android:paddingStart="@dimen/default_margin_2"
+        android:text="@string/member_id_label"
+        android:textAppearance="?android:textAppearanceSmall"
+        android:textColor="@color/white"
+        />
+
+    <com.wrapp.floatlabelededittext.FloatLabeledEditText
+        android:id="@+id/memberIdETFloating"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/faded_blue"
+        android:paddingBottom="@dimen/default_margin_0"
+        app:fletPaddingLeft="@dimen/default_margin_2"
+        app:fletPaddingTop="@dimen/default_margin_1"
+        app:fletTextAppearance="@style/TextAppearence.App.TextInputLayout"
+        >
+
+      <com.andreabaccega.widget.FormEditText
+          android:id="@+id/memberIdET"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:background="@android:color/transparent"
+          android:hint="@string/enter_member_id_hint"
+          android:inputType="text"
+          android:longClickable="false"
+          android:maxLines="1"
+          android:paddingBottom="@dimen/default_margin_1"
+          android:paddingEnd="@dimen/default_margin_2"
+          android:paddingStart="@dimen/default_margin_2"
+          android:textAppearance="?android:textAppearanceSmall"
+          android:textColor="@color/white"
+          android:textColorHint="@color/edittext_hint_color_white"
+          android:textCursorDrawable="@null"
+          validator:emptyErrorString="@string/member_id_empty_error"
+          />
+
+    </com.wrapp.floatlabelededittext.FloatLabeledEditText>
+  </LinearLayout>
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="@dimen/radiobutton_row_height"
+      android:layout_marginTop="1dp"
+      android:gravity="center_vertical"
+      android:orientation="horizontal"
+      >
+
+    <TextView
+        android:layout_width="@dimen/text_input_label_width"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="1dp"
+        android:background="@color/faded_blue"
+        android:gravity="center_vertical|start"
+        android:paddingStart="@dimen/default_margin_2"
+        android:text="@string/password_label"
+        android:textAppearance="?android:textAppearanceSmall"
+        android:textColor="@color/white"
+        />
+
+    <com.wrapp.floatlabelededittext.FloatLabeledEditText
+        android:id="@+id/passwordETFloating"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/faded_blue"
+        android:paddingBottom="@dimen/default_margin_0"
+        app:fletPaddingLeft="@dimen/default_margin_2"
+        app:fletPaddingTop="@dimen/default_margin_1"
+        app:fletTextAppearance="@style/TextAppearence.App.TextInputLayout"
+        >
+
+      <com.andreabaccega.widget.FormEditText
+          android:id="@+id/passwordET"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:background="@android:color/transparent"
+          android:hint="@string/enter_your_password_hint"
+          android:inputType="text"
+          android:longClickable="false"
+          android:maxLines="1"
+          android:paddingBottom="@dimen/default_margin_1"
+          android:paddingEnd="@dimen/default_margin_2"
+          android:paddingStart="@dimen/default_margin_2"
+          android:textAppearance="?android:textAppearanceSmall"
+          android:textColor="@color/white"
+          android:textColorHint="@color/edittext_hint_color_white"
+          android:textCursorDrawable="@null"
+          validator:emptyErrorString="@string/password_empty_error"
+          />
+
+    </com.wrapp.floatlabelededittext.FloatLabeledEditText>
+  </LinearLayout>
+
+  <Button
+      android:id="@+id/loginBTN"
+      android:layout_width="match_parent"
+      android:layout_height="@dimen/default_button_height_2"
+      android:layout_marginEnd="@dimen/default_margin_2"
+      android:layout_marginStart="@dimen/default_margin_2"
+      android:layout_marginTop="@dimen/default_margin_2"
+      android:text="@string/login_insurance_label"
+      android:textAllCaps="false"
+      />
+
+</LinearLayout>
