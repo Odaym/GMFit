@@ -27,7 +27,7 @@ public class ReimbursementStatusListActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_reimbursement_status);
+        setContentView(R.layout.activity_reimbursement_list_status);
         ButterKnife.bind(this);
         setupToolbar(toolbar, "Reimbursement Status", true);
 
