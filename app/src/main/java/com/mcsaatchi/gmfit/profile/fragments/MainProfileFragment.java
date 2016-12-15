@@ -1057,7 +1057,7 @@ public class MainProfileFragment extends Fragment {
     dataAccessHandler.updateUserProfile(
         prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
         dateOfBirth, bloodType, nationality, medicalCondition, measurementSystem.toLowerCase(),
-        userGoalId, activityLevelId, gender, height, weight, new Callback<DefaultGetResponse>() {
+        userGoalId, activityLevelId, gender, height, weight, "1", new Callback<DefaultGetResponse>() {
           @Override public void onResponse(Call<DefaultGetResponse> call,
               Response<DefaultGetResponse> response) {
             switch (response.code()) {

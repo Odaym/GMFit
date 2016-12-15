@@ -15,7 +15,7 @@ public class Constants {
 
   public static final String EXTRAS_FIRST_APP_LAUNCH = "first_app_launch";
 
-  public static final int WAIT_TIME_BEFORE_CHECKING_METRICS_SERVICE = 60000;
+  public static final int WAIT_TIME_BEFORE_CHECKING_METRICS_SERVICE = 1200000;
 
   public static final int NUMBER_OF_DAYS_IN_DATE_CAROUSEL = 8;
 
@@ -112,11 +112,9 @@ public class Constants {
   public static final String EVENT_STEP_COUNTER_INCREMENTED = "step_counter_incremented";
   public static final String EVENT_CALORIES_COUNTER_INCREMENTED = "calories_counter_incremented";
   public static final String EVENT_DISTANCE_COUNTER_INCREMENTED = "distance_counter_incremented";
-  public static final String EVENT_FINISHED_SETTING_UP_PROFILE_SUCCESSFULLY =
-      "finished_setting_up_profile_successfully";
 
   public static final String EVENT_SIGNNED_UP_SUCCESSFULLY_CLOSE_LOGIN_ACTIVITY =
-      "signned_up_successfully_close_login_activity";
+      "signed_up_successfully_close_login_activity";
 
   //REGISTERATION API
   public static final String NO_ACCESS_TOKEN_FOUND_IN_PREFS = "no_access_token_in_prefs";

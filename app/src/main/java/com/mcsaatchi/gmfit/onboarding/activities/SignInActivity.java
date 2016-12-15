@@ -18,17 +18,16 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.andreabaccega.widget.FormEditText;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.common.activities.BaseActivity;
-import com.mcsaatchi.gmfit.common.activities.MainActivity;
-import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.architecture.otto.EventBusPoster;
 import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
-import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponse;
-import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponseChart;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponseInnerBody;
+import com.mcsaatchi.gmfit.architecture.rest.UserProfileResponse;
+import com.mcsaatchi.gmfit.common.Constants;
+import com.mcsaatchi.gmfit.common.activities.BaseActivity;
+import com.mcsaatchi.gmfit.common.activities.MainActivity;
+import com.mcsaatchi.gmfit.common.classes.Helpers;
 import java.util.ArrayList;
-import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -150,24 +149,7 @@ public class SignInActivity extends BaseActivity {
                 .post(new EventBusPoster(
                     Constants.EVENT_SIGNNED_UP_SUCCESSFULLY_CLOSE_LOGIN_ACTIVITY));
 
-            /**
-             * Case where the user already has an account and they just logged in with it on a new installation
-             * Cannot happen otherwise
-             */
-            prefs.edit()
-                .putBoolean(prefs.getString(Constants.EXTRAS_USER_EMAIL, "")
-                    + "_"
-                    + Constants.EVENT_FINISHED_SETTING_UP_PROFILE_SUCCESSFULLY, true)
-                .apply();
-
-            List<AuthenticationResponseChart> chartsMap = responseBody.getCharts();
-
-            Intent intent = new Intent(SignInActivity.this, MainActivity.class);
-            intent.putParcelableArrayListExtra(Constants.BUNDLE_FITNESS_CHARTS_MAP,
-                (ArrayList<AuthenticationResponseChart>) chartsMap);
-            startActivity(intent);
-
-            finish();
+            getOnboardingStatus();
 
             break;
           case 401:
@@ -199,5 +181,38 @@ public class SignInActivity extends BaseActivity {
         alertDialog.show();
       }
     });
+  }
+
+  public void getOnboardingStatus() {
+    dataAccessHandler.getOnboardingStatus(
+        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
+        new Callback<UserProfileResponse>() {
+          @Override public void onResponse(Call<UserProfileResponse> call,
+              Response<UserProfileResponse> response) {
+
+            Intent intent;
+
+            switch (response.code()) {
+              case 200:
+                String userOnBoard = response.body().getData().getBody().getData().getOnboard();
+
+                if (userOnBoard.equals("1")) {
+                  intent = new Intent(SignInActivity.this, MainActivity.class);
+                  startActivity(intent);
+                } else {
+                  intent = new Intent(SignInActivity.this, SetupProfileActivity.class);
+                  startActivity(intent);
+                }
+
+                finish();
+
+                break;
+            }
+          }
+
+          @Override public void onFailure(Call<UserProfileResponse> call, Throwable t) {
+            Timber.d("Call failed with error : %s", t.getMessage());
+          }
+        });
   }
 }

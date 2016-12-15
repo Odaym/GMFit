@@ -26,21 +26,19 @@ import com.facebook.GraphResponse;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.common.activities.BaseActivity;
-import com.mcsaatchi.gmfit.common.activities.MainActivity;
-import com.mcsaatchi.gmfit.common.Constants;
-import com.mcsaatchi.gmfit.common.classes.DefaultIndicatorController;
 import com.mcsaatchi.gmfit.architecture.otto.EventBusPoster;
 import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
+import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponse;
+import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponseInnerBody;
+import com.mcsaatchi.gmfit.architecture.rest.UserProfileResponse;
+import com.mcsaatchi.gmfit.common.Constants;
+import com.mcsaatchi.gmfit.common.activities.BaseActivity;
+import com.mcsaatchi.gmfit.common.activities.MainActivity;
+import com.mcsaatchi.gmfit.common.classes.DefaultIndicatorController;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.onboarding.fragments.IntroSliderFragment;
-import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponse;
-import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponseChart;
-import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponseInnerBody;
 import com.squareup.otto.Subscribe;
 import io.fabric.sdk.android.Fabric;
-import java.util.ArrayList;
-import java.util.List;
 import org.json.JSONException;
 import org.json.JSONObject;
 import retrofit2.Call;
@@ -220,24 +218,11 @@ public class LoginActivity extends BaseActivity {
                 .putString(Constants.PREF_USER_ACCESS_TOKEN, "Bearer " + responseBody.getToken())
                 .apply();
 
-            List<AuthenticationResponseChart> chartsMap = responseBody.getCharts();
-
-            prefs.edit()
-                .putBoolean(prefs.getString(Constants.EXTRAS_USER_EMAIL, "")
-                    + "_"
-                    + Constants.EVENT_FINISHED_SETTING_UP_PROFILE_SUCCESSFULLY, true)
-                .apply();
-
             EventBusSingleton.getInstance()
                 .post(new EventBusPoster(
                     Constants.EVENT_SIGNNED_UP_SUCCESSFULLY_CLOSE_LOGIN_ACTIVITY));
 
-            intent = new Intent(LoginActivity.this, MainActivity.class);
-            intent.putParcelableArrayListExtra(Constants.BUNDLE_FITNESS_CHARTS_MAP,
-                (ArrayList<AuthenticationResponseChart>) chartsMap);
-            startActivity(intent);
-
-            finish();
+            getOnboardingStatus();
 
             break;
           case 201:
@@ -284,6 +269,39 @@ public class LoginActivity extends BaseActivity {
     indicatorContainer.addView(indicatorController.newInstance(this));
 
     indicatorController.initialize(7);
+  }
+
+  public void getOnboardingStatus() {
+    dataAccessHandler.getOnboardingStatus(
+        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
+        new Callback<UserProfileResponse>() {
+          @Override public void onResponse(Call<UserProfileResponse> call,
+              Response<UserProfileResponse> response) {
+
+            Intent intent;
+
+            switch (response.code()) {
+              case 200:
+                String userOnBoard = response.body().getData().getBody().getData().getOnboard();
+
+                if (userOnBoard.equals("1")) {
+                  intent = new Intent(LoginActivity.this, MainActivity.class);
+                  startActivity(intent);
+                } else {
+                  intent = new Intent(LoginActivity.this, SetupProfileActivity.class);
+                  startActivity(intent);
+                }
+
+                finish();
+
+                break;
+            }
+          }
+
+          @Override public void onFailure(Call<UserProfileResponse> call, Throwable t) {
+            Timber.d("Call failed with error : %s", t.getMessage());
+          }
+        });
   }
 
   public class IntroAdapter extends FragmentPagerAdapter {

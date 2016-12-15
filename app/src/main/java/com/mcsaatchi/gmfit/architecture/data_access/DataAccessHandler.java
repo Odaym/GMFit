@@ -76,11 +76,11 @@ public class DataAccessHandler {
 
   public void updateUserProfile(String userAccessToken, String finalDateOfBirth, String bloodType,
       String nationality, int medical_condition, String measurementSystem, int goalId,
-      int activityLevelId, int finalGender, double height, double weight,
+      int activityLevelId, int finalGender, double height, double weight, String onboard,
       Callback<DefaultGetResponse> callback) {
     apiCallsHandler.updateUserProfile(userAccessToken, finalDateOfBirth, bloodType, nationality,
         medical_condition, measurementSystem, goalId, activityLevelId, finalGender, height, weight,
-        callback);
+        onboard, callback);
   }
 
   public void updateUserPicture(String userAccessToken, Map<String, RequestBody> profilePicture,
@@ -235,6 +235,10 @@ public class DataAccessHandler {
   public void getTakenMedicalTests(String userAccessToken,
       Callback<TakenMedicalTestsResponse> callback) {
     apiCallsHandler.getTakenMedicalTests(userAccessToken, callback);
+  }
+
+  public void getOnboardingStatus(String userAccessToken, Callback<UserProfileResponse> callback) {
+    apiCallsHandler.getOnboardingStatus(userAccessToken, callback);
   }
 
   public void getUserProfile(String userAccessToken, Callback<UserProfileResponse> callback) {

@@ -116,8 +116,7 @@ public class SetupProfile4Fragment extends Fragment
     dateOfBirthTV.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
         CalendarDatePickerDialogFragment cdp =
-            new CalendarDatePickerDialogFragment().setOnDateSetListener(
-                SetupProfile4Fragment.this)
+            new CalendarDatePickerDialogFragment().setOnDateSetListener(SetupProfile4Fragment.this)
                 .setFirstDayOfWeek(Calendar.MONDAY)
                 .setDoneText(getString(R.string.accept_ok))
                 .setCancelText(getString(R.string.decline_cancel))
@@ -133,7 +132,9 @@ public class SetupProfile4Fragment extends Fragment
       }
 
       @Override public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-        finalWeight = Float.parseFloat(charSequence.toString());
+        if (!charSequence.toString().isEmpty()) {
+          finalWeight = Float.parseFloat(charSequence.toString());
+        }
       }
 
       @Override public void afterTextChanged(Editable editable) {
@@ -147,7 +148,9 @@ public class SetupProfile4Fragment extends Fragment
       }
 
       @Override public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-        finalHeight = Float.parseFloat(charSequence.toString());
+        if (!charSequence.toString().isEmpty()) {
+          finalHeight = Float.parseFloat(charSequence.toString());
+        }
       }
 
       @Override public void afterTextChanged(Editable editable) {
@@ -170,63 +173,49 @@ public class SetupProfile4Fragment extends Fragment
 
     switch (ebpMessage) {
       case Constants.EVENT_USER_FINALIZE_SETUP_PROFILE:
-        if (!weightET.getText().toString().isEmpty() && !heightET.getText().toString().isEmpty()) {
-          int finalGender;
+        int finalGender;
 
-          finalGender = genderSpinner.getSelectedItem().toString().equals("Male") ? 0 : 1;
+        finalGender = genderSpinner.getSelectedItem().toString().equals("Male") ? 0 : 1;
 
-          String finalDateOfBirth;
+        String finalDateOfBirth;
 
-          if (!dateOfBirth.isEmpty()) {
-            finalDateOfBirth = dateOfBirth;
-          } else {
-            finalDateOfBirth = "1990-01-01";
-          }
-
-          String finalBloodType = bloodTypeSpinner.getSelectedItem().toString();
-
-          prefs.edit()
-              .putString(Constants.EXTRAS_USER_PROFILE_DATE_OF_BIRTH, finalDateOfBirth)
-              .apply();
-          prefs.edit().putInt(Constants.EXTRAS_USER_PROFILE_GENDER, finalGender).apply();
-          prefs.edit().putFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, finalWeight).apply();
-          prefs.edit().putFloat(Constants.EXTRAS_USER_PROFILE_HEIGHT, finalHeight).apply();
-          prefs.edit().putString(Constants.EXTRAS_USER_PROFILE_BLOOD_TYPE, finalBloodType).apply();
-
-          /**
-           * These values are from previous steps 1 and 2 in the Setup Profile process
-           */
-          String nationality = prefs.getString(Constants.EXTRAS_USER_PROFILE_NATIONALITY, "");
-          String measurementSystem =
-              prefs.getString(Constants.EXTRAS_USER_PROFILE_MEASUREMENT_SYSTEM, "");
-          int goalId = prefs.getInt(Constants.EXTRAS_USER_PROFILE_GOAL_ID, 0);
-          int activityLevelId = prefs.getInt(Constants.EXTRAS_USER_PROFILE_ACTIVITY_LEVEL_ID, 0);
-          int medicalConditionId = Integer.parseInt(
-              ((MedicalConditionsResponseDatum) medicalConditionsSpinner.getSelectedItem()).getId());
-
-          prefs.edit()
-              .putInt(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION_ID, medicalConditionId)
-              .apply();
-          prefs.edit()
-              .putString(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION,
-                  ((MedicalConditionsResponseDatum) medicalConditionsSpinner.getSelectedItem()).getName())
-              .apply();
-
-          setupUserProfile(finalDateOfBirth, finalBloodType, nationality, medicalConditionId,
-              measurementSystem, goalId, activityLevelId, finalGender, finalHeight, finalWeight);
+        if (!dateOfBirth.isEmpty()) {
+          finalDateOfBirth = dateOfBirth;
         } else {
-          //                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-          //                    builder.setTitle(R.string.weight_or_height_empty_dialog_title)
-          //                            .setMessage(R.string.weight_or_height_empty_dialog_message)
-          //                            .setCancelable(false)
-          //                            .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-          //                                public void onClick(DialogInterface dialog, int id) {
-          //                                    //do things
-          //                                }
-          //                            });
-          //                    AlertDialog alert = builder.create();
-          //                    alert.show();
+          finalDateOfBirth = "1990-01-01";
         }
+
+        String finalBloodType = bloodTypeSpinner.getSelectedItem().toString();
+
+        prefs.edit()
+            .putString(Constants.EXTRAS_USER_PROFILE_DATE_OF_BIRTH, finalDateOfBirth)
+            .apply();
+        prefs.edit().putInt(Constants.EXTRAS_USER_PROFILE_GENDER, finalGender).apply();
+        prefs.edit().putFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, finalWeight).apply();
+        prefs.edit().putFloat(Constants.EXTRAS_USER_PROFILE_HEIGHT, finalHeight).apply();
+        prefs.edit().putString(Constants.EXTRAS_USER_PROFILE_BLOOD_TYPE, finalBloodType).apply();
+
+        /**
+         * These values are from previous steps 1 and 2 in the Setup Profile process
+         */
+        String nationality = prefs.getString(Constants.EXTRAS_USER_PROFILE_NATIONALITY, "");
+        String measurementSystem =
+            prefs.getString(Constants.EXTRAS_USER_PROFILE_MEASUREMENT_SYSTEM, "");
+        int goalId = prefs.getInt(Constants.EXTRAS_USER_PROFILE_GOAL_ID, 0);
+        int activityLevelId = prefs.getInt(Constants.EXTRAS_USER_PROFILE_ACTIVITY_LEVEL_ID, 0);
+        int medicalConditionId = Integer.parseInt(
+            ((MedicalConditionsResponseDatum) medicalConditionsSpinner.getSelectedItem()).getId());
+
+        prefs.edit()
+            .putInt(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION_ID, medicalConditionId)
+            .apply();
+        prefs.edit()
+            .putString(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION,
+                ((MedicalConditionsResponseDatum) medicalConditionsSpinner.getSelectedItem()).getName())
+            .apply();
+
+        setupUserProfile(finalDateOfBirth, finalBloodType, nationality, medicalConditionId,
+            measurementSystem, goalId, activityLevelId, finalGender, finalHeight, finalWeight);
 
         break;
     }
@@ -284,7 +273,7 @@ public class SetupProfile4Fragment extends Fragment
     dataAccessHandler.updateUserProfile(
         prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
         finalDateOfBirth, bloodType, nationality, medical_condition, measurementSystem, goalId,
-        activityLevelId, finalGender, height, weight, new Callback<DefaultGetResponse>() {
+        activityLevelId, finalGender, height, weight, "1", new Callback<DefaultGetResponse>() {
           @Override public void onResponse(Call<DefaultGetResponse> call,
               Response<DefaultGetResponse> response) {
             switch (response.code()) {
@@ -317,11 +306,6 @@ public class SetupProfile4Fragment extends Fragment
                 waitingDialog.dismiss();
 
                 prefs.edit().putBoolean(Constants.EXTRAS_USER_LOGGED_IN, true).apply();
-                prefs.edit()
-                    .putBoolean(prefs.getString(Constants.EXTRAS_USER_EMAIL, "")
-                        + "_"
-                        + Constants.EVENT_FINISHED_SETTING_UP_PROFILE_SUCCESSFULLY, true)
-                    .apply();
 
                 List<AuthenticationResponseWidget> widgetsMap =
                     response.body().getData().getBody().getWidgets();

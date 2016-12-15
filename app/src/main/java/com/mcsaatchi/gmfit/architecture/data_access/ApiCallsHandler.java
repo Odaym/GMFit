@@ -156,12 +156,12 @@ public class ApiCallsHandler {
 
   void updateUserProfile(String userAccessToken, String finalDateOfBirth, String bloodType,
       String nationality, int medical_condition, String measurementSystem, int goalId,
-      int activityLevelId, int finalGender, double height, double weight,
+      int activityLevelId, int finalGender, double height, double weight, String onboard,
       final Callback<DefaultGetResponse> callback) {
     Call<DefaultGetResponse> apiCall = new RestClient().getGMFitService()
         .updateUserProfile(userAccessToken,
             new UpdateProfileRequest(finalDateOfBirth, bloodType, nationality, medical_condition,
-                measurementSystem, goalId, activityLevelId, finalGender, height, weight));
+                measurementSystem, goalId, activityLevelId, finalGender, height, weight, onboard));
 
     apiCall.enqueue(new Callback<DefaultGetResponse>() {
       @Override
@@ -646,6 +646,21 @@ public class ApiCallsHandler {
     });
   }
 
+  void getOnboardingStatus(String userAccessToken, final Callback<UserProfileResponse> callback) {
+    Call<UserProfileResponse> apiCall =
+        new RestClient().getGMFitService().getOnboardingStatus(userAccessToken);
+
+    apiCall.enqueue(new Callback<UserProfileResponse>() {
+      @Override public void onResponse(Call<UserProfileResponse> call,
+          Response<UserProfileResponse> response) {
+        callback.onResponse(call, response);
+      }
+
+      @Override public void onFailure(Call<UserProfileResponse> call, Throwable t) {
+      }
+    });
+  }
+
   void getUserProfile(String userAccessToken, final Callback<UserProfileResponse> callback) {
     Call<UserProfileResponse> apiCall =
         new RestClient().getGMFitService().getUserProfile(userAccessToken);
@@ -800,10 +815,11 @@ public class ApiCallsHandler {
     final int gender;
     final double height;
     final double weight;
+    final String onboard;
 
     UpdateProfileRequest(String date_of_birth, String blood_type, String country,
         int medical_conditions, String metric_system, int user_goal, int activity_level, int gender,
-        double height, double weight) {
+        double height, double weight, String onboard) {
       this.date_of_birth = date_of_birth;
       this.blood_type = blood_type;
       this.country = country;
@@ -814,6 +830,7 @@ public class ApiCallsHandler {
       this.gender = gender;
       this.height = height;
       this.weight = weight;
+      this.onboard = onboard;
     }
   }
 

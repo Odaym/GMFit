@@ -13,6 +13,7 @@ public class UserProfileResponseDatum {
   @SerializedName("blood_type") @Expose private String bloodType;
   @SerializedName("gender") @Expose private String gender;
   @SerializedName("weight") @Expose private String weight;
+  @SerializedName("onboard") @Expose private String onboard;
   @SerializedName("height") @Expose private String height;
   @SerializedName("country") @Expose private String country;
   @SerializedName("metric_system") @Expose private String metricSystem;
@@ -180,5 +181,13 @@ public class UserProfileResponseDatum {
 
   public void setActivityLevels(List<UserProfileResponseActivityLevel> activityLevels) {
     this.activityLevels = activityLevels;
+  }
+
+  public String getOnboard() {
+    return onboard;
+  }
+
+  public void setOnboard(String onboard) {
+    this.onboard = onboard;
   }
 }
