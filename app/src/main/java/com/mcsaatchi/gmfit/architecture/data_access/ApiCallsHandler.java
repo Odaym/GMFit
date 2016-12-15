@@ -451,7 +451,7 @@ public class ApiCallsHandler {
     });
   }
 
-  void updateUserMeals(String userAccessToken, int instance_id, int amount,
+  void updateUserMeals(String userAccessToken, int instance_id, float amount,
       final Callback<DefaultGetResponse> callback) {
     Call<DefaultGetResponse> apiCall = new RestClient().getGMFitService()
         .updateUserMeals(userAccessToken, new UpdateMealsRequest(instance_id, amount));
@@ -920,9 +920,9 @@ public class ApiCallsHandler {
 
   public class UpdateMealsRequest {
     final int instance_id;
-    final int amount;
+    final float amount;
 
-    UpdateMealsRequest(int instance_id, int amount) {
+    UpdateMealsRequest(int instance_id, float amount) {
       this.instance_id = instance_id;
       this.amount = amount;
     }

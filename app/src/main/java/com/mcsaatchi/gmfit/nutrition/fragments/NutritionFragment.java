@@ -529,6 +529,8 @@ public class NutritionFragment extends Fragment {
                     @Override public void run() {
                       setupWidgetViews(finalWidgets);
 
+                      getUserGoalMetrics(finalDesiredDate, "nutrition");
+
                       setupChartViews(finalCharts);
 
                       hideProgressBarsForLoading();
@@ -781,7 +783,7 @@ public class NutritionFragment extends Fragment {
     for (int i = 0; i < widgetsFromResponse.size(); i++) {
       if (widgetsFromResponse.get(i).getTitle().equals("Calories")) {
         metricCounterTV.setText(String.valueOf((int) widgetsFromResponse.get(i).getValue()));
-        todayTV.setText(String.valueOf((int) widgetsFromResponse.get(i).getValue()));
+        //todayTV.setText(String.valueOf((int) widgetsFromResponse.get(i).getValue()));
       }
     }
 

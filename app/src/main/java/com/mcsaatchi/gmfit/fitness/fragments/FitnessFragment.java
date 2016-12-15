@@ -754,13 +754,18 @@ public class FitnessFragment extends Fragment implements SensorEventListener {
         if (!goalTV.getText().toString().isEmpty()
             && !todayTV.getText().toString().isEmpty()
             && !metricCounterTV.getText().toString().isEmpty()) {
-          remainingTV.setText(String.valueOf(
-              Integer.parseInt(goalTV.getText().toString()) - Integer.parseInt(
-                  metricCounterTV.getText().toString())));
+          int remainingValue = Integer.parseInt(goalTV.getText().toString()) - Integer.parseInt(
+              metricCounterTV.getText().toString());
 
-          metricProgressBar.setProgress(
-              ((Integer.parseInt(todayTV.getText().toString()) * 100) / Integer.parseInt(
-                  goalTV.getText().toString())));
+          if (remainingValue < 0) {
+            remainingTV.setText(String.valueOf(0));
+          } else {
+            remainingTV.setText(String.valueOf(remainingValue));
+
+            metricProgressBar.setProgress(
+                ((Integer.parseInt(todayTV.getText().toString()) * 100) / Integer.parseInt(
+                    goalTV.getText().toString())));
+          }
         }
 
         break;

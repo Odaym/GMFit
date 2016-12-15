@@ -290,7 +290,7 @@ public class SpecifyMealAmountActivity extends BaseActivity {
   private void updateUserMeal(final ProgressDialog waitingDialog, final int caloriesForThisMeal) {
     dataAccessHandler.updateUserMeals(
         prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
-        mealItem.getInstance_id(), Integer.parseInt(mealAmountET.getText().toString()),
+        mealItem.getInstance_id(), Float.parseFloat(mealAmountET.getText().toString()),
         new Callback<DefaultGetResponse>() {
           @Override public void onResponse(Call<DefaultGetResponse> call,
               Response<DefaultGetResponse> response) {

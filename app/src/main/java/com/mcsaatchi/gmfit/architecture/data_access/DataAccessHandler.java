@@ -143,7 +143,7 @@ public class DataAccessHandler {
     apiCallsHandler.updateUserCharts(userAccessToken, chartIds, chartPositions, callback);
   }
 
-  public void updateUserMeals(String userAccessToken, int instance_id, int amount,
+  public void updateUserMeals(String userAccessToken, int instance_id, float amount,
       Callback<DefaultGetResponse> callback) {
     apiCallsHandler.updateUserMeals(userAccessToken, instance_id, amount, callback);
   }
