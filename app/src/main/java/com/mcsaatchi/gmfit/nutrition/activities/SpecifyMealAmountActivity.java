@@ -204,6 +204,11 @@ public class SpecifyMealAmountActivity extends BaseActivity {
 
   private void storeMealOnCertainDate(final ProgressDialog waitingDialog,
       final int caloriesForThisMeal, String chosenDate) {
+    Timber.d(mealItem.getMeal_id() + "");
+    Timber.d(Integer.parseInt(mealAmountET.getText().toString()) + "");
+    Timber.d(mealItem.getType());
+    Timber.d(chosenDate);
+
     dataAccessHandler.storeNewMeal(
         prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
         mealItem.getMeal_id(), Integer.parseInt(mealAmountET.getText().toString()),

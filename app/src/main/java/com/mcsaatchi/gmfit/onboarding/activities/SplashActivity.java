@@ -13,11 +13,15 @@ import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.architecture.otto.EventBusPoster;
 import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponse;
+import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponseChart;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponseInnerBody;
+import com.mcsaatchi.gmfit.architecture.rest.UiResponse;
 import com.mcsaatchi.gmfit.architecture.rest.UserProfileResponse;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.MainActivity;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
+import java.util.ArrayList;
+import java.util.List;
 import javax.inject.Inject;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -136,10 +140,6 @@ public class SplashActivity extends AppCompatActivity {
                 .putString(Constants.PREF_USER_ACCESS_TOKEN, "Bearer " + responseBody.getToken())
                 .apply();
 
-            EventBusSingleton.getInstance()
-                .post(new EventBusPoster(
-                    Constants.EVENT_SIGNNED_UP_SUCCESSFULLY_CLOSE_LOGIN_ACTIVITY));
-
             getOnboardingStatus();
 
             break;
@@ -173,12 +173,45 @@ public class SplashActivity extends AppCompatActivity {
                 String userOnBoard = response.body().getData().getBody().getData().getOnboard();
 
                 if (userOnBoard.equals("1")) {
-                  intent = new Intent(SplashActivity.this, MainActivity.class);
-                  startActivity(intent);
+                  getUiForSection("fitness");
                 } else {
+                  EventBusSingleton.getInstance()
+                      .post(new EventBusPoster(
+                          Constants.EVENT_SIGNNED_UP_SUCCESSFULLY_CLOSE_LOGIN_ACTIVITY));
+
                   intent = new Intent(SplashActivity.this, SetupProfileActivity.class);
                   startActivity(intent);
+                  finish();
                 }
+
+                break;
+            }
+          }
+
+          @Override public void onFailure(Call<UserProfileResponse> call, Throwable t) {
+            Timber.d("Call failed with error : %s", t.getMessage());
+          }
+        });
+  }
+
+  private void getUiForSection(String section) {
+    dataAccessHandler.getUiForSection(
+        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
+        "http://gmfit.mcsaatchi.me/api/v1/user/ui?section=" + section, new Callback<UiResponse>() {
+          @Override public void onResponse(Call<UiResponse> call, Response<UiResponse> response) {
+            switch (response.code()) {
+              case 200:
+                EventBusSingleton.getInstance()
+                    .post(new EventBusPoster(
+                        Constants.EVENT_SIGNNED_UP_SUCCESSFULLY_CLOSE_LOGIN_ACTIVITY));
+
+                List<AuthenticationResponseChart> chartsMap =
+                    response.body().getData().getBody().getCharts();
+
+                Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+                intent.putParcelableArrayListExtra(Constants.BUNDLE_FITNESS_CHARTS_MAP,
+                    (ArrayList<AuthenticationResponseChart>) chartsMap);
+                startActivity(intent);
 
                 finish();
 
@@ -186,7 +219,7 @@ public class SplashActivity extends AppCompatActivity {
             }
           }
 
-          @Override public void onFailure(Call<UserProfileResponse> call, Throwable t) {
+          @Override public void onFailure(Call<UiResponse> call, Throwable t) {
             Timber.d("Call failed with error : %s", t.getMessage());
           }
         });

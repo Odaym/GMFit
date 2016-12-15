@@ -18,15 +18,16 @@ import android.util.Log;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.mcsaatchi.gmfit.BuildConfig;
-import com.mcsaatchi.gmfit.common.Constants;
-import com.mcsaatchi.gmfit.architecture.otto.EventBusPoster;
-import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
 import com.mcsaatchi.gmfit.architecture.GMFitApplication;
 import com.mcsaatchi.gmfit.architecture.data_access.DBHelper;
 import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
-import com.mcsaatchi.gmfit.fitness.models.FitnessWidget;
+import com.mcsaatchi.gmfit.architecture.otto.EventBusPoster;
+import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponse;
+import com.mcsaatchi.gmfit.common.Constants;
+import com.mcsaatchi.gmfit.fitness.models.FitnessWidget;
 import java.util.List;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 import javax.inject.Inject;
@@ -34,6 +35,7 @@ import org.joda.time.LocalDate;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import timber.log.Timber;
 
 /**
  * Background service which keeps the step-sensor listener alive to always get
@@ -67,6 +69,8 @@ public class SensorListener extends Service implements SensorEventListener {
 
     int stepsToday = prefs.getInt(todayDate + "_steps", 0);
 
+    Timber.d("Steps today : " + stepsToday);
+
     if (prefs.getBoolean(Constants.EXTRAS_FIRST_APP_LAUNCH, true)) {
       prefs.edit().putBoolean(Constants.EXTRAS_FIRST_APP_LAUNCH, false).apply();
 
@@ -79,7 +83,12 @@ public class SensorListener extends Service implements SensorEventListener {
               METRIC_RUNNING_FACTOR, STEP_LENGTH);
       float distanceToday = calculateDistance(STEP_LENGTH);
 
-      storeStepsToday(stepsToday, Math.round(event.values[0] * 1.5f), "steps");
+      if (new Random().nextBoolean()) {
+        storeStepsToday(stepsToday, 3, "steps");
+      } else {
+        storeStepsToday(stepsToday, 1, "steps");
+      }
+
       storeCaloriesToday(caloriesToday, prefs.getFloat(todayDate + "_calories", 0), "calories");
       storeDistanceToday(distanceToday, prefs.getFloat(todayDate + "_distance", 0), "distance");
 

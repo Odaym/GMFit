@@ -41,6 +41,11 @@ public class DataAccessHandler {
     apiCallsHandler.findMeals(userAccessToken, mealName, callback);
   }
 
+  public void searchForMealBarcode(String userAccessToken, String barcode,
+      Callback<SearchMealItemResponse> callback) {
+    apiCallsHandler.searchForMealBarcode(userAccessToken, barcode, callback);
+  }
+
   public void getSlugBreakdownForChart(final String chartType, String userAccessToken,
       final Callback<SlugBreakdownResponse> callback) {
     apiCallsHandler.getSlugBreakdownForChart(chartType, userAccessToken, callback);

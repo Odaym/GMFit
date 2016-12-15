@@ -118,6 +118,10 @@ public interface GMFit_Service {
       @Header(Constants.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken,
       @Query("name") String mealName);
 
+  @GET("meals") Call<SearchMealItemResponse> searchForMealBarcode(
+      @Header(Constants.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken,
+      @Query("barcode") String barcode);
+
   @GET Call<MealMetricsResponse> getMealMetrics(
       @Header(Constants.USER_ACCESS_TOKEN_HEADER_PARAMETER) String userAccessToken,
       @Url String fullUrl);

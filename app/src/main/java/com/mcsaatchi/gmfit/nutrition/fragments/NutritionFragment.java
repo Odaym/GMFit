@@ -46,6 +46,8 @@ import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponseWidget;
 import com.mcsaatchi.gmfit.architecture.rest.ChartMetricBreakdownResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ChartMetricBreakdownResponseDatum;
 import com.mcsaatchi.gmfit.architecture.rest.DefaultGetResponse;
+import com.mcsaatchi.gmfit.architecture.rest.SearchMealItemResponse;
+import com.mcsaatchi.gmfit.architecture.rest.SearchMealItemResponseDatum;
 import com.mcsaatchi.gmfit.architecture.rest.SlugBreakdownResponse;
 import com.mcsaatchi.gmfit.architecture.rest.UiResponse;
 import com.mcsaatchi.gmfit.architecture.rest.UserGoalMetricsResponse;
@@ -67,6 +69,7 @@ import com.mcsaatchi.gmfit.common.classes.SimpleDividerItemDecoration;
 import com.mcsaatchi.gmfit.common.models.DataChart;
 import com.mcsaatchi.gmfit.nutrition.activities.AddNewMealItemActivity;
 import com.mcsaatchi.gmfit.nutrition.activities.BarcodeCaptureActivity;
+import com.mcsaatchi.gmfit.nutrition.activities.SpecifyMealAmountActivity;
 import com.mcsaatchi.gmfit.nutrition.adapters.NutritionWidgetsGridAdapter;
 import com.mcsaatchi.gmfit.nutrition.adapters.UserMealsRecyclerAdapterDragSwipe;
 import com.mcsaatchi.gmfit.nutrition.models.MealItem;
@@ -246,10 +249,11 @@ public class NutritionFragment extends Fragment {
         if (resultCode == CommonStatusCodes.SUCCESS) {
           if (data != null) {
             Barcode barcode = data.getParcelableExtra(BarcodeCaptureActivity.BarcodeObject);
+            String mealType = data.getExtras().getString(Constants.MEAL_TYPE);
+
             scanContent = barcode.displayValue;
 
-            Toast.makeText(getActivity(), "Barcode value: " + scanContent, Toast.LENGTH_SHORT)
-                .show();
+            searchForMealBarcode(scanContent, mealType);
           } else {
             Toast.makeText(getActivity(), getString(R.string.no_barcode_detected_here),
                 Toast.LENGTH_LONG).show();
@@ -257,6 +261,49 @@ public class NutritionFragment extends Fragment {
         }
         break;
     }
+  }
+
+  private void searchForMealBarcode(String barcode, final String mealType) {
+    dataAccessHandler.searchForMealBarcode(
+        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
+        barcode, new Callback<SearchMealItemResponse>() {
+          @Override public void onResponse(Call<SearchMealItemResponse> call,
+              Response<SearchMealItemResponse> response) {
+            switch (response.code()) {
+              case 200:
+
+                List<SearchMealItemResponseDatum> mealsResponse =
+                    response.body().getData().getBody().getData();
+
+                if (!mealsResponse.isEmpty()) {
+                  MealItem item = new MealItem();
+                  item.setMeal_id(mealsResponse.get(0).getId());
+                  item.setMeasurementUnit(mealsResponse.get(0).getMeasurementUnit());
+                  item.setName(mealsResponse.get(0).getName());
+                  item.setType(mealType);
+
+                  Intent intent = new Intent(getActivity(), SpecifyMealAmountActivity.class);
+                  intent.putExtra(Constants.EXTRAS_MEAL_OBJECT_DETAILS, item);
+                  intent.putExtra(Constants.EXTRAS_MEAL_ITEM_PURPOSE_ADDING_TO_DATE, true);
+                  intent.putExtra(Constants.EXTRAS_DATE_TO_ADD_MEAL_ON,
+                      Helpers.prepareDateForAPIRequest(new LocalDate()));
+                  startActivity(intent);
+                } else {
+                  Toast.makeText(parentActivity, getString(R.string.scanned_meal_not_found),
+                      Toast.LENGTH_LONG).show();
+                }
+
+                break;
+            }
+          }
+
+          @Override public void onFailure(Call<SearchMealItemResponse> call, Throwable t) {
+            Timber.d("Call failed with error : %s", t.getMessage());
+            final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+            alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
+            alertDialog.show();
+          }
+        });
   }
 
   private void getUserGoalMetrics(final String date, final String type) {
@@ -691,7 +738,7 @@ public class NutritionFragment extends Fragment {
     });
     scanEntryBTN_BREAKFAST.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View view) {
-        handleScanMealEntry();
+        handleScanMealEntry("Breakfast");
       }
     });
 
@@ -702,7 +749,7 @@ public class NutritionFragment extends Fragment {
     });
     scanEntryBTN_LUNCH.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View view) {
-        handleScanMealEntry();
+        handleScanMealEntry("Lunch");
       }
     });
 
@@ -713,7 +760,7 @@ public class NutritionFragment extends Fragment {
     });
     scanEntryBTN_DINNER.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View view) {
-        handleScanMealEntry();
+        handleScanMealEntry("Dinner");
       }
     });
 
@@ -724,7 +771,7 @@ public class NutritionFragment extends Fragment {
     });
     scanEntryBTN_SNACKS.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View view) {
-        handleScanMealEntry();
+        handleScanMealEntry("Snack");
       }
     });
   }
@@ -873,10 +920,11 @@ public class NutritionFragment extends Fragment {
     dinnerPendingAlarm.cancel();
   }
 
-  public void handleScanMealEntry() {
+  public void handleScanMealEntry(String mealType) {
     Intent intent = new Intent(getActivity(), BarcodeCaptureActivity.class);
     intent.putExtra(BarcodeCaptureActivity.AutoFocus, true);
     intent.putExtra(BarcodeCaptureActivity.UseFlash, false);
+    intent.putExtra(Constants.MEAL_TYPE, mealType);
 
     startActivityForResult(intent, BARCODE_CAPTURE_RC);
   }

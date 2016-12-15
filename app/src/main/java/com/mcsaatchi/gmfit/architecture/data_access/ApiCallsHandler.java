@@ -272,6 +272,22 @@ public class ApiCallsHandler {
     });
   }
 
+  void searchForMealBarcode(String userAccessToken, String barcode,
+      final Callback<SearchMealItemResponse> callback) {
+    Call<SearchMealItemResponse> apiCall =
+        new RestClient().getGMFitService().searchForMealBarcode(userAccessToken, barcode);
+
+    apiCall.enqueue(new Callback<SearchMealItemResponse>() {
+      @Override public void onResponse(Call<SearchMealItemResponse> call,
+          Response<SearchMealItemResponse> response) {
+        callback.onResponse(call, response);
+      }
+
+      @Override public void onFailure(Call<SearchMealItemResponse> call, Throwable t) {
+      }
+    });
+  }
+
   void getMealMetrics(String userAccessToken, String fullUrl,
       final Callback<MealMetricsResponse> callback) {
     Call<MealMetricsResponse> apiCall =

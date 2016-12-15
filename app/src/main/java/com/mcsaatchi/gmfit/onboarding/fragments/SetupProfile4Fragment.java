@@ -28,7 +28,6 @@ import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.architecture.otto.EventBusPoster;
 import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponseChart;
-import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponseWidget;
 import com.mcsaatchi.gmfit.architecture.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.architecture.rest.MedicalConditionsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.MedicalConditionsResponseDatum;
@@ -307,14 +306,10 @@ public class SetupProfile4Fragment extends Fragment
 
                 prefs.edit().putBoolean(Constants.EXTRAS_USER_LOGGED_IN, true).apply();
 
-                List<AuthenticationResponseWidget> widgetsMap =
-                    response.body().getData().getBody().getWidgets();
                 List<AuthenticationResponseChart> chartsMap =
                     response.body().getData().getBody().getCharts();
 
                 Intent intent = new Intent(getActivity(), MainActivity.class);
-                intent.putParcelableArrayListExtra(Constants.BUNDLE_FITNESS_WIDGETS_MAP,
-                    (ArrayList<AuthenticationResponseWidget>) widgetsMap);
                 intent.putParcelableArrayListExtra(Constants.BUNDLE_FITNESS_CHARTS_MAP,
                     (ArrayList<AuthenticationResponseChart>) chartsMap);
                 startActivity(intent);

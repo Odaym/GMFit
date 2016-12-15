@@ -207,6 +207,7 @@
   <string name="today_title">Today</string>
   <string name="remaining_title">Remaining</string>
   <string name="kilocalories_shorthand_unit">kcal</string>
+  <string name="scanned_meal_not_found">The meal you scanned was not found in our database of meals</string>
 
   <!-- HEALTH FRAGMENT -->
   <string name="user_weight_label_metric">Kilograms</string>

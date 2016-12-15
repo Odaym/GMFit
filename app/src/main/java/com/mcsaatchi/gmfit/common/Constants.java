@@ -50,6 +50,7 @@ public class Constants {
   public static final String EXTRAS_CHART_FULL_NAME = "chart_full_name";
   public static final String EXTRAS_CHART_OBJECT = "chart_object";
   public static final String EXTRAS_MEAL_OBJECT_DETAILS = "meal_object_details";
+  public static final String MEAL_TYPE = "meal_type";
   public static final String EXTRAS_MEAL_ITEM_PURPOSE_ADDING_TO_DATE =
       "meal_item_purpose_adding_to_date";
   public static final String EXTRAS_DATE_TO_ADD_MEAL_ON = "date_to_add_meal_on";

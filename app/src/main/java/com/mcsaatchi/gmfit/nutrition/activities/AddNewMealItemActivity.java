@@ -43,11 +43,9 @@ import timber.log.Timber;
 
 public class AddNewMealItemActivity extends BaseActivity {
 
+  public static final int MEAL_AMOUNT_SPECIFIED = 536;
   private static final int SECTION_VIEWTYPE = 1;
   private static final int ITEM_VIEWTYPE = 2;
-
-  private static final int MEAL_AMOUNT_SPECIFIED = 536;
-
   @Bind(R.id.toolbar) Toolbar toolbar;
   @Bind(R.id.mealItemsList) ListView mealItemsList;
   @Bind(R.id.searchMealsAutoCompleTV) EditText searchMealsAutoCompleTV;

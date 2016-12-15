@@ -37,7 +37,6 @@ public class MainActivity extends BaseActivity {
   private FitnessFragment fitnessFragment;
   private NutritionFragment nutritionFragment;
   private HealthFragment healthFragment;
-  private InsuranceFragment insuranceFragment;
   private MainProfileFragment mainProfileFragment;
 
   private ArrayList<AuthenticationResponseChart> chartsMap;
@@ -82,7 +81,6 @@ public class MainActivity extends BaseActivity {
     fitnessFragment = new FitnessFragment();
     nutritionFragment = new NutritionFragment();
     healthFragment = new HealthFragment();
-    insuranceFragment = new InsuranceFragment();
     mainProfileFragment = new MainProfileFragment();
 
     bottomBar.setOnTabSelectListener(new OnTabSelectListener() {
