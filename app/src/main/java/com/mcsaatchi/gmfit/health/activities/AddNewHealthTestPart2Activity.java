@@ -197,9 +197,31 @@ public class AddNewHealthTestPart2Activity extends BaseActivity
           for (int i = 0; i < existingMedicaltest.getImages().size(); i++) {
             if (existingMedicaltest.getImages().get(i) != null
                 && imageViewElements.get(i) != null) {
-              //Picasso.with(this)
-              //    .load(existingMedicaltest.getImages().get(i).getImage())
-              //    .into(imageViewElements.get(i));
+
+              final int finalI = i;
+
+              Picasso.with(AddNewHealthTestPart2Activity.this)
+                  .load(existingMedicaltest.getImages().get(i).getImage())
+                  .resize(400, 400)
+                  .centerInside()
+                  .into(new Target() {
+
+                    @Override public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+
+                      addPictureElements.get(finalI).setVisibility(View.INVISIBLE);
+
+                      imageViewElements.get(finalI)
+                          .setBackground(new BitmapDrawable(getResources(), bitmap));
+                    }
+
+                    @Override public void onBitmapFailed(final Drawable errorDrawable) {
+                      Log.d("TAG", "FAILED");
+                    }
+
+                    @Override public void onPrepareLoad(final Drawable placeHolderDrawable) {
+                      Log.d("TAG", "Prepare Load");
+                    }
+                  });
               deleteButtonElements.get(i).setVisibility(View.VISIBLE);
             }
           }
@@ -258,10 +280,12 @@ public class AddNewHealthTestPart2Activity extends BaseActivity
 
             picturePaths.set(finalI, null);
 
-            if (existingMedicaltest != null
-                && existingMedicaltest.getImages().size() > 0
-                && existingMedicaltest.getImages().get(finalI) != null) {
-              deletedImages.add(existingMedicaltest.getImages().get(finalI).getId());
+            if (existingMedicaltest != null && !existingMedicaltest.getImages().isEmpty()) {
+              try {
+                deletedImages.add(existingMedicaltest.getImages().get(finalI).getId());
+              } catch (IndexOutOfBoundsException e) {
+
+              }
             }
           }
         });
@@ -403,6 +427,8 @@ public class AddNewHealthTestPart2Activity extends BaseActivity
 
     Picasso.with(AddNewHealthTestPart2Activity.this)
         .load(new File(finalImagePath))
+        .resize(400, 400)
+        .centerInside()
         .into(new Target() {
 
           @Override public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
@@ -606,6 +632,22 @@ public class AddNewHealthTestPart2Activity extends BaseActivity
 
   private void createNewHealthTestRequest(HashMap<String, RequestBody> metrics,
       HashMap<String, RequestBody> imageParts) {
+    final ProgressDialog waitingDialog = new ProgressDialog(this);
+    waitingDialog.setTitle(getResources().getString(R.string.creating_new_test_dialog_title));
+    waitingDialog.setMessage(getResources().getString(R.string.please_wait_dialog_message));
+    waitingDialog.show();
+
+    final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+    alertDialog.setTitle(R.string.creating_new_test_dialog_title);
+    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getResources().getString(R.string.ok),
+        new DialogInterface.OnClickListener() {
+          public void onClick(DialogInterface dialog, int which) {
+            dialog.dismiss();
+
+            if (waitingDialog.isShowing()) waitingDialog.dismiss();
+          }
+        });
+
     dataAccessHandler.storeNewHealthTest(
         prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
         toRequestBody(testNameET.getText().toString()), toRequestBody(dateTakenForRequest), metrics,
@@ -641,6 +683,22 @@ public class AddNewHealthTestPart2Activity extends BaseActivity
 
   private void createEditedHealthRequest(HashMap<String, RequestBody> metrics,
       HashMap<String, RequestBody> imageParts, RequestBody deletedImagesForRequest) {
+    final ProgressDialog waitingDialog = new ProgressDialog(this);
+    waitingDialog.setTitle(getResources().getString(R.string.editing_existing_test_dialog_title));
+    waitingDialog.setMessage(getResources().getString(R.string.please_wait_dialog_message));
+    waitingDialog.show();
+
+    final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+    alertDialog.setTitle(R.string.editing_existing_test_dialog_title);
+    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getResources().getString(R.string.ok),
+        new DialogInterface.OnClickListener() {
+          public void onClick(DialogInterface dialog, int which) {
+            dialog.dismiss();
+
+            if (waitingDialog.isShowing()) waitingDialog.dismiss();
+          }
+        });
+
     dataAccessHandler.editExistingHealthTest(
         prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
         toRequestBody(String.valueOf(existingMedicaltest.getInstanceId())),
