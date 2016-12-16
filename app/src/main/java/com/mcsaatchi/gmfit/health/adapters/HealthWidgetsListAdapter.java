@@ -1,4 +1,4 @@
-package com.mcsaatchi.gmfit.nutrition.adapters;
+package com.mcsaatchi.gmfit.health.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,19 +8,17 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.nutrition.models.NutritionWidget;
-
+import com.mcsaatchi.gmfit.health.models.HealthWidget;
 import java.util.ArrayList;
 
-public class NutritionWidgetsListAdapter extends BaseAdapter {
+public class HealthWidgetsListAdapter extends BaseAdapter {
 
   private Context context;
-  private ArrayList<NutritionWidget> widgetsMap;
+  private ArrayList<HealthWidget> widgetsMap;
   private int drawableResId;
 
-  public NutritionWidgetsListAdapter(Context context, ArrayList<NutritionWidget> widgetsMap,
+  public HealthWidgetsListAdapter(Context context, ArrayList<HealthWidget> widgetsMap,
       int drawableResId) {
     super();
     this.context = context;

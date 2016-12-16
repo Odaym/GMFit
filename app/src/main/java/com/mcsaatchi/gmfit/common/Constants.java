@@ -93,6 +93,8 @@ public class Constants {
   public static final String BUNDLE_ACTIVITY_BACK_BUTTON_ENABLED = "activity_back_button_enabled";
   public static final String BUNDLE_FITNESS_WIDGETS_MAP = "fitness_widgets_map";
   public static final String BUNDLE_FITNESS_CHARTS_MAP = "fitness_charts_map";
+  public static final String BUNDLE_HEALTH_WIDGETS_MAP = "health_widgets_map";
+  public static final String BUNDLE_HEALTH_CHARTS_MAP = "health_charts_map";
   public static final String BUNDLE_NUTRITION_WIDGETS_MAP = "nutrition_widgets_map";
   public static final String BUNDLE_NUTRITION_CHARTS_MAP = "nutrition_charts_map";
 

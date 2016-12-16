@@ -10,6 +10,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
@@ -19,6 +22,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.GMFitApplication;
+import com.mcsaatchi.gmfit.common.activities.CustomizeWidgetsAndChartsActivity;
 import com.mcsaatchi.gmfit.health.activities.AddNewHealthTestActivity;
 import com.mcsaatchi.gmfit.health.adapters.HealthWidgetsGridAdapter;
 import com.mcsaatchi.gmfit.health.adapters.UserTestsRecyclerAdapter;
@@ -86,6 +90,25 @@ public class HealthFragment extends Fragment {
     return fragmentView;
   }
 
+  @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+    super.onCreateOptionsMenu(menu, inflater);
+
+    inflater.inflate(R.menu.main, menu);
+  }
+
+  @Override public boolean onOptionsItemSelected(MenuItem item) {
+    switch (item.getItemId()) {
+      case R.id.settings:
+        Intent intent = new Intent(getActivity(), CustomizeWidgetsAndChartsActivity.class);
+        intent.putExtra(Constants.EXTRAS_FRAGMENT_TYPE, Constants.EXTRAS_HEALTH_FRAGMENT);
+        intent.putExtra(Constants.BUNDLE_HEALTH_WIDGETS_MAP, healthWidgetsMap);
+        startActivity(intent);
+        break;
+    }
+
+    return super.onOptionsItemSelected(item);
+  }
+
   private void getWidgets() {
     dataAccessHandler.getWidgets("medical", new Callback<WidgetsResponse>() {
       @Override
@@ -100,7 +123,7 @@ public class HealthFragment extends Fragment {
 
               widget.setId(widgetsFromResponse.get(i).getWidgetId());
               widget.setMeasurementUnit(widgetsFromResponse.get(i).getUnit());
-              widget.setPosition(Integer.parseInt(widgetsFromResponse.get(i).getPosition()));
+              widget.setPosition(i);
               widget.setValue(Float.parseFloat(widgetsFromResponse.get(i).getTotal()));
               widget.setTitle(widgetsFromResponse.get(i).getName());
               widget.setSlug(widgetsFromResponse.get(i).getSlug());
@@ -108,17 +131,7 @@ public class HealthFragment extends Fragment {
               healthWidgetsMap.add(widget);
             }
 
-            if (!healthWidgetsMap.isEmpty() && healthWidgetsMap.size() > 4) {
-              healthWidgetsMap = new ArrayList<>(healthWidgetsMap.subList(0, 4));
-
-              HealthWidgetsGridAdapter healthWidgetsGridAdapter =
-                  new HealthWidgetsGridAdapter(getActivity(), healthWidgetsMap,
-                      R.layout.grid_item_health_widgets);
-
-              widgetsGridView.setAdapter(healthWidgetsGridAdapter);
-
-              loadingWidgetsProgressBar.setVisibility(View.GONE);
-            }
+            setupWidgetViews(healthWidgetsMap);
 
             break;
         }
@@ -173,11 +186,31 @@ public class HealthFragment extends Fragment {
       case Constants.EXTRAS_TEST_EDIT_OR_CREATE_DONE:
         getTakenMedicalTests();
         break;
+      case Constants.EXTRAS_HEALTH_WIDGETS_ORDER_ARRAY_CHANGED:
+        if (ebp.getHealthWidgetsMap() != null) {
+          healthWidgetsMap = ebp.getHealthWidgetsMap();
+          setupWidgetViews(healthWidgetsMap);
+        }
+        break;
     }
   }
 
   @Override public void onDestroy() {
     super.onDestroy();
     EventBusSingleton.getInstance().unregister(this);
+  }
+
+  private void setupWidgetViews(ArrayList<HealthWidget> healthWidgetsMap){
+    if (!healthWidgetsMap.isEmpty() && healthWidgetsMap.size() > 4) {
+      healthWidgetsMap = new ArrayList<>(healthWidgetsMap.subList(0, 4));
+
+      HealthWidgetsGridAdapter healthWidgetsGridAdapter =
+          new HealthWidgetsGridAdapter(getActivity(), healthWidgetsMap,
+              R.layout.grid_item_health_widgets);
+
+      widgetsGridView.setAdapter(healthWidgetsGridAdapter);
+
+      loadingWidgetsProgressBar.setVisibility(View.GONE);
+    }
   }
 }

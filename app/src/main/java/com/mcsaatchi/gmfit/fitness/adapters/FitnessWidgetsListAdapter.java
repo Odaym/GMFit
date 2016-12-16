@@ -65,8 +65,10 @@ public class FitnessWidgetsListAdapter extends BaseAdapter {
     holder.itemIconRightIMG.setImageResource(drawableResId);
     holder.itemNameTV.setText((widgetsMap.get(position)).getTitle());
 
-    if (position > 4) {
+    if (widgetsMap.get(position).getPosition() > 4) {
       holder.itemLayout.setAlpha(0.2f);
+    } else {
+      holder.itemLayout.setAlpha(1f);
     }
 
     return convertView;

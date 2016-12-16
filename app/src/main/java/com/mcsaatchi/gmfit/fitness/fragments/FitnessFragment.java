@@ -446,7 +446,7 @@ public class FitnessFragment extends Fragment implements SensorEventListener {
               if (!widgetsFromResponse.get(i).getName().equals("Steps Count")) {
                 widget.setId(widgetsFromResponse.get(i).getWidgetId());
                 widget.setMeasurementUnit(widgetsFromResponse.get(i).getUnit());
-                widget.setPosition(Integer.parseInt(widgetsFromResponse.get(i).getPosition()));
+                widget.setPosition(i);
                 widget.setValue(Float.parseFloat(widgetsFromResponse.get(i).getTotal()));
                 widget.setTitle(widgetsFromResponse.get(i).getName());
 

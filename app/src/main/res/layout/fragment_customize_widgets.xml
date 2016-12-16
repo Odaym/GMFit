@@ -25,10 +25,10 @@
       android:layout_height="match_parent"
       android:choiceMode="singleChoice"
       android:dividerHeight="0.5sp"
-      android:drawSelectorOnTop="true"
       dslv:drag_scroll_start="0.02"
       dslv:drag_start_mode="onLongPress"
       dslv:float_alpha="0.3"
+      dslv:float_background_color="#BFF9F9F9"
       dslv:max_drag_scroll_speed="0.7"
       dslv:slide_shuffle_speed="0.1"
       />

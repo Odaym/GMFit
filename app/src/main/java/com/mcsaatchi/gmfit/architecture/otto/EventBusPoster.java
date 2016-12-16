@@ -2,6 +2,7 @@ package com.mcsaatchi.gmfit.architecture.otto;
 
 import com.mcsaatchi.gmfit.common.models.DataChart;
 import com.mcsaatchi.gmfit.fitness.models.FitnessWidget;
+import com.mcsaatchi.gmfit.health.models.HealthWidget;
 import com.mcsaatchi.gmfit.nutrition.models.MealItem;
 import com.mcsaatchi.gmfit.nutrition.models.NutritionWidget;
 
@@ -16,8 +17,10 @@ public class EventBusPoster {
   private MealItem mealItem;
   private boolean createNewMealItem;
   private List<DataChart> dataChartsListExtra;
+
   private ArrayList<NutritionWidget> widgetsMapNutrition;
   private ArrayList<FitnessWidget> widgetsMapFitness;
+  private ArrayList<HealthWidget> widgetsMapHealth;
 
   public EventBusPoster(String message) {
     this.message = message;
@@ -57,12 +60,20 @@ public class EventBusPoster {
     this.widgetsMapFitness = widgetsMapFitness;
   }
 
+  public void setWidgetsMapHealth(ArrayList<HealthWidget> widgetsMapHealth) {
+    this.widgetsMapHealth = widgetsMapHealth;
+  }
+
   public ArrayList<NutritionWidget> getNutritionWidgetsMap() {
     return widgetsMapNutrition;
   }
 
   public ArrayList<FitnessWidget> getFitnessWidgetsMap() {
     return widgetsMapFitness;
+  }
+
+  public ArrayList<HealthWidget> getHealthWidgetsMap() {
+    return widgetsMapHealth;
   }
 
   public MealItem getMealItemExtra() {

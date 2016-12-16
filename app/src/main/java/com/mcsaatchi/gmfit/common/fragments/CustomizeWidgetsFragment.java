@@ -12,6 +12,8 @@ import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.fitness.adapters.FitnessWidgetsListAdapter;
+import com.mcsaatchi.gmfit.health.adapters.HealthWidgetsListAdapter;
+import com.mcsaatchi.gmfit.health.models.HealthWidget;
 import com.mcsaatchi.gmfit.nutrition.adapters.NutritionWidgetsListAdapter;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.architecture.otto.EventBusPoster;
@@ -30,6 +32,7 @@ public class CustomizeWidgetsFragment extends Fragment {
 
   private FitnessWidgetsListAdapter customizeFitnessWidgetsAdapter;
   private NutritionWidgetsListAdapter customizeNutritionWidgetsAdapter;
+  private HealthWidgetsListAdapter customizeHealthWidgetsAdapter;
 
   private String WIDGETS_ORDER_ARRAY_CHANGED_EVENT;
   private Activity parentActivity;
@@ -37,10 +40,14 @@ public class CustomizeWidgetsFragment extends Fragment {
 
   private ArrayList<FitnessWidget> itemsMapFitness = new ArrayList<>();
   private ArrayList<NutritionWidget> itemsMapNutrition = new ArrayList<>();
+  private ArrayList<HealthWidget> itemsMapHealth = new ArrayList<>();
 
   private RuntimeExceptionDao<FitnessWidget, Integer> fitnessWidgetsDAO;
   private RuntimeExceptionDao<NutritionWidget, Integer> nutritionWidgetsDAO;
 
+  /**
+   * DROPPERS
+   */
   private DragSortListView.DropListener onDropFitnessItems = new DragSortListView.DropListener() {
     @Override public void drop(int from, int to) {
 
@@ -71,6 +78,20 @@ public class CustomizeWidgetsFragment extends Fragment {
     }
   };
 
+  private DragSortListView.DropListener onDropHealthItems = new DragSortListView.DropListener() {
+    @Override public void drop(int from, int to) {
+
+      EventBusPoster ebp = new EventBusPoster(WIDGETS_ORDER_ARRAY_CHANGED_EVENT);
+      ebp.setWidgetsMapHealth(itemsMapHealth);
+      EventBusSingleton.getInstance().post(ebp);
+
+      customizeHealthWidgetsAdapter.notifyData();
+    }
+  };
+
+  /**
+   * DRAGGERS
+   */
   private DragSortListView.DragListener onDragFitnessItems = new DragSortListView.DragListener() {
     @Override public void drag(int from, int to) {
       if (to < itemsMapFitness.size() && from < itemsMapFitness.size()) {
@@ -105,6 +126,25 @@ public class CustomizeWidgetsFragment extends Fragment {
         itemsMapNutrition.get(to).setPosition(from);
 
         itemsMapNutrition.set(to, tempItem);
+      }
+    }
+  };
+
+  private DragSortListView.DragListener onDragHealthItems = new DragSortListView.DragListener() {
+    @Override public void drag(int from, int to) {
+      if (to < itemsMapHealth.size() && from < itemsMapHealth.size()) {
+
+        HealthWidget tempItem = itemsMapHealth.get(from);
+
+        int toPosition = itemsMapHealth.get(to).getPosition();
+
+        tempItem.setPosition(toPosition);
+
+        itemsMapHealth.set(from, itemsMapHealth.get(to));
+
+        itemsMapHealth.get(to).setPosition(from);
+
+        itemsMapHealth.set(to, tempItem);
       }
     }
   };
@@ -148,7 +188,10 @@ public class CustomizeWidgetsFragment extends Fragment {
             hookUpListWithNutritionItems(itemsMapNutrition);
             break;
           case Constants.EXTRAS_HEALTH_FRAGMENT:
+            itemsMapHealth =
+                fragmentBundle.getParcelableArrayList(Constants.BUNDLE_HEALTH_WIDGETS_MAP);
             WIDGETS_ORDER_ARRAY_CHANGED_EVENT = Constants.EXTRAS_HEALTH_WIDGETS_ORDER_ARRAY_CHANGED;
+            hookUpListWithHealthItems(itemsMapHealth);
             break;
         }
       }
@@ -174,5 +217,14 @@ public class CustomizeWidgetsFragment extends Fragment {
         new NutritionWidgetsListAdapter(parentActivity, itemsMapNutrition,
             R.drawable.ic_menu_black_24dp);
     widgetsListView.setAdapter(customizeNutritionWidgetsAdapter);
+  }
+
+  private void hookUpListWithHealthItems(ArrayList<HealthWidget> healthItems) {
+    widgetsListView.setDragListener(onDragHealthItems);
+    widgetsListView.setDropListener(onDropHealthItems);
+
+    customizeHealthWidgetsAdapter =
+        new HealthWidgetsListAdapter(parentActivity, healthItems, R.drawable.ic_menu_black_24dp);
+    widgetsListView.setAdapter(customizeHealthWidgetsAdapter);
   }
 }

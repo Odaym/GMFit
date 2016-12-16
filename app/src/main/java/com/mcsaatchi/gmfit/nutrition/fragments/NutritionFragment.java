@@ -488,7 +488,7 @@ public class NutritionFragment extends Fragment {
             for (int i = 0; i < widgetsMapFromAPI.size(); i++) {
               NutritionWidget nutritionWidget = new NutritionWidget();
               nutritionWidget.setTitle(widgetsMapFromAPI.get(i).getName());
-              nutritionWidget.setPosition(Integer.parseInt(widgetsMapFromAPI.get(i).getPosition()));
+              nutritionWidget.setPosition(i);
               nutritionWidget.setMeasurementUnit(widgetsMapFromAPI.get(i).getUnit());
               nutritionWidget.setWidget_id(widgetsMapFromAPI.get(i).getWidgetId());
               nutritionWidget.setValue(Double.parseDouble(widgetsMapFromAPI.get(i).getTotal()));
