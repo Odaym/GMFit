@@ -98,7 +98,7 @@ public final class BarcodeCaptureActivity extends BaseActivity {
     mPreview = (CameraSourcePreview) findViewById(R.id.preview);
     mGraphicOverlay = (GraphicOverlay<BarcodeGraphic>) findViewById(R.id.graphicOverlay);
 
-    if (getIntent().getExtras() != null){
+    if (getIntent().getExtras() != null) {
       mealType = getIntent().getExtras().getString(Constants.MEAL_TYPE);
     }
 

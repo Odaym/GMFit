@@ -49,7 +49,8 @@ public class Helpers {
 
   public static void hideKeyboard(View currentFocus, Context context) {
     if (currentFocus != null) {
-      InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+      InputMethodManager imm =
+          (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
       imm.hideSoftInputFromWindow(currentFocus.getWindowToken(), 0);
     }
   }

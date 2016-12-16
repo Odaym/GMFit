@@ -264,104 +264,96 @@ public class NutritionFragment extends Fragment {
   }
 
   private void searchForMealBarcode(String barcode, final String mealType) {
-    dataAccessHandler.searchForMealBarcode(
-        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
-        barcode, new Callback<SearchMealItemResponse>() {
-          @Override public void onResponse(Call<SearchMealItemResponse> call,
-              Response<SearchMealItemResponse> response) {
-            switch (response.code()) {
-              case 200:
+    dataAccessHandler.searchForMealBarcode(barcode, new Callback<SearchMealItemResponse>() {
+      @Override public void onResponse(Call<SearchMealItemResponse> call,
+          Response<SearchMealItemResponse> response) {
+        switch (response.code()) {
+          case 200:
 
-                List<SearchMealItemResponseDatum> mealsResponse =
-                    response.body().getData().getBody().getData();
+            List<SearchMealItemResponseDatum> mealsResponse =
+                response.body().getData().getBody().getData();
 
-                if (!mealsResponse.isEmpty()) {
-                  MealItem item = new MealItem();
-                  item.setMeal_id(mealsResponse.get(0).getId());
-                  item.setMeasurementUnit(mealsResponse.get(0).getMeasurementUnit());
-                  item.setName(mealsResponse.get(0).getName());
-                  item.setType(mealType);
+            if (!mealsResponse.isEmpty()) {
+              MealItem item = new MealItem();
+              item.setMeal_id(mealsResponse.get(0).getId());
+              item.setMeasurementUnit(mealsResponse.get(0).getMeasurementUnit());
+              item.setName(mealsResponse.get(0).getName());
+              item.setType(mealType);
 
-                  Intent intent = new Intent(getActivity(), SpecifyMealAmountActivity.class);
-                  intent.putExtra(Constants.EXTRAS_MEAL_OBJECT_DETAILS, item);
-                  intent.putExtra(Constants.EXTRAS_MEAL_ITEM_PURPOSE_ADDING_TO_DATE, true);
-                  intent.putExtra(Constants.EXTRAS_DATE_TO_ADD_MEAL_ON,
-                      Helpers.prepareDateForAPIRequest(new LocalDate()));
-                  startActivity(intent);
-                } else {
-                  Toast.makeText(parentActivity, getString(R.string.scanned_meal_not_found),
-                      Toast.LENGTH_LONG).show();
-                }
-
-                break;
+              Intent intent = new Intent(getActivity(), SpecifyMealAmountActivity.class);
+              intent.putExtra(Constants.EXTRAS_MEAL_OBJECT_DETAILS, item);
+              intent.putExtra(Constants.EXTRAS_MEAL_ITEM_PURPOSE_ADDING_TO_DATE, true);
+              intent.putExtra(Constants.EXTRAS_DATE_TO_ADD_MEAL_ON,
+                  Helpers.prepareDateForAPIRequest(new LocalDate()));
+              startActivity(intent);
+            } else {
+              Toast.makeText(parentActivity, getString(R.string.scanned_meal_not_found),
+                  Toast.LENGTH_LONG).show();
             }
-          }
 
-          @Override public void onFailure(Call<SearchMealItemResponse> call, Throwable t) {
-            Timber.d("Call failed with error : %s", t.getMessage());
-            final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
-            alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
-            alertDialog.show();
-          }
-        });
+            break;
+        }
+      }
+
+      @Override public void onFailure(Call<SearchMealItemResponse> call, Throwable t) {
+        Timber.d("Call failed with error : %s", t.getMessage());
+        final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+        alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
+        alertDialog.show();
+      }
+    });
   }
 
   private void getUserGoalMetrics(final String date, final String type) {
-    dataAccessHandler.getUserGoalMetrics(
-        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
-        date, type, new Callback<UserGoalMetricsResponse>() {
-          @Override public void onResponse(Call<UserGoalMetricsResponse> call,
-              Response<UserGoalMetricsResponse> response) {
+    dataAccessHandler.getUserGoalMetrics(date, type, new Callback<UserGoalMetricsResponse>() {
+      @Override public void onResponse(Call<UserGoalMetricsResponse> call,
+          Response<UserGoalMetricsResponse> response) {
 
-            switch (response.code()) {
-              case 200:
-                UserGoalMetricsResponseActiveCalories activeCaloriesResponse =
-                    response.body().getData().getBody().getMetrics().getActiveCalories();
+        switch (response.code()) {
+          case 200:
+            UserGoalMetricsResponseActiveCalories activeCaloriesResponse =
+                response.body().getData().getBody().getMetrics().getActiveCalories();
 
-                if (activeCaloriesResponse == null) {
-                  String maxValue =
-                      response.body().getData().getBody().getMetrics().getCalories().getMaxValue();
+            if (activeCaloriesResponse == null) {
+              String maxValue =
+                  response.body().getData().getBody().getMetrics().getCalories().getMaxValue();
 
-                  String currentValue =
-                      response.body().getData().getBody().getMetrics().getCalories().getValue();
+              String currentValue =
+                  response.body().getData().getBody().getMetrics().getCalories().getValue();
 
-                  todayTV.setText(String.valueOf((int) Double.parseDouble(currentValue)));
-                  goalTV.setText(maxValue);
+              todayTV.setText(String.valueOf((int) Double.parseDouble(currentValue)));
+              goalTV.setText(maxValue);
 
-                  getUserGoalMetrics(date, "fitness");
-                } else {
-                  String activeCalories = activeCaloriesResponse.getValue();
+              getUserGoalMetrics(date, "fitness");
+            } else {
+              String activeCalories = activeCaloriesResponse.getValue();
 
-                  activeTV.setText(String.valueOf((int) Double.parseDouble(activeCalories)));
-                }
-
-                if (!activeTV.getText().toString().isEmpty()
-                    && !goalTV.getText()
-                    .toString()
-                    .isEmpty()
-                    && !todayTV.getText().toString().isEmpty()
-                    && !metricCounterTV.getText().toString().isEmpty()) {
-                  int remainingValue =
-                      Integer.parseInt(goalTV.getText().toString()) + Integer.parseInt(
-                          activeTV.getText().toString()) - Integer.parseInt(
-                          todayTV.getText().toString());
-
-                  if (remainingValue < 0) {
-                    remainingTV.setText(String.valueOf(0));
-                  } else {
-                    remainingTV.setText(String.valueOf(remainingValue));
-                  }
-
-                  changeMetricProgressValue();
-                }
-
-                break;
+              activeTV.setText(String.valueOf((int) Double.parseDouble(activeCalories)));
             }
-          }
 
-          @Override public void onFailure(Call<UserGoalMetricsResponse> call, Throwable t) {
-          }
-        });
+            if (!activeTV.getText().toString().isEmpty()
+                && !goalTV.getText().toString().isEmpty()
+                && !todayTV.getText().toString().isEmpty()
+                && !metricCounterTV.getText().toString().isEmpty()) {
+              int remainingValue = Integer.parseInt(goalTV.getText().toString()) + Integer.parseInt(
+                  activeTV.getText().toString()) - Integer.parseInt(todayTV.getText().toString());
+
+              if (remainingValue < 0) {
+                remainingTV.setText(String.valueOf(0));
+              } else {
+                remainingTV.setText(String.valueOf(remainingValue));
+              }
+
+              changeMetricProgressValue();
+            }
+
+            break;
+        }
+      }
+
+      @Override public void onFailure(Call<UserGoalMetricsResponse> call, Throwable t) {
+      }
+    });
   }
 
   private void setupDateCarousel() {
@@ -479,84 +471,79 @@ public class NutritionFragment extends Fragment {
           "http://gmfit.mcsaatchi.me/api/v1/user/ui?section=" + section + "&date=" + desiredDate;
     }
 
-    dataAccessHandler.getUiForSection(
-        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
-        finalUrl, new Callback<UiResponse>() {
-          @Override public void onResponse(Call<UiResponse> call, Response<UiResponse> response) {
-            switch (response.code()) {
-              case 200:
-                List<AuthenticationResponseWidget> widgetsMapFromAPI =
-                    response.body().getData().getBody().getWidgets();
-                List<AuthenticationResponseChart> chartsMapFromAPI =
-                    response.body().getData().getBody().getCharts();
+    dataAccessHandler.getUiForSection(finalUrl, new Callback<UiResponse>() {
+      @Override public void onResponse(Call<UiResponse> call, Response<UiResponse> response) {
+        switch (response.code()) {
+          case 200:
+            List<AuthenticationResponseWidget> widgetsMapFromAPI =
+                response.body().getData().getBody().getWidgets();
+            List<AuthenticationResponseChart> chartsMapFromAPI =
+                response.body().getData().getBody().getCharts();
 
-                /**
-                 * Update or create widgets and datacharts into the DB
-                 */
-                finalWidgets = new ArrayList<>();
+            /**
+             * Update or create widgets and datacharts into the DB
+             */
+            finalWidgets = new ArrayList<>();
 
-                for (int i = 0; i < widgetsMapFromAPI.size(); i++) {
-                  NutritionWidget nutritionWidget = new NutritionWidget();
-                  nutritionWidget.setTitle(widgetsMapFromAPI.get(i).getName());
-                  nutritionWidget.setPosition(
-                      Integer.parseInt(widgetsMapFromAPI.get(i).getPosition()));
-                  nutritionWidget.setMeasurementUnit(widgetsMapFromAPI.get(i).getUnit());
-                  nutritionWidget.setWidget_id(widgetsMapFromAPI.get(i).getWidgetId());
-                  nutritionWidget.setValue(Double.parseDouble(widgetsMapFromAPI.get(i).getTotal()));
+            for (int i = 0; i < widgetsMapFromAPI.size(); i++) {
+              NutritionWidget nutritionWidget = new NutritionWidget();
+              nutritionWidget.setTitle(widgetsMapFromAPI.get(i).getName());
+              nutritionWidget.setPosition(Integer.parseInt(widgetsMapFromAPI.get(i).getPosition()));
+              nutritionWidget.setMeasurementUnit(widgetsMapFromAPI.get(i).getUnit());
+              nutritionWidget.setWidget_id(widgetsMapFromAPI.get(i).getWidgetId());
+              nutritionWidget.setValue(Double.parseDouble(widgetsMapFromAPI.get(i).getTotal()));
 
-                  finalWidgets.add(nutritionWidget);
-                }
-
-                finalCharts = new ArrayList<>();
-
-                for (int i = 0; i < chartsMapFromAPI.size(); i++) {
-                  DataChart nutritionDataChart = new DataChart();
-                  nutritionDataChart.setName(chartsMapFromAPI.get(i).getName());
-                  nutritionDataChart.setPosition(
-                      Integer.parseInt(chartsMapFromAPI.get(i).getPosition()));
-                  nutritionDataChart.setType(chartsMapFromAPI.get(i).getSlug());
-                  nutritionDataChart.setUsername(chartsMapFromAPI.get(i).getSlug());
-                  nutritionDataChart.setChart_id(chartsMapFromAPI.get(i).getChartId());
-                  nutritionDataChart.setChartData(
-                      (ArrayList<AuthenticationResponseChartData>) chartsMapFromAPI.get(i)
-                          .getData());
-
-                  finalCharts.add(nutritionDataChart);
-                }
-
-                if (isAdded()) {
-                  getActivity().runOnUiThread(new Runnable() {
-                    @Override public void run() {
-                      setupWidgetViews(finalWidgets);
-
-                      getUserGoalMetrics(finalDesiredDate, "nutrition");
-
-                      setupChartViews(finalCharts);
-
-                      hideProgressBarsForLoading();
-                    }
-                  });
-                }
-
-                break;
+              finalWidgets.add(nutritionWidget);
             }
-          }
 
-          @Override public void onFailure(Call<UiResponse> call, Throwable t) {
-            Timber.d("Call failed with error : %s", t.getMessage());
-            final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+            finalCharts = new ArrayList<>();
 
-            alertDialog.setMessage(getActivity().getResources()
-                .getString(R.string.error_response_from_server_incorrect));
-            alertDialog.show();
-          }
-        });
+            for (int i = 0; i < chartsMapFromAPI.size(); i++) {
+              DataChart nutritionDataChart = new DataChart();
+              nutritionDataChart.setName(chartsMapFromAPI.get(i).getName());
+              nutritionDataChart.setPosition(
+                  Integer.parseInt(chartsMapFromAPI.get(i).getPosition()));
+              nutritionDataChart.setType(chartsMapFromAPI.get(i).getSlug());
+              nutritionDataChart.setUsername(chartsMapFromAPI.get(i).getSlug());
+              nutritionDataChart.setChart_id(chartsMapFromAPI.get(i).getChartId());
+              nutritionDataChart.setChartData(
+                  (ArrayList<AuthenticationResponseChartData>) chartsMapFromAPI.get(i).getData());
+
+              finalCharts.add(nutritionDataChart);
+            }
+
+            if (isAdded()) {
+              getActivity().runOnUiThread(new Runnable() {
+                @Override public void run() {
+                  setupWidgetViews(finalWidgets);
+
+                  getUserGoalMetrics(finalDesiredDate, "nutrition");
+
+                  setupChartViews(finalCharts);
+
+                  hideProgressBarsForLoading();
+                }
+              });
+            }
+
+            break;
+        }
+      }
+
+      @Override public void onFailure(Call<UiResponse> call, Throwable t) {
+        Timber.d("Call failed with error : %s", t.getMessage());
+        final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+
+        alertDialog.setMessage(
+            getActivity().getResources().getString(R.string.error_response_from_server_incorrect));
+        alertDialog.show();
+      }
+    });
   }
 
   private void updateUserWidgets(int[] widgetIds, int[] widgetPositions) {
-    dataAccessHandler.updateUserWidgets(
-        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
-        widgetIds, widgetPositions, new Callback<DefaultGetResponse>() {
+    dataAccessHandler.updateUserWidgets(widgetIds, widgetPositions,
+        new Callback<DefaultGetResponse>() {
           @Override public void onResponse(Call<DefaultGetResponse> call,
               Response<DefaultGetResponse> response) {
             switch (response.code()) {
@@ -573,9 +560,8 @@ public class NutritionFragment extends Fragment {
   }
 
   private void updateUserCharts(int[] chartIds, int[] chartPositions) {
-    dataAccessHandler.updateUserCharts(
-        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
-        chartIds, chartPositions, new Callback<DefaultGetResponse>() {
+    dataAccessHandler.updateUserCharts(chartIds, chartPositions,
+        new Callback<DefaultGetResponse>() {
           @Override public void onResponse(Call<DefaultGetResponse> call,
               Response<DefaultGetResponse> response) {
             switch (response.code()) {
@@ -592,144 +578,142 @@ public class NutritionFragment extends Fragment {
   }
 
   private void getUserAddedMeals(String desiredDate) {
-    dataAccessHandler.getUserAddedMealsOnDate(
-        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
-        desiredDate, new Callback<UserMealsResponse>() {
-          @Override public void onResponse(Call<UserMealsResponse> call,
-              Response<UserMealsResponse> response) {
-            switch (response.code()) {
-              case 200:
+    dataAccessHandler.getUserAddedMealsOnDate(desiredDate, new Callback<UserMealsResponse>() {
+      @Override
+      public void onResponse(Call<UserMealsResponse> call, Response<UserMealsResponse> response) {
+        switch (response.code()) {
+          case 200:
 
-                /**
-                 * Grab all meals from the API
-                 */
-                List<UserMealsResponseBreakfast> breakfastMeals =
-                    response.body().getData().getBody().getData().getBreakfast();
-                List<UserMealsResponseLunch> lunchMeals =
-                    response.body().getData().getBody().getData().getLunch();
-                List<UserMealsResponseDinner> dinnerMeals =
-                    response.body().getData().getBody().getData().getDinner();
-                List<UserMealsResponseSnack> snackMeals =
-                    response.body().getData().getBody().getData().getSnack();
+            /**
+             * Grab all meals from the API
+             */
+            List<UserMealsResponseBreakfast> breakfastMeals =
+                response.body().getData().getBody().getData().getBreakfast();
+            List<UserMealsResponseLunch> lunchMeals =
+                response.body().getData().getBody().getData().getLunch();
+            List<UserMealsResponseDinner> dinnerMeals =
+                response.body().getData().getBody().getData().getDinner();
+            List<UserMealsResponseSnack> snackMeals =
+                response.body().getData().getBody().getData().getSnack();
 
-                finalBreakfastMeals.clear();
-                finalLunchMeals.clear();
-                finalDinnerMeals.clear();
-                finalSnackMeals.clear();
+            finalBreakfastMeals.clear();
+            finalLunchMeals.clear();
+            finalDinnerMeals.clear();
+            finalSnackMeals.clear();
 
-                /**
-                 * Insert Breakfast meals
-                 */
-                for (int i = 0; i < breakfastMeals.size(); i++) {
-                  MealItem breakfastMeal = new MealItem();
-                  breakfastMeal.setMeal_id(breakfastMeals.get(i).getId());
-                  breakfastMeal.setCreated_at(breakfastMeals.get(i).getCreatedAt());
-                  breakfastMeal.setInstance_id(breakfastMeals.get(i).getInstance_id());
-                  breakfastMeal.setType("Breakfast");
-                  breakfastMeal.setName(breakfastMeals.get(i).getName());
-                  breakfastMeal.setMeasurementUnit(breakfastMeals.get(i).getMeasurementUnit());
-                  breakfastMeal.setAmount(breakfastMeals.get(i).getAmount());
-                  breakfastMeal.setSectionType(2);
+            /**
+             * Insert Breakfast meals
+             */
+            for (int i = 0; i < breakfastMeals.size(); i++) {
+              MealItem breakfastMeal = new MealItem();
+              breakfastMeal.setMeal_id(breakfastMeals.get(i).getId());
+              breakfastMeal.setCreated_at(breakfastMeals.get(i).getCreatedAt());
+              breakfastMeal.setInstance_id(breakfastMeals.get(i).getInstance_id());
+              breakfastMeal.setType("Breakfast");
+              breakfastMeal.setName(breakfastMeals.get(i).getName());
+              breakfastMeal.setMeasurementUnit(breakfastMeals.get(i).getMeasurementUnit());
+              breakfastMeal.setAmount(breakfastMeals.get(i).getAmount());
+              breakfastMeal.setSectionType(2);
 
-                  if (breakfastMeals.get(i).getTotalCalories() != null) {
-                    breakfastMeal.setTotalCalories(breakfastMeals.get(i).getTotalCalories());
-                  } else {
-                    breakfastMeal.setTotalCalories(0);
-                  }
+              if (breakfastMeals.get(i).getTotalCalories() != null) {
+                breakfastMeal.setTotalCalories(breakfastMeals.get(i).getTotalCalories());
+              } else {
+                breakfastMeal.setTotalCalories(0);
+              }
 
-                  finalBreakfastMeals.add(breakfastMeal);
-                }
-
-                setupMealSectionsListView(finalBreakfastMeals, "Breakfast");
-
-                /**
-                 * Insert Lunch meals
-                 */
-                for (int i = 0; i < lunchMeals.size(); i++) {
-                  MealItem lunchMeal = new MealItem();
-                  lunchMeal.setMeal_id(lunchMeals.get(i).getId());
-                  lunchMeal.setCreated_at(lunchMeals.get(i).getCreatedAt());
-                  lunchMeal.setInstance_id(lunchMeals.get(i).getInstance_id());
-                  lunchMeal.setType("Lunch");
-                  lunchMeal.setName(lunchMeals.get(i).getName());
-                  lunchMeal.setMeasurementUnit(lunchMeals.get(i).getMeasurementUnit());
-                  lunchMeal.setAmount(lunchMeals.get(i).getAmount());
-                  lunchMeal.setSectionType(2);
-
-                  if (lunchMeals.get(i).getTotalCalories() != null) {
-                    lunchMeal.setTotalCalories(lunchMeals.get(i).getTotalCalories());
-                  } else {
-                    lunchMeal.setTotalCalories(0);
-                  }
-
-                  finalLunchMeals.add(lunchMeal);
-                }
-
-                setupMealSectionsListView(finalLunchMeals, "Lunch");
-
-                /**
-                 * Insert Dinner meals
-                 */
-                for (int i = 0; i < dinnerMeals.size(); i++) {
-                  MealItem dinnerMeal = new MealItem();
-                  dinnerMeal.setMeal_id(dinnerMeals.get(i).getId());
-                  dinnerMeal.setCreated_at(dinnerMeals.get(i).getCreatedAt());
-                  dinnerMeal.setInstance_id(dinnerMeals.get(i).getInstance_id());
-                  dinnerMeal.setType("Dinner");
-                  dinnerMeal.setName(dinnerMeals.get(i).getName());
-                  dinnerMeal.setMeasurementUnit(dinnerMeals.get(i).getMeasurementUnit());
-                  dinnerMeal.setAmount(dinnerMeals.get(i).getAmount());
-                  dinnerMeal.setSectionType(2);
-
-                  if (dinnerMeals.get(i).getTotalCalories() != null) {
-                    dinnerMeal.setTotalCalories(dinnerMeals.get(i).getTotalCalories());
-                  } else {
-                    dinnerMeal.setTotalCalories(0);
-                  }
-
-                  finalDinnerMeals.add(dinnerMeal);
-                }
-
-                setupMealSectionsListView(finalDinnerMeals, "Dinner");
-
-                /**
-                 * Insert Snack meals
-                 */
-                for (int i = 0; i < snackMeals.size(); i++) {
-                  MealItem snackMeal = new MealItem();
-                  snackMeal.setMeal_id(snackMeals.get(i).getId());
-                  snackMeal.setInstance_id(snackMeals.get(i).getInstance_id());
-                  snackMeal.setCreated_at(snackMeals.get(i).getCreatedAt());
-                  snackMeal.setType("Snack");
-                  snackMeal.setName(snackMeals.get(i).getName());
-                  snackMeal.setMeasurementUnit(snackMeals.get(i).getMeasurementUnit());
-                  snackMeal.setAmount(snackMeals.get(i).getAmount());
-                  snackMeal.setSectionType(2);
-
-                  if (snackMeals.get(i).getTotalCalories() != null) {
-                    snackMeal.setTotalCalories(snackMeals.get(i).getTotalCalories());
-                  } else {
-                    snackMeal.setTotalCalories(0);
-                  }
-
-                  finalSnackMeals.add(snackMeal);
-                }
-
-                setupMealSectionsListView(finalSnackMeals, "Snack");
-
-                break;
+              finalBreakfastMeals.add(breakfastMeal);
             }
-          }
 
-          @Override public void onFailure(Call<UserMealsResponse> call, Throwable t) {
-            Timber.d("Call failed with error : %s", t.getMessage());
-            final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+            setupMealSectionsListView(finalBreakfastMeals, "Breakfast");
 
-            alertDialog.setMessage(getActivity().getResources()
-                .getString(R.string.error_response_from_server_incorrect));
-            alertDialog.show();
-          }
-        });
+            /**
+             * Insert Lunch meals
+             */
+            for (int i = 0; i < lunchMeals.size(); i++) {
+              MealItem lunchMeal = new MealItem();
+              lunchMeal.setMeal_id(lunchMeals.get(i).getId());
+              lunchMeal.setCreated_at(lunchMeals.get(i).getCreatedAt());
+              lunchMeal.setInstance_id(lunchMeals.get(i).getInstance_id());
+              lunchMeal.setType("Lunch");
+              lunchMeal.setName(lunchMeals.get(i).getName());
+              lunchMeal.setMeasurementUnit(lunchMeals.get(i).getMeasurementUnit());
+              lunchMeal.setAmount(lunchMeals.get(i).getAmount());
+              lunchMeal.setSectionType(2);
+
+              if (lunchMeals.get(i).getTotalCalories() != null) {
+                lunchMeal.setTotalCalories(lunchMeals.get(i).getTotalCalories());
+              } else {
+                lunchMeal.setTotalCalories(0);
+              }
+
+              finalLunchMeals.add(lunchMeal);
+            }
+
+            setupMealSectionsListView(finalLunchMeals, "Lunch");
+
+            /**
+             * Insert Dinner meals
+             */
+            for (int i = 0; i < dinnerMeals.size(); i++) {
+              MealItem dinnerMeal = new MealItem();
+              dinnerMeal.setMeal_id(dinnerMeals.get(i).getId());
+              dinnerMeal.setCreated_at(dinnerMeals.get(i).getCreatedAt());
+              dinnerMeal.setInstance_id(dinnerMeals.get(i).getInstance_id());
+              dinnerMeal.setType("Dinner");
+              dinnerMeal.setName(dinnerMeals.get(i).getName());
+              dinnerMeal.setMeasurementUnit(dinnerMeals.get(i).getMeasurementUnit());
+              dinnerMeal.setAmount(dinnerMeals.get(i).getAmount());
+              dinnerMeal.setSectionType(2);
+
+              if (dinnerMeals.get(i).getTotalCalories() != null) {
+                dinnerMeal.setTotalCalories(dinnerMeals.get(i).getTotalCalories());
+              } else {
+                dinnerMeal.setTotalCalories(0);
+              }
+
+              finalDinnerMeals.add(dinnerMeal);
+            }
+
+            setupMealSectionsListView(finalDinnerMeals, "Dinner");
+
+            /**
+             * Insert Snack meals
+             */
+            for (int i = 0; i < snackMeals.size(); i++) {
+              MealItem snackMeal = new MealItem();
+              snackMeal.setMeal_id(snackMeals.get(i).getId());
+              snackMeal.setInstance_id(snackMeals.get(i).getInstance_id());
+              snackMeal.setCreated_at(snackMeals.get(i).getCreatedAt());
+              snackMeal.setType("Snack");
+              snackMeal.setName(snackMeals.get(i).getName());
+              snackMeal.setMeasurementUnit(snackMeals.get(i).getMeasurementUnit());
+              snackMeal.setAmount(snackMeals.get(i).getAmount());
+              snackMeal.setSectionType(2);
+
+              if (snackMeals.get(i).getTotalCalories() != null) {
+                snackMeal.setTotalCalories(snackMeals.get(i).getTotalCalories());
+              } else {
+                snackMeal.setTotalCalories(0);
+              }
+
+              finalSnackMeals.add(snackMeal);
+            }
+
+            setupMealSectionsListView(finalSnackMeals, "Snack");
+
+            break;
+        }
+      }
+
+      @Override public void onFailure(Call<UserMealsResponse> call, Throwable t) {
+        Timber.d("Call failed with error : %s", t.getMessage());
+        final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+
+        alertDialog.setMessage(
+            getActivity().getResources().getString(R.string.error_response_from_server_incorrect));
+        alertDialog.show();
+      }
+    });
   }
 
   private void hookupMealSectionRowsClickListeners() {
@@ -1022,7 +1006,7 @@ public class NutritionFragment extends Fragment {
         });
 
     dataAccessHandler.getSlugBreakdownForChart(chartType,
-        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
+
         new Callback<SlugBreakdownResponse>() {
           @Override public void onResponse(Call<SlugBreakdownResponse> call,
               Response<SlugBreakdownResponse> response) {
@@ -1056,10 +1040,8 @@ public class NutritionFragment extends Fragment {
     final String todayDate;
     todayDate = dt.toString();
 
-    dataAccessHandler.getPeriodicalChartData(
-        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
-        dt.minusMonths(1).toString(), todayDate, "nutrition", chart_slug,
-        new Callback<ChartMetricBreakdownResponse>() {
+    dataAccessHandler.getPeriodicalChartData(dt.minusMonths(1).toString(), todayDate, "nutrition",
+        chart_slug, new Callback<ChartMetricBreakdownResponse>() {
           @Override public void onResponse(Call<ChartMetricBreakdownResponse> call,
               Response<ChartMetricBreakdownResponse> response) {
             if (response.body().getData().getBody() != null) {

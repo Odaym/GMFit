@@ -1,20 +1,21 @@
 package com.mcsaatchi.gmfit.architecture.dagger;
 
-import com.mcsaatchi.gmfit.common.activities.BaseActivity;
-import com.mcsaatchi.gmfit.health.fragments.HealthFragment;
-import com.mcsaatchi.gmfit.nutrition.fragments.NutritionFragment;
-import com.mcsaatchi.gmfit.onboarding.activities.SplashActivity;
-import com.mcsaatchi.gmfit.nutrition.adapters.UserMealsRecyclerAdapterDragSwipe;
 import com.mcsaatchi.gmfit.architecture.GMFitApplication;
 import com.mcsaatchi.gmfit.architecture.data_access.ApiCallsHandler;
 import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
+import com.mcsaatchi.gmfit.architecture.rest.RestClient;
+import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.fitness.fragments.FitnessFragment;
+import com.mcsaatchi.gmfit.fitness.pedometer.SensorListener;
+import com.mcsaatchi.gmfit.health.fragments.HealthFragment;
+import com.mcsaatchi.gmfit.nutrition.adapters.UserMealsRecyclerAdapterDragSwipe;
+import com.mcsaatchi.gmfit.nutrition.fragments.NutritionFragment;
+import com.mcsaatchi.gmfit.onboarding.activities.SplashActivity;
+import com.mcsaatchi.gmfit.onboarding.fragments.SetupProfile1Fragment;
 import com.mcsaatchi.gmfit.onboarding.fragments.SetupProfile2Fragment;
 import com.mcsaatchi.gmfit.onboarding.fragments.SetupProfile3Fragment;
 import com.mcsaatchi.gmfit.onboarding.fragments.SetupProfile4Fragment;
 import com.mcsaatchi.gmfit.profile.fragments.MainProfileFragment;
-import com.mcsaatchi.gmfit.onboarding.fragments.SetupProfile1Fragment;
-import com.mcsaatchi.gmfit.fitness.pedometer.SensorListener;
 import dagger.Component;
 import javax.inject.Singleton;
 
@@ -42,8 +43,13 @@ import javax.inject.Singleton;
 
   void inject(SensorListener sensorListener);
 
+  void inject(RestClient restClient);
+
   void inject(SetupProfile1Fragment setup_profile_1_fragment);
+
   void inject(SetupProfile2Fragment setup_profile_2_fragment);
+
   void inject(SetupProfile3Fragment setup_profile_3_fragment);
+
   void inject(SetupProfile4Fragment setup_profile_4_fragment);
 }

@@ -94,8 +94,7 @@ public class AddNewMealItemActivity extends BaseActivity {
       public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
         if (((MealItem) adapterView.getItemAtPosition(position)).getSectionType()
             == ITEM_VIEWTYPE) {
-          Intent intent =
-              new Intent(AddNewMealItemActivity.this, SpecifyMealAmountActivity.class);
+          Intent intent = new Intent(AddNewMealItemActivity.this, SpecifyMealAmountActivity.class);
 
           if (purposeIsToAddMealToDate) {
             intent.putExtra(Constants.EXTRAS_MEAL_ITEM_PURPOSE_ADDING_TO_DATE, true);
@@ -226,9 +225,7 @@ public class AddNewMealItemActivity extends BaseActivity {
                               }
                             });
 
-                        dataAccessHandler.requestNewMeal(
-                            prefs.getString(Constants.PREF_USER_ACCESS_TOKEN,
-                                Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS), charSequence.toString(),
+                        dataAccessHandler.requestNewMeal(charSequence.toString(),
                             new Callback<DefaultGetResponse>() {
                               @Override public void onResponse(Call<DefaultGetResponse> call,
                                   Response<DefaultGetResponse> response) {
@@ -303,26 +300,24 @@ public class AddNewMealItemActivity extends BaseActivity {
 
   private void findMeals(String mealName,
       final Callback<SearchMealItemResponse> mealItemsResponse) {
-    dataAccessHandler.findMeals(
-        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
-        mealName, new Callback<SearchMealItemResponse>() {
-          @Override public void onResponse(Call<SearchMealItemResponse> call,
-              Response<SearchMealItemResponse> response) {
-            switch (response.code()) {
-              case 200:
-                mealItemsResponse.onResponse(null, response);
-                break;
-            }
-          }
+    dataAccessHandler.findMeals(mealName, new Callback<SearchMealItemResponse>() {
+      @Override public void onResponse(Call<SearchMealItemResponse> call,
+          Response<SearchMealItemResponse> response) {
+        switch (response.code()) {
+          case 200:
+            mealItemsResponse.onResponse(null, response);
+            break;
+        }
+      }
 
-          @Override public void onFailure(Call<SearchMealItemResponse> call, Throwable t) {
-            Timber.d("Call failed with error : %s", t.getMessage());
-            final AlertDialog alertDialog =
-                new AlertDialog.Builder(AddNewMealItemActivity.this).create();
-            alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
-            alertDialog.show();
-          }
-        });
+      @Override public void onFailure(Call<SearchMealItemResponse> call, Throwable t) {
+        Timber.d("Call failed with error : %s", t.getMessage());
+        final AlertDialog alertDialog =
+            new AlertDialog.Builder(AddNewMealItemActivity.this).create();
+        alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
+        alertDialog.show();
+      }
+    });
   }
 
   private void loadRecentMealsFromServer(String mealType) {
@@ -348,7 +343,6 @@ public class AddNewMealItemActivity extends BaseActivity {
         });
 
     dataAccessHandler.getRecentMeals(
-        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
         "http://gmfit.mcsaatchi.me/api/v1/user/meals/recent?when=" + mealType.toLowerCase(),
         new Callback<RecentMealsResponse>() {
           @Override public void onResponse(Call<RecentMealsResponse> call,

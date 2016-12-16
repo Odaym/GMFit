@@ -59,54 +59,51 @@ public class SetupProfile2Fragment extends Fragment {
           }
         });
 
-    dataAccessHandler.getUserGoals(
-        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
-        new Callback<UserGoalsResponse>() {
-          @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP) @Override
-          public void onResponse(Call<UserGoalsResponse> call,
-              Response<UserGoalsResponse> response) {
-            switch (response.code()) {
-              case 200:
+    dataAccessHandler.getUserGoals(new Callback<UserGoalsResponse>() {
+      @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP) @Override
+      public void onResponse(Call<UserGoalsResponse> call, Response<UserGoalsResponse> response) {
+        switch (response.code()) {
+          case 200:
 
-                List<UserGoalsResponseBody> activityLevels = response.body().getData().getBody();
+            List<UserGoalsResponseBody> activityLevels = response.body().getData().getBody();
 
-                for (int i = 0; i < activityLevels.size(); i++) {
-                  View listItemRadioButton = getActivity().getLayoutInflater()
-                      .inflate(R.layout.user_goals_list_item_radio_button_row, null);
+            for (int i = 0; i < activityLevels.size(); i++) {
+              View listItemRadioButton = getActivity().getLayoutInflater()
+                  .inflate(R.layout.user_goals_list_item_radio_button_row, null);
 
-                  final RadioButton radioButtonItem =
-                      (RadioButton) listItemRadioButton.findViewById(R.id.goalRadioButtonItem);
-                  radioButtonItem.setText(activityLevels.get(i).getName());
-                  radioButtonItem.setId(activityLevels.get(i).getId());
+              final RadioButton radioButtonItem =
+                  (RadioButton) listItemRadioButton.findViewById(R.id.goalRadioButtonItem);
+              radioButtonItem.setText(activityLevels.get(i).getName());
+              radioButtonItem.setId(activityLevels.get(i).getId());
 
-                  radioButtonItem.setOnClickListener(new View.OnClickListener() {
-                    @Override public void onClick(View view) {
-                      dataWasSelected = true;
+              radioButtonItem.setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View view) {
+                  dataWasSelected = true;
 
-                      prefs.edit()
-                          .putInt(Constants.EXTRAS_USER_PROFILE_GOAL_ID, radioButtonItem.getId())
-                          .apply();
-                      prefs.edit()
-                          .putString(Constants.EXTRAS_USER_PROFILE_GOAL,
-                              radioButtonItem.getText().toString())
-                          .apply();
-                    }
-                  });
-
-                  goalRadioButtonsGroup.addView(listItemRadioButton);
+                  prefs.edit()
+                      .putInt(Constants.EXTRAS_USER_PROFILE_GOAL_ID, radioButtonItem.getId())
+                      .apply();
+                  prefs.edit()
+                      .putString(Constants.EXTRAS_USER_PROFILE_GOAL,
+                          radioButtonItem.getText().toString())
+                      .apply();
                 }
+              });
 
-                break;
+              goalRadioButtonsGroup.addView(listItemRadioButton);
             }
-          }
 
-          @Override public void onFailure(Call<UserGoalsResponse> call, Throwable t) {
-            Timber.d("Call failed with error : %s", t.getMessage());
-            alertDialog.setMessage(
-                getActivity().getResources().getString(R.string.error_response_from_server_incorrect));
-            alertDialog.show();
-          }
-        });
+            break;
+        }
+      }
+
+      @Override public void onFailure(Call<UserGoalsResponse> call, Throwable t) {
+        Timber.d("Call failed with error : %s", t.getMessage());
+        alertDialog.setMessage(
+            getActivity().getResources().getString(R.string.error_response_from_server_incorrect));
+        alertDialog.show();
+      }
+    });
   }
 
   public boolean wasDataSelected() {

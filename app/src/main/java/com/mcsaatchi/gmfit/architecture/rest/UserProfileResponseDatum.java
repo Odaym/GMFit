@@ -19,8 +19,8 @@ public class UserProfileResponseDatum {
   @SerializedName("metric_system") @Expose private String metricSystem;
   @SerializedName("user_goals") @Expose private List<UserProfileResponseGoal> userGoals =
       new ArrayList<>();
-  @SerializedName("activity_levels") @Expose private List<UserProfileResponseActivityLevel> activityLevels =
-      new ArrayList<>();
+  @SerializedName("activity_levels") @Expose private List<UserProfileResponseActivityLevel>
+      activityLevels = new ArrayList<>();
   @SerializedName("medical_conditions") @Expose private List<UserProfileResponseMedicalCondition>
       medicalConditions = new ArrayList<>();
   @SerializedName("profile_picture") @Expose private String profile_picture;

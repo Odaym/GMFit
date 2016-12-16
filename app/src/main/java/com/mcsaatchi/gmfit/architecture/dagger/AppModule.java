@@ -4,9 +4,10 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import com.mcsaatchi.gmfit.architecture.GMFitApplication;
-import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.architecture.data_access.ApiCallsHandler;
 import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
+import com.mcsaatchi.gmfit.architecture.rest.RestClient;
+import com.mcsaatchi.gmfit.common.Constants;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Singleton;
@@ -29,6 +30,10 @@ import org.joda.time.LocalDate;
 
   @Provides @Singleton ApiCallsHandler provideApiCallsHandler(Context app) {
     return new ApiCallsHandler(app);
+  }
+
+  @Provides @Singleton RestClient providesRestClient(Context app) {
+    return new RestClient(app);
   }
 
   @Provides @Singleton SharedPreferences providesSharedPreferences(Context app) {

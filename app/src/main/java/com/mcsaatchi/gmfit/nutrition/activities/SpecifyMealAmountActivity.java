@@ -100,9 +100,8 @@ public class SpecifyMealAmountActivity extends BaseActivity {
           }
         });
 
-    dataAccessHandler.getMealMetrics(
-        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
-        "http://gmfit.mcsaatchi.me/api/v1/meals/" + meal_id, new Callback<MealMetricsResponse>() {
+    dataAccessHandler.getMealMetrics("http://gmfit.mcsaatchi.me/api/v1/meals/" + meal_id,
+        new Callback<MealMetricsResponse>() {
           @Override public void onResponse(Call<MealMetricsResponse> call,
               Response<MealMetricsResponse> response) {
             switch (response.code()) {
@@ -204,15 +203,9 @@ public class SpecifyMealAmountActivity extends BaseActivity {
 
   private void storeMealOnCertainDate(final ProgressDialog waitingDialog,
       final int caloriesForThisMeal, String chosenDate) {
-    Timber.d(mealItem.getMeal_id() + "");
-    Timber.d(Integer.parseInt(mealAmountET.getText().toString()) + "");
-    Timber.d(mealItem.getType());
-    Timber.d(chosenDate);
-
-    dataAccessHandler.storeNewMeal(
-        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
-        mealItem.getMeal_id(), Integer.parseInt(mealAmountET.getText().toString()),
-        mealItem.getType(), chosenDate, new Callback<DefaultGetResponse>() {
+    dataAccessHandler.storeNewMeal(mealItem.getMeal_id(),
+        Float.parseFloat(mealAmountET.getText().toString()), mealItem.getType(), chosenDate,
+        new Callback<DefaultGetResponse>() {
           @Override public void onResponse(Call<DefaultGetResponse> call,
               Response<DefaultGetResponse> response) {
             switch (response.code()) {
@@ -253,10 +246,8 @@ public class SpecifyMealAmountActivity extends BaseActivity {
 
   private void updateUserMealOnCertainDate(final ProgressDialog waitingDialog,
       final int caloriesForThisMeal) {
-    dataAccessHandler.updateUserMeals(
-        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
-        mealItem.getInstance_id(), Integer.parseInt(mealAmountET.getText().toString()),
-        new Callback<DefaultGetResponse>() {
+    dataAccessHandler.updateUserMeals(mealItem.getInstance_id(),
+        Integer.parseInt(mealAmountET.getText().toString()), new Callback<DefaultGetResponse>() {
           @Override public void onResponse(Call<DefaultGetResponse> call,
               Response<DefaultGetResponse> response) {
             switch (response.code()) {
@@ -288,10 +279,8 @@ public class SpecifyMealAmountActivity extends BaseActivity {
   }
 
   private void updateUserMeal(final ProgressDialog waitingDialog, final int caloriesForThisMeal) {
-    dataAccessHandler.updateUserMeals(
-        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
-        mealItem.getInstance_id(), Float.parseFloat(mealAmountET.getText().toString()),
-        new Callback<DefaultGetResponse>() {
+    dataAccessHandler.updateUserMeals(mealItem.getInstance_id(),
+        Float.parseFloat(mealAmountET.getText().toString()), new Callback<DefaultGetResponse>() {
           @Override public void onResponse(Call<DefaultGetResponse> call,
               Response<DefaultGetResponse> response) {
             switch (response.code()) {

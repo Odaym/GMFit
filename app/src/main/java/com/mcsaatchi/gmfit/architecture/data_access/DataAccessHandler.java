@@ -36,29 +36,25 @@ public class DataAccessHandler {
     ((GMFitApplication) app).getAppComponent().inject(this);
   }
 
-  public void findMeals(String userAccessToken, String mealName,
-      Callback<SearchMealItemResponse> callback) {
-    apiCallsHandler.findMeals(userAccessToken, mealName, callback);
+  public void findMeals(String mealName, Callback<SearchMealItemResponse> callback) {
+    apiCallsHandler.findMeals(mealName, callback);
   }
 
-  public void searchForMealBarcode(String userAccessToken, String barcode,
-      Callback<SearchMealItemResponse> callback) {
-    apiCallsHandler.searchForMealBarcode(userAccessToken, barcode, callback);
+  public void searchForMealBarcode(String barcode, Callback<SearchMealItemResponse> callback) {
+    apiCallsHandler.searchForMealBarcode(barcode, callback);
   }
 
-  public void getSlugBreakdownForChart(final String chartType, String userAccessToken,
+  public void getSlugBreakdownForChart(final String chartType,
       final Callback<SlugBreakdownResponse> callback) {
-    apiCallsHandler.getSlugBreakdownForChart(chartType, userAccessToken, callback);
+    apiCallsHandler.getSlugBreakdownForChart(chartType, callback);
   }
 
-  public void refreshAccessToken(String userAccessToken,
-      Callback<AuthenticationResponse> callback) {
-    apiCallsHandler.refreshAccessToken(userAccessToken, callback);
+  public void refreshAccessToken(Callback<AuthenticationResponse> callback) {
+    apiCallsHandler.refreshAccessToken(callback);
   }
 
-  public void synchronizeMetricsWithServer(String userAccessToken, String[] slugsArray,
-      Number[] valuesArray) {
-    apiCallsHandler.synchronizeMetricsWithServer(userAccessToken, slugsArray, valuesArray);
+  public void synchronizeMetricsWithServer(String[] slugsArray, Number[] valuesArray) {
+    apiCallsHandler.synchronizeMetricsWithServer(slugsArray, valuesArray);
   }
 
   public void signInUser(String email, String password, Callback<AuthenticationResponse> callback) {
@@ -75,42 +71,38 @@ public class DataAccessHandler {
     apiCallsHandler.signInUserSilently(email, password, callback);
   }
 
-  public void signOutUser(String userAccessToken, Callback<DefaultGetResponse> callback) {
-    apiCallsHandler.signOutUser(userAccessToken, callback);
+  public void signOutUser(Callback<DefaultGetResponse> callback) {
+    apiCallsHandler.signOutUser(callback);
   }
 
-  public void updateUserProfile(String userAccessToken, String finalDateOfBirth, String bloodType,
-      String nationality, int medical_condition, String measurementSystem, int goalId,
-      int activityLevelId, int finalGender, double height, double weight, String onboard,
+  public void updateUserProfile(String finalDateOfBirth, String bloodType, String nationality,
+      int medical_condition, String measurementSystem, int goalId, int activityLevelId,
+      int finalGender, double height, double weight, String onboard,
       Callback<DefaultGetResponse> callback) {
-    apiCallsHandler.updateUserProfile(userAccessToken, finalDateOfBirth, bloodType, nationality,
-        medical_condition, measurementSystem, goalId, activityLevelId, finalGender, height, weight,
-        onboard, callback);
+    apiCallsHandler.updateUserProfile(finalDateOfBirth, bloodType, nationality, medical_condition,
+        measurementSystem, goalId, activityLevelId, finalGender, height, weight, onboard, callback);
   }
 
-  public void updateUserPicture(String userAccessToken, Map<String, RequestBody> profilePicture,
+  public void updateUserPicture(Map<String, RequestBody> profilePicture,
       Callback<DefaultGetResponse> callback) {
-    apiCallsHandler.updateUserPicture(userAccessToken, profilePicture, callback);
+    apiCallsHandler.updateUserPicture(profilePicture, callback);
   }
 
-  public void getUiForSection(String userAccessToken, String section,
-      Callback<UiResponse> callback) {
-    apiCallsHandler.getUiForSection(userAccessToken, section, callback);
+  public void getUiForSection(String section, Callback<UiResponse> callback) {
+    apiCallsHandler.getUiForSection(section, callback);
   }
 
-  public void getMedicalConditions(String userAccessToken,
-      Callback<MedicalConditionsResponse> callback) {
-    apiCallsHandler.getMedicalConditions(userAccessToken, callback);
+  public void getMedicalConditions(Callback<MedicalConditionsResponse> callback) {
+    apiCallsHandler.getMedicalConditions(callback);
   }
 
-  public void sendResetPasswordLink(String userAccessToken, String email,
+  public void sendResetPasswordLink(String email, Callback<DefaultGetResponse> callback) {
+    apiCallsHandler.sendResetPasswordLink(email, callback);
+  }
+
+  public void changePassword(String old_password, String new_password,
       Callback<DefaultGetResponse> callback) {
-    apiCallsHandler.sendResetPasswordLink(userAccessToken, email, callback);
-  }
-
-  public void changePassword(String userAccessToken, String old_password, String new_password,
-      Callback<DefaultGetResponse> callback) {
-    apiCallsHandler.changePassword(userAccessToken, old_password, new_password, callback);
+    apiCallsHandler.changePassword(old_password, new_password, callback);
   }
 
   public void finalizeResetPassword(String resetPasswordToken, String newPassword,
@@ -118,53 +110,48 @@ public class DataAccessHandler {
     apiCallsHandler.finalizeResetPassword(resetPasswordToken, newPassword, callback);
   }
 
-  public void getMealMetrics(String userAccessToken, String fullUrl,
-      Callback<MealMetricsResponse> callback) {
-    apiCallsHandler.getMealMetrics(userAccessToken, fullUrl, callback);
+  public void getMealMetrics(String fullUrl, Callback<MealMetricsResponse> callback) {
+    apiCallsHandler.getMealMetrics(fullUrl, callback);
   }
 
-  public void getUserGoalMetrics(String userAccessToken, String date, String type,
+  public void getUserGoalMetrics(String date, String type,
       Callback<UserGoalMetricsResponse> callback) {
-    apiCallsHandler.getUserGoalMetrics(userAccessToken, date, type, callback);
+    apiCallsHandler.getUserGoalMetrics(date, type, callback);
   }
 
-  public void verifyUser(String userAccessToken, String verificationCode,
+  public void verifyUser(String verificationCode, Callback<DefaultGetResponse> callback) {
+    apiCallsHandler.verifyUser(verificationCode, callback);
+  }
+
+  public void updateUserWidgets(int[] widgetIds, int[] widgetPositions,
       Callback<DefaultGetResponse> callback) {
-    apiCallsHandler.verifyUser(userAccessToken, verificationCode, callback);
+    apiCallsHandler.updateUserWidgets(widgetIds, widgetPositions, callback);
   }
 
-  public void updateUserWidgets(String userAccessToken, int[] widgetIds, int[] widgetPositions,
+  public void updateUserCharts(int[] chartIds, int[] chartPositions,
       Callback<DefaultGetResponse> callback) {
-    apiCallsHandler.updateUserWidgets(userAccessToken, widgetIds, widgetPositions, callback);
+    apiCallsHandler.updateUserCharts(chartIds, chartPositions, callback);
   }
 
-  public void updateUserCharts(String userAccessToken, int[] chartIds, int[] chartPositions,
+  public void updateUserMeals(int instance_id, float amount,
       Callback<DefaultGetResponse> callback) {
-    apiCallsHandler.updateUserCharts(userAccessToken, chartIds, chartPositions, callback);
+    apiCallsHandler.updateUserMeals(instance_id, amount, callback);
   }
 
-  public void updateUserMeals(String userAccessToken, int instance_id, float amount,
-      Callback<DefaultGetResponse> callback) {
-    apiCallsHandler.updateUserMeals(userAccessToken, instance_id, amount, callback);
+  public void deleteUserMeal(int instance_id, Callback<DefaultGetResponse> callback) {
+    apiCallsHandler.deleteUserMeal(instance_id, callback);
   }
 
-  public void deleteUserMeal(String userAccessToken, int instance_id,
-      Callback<DefaultGetResponse> callback) {
-    apiCallsHandler.deleteUserMeal(userAccessToken, instance_id, callback);
+  public void getUserAddedMeals(Callback<UserMealsResponse> callback) {
+    apiCallsHandler.getUserAddedMeals(callback);
   }
 
-  public void getUserAddedMeals(String userAccessToken, Callback<UserMealsResponse> callback) {
-    apiCallsHandler.getUserAddedMeals(userAccessToken, callback);
+  public void getUserAddedMealsOnDate(String chosenDate, Callback<UserMealsResponse> callback) {
+    apiCallsHandler.getUserAddedMealsOnDate(chosenDate, callback);
   }
 
-  public void getUserAddedMealsOnDate(String userAccessToken, String chosenDate,
-      Callback<UserMealsResponse> callback) {
-    apiCallsHandler.getUserAddedMealsOnDate(userAccessToken, chosenDate, callback);
-  }
-
-  public void getMetaTexts(String userAccessToken, String section,
-      Callback<MetaTextsResponse> callback) {
-    apiCallsHandler.getMetaTexts(userAccessToken, section, callback);
+  public void getMetaTexts(String section, Callback<MetaTextsResponse> callback) {
+    apiCallsHandler.getMetaTexts(section, callback);
   }
 
   public void handleFacebookProcess(String facebookAccessToken,
@@ -172,99 +159,87 @@ public class DataAccessHandler {
     apiCallsHandler.handleFacebookProcess(facebookAccessToken, callback);
   }
 
-  public void storeNewMeal(String userAccessToken, int meal_id, int servingsAmount, String when,
-      String date, Callback<DefaultGetResponse> callback) {
-    apiCallsHandler.storeNewMeal(userAccessToken, meal_id, servingsAmount, when, date, callback);
-  }
-
-  public void getRecentMeals(String userAccessToken, String fullUrl,
-      Callback<RecentMealsResponse> callback) {
-    apiCallsHandler.getRecentMeals(userAccessToken, fullUrl, callback);
-  }
-
-  public void getPeriodicalChartData(String userAccessToken, String start_date, String end_date,
-      String type, String monitored_metric, Callback<ChartMetricBreakdownResponse> callback) {
-    apiCallsHandler.getPeriodicalChartData(userAccessToken, start_date, end_date, type,
-        monitored_metric, callback);
-  }
-
-  public void addMetricChart(String userAccessToken, int chart_id,
+  public void storeNewMeal(int meal_id, float servingsAmount, String when, String date,
       Callback<DefaultGetResponse> callback) {
-    apiCallsHandler.addMetricChart(userAccessToken, chart_id, callback);
+    apiCallsHandler.storeNewMeal(meal_id, servingsAmount, when, date, callback);
   }
 
-  public void getChartsBySection(String userAccessToken, String sectionName,
-      Callback<ChartsBySectionResponse> callback) {
-    apiCallsHandler.getChartsBySection(userAccessToken, sectionName, callback);
+  public void getRecentMeals(String fullUrl, Callback<RecentMealsResponse> callback) {
+    apiCallsHandler.getRecentMeals(fullUrl, callback);
   }
 
-  public void requestNewMeal(String userAccessToken, String mealName,
+  public void getPeriodicalChartData(String start_date, String end_date, String type,
+      String monitored_metric, Callback<ChartMetricBreakdownResponse> callback) {
+    apiCallsHandler.getPeriodicalChartData(start_date, end_date, type, monitored_metric, callback);
+  }
+
+  public void addMetricChart(int chart_id, Callback<DefaultGetResponse> callback) {
+    apiCallsHandler.addMetricChart(chart_id, callback);
+  }
+
+  public void getChartsBySection(String sectionName, Callback<ChartsBySectionResponse> callback) {
+    apiCallsHandler.getChartsBySection(sectionName, callback);
+  }
+
+  public void requestNewMeal(String mealName, Callback<DefaultGetResponse> callback) {
+    apiCallsHandler.requestNewMeal(mealName, callback);
+  }
+
+  public void getTesticularMetrics(Callback<MedicalTestMetricsResponse> callback) {
+    apiCallsHandler.getTesticularMetrics(callback);
+  }
+
+  public void getMedicalTests(Callback<MedicalTestsResponse> callback) {
+    apiCallsHandler.getMedicalTests(callback);
+  }
+
+  public void getWidgets(String sectionName, Callback<WidgetsResponse> callback) {
+    apiCallsHandler.getWidgets(sectionName, callback);
+  }
+
+  public void getWidgetsWithDate(String sectionName, String date,
+      Callback<WidgetsResponse> callback) {
+    apiCallsHandler.getWidgetsWithDate(sectionName, date, callback);
+  }
+
+  public void storeNewHealthTest(RequestBody test_name, RequestBody date_taken,
+      Map<String, RequestBody> metrics, Map<String, RequestBody> imageFiles,
       Callback<DefaultGetResponse> callback) {
-    apiCallsHandler.requestNewMeal(userAccessToken, mealName, callback);
+    apiCallsHandler.storeNewHealthTest(test_name, date_taken, metrics, imageFiles, callback);
   }
 
-  public void getTesticularMetrics(String userAccessToken,
-      Callback<MedicalTestMetricsResponse> callback) {
-    apiCallsHandler.getTesticularMetrics(userAccessToken, callback);
-  }
-
-  public void getMedicalTests(String userAccessToken, Callback<MedicalTestsResponse> callback) {
-    apiCallsHandler.getMedicalTests(userAccessToken, callback);
-  }
-
-  public void getWidgets(String userAccessToken, String sectionName,
-      Callback<WidgetsResponse> callback) {
-    apiCallsHandler.getWidgets(userAccessToken, sectionName, callback);
-  }
-
-  public void getWidgetsWithDate(String userAccessToken, String sectionName, String date,
-      Callback<WidgetsResponse> callback) {
-    apiCallsHandler.getWidgetsWithDate(userAccessToken, sectionName, date, callback);
-  }
-
-  public void storeNewHealthTest(String userAccessToken, RequestBody test_name,
+  public void editExistingHealthTest(RequestBody instance_id, RequestBody name,
       RequestBody date_taken, Map<String, RequestBody> metrics, Map<String, RequestBody> imageFiles,
-      Callback<DefaultGetResponse> callback) {
-    apiCallsHandler.storeNewHealthTest(userAccessToken, test_name, date_taken, metrics, imageFiles,
-        callback);
+      RequestBody deletedImages, Callback<DefaultGetResponse> callback) {
+    apiCallsHandler.editExistingHealthTest(instance_id, name, date_taken, metrics, imageFiles,
+        deletedImages, callback);
   }
 
-  public void editExistingHealthTest(String userAccessToken, RequestBody instance_id,
-      RequestBody name, RequestBody date_taken, Map<String, RequestBody> metrics,
-      Map<String, RequestBody> imageFiles, RequestBody deletedImages,
-      Callback<DefaultGetResponse> callback) {
-    apiCallsHandler.editExistingHealthTest(userAccessToken, instance_id, name, date_taken, metrics,
-        imageFiles, deletedImages, callback);
+  public void getTakenMedicalTests(Callback<TakenMedicalTestsResponse> callback) {
+    apiCallsHandler.getTakenMedicalTests(callback);
   }
 
-  public void getTakenMedicalTests(String userAccessToken,
-      Callback<TakenMedicalTestsResponse> callback) {
-    apiCallsHandler.getTakenMedicalTests(userAccessToken, callback);
+  public void getOnboardingStatus(Callback<UserProfileResponse> callback) {
+    apiCallsHandler.getOnboardingStatus(callback);
   }
 
-  public void getOnboardingStatus(String userAccessToken, Callback<UserProfileResponse> callback) {
-    apiCallsHandler.getOnboardingStatus(userAccessToken, callback);
+  public void getUserProfile(Callback<UserProfileResponse> callback) {
+    apiCallsHandler.getUserProfile(callback);
   }
 
-  public void getUserProfile(String userAccessToken, Callback<UserProfileResponse> callback) {
-    apiCallsHandler.getUserProfile(userAccessToken, callback);
+  public void getEmergencyProfile(Callback<EmergencyProfileResponse> callback) {
+    apiCallsHandler.getEmergencyProfile(callback);
   }
 
-  public void getEmergencyProfile(String userAccessToken,
-      Callback<EmergencyProfileResponse> callback) {
-    apiCallsHandler.getEmergencyProfile(userAccessToken, callback);
+  public void deleteUserChart(String chart_id, Callback<DefaultGetResponse> callback) {
+    apiCallsHandler.deleteUserChart(chart_id, callback);
   }
 
-  public void deleteUserChart(String userAccessToken, String chart_id,
-      Callback<DefaultGetResponse> callback) {
-    apiCallsHandler.deleteUserChart(userAccessToken, chart_id, callback);
+  public void getActivityLevels(Callback<ActivityLevelsResponse> callback) {
+    apiCallsHandler.getActivityLevels(callback);
   }
 
-  public void getActivityLevels(String userAccessToken, Callback<ActivityLevelsResponse> callback) {
-    apiCallsHandler.getActivityLevels(userAccessToken, callback);
-  }
-
-  public void getUserGoals(String userAccessToken, Callback<UserGoalsResponse> callback) {
-    apiCallsHandler.getUserGoals(userAccessToken, callback);
+  public void getUserGoals(Callback<UserGoalsResponse> callback) {
+    apiCallsHandler.getUserGoals(callback);
   }
 }

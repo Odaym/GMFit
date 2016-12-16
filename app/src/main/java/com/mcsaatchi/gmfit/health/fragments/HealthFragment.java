@@ -87,87 +87,83 @@ public class HealthFragment extends Fragment {
   }
 
   private void getWidgets() {
-    dataAccessHandler.getWidgets(
-        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
-        "medical", new Callback<WidgetsResponse>() {
-          @Override
-          public void onResponse(Call<WidgetsResponse> call, Response<WidgetsResponse> response) {
-            switch (response.code()) {
-              case 200:
-                List<WidgetsResponseDatum> widgetsFromResponse =
-                    response.body().getData().getBody().getData();
+    dataAccessHandler.getWidgets("medical", new Callback<WidgetsResponse>() {
+      @Override
+      public void onResponse(Call<WidgetsResponse> call, Response<WidgetsResponse> response) {
+        switch (response.code()) {
+          case 200:
+            List<WidgetsResponseDatum> widgetsFromResponse =
+                response.body().getData().getBody().getData();
 
-                for (int i = 0; i < widgetsFromResponse.size(); i++) {
-                  HealthWidget widget = new HealthWidget();
+            for (int i = 0; i < widgetsFromResponse.size(); i++) {
+              HealthWidget widget = new HealthWidget();
 
-                  widget.setId(widgetsFromResponse.get(i).getWidgetId());
-                  widget.setMeasurementUnit(widgetsFromResponse.get(i).getUnit());
-                  widget.setPosition(Integer.parseInt(widgetsFromResponse.get(i).getPosition()));
-                  widget.setValue(Float.parseFloat(widgetsFromResponse.get(i).getTotal()));
-                  widget.setTitle(widgetsFromResponse.get(i).getName());
-                  widget.setSlug(widgetsFromResponse.get(i).getSlug());
+              widget.setId(widgetsFromResponse.get(i).getWidgetId());
+              widget.setMeasurementUnit(widgetsFromResponse.get(i).getUnit());
+              widget.setPosition(Integer.parseInt(widgetsFromResponse.get(i).getPosition()));
+              widget.setValue(Float.parseFloat(widgetsFromResponse.get(i).getTotal()));
+              widget.setTitle(widgetsFromResponse.get(i).getName());
+              widget.setSlug(widgetsFromResponse.get(i).getSlug());
 
-                  healthWidgetsMap.add(widget);
-                }
-
-                if (!healthWidgetsMap.isEmpty() && healthWidgetsMap.size() > 4) {
-                  healthWidgetsMap = new ArrayList<>(healthWidgetsMap.subList(0, 4));
-
-                  HealthWidgetsGridAdapter healthWidgetsGridAdapter =
-                      new HealthWidgetsGridAdapter(getActivity(), healthWidgetsMap,
-                          R.layout.grid_item_health_widgets);
-
-                  widgetsGridView.setAdapter(healthWidgetsGridAdapter);
-
-                  loadingWidgetsProgressBar.setVisibility(View.GONE);
-                }
-
-                break;
+              healthWidgetsMap.add(widget);
             }
-          }
 
-          @Override public void onFailure(Call<WidgetsResponse> call, Throwable t) {
-            Timber.d("Call failed with error : %s", t.getMessage());
-            final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
-            alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
-            alertDialog.show();
-          }
-        });
+            if (!healthWidgetsMap.isEmpty() && healthWidgetsMap.size() > 4) {
+              healthWidgetsMap = new ArrayList<>(healthWidgetsMap.subList(0, 4));
+
+              HealthWidgetsGridAdapter healthWidgetsGridAdapter =
+                  new HealthWidgetsGridAdapter(getActivity(), healthWidgetsMap,
+                      R.layout.grid_item_health_widgets);
+
+              widgetsGridView.setAdapter(healthWidgetsGridAdapter);
+
+              loadingWidgetsProgressBar.setVisibility(View.GONE);
+            }
+
+            break;
+        }
+      }
+
+      @Override public void onFailure(Call<WidgetsResponse> call, Throwable t) {
+        Timber.d("Call failed with error : %s", t.getMessage());
+        final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+        alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
+        alertDialog.show();
+      }
+    });
   }
 
   private void getTakenMedicalTests() {
-    dataAccessHandler.getTakenMedicalTests(
-        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
-        new Callback<TakenMedicalTestsResponse>() {
-          @Override public void onResponse(Call<TakenMedicalTestsResponse> call,
-              Response<TakenMedicalTestsResponse> response) {
-            switch (response.code()) {
-              case 200:
-                List<TakenMedicalTestsResponseBody> takenMedicalTests =
-                    response.body().getData().getBody();
+    dataAccessHandler.getTakenMedicalTests(new Callback<TakenMedicalTestsResponse>() {
+      @Override public void onResponse(Call<TakenMedicalTestsResponse> call,
+          Response<TakenMedicalTestsResponse> response) {
+        switch (response.code()) {
+          case 200:
+            List<TakenMedicalTestsResponseBody> takenMedicalTests =
+                response.body().getData().getBody();
 
-                loadingTestsProgressBar.setVisibility(View.GONE);
+            loadingTestsProgressBar.setVisibility(View.GONE);
 
-                RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
-                UserTestsRecyclerAdapter userTestsRecyclerAdapter =
-                    new UserTestsRecyclerAdapter(getActivity(), takenMedicalTests);
+            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+            UserTestsRecyclerAdapter userTestsRecyclerAdapter =
+                new UserTestsRecyclerAdapter(getActivity(), takenMedicalTests);
 
-                userTestsListView.setLayoutManager(mLayoutManager);
-                userTestsListView.setNestedScrollingEnabled(false);
-                userTestsListView.setAdapter(userTestsRecyclerAdapter);
-                userTestsListView.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
+            userTestsListView.setLayoutManager(mLayoutManager);
+            userTestsListView.setNestedScrollingEnabled(false);
+            userTestsListView.setAdapter(userTestsRecyclerAdapter);
+            userTestsListView.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
 
-                break;
-            }
-          }
+            break;
+        }
+      }
 
-          @Override public void onFailure(Call<TakenMedicalTestsResponse> call, Throwable t) {
-            Timber.d("Call failed with error : %s", t.getMessage());
-            final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
-            alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
-            alertDialog.show();
-          }
-        });
+      @Override public void onFailure(Call<TakenMedicalTestsResponse> call, Throwable t) {
+        Timber.d("Call failed with error : %s", t.getMessage());
+        final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+        alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
+        alertDialog.show();
+      }
+    });
   }
 
   @Subscribe public void handle_BusEvents(EventBusPoster ebp) {

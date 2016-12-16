@@ -170,7 +170,7 @@ public class AddNewMealOnDateActivity extends BaseActivity {
 
   private void getUserAddedMealsOnDate(String chosenDate) {
     dataAccessHandler.getUserAddedMealsOnDate(
-        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
+
         chosenDate, new Callback<UserMealsResponse>() {
           @Override public void onResponse(Call<UserMealsResponse> call,
               Response<UserMealsResponse> response) {

@@ -648,10 +648,9 @@ public class AddNewHealthTestPart2Activity extends BaseActivity
           }
         });
 
-    dataAccessHandler.storeNewHealthTest(
-        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
-        toRequestBody(testNameET.getText().toString()), toRequestBody(dateTakenForRequest), metrics,
-        imageParts, new Callback<DefaultGetResponse>() {
+    dataAccessHandler.storeNewHealthTest(toRequestBody(testNameET.getText().toString()),
+        toRequestBody(dateTakenForRequest), metrics, imageParts,
+        new Callback<DefaultGetResponse>() {
           @Override public void onResponse(Call<DefaultGetResponse> call,
               Response<DefaultGetResponse> response) {
             switch (response.code()) {
@@ -700,7 +699,6 @@ public class AddNewHealthTestPart2Activity extends BaseActivity
         });
 
     dataAccessHandler.editExistingHealthTest(
-        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
         toRequestBody(String.valueOf(existingMedicaltest.getInstanceId())),
         toRequestBody(existingMedicaltest.getName()), toRequestBody(dateTakenForRequest), metrics,
         imageParts, deletedImagesForRequest, new Callback<DefaultGetResponse>() {

@@ -68,34 +68,31 @@ public class ForgotPasswordActivity extends BaseActivity {
           }
         });
 
-    dataAccessHandler.sendResetPasswordLink(
-        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
-        email, new Callback<DefaultGetResponse>() {
-          @Override public void onResponse(Call<DefaultGetResponse> call,
-              Response<DefaultGetResponse> response) {
-            switch (response.code()) {
-              case 200:
-                waitingDialog.dismiss();
+    dataAccessHandler.sendResetPasswordLink(email, new Callback<DefaultGetResponse>() {
+      @Override
+      public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
+        switch (response.code()) {
+          case 200:
+            waitingDialog.dismiss();
 
-                Intent intent =
-                    new Intent(ForgotPasswordActivity.this, ResetPasswordActivity.class);
-                startActivity(intent);
+            Intent intent = new Intent(ForgotPasswordActivity.this, ResetPasswordActivity.class);
+            startActivity(intent);
 
-                Toast.makeText(ForgotPasswordActivity.this, R.string.password_change_successful,
-                    Toast.LENGTH_SHORT).show();
+            Toast.makeText(ForgotPasswordActivity.this, R.string.password_change_successful,
+                Toast.LENGTH_SHORT).show();
 
-                finish();
+            finish();
 
-                break;
-            }
-          }
+            break;
+        }
+      }
 
-          @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
-            Timber.d("Call failed with error : %s", t.getMessage());
-            alertDialog.setMessage(
-                getResources().getString(R.string.error_response_from_server_incorrect));
-            alertDialog.show();
-          }
-        });
+      @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+        Timber.d("Call failed with error : %s", t.getMessage());
+        alertDialog.setMessage(
+            getResources().getString(R.string.error_response_from_server_incorrect));
+        alertDialog.show();
+      }
+    });
   }
 }

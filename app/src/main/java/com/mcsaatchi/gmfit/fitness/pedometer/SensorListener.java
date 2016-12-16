@@ -190,44 +190,40 @@ public class SensorListener extends Service implements SensorEventListener {
   }
 
   private void refreshAccessToken() {
-    dataAccessHandler.refreshAccessToken(
-        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
-        new Callback<AuthenticationResponse>() {
-          @Override public void onResponse(Call<AuthenticationResponse> call,
-              Response<AuthenticationResponse> response) {
-            switch (response.code()) {
-              case 200:
-                prefs.edit()
-                    .putString(Constants.PREF_USER_ACCESS_TOKEN,
-                        "Bearer " + response.body().getData().getBody().getToken())
-                    .apply();
+    dataAccessHandler.refreshAccessToken(new Callback<AuthenticationResponse>() {
+      @Override public void onResponse(Call<AuthenticationResponse> call,
+          Response<AuthenticationResponse> response) {
+        switch (response.code()) {
+          case 200:
+            prefs.edit()
+                .putString(Constants.PREF_USER_ACCESS_TOKEN,
+                    "Bearer " + response.body().getData().getBody().getToken())
+                .apply();
 
-                String[] slugsArray = new String[] {
-                    "steps-count", "active-calories", "distance-traveled"
-                };
+            String[] slugsArray = new String[] {
+                "steps-count", "active-calories", "distance-traveled"
+            };
 
-                Number[] valuesArray = new Number[] {
-                    prefs.getInt(todayDate + "_steps", 0),
-                    (int) prefs.getFloat(todayDate + "_calories", 0),
-                    prefs.getFloat(todayDate + "_distance", 0)
-                };
+            Number[] valuesArray = new Number[] {
+                prefs.getInt(todayDate + "_steps", 0),
+                (int) prefs.getFloat(todayDate + "_calories", 0),
+                prefs.getFloat(todayDate + "_distance", 0)
+            };
 
-                synchronizeMetricsWithServer(slugsArray, valuesArray);
+            synchronizeMetricsWithServer(slugsArray, valuesArray);
 
-                break;
-            }
-          }
+            break;
+        }
+      }
 
-          @Override public void onFailure(Call<AuthenticationResponse> call, Throwable t) {
+      @Override public void onFailure(Call<AuthenticationResponse> call, Throwable t) {
 
-          }
-        });
+      }
+    });
   }
 
   private void synchronizeMetricsWithServer(String[] slugsArray, Number[] valuesArray) {
-    dataAccessHandler.synchronizeMetricsWithServer(
-        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
-        slugsArray, valuesArray);
+    dataAccessHandler.synchronizeMetricsWithServer(slugsArray, valuesArray);
 
     wipeOutFitnessMetricsAtMidnight();
   }

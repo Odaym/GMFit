@@ -183,45 +183,41 @@ public class SignInActivity extends BaseActivity {
   }
 
   public void getOnboardingStatus(final ProgressDialog waitingDialog) {
-    dataAccessHandler.getOnboardingStatus(
-        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
-        new Callback<UserProfileResponse>() {
-          @Override public void onResponse(Call<UserProfileResponse> call,
-              Response<UserProfileResponse> response) {
+    dataAccessHandler.getOnboardingStatus(new Callback<UserProfileResponse>() {
+      @Override public void onResponse(Call<UserProfileResponse> call,
+          Response<UserProfileResponse> response) {
 
-            Intent intent;
+        Intent intent;
 
-            switch (response.code()) {
-              case 200:
-                String userOnBoard = response.body().getData().getBody().getData().getOnboard();
+        switch (response.code()) {
+          case 200:
+            String userOnBoard = response.body().getData().getBody().getData().getOnboard();
 
+            if (userOnBoard.equals("1")) {
+              getUiForSection(waitingDialog, "fitness");
+            } else {
+              EventBusSingleton.getInstance()
+                  .post(new EventBusPoster(
+                      Constants.EVENT_SIGNNED_UP_SUCCESSFULLY_CLOSE_LOGIN_ACTIVITY));
 
-                if (userOnBoard.equals("1")) {
-                  getUiForSection(waitingDialog, "fitness");
-                } else {
-                  EventBusSingleton.getInstance()
-                      .post(new EventBusPoster(
-                          Constants.EVENT_SIGNNED_UP_SUCCESSFULLY_CLOSE_LOGIN_ACTIVITY));
-
-                  intent = new Intent(SignInActivity.this, SetupProfileActivity.class);
-                  startActivity(intent);
-                  finish();
-                }
-
-                break;
+              intent = new Intent(SignInActivity.this, SetupProfileActivity.class);
+              startActivity(intent);
+              finish();
             }
-          }
 
-          @Override public void onFailure(Call<UserProfileResponse> call, Throwable t) {
-            Timber.d("Call failed with error : %s", t.getMessage());
-          }
-        });
+            break;
+        }
+      }
+
+      @Override public void onFailure(Call<UserProfileResponse> call, Throwable t) {
+        Timber.d("Call failed with error : %s", t.getMessage());
+      }
+    });
   }
 
   private void getUiForSection(final ProgressDialog waitingDialog, String section) {
-    dataAccessHandler.getUiForSection(
-        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
-        "http://gmfit.mcsaatchi.me/api/v1/user/ui?section=" + section, new Callback<UiResponse>() {
+    dataAccessHandler.getUiForSection("http://gmfit.mcsaatchi.me/api/v1/user/ui?section=" + section,
+        new Callback<UiResponse>() {
           @Override public void onResponse(Call<UiResponse> call, Response<UiResponse> response) {
             switch (response.code()) {
               case 200:

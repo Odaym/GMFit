@@ -17,7 +17,8 @@ public class TestMetricUnitsSpinnerAdapter extends BaseAdapter implements Spinne
   private ArrayList<MedicalTestMetricsResponseDatum> listItems;
   private int unitsSize;
 
-  public TestMetricUnitsSpinnerAdapter(Context context, ArrayList<MedicalTestMetricsResponseDatum> listItems, int unitsSize) {
+  public TestMetricUnitsSpinnerAdapter(Context context,
+      ArrayList<MedicalTestMetricsResponseDatum> listItems, int unitsSize) {
     this.listItems = listItems;
     this.unitsSize = unitsSize;
     activity = context;

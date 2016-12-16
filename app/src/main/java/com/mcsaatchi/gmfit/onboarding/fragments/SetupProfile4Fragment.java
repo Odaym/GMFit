@@ -221,32 +221,30 @@ public class SetupProfile4Fragment extends Fragment
   }
 
   private void getAndPopulateMedicalConditions() {
-    dataAccessHandler.getMedicalConditions(
-        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
-        new Callback<MedicalConditionsResponse>() {
-          @Override public void onResponse(Call<MedicalConditionsResponse> call,
-              Response<MedicalConditionsResponse> response) {
-            switch (response.code()) {
-              case 200:
-                ArrayList<MedicalConditionsResponseDatum> allMedicalData =
-                    (ArrayList<MedicalConditionsResponseDatum>) response.body()
-                        .getData()
-                        .getBody()
-                        .getData();
+    dataAccessHandler.getMedicalConditions(new Callback<MedicalConditionsResponse>() {
+      @Override public void onResponse(Call<MedicalConditionsResponse> call,
+          Response<MedicalConditionsResponse> response) {
+        switch (response.code()) {
+          case 200:
+            ArrayList<MedicalConditionsResponseDatum> allMedicalData =
+                (ArrayList<MedicalConditionsResponseDatum>) response.body()
+                    .getData()
+                    .getBody()
+                    .getData();
 
-                initMedicalConditionsSpinner(allMedicalData, medicalConditionsSpinner);
+            initMedicalConditionsSpinner(allMedicalData, medicalConditionsSpinner);
 
-                break;
-              case 401:
+            break;
+          case 401:
 
-                break;
-            }
-          }
+            break;
+        }
+      }
 
-          @Override public void onFailure(Call<MedicalConditionsResponse> call, Throwable t) {
+      @Override public void onFailure(Call<MedicalConditionsResponse> call, Throwable t) {
 
-          }
-        });
+      }
+    });
   }
 
   private void setupUserProfile(String finalDateOfBirth, String bloodType, String nationality,
@@ -269,10 +267,9 @@ public class SetupProfile4Fragment extends Fragment
           }
         });
 
-    dataAccessHandler.updateUserProfile(
-        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
-        finalDateOfBirth, bloodType, nationality, medical_condition, measurementSystem, goalId,
-        activityLevelId, finalGender, height, weight, "1", new Callback<DefaultGetResponse>() {
+    dataAccessHandler.updateUserProfile(finalDateOfBirth, bloodType, nationality, medical_condition,
+        measurementSystem, goalId, activityLevelId, finalGender, height, weight, "1",
+        new Callback<DefaultGetResponse>() {
           @Override public void onResponse(Call<DefaultGetResponse> call,
               Response<DefaultGetResponse> response) {
             switch (response.code()) {
@@ -296,9 +293,8 @@ public class SetupProfile4Fragment extends Fragment
   }
 
   private void getUiForSection(final ProgressDialog waitingDialog, String section) {
-    dataAccessHandler.getUiForSection(
-        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
-        "http://gmfit.mcsaatchi.me/api/v1/user/ui?section=" + section, new Callback<UiResponse>() {
+    dataAccessHandler.getUiForSection("http://gmfit.mcsaatchi.me/api/v1/user/ui?section=" + section,
+        new Callback<UiResponse>() {
           @Override public void onResponse(Call<UiResponse> call, Response<UiResponse> response) {
             switch (response.code()) {
               case 200:
