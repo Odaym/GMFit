@@ -10,7 +10,7 @@ public class UserMealsResponseBreakfast {
   @SerializedName("amount") @Expose private String amount;
   @SerializedName("measurement_unit") @Expose private String measurementUnit;
   @SerializedName("created_at") @Expose private String createdAt;
-  @SerializedName("total_calories") @Expose private Integer totalCalories;
+  @SerializedName("total_calories") @Expose private float totalCalories;
 
   /**
    * @return The instance_id
@@ -99,7 +99,7 @@ public class UserMealsResponseBreakfast {
   /**
    * @return The totalCalories
    */
-  public Integer getTotalCalories() {
+  public float getTotalCalories() {
     return totalCalories;
   }
 

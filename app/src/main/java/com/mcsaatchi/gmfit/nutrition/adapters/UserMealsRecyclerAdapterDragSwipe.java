@@ -57,7 +57,7 @@ public class UserMealsRecyclerAdapterDragSwipe
     holder.entryTitleTV.setText(meal.getName());
 
     if (meal.getAmount() != null) {
-      if (Integer.parseInt(meal.getAmount()) > 1) {
+      if (Float.parseFloat(meal.getAmount()) > 1) {
         holder.entryDescriptionTV.setText(meal.getAmount() + " servings");
       } else {
         holder.entryDescriptionTV.setText("1 serving");

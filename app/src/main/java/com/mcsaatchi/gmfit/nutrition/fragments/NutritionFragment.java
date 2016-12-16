@@ -615,11 +615,11 @@ public class NutritionFragment extends Fragment {
               breakfastMeal.setAmount(breakfastMeals.get(i).getAmount());
               breakfastMeal.setSectionType(2);
 
-              if (breakfastMeals.get(i).getTotalCalories() != null) {
+              //if (breakfastMeals.get(i).getTotalCalories() != null) {
                 breakfastMeal.setTotalCalories(breakfastMeals.get(i).getTotalCalories());
-              } else {
-                breakfastMeal.setTotalCalories(0);
-              }
+              //} else {
+              //  breakfastMeal.setTotalCalories(0);
+              //}
 
               finalBreakfastMeals.add(breakfastMeal);
             }
@@ -640,11 +640,11 @@ public class NutritionFragment extends Fragment {
               lunchMeal.setAmount(lunchMeals.get(i).getAmount());
               lunchMeal.setSectionType(2);
 
-              if (lunchMeals.get(i).getTotalCalories() != null) {
+              //if (lunchMeals.get(i).getTotalCalories() != null) {
                 lunchMeal.setTotalCalories(lunchMeals.get(i).getTotalCalories());
-              } else {
-                lunchMeal.setTotalCalories(0);
-              }
+              //} else {
+              //  lunchMeal.setTotalCalories(0);
+              //}
 
               finalLunchMeals.add(lunchMeal);
             }
@@ -665,11 +665,11 @@ public class NutritionFragment extends Fragment {
               dinnerMeal.setAmount(dinnerMeals.get(i).getAmount());
               dinnerMeal.setSectionType(2);
 
-              if (dinnerMeals.get(i).getTotalCalories() != null) {
+              //if (dinnerMeals.get(i).getTotalCalories() != null) {
                 dinnerMeal.setTotalCalories(dinnerMeals.get(i).getTotalCalories());
-              } else {
-                dinnerMeal.setTotalCalories(0);
-              }
+              //} else {
+              //  dinnerMeal.setTotalCalories(0);
+              //}
 
               finalDinnerMeals.add(dinnerMeal);
             }
@@ -690,11 +690,11 @@ public class NutritionFragment extends Fragment {
               snackMeal.setAmount(snackMeals.get(i).getAmount());
               snackMeal.setSectionType(2);
 
-              if (snackMeals.get(i).getTotalCalories() != null) {
+              //if (snackMeals.get(i).getTotalCalories() != null) {
                 snackMeal.setTotalCalories(snackMeals.get(i).getTotalCalories());
-              } else {
-                snackMeal.setTotalCalories(0);
-              }
+              //} else {
+              //  snackMeal.setTotalCalories(0);
+              //}
 
               finalSnackMeals.add(snackMeal);
             }

@@ -21,7 +21,7 @@ public class MealItem implements Parcelable {
   private int sectionType;
   private String amount;
   private String measurementUnit;
-  private int totalCalories;
+  private float totalCalories;
   private String created_at;
 
   public MealItem() {
@@ -42,7 +42,7 @@ public class MealItem implements Parcelable {
     this.sectionType = in.readInt();
     this.amount = in.readString();
     this.measurementUnit = in.readString();
-    this.totalCalories = in.readInt();
+    this.totalCalories = in.readFloat();
   }
 
   public int getMeal_id() {
@@ -101,11 +101,11 @@ public class MealItem implements Parcelable {
     this.measurementUnit = measurementUnit;
   }
 
-  public int getTotalCalories() {
+  public float getTotalCalories() {
     return totalCalories;
   }
 
-  public void setTotalCalories(int totalCalories) {
+  public void setTotalCalories(float totalCalories) {
     this.totalCalories = totalCalories;
   }
 
@@ -130,6 +130,6 @@ public class MealItem implements Parcelable {
     dest.writeInt(this.sectionType);
     dest.writeString(this.amount);
     dest.writeString(this.measurementUnit);
-    dest.writeInt(this.totalCalories);
+    dest.writeFloat(this.totalCalories);
   }
 }

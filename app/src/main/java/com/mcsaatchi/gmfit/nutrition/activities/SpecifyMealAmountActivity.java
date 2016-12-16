@@ -214,7 +214,7 @@ public class SpecifyMealAmountActivity extends BaseActivity {
 
                 mealItem.setAmount(mealAmountET.getText().toString());
                 mealItem.setTotalCalories(
-                    Integer.parseInt(mealItem.getAmount()) * caloriesForThisMeal);
+                    (int) (Float.parseFloat(mealItem.getAmount()) * caloriesForThisMeal));
 
                 Intent resultIntent = new Intent();
                 resultIntent.putExtra(Constants.EXTRAS_MEAL_OBJECT_DETAILS, mealItem);
@@ -289,7 +289,7 @@ public class SpecifyMealAmountActivity extends BaseActivity {
 
                 mealItem.setAmount(mealAmountET.getText().toString());
                 mealItem.setTotalCalories(
-                    Integer.parseInt(mealItem.getAmount()) * caloriesForThisMeal);
+                    (int) (Float.parseFloat(mealItem.getAmount()) * caloriesForThisMeal));
 
                 EventBusSingleton.getInstance()
                     .post(new EventBusPoster(Constants.EXTRAS_UPDATED_MEAL_ENTRY));
