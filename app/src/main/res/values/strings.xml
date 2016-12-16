@@ -360,4 +360,5 @@
     <string name="no_storage_permission">To be able to attach photos, GMFit needs access to read from this device\'s external storage</string>
     <string name="creating_new_test_dialog_title">Adding a new test</string>
     <string name="editing_existing_test_dialog_title">Applying changes to test</string>
+    <string name="medication_information">Medication Information</string>
 </resources>

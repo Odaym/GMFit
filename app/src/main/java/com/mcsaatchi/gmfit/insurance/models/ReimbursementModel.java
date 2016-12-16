@@ -1,5 +1,7 @@
 package com.mcsaatchi.gmfit.insurance.models;
 
+import java.util.List;
+
 public class ReimbursementModel {
     private String id;
     private String category;
@@ -8,8 +10,11 @@ public class ReimbursementModel {
     private String amount;
     private String status;
     private String type;
+    private List<MedicalInformationModel> medicines;
 
-    public ReimbursementModel(String id, String category, String subCategory, String serviceDate, String amount, String status, String type) {
+    public ReimbursementModel(String id, String category, String subCategory, String serviceDate,
+                              String amount, String status, String type, List<MedicalInformationModel> medicines) {
+        this.medicines = medicines;
         this.id = id;
         this.category = category;
         this.subCategory = subCategory;
@@ -73,5 +78,13 @@ public class ReimbursementModel {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public List<MedicalInformationModel> getMedicines() {
+        return medicines;
+    }
+
+    public void setMedicines(List<MedicalInformationModel> medicines) {
+        this.medicines = medicines;
     }
 }

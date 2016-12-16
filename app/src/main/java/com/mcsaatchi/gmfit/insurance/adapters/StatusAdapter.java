@@ -62,7 +62,7 @@ public class StatusAdapter extends RecyclerView.Adapter<StatusAdapter.ViewHolder
         }
 
         void populate(ReimbursementModel reimbursement) {
-            idTv.setText(reimbursement.getId());
+            idTv.setText("Reimbursement #"+reimbursement.getId());
             categoryTv.setText(reimbursement.getCategory());
             subCategoryTv.setText(reimbursement.getSubCategory());
             typeTv.setText(reimbursement.getType());
