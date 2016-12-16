@@ -27,6 +27,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
@@ -110,6 +111,7 @@ public class MainProfileFragment extends Fragment {
   @Bind(R.id.contactUsLayout) RelativeLayout contactUsLayout;
   @Bind(R.id.shareAppLayout) RelativeLayout shareAppLayout;
   @Bind(R.id.changePasswordLayout) RelativeLayout changePasswordLayout;
+  @Bind(R.id.changePasswordParentLayout) LinearLayout changePasswordParentLayout;
 
   @Bind(R.id.shareEmergencyProfileBTN) Button shareEmergencyProfileBTN;
 
@@ -595,6 +597,13 @@ public class MainProfileFragment extends Fragment {
         }
       }
     });
+
+    /**
+     * If the user is logged in through Facebook, Token is not -1 (empty)
+     */
+    if (!prefs.getString(Constants.EXTRAS_USER_FACEBOOK_TOKEN, "-1").equals("-1")) {
+      changePasswordParentLayout.setVisibility(View.GONE);
+    }
 
     /**
      * CHANGE PASSWORD LAYOUT
