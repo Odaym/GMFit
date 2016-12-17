@@ -36,7 +36,7 @@
           android:layout_width="match_parent"
           android:layout_height="match_parent"
           android:hint="@string/add_meal_amount_hint"
-          android:inputType="number"
+          android:inputType="numberDecimal"
           android:maxLines="1"
           android:paddingBottom="@dimen/default_margin_1"
           android:paddingStart="@dimen/default_margin_2"

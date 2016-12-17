@@ -27,6 +27,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
@@ -110,6 +111,7 @@ public class MainProfileFragment extends Fragment {
   @Bind(R.id.contactUsLayout) RelativeLayout contactUsLayout;
   @Bind(R.id.shareAppLayout) RelativeLayout shareAppLayout;
   @Bind(R.id.changePasswordLayout) RelativeLayout changePasswordLayout;
+  @Bind(R.id.changePasswordParentLayout) LinearLayout changePasswordParentLayout;
 
   @Bind(R.id.shareEmergencyProfileBTN) Button shareEmergencyProfileBTN;
 
@@ -597,6 +599,13 @@ public class MainProfileFragment extends Fragment {
     });
 
     /**
+     * If the user is logged in through Facebook, Token is not -1 (empty)
+     */
+    if (!prefs.getString(Constants.EXTRAS_USER_FACEBOOK_TOKEN, "-1").equals("-1")) {
+      changePasswordParentLayout.setVisibility(View.GONE);
+    }
+
+    /**
      * CHANGE PASSWORD LAYOUT
      */
     changePasswordLayout.setOnClickListener(new View.OnClickListener() {
@@ -813,215 +822,205 @@ public class MainProfileFragment extends Fragment {
           }
         });
 
-    dataAccessHandler.getMetaTexts(
-        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
-        section, new Callback<MetaTextsResponse>() {
-          @Override public void onResponse(Call<MetaTextsResponse> call,
-              Response<MetaTextsResponse> response) {
+    dataAccessHandler.getMetaTexts(section, new Callback<MetaTextsResponse>() {
+      @Override
+      public void onResponse(Call<MetaTextsResponse> call, Response<MetaTextsResponse> response) {
 
-            switch (response.code()) {
-              case 200:
-                waitingDialog.dismiss();
+        switch (response.code()) {
+          case 200:
+            waitingDialog.dismiss();
 
-                Intent intent = new Intent(getActivity(), MetaTextsActivity.class);
-                switch (section) {
-                  case "terms":
-                    intent.putExtra(Constants.BUNDLE_ACTIVITY_TITLE,
-                        getResources().getString(R.string.terms_and_conditions_entry));
-                    break;
-                  case "privacy":
-                    intent.putExtra(Constants.BUNDLE_ACTIVITY_TITLE,
-                        getResources().getString(R.string.privacy_and_security_entry));
-                    break;
-                }
-
-                intent.putExtra(Constants.EXTRAS_META_HTML_CONTENT,
-                    response.body().getData().getBody());
-                startActivity(intent);
+            Intent intent = new Intent(getActivity(), MetaTextsActivity.class);
+            switch (section) {
+              case "terms":
+                intent.putExtra(Constants.BUNDLE_ACTIVITY_TITLE,
+                    getResources().getString(R.string.terms_and_conditions_entry));
+                break;
+              case "privacy":
+                intent.putExtra(Constants.BUNDLE_ACTIVITY_TITLE,
+                    getResources().getString(R.string.privacy_and_security_entry));
+                break;
             }
-          }
 
-          @Override public void onFailure(Call<MetaTextsResponse> call, Throwable t) {
-            Timber.d("Call failed with error : %s", t.getMessage());
-            alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
-            alertDialog.show();
-          }
-        });
+            intent.putExtra(Constants.EXTRAS_META_HTML_CONTENT,
+                response.body().getData().getBody());
+            startActivity(intent);
+        }
+      }
+
+      @Override public void onFailure(Call<MetaTextsResponse> call, Throwable t) {
+        Timber.d("Call failed with error : %s", t.getMessage());
+        alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
+        alertDialog.show();
+      }
+    });
   }
 
   private void getUserProfile() {
-    dataAccessHandler.getUserProfile(
-        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
-        new Callback<UserProfileResponse>() {
-          @Override public void onResponse(Call<UserProfileResponse> call,
-              Response<UserProfileResponse> response) {
-            switch (response.code()) {
-              case 200:
-                UserProfileResponseDatum userProfileData =
-                    response.body().getData().getBody().getData();
+    dataAccessHandler.getUserProfile(new Callback<UserProfileResponse>() {
+      @Override public void onResponse(Call<UserProfileResponse> call,
+          Response<UserProfileResponse> response) {
+        switch (response.code()) {
+          case 200:
+            UserProfileResponseDatum userProfileData =
+                response.body().getData().getBody().getData();
 
-                SharedPreferences.Editor prefsEditor = prefs.edit();
+            SharedPreferences.Editor prefsEditor = prefs.edit();
 
-                if (userProfileData != null) {
+            if (userProfileData != null) {
 
-                  userMedicalConditions = userProfileData.getMedicalConditions();
-                  userGoals = userProfileData.getUserGoals();
-                  userActivityLevels = userProfileData.getActivityLevels();
+              userMedicalConditions = userProfileData.getMedicalConditions();
+              userGoals = userProfileData.getUserGoals();
+              userActivityLevels = userProfileData.getActivityLevels();
 
-                  /**
-                   * Set the medical condition
-                   */
-                  if (prefs.getInt(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION_ID, -1)
-                      == -1) {
+              /**
+               * Set the medical condition
+               */
+              if (prefs.getInt(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION_ID, -1) == -1) {
+                prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION, "None");
+                prefsEditor.putInt(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION_ID, -1);
+
+                medicalConditionsValueTV.setText("None");
+              } else {
+                for (int i = 0; i < userMedicalConditions.size(); i++) {
+                  if (userMedicalConditions.get(i).getSelected().equals("1")) {
                     prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION,
-                        "None");
-                    prefsEditor.putInt(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION_ID, -1);
+                        userMedicalConditions.get(i).getName());
+                    prefsEditor.putInt(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION_ID,
+                        Integer.parseInt(userMedicalConditions.get(i).getId()));
 
-                    medicalConditionsValueTV.setText("None");
-                  } else {
-                    for (int i = 0; i < userMedicalConditions.size(); i++) {
-                      if (userMedicalConditions.get(i).getSelected().equals("1")) {
-                        prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION,
-                            userMedicalConditions.get(i).getName());
-                        prefsEditor.putInt(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION_ID,
-                            Integer.parseInt(userMedicalConditions.get(i).getId()));
-
-                        medicalConditionsValueTV.setText(userMedicalConditions.get(i).getName());
-                      }
-                    }
+                    medicalConditionsValueTV.setText(userMedicalConditions.get(i).getName());
                   }
-
-                  /**
-                   * Set the activity level
-                   */
-                  if (prefs.getInt(Constants.EXTRAS_USER_PROFILE_ACTIVITY_LEVEL_ID, -1) == -1) {
-                    prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_ACTIVITY_LEVEL,
-                        "Lightly Active (1-3 times per week)");
-                    prefsEditor.putInt(Constants.EXTRAS_USER_PROFILE_ACTIVITY_LEVEL_ID, 2);
-
-                    activityLevelsEntryValueTV.setText("Lightly Active (1-3 times per week)");
-                  } else {
-                    for (int i = 0; i < userActivityLevels.size(); i++) {
-                      if (userActivityLevels.get(i).getSelected().equals("1")) {
-                        prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_ACTIVITY_LEVEL,
-                            userActivityLevels.get(i).getName());
-                        prefsEditor.putInt(Constants.EXTRAS_USER_PROFILE_ACTIVITY_LEVEL_ID,
-                            Integer.parseInt(userActivityLevels.get(i).getId()));
-
-                        activityLevelsEntryValueTV.setText(userActivityLevels.get(i).getName());
-                      }
-                    }
-                  }
-
-                  /**
-                   * Set the user goals
-                   */
-                  for (int i = 0; i < userGoals.size(); i++) {
-                    if (userGoals.get(i).getSelected().equals("1")) {
-                      prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_GOAL,
-                          userGoals.get(i).getName());
-                      prefsEditor.putInt(Constants.EXTRAS_USER_PROFILE_GOAL_ID,
-                          Integer.parseInt(userGoals.get(i).getId()));
-
-                      goalsEntryValueTV.setText(userGoals.get(i).getName());
-                    }
-                  }
-
-                  /**
-                   * Set the name
-                   */
-                  if (userProfileData.getName() != null && !userProfileData.getName().isEmpty()) {
-                    prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_USER_FULL_NAME,
-                        userProfileData.getName());
-                    userFullNameTV.setText(userProfileData.getName());
-                  }
-
-                  /**
-                   * Set the email
-                   */
-                  if (userProfileData.getEmail() != null && !userProfileData.getEmail().isEmpty()) {
-                    prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_USER_EMAIL,
-                        userProfileData.getEmail());
-                    userEmailTV.setText(userProfileData.getEmail());
-                  }
-
-                  /**
-                   * Set the weight
-                   */
-                  if (userProfileData.getWeight() != null && !userProfileData.getWeight()
-                      .isEmpty()) {
-                    prefsEditor.putFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT,
-                        Float.parseFloat(userProfileData.getWeight()));
-                    weightEntryValueTV.setText(String.valueOf(
-                        String.format(Locale.getDefault(), "%.1f",
-                            Float.parseFloat(userProfileData.getWeight()))));
-                  }
-
-                  /**
-                   * Set the country
-                   */
-                  if (userProfileData.getCountry() != null && !userProfileData.getCountry()
-                      .isEmpty()) {
-                    prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_NATIONALITY,
-                        userProfileData.getCountry());
-                    countryValueTV.setText(userProfileData.getCountry());
-                  }
-
-                  /**
-                   * Set the metric system
-                   */
-                  if (userProfileData.getMetricSystem() != null
-                      && !userProfileData.getMetricSystem().isEmpty()) {
-                    prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_MEASUREMENT_SYSTEM,
-                        userProfileData.getMetricSystem());
-
-                    String cap = userProfileData.getMetricSystem().substring(0, 1).toUpperCase()
-                        + userProfileData.getMetricSystem().substring(1);
-
-                    metricSystemValueTV.setText(cap);
-                  }
-
-                  /**
-                   * Set the gender
-                   */
-                  if (userProfileData.getGender() != null && !userProfileData.getGender()
-                      .isEmpty()) {
-                    int finalGender = userProfileData.getGender().equals("Male") ? 0 : 1;
-                    prefsEditor.putInt(Constants.EXTRAS_USER_PROFILE_GENDER, finalGender);
-                  }
-
-                  /**
-                   * Set the profile picture
-                   */
-                  if (userProfileData.getProfile_picture() != null
-                      && !userProfileData.getProfile_picture().equals("http://gmfit.mcsaatchi.me/")
-                      && getActivity() != null) {
-
-                    prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_IMAGE,
-                        userProfileData.getProfile_picture());
-
-                    Picasso.with(getActivity())
-                        .load(userProfileData.getProfile_picture())
-                        .resize(200, 200)
-                        .transform(new CircleTransform())
-                        .centerInside()
-                        .into(userProfileIV);
-                  }
-
-                  prefsEditor.apply();
-
-                  break;
                 }
-            }
-          }
+              }
 
-          @Override public void onFailure(Call<UserProfileResponse> call, Throwable t) {
-            Timber.d("Call failed with error : %s", t.getMessage());
-            final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
-            alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
-            alertDialog.show();
-          }
-        });
+              /**
+               * Set the activity level
+               */
+              if (prefs.getInt(Constants.EXTRAS_USER_PROFILE_ACTIVITY_LEVEL_ID, -1) == -1) {
+                prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_ACTIVITY_LEVEL,
+                    "Lightly Active (1-3 times per week)");
+                prefsEditor.putInt(Constants.EXTRAS_USER_PROFILE_ACTIVITY_LEVEL_ID, 2);
+
+                activityLevelsEntryValueTV.setText("Lightly Active (1-3 times per week)");
+              } else {
+                for (int i = 0; i < userActivityLevels.size(); i++) {
+                  if (userActivityLevels.get(i).getSelected().equals("1")) {
+                    prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_ACTIVITY_LEVEL,
+                        userActivityLevels.get(i).getName());
+                    prefsEditor.putInt(Constants.EXTRAS_USER_PROFILE_ACTIVITY_LEVEL_ID,
+                        Integer.parseInt(userActivityLevels.get(i).getId()));
+
+                    activityLevelsEntryValueTV.setText(userActivityLevels.get(i).getName());
+                  }
+                }
+              }
+
+              /**
+               * Set the user goals
+               */
+              for (int i = 0; i < userGoals.size(); i++) {
+                if (userGoals.get(i).getSelected().equals("1")) {
+                  prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_GOAL,
+                      userGoals.get(i).getName());
+                  prefsEditor.putInt(Constants.EXTRAS_USER_PROFILE_GOAL_ID,
+                      Integer.parseInt(userGoals.get(i).getId()));
+
+                  goalsEntryValueTV.setText(userGoals.get(i).getName());
+                }
+              }
+
+              /**
+               * Set the name
+               */
+              if (userProfileData.getName() != null && !userProfileData.getName().isEmpty()) {
+                prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_USER_FULL_NAME,
+                    userProfileData.getName());
+                userFullNameTV.setText(userProfileData.getName());
+              }
+
+              /**
+               * Set the email
+               */
+              if (userProfileData.getEmail() != null && !userProfileData.getEmail().isEmpty()) {
+                prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_USER_EMAIL,
+                    userProfileData.getEmail());
+                userEmailTV.setText(userProfileData.getEmail());
+              }
+
+              /**
+               * Set the weight
+               */
+              if (userProfileData.getWeight() != null && !userProfileData.getWeight().isEmpty()) {
+                prefsEditor.putFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT,
+                    Float.parseFloat(userProfileData.getWeight()));
+                weightEntryValueTV.setText(String.valueOf(String.format(Locale.getDefault(), "%.1f",
+                    Float.parseFloat(userProfileData.getWeight()))));
+              }
+
+              /**
+               * Set the country
+               */
+              if (userProfileData.getCountry() != null && !userProfileData.getCountry().isEmpty()) {
+                prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_NATIONALITY,
+                    userProfileData.getCountry());
+                countryValueTV.setText(userProfileData.getCountry());
+              }
+
+              /**
+               * Set the metric system
+               */
+              if (userProfileData.getMetricSystem() != null && !userProfileData.getMetricSystem()
+                  .isEmpty()) {
+                prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_MEASUREMENT_SYSTEM,
+                    userProfileData.getMetricSystem());
+
+                String cap = userProfileData.getMetricSystem().substring(0, 1).toUpperCase()
+                    + userProfileData.getMetricSystem().substring(1);
+
+                metricSystemValueTV.setText(cap);
+              }
+
+              /**
+               * Set the gender
+               */
+              if (userProfileData.getGender() != null && !userProfileData.getGender().isEmpty()) {
+                int finalGender = userProfileData.getGender().equals("Male") ? 0 : 1;
+                prefsEditor.putInt(Constants.EXTRAS_USER_PROFILE_GENDER, finalGender);
+              }
+
+              /**
+               * Set the profile picture
+               */
+              if (userProfileData.getProfile_picture() != null
+                  && !userProfileData.getProfile_picture().equals("http://gmfit.mcsaatchi.me/")
+                  && getActivity() != null) {
+
+                prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_IMAGE,
+                    userProfileData.getProfile_picture());
+
+                Picasso.with(getActivity())
+                    .load(userProfileData.getProfile_picture())
+                    .resize(200, 200)
+                    .transform(new CircleTransform())
+                    .centerInside()
+                    .into(userProfileIV);
+              }
+
+              prefsEditor.apply();
+
+              break;
+            }
+        }
+      }
+
+      @Override public void onFailure(Call<UserProfileResponse> call, Throwable t) {
+        Timber.d("Call failed with error : %s", t.getMessage());
+        final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+        alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
+        alertDialog.show();
+      }
+    });
   }
 
   private void updateUserProfile() {
@@ -1054,10 +1053,9 @@ public class MainProfileFragment extends Fragment {
           }
         });
 
-    dataAccessHandler.updateUserProfile(
-        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
-        dateOfBirth, bloodType, nationality, medicalCondition, measurementSystem.toLowerCase(),
-        userGoalId, activityLevelId, gender, height, weight, new Callback<DefaultGetResponse>() {
+    dataAccessHandler.updateUserProfile(dateOfBirth, bloodType, nationality, medicalCondition,
+        measurementSystem.toLowerCase(), userGoalId, activityLevelId, gender, height, weight, "1",
+        new Callback<DefaultGetResponse>() {
           @Override public void onResponse(Call<DefaultGetResponse> call,
               Response<DefaultGetResponse> response) {
             switch (response.code()) {
@@ -1097,31 +1095,29 @@ public class MainProfileFragment extends Fragment {
 
     profilePictureParts.put("picture\"; filename=\"" + userPicturePath + ".jpg", imageFilePart);
 
-    dataAccessHandler.updateUserPicture(
-        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
-        profilePictureParts, new Callback<DefaultGetResponse>() {
-          @Override public void onResponse(Call<DefaultGetResponse> call,
-              Response<DefaultGetResponse> response) {
-            switch (response.code()) {
-              case 200:
+    dataAccessHandler.updateUserPicture(profilePictureParts, new Callback<DefaultGetResponse>() {
+      @Override
+      public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
+        switch (response.code()) {
+          case 200:
 
-                waitingDialog.dismiss();
-                Toast.makeText(getActivity(), "Your profile was updated successfully",
-                    Toast.LENGTH_SHORT).show();
+            waitingDialog.dismiss();
+            Toast.makeText(getActivity(), "Your profile was updated successfully",
+                Toast.LENGTH_SHORT).show();
 
-                profilePictureChanged = false;
+            profilePictureChanged = false;
 
-                break;
-            }
-          }
+            break;
+        }
+      }
 
-          @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
-            Timber.d("Call failed with error : %s", t.getMessage());
-            final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
-            alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
-            alertDialog.show();
-          }
-        });
+      @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+        Timber.d("Call failed with error : %s", t.getMessage());
+        final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+        alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
+        alertDialog.show();
+      }
+    });
   }
 
   private void signOutUser() {
@@ -1141,67 +1137,63 @@ public class MainProfileFragment extends Fragment {
           }
         });
 
-    dataAccessHandler.signOutUser(
-        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
-        new Callback<DefaultGetResponse>() {
-          @Override public void onResponse(Call<DefaultGetResponse> call,
-              Response<DefaultGetResponse> response) {
-            switch (response.code()) {
-              case 200:
-                waitingDialog.dismiss();
+    dataAccessHandler.signOutUser(new Callback<DefaultGetResponse>() {
+      @Override
+      public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
+        switch (response.code()) {
+          case 200:
+            waitingDialog.dismiss();
 
-                prefs.edit()
-                    .putString(Constants.PREF_USER_ACCESS_TOKEN,
-                        Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS)
-                    .apply();
-                prefs.edit().putBoolean(Constants.EXTRAS_USER_LOGGED_IN, false).apply();
+            prefs.edit()
+                .putString(Constants.PREF_USER_ACCESS_TOKEN,
+                    Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS)
+                .apply();
+            prefs.edit().putBoolean(Constants.EXTRAS_USER_LOGGED_IN, false).apply();
 
-                if (!prefs.getString(Constants.EXTRAS_USER_FACEBOOK_TOKEN, "-1").equals("-1")) {
-                  FacebookSdk.sdkInitialize(getActivity());
-                  LoginManager.getInstance().logOut();
-                  prefs.edit().putString(Constants.EXTRAS_USER_FACEBOOK_TOKEN, "-1").apply();
-                }
-
-                getActivity().finish();
-
-                Intent intent = new Intent(getActivity(), LoginActivity.class);
-                startActivity(intent);
-                break;
+            if (!prefs.getString(Constants.EXTRAS_USER_FACEBOOK_TOKEN, "-1").equals("-1")) {
+              FacebookSdk.sdkInitialize(getActivity());
+              LoginManager.getInstance().logOut();
+              prefs.edit().putString(Constants.EXTRAS_USER_FACEBOOK_TOKEN, "-1").apply();
             }
-          }
 
-          @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
-            Timber.d("Call failed with error : %s", t.getMessage());
-            alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
-            alertDialog.show();
             getActivity().finish();
-          }
-        });
+
+            Intent intent = new Intent(getActivity(), LoginActivity.class);
+            startActivity(intent);
+            break;
+        }
+      }
+
+      @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+        Timber.d("Call failed with error : %s", t.getMessage());
+        alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
+        alertDialog.show();
+        getActivity().finish();
+      }
+    });
   }
 
   private void requestEmergencyProfile() {
-    dataAccessHandler.getEmergencyProfile(
-        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
-        new Callback<EmergencyProfileResponse>() {
-          @Override public void onResponse(Call<EmergencyProfileResponse> call,
-              Response<EmergencyProfileResponse> response) {
-            switch (response.code()) {
-              case 200:
-                if (response.body().getData().getBody() != null) {
-                  new DownloadPDFFile().execute(response.body().getData().getBody().getUserPdf(),
-                      "my_emergency_profile.pdf");
-                }
-                break;
+    dataAccessHandler.getEmergencyProfile(new Callback<EmergencyProfileResponse>() {
+      @Override public void onResponse(Call<EmergencyProfileResponse> call,
+          Response<EmergencyProfileResponse> response) {
+        switch (response.code()) {
+          case 200:
+            if (response.body().getData().getBody() != null) {
+              new DownloadPDFFile().execute(response.body().getData().getBody().getUserPdf(),
+                  "my_emergency_profile.pdf");
             }
-          }
+            break;
+        }
+      }
 
-          @Override public void onFailure(Call<EmergencyProfileResponse> call, Throwable t) {
-            Timber.d("Call failed with error : %s", t.getMessage());
-            final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
-            alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
-            alertDialog.show();
-          }
-        });
+      @Override public void onFailure(Call<EmergencyProfileResponse> call, Throwable t) {
+        Timber.d("Call failed with error : %s", t.getMessage());
+        final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+        alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
+        alertDialog.show();
+      }
+    });
   }
 
   public static class FileDownloader {

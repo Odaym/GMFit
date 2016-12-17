@@ -16,6 +16,7 @@ import com.mcsaatchi.gmfit.common.fragments.CustomizeChartsFragment;
 import com.mcsaatchi.gmfit.common.fragments.CustomizeWidgetsFragment;
 import com.mcsaatchi.gmfit.common.models.DataChart;
 import com.mcsaatchi.gmfit.fitness.models.FitnessWidget;
+import com.mcsaatchi.gmfit.health.models.HealthWidget;
 import com.mcsaatchi.gmfit.nutrition.models.NutritionWidget;
 
 import java.util.ArrayList;
@@ -35,6 +36,7 @@ public class CustomizeWidgetsAndChartsActivity extends BaseActivity {
 
   private ArrayList<FitnessWidget> fitnessWidgetsMapExtra;
   private ArrayList<NutritionWidget> nutritionWidgetsMapExtra;
+  private ArrayList<HealthWidget> healthWidgetsMapExtra;
   private ArrayList<DataChart> dataChartsMapExtra;
 
   private String[] tabTitles = new String[] {
@@ -73,6 +75,12 @@ public class CustomizeWidgetsAndChartsActivity extends BaseActivity {
                 intentExtras.getParcelableArrayList(Constants.BUNDLE_NUTRITION_WIDGETS_MAP);
             mainLayoutTop.setBackground(
                 getResources().getDrawable(R.drawable.nutrition_background));
+            break;
+          case Constants.EXTRAS_HEALTH_FRAGMENT:
+            healthWidgetsMapExtra =
+                intentExtras.getParcelableArrayList(Constants.BUNDLE_HEALTH_WIDGETS_MAP);
+            mainLayoutTop.setBackground(
+                getResources().getDrawable(R.drawable.health_background));
             break;
         }
       }
@@ -118,6 +126,10 @@ public class CustomizeWidgetsAndChartsActivity extends BaseActivity {
             fragmentArguments.putParcelableArrayList(Constants.BUNDLE_NUTRITION_CHARTS_MAP,
                 dataChartsMapExtra);
             break;
+          case Constants.EXTRAS_HEALTH_FRAGMENT:
+            fragmentArguments.putParcelableArrayList(Constants.BUNDLE_HEALTH_WIDGETS_MAP,
+                healthWidgetsMapExtra);
+            break;
         }
       }
 
@@ -140,6 +152,8 @@ public class CustomizeWidgetsAndChartsActivity extends BaseActivity {
     }
 
     @Override public int getCount() {
+      if (typeOfFragmentToCustomiseFor.equals(Constants.EXTRAS_HEALTH_FRAGMENT)) return 1;
+
       return tabTitles.length;
     }
   }

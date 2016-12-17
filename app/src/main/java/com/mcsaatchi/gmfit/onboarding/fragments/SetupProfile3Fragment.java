@@ -58,61 +58,57 @@ public class SetupProfile3Fragment extends Fragment {
           }
         });
 
-    dataAccessHandler.getActivityLevels(
-        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
-        new Callback<ActivityLevelsResponse>() {
-          @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP) @Override
-          public void onResponse(Call<ActivityLevelsResponse> call,
-              Response<ActivityLevelsResponse> response) {
-            switch (response.code()) {
-              case 200:
+    dataAccessHandler.getActivityLevels(new Callback<ActivityLevelsResponse>() {
+      @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP) @Override
+      public void onResponse(Call<ActivityLevelsResponse> call,
+          Response<ActivityLevelsResponse> response) {
+        switch (response.code()) {
+          case 200:
 
-                List<ActivityLevelsResponseBody> activityLevels =
-                    response.body().getData().getBody();
+            List<ActivityLevelsResponseBody> activityLevels = response.body().getData().getBody();
 
-                for (int i = 0; i < activityLevels.size(); i++) {
-                  View listItemRadioButton = getActivity().getLayoutInflater()
-                      .inflate(R.layout.activity_levels_list_item_radio_button_row, null);
+            for (int i = 0; i < activityLevels.size(); i++) {
+              View listItemRadioButton = getActivity().getLayoutInflater()
+                  .inflate(R.layout.activity_levels_list_item_radio_button_row, null);
 
-                  final RadioButton radioButtonItem =
-                      (RadioButton) listItemRadioButton.findViewById(
-                          R.id.activityLevelRadioButtonItem);
-                  radioButtonItem.setText(activityLevels.get(i).getName());
-                  radioButtonItem.setId(activityLevels.get(i).getId());
+              final RadioButton radioButtonItem =
+                  (RadioButton) listItemRadioButton.findViewById(R.id.activityLevelRadioButtonItem);
+              radioButtonItem.setText(activityLevels.get(i).getName());
+              radioButtonItem.setId(activityLevels.get(i).getId());
 
-                  TextView radioButtonHintTV =
-                      (TextView) listItemRadioButton.findViewById(R.id.radioButtonHintTV);
-                  radioButtonHintTV.setText(activityLevels.get(i).getDescription());
+              TextView radioButtonHintTV =
+                  (TextView) listItemRadioButton.findViewById(R.id.radioButtonHintTV);
+              radioButtonHintTV.setText(activityLevels.get(i).getDescription());
 
-                  radioButtonItem.setOnClickListener(new View.OnClickListener() {
-                    @Override public void onClick(View view) {
-                      dataWasSelected = true;
+              radioButtonItem.setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View view) {
+                  dataWasSelected = true;
 
-                      prefs.edit()
-                          .putInt(Constants.EXTRAS_USER_PROFILE_ACTIVITY_LEVEL_ID,
-                              radioButtonItem.getId())
-                          .apply();
-                      prefs.edit()
-                          .putString(Constants.EXTRAS_USER_PROFILE_ACTIVITY_LEVEL,
-                              radioButtonItem.getText().toString())
-                          .apply();
-                    }
-                  });
-
-                  activityLevelsRadioButtonsGroup.addView(listItemRadioButton);
+                  prefs.edit()
+                      .putInt(Constants.EXTRAS_USER_PROFILE_ACTIVITY_LEVEL_ID,
+                          radioButtonItem.getId())
+                      .apply();
+                  prefs.edit()
+                      .putString(Constants.EXTRAS_USER_PROFILE_ACTIVITY_LEVEL,
+                          radioButtonItem.getText().toString())
+                      .apply();
                 }
+              });
 
-                break;
+              activityLevelsRadioButtonsGroup.addView(listItemRadioButton);
             }
-          }
 
-          @Override public void onFailure(Call<ActivityLevelsResponse> call, Throwable t) {
-            Timber.d("Call failed with error : %s", t.getMessage());
-            alertDialog.setMessage(
-                getActivity().getResources().getString(R.string.error_response_from_server_incorrect));
-            alertDialog.show();
-          }
-        });
+            break;
+        }
+      }
+
+      @Override public void onFailure(Call<ActivityLevelsResponse> call, Throwable t) {
+        Timber.d("Call failed with error : %s", t.getMessage());
+        alertDialog.setMessage(
+            getActivity().getResources().getString(R.string.error_response_from_server_incorrect));
+        alertDialog.show();
+      }
+    });
   }
 
   public boolean wasDataSelected() {

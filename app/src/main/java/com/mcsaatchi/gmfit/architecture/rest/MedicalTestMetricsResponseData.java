@@ -7,7 +7,8 @@ import java.util.List;
 
 public class MedicalTestMetricsResponseData {
   @SerializedName("message") @Expose private String message;
-  @SerializedName("body") @Expose private List<MedicalTestMetricsResponseBody> body = new ArrayList<>();
+  @SerializedName("body") @Expose private List<MedicalTestMetricsResponseBody> body =
+      new ArrayList<>();
   @SerializedName("code") @Expose private Integer code;
 
   /**

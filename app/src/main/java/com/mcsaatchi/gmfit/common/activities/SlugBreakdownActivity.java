@@ -110,8 +110,8 @@ public class SlugBreakdownActivity extends BaseActivity {
                 switch (typeOfFragmentToCustomizeFor) {
                   case Constants.EXTRAS_FITNESS_FRAGMENT:
                     EventBusSingleton.getInstance()
-                        .post(new EventBusPoster(Constants.EXTRAS_FITNESS_CHART_DELETED,
-                            chartTitle));
+                        .post(
+                            new EventBusPoster(Constants.EXTRAS_FITNESS_CHART_DELETED, chartTitle));
                     break;
                   case Constants.EXTRAS_NUTRITION_FRAGMENT:
                     EventBusSingleton.getInstance()

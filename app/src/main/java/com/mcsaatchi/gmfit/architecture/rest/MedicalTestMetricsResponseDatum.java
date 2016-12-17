@@ -5,7 +5,7 @@ import android.os.Parcelable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class MedicalTestMetricsResponseDatum implements Parcelable{
+public class MedicalTestMetricsResponseDatum implements Parcelable {
   public static final Creator<MedicalTestMetricsResponseDatum> CREATOR =
       new Creator<MedicalTestMetricsResponseDatum>() {
         @Override public MedicalTestMetricsResponseDatum createFromParcel(Parcel source) {

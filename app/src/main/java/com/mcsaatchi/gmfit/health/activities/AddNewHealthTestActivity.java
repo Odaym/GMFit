@@ -117,34 +117,32 @@ public class AddNewHealthTestActivity extends BaseActivity {
           }
         });
 
-    dataAccessHandler.getTesticularMetrics(
-        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
-        new Callback<MedicalTestMetricsResponse>() {
-          @Override public void onResponse(Call<MedicalTestMetricsResponse> call,
-              Response<MedicalTestMetricsResponse> response) {
-            switch (response.code()) {
-              case 200:
+    dataAccessHandler.getTesticularMetrics(new Callback<MedicalTestMetricsResponse>() {
+      @Override public void onResponse(Call<MedicalTestMetricsResponse> call,
+          Response<MedicalTestMetricsResponse> response) {
+        switch (response.code()) {
+          case 200:
 
-                waitingDialog.dismiss();
+            waitingDialog.dismiss();
 
-                final ArrayList<MedicalTestMetricsResponseBody> metricsFromResponse =
-                    (ArrayList<MedicalTestMetricsResponseBody>) response.body().getData().getBody();
+            final ArrayList<MedicalTestMetricsResponseBody> metricsFromResponse =
+                (ArrayList<MedicalTestMetricsResponseBody>) response.body().getData().getBody();
 
-                setupAvailableTestMetrics(metricsFromResponse);
+            setupAvailableTestMetrics(metricsFromResponse);
 
-                hookupSearchBar(metricsFromResponse, null);
+            hookupSearchBar(metricsFromResponse, null);
 
-                break;
-            }
-          }
+            break;
+        }
+      }
 
-          @Override public void onFailure(Call<MedicalTestMetricsResponse> call, Throwable t) {
-            Timber.d("Call failed with error : %s", t.getMessage());
-            alertDialog.setMessage(
-                getResources().getString(R.string.error_response_from_server_incorrect));
-            alertDialog.show();
-          }
-        });
+      @Override public void onFailure(Call<MedicalTestMetricsResponse> call, Throwable t) {
+        Timber.d("Call failed with error : %s", t.getMessage());
+        alertDialog.setMessage(
+            getResources().getString(R.string.error_response_from_server_incorrect));
+        alertDialog.show();
+      }
+    });
   }
 
   private void hookupSearchBar(final ArrayList<MedicalTestMetricsResponseBody> metricsFromResponse,

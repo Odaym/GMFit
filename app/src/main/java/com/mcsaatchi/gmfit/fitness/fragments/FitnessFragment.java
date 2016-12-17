@@ -257,10 +257,8 @@ public class FitnessFragment extends Fragment implements SensorEventListener {
       final TextView dateTV_1, final TextView dateTV_2, final TextView dateTV_3,
       final TextView dateTV_4, final String chart_slug) {
 
-    dataAccessHandler.getPeriodicalChartData(
-        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
-        dt.minusMonths(1).toString(), desiredDate, "fitness", chart_slug,
-        new Callback<ChartMetricBreakdownResponse>() {
+    dataAccessHandler.getPeriodicalChartData(dt.minusMonths(1).toString(), desiredDate, "fitness",
+        chart_slug, new Callback<ChartMetricBreakdownResponse>() {
           @Override public void onResponse(Call<ChartMetricBreakdownResponse> call,
               Response<ChartMetricBreakdownResponse> response) {
             if (response.body() != null) {
@@ -432,41 +430,39 @@ public class FitnessFragment extends Fragment implements SensorEventListener {
   }
 
   private void getWidgetsWithDate(final String finalDate) {
-    dataAccessHandler.getWidgetsWithDate(
-        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
-        "fitness", finalDate, new Callback<WidgetsResponse>() {
-          @Override
-          public void onResponse(Call<WidgetsResponse> call, Response<WidgetsResponse> response) {
-            switch (response.code()) {
-              case 200:
-                List<WidgetsResponseDatum> widgetsFromResponse =
-                    response.body().getData().getBody().getData();
+    dataAccessHandler.getWidgetsWithDate("fitness", finalDate, new Callback<WidgetsResponse>() {
+      @Override
+      public void onResponse(Call<WidgetsResponse> call, Response<WidgetsResponse> response) {
+        switch (response.code()) {
+          case 200:
+            List<WidgetsResponseDatum> widgetsFromResponse =
+                response.body().getData().getBody().getData();
 
-                ArrayList<FitnessWidget> newWidgetsMap = new ArrayList<>();
+            ArrayList<FitnessWidget> newWidgetsMap = new ArrayList<>();
 
-                for (int i = 0; i < widgetsFromResponse.size(); i++) {
-                  FitnessWidget widget = new FitnessWidget();
+            for (int i = 0; i < widgetsFromResponse.size(); i++) {
+              FitnessWidget widget = new FitnessWidget();
 
-                  if (!widgetsFromResponse.get(i).getName().equals("Steps Count")) {
-                    widget.setId(widgetsFromResponse.get(i).getWidgetId());
-                    widget.setMeasurementUnit(widgetsFromResponse.get(i).getUnit());
-                    widget.setPosition(Integer.parseInt(widgetsFromResponse.get(i).getPosition()));
-                    widget.setValue(Float.parseFloat(widgetsFromResponse.get(i).getTotal()));
-                    widget.setTitle(widgetsFromResponse.get(i).getName());
+              if (!widgetsFromResponse.get(i).getName().equals("Steps Count")) {
+                widget.setId(widgetsFromResponse.get(i).getWidgetId());
+                widget.setMeasurementUnit(widgetsFromResponse.get(i).getUnit());
+                widget.setPosition(i);
+                widget.setValue(Float.parseFloat(widgetsFromResponse.get(i).getTotal()));
+                widget.setTitle(widgetsFromResponse.get(i).getName());
 
-                    newWidgetsMap.add(widget);
-                  }
-                }
-
-                setupWidgetViews(newWidgetsMap);
-
-                break;
+                newWidgetsMap.add(widget);
+              }
             }
-          }
 
-          @Override public void onFailure(Call<WidgetsResponse> call, Throwable t) {
-          }
-        });
+            setupWidgetViews(newWidgetsMap);
+
+            break;
+        }
+      }
+
+      @Override public void onFailure(Call<WidgetsResponse> call, Throwable t) {
+      }
+    });
   }
 
   private void getUserGoalMetrics(String date, String type, final boolean requestingPreviousData) {
@@ -475,68 +471,64 @@ public class FitnessFragment extends Fragment implements SensorEventListener {
       metricCounterTV.setVisibility(View.INVISIBLE);
     }
 
-    dataAccessHandler.getUserGoalMetrics(
-        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
-        date, type, new Callback<UserGoalMetricsResponse>() {
-          @Override public void onResponse(Call<UserGoalMetricsResponse> call,
-              Response<UserGoalMetricsResponse> response) {
+    dataAccessHandler.getUserGoalMetrics(date, type, new Callback<UserGoalMetricsResponse>() {
+      @Override public void onResponse(Call<UserGoalMetricsResponse> call,
+          Response<UserGoalMetricsResponse> response) {
 
-            switch (response.code()) {
-              case 200:
-                String maxValue =
-                    response.body().getData().getBody().getMetrics().getStepsCount().getMaxValue();
+        switch (response.code()) {
+          case 200:
+            String maxValue =
+                response.body().getData().getBody().getMetrics().getStepsCount().getMaxValue();
 
-                String currentValue =
-                    response.body().getData().getBody().getMetrics().getStepsCount().getValue();
+            String currentValue =
+                response.body().getData().getBody().getMetrics().getStepsCount().getValue();
 
-                int remainingValue = 0;
+            int remainingValue = 0;
 
-                goalTV.setText(maxValue);
+            goalTV.setText(maxValue);
 
-                metricProgressBar.setProgress(
-                    (int) ((Double.parseDouble(currentValue) * 100) / Double.parseDouble(
-                        maxValue)));
+            metricProgressBar.setProgress(
+                (int) ((Double.parseDouble(currentValue) * 100) / Double.parseDouble(maxValue)));
 
-                /**
-                 * Requesting today's data
-                 */
-                if (!requestingPreviousData) {
-                  metricCounterTV.setText(
-                      String.valueOf(prefs.getInt(Helpers.getTodayDate() + "_steps", 0)));
-                  todayTV.setText(
-                      String.valueOf(prefs.getInt(Helpers.getTodayDate() + "_steps", 0)));
+            /**
+             * Requesting today's data
+             */
+            if (!requestingPreviousData) {
+              metricCounterTV.setText(
+                  String.valueOf(prefs.getInt(Helpers.getTodayDate() + "_steps", 0)));
+              todayTV.setText(String.valueOf(prefs.getInt(Helpers.getTodayDate() + "_steps", 0)));
 
-                  remainingValue = Integer.parseInt(maxValue) - Integer.parseInt(
-                      metricCounterTV.getText().toString());
-                } else {
-                  /**
-                   * Requesting data from previous days
-                   */
-                  metricCounterTV.setText(String.valueOf((int) Double.parseDouble(currentValue)));
-                  todayTV.setText(String.valueOf((int) Double.parseDouble(currentValue)));
+              remainingValue = Integer.parseInt(maxValue) - Integer.parseInt(
+                  metricCounterTV.getText().toString());
+            } else {
+              /**
+               * Requesting data from previous days
+               */
+              metricCounterTV.setText(String.valueOf((int) Double.parseDouble(currentValue)));
+              todayTV.setText(String.valueOf((int) Double.parseDouble(currentValue)));
 
-                  remainingValue =
-                      (int) (Integer.parseInt(maxValue) - Double.parseDouble(currentValue));
-                }
-
-                if (loadingMetricProgressBar != null) {
-                  loadingMetricProgressBar.setVisibility(View.INVISIBLE);
-                  metricCounterTV.setVisibility(View.VISIBLE);
-                }
-
-                if (remainingValue < 0) {
-                  remainingTV.setText(String.valueOf(0));
-                } else {
-                  remainingTV.setText(String.valueOf(remainingValue));
-                }
-
-                break;
+              remainingValue =
+                  (int) (Integer.parseInt(maxValue) - Double.parseDouble(currentValue));
             }
-          }
 
-          @Override public void onFailure(Call<UserGoalMetricsResponse> call, Throwable t) {
-          }
-        });
+            if (loadingMetricProgressBar != null) {
+              loadingMetricProgressBar.setVisibility(View.INVISIBLE);
+              metricCounterTV.setVisibility(View.VISIBLE);
+            }
+
+            if (remainingValue < 0) {
+              remainingTV.setText(String.valueOf(0));
+            } else {
+              remainingTV.setText(String.valueOf(remainingValue));
+            }
+
+            break;
+        }
+      }
+
+      @Override public void onFailure(Call<UserGoalMetricsResponse> call, Throwable t) {
+      }
+    });
   }
 
   public void addNewBarChart(final String chartTitle, final String chartType, String desiredDate) {
@@ -631,29 +623,27 @@ public class FitnessFragment extends Fragment implements SensorEventListener {
           }
         });
 
-    dataAccessHandler.getSlugBreakdownForChart(chartType,
-        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
-        new Callback<SlugBreakdownResponse>() {
-          @Override public void onResponse(Call<SlugBreakdownResponse> call,
-              Response<SlugBreakdownResponse> response) {
-            switch (response.code()) {
-              case 200:
-                waitingDialog.dismiss();
+    dataAccessHandler.getSlugBreakdownForChart(chartType, new Callback<SlugBreakdownResponse>() {
+      @Override public void onResponse(Call<SlugBreakdownResponse> call,
+          Response<SlugBreakdownResponse> response) {
+        switch (response.code()) {
+          case 200:
+            waitingDialog.dismiss();
 
-                Intent intent = new Intent(getActivity(), SlugBreakdownActivity.class);
-                intent.putExtra(Constants.EXTRAS_FRAGMENT_TYPE, Constants.EXTRAS_FITNESS_FRAGMENT);
-                intent.putExtra(Constants.EXTRAS_CHART_FULL_NAME, chartTitle);
-                intent.putExtra(Constants.EXTRAS_CHART_TYPE_SELECTED, chartType);
-                intent.putExtra(Constants.BUNDLE_SLUG_BREAKDOWN_DATA,
-                    response.body().getData().getBody().getData());
-                getActivity().startActivity(intent);
-                break;
-            }
-          }
+            Intent intent = new Intent(getActivity(), SlugBreakdownActivity.class);
+            intent.putExtra(Constants.EXTRAS_FRAGMENT_TYPE, Constants.EXTRAS_FITNESS_FRAGMENT);
+            intent.putExtra(Constants.EXTRAS_CHART_FULL_NAME, chartTitle);
+            intent.putExtra(Constants.EXTRAS_CHART_TYPE_SELECTED, chartType);
+            intent.putExtra(Constants.BUNDLE_SLUG_BREAKDOWN_DATA,
+                response.body().getData().getBody().getData());
+            getActivity().startActivity(intent);
+            break;
+        }
+      }
 
-          @Override public void onFailure(Call<SlugBreakdownResponse> call, Throwable t) {
-          }
-        });
+      @Override public void onFailure(Call<SlugBreakdownResponse> call, Throwable t) {
+      }
+    });
   }
 
   /**
@@ -754,13 +744,18 @@ public class FitnessFragment extends Fragment implements SensorEventListener {
         if (!goalTV.getText().toString().isEmpty()
             && !todayTV.getText().toString().isEmpty()
             && !metricCounterTV.getText().toString().isEmpty()) {
-          remainingTV.setText(String.valueOf(
-              Integer.parseInt(goalTV.getText().toString()) - Integer.parseInt(
-                  metricCounterTV.getText().toString())));
+          int remainingValue = Integer.parseInt(goalTV.getText().toString()) - Integer.parseInt(
+              metricCounterTV.getText().toString());
 
-          metricProgressBar.setProgress(
-              ((Integer.parseInt(todayTV.getText().toString()) * 100) / Integer.parseInt(
-                  goalTV.getText().toString())));
+          if (remainingValue < 0) {
+            remainingTV.setText(String.valueOf(0));
+          } else {
+            remainingTV.setText(String.valueOf(remainingValue));
+
+            metricProgressBar.setProgress(
+                ((Integer.parseInt(todayTV.getText().toString()) * 100) / Integer.parseInt(
+                    goalTV.getText().toString())));
+          }
         }
 
         break;
@@ -786,9 +781,8 @@ public class FitnessFragment extends Fragment implements SensorEventListener {
   }
 
   private void updateUserCharts(int[] chartIds, int[] chartPositions) {
-    dataAccessHandler.updateUserCharts(
-        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
-        chartIds, chartPositions, new Callback<DefaultGetResponse>() {
+    dataAccessHandler.updateUserCharts(chartIds, chartPositions,
+        new Callback<DefaultGetResponse>() {
           @Override public void onResponse(Call<DefaultGetResponse> call,
               Response<DefaultGetResponse> response) {
             switch (response.code()) {
@@ -823,28 +817,25 @@ public class FitnessFragment extends Fragment implements SensorEventListener {
           }
         });
 
-    dataAccessHandler.deleteUserChart(
-        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
-        chart_id, new Callback<DefaultGetResponse>() {
-          @Override public void onResponse(Call<DefaultGetResponse> call,
-              Response<DefaultGetResponse> response) {
-            switch (response.code()) {
-              case 200:
-                waitingDialog.dismiss();
+    dataAccessHandler.deleteUserChart(chart_id, new Callback<DefaultGetResponse>() {
+      @Override
+      public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
+        switch (response.code()) {
+          case 200:
+            waitingDialog.dismiss();
 
-                Toast.makeText(parentActivity, "Chart deleted successfully", Toast.LENGTH_SHORT)
-                    .show();
+            Toast.makeText(parentActivity, "Chart deleted successfully", Toast.LENGTH_SHORT).show();
 
-                cards_container.removeAllViews();
+            cards_container.removeAllViews();
 
-                setupChartViews(chartsMap, todayDate);
+            setupChartViews(chartsMap, todayDate);
 
-                break;
-            }
-          }
+            break;
+        }
+      }
 
-          @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
-          }
-        });
+      @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+      }
+    });
   }
 }

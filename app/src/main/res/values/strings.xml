@@ -153,6 +153,12 @@
     <string name="enable_notifications_location_hint">To further improve your GlobeMed Fit experience, we would like to send you push notifications and
         access your location
     </string>
+    <string name="no_reimbursements_available">No Reimbursements Available</string>
+    <string name="you_did_not_submit_any_reimbursement_yet">You did not submit any reimbursement yet.</string>
+    <string name="submit_a_reimbursement">Submit a Reimbursement</string>
+    <string name="add_your_remarks_here">Add your remarks here</string>
+    <string name="fill_in_the_required_fields_below">Fill in the required fields below</string>
+    <string name="attach_all_the_required_documents_below">Attach all the required documents below</string>
     <string name="enable_notifications_location_permissions">Enable Notifications &amp; Location</string>
     <string name="gender_hint">Gender</string>
     <string name="date_of_birth_hint">Date of Birth</string>
@@ -207,6 +213,7 @@
     <string name="today_title">Today</string>
     <string name="remaining_title">Remaining</string>
     <string name="kilocalories_shorthand_unit">kcal</string>
+    <string name="scanned_meal_not_found">The meal you scanned was not found in our database of meals</string>
 
     <!-- HEALTH FRAGMENT -->
     <string name="user_weight_label_metric">Kilograms</string>
@@ -262,12 +269,6 @@
     <string name="emergency_profile_section_hint">In the case of an emergency, you can share this profile via email as a PDF file.
         The file will include profile information, medical conditions and the list of medications.
     </string>
-    <string name="no_reimbursements_available">No Reimbursements Available</string>
-    <string name="you_did_not_submit_any_reimbursement_yet">You did not submit any reimbursement yet.</string>
-    <string name="submit_a_reimbursement">Submit a Reimbursement</string>
-    <string name="add_your_remarks_here">Add your remarks here</string>
-    <string name="fill_in_the_required_fields_below">Fill in the required fields below</string>
-    <string name="attach_all_the_required_documents_below">Attach all the required documents below</string>
     <string name="share_emergency_profile_btn">Share Emergency Profile</string>
     <string name="application_settings_section_title">Application Settings</string>
     <string name="current_weight_entry">Current Weight</string>
@@ -358,7 +359,6 @@
     <string name="add_test_photos_bar_title">Attach Photos</string>
     <string name="add_photo_hint">+ Add a photo</string>
     <string name="no_storage_permission">To be able to attach photos, GMFit needs access to read from this device\'s external storage</string>
-    <string name="creating_new_test_dialog_title">Adding a new test</string>
-    <string name="editing_existing_test_dialog_title">Applying changes to test</string>
-    <string name="medication_information">Medication Information</string>
+    <string name="creating_new_test_dialog_title">Creating a new test</string>
+    <string name="editing_existing_test_dialog_title">Applying changes to medical test</string>
 </resources>

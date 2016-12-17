@@ -89,87 +89,83 @@ public class AddNewChartActivity extends BaseActivity {
   }
 
   private void getChartsBySection(String sectionName, final int requestCodeToSendBack) {
-    dataAccessHandler.getChartsBySection(
-        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
-        sectionName, new Callback<ChartsBySectionResponse>() {
-          @Override public void onResponse(Call<ChartsBySectionResponse> call,
-              Response<ChartsBySectionResponse> response) {
-            switch (response.code()) {
-              case 200:
-                waitingDialog.dismiss();
+    dataAccessHandler.getChartsBySection(sectionName, new Callback<ChartsBySectionResponse>() {
+      @Override public void onResponse(Call<ChartsBySectionResponse> call,
+          Response<ChartsBySectionResponse> response) {
+        switch (response.code()) {
+          case 200:
+            waitingDialog.dismiss();
 
-                List<ChartsBySectionResponseDatum> chartsFromResponse =
-                    response.body().getData().getBody().getData();
+            List<ChartsBySectionResponseDatum> chartsFromResponse =
+                response.body().getData().getBody().getData();
 
-                for (int i = 0; i < chartsFromResponse.size(); i++) {
-                  DataChart newChartToAdd = new DataChart();
+            for (int i = 0; i < chartsFromResponse.size(); i++) {
+              DataChart newChartToAdd = new DataChart();
 
-                  newChartToAdd.setType(chartsFromResponse.get(i).getSlug());
-                  newChartToAdd.setName(chartsFromResponse.get(i).getName());
-                  newChartToAdd.setMeasurementUnit(chartsFromResponse.get(i).getUnit());
-                  newChartToAdd.setChart_id(chartsFromResponse.get(i).getId());
+              newChartToAdd.setType(chartsFromResponse.get(i).getSlug());
+              newChartToAdd.setName(chartsFromResponse.get(i).getName());
+              newChartToAdd.setMeasurementUnit(chartsFromResponse.get(i).getUnit());
+              newChartToAdd.setChart_id(chartsFromResponse.get(i).getId());
 
-                  chartItemsMap.add(newChartToAdd);
-                }
-
-                chartsList.setAdapter(new DataChartsListingAdapter(chartItemsMap, AddNewChartActivity.this));
-
-                chartsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                  @Override
-                  public void onItemClick(AdapterView<?> adapterView, View view, int position,
-                      long l) {
-
-                    DataChart dataChart = chartItemsMap.get(position);
-
-                    if (!dataChart.getName().equals("Number of Steps")) {
-
-                      addMetricChart(dataChart.getChart_id());
-
-                      Intent intent = new Intent();
-                      intent.putExtra(Constants.EXTRAS_CHART_FULL_NAME, dataChart.getName());
-                      intent.putExtra(Constants.EXTRAS_CHART_TYPE_SELECTED, dataChart.getType());
-                      setResult(requestCodeToSendBack, intent);
-
-                      finish();
-                    } else {
-                      Toast.makeText(AddNewChartActivity.this, R.string.duplicate_chart_error,
-                          Toast.LENGTH_SHORT).show();
-                    }
-                  }
-                });
-
-                break;
+              chartItemsMap.add(newChartToAdd);
             }
-          }
 
-          @Override public void onFailure(Call<ChartsBySectionResponse> call, Throwable t) {
-            Timber.d("Call failed with error : %s", t.getMessage());
-            alertDialog.setMessage(
-                getResources().getString(R.string.error_response_from_server_incorrect));
-            alertDialog.show();
-          }
-        });
+            chartsList.setAdapter(
+                new DataChartsListingAdapter(chartItemsMap, AddNewChartActivity.this));
+
+            chartsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+              @Override
+              public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+
+                DataChart dataChart = chartItemsMap.get(position);
+
+                if (!dataChart.getName().equals("Number of Steps")) {
+
+                  addMetricChart(dataChart.getChart_id());
+
+                  Intent intent = new Intent();
+                  intent.putExtra(Constants.EXTRAS_CHART_FULL_NAME, dataChart.getName());
+                  intent.putExtra(Constants.EXTRAS_CHART_TYPE_SELECTED, dataChart.getType());
+                  setResult(requestCodeToSendBack, intent);
+
+                  finish();
+                } else {
+                  Toast.makeText(AddNewChartActivity.this, R.string.duplicate_chart_error,
+                      Toast.LENGTH_SHORT).show();
+                }
+              }
+            });
+
+            break;
+        }
+      }
+
+      @Override public void onFailure(Call<ChartsBySectionResponse> call, Throwable t) {
+        Timber.d("Call failed with error : %s", t.getMessage());
+        alertDialog.setMessage(
+            getResources().getString(R.string.error_response_from_server_incorrect));
+        alertDialog.show();
+      }
+    });
   }
 
   private void addMetricChart(int chart_id) {
-    dataAccessHandler.addMetricChart(
-        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
-        chart_id, new Callback<DefaultGetResponse>() {
-          @Override public void onResponse(Call<DefaultGetResponse> call,
-              Response<DefaultGetResponse> response) {
-            switch (response.code()) {
-              case 200:
-                Timber.d("onResponse: Successfully add a new chart!");
-                break;
-            }
-          }
+    dataAccessHandler.addMetricChart(chart_id, new Callback<DefaultGetResponse>() {
+      @Override
+      public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
+        switch (response.code()) {
+          case 200:
+            Timber.d("onResponse: Successfully add a new chart!");
+            break;
+        }
+      }
 
-          @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
-            Timber.d("Call failed with error : %s", t.getMessage());
-            alertDialog.setMessage(
-                getResources().getString(R.string.error_response_from_server_incorrect));
-            alertDialog.show();
-          }
-        });
+      @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+        Timber.d("Call failed with error : %s", t.getMessage());
+        alertDialog.setMessage(
+            getResources().getString(R.string.error_response_from_server_incorrect));
+        alertDialog.show();
+      }
+    });
   }
 }

@@ -15,7 +15,7 @@ public class Constants {
 
   public static final String EXTRAS_FIRST_APP_LAUNCH = "first_app_launch";
 
-  public static final int WAIT_TIME_BEFORE_CHECKING_METRICS_SERVICE = 60000;
+  public static final int WAIT_TIME_BEFORE_CHECKING_METRICS_SERVICE = 120000;
 
   public static final int NUMBER_OF_DAYS_IN_DATE_CAROUSEL = 8;
 
@@ -50,6 +50,7 @@ public class Constants {
   public static final String EXTRAS_CHART_FULL_NAME = "chart_full_name";
   public static final String EXTRAS_CHART_OBJECT = "chart_object";
   public static final String EXTRAS_MEAL_OBJECT_DETAILS = "meal_object_details";
+  public static final String MEAL_TYPE = "meal_type";
   public static final String EXTRAS_MEAL_ITEM_PURPOSE_ADDING_TO_DATE =
       "meal_item_purpose_adding_to_date";
   public static final String EXTRAS_DATE_TO_ADD_MEAL_ON = "date_to_add_meal_on";
@@ -92,6 +93,8 @@ public class Constants {
   public static final String BUNDLE_ACTIVITY_BACK_BUTTON_ENABLED = "activity_back_button_enabled";
   public static final String BUNDLE_FITNESS_WIDGETS_MAP = "fitness_widgets_map";
   public static final String BUNDLE_FITNESS_CHARTS_MAP = "fitness_charts_map";
+  public static final String BUNDLE_HEALTH_WIDGETS_MAP = "health_widgets_map";
+  public static final String BUNDLE_HEALTH_CHARTS_MAP = "health_charts_map";
   public static final String BUNDLE_NUTRITION_WIDGETS_MAP = "nutrition_widgets_map";
   public static final String BUNDLE_NUTRITION_CHARTS_MAP = "nutrition_charts_map";
 
@@ -112,11 +115,9 @@ public class Constants {
   public static final String EVENT_STEP_COUNTER_INCREMENTED = "step_counter_incremented";
   public static final String EVENT_CALORIES_COUNTER_INCREMENTED = "calories_counter_incremented";
   public static final String EVENT_DISTANCE_COUNTER_INCREMENTED = "distance_counter_incremented";
-  public static final String EVENT_FINISHED_SETTING_UP_PROFILE_SUCCESSFULLY =
-      "finished_setting_up_profile_successfully";
 
   public static final String EVENT_SIGNNED_UP_SUCCESSFULLY_CLOSE_LOGIN_ACTIVITY =
-      "signned_up_successfully_close_login_activity";
+      "signed_up_successfully_close_login_activity";
 
   //REGISTERATION API
   public static final String NO_ACCESS_TOKEN_FOUND_IN_PREFS = "no_access_token_in_prefs";

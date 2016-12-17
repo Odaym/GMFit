@@ -10,9 +10,9 @@ import com.mcsaatchi.gmfit.BuildConfig;
 import com.mcsaatchi.gmfit.architecture.dagger.AppComponent;
 import com.mcsaatchi.gmfit.architecture.dagger.AppModule;
 import com.mcsaatchi.gmfit.architecture.dagger.DaggerAppComponent;
+import com.mcsaatchi.gmfit.architecture.timber.TimberReleaseTree;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
-import com.mcsaatchi.gmfit.architecture.timber.TimberReleaseTree;
 import io.fabric.sdk.android.Fabric;
 import timber.log.Timber;
 

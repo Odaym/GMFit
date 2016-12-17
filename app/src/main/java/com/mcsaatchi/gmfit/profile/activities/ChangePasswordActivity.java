@@ -97,9 +97,8 @@ public class ChangePasswordActivity extends BaseActivity {
           }
         });
 
-    dataAccessHandler.changePassword(
-        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
-        old_password, new_password, new Callback<DefaultGetResponse>() {
+    dataAccessHandler.changePassword(old_password, new_password,
+        new Callback<DefaultGetResponse>() {
           @Override public void onResponse(Call<DefaultGetResponse> call,
               Response<DefaultGetResponse> response) {
             switch (response.code()) {

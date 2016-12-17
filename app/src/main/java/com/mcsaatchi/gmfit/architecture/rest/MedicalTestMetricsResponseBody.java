@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MedicalTestMetricsResponseBody implements Parcelable{
+public class MedicalTestMetricsResponseBody implements Parcelable {
   public static final Creator<MedicalTestMetricsResponseBody> CREATOR =
       new Creator<MedicalTestMetricsResponseBody>() {
         @Override public MedicalTestMetricsResponseBody createFromParcel(Parcel source) {

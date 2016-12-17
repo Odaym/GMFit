@@ -33,8 +33,8 @@ public class HealthWidget implements Parcelable {
     this.measurementUnit = in.readString();
     this.percentage = in.readDouble();
     this.position = in.readInt();
-    this.slug = in.readString();
     this.widget_id = in.readInt();
+    this.slug = in.readString();
   }
 
   public String getSlug() {
@@ -110,9 +110,9 @@ public class HealthWidget implements Parcelable {
     dest.writeDouble(this.value);
     dest.writeString(this.title);
     dest.writeString(this.measurementUnit);
-    dest.writeString(this.slug);
     dest.writeDouble(this.percentage);
     dest.writeInt(this.position);
     dest.writeInt(this.widget_id);
+    dest.writeString(this.slug);
   }
 }

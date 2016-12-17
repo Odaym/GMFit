@@ -57,7 +57,7 @@ public class UserMealsRecyclerAdapterDragSwipe
     holder.entryTitleTV.setText(meal.getName());
 
     if (meal.getAmount() != null) {
-      if (Integer.parseInt(meal.getAmount()) > 1) {
+      if (Float.parseFloat(meal.getAmount()) > 1) {
         holder.entryDescriptionTV.setText(meal.getAmount() + " servings");
       } else {
         holder.entryDescriptionTV.setText("1 serving");
@@ -86,32 +86,30 @@ public class UserMealsRecyclerAdapterDragSwipe
   }
 
   private void deleteUserMeal(int instance_id) {
-    dataAccessHandler.deleteUserMeal(
-        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS),
-        instance_id, new Callback<DefaultGetResponse>() {
-          @Override public void onResponse(Call<DefaultGetResponse> call,
-              Response<DefaultGetResponse> response) {
-            Log.d("TAG", "onResponse: Response code was : " + response.code());
+    dataAccessHandler.deleteUserMeal(instance_id, new Callback<DefaultGetResponse>() {
+      @Override
+      public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
+        Log.d("TAG", "onResponse: Response code was : " + response.code());
 
-            switch (response.code()) {
-              case 200:
-                Log.d("TAG", "onResponse: Meal item removed!");
+        switch (response.code()) {
+          case 200:
+            Log.d("TAG", "onResponse: Meal item removed!");
 
-                EventBusSingleton.getInstance()
-                    .post(new EventBusPoster(Constants.EXTRAS_DELETED_MEAL_ENTRY));
+            EventBusSingleton.getInstance()
+                .post(new EventBusPoster(Constants.EXTRAS_DELETED_MEAL_ENTRY));
 
-                break;
-            }
-          }
+            break;
+        }
+      }
 
-          @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
-            Timber.d("Call failed with error : %s", t.getMessage());
-            final AlertDialog alertDialog = new AlertDialog.Builder(context).create();
-            alertDialog.setMessage(
-                context.getResources().getString(R.string.error_response_from_server_incorrect));
-            alertDialog.show();
-          }
-        });
+      @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+        Timber.d("Call failed with error : %s", t.getMessage());
+        final AlertDialog alertDialog = new AlertDialog.Builder(context).create();
+        alertDialog.setMessage(
+            context.getResources().getString(R.string.error_response_from_server_incorrect));
+        alertDialog.show();
+      }
+    });
   }
 
   class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

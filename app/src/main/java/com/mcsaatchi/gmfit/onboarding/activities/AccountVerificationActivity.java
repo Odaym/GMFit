@@ -77,34 +77,33 @@ public class AccountVerificationActivity extends BaseActivity {
           }
         });
 
-    dataAccessHandler.verifyUser(prefs.getString(Constants.PREF_USER_ACCESS_TOKEN, ""),
-        verificationCode, new Callback<DefaultGetResponse>() {
-          @Override public void onResponse(Call<DefaultGetResponse> call,
-              Response<DefaultGetResponse> response) {
-            switch (response.code()) {
-              case 200:
-                waitingDialog.dismiss();
+    dataAccessHandler.verifyUser(verificationCode, new Callback<DefaultGetResponse>() {
+      @Override
+      public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
+        switch (response.code()) {
+          case 200:
+            waitingDialog.dismiss();
 
-                prefs.edit().putBoolean(Constants.EXTRAS_USER_LOGGED_IN, true).apply();
+            prefs.edit().putBoolean(Constants.EXTRAS_USER_LOGGED_IN, true).apply();
 
-                Intent intent =
-                    new Intent(AccountVerificationActivity.this, SetupProfileActivity.class);
-                startActivity(intent);
-                finish();
-                break;
-              case 401:
-                alertDialog.setMessage(getString(R.string.wrong_verification_code));
-                alertDialog.show();
-                break;
-            }
-          }
-
-          @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
-            Timber.d("Call failed with error : %s", t.getMessage());
-            alertDialog.setMessage(
-                getResources().getString(R.string.error_response_from_server_incorrect));
+            Intent intent =
+                new Intent(AccountVerificationActivity.this, SetupProfileActivity.class);
+            startActivity(intent);
+            finish();
+            break;
+          case 401:
+            alertDialog.setMessage(getString(R.string.wrong_verification_code));
             alertDialog.show();
-          }
-        });
+            break;
+        }
+      }
+
+      @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+        Timber.d("Call failed with error : %s", t.getMessage());
+        alertDialog.setMessage(
+            getResources().getString(R.string.error_response_from_server_incorrect));
+        alertDialog.show();
+      }
+    });
   }
 }

@@ -45,6 +45,7 @@ import com.google.android.gms.vision.MultiProcessor;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
 import com.mcsaatchi.gmfit.R;
+import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.nutrition.barcode_reader.BarcodeGraphic;
 import com.mcsaatchi.gmfit.nutrition.barcode_reader.BarcodeTrackerFactory;
@@ -72,9 +73,8 @@ public final class BarcodeCaptureActivity extends BaseActivity {
   private static final int RC_HANDLE_GMS = 9001;
   // permission request codes need to be < 256
   private static final int RC_HANDLE_CAMERA_PERM = 2;
-
   @Bind(R.id.toolbar) Toolbar toolbar;
-
+  private String mealType;
   private CameraSource mCameraSource;
   private CameraSourcePreview mPreview;
   private GraphicOverlay<BarcodeGraphic> mGraphicOverlay;
@@ -97,6 +97,10 @@ public final class BarcodeCaptureActivity extends BaseActivity {
 
     mPreview = (CameraSourcePreview) findViewById(R.id.preview);
     mGraphicOverlay = (GraphicOverlay<BarcodeGraphic>) findViewById(R.id.graphicOverlay);
+
+    if (getIntent().getExtras() != null) {
+      mealType = getIntent().getExtras().getString(Constants.MEAL_TYPE);
+    }
 
     // read parameters from the intent used to launch the activity.
     boolean autoFocus = getIntent().getBooleanExtra(AutoFocus, false);
@@ -312,6 +316,7 @@ public final class BarcodeCaptureActivity extends BaseActivity {
       if (barcode != null) {
         Intent data = new Intent();
         data.putExtra(BarcodeObject, barcode);
+        data.putExtra(Constants.MEAL_TYPE, mealType);
         setResult(CommonStatusCodes.SUCCESS, data);
         finish();
       } else {
