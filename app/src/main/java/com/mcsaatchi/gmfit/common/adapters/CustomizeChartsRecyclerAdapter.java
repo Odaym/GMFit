@@ -6,13 +6,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.otto.EventBusPoster;
 import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
-import com.mcsaatchi.gmfit.common.models.DataChart;
 import com.mcsaatchi.gmfit.architecture.touch_helpers.DragItemTouchHelperAdapter;
-
+import com.mcsaatchi.gmfit.common.models.DataChart;
 import java.util.Collections;
 import java.util.List;
 

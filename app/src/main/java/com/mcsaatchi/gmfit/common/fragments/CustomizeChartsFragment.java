@@ -9,18 +9,15 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.common.adapters.CustomizeChartsRecyclerAdapter;
-import com.mcsaatchi.gmfit.common.Constants;
-import com.mcsaatchi.gmfit.common.classes.SimpleDividerItemDecoration;
-import com.mcsaatchi.gmfit.common.models.DataChart;
-import com.mcsaatchi.gmfit.architecture.touch_helpers.SimpleDragItemTouchHelperCallback;
-
-import java.util.List;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import com.mcsaatchi.gmfit.R;
+import com.mcsaatchi.gmfit.architecture.touch_helpers.SimpleDragItemTouchHelperCallback;
+import com.mcsaatchi.gmfit.common.Constants;
+import com.mcsaatchi.gmfit.common.adapters.CustomizeChartsRecyclerAdapter;
+import com.mcsaatchi.gmfit.common.classes.SimpleDividerItemDecoration;
+import com.mcsaatchi.gmfit.common.models.DataChart;
+import java.util.List;
 
 public class CustomizeChartsFragment extends Fragment {
 

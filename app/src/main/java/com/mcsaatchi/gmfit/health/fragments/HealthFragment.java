@@ -22,20 +22,20 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.GMFitApplication;
-import com.mcsaatchi.gmfit.common.activities.CustomizeWidgetsAndChartsActivity;
-import com.mcsaatchi.gmfit.health.activities.AddNewHealthTestActivity;
-import com.mcsaatchi.gmfit.health.adapters.HealthWidgetsGridAdapter;
-import com.mcsaatchi.gmfit.health.adapters.UserTestsRecyclerAdapter;
-import com.mcsaatchi.gmfit.common.Constants;
+import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.architecture.otto.EventBusPoster;
 import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
-import com.mcsaatchi.gmfit.common.classes.SimpleDividerItemDecoration;
-import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
-import com.mcsaatchi.gmfit.health.models.HealthWidget;
 import com.mcsaatchi.gmfit.architecture.rest.TakenMedicalTestsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.TakenMedicalTestsResponseBody;
 import com.mcsaatchi.gmfit.architecture.rest.WidgetsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.WidgetsResponseDatum;
+import com.mcsaatchi.gmfit.common.Constants;
+import com.mcsaatchi.gmfit.common.activities.CustomizeWidgetsAndChartsActivity;
+import com.mcsaatchi.gmfit.common.classes.SimpleDividerItemDecoration;
+import com.mcsaatchi.gmfit.health.activities.AddNewHealthTestActivity;
+import com.mcsaatchi.gmfit.health.adapters.HealthWidgetsGridAdapter;
+import com.mcsaatchi.gmfit.health.adapters.UserTestsRecyclerAdapter;
+import com.mcsaatchi.gmfit.health.models.HealthWidget;
 import com.squareup.otto.Subscribe;
 import java.util.ArrayList;
 import java.util.List;
@@ -200,7 +200,7 @@ public class HealthFragment extends Fragment {
     EventBusSingleton.getInstance().unregister(this);
   }
 
-  private void setupWidgetViews(ArrayList<HealthWidget> healthWidgetsMap){
+  private void setupWidgetViews(ArrayList<HealthWidget> healthWidgetsMap) {
     if (!healthWidgetsMap.isEmpty() && healthWidgetsMap.size() > 4) {
       healthWidgetsMap = new ArrayList<>(healthWidgetsMap.subList(0, 4));
 

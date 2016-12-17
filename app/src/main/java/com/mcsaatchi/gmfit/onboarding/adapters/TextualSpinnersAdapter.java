@@ -7,9 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
-
 import com.mcsaatchi.gmfit.R;
-
 import java.util.ArrayList;
 
 public class TextualSpinnersAdapter extends BaseAdapter implements SpinnerAdapter {

@@ -10,17 +10,14 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.architecture.rest.SlugBreakdownResponseYearly;
-
+import com.mcsaatchi.gmfit.common.Constants;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Locale;
-
-import butterknife.Bind;
-import butterknife.ButterKnife;
 
 public class SlugBreakdownFragmentYearly extends Fragment {
   @Bind(R.id.slugBreakdownListView) ListView slugBreakdownListView;

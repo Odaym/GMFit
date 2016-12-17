@@ -17,10 +17,9 @@ import com.mcsaatchi.gmfit.insurance.activities.UpdatePasswordActivity;
 import com.squareup.picasso.Picasso;
 
 public class InsuranceLoginFragment extends Fragment {
+  public static final int INFO_UPDATED_SUCCESSFULLY_AFTER_LOGIN = 537;
   @Bind(R.id.memberImageIV) ImageView memberImageIV;
   @Bind(R.id.loginBTN) Button loginBTN;
-
-  public static final int INFO_UPDATED_SUCCESSFULLY_AFTER_LOGIN = 537;
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {

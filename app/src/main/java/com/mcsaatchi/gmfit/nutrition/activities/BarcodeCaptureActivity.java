@@ -37,7 +37,8 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.widget.Toast;
-
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.CommonStatusCodes;
@@ -52,11 +53,7 @@ import com.mcsaatchi.gmfit.nutrition.barcode_reader.BarcodeTrackerFactory;
 import com.mcsaatchi.gmfit.nutrition.barcode_reader.CameraSource;
 import com.mcsaatchi.gmfit.nutrition.barcode_reader.CameraSourcePreview;
 import com.mcsaatchi.gmfit.nutrition.barcode_reader.GraphicOverlay;
-
 import java.io.IOException;
-
-import butterknife.Bind;
-import butterknife.ButterKnife;
 
 /**
  * Activity for the multi-tracker app.  This app detects barcodes and displays the value with the

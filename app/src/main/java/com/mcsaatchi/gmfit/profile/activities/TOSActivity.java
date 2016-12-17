@@ -5,11 +5,9 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.text.method.LinkMovementMethod;
 import android.widget.TextView;
-
-import com.mcsaatchi.gmfit.R;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 
 public class TOSActivity extends BaseActivity {

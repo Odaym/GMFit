@@ -2,9 +2,7 @@ package com.mcsaatchi.gmfit.common.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponseChartData;
-
 import java.util.ArrayList;
 
 public class DataChart implements Parcelable {

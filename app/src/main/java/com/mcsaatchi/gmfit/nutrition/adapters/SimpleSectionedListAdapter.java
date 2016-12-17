@@ -7,13 +7,10 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.nutrition.models.MealItem;
-
-import java.util.List;
-
 import de.halfbit.pinnedsection.PinnedSectionListView;
+import java.util.List;
 
 public class SimpleSectionedListAdapter extends BaseAdapter
     implements PinnedSectionListView.PinnedSectionListAdapter {
