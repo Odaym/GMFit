@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_weight=".6"
+            android:background="@android:color/white"
+            android:padding="20dp">
+
+            <TextView
+                android:id="@+id/item_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:textColor="@color/buttons_text_color"
+                tools:text="Subcategory"/>
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/touchableContainer"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_weight=".4"
+            android:background="@color/much_lighter_gray"
+            android:clickable="true"
+            android:foreground="?android:selectableItemBackground"
+            android:padding="20dp">
+
+            <TextView
+                android:id="@+id/item_selected"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                tools:text="Choose a subcategory"/>
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_arrow_down_green"
+                android:tint="@color/arrow_blue"/>
+        </RelativeLayout>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/offwhite_background_gray"/>
+
+</LinearLayout>
