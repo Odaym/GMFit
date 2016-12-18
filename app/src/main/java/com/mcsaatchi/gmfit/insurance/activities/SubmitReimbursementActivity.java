@@ -1,7 +1,10 @@
 package com.mcsaatchi.gmfit.insurance.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.widget.Button;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.mcsaatchi.gmfit.R;
@@ -21,6 +24,8 @@ public class SubmitReimbursementActivity extends BaseActivity {
 
   @Bind(R.id.categoryInOutToggle) CustomToggle categoryToggle;
 
+  @Bind(R.id.submitReimbursementBTN) Button submitReimbursementBTN;
+
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_submit_reimbursement);
@@ -33,21 +38,32 @@ public class SubmitReimbursementActivity extends BaseActivity {
 
           }
         });
+
     serviceDate.setUpDatePicker("Service Date", "Choose a date",
         new CustomPicker.OnDatePickerClickListener() {
           @Override public void dateSet(int year, int month, int dayOfMonth) {
 
           }
         });
+
     amount.setUpDropDown("Amount", "Enter amount", new String[] { "item 1", "item 2", "item 3" },
         new CustomPicker.OnDropDownClickListener() {
           @Override public void onClick(int index, String selected) {
 
           }
         });
+
     categoryToggle.setUp("Category", "Out", "In", new CustomToggle.OnToggleListener() {
       @Override public void selected(String option) {
 
+      }
+    });
+
+    submitReimbursementBTN.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View view) {
+        Intent intent =
+            new Intent(SubmitReimbursementActivity.this, ReimbursementStatusListActivity.class);
+        startActivity(intent);
       }
     });
   }

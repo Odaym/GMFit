@@ -1,6 +1,9 @@
 package com.mcsaatchi.gmfit.insurance.models;
 
-public class MedicalInformationModel {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class MedicalInformationModel implements Parcelable{
   private String medicineName;
   private String status;
   private String tabletCount;
@@ -55,4 +58,35 @@ public class MedicalInformationModel {
   public void setDuration(String duration) {
     this.duration = duration;
   }
+
+  @Override public int describeContents() {
+    return 0;
+  }
+
+  @Override public void writeToParcel(Parcel dest, int flags) {
+    dest.writeString(this.medicineName);
+    dest.writeString(this.status);
+    dest.writeString(this.tabletCount);
+    dest.writeString(this.frequency);
+    dest.writeString(this.duration);
+  }
+
+  protected MedicalInformationModel(Parcel in) {
+    this.medicineName = in.readString();
+    this.status = in.readString();
+    this.tabletCount = in.readString();
+    this.frequency = in.readString();
+    this.duration = in.readString();
+  }
+
+  public static final Creator<MedicalInformationModel> CREATOR =
+      new Creator<MedicalInformationModel>() {
+        @Override public MedicalInformationModel createFromParcel(Parcel source) {
+          return new MedicalInformationModel(source);
+        }
+
+        @Override public MedicalInformationModel[] newArray(int size) {
+          return new MedicalInformationModel[size];
+        }
+      };
 }

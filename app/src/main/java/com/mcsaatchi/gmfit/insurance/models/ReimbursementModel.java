@@ -1,8 +1,11 @@
 package com.mcsaatchi.gmfit.insurance.models;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+import java.util.ArrayList;
 import java.util.List;
 
-public class ReimbursementModel {
+public class ReimbursementModel implements Parcelable {
   private String id;
   private String category;
   private String subCategory;
@@ -87,4 +90,41 @@ public class ReimbursementModel {
   public void setMedicines(List<MedicalInformationModel> medicines) {
     this.medicines = medicines;
   }
+
+  @Override public int describeContents() {
+    return 0;
+  }
+
+  @Override public void writeToParcel(Parcel dest, int flags) {
+    dest.writeString(this.id);
+    dest.writeString(this.category);
+    dest.writeString(this.subCategory);
+    dest.writeString(this.serviceDate);
+    dest.writeString(this.amount);
+    dest.writeString(this.status);
+    dest.writeString(this.type);
+    dest.writeList(this.medicines);
+  }
+
+  protected ReimbursementModel(Parcel in) {
+    this.id = in.readString();
+    this.category = in.readString();
+    this.subCategory = in.readString();
+    this.serviceDate = in.readString();
+    this.amount = in.readString();
+    this.status = in.readString();
+    this.type = in.readString();
+    this.medicines = new ArrayList<MedicalInformationModel>();
+    in.readList(this.medicines, MedicalInformationModel.class.getClassLoader());
+  }
+
+  public static final Creator<ReimbursementModel> CREATOR = new Creator<ReimbursementModel>() {
+    @Override public ReimbursementModel createFromParcel(Parcel source) {
+      return new ReimbursementModel(source);
+    }
+
+    @Override public ReimbursementModel[] newArray(int size) {
+      return new ReimbursementModel[size];
+    }
+  };
 }

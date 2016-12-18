@@ -321,6 +321,7 @@
   <string name="widget_members_guide">Member\'s Guide</string>
   <string name="widget_coverage_description">Coverage Description</string>
   <string name="widget_snapshot">Snapshot</string>
+  <string name="medication_information">Medication Information</string>
 
   <!-- INSURANCE UPDATE PASSWORD ACTIVITY -->
   <string name="insurance_update_password_activity_title">Update Password</string>

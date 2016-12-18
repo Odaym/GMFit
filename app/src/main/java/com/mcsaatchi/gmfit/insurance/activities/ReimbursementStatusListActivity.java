@@ -7,7 +7,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import com.google.gson.Gson;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.insurance.adapters.StatusAdapter;
@@ -21,7 +20,6 @@ public class ReimbursementStatusListActivity extends BaseActivity {
   @Bind(R.id.toolbar) Toolbar toolbar;
   @Bind(R.id.recyclerView) RecyclerView recyclerView;
   StatusAdapter statusAdapter;
-  private Gson gson = new Gson();
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -59,8 +57,7 @@ public class ReimbursementStatusListActivity extends BaseActivity {
       @Override public void onClick(ReimbursementModel reimbursementModel, int index) {
         Intent intent =
             new Intent(ReimbursementStatusListActivity.this, ReimbursementStatusActivity.class);
-        intent.putExtra(ReimbursementStatusActivity.REIMBURSEMENT_MODEL_KEY,
-            gson.toJson(reimbursementModel));
+        intent.putExtra(ReimbursementStatusActivity.REIMBURSEMENT_MODEL_KEY, reimbursementModel);
         startActivity(intent);
       }
     });
