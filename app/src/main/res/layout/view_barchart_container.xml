@@ -39,14 +39,6 @@
           android:textColor="@color/white"
           android:textSize="@dimen/default_small_font_size"
           />
-      <Button
-          android:id="@+id/showChartValuesBTN"
-          android:layout_width="30dp"
-          android:layout_height="30dp"
-          android:layout_alignParentEnd="true"
-          android:layout_centerVertical="true"
-          android:layout_marginEnd="@dimen/default_margin_1"
-          />
     </RelativeLayout>
 
     <com.github.mikephil.charting.charts.BarChart

@@ -944,9 +944,6 @@ public class NutritionFragment extends Fragment {
 
     TextView chartTitleTV = (TextView) barChartLayout.findViewById(R.id.chartTitleTV);
     final BarChart barChart = (BarChart) barChartLayout.findViewById(R.id.barChart);
-    Button showChartValuesBTN = (Button) barChartLayout.findViewById(R.id.showChartValuesBTN);
-
-    showChartValuesBTN.setBackgroundResource(R.drawable.ic_format_list_numbered_white_24dp);
 
     if (chartTitle != null) chartTitleTV.setText(chartTitle);
 
@@ -967,20 +964,6 @@ public class NutritionFragment extends Fragment {
       barChart.setOnClickListener(new View.OnClickListener() {
         @Override public void onClick(View view) {
           getSlugBreakdownForChart(chartTitle, chartTitle);
-        }
-      });
-
-      showChartValuesBTN.setOnClickListener(new View.OnClickListener() {
-        @Override public void onClick(View view) {
-          if (setDrawValuesDisabled) {
-            barChart.getBarData().setDrawValues(true);
-          } else {
-            barChart.getBarData().setDrawValues(false);
-          }
-
-          setDrawValuesDisabled = !setDrawValuesDisabled;
-
-          barChart.invalidate();
         }
       });
     }
@@ -1088,7 +1071,10 @@ public class NutritionFragment extends Fragment {
                   }
                 }
 
-                Helpers.setBarChartData(barchart, newChartData);
+                if (isAdded()) {
+                  Helpers.setBarChartData(getActivity(), Constants.EXTRAS_NUTRITION_FRAGMENT,
+                      barchart, newChartData);
+                }
               }
             }
           }
