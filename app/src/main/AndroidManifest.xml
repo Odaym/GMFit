@@ -176,7 +176,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/No_Action_Bar_Theme"/>
         <activity
-            android:name=".insurance.activities.ApprovalRequestsStatus"
+            android:name=".insurance.activities.ApprovalRequestsStatusActivity"
             android:screenOrientation="portrait"
             android:theme="@style/No_Action_Bar_Theme"/>
 

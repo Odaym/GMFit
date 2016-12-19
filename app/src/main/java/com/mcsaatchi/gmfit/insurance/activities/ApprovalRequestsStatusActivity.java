@@ -10,7 +10,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class ApprovalRequestsStatus extends BaseActivity {
+public class ApprovalRequestsStatusActivity extends BaseActivity {
 
     @Bind(R.id.toolbar)
     Toolbar toolbar;
