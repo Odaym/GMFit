@@ -13,21 +13,18 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
-
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.architecture.otto.EventBusPoster;
 import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
+import com.mcsaatchi.gmfit.architecture.rest.SlugBreakdownResponseInnerData;
+import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.classes.SlidingTabLayout;
 import com.mcsaatchi.gmfit.common.fragments.SlugBreakdownFragmentDaily;
 import com.mcsaatchi.gmfit.common.fragments.SlugBreakdownFragmentMonthly;
 import com.mcsaatchi.gmfit.common.fragments.SlugBreakdownFragmentYearly;
-import com.mcsaatchi.gmfit.architecture.rest.SlugBreakdownResponseInnerData;
-
 import java.util.ArrayList;
-
-import butterknife.Bind;
-import butterknife.ButterKnife;
 
 public class SlugBreakdownActivity extends BaseActivity {
   private static final int DAY_BREAKDOWN = 0;

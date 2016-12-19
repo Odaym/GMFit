@@ -42,9 +42,7 @@ import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-
 import com.mcsaatchi.gmfit.R;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;

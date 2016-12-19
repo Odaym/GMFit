@@ -7,25 +7,22 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.mcsaatchi.gmfit.R;
+import com.mcsaatchi.gmfit.architecture.otto.EventBusPoster;
+import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
+import com.mcsaatchi.gmfit.architecture.reorderable_listview.DragSortListView;
+import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.fitness.adapters.FitnessWidgetsListAdapter;
+import com.mcsaatchi.gmfit.fitness.models.FitnessWidget;
 import com.mcsaatchi.gmfit.health.adapters.HealthWidgetsListAdapter;
 import com.mcsaatchi.gmfit.health.models.HealthWidget;
 import com.mcsaatchi.gmfit.nutrition.adapters.NutritionWidgetsListAdapter;
-import com.mcsaatchi.gmfit.common.Constants;
-import com.mcsaatchi.gmfit.architecture.otto.EventBusPoster;
-import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
-import com.mcsaatchi.gmfit.fitness.models.FitnessWidget;
 import com.mcsaatchi.gmfit.nutrition.models.NutritionWidget;
-import com.mcsaatchi.gmfit.architecture.reorderable_listview.DragSortListView;
-
 import java.util.ArrayList;
-
-import butterknife.Bind;
-import butterknife.ButterKnife;
 
 public class CustomizeWidgetsFragment extends Fragment {
   @Bind(R.id.widgetsListView) DragSortListView widgetsListView;

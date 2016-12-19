@@ -6,10 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
-
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.nutrition.models.NutritionalFact;
-
 import java.util.List;
 
 public class NutritionalFactsListAdapter extends BaseAdapter {

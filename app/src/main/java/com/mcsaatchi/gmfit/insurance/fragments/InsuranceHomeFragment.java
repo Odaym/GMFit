@@ -45,7 +45,7 @@ public class InsuranceHomeFragment extends Fragment {
       ArrayList<InsuranceOperationWidget> insuranceOperationWidgets) {
 
     InsuranceOperationWidgetsGridAdapter widgetsAdapter =
-        new InsuranceOperationWidgetsGridAdapter(insuranceOperationWidgets);
+        new InsuranceOperationWidgetsGridAdapter(getActivity(), insuranceOperationWidgets);
 
     GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2);
     gridLayoutManager.setSpanCount(4);

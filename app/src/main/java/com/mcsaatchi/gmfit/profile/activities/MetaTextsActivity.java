@@ -8,8 +8,8 @@ import android.webkit.WebView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.common.Constants;
+import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 
 public class MetaTextsActivity extends BaseActivity {
   @Bind(R.id.metaTextsWebView) WebView metaTextsWebView;

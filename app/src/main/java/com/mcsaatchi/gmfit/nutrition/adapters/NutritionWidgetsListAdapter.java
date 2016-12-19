@@ -8,10 +8,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.nutrition.models.NutritionWidget;
-
 import java.util.ArrayList;
 
 public class NutritionWidgetsListAdapter extends BaseAdapter {

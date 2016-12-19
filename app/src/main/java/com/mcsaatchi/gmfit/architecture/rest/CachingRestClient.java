@@ -1,8 +1,8 @@
 package com.mcsaatchi.gmfit.architecture.rest;
 
 import android.util.Log;
-import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.architecture.GMFitApplication;
+import com.mcsaatchi.gmfit.common.Constants;
 import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;

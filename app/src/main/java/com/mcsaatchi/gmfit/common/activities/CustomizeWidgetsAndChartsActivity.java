@@ -8,7 +8,8 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.widget.LinearLayout;
-
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.classes.SlidingTabLayout;
@@ -18,11 +19,7 @@ import com.mcsaatchi.gmfit.common.models.DataChart;
 import com.mcsaatchi.gmfit.fitness.models.FitnessWidget;
 import com.mcsaatchi.gmfit.health.models.HealthWidget;
 import com.mcsaatchi.gmfit.nutrition.models.NutritionWidget;
-
 import java.util.ArrayList;
-
-import butterknife.Bind;
-import butterknife.ButterKnife;
 
 public class CustomizeWidgetsAndChartsActivity extends BaseActivity {
   @Bind(R.id.pager) ViewPager pager;
@@ -79,8 +76,7 @@ public class CustomizeWidgetsAndChartsActivity extends BaseActivity {
           case Constants.EXTRAS_HEALTH_FRAGMENT:
             healthWidgetsMapExtra =
                 intentExtras.getParcelableArrayList(Constants.BUNDLE_HEALTH_WIDGETS_MAP);
-            mainLayoutTop.setBackground(
-                getResources().getDrawable(R.drawable.health_background));
+            mainLayoutTop.setBackground(getResources().getDrawable(R.drawable.health_background));
             break;
         }
       }

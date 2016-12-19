@@ -305,7 +305,10 @@ public class FitnessFragment extends Fragment implements SensorEventListener {
                   }
                 }
 
-                Helpers.setBarChartData(barchart, newChartData);
+                if (isAdded()) {
+                  Helpers.setBarChartData(getActivity(), Constants.EXTRAS_FITNESS_FRAGMENT,
+                      barchart, newChartData);
+                }
               }
             }
           }
@@ -545,9 +548,6 @@ public class FitnessFragment extends Fragment implements SensorEventListener {
     final TextView chartTitleTV_NEW_CHART =
         (TextView) barChartLayout.findViewById(R.id.chartTitleTV);
     final BarChart barChart = (BarChart) barChartLayout.findViewById(R.id.barChart);
-    Button showChartValuesBTN = (Button) barChartLayout.findViewById(R.id.showChartValuesBTN);
-
-    showChartValuesBTN.setBackgroundResource(R.drawable.ic_format_list_numbered_white_24dp);
 
     if (chartTitle != null) chartTitleTV_NEW_CHART.setText(chartTitle);
 
@@ -584,22 +584,6 @@ public class FitnessFragment extends Fragment implements SensorEventListener {
     barChart.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View view) {
         getSlugBreakdownForChart(chartTitle, chartType);
-      }
-    });
-
-    showChartValuesBTN.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View view) {
-        if (barChart.getBarData() != null) {
-          if (setDrawValuesDisabled) {
-            barChart.getBarData().setDrawValues(true);
-          } else {
-            barChart.getBarData().setDrawValues(false);
-          }
-
-          setDrawValuesDisabled = !setDrawValuesDisabled;
-
-          barChart.invalidate();
-        }
       }
     });
   }

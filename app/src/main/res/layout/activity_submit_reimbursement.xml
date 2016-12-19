@@ -113,7 +113,7 @@
                 android:background="@color/offwhite_background_gray">
 
                 <Button
-                    android:id="@+id/submitReimbursement"
+                    android:id="@+id/submitReimbursementBTN"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"

@@ -103,7 +103,7 @@ public class Helpers {
     return bundle;
   }
 
-  public static void setBarChartData(BarChart chart,
+  public static void setBarChartData(Context context, String whichFragment, BarChart chart,
       List<AuthenticationResponseChartData> chartData) {
     ArrayList<BarEntry> valsMetrics = new ArrayList<>();
     ArrayList<String> xVals = new ArrayList<>();
@@ -159,6 +159,9 @@ public class Helpers {
 
     chart.setData(data);
 
+    chart.setRenderer(new CustomBarChartRenderer(context, whichFragment, chart, chart.getAnimator(),
+        chart.getViewPortHandler()));
+
     chart.getBarData().setDrawValues(false);
 
     chart.invalidate();
@@ -166,16 +169,16 @@ public class Helpers {
 
   private static int findLargestNumber(List<AuthenticationResponseChartData> rawChartData) {
     int smallest = (int) Double.parseDouble(rawChartData.get(0).getValue());
-    int largetst = (int) Double.parseDouble(rawChartData.get(0).getValue());
+    int largest = (int) Double.parseDouble(rawChartData.get(0).getValue());
 
     for (int i = 1; i < rawChartData.size(); i++) {
       int currentValue = (int) Double.parseDouble(rawChartData.get(i).getValue());
-      if (currentValue > largetst) {
-        largetst = currentValue;
+      if (currentValue > largest) {
+        largest = currentValue;
       } else if (currentValue < smallest) smallest = currentValue;
     }
 
-    return largetst;
+    return largest;
   }
 
   public static boolean isInternetAvailable(Context context) {
