@@ -171,9 +171,12 @@
             android:screenOrientation="portrait"
             android:theme="@style/No_Action_Bar_Theme"
             android:windowSoftInputMode="adjustPan"/>
-
         <activity
             android:name=".insurance.activities.ReimbursementStatusActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/No_Action_Bar_Theme"/>
+        <activity
+            android:name=".insurance.activities.ApprovalRequestsStatus"
             android:screenOrientation="portrait"
             android:theme="@style/No_Action_Bar_Theme"/>
 
