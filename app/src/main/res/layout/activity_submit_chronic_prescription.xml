@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/activity_submit_reimbursement"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/insurance_background"
+    android:orientation="vertical"
+    tools:context="com.mcsaatchi.gmfit.insurance.activities.SubmitChronicPrescriptionActivity">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fitsSystemWindows="true"
+            app:theme="@style/TransparentToolbar"/>
+    </FrameLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+           <com.mcsaatchi.gmfit.insurance.widget.ItemHeader
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                custom:header_text="@string/attach_all_the_required_documents_below"/>
+
+            <com.mcsaatchi.gmfit.insurance.widget.CustomAttachementPicker
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                custom:header_text="Medical Report"/>
+
+            <com.mcsaatchi.gmfit.insurance.widget.CustomAttachementPicker
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                custom:header_text="Invoice"/>
+
+            <com.mcsaatchi.gmfit.insurance.widget.CustomAttachementPicker
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                custom:header_text="Identity Card"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:background="@color/offwhite_background_gray">
+
+                <Button
+                    android:id="@+id/submitReimbursementBTN"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:background="@color/buttons_blue"
+                    android:text="@string/submit_a_reimbursement"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"/>
+            </RelativeLayout>
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
