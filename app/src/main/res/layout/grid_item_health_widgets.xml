@@ -32,17 +32,9 @@
       android:id="@+id/measurementUnitTV"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_alignStart="@+id/metricTV"
+      android:layout_alignParentEnd="true"
       android:layout_below="@+id/metricTV"
       android:textColor="@android:color/white"
       />
 
-  <!--<TextView-->
-  <!--android:id="@+id/metricPercentageTV"-->
-  <!--android:layout_width="wrap_content"-->
-  <!--android:layout_height="wrap_content"-->
-  <!--android:layout_below="@+id/metricTV"-->
-  <!--android:layout_toEndOf="@+id/measurementUnitTV"-->
-  <!--android:paddingStart="@dimen/default_margin_1"-->
-  <!--android:textColor="@android:color/white"/>-->
 </RelativeLayout>
