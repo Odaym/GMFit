@@ -131,7 +131,6 @@ public class MainProfileFragment extends Fragment {
 
   private ArrayList userMetricSystems = new ArrayList<String>() {{
     add(0, "Metric");
-    add(1, "Imperial");
   }};
 
   private List<UserProfileResponseGoal> userGoals = new ArrayList<>();
@@ -1001,7 +1000,7 @@ public class MainProfileFragment extends Fragment {
 
                 Picasso.with(getActivity())
                     .load(userProfileData.getProfile_picture())
-                    .resize(200, 200)
+                    .resize(500, 500)
                     .transform(new CircleTransform())
                     .centerInside()
                     .into(userProfileIV);

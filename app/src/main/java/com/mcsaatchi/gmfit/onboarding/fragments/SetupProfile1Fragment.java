@@ -24,7 +24,6 @@ public class SetupProfile1Fragment extends Fragment {
   @Bind(R.id.chooseCountryBTN) Button chooseCountryBTN;
   @Bind(R.id.countryFlagIV) ImageView countryFlagIV;
   @Bind(R.id.metricRdBTN) RadioButton metricRdBTN;
-  @Bind(R.id.imperialRdBTN) RadioButton imperialRdBTN;
 
   @Inject SharedPreferences prefs;
 
@@ -56,16 +55,6 @@ public class SetupProfile1Fragment extends Fragment {
         if (checked) {
           prefs.edit()
               .putString(Constants.EXTRAS_USER_PROFILE_MEASUREMENT_SYSTEM, "metric")
-              .apply();
-        }
-      }
-    });
-
-    imperialRdBTN.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-      @Override public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
-        if (checked) {
-          prefs.edit()
-              .putString(Constants.EXTRAS_USER_PROFILE_MEASUREMENT_SYSTEM, "imperial")
               .apply();
         }
       }

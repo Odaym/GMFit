@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="140dp"
-    android:layout_height="90dp"
+    android:layout_width="@dimen/operation_box_width"
+    android:layout_height="@dimen/operation_box_height"
     android:layout_marginBottom="@dimen/default_margin_2"
-    android:layout_marginStart="@dimen/default_margin_2"
-    android:layout_marginTop="@dimen/default_margin_2"
+    android:layout_marginEnd="@dimen/default_margin_2"
     android:background="@color/fitness_dark_blue"
     android:gravity="center"
     android:orientation="vertical"
@@ -14,18 +13,14 @@
       android:id="@+id/widgetIconIV"
       android:layout_width="@dimen/insurance_widget_icon_dimen"
       android:layout_height="@dimen/insurance_widget_icon_dimen"
-      android:layout_gravity="center"
-      android:layout_marginTop="@dimen/default_margin_1"
       />
 
   <TextView
       android:id="@+id/widgetNameTV"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_gravity="center"
-      android:layout_marginBottom="@dimen/default_margin_1"
       android:layout_marginTop="@dimen/default_margin_1"
-      android:gravity="center_horizontal"
+      android:gravity="center"
       android:textColor="@android:color/white"
       android:textSize="@dimen/insurance_widgets_name_font_size"
       />
