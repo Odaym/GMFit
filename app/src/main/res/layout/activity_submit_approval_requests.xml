@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/insurance_background"
     android:orientation="vertical"
-    tools:context="com.mcsaatchi.gmfit.insurance.activities.SubmitReimbursementActivity">
+    tools:context="com.mcsaatchi.gmfit.insurance.activities.SubmitApprovalRequestsActivity">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -51,11 +51,6 @@
 
             <com.mcsaatchi.gmfit.insurance.widget.CustomPicker
                 android:id="@+id/reimbursementServiceDate"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
-            <com.mcsaatchi.gmfit.insurance.widget.CustomPicker
-                android:id="@+id/reimbursementAmount"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
@@ -113,7 +108,7 @@
                 android:background="@color/offwhite_background_gray">
 
                 <Button
-                    android:id="@+id/submitReimbursementBTN"
+                    android:id="@+id/submitApprovalRequestBTN"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
@@ -121,7 +116,7 @@
                     android:layout_marginLeft="16dp"
                     android:layout_marginRight="16dp"
                     android:background="@color/buttons_blue"
-                    android:text="@string/submit_a_reimbursement"
+                    android:text="Submit"
                     android:textAllCaps="false"
                     android:textColor="@color/white"/>
             </RelativeLayout>
