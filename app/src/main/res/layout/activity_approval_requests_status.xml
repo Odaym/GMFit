@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    android:id="@+id/activity_claim_reimbursement"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_claim_reimbursement"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/insurance_background"
     android:orientation="vertical"
-    tools:context="com.mcsaatchi.gmfit.insurance.activities.ApprovalRequestsStatusEmptyActivity">
+    tools:context="com.mcsaatchi.gmfit.insurance.activities.approval_request.ApprovalRequestsStatusEmptyActivity">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -15,9 +15,9 @@
         android:fitsSystemWindows="true">
 
         <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
             xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fitsSystemWindows="true"
@@ -41,9 +41,9 @@
                 android:id="@+id/imageView"
                 android:layout_width="75dp"
                 android:layout_height="75dp"
-                android:src="@drawable/folder_icon"
+                android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                android:layout_centerHorizontal="true"/>
+                android:src="@drawable/folder_icon"/>
         </RelativeLayout>
 
         <View

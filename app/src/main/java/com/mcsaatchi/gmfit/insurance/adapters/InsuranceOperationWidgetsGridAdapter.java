@@ -11,27 +11,27 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.insurance.activities.ClaimReimbursementActivity;
+import com.mcsaatchi.gmfit.insurance.activities.approval_request.ApprovalRequestsStatusEmptyActivity;
+import com.mcsaatchi.gmfit.insurance.activities.approval_request.ApprovalRequestsStatusListActivity;
+import com.mcsaatchi.gmfit.insurance.activities.chronic.ChronicPrescriptionEmptyActivity;
+import com.mcsaatchi.gmfit.insurance.activities.reimbursement.ClaimReimbursementActivity;
+import com.mcsaatchi.gmfit.insurance.activities.reimbursement.ReimbursementStatusListActivity;
 import com.mcsaatchi.gmfit.insurance.models.InsuranceOperationWidget;
 import java.util.ArrayList;
 
 public class InsuranceOperationWidgetsGridAdapter
     extends RecyclerView.Adapter<InsuranceOperationWidgetsGridAdapter.RecyclerViewHolder> {
-  private ArrayList<InsuranceOperationWidget> widgetsMap;
-
-  private Context context;
-
   private static final int SUBMIT_ITEM = 0;
   private static final int TRACK_ITEM = 1;
   private static final int MEMBER_GUIDE_ITEM = 2;
   private static final int COVERAGE_ITEM = 3;
   private static final int SNAPSHOT_ITEM = 4;
-
   private static final int REIMBURSEMENT_ITEM = 0;
   private static final int APPROVAL_REQUEST_ITEM = 1;
   private static final int CHRONIC_ITEM = 2;
   private static final int REQUESTS_ITEM = 3;
-
+  private ArrayList<InsuranceOperationWidget> widgetsMap;
+  private Context context;
   private String[] dialogItems =
       new String[] { "Reimbursement", "Approval Request", "Chronic", "Requests" };
 
@@ -75,9 +75,10 @@ public class InsuranceOperationWidgetsGridAdapter
 
       switch (positionOfOperation) {
         case SUBMIT_ITEM:
-          setDropDownItems();
+          setDropDownItems(SUBMIT_ITEM);
           break;
         case TRACK_ITEM:
+          setDropDownItems(TRACK_ITEM);
           break;
         case MEMBER_GUIDE_ITEM:
           break;
@@ -88,22 +89,37 @@ public class InsuranceOperationWidgetsGridAdapter
       }
     }
 
-    void setDropDownItems() {
-      AlertDialog.Builder builder = new AlertDialog.Builder(context);
+    void setDropDownItems(final int request_purpose) {
+      final AlertDialog.Builder builder = new AlertDialog.Builder(context);
       builder.setTitle("What would you like to submit?")
           .setItems(dialogItems, new DialogInterface.OnClickListener() {
             @Override public void onClick(DialogInterface dialogInterface, int position) {
               switch (position) {
                 case REIMBURSEMENT_ITEM:
-                  /**
-                   * If there are no reimbursements present, open the ClaimReimbursementActivity
-                   */
-                  Intent intent = new Intent(context, ClaimReimbursementActivity.class);
-                  context.startActivity(intent);
+                  if (request_purpose == SUBMIT_ITEM) {
+                    Intent intent = new Intent(context, ClaimReimbursementActivity.class);
+                    context.startActivity(intent);
+                  } else if (request_purpose == TRACK_ITEM) {
+                    Intent intent = new Intent(context, ReimbursementStatusListActivity.class);
+                    context.startActivity(intent);
+                  }
                   break;
                 case APPROVAL_REQUEST_ITEM:
+                  if (request_purpose == SUBMIT_ITEM) {
+                    Intent intent = new Intent(context, ApprovalRequestsStatusEmptyActivity.class);
+                    context.startActivity(intent);
+                  } else if (request_purpose == TRACK_ITEM) {
+                    Intent intent = new Intent(context, ApprovalRequestsStatusListActivity.class);
+                    context.startActivity(intent);
+                  }
                   break;
                 case CHRONIC_ITEM:
+                  if (request_purpose == SUBMIT_ITEM) {
+                    Intent intent = new Intent(context, ChronicPrescriptionEmptyActivity.class);
+                    context.startActivity(intent);
+                  } else if (request_purpose == TRACK_ITEM) {
+                    //TODO:
+                  }
                   break;
                 case REQUESTS_ITEM:
                   break;

@@ -1,4 +1,4 @@
-package com.mcsaatchi.gmfit.insurance.activities;
+package com.mcsaatchi.gmfit.insurance.activities.reimbursement;
 
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;

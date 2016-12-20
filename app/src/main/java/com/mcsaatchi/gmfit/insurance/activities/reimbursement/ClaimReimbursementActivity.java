@@ -1,4 +1,4 @@
-package com.mcsaatchi.gmfit.insurance.activities;
+package com.mcsaatchi.gmfit.insurance.activities.reimbursement;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -22,5 +22,6 @@ public class ClaimReimbursementActivity extends BaseActivity {
 
   @OnClick(R.id.submitReimbursement) public void submitReimbursement() {
     startActivity(new Intent(this, SubmitReimbursementActivity.class));
+    finish();
   }
 }

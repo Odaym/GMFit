@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="com.mcsaatchi.gmfit"
-          xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="com.mcsaatchi.gmfit">
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
@@ -159,47 +159,47 @@
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name"/>
         <activity
-            android:name=".insurance.activities.ClaimReimbursementActivity"
+            android:name=".insurance.activities.reimbursement.ClaimReimbursementActivity"
             android:screenOrientation="portrait"
             android:theme="@style/No_Action_Bar_Theme"/>
         <activity
-            android:name=".insurance.activities.SubmitReimbursementActivity"
+            android:name=".insurance.activities.reimbursement.SubmitReimbursementActivity"
             android:screenOrientation="portrait"
             android:theme="@style/No_Action_Bar_Theme"
             android:windowSoftInputMode="adjustPan"/>
         <activity
-            android:name=".insurance.activities.ReimbursementStatusListActivity"
+            android:name=".insurance.activities.reimbursement.ReimbursementStatusListActivity"
             android:screenOrientation="portrait"
             android:theme="@style/No_Action_Bar_Theme"
             android:windowSoftInputMode="adjustPan"/>
         <activity
-            android:name=".insurance.activities.ReimbursementStatusActivity"
+            android:name=".insurance.activities.reimbursement.ReimbursementStatusActivity"
             android:screenOrientation="portrait"
             android:theme="@style/No_Action_Bar_Theme"/>
         <activity
-            android:name=".insurance.activities.ApprovalRequestsStatusEmptyActivity"
+            android:name=".insurance.activities.approval_request.ApprovalRequestsStatusEmptyActivity"
             android:screenOrientation="portrait"
             android:theme="@style/No_Action_Bar_Theme"/>
         <activity
-            android:name=".insurance.activities.ApprovalRequestsStatusListActivity"
+            android:name=".insurance.activities.approval_request.ApprovalRequestsStatusListActivity"
             android:screenOrientation="portrait"
             android:theme="@style/No_Action_Bar_Theme"
             android:windowSoftInputMode="adjustPan"/>
         <activity
-            android:name=".insurance.activities.SubmitApprovalRequestsActivity"
+            android:name=".insurance.activities.approval_request.SubmitApprovalRequestsActivity"
             android:screenOrientation="portrait"
             android:theme="@style/No_Action_Bar_Theme"
             android:windowSoftInputMode="adjustPan"/>
         <activity
-            android:name=".insurance.activities.ApprovalRequestStatusActivity"
+            android:name=".insurance.activities.approval_request.ApprovalRequestStatusActivity"
             android:screenOrientation="portrait"
             android:theme="@style/No_Action_Bar_Theme"/>
         <activity
-            android:name=".insurance.activities.ChronicPrescriptionEmptyActivity"
+            android:name=".insurance.activities.chronic.ChronicPrescriptionEmptyActivity"
             android:screenOrientation="portrait"
             android:theme="@style/No_Action_Bar_Theme"/>
         <activity
-            android:name=".insurance.activities.SubmitChronicPrescriptionActivity"
+            android:name=".insurance.activities.chronic.SubmitChronicPrescriptionActivity"
             android:screenOrientation="portrait"
             android:theme="@style/No_Action_Bar_Theme"/>
 

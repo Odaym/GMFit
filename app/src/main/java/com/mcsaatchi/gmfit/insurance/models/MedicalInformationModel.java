@@ -3,7 +3,17 @@ package com.mcsaatchi.gmfit.insurance.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class MedicalInformationModel implements Parcelable{
+public class MedicalInformationModel implements Parcelable {
+  public static final Creator<MedicalInformationModel> CREATOR =
+      new Creator<MedicalInformationModel>() {
+        @Override public MedicalInformationModel createFromParcel(Parcel source) {
+          return new MedicalInformationModel(source);
+        }
+
+        @Override public MedicalInformationModel[] newArray(int size) {
+          return new MedicalInformationModel[size];
+        }
+      };
   private String medicineName;
   private String status;
   private String tabletCount;
@@ -17,6 +27,14 @@ public class MedicalInformationModel implements Parcelable{
     this.tabletCount = tabletCount;
     this.frequency = frequency;
     this.duration = duration;
+  }
+
+  protected MedicalInformationModel(Parcel in) {
+    this.medicineName = in.readString();
+    this.status = in.readString();
+    this.tabletCount = in.readString();
+    this.frequency = in.readString();
+    this.duration = in.readString();
   }
 
   public String getMedicineName() {
@@ -70,23 +88,4 @@ public class MedicalInformationModel implements Parcelable{
     dest.writeString(this.frequency);
     dest.writeString(this.duration);
   }
-
-  protected MedicalInformationModel(Parcel in) {
-    this.medicineName = in.readString();
-    this.status = in.readString();
-    this.tabletCount = in.readString();
-    this.frequency = in.readString();
-    this.duration = in.readString();
-  }
-
-  public static final Creator<MedicalInformationModel> CREATOR =
-      new Creator<MedicalInformationModel>() {
-        @Override public MedicalInformationModel createFromParcel(Parcel source) {
-          return new MedicalInformationModel(source);
-        }
-
-        @Override public MedicalInformationModel[] newArray(int size) {
-          return new MedicalInformationModel[size];
-        }
-      };
 }

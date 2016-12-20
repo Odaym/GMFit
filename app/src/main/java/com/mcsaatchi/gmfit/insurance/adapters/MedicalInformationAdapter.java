@@ -14,6 +14,7 @@ public class MedicalInformationAdapter
     extends RecyclerView.Adapter<MedicalInformationAdapter.ViewHolder> {
   private List<MedicalInformationModel> medicines = new ArrayList<>();
   private MedicalInformationAdapter.OnClickListener onClickListener;
+
   public MedicalInformationAdapter(List<MedicalInformationModel> medicines,
       MedicalInformationAdapter.OnClickListener onClickListener) {
     this.medicines = medicines;

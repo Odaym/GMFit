@@ -13,6 +13,7 @@ import java.util.List;
 public class StatusAdapter extends RecyclerView.Adapter<StatusAdapter.ViewHolder> {
   private List<ReimbursementModel> reimbursements = new ArrayList<>();
   private StatusAdapter.OnClickListener onClickListener;
+
   public StatusAdapter(List<ReimbursementModel> reimbursements,
       StatusAdapter.OnClickListener onClickListener) {
     this.reimbursements = reimbursements;

@@ -1,10 +1,10 @@
-package com.mcsaatchi.gmfit.insurance.activities;
+package com.mcsaatchi.gmfit.insurance.activities.reimbursement;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.mcsaatchi.gmfit.R;
@@ -61,9 +61,9 @@ public class SubmitReimbursementActivity extends BaseActivity {
 
     submitReimbursementBTN.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View view) {
-        Intent intent =
-            new Intent(SubmitReimbursementActivity.this, ReimbursementStatusListActivity.class);
-        startActivity(intent);
+        Toast.makeText(SubmitReimbursementActivity.this, "Submitted successfully",
+            Toast.LENGTH_SHORT).show();
+        finish();
       }
     });
   }
