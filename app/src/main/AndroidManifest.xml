@@ -189,7 +189,6 @@
             android:screenOrientation="portrait"
             android:theme="@style/No_Action_Bar_Theme"
             android:windowSoftInputMode="adjustPan"/>
-
         <activity
             android:name=".insurance.activities.ApprovalRequestStatusActivity"
             android:screenOrientation="portrait"

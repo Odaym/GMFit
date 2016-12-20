@@ -1,5 +1,6 @@
 package com.mcsaatchi.gmfit.insurance.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 
@@ -24,6 +25,7 @@ public class ApprovalRequestsStatusEmptyActivity extends BaseActivity {
     }
 
     @OnClick(R.id.submitRequestBTN)
-    public void submitReimbursement() {
+    public void submitRequest() {
+        startActivity(new Intent(this, SubmitApprovalRequestsActivity.class));
     }
 }
