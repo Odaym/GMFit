@@ -63,8 +63,8 @@ public class ApprovalRequestsStatusListActivity extends BaseActivity {
             @Override
             public void onClick(ReimbursementModel reimbursementModel, int index) {
                 Intent intent =
-                        new Intent(ApprovalRequestsStatusListActivity.this, ReimbursementStatusActivity.class);
-                intent.putExtra(ReimbursementStatusActivity.REIMBURSEMENT_MODEL_KEY, reimbursementModel);
+                        new Intent(ApprovalRequestsStatusListActivity.this, ApprovalRequestStatusActivity.class);
+                intent.putExtra(ApprovalRequestStatusActivity.REIMBURSEMENT_MODEL_KEY, reimbursementModel);
                 startActivity(intent);
             }
         });

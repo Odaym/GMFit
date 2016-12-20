@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/insurance_background"
     android:orientation="vertical"
-    tools:context="com.mcsaatchi.gmfit.insurance.activities.ReimbursementStatusActivity">
+    tools:context="com.mcsaatchi.gmfit.insurance.activities.ApprovalRequestStatusActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -57,11 +57,6 @@
 
             <com.mcsaatchi.gmfit.insurance.widget.ItemLabel
                 android:id="@+id/serviceDate"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
-            <com.mcsaatchi.gmfit.insurance.widget.ItemLabel
-                android:id="@+id/amount"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
