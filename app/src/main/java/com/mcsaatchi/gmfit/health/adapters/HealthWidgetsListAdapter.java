@@ -63,7 +63,7 @@ public class HealthWidgetsListAdapter extends BaseAdapter {
     holder.itemIconRightIMG.setImageResource(drawableResId);
     holder.itemNameTV.setText((widgetsMap.get(position)).getTitle());
 
-    if (widgetsMap.get(position).getPosition() > 4) {
+    if (widgetsMap.get(position).getPosition() > 3) {
       holder.itemLayout.setAlpha(0.2f);
     } else {
       holder.itemLayout.setAlpha(1f);
