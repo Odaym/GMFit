@@ -194,6 +194,11 @@
             android:screenOrientation="portrait"
             android:theme="@style/No_Action_Bar_Theme"/>
 
+        <activity
+            android:name=".insurance.activities.ChronicPrescriptionEmptyActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/No_Action_Bar_Theme"/>
+
         <receiver android:name=".common.classes.AlarmReceiver"/>
         <receiver android:name=".fitness.pedometer.BootReceiver">
             <intent-filter>
