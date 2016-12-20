@@ -118,15 +118,6 @@
         android:textColor="@android:color/white"
         />
 
-    <RadioButton
-        android:id="@+id/imperialRdBTN"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/radiobutton_row_height"
-        android:buttonTint="@android:color/white"
-        android:paddingStart="@dimen/default_margin_1"
-        android:text="@string/measurement_unit_imperial"
-        android:textColor="@android:color/white"
-        />
   </RadioGroup>
 
   <TextView

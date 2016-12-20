@@ -26,15 +26,15 @@ public class InsuranceHomeFragment extends Fragment {
     ButterKnife.bind(this, fragmentView);
 
     setupInsurancePathsGrid(new ArrayList<InsuranceOperationWidget>() {{
-      add(new InsuranceOperationWidget(R.drawable.verification_banner,
+      add(new InsuranceOperationWidget(R.drawable.ic_insurance_operations_submit,
           getString(R.string.widget_submit)));
-      add(new InsuranceOperationWidget(R.drawable.verification_banner,
+      add(new InsuranceOperationWidget(R.drawable.ic_insurance_operation_track,
           getString(R.string.widget_track)));
-      add(new InsuranceOperationWidget(R.drawable.verification_banner,
+      add(new InsuranceOperationWidget(R.drawable.ic_insurance_operation_member_guide,
           getString(R.string.widget_members_guide)));
-      add(new InsuranceOperationWidget(R.drawable.verification_banner,
+      add(new InsuranceOperationWidget(R.drawable.ic_insurance_operation_coverage_desc,
           getString(R.string.widget_coverage_description)));
-      add(new InsuranceOperationWidget(R.drawable.verification_banner,
+      add(new InsuranceOperationWidget(R.drawable.ic_insurance_operation_snapshot,
           getString(R.string.widget_snapshot)));
     }});
 

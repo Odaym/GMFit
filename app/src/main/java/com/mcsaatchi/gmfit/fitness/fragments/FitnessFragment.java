@@ -88,6 +88,7 @@ public class FitnessFragment extends Fragment implements SensorEventListener {
   @Bind(R.id.dateCarousel) HorizontalScrollView dateCarousel;
   @Bind(R.id.dateCarouselContainer) LinearLayout dateCarouselContainer;
   @Bind(R.id.goalTV) FontTextView goalTV;
+  @Bind(R.id.goalStatusWordTV) TextView goalStatusWordTV;
   @Bind(R.id.remainingTV) FontTextView remainingTV;
   @Bind(R.id.todayTV) FontTextView todayTV;
   @Bind(R.id.metricProgressBar) ProgressBar metricProgressBar;
@@ -96,7 +97,6 @@ public class FitnessFragment extends Fragment implements SensorEventListener {
   @Inject SharedPreferences prefs;
   @Inject LocalDate dt;
   @Inject DataAccessHandler dataAccessHandler;
-  private boolean setDrawValuesDisabled = true;
   private Activity parentActivity;
   private String chartName;
   private String chartType;
@@ -516,14 +516,17 @@ public class FitnessFragment extends Fragment implements SensorEventListener {
 
             if (loadingMetricProgressBar != null) {
               loadingMetricProgressBar.setVisibility(View.INVISIBLE);
-              metricCounterTV.setVisibility(View.VISIBLE);
             }
 
+            metricCounterTV.setVisibility(View.VISIBLE);
+
             if (remainingValue < 0) {
-              remainingTV.setText(String.valueOf(0));
+              goalStatusWordTV.setText(getResources().getString(R.string.goal_exceeded_tv));
             } else {
-              remainingTV.setText(String.valueOf(remainingValue));
+              goalStatusWordTV.setText(getResources().getString(R.string.remaining_title));
             }
+
+            remainingTV.setText(String.valueOf(Math.abs(remainingValue)));
 
             break;
         }
@@ -725,21 +728,25 @@ public class FitnessFragment extends Fragment implements SensorEventListener {
       case Constants.EVENT_STEP_COUNTER_INCREMENTED:
         metricCounterTV.setText(String.valueOf(prefs.getInt(Helpers.getTodayDate() + "_steps", 0)));
         todayTV.setText(String.valueOf(prefs.getInt(Helpers.getTodayDate() + "_steps", 0)));
+
         if (!goalTV.getText().toString().isEmpty()
             && !todayTV.getText().toString().isEmpty()
             && !metricCounterTV.getText().toString().isEmpty()) {
+
           int remainingValue = Integer.parseInt(goalTV.getText().toString()) - Integer.parseInt(
               metricCounterTV.getText().toString());
 
           if (remainingValue < 0) {
-            remainingTV.setText(String.valueOf(0));
+            goalStatusWordTV.setText(getResources().getString(R.string.goal_exceeded_tv));
           } else {
-            remainingTV.setText(String.valueOf(remainingValue));
+            goalStatusWordTV.setText(getResources().getString(R.string.remaining_title));
 
             metricProgressBar.setProgress(
                 ((Integer.parseInt(todayTV.getText().toString()) * 100) / Integer.parseInt(
                     goalTV.getText().toString())));
           }
+
+          remainingTV.setText(String.valueOf(Math.abs(remainingValue)));
         }
 
         break;

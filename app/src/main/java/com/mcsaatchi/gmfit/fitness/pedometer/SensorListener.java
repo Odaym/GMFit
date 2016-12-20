@@ -35,7 +35,6 @@ import org.joda.time.LocalDate;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import timber.log.Timber;
 
 /**
  * Background service which keeps the step-sensor listener alive to always get
@@ -68,8 +67,6 @@ public class SensorListener extends Service implements SensorEventListener {
     yesterdayDate = dt.minusDays(1).toString();
 
     int stepsToday = prefs.getInt(todayDate + "_steps", 0);
-
-    Timber.d("Steps today : " + stepsToday);
 
     if (prefs.getBoolean(Constants.EXTRAS_FIRST_APP_LAUNCH, true)) {
       prefs.edit().putBoolean(Constants.EXTRAS_FIRST_APP_LAUNCH, false).apply();
