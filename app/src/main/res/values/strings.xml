@@ -196,6 +196,8 @@
   <string name="deleting_chart_dialog_title">Deleting chart</string>
   <string name="steps_today_title">Steps</string>
   <string name="steps_shorthand_unit">steps</string>
+  <string name="goal_exceeded_tv">Goal Exceeded!</string>
+  <string name="goal_nutrition_excess">Excess!</string>
 
   <!-- BREAKDOWN ACTIVITY -->
   <string name="all_time_breakdown_bar_hint">All Time</string>
@@ -318,8 +320,8 @@
   <string name="login_insurance_label">Login</string>
   <string name="widget_submit">Submit</string>
   <string name="widget_track">Track</string>
-  <string name="widget_members_guide">Member\'s Guide</string>
-  <string name="widget_coverage_description">Coverage Description</string>
+  <string name="widget_members_guide">Member\'s\nGuide</string>
+  <string name="widget_coverage_description">Coverage\nDescription</string>
   <string name="widget_snapshot">Snapshot</string>
   <string name="medication_information">Medication Information</string>
 

@@ -2,6 +2,7 @@
 
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/userGoalsSection"
     android:layout_width="match_parent"
     android:layout_height="@dimen/user_goals_section_height"
@@ -104,15 +105,18 @@
       android:layout_width="0dp"
       android:layout_height="wrap_content"
       android:layout_weight="2"
+      android:gravity="center"
       android:orientation="vertical"
       >
 
     <TextView
-        android:layout_width="match_parent"
+        android:id="@+id/goalStatusWordTV"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/fitness_goals_rounded_view"
         android:gravity="center_horizontal"
-        android:text="@string/remaining_title"
+        android:paddingEnd="@dimen/default_margin_1_5"
+        android:paddingStart="@dimen/default_margin_1_5"
         android:textAppearance="?android:textAppearanceSmall"
         android:textColor="@color/white"
         />

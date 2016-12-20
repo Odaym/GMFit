@@ -26,6 +26,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.HorizontalScrollView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -149,9 +150,10 @@ public class NutritionFragment extends Fragment {
   @Bind(R.id.remainingTV) FontTextView remainingTV;
   @Bind(R.id.todayTV) FontTextView todayTV;
   @Bind(R.id.activeTV) FontTextView activeTV;
+  @Bind(R.id.goalStatusWordTV) TextView goalStatusWordTV;
+  @Bind(R.id.goalStatusIconIV) ImageView goalStatusIconIV;
 
   private String finalDesiredDate;
-  private boolean setDrawValuesDisabled = true;
   private UserMealsRecyclerAdapterDragSwipe userMealsRecyclerAdapter;
   private ArrayList<MealItem> finalBreakfastMeals = new ArrayList<>();
   private ArrayList<MealItem> finalLunchMeals = new ArrayList<>();
@@ -335,14 +337,19 @@ public class NutritionFragment extends Fragment {
                 && !goalTV.getText().toString().isEmpty()
                 && !todayTV.getText().toString().isEmpty()
                 && !metricCounterTV.getText().toString().isEmpty()) {
+
               int remainingValue = Integer.parseInt(goalTV.getText().toString()) + Integer.parseInt(
                   activeTV.getText().toString()) - Integer.parseInt(todayTV.getText().toString());
 
               if (remainingValue < 0) {
-                remainingTV.setText(String.valueOf(0));
+                goalStatusWordTV.setText(getResources().getString(R.string.goal_nutrition_excess));
+                goalStatusIconIV.setVisibility(View.VISIBLE);
               } else {
-                remainingTV.setText(String.valueOf(remainingValue));
+                goalStatusIconIV.setVisibility(View.GONE);
+                goalStatusWordTV.setText(getResources().getString(R.string.remaining_title));
               }
+
+              remainingTV.setText(String.valueOf(Math.abs(remainingValue)));
 
               changeMetricProgressValue();
             }
