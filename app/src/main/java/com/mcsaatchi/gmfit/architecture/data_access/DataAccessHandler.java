@@ -138,6 +138,10 @@ public class DataAccessHandler {
     apiCallsHandler.updateUserMeals(instance_id, amount, callback);
   }
 
+  public void deleteUserTest(int instance_id, Callback<DefaultGetResponse> callback) {
+    apiCallsHandler.deleteUserTest(instance_id, callback);
+  }
+
   public void deleteUserMeal(int instance_id, Callback<DefaultGetResponse> callback) {
     apiCallsHandler.deleteUserMeal(instance_id, callback);
   }

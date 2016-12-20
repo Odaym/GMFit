@@ -9,6 +9,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -29,6 +30,7 @@ import com.mcsaatchi.gmfit.architecture.rest.TakenMedicalTestsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.TakenMedicalTestsResponseBody;
 import com.mcsaatchi.gmfit.architecture.rest.WidgetsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.WidgetsResponseDatum;
+import com.mcsaatchi.gmfit.architecture.touch_helpers.SimpleSwipeItemTouchHelperCallback;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.CustomizeWidgetsAndChartsActivity;
 import com.mcsaatchi.gmfit.common.classes.SimpleDividerItemDecoration;
@@ -160,11 +162,14 @@ public class HealthFragment extends Fragment {
             RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
             UserTestsRecyclerAdapter userTestsRecyclerAdapter =
                 new UserTestsRecyclerAdapter(getActivity(), takenMedicalTests);
+            ItemTouchHelper.Callback callback = new SimpleSwipeItemTouchHelperCallback(userTestsRecyclerAdapter);
+            ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
 
             userTestsListView.setLayoutManager(mLayoutManager);
             userTestsListView.setNestedScrollingEnabled(false);
             userTestsListView.setAdapter(userTestsRecyclerAdapter);
             userTestsListView.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
+            touchHelper.attachToRecyclerView(userTestsListView);
 
             break;
         }

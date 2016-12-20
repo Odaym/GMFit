@@ -98,6 +98,9 @@ public interface GMFit_Service {
   @POST("user/meals/delete") Call<DefaultGetResponse> deleteUserMeal(
       @Body ApiCallsHandler.DeleteMealRequest deleteMealRequest);
 
+  @POST("user/medical/delete") Call<DefaultGetResponse> deleteUserTest(
+      @Body ApiCallsHandler.DeleteTestRequest deleteTestRequest);
+
   @GET Call<RecentMealsResponse> getRecentMeals(@Url String fullUrl);
 
   @POST("user/meals/request") Call<DefaultGetResponse> requestNewMeal(

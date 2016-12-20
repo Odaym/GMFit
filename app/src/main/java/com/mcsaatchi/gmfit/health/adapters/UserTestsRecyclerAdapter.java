@@ -2,29 +2,45 @@ package com.mcsaatchi.gmfit.health.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import com.mcsaatchi.gmfit.R;
+import com.mcsaatchi.gmfit.architecture.GMFitApplication;
+import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
+import com.mcsaatchi.gmfit.architecture.otto.EventBusPoster;
+import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
+import com.mcsaatchi.gmfit.architecture.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.architecture.rest.TakenMedicalTestsResponseBody;
+import com.mcsaatchi.gmfit.architecture.touch_helpers.DragSwipeItemTouchHelperAdapter;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.health.activities.AddNewHealthTestActivity;
 import java.util.List;
+import javax.inject.Inject;
 import org.joda.time.DateTime;
 import org.joda.time.IllegalFieldValueException;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import timber.log.Timber;
 
 public class UserTestsRecyclerAdapter
-    extends RecyclerView.Adapter<UserTestsRecyclerAdapter.MyViewHolder> {
+    extends RecyclerView.Adapter<UserTestsRecyclerAdapter.MyViewHolder>
+    implements DragSwipeItemTouchHelperAdapter {
 
+  @Inject DataAccessHandler dataAccessHandler;
   private List<TakenMedicalTestsResponseBody> userTests;
   private Context context;
 
   public UserTestsRecyclerAdapter(Context context, List<TakenMedicalTestsResponseBody> userTests) {
     this.userTests = userTests;
     this.context = context;
+
+    ((GMFitApplication) context.getApplicationContext()).getAppComponent().inject(this);
   }
 
   @Override public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -57,6 +73,44 @@ public class UserTestsRecyclerAdapter
 
   @Override public int getItemCount() {
     return userTests.size();
+  }
+
+  @Override public void onItemDismiss(int position) {
+    try {
+      deleteUserTest(userTests.get(position).getInstanceId());
+
+      userTests.remove(position);
+      notifyItemRemoved(position);
+      notifyItemRangeChanged(position, userTests.size());
+    } catch (IndexOutOfBoundsException ignored) {
+    }
+  }
+
+  private void deleteUserTest(int instance_id) {
+    dataAccessHandler.deleteUserTest(instance_id, new Callback<DefaultGetResponse>() {
+      @Override
+      public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
+        Log.d("TAG", "onResponse: Response code was : " + response.code());
+
+        switch (response.code()) {
+          case 200:
+            Log.d("TAG", "onResponse: User test removed!");
+
+            EventBusSingleton.getInstance()
+                .post(new EventBusPoster(Constants.EXTRAS_DELETED_MEAL_ENTRY));
+
+            break;
+        }
+      }
+
+      @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+        Timber.d("Call failed with error : %s", t.getMessage());
+        final AlertDialog alertDialog = new AlertDialog.Builder(context).create();
+        alertDialog.setMessage(
+            context.getResources().getString(R.string.error_response_from_server_incorrect));
+        alertDialog.show();
+      }
+    });
   }
 
   class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

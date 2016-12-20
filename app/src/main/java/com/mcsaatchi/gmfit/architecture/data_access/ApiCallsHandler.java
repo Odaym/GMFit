@@ -700,6 +700,21 @@ public class ApiCallsHandler {
     });
   }
 
+  void deleteUserTest(int instance_id, final Callback<DefaultGetResponse> callback) {
+    Call<DefaultGetResponse> apiCall =
+        restClient.getGMFitService().deleteUserTest(new DeleteTestRequest(instance_id));
+
+    apiCall.enqueue(new Callback<DefaultGetResponse>() {
+      @Override
+      public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
+        callback.onResponse(call, response);
+      }
+
+      @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+      }
+    });
+  }
+
   void updateUserPicture(Map<String, RequestBody> profilePicture,
       final Callback<DefaultGetResponse> callback) {
     Call<DefaultGetResponse> apiCall =
@@ -907,6 +922,14 @@ public class ApiCallsHandler {
 
     public DeleteUserChartRequest(String chart_id) {
       this.chart_id = chart_id;
+    }
+  }
+
+  public class DeleteTestRequest {
+    final int test_id;
+
+    public DeleteTestRequest(int test_id) {
+      this.test_id = test_id;
     }
   }
 
