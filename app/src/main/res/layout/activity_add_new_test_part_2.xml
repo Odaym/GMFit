@@ -60,7 +60,7 @@
               android:layout_height="match_parent"
               android:background="@android:color/transparent"
               android:hint="@string/enter_test_name_hint"
-              android:inputType="text"
+              android:inputType="textCapSentences"
               android:longClickable="false"
               android:maxLines="1"
               android:paddingBottom="@dimen/default_margin_1"

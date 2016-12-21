@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.andreabaccega.widget.FormEditText;
@@ -41,6 +42,7 @@ public class SpecifyMealAmountActivity extends BaseActivity {
   @Bind(R.id.nutritionFactsList) ListView nutritionFactsList;
   @Bind(R.id.addToDiaryBTN) Button addToDiaryBTN;
   @Bind(R.id.mealAmountET) FormEditText mealAmountET;
+  @Bind(R.id.measurementUnitTV) TextView measurementUnitTV;
 
   private ArrayList<FormEditText> allFields = new ArrayList<>();
   private NutritionalFactsListAdapter nutritionFactsListAdapter;
@@ -77,6 +79,8 @@ public class SpecifyMealAmountActivity extends BaseActivity {
         }
 
         mealAmountET.setSelection(mealAmountET.getText().toString().length());
+
+        measurementUnitTV.setText(mealItem.getMeasurementUnit());
 
         getMealMetrics(mealItem.getMeal_id());
       }

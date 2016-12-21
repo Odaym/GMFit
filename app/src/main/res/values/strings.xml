@@ -218,6 +218,8 @@
     <string name="remaining_title">Remaining</string>
     <string name="kilocalories_shorthand_unit">kcal</string>
     <string name="scanned_meal_not_found">The meal you scanned was not found in our database of meals</string>
+    <string name="searching_for_barcode_meal">Searching for product</string>
+    <string name="meals_empty_tap_get_started">Tap the \"Add\" or \"Scan\" buttons to start</string>
 
     <!-- HEALTH FRAGMENT -->
     <string name="user_weight_label_metric">Kilograms</string>

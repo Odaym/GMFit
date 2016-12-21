@@ -83,6 +83,25 @@ public class MainActivity extends BaseActivity {
     healthFragment = new HealthFragment();
     mainProfileFragment = new MainProfileFragment();
 
+    bottomBar.getTabWithId(R.id.item_one).findViewById(R.id.bb_bottom_bar_icon).setScaleX(1.1f);
+    bottomBar.getTabWithId(R.id.item_one).findViewById(R.id.bb_bottom_bar_icon).setScaleY(1.1f);
+
+    bottomBar.getTabWithId(R.id.item_two).findViewById(R.id.bb_bottom_bar_icon).setScaleX(1.1f);
+    bottomBar.getTabWithId(R.id.item_two).findViewById(R.id.bb_bottom_bar_icon).setScaleY(1.1f);
+
+    bottomBar.getTabWithId(R.id.item_three).findViewById(R.id.bb_bottom_bar_icon).setScaleX(1.1f);
+    bottomBar.getTabWithId(R.id.item_three).findViewById(R.id.bb_bottom_bar_icon).setScaleY(1.1f);
+
+    bottomBar.getTabWithId(R.id.item_four).findViewById(R.id.bb_bottom_bar_icon).setScaleX(1.1f);
+    bottomBar.getTabWithId(R.id.item_four).findViewById(R.id.bb_bottom_bar_icon).setScaleY(1.1f);
+
+    bottomBar.getTabWithId(R.id.item_five).findViewById(R.id.bb_bottom_bar_icon).setScaleX(1.1f);
+    bottomBar.getTabWithId(R.id.item_five).findViewById(R.id.bb_bottom_bar_icon).setScaleY(1.1f);
+
+    bottomBar.findViewById(R.id.bb_bottom_bar_item_container)
+        .setPadding(0, 0, 0,
+            getResources().getDimensionPixelSize(R.dimen.bottom_bar_navigation_bottom_padding));
+
     bottomBar.setOnTabSelectListener(new OnTabSelectListener() {
       @Override public void onTabSelected(@IdRes int tabId) {
 

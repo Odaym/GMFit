@@ -76,6 +76,7 @@ import com.mcsaatchi.gmfit.nutrition.adapters.UserMealsRecyclerAdapterDragSwipe;
 import com.mcsaatchi.gmfit.nutrition.models.MealItem;
 import com.mcsaatchi.gmfit.nutrition.models.NutritionWidget;
 import com.squareup.otto.Subscribe;
+import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -152,6 +153,10 @@ public class NutritionFragment extends Fragment {
   @Bind(R.id.activeTV) FontTextView activeTV;
   @Bind(R.id.goalStatusWordTV) TextView goalStatusWordTV;
   @Bind(R.id.goalStatusIconIV) ImageView goalStatusIconIV;
+  @Bind(R.id.breakfastMealsEmptyLayout) LinearLayout breakfastMealsEmptyLayout;
+  @Bind(R.id.lunchMealsEmptyLayout) LinearLayout lunchMealsEmptyLayout;
+  @Bind(R.id.dinnerMealsEmptyLayout) LinearLayout dinnerMealsEmptyLayout;
+  @Bind(R.id.snackMealsEmptyLayout) LinearLayout snackMealsEmptyLayout;
 
   private String finalDesiredDate;
   private UserMealsRecyclerAdapterDragSwipe userMealsRecyclerAdapter;
@@ -266,11 +271,29 @@ public class NutritionFragment extends Fragment {
   }
 
   private void searchForMealBarcode(String barcode, final String mealType) {
+    final ProgressDialog waitingDialog = new ProgressDialog(getActivity());
+    waitingDialog.setTitle(getString(R.string.searching_for_barcode_meal));
+    waitingDialog.setMessage(getString(R.string.please_wait_dialog_message));
+    waitingDialog.show();
+
+    final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+    alertDialog.setTitle(R.string.searching_for_barcode_meal);
+    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
+        new DialogInterface.OnClickListener() {
+          public void onClick(DialogInterface dialog, int which) {
+            dialog.dismiss();
+
+            if (waitingDialog.isShowing()) waitingDialog.dismiss();
+          }
+        });
+
     dataAccessHandler.searchForMealBarcode(barcode, new Callback<SearchMealItemResponse>() {
       @Override public void onResponse(Call<SearchMealItemResponse> call,
           Response<SearchMealItemResponse> response) {
         switch (response.code()) {
           case 200:
+
+            waitingDialog.dismiss();
 
             List<SearchMealItemResponseDatum> mealsResponse =
                 response.body().getData().getBody().getData();
@@ -346,7 +369,9 @@ public class NutritionFragment extends Fragment {
                 goalStatusIconIV.setVisibility(View.VISIBLE);
               } else {
                 goalStatusIconIV.setVisibility(View.GONE);
-                goalStatusWordTV.setText(getResources().getString(R.string.remaining_title));
+                if (isAdded()) {
+                  goalStatusWordTV.setText(getResources().getString(R.string.remaining_title));
+                }
               }
 
               remainingTV.setText(String.valueOf(Math.abs(remainingValue)));
@@ -814,19 +839,64 @@ public class NutritionFragment extends Fragment {
 
       switch (mealType) {
         case "Breakfast":
-          hookUpMealSectionListViews(breakfastListView, mLayoutManager, touchHelper);
+          if (mealItems.isEmpty()) {
+            breakfastMealsEmptyLayout.setVisibility(View.VISIBLE);
+            writeAppropriateEmptyText(breakfastMealsEmptyLayout, "Breakfast");
+
+            ImageView mealsEmptyIconIV =
+                (ImageView) breakfastMealsEmptyLayout.findViewById(R.id.mealsEmptyIconIV);
+            Picasso.with(getActivity()).load(R.drawable.ic_empty_meals).into(mealsEmptyIconIV);
+          } else {
+            breakfastMealsEmptyLayout.setVisibility(View.GONE);
+            hookUpMealSectionListViews(breakfastListView, mLayoutManager, touchHelper);
+          }
           break;
         case "Lunch":
-          hookUpMealSectionListViews(lunchListView, mLayoutManager, touchHelper);
+          if (mealItems.isEmpty()) {
+            lunchMealsEmptyLayout.setVisibility(View.VISIBLE);
+            writeAppropriateEmptyText(lunchMealsEmptyLayout, "Lunch");
+
+            ImageView mealsEmptyIconIV =
+                (ImageView) lunchMealsEmptyLayout.findViewById(R.id.mealsEmptyIconIV);
+            Picasso.with(getActivity()).load(R.drawable.ic_empty_meals).into(mealsEmptyIconIV);
+          } else {
+            lunchMealsEmptyLayout.setVisibility(View.GONE);
+            hookUpMealSectionListViews(lunchListView, mLayoutManager, touchHelper);
+          }
           break;
         case "Dinner":
-          hookUpMealSectionListViews(dinnerListView, mLayoutManager, touchHelper);
+          if (mealItems.isEmpty()) {
+            dinnerMealsEmptyLayout.setVisibility(View.VISIBLE);
+            writeAppropriateEmptyText(dinnerMealsEmptyLayout, "Dinner");
+
+            ImageView mealsEmptyIconIV =
+                (ImageView) dinnerMealsEmptyLayout.findViewById(R.id.mealsEmptyIconIV);
+            Picasso.with(getActivity()).load(R.drawable.ic_empty_meals).into(mealsEmptyIconIV);
+          } else {
+            dinnerMealsEmptyLayout.setVisibility(View.GONE);
+            hookUpMealSectionListViews(dinnerListView, mLayoutManager, touchHelper);
+          }
           break;
         case "Snack":
-          hookUpMealSectionListViews(snacksListView, mLayoutManager, touchHelper);
+          if (mealItems.isEmpty()) {
+            snackMealsEmptyLayout.setVisibility(View.VISIBLE);
+            writeAppropriateEmptyText(snackMealsEmptyLayout, "Snacks");
+
+            ImageView mealsEmptyIconIV =
+                (ImageView) snackMealsEmptyLayout.findViewById(R.id.mealsEmptyIconIV);
+            Picasso.with(getActivity()).load(R.drawable.ic_empty_snacks).into(mealsEmptyIconIV);
+          } else {
+            snackMealsEmptyLayout.setVisibility(View.GONE);
+            hookUpMealSectionListViews(snacksListView, mLayoutManager, touchHelper);
+          }
           break;
       }
     }
+  }
+
+  private void writeAppropriateEmptyText(LinearLayout emptyMealsLayout, String mealType) {
+    TextView typeOfEmptyMealTV = (TextView) emptyMealsLayout.findViewById(R.id.typeOfEmptyMealTV);
+    typeOfEmptyMealTV.setText("No " + mealType + " added");
   }
 
   private void hookUpMealSectionListViews(RecyclerView mealListView,

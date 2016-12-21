@@ -8,6 +8,8 @@
   <dimen name="goal_metrics_viewpager_height">90dp</dimen>
 
   <dimen name="bottom_bar_navigation_height">60dp</dimen>
+  <dimen name="bottom_bar_navigation_bottom_padding">-15dp</dimen>
+
   <dimen name="sections_progress_bar_height">7dp</dimen>
   <dimen name="metric_counter_font_size">140sp</dimen>
 
@@ -82,6 +84,7 @@
   <dimen name="add_and_scan_icons_dimens">20dp</dimen>
   <dimen name="user_goal_labels_font_size">45sp</dimen>
   <dimen name="user_goals_section_height">140dp</dimen>
+  <dimen name="empty_layouts_image_dimens">50dp</dimen>
 
   <!-- TOP OF DASHBOARD-->
   <dimen name="metric_cell_padding_horizontal">25dp</dimen>
@@ -107,11 +110,12 @@
   <dimen name="test_photos_height">120dp</dimen>
   <dimen name="add_medical_tests_layout_height">60dp</dimen>
   <dimen name="far_right_arrow_icon_dimens">15dp</dimen>
-  <dimen name="medical_tests_row_height">60dp</dimen>
+  <dimen name="medical_tests_row_height">80dp</dimen>
   <dimen name="widgets_metric_name_width">50dp</dimen>
 
   <!-- PROFILE SECTION -->
   <dimen name="profile_value_fields_item_width">120dp</dimen>
+  <dimen name="profile_row_field_height">120dp</dimen>
 
   <!-- INSURANCE SECTION -->
   <dimen name="insurance_home_header_section_height">130dp</dimen>

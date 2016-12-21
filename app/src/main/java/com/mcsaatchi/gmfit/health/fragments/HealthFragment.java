@@ -189,6 +189,7 @@ public class HealthFragment extends Fragment {
 
     switch (ebpMessage) {
       case Constants.EXTRAS_TEST_EDIT_OR_CREATE_DONE:
+        getWidgets();
         getTakenMedicalTests();
         break;
       case Constants.EXTRAS_HEALTH_WIDGETS_ORDER_ARRAY_CHANGED:

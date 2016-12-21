@@ -52,14 +52,13 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/bottom_bar_navigation_height"
         android:layout_gravity="bottom"
-        android:background="@color/black"
-        app:bb_activeTabColor="@color/white"
+        android:gravity="center_vertical"
         app:bb_behavior="shy"
         app:bb_inActiveTabColor="@color/bottom_bar_tabs_inactive_color"
         app:bb_showShadow="true"
         app:bb_tabXmlResource="@xml/bottom_bar_navigation_tabs"
-        app:layout_anchorGravity="bottom"
         />
+        <!--app:layout_anchorGravity="center_vertical"-->
 
   </android.support.design.widget.CoordinatorLayout>
 </LinearLayout>

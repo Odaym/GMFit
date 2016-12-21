@@ -208,6 +208,12 @@
           </LinearLayout>
         </LinearLayout>
 
+        <include
+            layout="@layout/empty_meals_layout"
+            android:id="@+id/breakfastMealsEmptyLayout"
+            android:visibility="gone"
+            />
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/breakfastListView"
             android:layout_width="match_parent"
@@ -288,6 +294,12 @@
                 />
           </LinearLayout>
         </LinearLayout>
+
+        <include
+            layout="@layout/empty_meals_layout"
+            android:id="@+id/lunchMealsEmptyLayout"
+            android:visibility="gone"
+            />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/lunchListView"
@@ -370,6 +382,12 @@
           </LinearLayout>
         </LinearLayout>
 
+        <include
+            layout="@layout/empty_meals_layout"
+            android:id="@+id/dinnerMealsEmptyLayout"
+            android:visibility="gone"
+            />
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/dinnerListView"
             android:layout_width="match_parent"
@@ -450,6 +468,12 @@
                 />
           </LinearLayout>
         </LinearLayout>
+
+        <include
+            layout="@layout/empty_meals_layout"
+            android:id="@+id/snackMealsEmptyLayout"
+            android:visibility="gone"
+            />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/snacksListView"

@@ -11,10 +11,9 @@
 
   <include layout="@layout/app_toolbar"/>
 
-  <LinearLayout
+  <RelativeLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:orientation="horizontal"
       android:paddingEnd="@dimen/activity_vertical_margin"
       android:paddingStart="@dimen/activity_vertical_margin"
       >
@@ -24,7 +23,6 @@
         android:layout_width="0dp"
         android:layout_height="@dimen/radiobutton_row_height"
         android:layout_marginBottom="@dimen/default_margin_0"
-        android:layout_weight="1"
         android:paddingBottom="@dimen/default_margin_0"
         app:fletPaddingLeft="@dimen/default_margin_2"
         app:fletPaddingTop="@dimen/default_margin_1"
@@ -40,6 +38,7 @@
           android:maxLines="1"
           android:paddingBottom="@dimen/default_margin_1"
           android:paddingStart="@dimen/default_margin_2"
+          android:text="asdfadf09iasdf09iasf"
           android:textAppearance="?android:textAppearanceSmall"
           android:textColor="@android:color/white"
           android:textColorHint="@color/offwhite_transparent"
@@ -48,7 +47,16 @@
           />
 
     </com.wrapp.floatlabelededittext.FloatLabeledEditText>
-  </LinearLayout>
+
+    <TextView
+        android:id="@+id/measurementUnitTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/mealAmountFloatingET"
+        android:text="apsdofkapsdofkasdf"
+        android:textColor="@android:color/white"
+        />
+  </RelativeLayout>
 
   <Button
       android:id="@+id/addToDiaryBTN"

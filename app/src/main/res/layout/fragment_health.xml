@@ -149,21 +149,6 @@
             />
 
       </RelativeLayout>
-
-      <Button
-          android:id="@+id/viewMoreBTN"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_marginBottom="@dimen/default_margin_2"
-          android:layout_marginEnd="@dimen/default_margin_2"
-          android:layout_marginStart="@dimen/default_margin_2"
-          android:layout_marginTop="@dimen/default_margin_3"
-          android:background="@color/fitness_dark_blue"
-          android:text="@string/view_more_tests_btn"
-          android:textColor="@android:color/white"
-          style="?android:attr/borderlessButtonStyle"
-          />
-
     </LinearLayout>
   </LinearLayout>
 </RelativeLayout>
