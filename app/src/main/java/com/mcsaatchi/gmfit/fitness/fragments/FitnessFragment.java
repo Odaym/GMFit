@@ -21,6 +21,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -91,7 +92,7 @@ public class FitnessFragment extends Fragment {
   private String todayDate;
   private String userEmail;
 
-  private FitnessWidgetsGridAdapter widgets_GridAdapter;
+  private FitnessWidgetsGridAdapter widgetsGridAdapter;
   private ArrayList<FitnessWidget> widgetsMap;
   private ArrayList<DataChart> chartsMap;
   private RuntimeExceptionDao<FitnessWidget, Integer> fitnessWidgetsDAO;
@@ -165,6 +166,13 @@ public class FitnessFragment extends Fragment {
       }
     });
 
+    dateCarouselLayout.post(new Runnable() {
+      @Override public void run() {
+        dateCarouselLayout.setSmoothScrollingEnabled(true);
+        dateCarouselLayout.fullScroll(HorizontalScrollView.FOCUS_RIGHT);
+      }
+    });
+
     Timber.d("onCreateView: Device info : %s %s (%s) - %s", Build.MANUFACTURER, Build.MODEL,
         Build.DEVICE, Build.VERSION.RELEASE);
 
@@ -230,38 +238,37 @@ public class FitnessFragment extends Fragment {
     EventBusSingleton.getInstance().unregister(this);
   }
 
-  private void getPeriodicalChartData(final CustomBarChart customBarChart, String desiredDate,
+  private void getPeriodicalChartData(final String chartTitle, String desiredDate,
       final String chart_slug) {
     dataAccessHandler.getPeriodicalChartData(dt.minusMonths(1).toString(), desiredDate, "fitness",
         chart_slug, new Callback<ChartMetricBreakdownResponse>() {
           @Override public void onResponse(Call<ChartMetricBreakdownResponse> call,
               Response<ChartMetricBreakdownResponse> response) {
-            if (response.body() != null) {
+            if (response.code() == 200) {
               List<ChartMetricBreakdownResponseDatum> rawChartData =
                   response.body().getData().getBody().getData();
 
-              if (rawChartData != null && rawChartData.size() > 0) {
-                List<AuthenticationResponseChartData> newChartData = new ArrayList<>();
+              List<AuthenticationResponseChartData> newChartData = new ArrayList<>();
 
-                for (int i = 0; i < rawChartData.size(); i++) {
-                  newChartData.add(
-                      new AuthenticationResponseChartData(rawChartData.get(i).getDate(),
-                          rawChartData.get(i).getValue()));
-                }
-
-                customBarChart.setBarChartDataAndDates(newChartData,
-                    Constants.EXTRAS_FITNESS_FRAGMENT);
-                cards_container.addView(customBarChart);
-                ///**
-                // * Open the breakdown for the chart
-                // */
-                //customBarChart.addClickListener(new CustomBarChart.CustomBarChartClickListener() {
-                //  @Override public void handleClick() {
-                //    getSlugBreakdownForChart(chartTitle, chartType);
-                //  }
-                //});
-
+              for (ChartMetricBreakdownResponseDatum responseDatum : rawChartData) {
+                newChartData.add(new AuthenticationResponseChartData(responseDatum.getDate(),
+                    responseDatum.getValue()));
               }
+
+              CustomBarChart customBarChart =
+                  new CustomBarChart(getActivity(), chartTitle, chart_slug);
+
+              /**
+               * Open the breakdown for the chart
+               */
+              customBarChart.addClickListener(new CustomBarChart.CustomBarChartClickListener() {
+                @Override public void handleClick(String chartTitle, String chartType) {
+                  getSlugBreakdownForChart(chartTitle, chartType);
+                }
+              });
+
+              customBarChart.setBarChartDataAndDates(cards_container, newChartData,
+                  Constants.EXTRAS_FITNESS_FRAGMENT);
             }
           }
 
@@ -376,25 +383,16 @@ public class FitnessFragment extends Fragment {
   }
 
   public void addNewBarChart(final String chartTitle, final String chartType, String desiredDate) {
-    CustomBarChart customBarChart = new CustomBarChart(getActivity());
-    customBarChart.setLayoutParams(customBarChart.fixLayoutParams());
-    customBarChart.setChartTitle(chartTitle);
-
-    /**
-     * Depending on the chart type passed here,
-     * grab the appropriate element from the array within the API response that was passed to this fragment from the host activity
-     */
     switch (chartType) {
       case "steps-count":
-        getPeriodicalChartData(customBarChart, desiredDate, "steps-count");
+        getPeriodicalChartData(chartTitle, desiredDate, "steps-count");
         break;
       case "active-calories":
-        getPeriodicalChartData(customBarChart, desiredDate, "active-calories");
+        getPeriodicalChartData(chartTitle, desiredDate, "active-calories");
         break;
       case "distance-traveled":
-        getPeriodicalChartData(customBarChart, desiredDate, "distance-traveled");
+        getPeriodicalChartData(chartTitle, desiredDate, "distance-traveled");
         break;
-
     }
   }
 
@@ -458,19 +456,19 @@ public class FitnessFragment extends Fragment {
   }
 
   private void setupWidgetViews(ArrayList<FitnessWidget> widgetsMap) {
-    widgets_GridAdapter = new FitnessWidgetsGridAdapter(getActivity(), widgetsMap,
+    widgetsGridAdapter = new FitnessWidgetsGridAdapter(getActivity(), widgetsMap,
         R.layout.grid_item_fitness_widgets);
 
     widgetsGridView.setLayoutManager(new GridLayoutManager(getActivity(), widgetsMap.size()));
-    widgetsGridView.setAdapter(widgets_GridAdapter);
+    widgetsGridView.setAdapter(widgetsGridAdapter);
   }
 
   private TextView findWidgetInGrid(String widgetName) {
     RecyclerView.ViewHolder fitnessWidgetViewHolder;
     TextView metricCountTextView = null;
 
-    for (int i = 0; i < widgets_GridAdapter.getItemCount(); i++) {
-      if (widgets_GridAdapter.getItem(i).getTitle().equals(widgetName)) {
+    for (int i = 0; i < widgetsGridAdapter.getItemCount(); i++) {
+      if (widgetsGridAdapter.getItem(i).getTitle().equals(widgetName)) {
         fitnessWidgetViewHolder = widgetsGridView.findViewHolderForAdapterPosition(i);
 
         if (fitnessWidgetViewHolder != null) {

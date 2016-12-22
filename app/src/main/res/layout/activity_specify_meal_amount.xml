@@ -11,9 +11,10 @@
 
   <include layout="@layout/app_toolbar"/>
 
-  <RelativeLayout
+  <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
+      android:orientation="horizontal"
       android:paddingEnd="@dimen/activity_vertical_margin"
       android:paddingStart="@dimen/activity_vertical_margin"
       >
@@ -23,6 +24,7 @@
         android:layout_width="0dp"
         android:layout_height="@dimen/radiobutton_row_height"
         android:layout_marginBottom="@dimen/default_margin_0"
+        android:layout_weight="1"
         android:paddingBottom="@dimen/default_margin_0"
         app:fletPaddingLeft="@dimen/default_margin_2"
         app:fletPaddingTop="@dimen/default_margin_1"
@@ -38,7 +40,6 @@
           android:maxLines="1"
           android:paddingBottom="@dimen/default_margin_1"
           android:paddingStart="@dimen/default_margin_2"
-          android:text="asdfadf09iasdf09iasf"
           android:textAppearance="?android:textAppearanceSmall"
           android:textColor="@android:color/white"
           android:textColorHint="@color/offwhite_transparent"
@@ -46,17 +47,20 @@
           validator:emptyErrorString="@string/field_empty_error_message"
           />
 
-    </com.wrapp.floatlabelededittext.FloatLabeledEditText>
+      <TextView
+          android:id="@+id/measurementUnitTV"
+          android:layout_width="wrap_content"
+          android:layout_height="match_parent"
+          android:layout_gravity="end"
+          android:gravity="bottom|center_vertical"
+          android:paddingBottom="@dimen/default_margin_1"
+          android:paddingEnd="@dimen/default_margin_4"
+          android:textAppearance="?android:textAppearanceSmall"
+          android:textColor="@color/offwhite_transparent"
+          />
 
-    <TextView
-        android:id="@+id/measurementUnitTV"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/mealAmountFloatingET"
-        android:text="apsdofkapsdofkasdf"
-        android:textColor="@android:color/white"
-        />
-  </RelativeLayout>
+    </com.wrapp.floatlabelededittext.FloatLabeledEditText>
+  </LinearLayout>
 
   <Button
       android:id="@+id/addToDiaryBTN"

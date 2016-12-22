@@ -13,6 +13,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.common.Constants;
+import com.mcsaatchi.gmfit.common.classes.Helpers;
 import java.util.ArrayList;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
@@ -50,7 +51,7 @@ public class DateCarousel extends HorizontalScrollView {
     LocalDate dateToStartFrom = dt.plusDays(daysExtraToShow);
 
     for (int i = Constants.NUMBER_OF_DAYS_IN_DATE_CAROUSEL; i >= 0; i--) {
-      View itemDateCarouselLayout = mInflater.inflate(R.layout.item_date_carousel, this, true);
+      View itemDateCarouselLayout = mInflater.inflate(R.layout.item_date_carousel, null);
       itemDateCarouselLayout.setPadding(
           getResources().getDimensionPixelSize(R.dimen.default_margin_1), 0,
           getResources().getDimensionPixelSize(R.dimen.default_margin_1), 0);
@@ -93,12 +94,14 @@ public class DateCarousel extends HorizontalScrollView {
                     + "/"
                     + dt.year().getAsText());
 
+            String finalDesiredDate = Helpers.prepareDateForAPIRequest(formattedDate.toLocalDate());
+
             String todaysDateFormatted =
                 dt.getYear() + "-" + dt.getMonthOfYear() + "-" + dt.getDayOfMonth();
-
-            String finalDesiredDate =
-                formattedDate.getYear() + "-" + formattedDate.getMonthOfYear() + "-" + formattedDate
-                    .getDayOfMonth();
+            //
+            //String finalDesiredDate =
+            //    formattedDate.getYear() + "-" + formattedDate.getMonthOfYear() + "-" + formattedDate
+            //        .getDayOfMonth();
 
             for (CarouselClickListener listener : clickListeners) {
               listener.handleClick(todaysDateFormatted, finalDesiredDate);
@@ -107,13 +110,6 @@ public class DateCarousel extends HorizontalScrollView {
         });
       }
     }
-
-    dateCarousel.post(new Runnable() {
-      @Override public void run() {
-        dateCarousel.setSmoothScrollingEnabled(true);
-        dateCarousel.fullScroll(HorizontalScrollView.FOCUS_RIGHT);
-      }
-    });
   }
 
   private void focusOnView(LinearLayout dateCarouselContainer, final View view) {

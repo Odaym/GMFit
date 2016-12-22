@@ -22,59 +22,49 @@ import org.joda.time.DateTime;
 
 public class CustomBarChart extends BarChart {
 
+  private View barChartLayout;
+
   @Bind(R.id.barChart) BarChart barChart;
   @Bind(R.id.chartTitleTV) TextView chartTitleTV;
   @Bind(R.id.dateTV_1) TextView dateTV_1;
   @Bind(R.id.dateTV_2) TextView dateTV_2;
   @Bind(R.id.dateTV_3) TextView dateTV_3;
   @Bind(R.id.dateTV_4) TextView dateTV_4;
+
+  private String chartTitle, chartType;
+
   private Context context;
   private ArrayList<CustomBarChartClickListener> clickListeners = new ArrayList<>();
-  private LayoutInflater mInflater;
 
-  public CustomBarChart(Context context) {
+  public CustomBarChart(Context context, String chartTitle, String chartType) {
     super(context);
     this.context = context;
 
-    mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-    View v = mInflater.inflate(R.layout.view_barchart_container, this, true);
+    this.chartTitle = chartTitle;
+    this.chartType = chartType;
 
-    ButterKnife.bind(this, v);
-  }
+    LayoutInflater mInflater =
+        (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    barChartLayout = mInflater.inflate(R.layout.view_barchart_container, null);
 
-  private static int findLargestNumber(List<AuthenticationResponseChartData> rawChartData) {
-    int smallest = (int) Double.parseDouble(rawChartData.get(0).getValue());
-    int largest = (int) Double.parseDouble(rawChartData.get(0).getValue());
+    ButterKnife.bind(this, barChartLayout);
 
-    for (int i = 1; i < rawChartData.size(); i++) {
-      int currentValue = (int) Double.parseDouble(rawChartData.get(i).getValue());
-      if (currentValue > largest) {
-        largest = currentValue;
-      } else if (currentValue < smallest) smallest = currentValue;
-    }
+    LinearLayout.LayoutParams lp =
+        new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+            getResources().getDimensionPixelSize(R.dimen.chart_height_2));
+    lp.topMargin = getResources().getDimensionPixelSize(R.dimen.default_margin_1);
 
-    return largest;
+    barChartLayout.setLayoutParams(lp);
+
+    chartTitleTV.setText(chartTitle);
   }
 
   public void addClickListener(CustomBarChartClickListener listener) {
     this.clickListeners.add(listener);
   }
 
-  public void setChartTitle(String title) {
-    chartTitleTV.setText(title);
-  }
-
-  public LinearLayout.LayoutParams fixLayoutParams() {
-    LinearLayout.LayoutParams lp =
-        new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-            getResources().getDimensionPixelSize(R.dimen.chart_height_2));
-    lp.topMargin = getResources().getDimensionPixelSize(R.dimen.default_margin_1);
-
-    return lp;
-  }
-
-  public void setBarChartDataAndDates(List<AuthenticationResponseChartData> newChartData,
-      String whichFragment) {
+  public void setBarChartDataAndDates(LinearLayout barContainer,
+      List<AuthenticationResponseChartData> newChartData, String whichFragment) {
 
     DateTime date;
 
@@ -101,13 +91,13 @@ public class CustomBarChart extends BarChart {
               date.getDayOfMonth() + " " + date.monthOfYear().getAsText().substring(0, 3));
           break;
       }
-
-      setBarChartData(newChartData, whichFragment);
     }
+
+    setBarChartData(barContainer, newChartData, whichFragment);
   }
 
-  private void setBarChartData(List<AuthenticationResponseChartData> chartData,
-      String whichFragment) {
+  private void setBarChartData(LinearLayout barContainer,
+      List<AuthenticationResponseChartData> chartData, String whichFragment) {
     ArrayList<BarEntry> valsMetrics = new ArrayList<>();
     ArrayList<String> xVals = new ArrayList<>();
 
@@ -157,24 +147,40 @@ public class CustomBarChart extends BarChart {
 
     barChart.setData(data);
 
+    barChart.getBarData().setDrawValues(true);
+
     barChart.setRenderer(
         new CustomBarChartRenderer(context, whichFragment, barChart, barChart.getAnimator(),
             barChart.getViewPortHandler()));
-
-    barChart.getBarData().setDrawValues(false);
 
     barChart.invalidate();
 
     for (final CustomBarChartClickListener listener : clickListeners) {
       barChart.setOnClickListener(new OnClickListener() {
         @Override public void onClick(View view) {
-          listener.handleClick();
+          listener.handleClick(chartTitle, chartType);
         }
       });
     }
+
+    barContainer.addView(barChartLayout);
   }
 
   public interface CustomBarChartClickListener {
-    void handleClick();
+    void handleClick(String chartTitle, String chartType);
+  }
+
+  private static int findLargestNumber(List<AuthenticationResponseChartData> rawChartData) {
+    int smallest = (int) Double.parseDouble(rawChartData.get(0).getValue());
+    int largest = (int) Double.parseDouble(rawChartData.get(0).getValue());
+
+    for (int i = 1; i < rawChartData.size(); i++) {
+      int currentValue = (int) Double.parseDouble(rawChartData.get(i).getValue());
+      if (currentValue > largest) {
+        largest = currentValue;
+      } else if (currentValue < smallest) smallest = currentValue;
+    }
+
+    return largest;
   }
 }

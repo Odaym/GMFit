@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -16,7 +15,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -33,7 +31,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import com.github.mikephil.charting.charts.BarChart;
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.mcsaatchi.gmfit.R;
@@ -67,6 +64,8 @@ import com.mcsaatchi.gmfit.common.classes.AlarmReceiver;
 import com.mcsaatchi.gmfit.common.classes.FontTextView;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.common.classes.SimpleDividerItemDecoration;
+import com.mcsaatchi.gmfit.common.components.CustomBarChart;
+import com.mcsaatchi.gmfit.common.components.DateCarousel;
 import com.mcsaatchi.gmfit.common.models.DataChart;
 import com.mcsaatchi.gmfit.nutrition.activities.AddNewMealItemActivity;
 import com.mcsaatchi.gmfit.nutrition.activities.BarcodeCaptureActivity;
@@ -78,13 +77,9 @@ import com.mcsaatchi.gmfit.nutrition.models.NutritionWidget;
 import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import javax.inject.Inject;
-import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -144,8 +139,7 @@ public class NutritionFragment extends Fragment {
   @Bind(R.id.addChartBTN) Button addNewChartBTN;
   @Bind(R.id.loadingMetricProgressBar) ProgressBar loadingMetricProgressBar;
   @Bind(R.id.loadingWidgetsProgressBar) ProgressBar loadingWidgetsProgressBar;
-  @Bind(R.id.dateCarousel) HorizontalScrollView dateCarousel;
-  @Bind(R.id.dateCarouselContainer) LinearLayout dateCarouselContainer;
+  @Bind(R.id.dateCarouselLayout) DateCarousel dateCarouselLayout;
 
   @Bind(R.id.goalTV) FontTextView goalTV;
   @Bind(R.id.remainingTV) FontTextView remainingTV;
@@ -270,6 +264,25 @@ public class NutritionFragment extends Fragment {
     }
   }
 
+  private void setupDateCarousel() {
+    dateCarouselLayout.addClickListener(new DateCarousel.CarouselClickListener() {
+      @Override public void handleClick(String todayDate, String finalDate) {
+        showProgressBarsForLoading();
+
+        getUserGoalMetrics(finalDate, "nutrition");
+        getUserAddedMeals(finalDate);
+        getUiForSection("nutrition", finalDate);
+      }
+    });
+
+    dateCarouselLayout.post(new Runnable() {
+      @Override public void run() {
+        dateCarouselLayout.setSmoothScrollingEnabled(true);
+        dateCarouselLayout.fullScroll(HorizontalScrollView.FOCUS_RIGHT);
+      }
+    });
+  }
+
   private void searchForMealBarcode(String barcode, final String mealType) {
     final ProgressDialog waitingDialog = new ProgressDialog(getActivity());
     waitingDialog.setTitle(getString(R.string.searching_for_barcode_meal));
@@ -388,111 +401,6 @@ public class NutritionFragment extends Fragment {
     });
   }
 
-  private void setupDateCarousel() {
-    int daysExtraToShow = 3;
-
-    LocalDate dateToStartFrom = dt.plusDays(daysExtraToShow);
-
-    for (int i = Constants.NUMBER_OF_DAYS_IN_DATE_CAROUSEL; i >= 0; i--) {
-      final View itemDateCarouselLayout =
-          getActivity().getLayoutInflater().inflate(R.layout.item_date_carousel, null);
-      itemDateCarouselLayout.setPadding(
-          getResources().getDimensionPixelSize(R.dimen.default_margin_1), 0,
-          getResources().getDimensionPixelSize(R.dimen.default_margin_1), 0);
-
-      final TextView dayOfMonthTV =
-          (TextView) itemDateCarouselLayout.findViewById(R.id.dayOfMonthTV);
-      final TextView monthOfYearTV =
-          (TextView) itemDateCarouselLayout.findViewById(R.id.monthOfYearTV);
-
-      dayOfMonthTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
-      monthOfYearTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
-      dayOfMonthTV.setTypeface(null, Typeface.NORMAL);
-      monthOfYearTV.setTypeface(null, Typeface.NORMAL);
-
-      LocalDate dateAsLocal = dateToStartFrom.minusDays(i);
-      DateTimeFormatter monthFormatter = DateTimeFormat.forPattern("MMM");
-
-      dayOfMonthTV.setText(String.valueOf(dateAsLocal.getDayOfMonth()));
-      monthOfYearTV.setText(String.valueOf(monthFormatter.print(dateAsLocal).toUpperCase()));
-
-      dateCarouselContainer.addView(itemDateCarouselLayout);
-
-      if (i == daysExtraToShow) {
-        focusOnView(dateCarouselContainer, itemDateCarouselLayout);
-      }
-
-      if (i < daysExtraToShow) {
-        fadeOutView(itemDateCarouselLayout);
-      } else if (i >= daysExtraToShow) {
-        itemDateCarouselLayout.setOnClickListener(new View.OnClickListener() {
-          @Override public void onClick(View view) {
-            focusOnView(dateCarouselContainer, view);
-
-            showProgressBarsForLoading();
-
-            DateTimeFormatter formatter = DateTimeFormat.forPattern("dd/MMM/yyyy");
-            DateTime formattedDate = formatter.parseDateTime(dayOfMonthTV.getText().toString()
-                + "/"
-                + monthOfYearTV.getText().toString()
-                + "/"
-                + dt.year().getAsText());
-
-            finalDesiredDate = Helpers.prepareDateForAPIRequest(formattedDate.toLocalDate());
-
-            getUserGoalMetrics(finalDesiredDate, "nutrition");
-            getUserAddedMeals(finalDesiredDate);
-            getUiForSection("nutrition", finalDesiredDate);
-          }
-        });
-      }
-    }
-
-    dateCarousel.post(new Runnable() {
-      @Override public void run() {
-        dateCarousel.setSmoothScrollingEnabled(true);
-        dateCarousel.fullScroll(HorizontalScrollView.FOCUS_RIGHT);
-      }
-    });
-  }
-
-  private void focusOnView(final LinearLayout dateCarouselContainer, final View view) {
-    TextView dayOfMonthTV;
-    TextView monthOfYearTV;
-    LinearLayout dateEntryLayout;
-
-    for (int i = 0; i < dateCarouselContainer.getChildCount(); i++) {
-
-      dateEntryLayout =
-          (LinearLayout) dateCarouselContainer.getChildAt(i).findViewById(R.id.dateEntryLayout);
-      dayOfMonthTV = (TextView) dateCarouselContainer.getChildAt(i).findViewById(R.id.dayOfMonthTV);
-      monthOfYearTV =
-          (TextView) dateCarouselContainer.getChildAt(i).findViewById(R.id.monthOfYearTV);
-
-      dateEntryLayout.setBackgroundColor(0);
-      dayOfMonthTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
-      monthOfYearTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
-      dayOfMonthTV.setTypeface(null, Typeface.NORMAL);
-      monthOfYearTV.setTypeface(null, Typeface.NORMAL);
-    }
-
-    dateEntryLayout = (LinearLayout) view.findViewById(R.id.dateEntryLayout);
-    dayOfMonthTV = (TextView) view.findViewById(R.id.dayOfMonthTV);
-    monthOfYearTV = (TextView) view.findViewById(R.id.monthOfYearTV);
-
-    if (isAdded()) {
-      dateEntryLayout.setBackgroundColor(getResources().getColor(R.color.offwhite_transparent));
-    }
-    dayOfMonthTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-    monthOfYearTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-    dayOfMonthTV.setTypeface(null, Typeface.BOLD);
-    monthOfYearTV.setTypeface(null, Typeface.BOLD);
-  }
-
-  private void fadeOutView(View view) {
-    view.setAlpha(0.5f);
-  }
-
   private void getUiForSection(String section, String desiredDate) {
     String finalUrl;
 
@@ -549,7 +457,7 @@ public class NutritionFragment extends Fragment {
                 @Override public void run() {
                   setupWidgetViews(finalWidgets);
 
-                  getUserGoalMetrics(finalDesiredDate, "nutrition");
+                  //getUserGoalMetrics(finalDesiredDate, "nutrition");
 
                   setupChartViews(finalCharts);
 
@@ -1009,41 +917,7 @@ public class NutritionFragment extends Fragment {
   }
 
   private void addNewBarChart(final String chartTitle) {
-    final TextView dateTV_1, dateTV_2, dateTV_3, dateTV_4;
-
-    final View barChartLayout =
-        parentActivity.getLayoutInflater().inflate(R.layout.view_barchart_container, null);
-
-    dateTV_1 = (TextView) barChartLayout.findViewById(R.id.dateTV_1);
-    dateTV_2 = (TextView) barChartLayout.findViewById(R.id.dateTV_2);
-    dateTV_3 = (TextView) barChartLayout.findViewById(R.id.dateTV_3);
-    dateTV_4 = (TextView) barChartLayout.findViewById(R.id.dateTV_4);
-
-    TextView chartTitleTV = (TextView) barChartLayout.findViewById(R.id.chartTitleTV);
-    final BarChart barChart = (BarChart) barChartLayout.findViewById(R.id.barChart);
-
-    if (chartTitle != null) chartTitleTV.setText(chartTitle);
-
-    getDefaultChartMonthlyBreakdown(barChart, dateTV_1, dateTV_2, dateTV_3, dateTV_4, chartTitle);
-
-    if (isAdded()) {
-      LinearLayout.LayoutParams lp =
-          new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-              getResources().getDimensionPixelSize(R.dimen.chart_height_2));
-      lp.topMargin = getResources().getDimensionPixelSize(R.dimen.default_margin_2);
-      barChartLayout.setLayoutParams(lp);
-
-      cards_container.addView(barChartLayout);
-
-      /**
-       * Open the breakdown for the chart
-       */
-      barChart.setOnClickListener(new View.OnClickListener() {
-        @Override public void onClick(View view) {
-          getSlugBreakdownForChart(chartTitle, chartTitle);
-        }
-      });
-    }
+    getDefaultChartMonthlyBreakdown(chartTitle);
   }
 
   private void getSlugBreakdownForChart(final String chartTitle, final String chartType) {
@@ -1094,14 +968,13 @@ public class NutritionFragment extends Fragment {
         });
   }
 
-  private void getDefaultChartMonthlyBreakdown(final BarChart barchart, final TextView dateTV_1,
-      final TextView dateTV_2, final TextView dateTV_3, final TextView dateTV_4,
-      final String chart_slug) {
+  private void getDefaultChartMonthlyBreakdown(final String chartTitle) {
+
     final String todayDate;
     todayDate = dt.toString();
 
     dataAccessHandler.getPeriodicalChartData(dt.minusMonths(1).toString(), todayDate, "nutrition",
-        chart_slug, new Callback<ChartMetricBreakdownResponse>() {
+        chartTitle, new Callback<ChartMetricBreakdownResponse>() {
           @Override public void onResponse(Call<ChartMetricBreakdownResponse> call,
               Response<ChartMetricBreakdownResponse> response) {
             if (response.body().getData().getBody() != null) {
@@ -1116,42 +989,20 @@ public class NutritionFragment extends Fragment {
                       new AuthenticationResponseChartData(rawChartData.get(i).getDate(),
                           rawChartData.get(i).getValue()));
                 }
+                CustomBarChart customBarChart =
+                    new CustomBarChart(getActivity(), chartTitle, chartTitle);
 
-                DateTime date;
-
-                Collections.reverse(newChartData);
-
-                for (int i = 0; i < newChartData.size(); i++) {
-                  date = new DateTime(newChartData.get(i).getDate());
-
-                  switch (i) {
-                    case 5:
-                      dateTV_1.setText(date.getDayOfMonth() + " " + date.monthOfYear()
-                          .getAsText()
-                          .substring(0, 3));
-                      break;
-                    case 12:
-                      dateTV_2.setText(date.getDayOfMonth() + " " + date.monthOfYear()
-                          .getAsText()
-                          .substring(0, 3));
-                      break;
-                    case 19:
-                      dateTV_3.setText(date.getDayOfMonth() + " " + date.monthOfYear()
-                          .getAsText()
-                          .substring(0, 3));
-                      break;
-                    case 26:
-                      dateTV_4.setText(date.getDayOfMonth() + " " + date.monthOfYear()
-                          .getAsText()
-                          .substring(0, 3));
-                      break;
+                /**
+                 * Open the breakdown for the chart
+                 */
+                customBarChart.addClickListener(new CustomBarChart.CustomBarChartClickListener() {
+                  @Override public void handleClick(String chartTitle, String chartType) {
+                    getSlugBreakdownForChart(chartTitle, chartType);
                   }
-                }
-                //
-                //if (isAdded()) {
-                //  Helpers.setBarChartData(getActivity(), Constants.EXTRAS_NUTRITION_FRAGMENT,
-                //      barchart, newChartData);
-                //}
+                });
+
+                customBarChart.setBarChartDataAndDates(cards_container, newChartData,
+                    Constants.EXTRAS_NUTRITION_FRAGMENT);
               }
             }
           }

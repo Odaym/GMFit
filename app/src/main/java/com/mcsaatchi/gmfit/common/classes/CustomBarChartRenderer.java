@@ -48,8 +48,9 @@ public class CustomBarChartRenderer extends BarChartRenderer {
         break;
     }
 
-    LinearGradient linGrad =
-        new LinearGradient(0, 0, 0, height, gradientColors, new float[]{0.1f, 1f}, Shader.TileMode.REPEAT);
+    LinearGradient linGrad = new LinearGradient(0, 0, 0,
+        context.getResources().getDimensionPixelSize(R.dimen.chart_height), gradientColors,
+        new float[] { 0.1f, 1f }, Shader.TileMode.REPEAT);
 
     shadedPaint.setShader(linGrad);
   }
