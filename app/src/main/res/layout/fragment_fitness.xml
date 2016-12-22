@@ -14,25 +14,14 @@
       android:background="@android:color/transparent"
       >
 
-    <HorizontalScrollView
-        android:id="@+id/dateCarousel"
+    <com.mcsaatchi.gmfit.common.components.DateCarousel
+        android:id="@+id/dateCarouselLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/default_margin_2"
         android:layout_marginTop="@dimen/default_margin_1"
         android:background="@color/offwhite_more_transparent"
-        android:scrollbars="none"
-        >
-
-      <LinearLayout
-          android:id="@+id/dateCarouselContainer"
-          android:layout_width="wrap_content"
-          android:layout_height="match_parent"
-          android:gravity="center_vertical"
-          android:orientation="horizontal"
-          />
-
-    </HorizontalScrollView>
+        />
 
     <ProgressBar
         android:id="@+id/loadingMetricProgressBar"
@@ -47,7 +36,7 @@
         android:id="@+id/metricProgressBar"
         android:layout_width="@dimen/metric_header_progress_bar_width"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/dateCarousel"
+        android:layout_below="@+id/dateCarouselLayout"
         android:layout_centerHorizontal="true"
         android:indeterminate="false"
         android:max="100"

@@ -1147,11 +1147,11 @@ public class NutritionFragment extends Fragment {
                       break;
                   }
                 }
-
-                if (isAdded()) {
-                  Helpers.setBarChartData(getActivity(), Constants.EXTRAS_NUTRITION_FRAGMENT,
-                      barchart, newChartData);
-                }
+                //
+                //if (isAdded()) {
+                //  Helpers.setBarChartData(getActivity(), Constants.EXTRAS_NUTRITION_FRAGMENT,
+                //      barchart, newChartData);
+                //}
               }
             }
           }

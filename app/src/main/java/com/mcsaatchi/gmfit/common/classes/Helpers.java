@@ -12,21 +12,14 @@ import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import com.andreabaccega.widget.FormEditText;
-import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.BarDataSet;
-import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.formatter.ValueFormatter;
-import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponseChartData;
 import com.mcsaatchi.gmfit.common.Constants;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
@@ -101,84 +94,6 @@ public class Helpers {
     bundle.putBoolean(Constants.BUNDLE_ACTIVITY_BACK_BUTTON_ENABLED, enableBackButton);
 
     return bundle;
-  }
-
-  public static void setBarChartData(Context context, String whichFragment, BarChart chart,
-      List<AuthenticationResponseChartData> chartData) {
-    ArrayList<BarEntry> valsMetrics = new ArrayList<>();
-    ArrayList<String> xVals = new ArrayList<>();
-
-    int k = 0;
-
-    for (int i = 0; i < chartData.size(); i++) {
-      xVals.add("");
-
-      BarEntry val1 = new BarEntry((int) Float.parseFloat(chartData.get(i).getValue()), k);
-      valsMetrics.add(val1);
-
-      k++;
-    }
-
-    BarDataSet set1;
-    set1 = new BarDataSet(valsMetrics, null);
-    set1.setColor(R.color.fitness_pink);
-    set1.setHighLightAlpha(1);
-    set1.setValueTextSize(7f);
-
-    ArrayList<IBarDataSet> dataSets = new ArrayList<>();
-    dataSets.add(set1);
-
-    BarData data = new BarData(xVals, dataSets);
-
-    /**
-     * If you would like to show values, use this formatter
-     */
-    data.setValueFormatter(new MyValueFormatter());
-
-    chart.setScaleEnabled(false);
-    chart.setDescription(null);
-    chart.setDrawGridBackground(false);
-    chart.getLegend().setEnabled(false);
-
-    chart.getAxisRight().setEnabled(false);
-    chart.getAxisLeft().setEnabled(false);
-
-    chart.getXAxis().setDrawGridLines(false);
-
-    chart.getXAxis().setEnabled(false);
-
-    chart.getAxisLeft().setAxisMaxValue(findLargestNumber(chartData));
-    chart.getAxisLeft().setShowOnlyMinMax(true);
-    chart.getAxisRight().setShowOnlyMinMax(true);
-
-    chart.getAxisLeft().setDrawLabels(false);
-    chart.getAxisRight().setDrawLabels(false);
-
-    chart.getAxisRight().setAxisMinValue(0);
-    chart.getAxisLeft().setAxisMinValue(0);
-
-    chart.setData(data);
-
-    chart.setRenderer(new CustomBarChartRenderer(context, whichFragment, chart, chart.getAnimator(),
-        chart.getViewPortHandler()));
-
-    chart.getBarData().setDrawValues(false);
-
-    chart.invalidate();
-  }
-
-  private static int findLargestNumber(List<AuthenticationResponseChartData> rawChartData) {
-    int smallest = (int) Double.parseDouble(rawChartData.get(0).getValue());
-    int largest = (int) Double.parseDouble(rawChartData.get(0).getValue());
-
-    for (int i = 1; i < rawChartData.size(); i++) {
-      int currentValue = (int) Double.parseDouble(rawChartData.get(i).getValue());
-      if (currentValue > largest) {
-        largest = currentValue;
-      } else if (currentValue < smallest) smallest = currentValue;
-    }
-
-    return largest;
   }
 
   public static boolean isInternetAvailable(Context context) {

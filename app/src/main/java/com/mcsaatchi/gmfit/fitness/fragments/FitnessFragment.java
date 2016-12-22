@@ -6,11 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Typeface;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
@@ -19,7 +14,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,14 +21,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import com.github.mikephil.charting.charts.BarChart;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.mcsaatchi.gmfit.R;
@@ -57,6 +49,8 @@ import com.mcsaatchi.gmfit.common.activities.CustomizeWidgetsAndChartsActivity;
 import com.mcsaatchi.gmfit.common.activities.SlugBreakdownActivity;
 import com.mcsaatchi.gmfit.common.classes.FontTextView;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
+import com.mcsaatchi.gmfit.common.components.CustomBarChart;
+import com.mcsaatchi.gmfit.common.components.DateCarousel;
 import com.mcsaatchi.gmfit.common.models.DataChart;
 import com.mcsaatchi.gmfit.fitness.adapters.FitnessWidgetsGridAdapter;
 import com.mcsaatchi.gmfit.fitness.models.FitnessWidget;
@@ -64,29 +58,25 @@ import com.squareup.otto.Subscribe;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import javax.inject.Inject;
 import net.danlew.android.joda.JodaTimeAndroid;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import timber.log.Timber;
 
-public class FitnessFragment extends Fragment implements SensorEventListener {
+public class FitnessFragment extends Fragment {
 
   private static final int ADD_NEW_FITNESS_CHART_REQUEST_CODE = 1;
 
+  @Bind(R.id.dateCarouselLayout) DateCarousel dateCarouselLayout;
   @Bind(R.id.widgetsGridView) RecyclerView widgetsGridView;
   @Bind(R.id.cards_container) LinearLayout cards_container;
   @Bind(R.id.addChartBTN) Button addNewChartBTN;
   @Bind(R.id.metricCounterTV) FontTextView metricCounterTV;
-  @Bind(R.id.dateCarousel) HorizontalScrollView dateCarousel;
-  @Bind(R.id.dateCarouselContainer) LinearLayout dateCarouselContainer;
   @Bind(R.id.goalTV) FontTextView goalTV;
   @Bind(R.id.goalStatusWordTV) TextView goalStatusWordTV;
   @Bind(R.id.remainingTV) FontTextView remainingTV;
@@ -98,8 +88,6 @@ public class FitnessFragment extends Fragment implements SensorEventListener {
   @Inject LocalDate dt;
   @Inject DataAccessHandler dataAccessHandler;
   private Activity parentActivity;
-  private String chartName;
-  private String chartType;
   private String todayDate;
   private String userEmail;
 
@@ -129,27 +117,6 @@ public class FitnessFragment extends Fragment implements SensorEventListener {
       todayDate = dt.toString();
 
       getUserGoalMetrics(todayDate, "fitness", false);
-
-      SensorManager sm = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
-      Sensor sensor = sm.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
-      if (sensor == null) {
-        new AlertDialog.Builder(getActivity()).setTitle("Cannot count steps")
-            .setMessage("Your device isn't equipped with this sensor")
-            .setOnDismissListener(new DialogInterface.OnDismissListener() {
-              @Override public void onDismiss(final DialogInterface dialogInterface) {
-                //getActivity().finish();
-              }
-            })
-            .setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-              @Override public void onClick(final DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-              }
-            })
-            .create()
-            .show();
-      } else {
-        sm.registerListener(this, sensor, 0, 0);
-      }
 
       if (((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
         ((AppCompatActivity) getActivity()).getSupportActionBar()
@@ -186,7 +153,17 @@ public class FitnessFragment extends Fragment implements SensorEventListener {
 
     setupChartViews(chartsMap, todayDate);
 
-    setupDateCarousel();
+    dateCarouselLayout.addClickListener(new DateCarousel.CarouselClickListener() {
+      @Override public void handleClick(String todayDate, String finalDate) {
+        DateTime finalTodayDateTime = new DateTime(todayDate);
+        DateTime finalDesiredDateTime = new DateTime(finalDate);
+
+        getUserGoalMetrics(finalDate, "fitness", !finalTodayDateTime.isEqual(finalDesiredDateTime));
+
+        getWidgetsWithDate(finalDate);
+        setupChartViews(chartsMap, finalDate);
+      }
+    });
 
     Timber.d("onCreateView: Device info : %s %s (%s) - %s", Build.MANUFACTURER, Build.MODEL,
         Build.DEVICE, Build.VERSION.RELEASE);
@@ -212,8 +189,8 @@ public class FitnessFragment extends Fragment implements SensorEventListener {
     if (requestCode == ADD_NEW_FITNESS_CHART_REQUEST_CODE) {
       if (data != null) {
 
-        chartType = data.getStringExtra(Constants.EXTRAS_CHART_TYPE_SELECTED);
-        chartName = data.getStringExtra(Constants.EXTRAS_CHART_FULL_NAME);
+        String chartType = data.getStringExtra(Constants.EXTRAS_CHART_TYPE_SELECTED);
+        String chartName = data.getStringExtra(Constants.EXTRAS_CHART_FULL_NAME);
 
         addNewBarChart(chartName, chartType, todayDate);
 
@@ -253,10 +230,8 @@ public class FitnessFragment extends Fragment implements SensorEventListener {
     EventBusSingleton.getInstance().unregister(this);
   }
 
-  private void getPeriodicalChartData(final BarChart barchart, String desiredDate,
-      final TextView dateTV_1, final TextView dateTV_2, final TextView dateTV_3,
-      final TextView dateTV_4, final String chart_slug) {
-
+  private void getPeriodicalChartData(final CustomBarChart customBarChart, String desiredDate,
+      final String chart_slug) {
     dataAccessHandler.getPeriodicalChartData(dt.minusMonths(1).toString(), desiredDate, "fitness",
         chart_slug, new Callback<ChartMetricBreakdownResponse>() {
           @Override public void onResponse(Call<ChartMetricBreakdownResponse> call,
@@ -274,41 +249,18 @@ public class FitnessFragment extends Fragment implements SensorEventListener {
                           rawChartData.get(i).getValue()));
                 }
 
-                DateTime date;
+                customBarChart.setBarChartDataAndDates(newChartData,
+                    Constants.EXTRAS_FITNESS_FRAGMENT);
+                cards_container.addView(customBarChart);
+                ///**
+                // * Open the breakdown for the chart
+                // */
+                //customBarChart.addClickListener(new CustomBarChart.CustomBarChartClickListener() {
+                //  @Override public void handleClick() {
+                //    getSlugBreakdownForChart(chartTitle, chartType);
+                //  }
+                //});
 
-                Collections.reverse(newChartData);
-
-                for (int i = 0; i < newChartData.size(); i++) {
-                  date = new DateTime(newChartData.get(i).getDate());
-
-                  switch (i) {
-                    case 5:
-                      dateTV_1.setText(date.getDayOfMonth() + " " + date.monthOfYear()
-                          .getAsText()
-                          .substring(0, 3));
-                      break;
-                    case 12:
-                      dateTV_2.setText(date.getDayOfMonth() + " " + date.monthOfYear()
-                          .getAsText()
-                          .substring(0, 3));
-                      break;
-                    case 19:
-                      dateTV_3.setText(date.getDayOfMonth() + " " + date.monthOfYear()
-                          .getAsText()
-                          .substring(0, 3));
-                      break;
-                    case 26:
-                      dateTV_4.setText(date.getDayOfMonth() + " " + date.monthOfYear()
-                          .getAsText()
-                          .substring(0, 3));
-                      break;
-                  }
-                }
-
-                if (isAdded()) {
-                  Helpers.setBarChartData(getActivity(), Constants.EXTRAS_FITNESS_FRAGMENT,
-                      barchart, newChartData);
-                }
               }
             }
           }
@@ -318,121 +270,7 @@ public class FitnessFragment extends Fragment implements SensorEventListener {
         });
   }
 
-  private void setupDateCarousel() {
-    int daysExtraToShow = 3;
-
-    LocalDate dateToStartFrom = dt.plusDays(daysExtraToShow);
-
-    for (int i = Constants.NUMBER_OF_DAYS_IN_DATE_CAROUSEL; i >= 0; i--) {
-      final View itemDateCarouselLayout =
-          getActivity().getLayoutInflater().inflate(R.layout.item_date_carousel, null);
-      itemDateCarouselLayout.setPadding(
-          getResources().getDimensionPixelSize(R.dimen.default_margin_1), 0,
-          getResources().getDimensionPixelSize(R.dimen.default_margin_1), 0);
-
-      final TextView dayOfMonthTV =
-          (TextView) itemDateCarouselLayout.findViewById(R.id.dayOfMonthTV);
-      final TextView monthOfYearTV =
-          (TextView) itemDateCarouselLayout.findViewById(R.id.monthOfYearTV);
-
-      dayOfMonthTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
-      monthOfYearTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
-      dayOfMonthTV.setTypeface(null, Typeface.NORMAL);
-      monthOfYearTV.setTypeface(null, Typeface.NORMAL);
-
-      LocalDate dateAsLocal = dateToStartFrom.minusDays(i);
-      DateTimeFormatter monthFormatter = DateTimeFormat.forPattern("MMM");
-
-      dayOfMonthTV.setText(String.valueOf(dateAsLocal.getDayOfMonth()));
-      monthOfYearTV.setText(String.valueOf(monthFormatter.print(dateAsLocal).toUpperCase()));
-
-      dateCarouselContainer.addView(itemDateCarouselLayout);
-
-      if (i == daysExtraToShow) {
-        focusOnView(dateCarouselContainer, itemDateCarouselLayout);
-      }
-
-      if (i < daysExtraToShow) {
-        fadeOutView(itemDateCarouselLayout);
-      } else if (i >= daysExtraToShow) {
-        itemDateCarouselLayout.setOnClickListener(new View.OnClickListener() {
-          @Override public void onClick(View view) {
-            focusOnView(dateCarouselContainer, view);
-
-            DateTimeFormatter formatterForDisplay = DateTimeFormat.forPattern("dd/MMM/yyyy");
-
-            DateTime formattedDate = formatterForDisplay.parseDateTime(
-                dayOfMonthTV.getText().toString()
-                    + "/"
-                    + monthOfYearTV.getText().toString()
-                    + "/"
-                    + dt.year().getAsText());
-
-            String finalDesiredDate =
-                formattedDate.getYear() + "-" + formattedDate.getMonthOfYear() + "-" + formattedDate
-                    .getDayOfMonth();
-
-            String todaysDateFormatted =
-                dt.getYear() + "-" + dt.getMonthOfYear() + "-" + dt.getDayOfMonth();
-
-            if (new DateTime(finalDesiredDate).isEqual(new DateTime(todaysDateFormatted))) {
-              getUserGoalMetrics(finalDesiredDate, "fitness", false);
-            } else {
-              getUserGoalMetrics(finalDesiredDate, "fitness", true);
-            }
-
-            getWidgetsWithDate(finalDesiredDate);
-            setupChartViews(chartsMap, finalDesiredDate);
-          }
-        });
-      }
-    }
-
-    dateCarousel.post(new Runnable() {
-      @Override public void run() {
-        dateCarousel.setSmoothScrollingEnabled(true);
-        dateCarousel.fullScroll(HorizontalScrollView.FOCUS_RIGHT);
-      }
-    });
-  }
-
-  private void focusOnView(final LinearLayout dateCarouselContainer, final View view) {
-    TextView dayOfMonthTV;
-    TextView monthOfYearTV;
-    LinearLayout dateEntryLayout;
-
-    for (int i = 0; i < dateCarouselContainer.getChildCount(); i++) {
-      dateEntryLayout =
-          (LinearLayout) dateCarouselContainer.getChildAt(i).findViewById(R.id.dateEntryLayout);
-      dayOfMonthTV = (TextView) dateCarouselContainer.getChildAt(i).findViewById(R.id.dayOfMonthTV);
-      monthOfYearTV =
-          (TextView) dateCarouselContainer.getChildAt(i).findViewById(R.id.monthOfYearTV);
-
-      dateEntryLayout.setBackgroundColor(0);
-      dayOfMonthTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
-      monthOfYearTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
-      dayOfMonthTV.setTypeface(null, Typeface.NORMAL);
-      monthOfYearTV.setTypeface(null, Typeface.NORMAL);
-    }
-
-    dateEntryLayout = (LinearLayout) view.findViewById(R.id.dateEntryLayout);
-    dayOfMonthTV = (TextView) view.findViewById(R.id.dayOfMonthTV);
-    monthOfYearTV = (TextView) view.findViewById(R.id.monthOfYearTV);
-
-    if (isAdded()) {
-      dateEntryLayout.setBackgroundColor(getResources().getColor(R.color.offwhite_transparent));
-    }
-    dayOfMonthTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-    monthOfYearTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-    dayOfMonthTV.setTypeface(null, Typeface.BOLD);
-    monthOfYearTV.setTypeface(null, Typeface.BOLD);
-  }
-
-  private void fadeOutView(View view) {
-    view.setAlpha(0.5f);
-  }
-
-  private void getWidgetsWithDate(final String finalDate) {
+  public void getWidgetsWithDate(final String finalDate) {
     dataAccessHandler.getWidgetsWithDate("fitness", finalDate, new Callback<WidgetsResponse>() {
       @Override
       public void onResponse(Call<WidgetsResponse> call, Response<WidgetsResponse> response) {
@@ -468,7 +306,7 @@ public class FitnessFragment extends Fragment implements SensorEventListener {
     });
   }
 
-  private void getUserGoalMetrics(String date, String type, final boolean requestingPreviousData) {
+  public void getUserGoalMetrics(String date, String type, final boolean requestingPreviousData) {
     if (loadingMetricProgressBar != null) {
       loadingMetricProgressBar.setVisibility(View.VISIBLE);
       metricCounterTV.setVisibility(View.INVISIBLE);
@@ -538,21 +376,9 @@ public class FitnessFragment extends Fragment implements SensorEventListener {
   }
 
   public void addNewBarChart(final String chartTitle, final String chartType, String desiredDate) {
-    final TextView dateTV_1, dateTV_2, dateTV_3, dateTV_4;
-
-    final View barChartLayout =
-        getActivity().getLayoutInflater().inflate(R.layout.view_barchart_container, null);
-
-    dateTV_1 = (TextView) barChartLayout.findViewById(R.id.dateTV_1);
-    dateTV_2 = (TextView) barChartLayout.findViewById(R.id.dateTV_2);
-    dateTV_3 = (TextView) barChartLayout.findViewById(R.id.dateTV_3);
-    dateTV_4 = (TextView) barChartLayout.findViewById(R.id.dateTV_4);
-
-    final TextView chartTitleTV_NEW_CHART =
-        (TextView) barChartLayout.findViewById(R.id.chartTitleTV);
-    final BarChart barChart = (BarChart) barChartLayout.findViewById(R.id.barChart);
-
-    if (chartTitle != null) chartTitleTV_NEW_CHART.setText(chartTitle);
+    CustomBarChart customBarChart = new CustomBarChart(getActivity());
+    customBarChart.setLayoutParams(customBarChart.fixLayoutParams());
+    customBarChart.setChartTitle(chartTitle);
 
     /**
      * Depending on the chart type passed here,
@@ -560,35 +386,16 @@ public class FitnessFragment extends Fragment implements SensorEventListener {
      */
     switch (chartType) {
       case "steps-count":
-        getPeriodicalChartData(barChart, desiredDate, dateTV_1, dateTV_2, dateTV_3, dateTV_4,
-            "steps-count");
+        getPeriodicalChartData(customBarChart, desiredDate, "steps-count");
         break;
       case "active-calories":
-        getPeriodicalChartData(barChart, desiredDate, dateTV_1, dateTV_2, dateTV_3, dateTV_4,
-            "active-calories");
+        getPeriodicalChartData(customBarChart, desiredDate, "active-calories");
         break;
       case "distance-traveled":
-        getPeriodicalChartData(barChart, desiredDate, dateTV_1, dateTV_2, dateTV_3, dateTV_4,
-            "distance-traveled");
+        getPeriodicalChartData(customBarChart, desiredDate, "distance-traveled");
         break;
+
     }
-
-    LinearLayout.LayoutParams lp =
-        new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-            getResources().getDimensionPixelSize(R.dimen.chart_height_2));
-    lp.topMargin = getResources().getDimensionPixelSize(R.dimen.default_margin_1);
-    barChartLayout.setLayoutParams(lp);
-
-    cards_container.addView(barChartLayout);
-
-    /**
-     * Open the breakdown for the chart
-     */
-    barChart.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View view) {
-        getSlugBreakdownForChart(chartTitle, chartType);
-      }
-    });
   }
 
   private void getSlugBreakdownForChart(final String chartTitle, final String chartType) {
@@ -638,14 +445,13 @@ public class FitnessFragment extends Fragment implements SensorEventListener {
    * remaining barcharts
    * (the ones from DB)
    */
-  private void setupChartViews(List<DataChart> dataChartsMap, String desiredDate) {
+  public void setupChartViews(List<DataChart> dataChartsMap, String desiredDate) {
     cards_container.removeAllViews();
 
     addNewBarChart("Steps Count", "steps-count", desiredDate);
 
     if (!dataChartsMap.isEmpty()) {
       for (DataChart chart : dataChartsMap) {
-
         addNewBarChart(chart.getName(), chart.getType(), desiredDate);
       }
     }
@@ -761,14 +567,6 @@ public class FitnessFragment extends Fragment implements SensorEventListener {
             (prefs.getFloat(Helpers.getTodayDate() + "_distance", 0))));
         break;
     }
-  }
-
-  @Override public void onSensorChanged(SensorEvent sensorEvent) {
-
-  }
-
-  @Override public void onAccuracyChanged(Sensor sensor, int i) {
-
   }
 
   private void updateUserCharts(int[] chartIds, int[] chartPositions) {
