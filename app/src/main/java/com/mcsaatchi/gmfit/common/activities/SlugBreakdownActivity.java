@@ -16,7 +16,7 @@ import android.widget.LinearLayout;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.otto.EventBusPoster;
+import com.mcsaatchi.gmfit.architecture.otto.DataChartDeletedEvent;
 import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
 import com.mcsaatchi.gmfit.architecture.rest.SlugBreakdownResponseInnerData;
 import com.mcsaatchi.gmfit.common.Constants;
@@ -104,18 +104,7 @@ public class SlugBreakdownActivity extends BaseActivity {
             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
               public void onClick(DialogInterface dialog, int which) {
 
-                switch (typeOfFragmentToCustomizeFor) {
-                  case Constants.EXTRAS_FITNESS_FRAGMENT:
-                    EventBusSingleton.getInstance()
-                        .post(
-                            new EventBusPoster(Constants.EXTRAS_FITNESS_CHART_DELETED, chartTitle));
-                    break;
-                  case Constants.EXTRAS_NUTRITION_FRAGMENT:
-                    EventBusSingleton.getInstance()
-                        .post(new EventBusPoster(Constants.EXTRAS_NUTRITION_CHART_DELETED,
-                            chartTitle));
-                    break;
-                }
+                EventBusSingleton.getInstance().post(new DataChartDeletedEvent(chartTitle));
 
                 finish();
               }

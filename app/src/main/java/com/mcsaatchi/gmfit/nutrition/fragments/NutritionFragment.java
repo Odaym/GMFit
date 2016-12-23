@@ -36,8 +36,10 @@ import com.google.android.gms.vision.barcode.Barcode;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.GMFitApplication;
 import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
-import com.mcsaatchi.gmfit.architecture.otto.EventBusPoster;
+import com.mcsaatchi.gmfit.architecture.otto.DataChartsOrderChangedEvent;
 import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
+import com.mcsaatchi.gmfit.architecture.otto.MealEntryManipulatedEvent;
+import com.mcsaatchi.gmfit.architecture.otto.NutritionWidgetsOrderChangedEvent;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponseChart;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponseChartData;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponseWidget;
@@ -84,8 +86,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import timber.log.Timber;
-
-import static com.mcsaatchi.gmfit.common.Constants.EXTRAS_NUTRITION_CHARTS_ORDER_ARRAY_CHANGED;
 
 public class NutritionFragment extends Fragment {
 
@@ -555,11 +555,7 @@ public class NutritionFragment extends Fragment {
               breakfastMeal.setAmount(breakfastMeals.get(i).getAmount());
               breakfastMeal.setSectionType(2);
 
-              //if (breakfastMeals.get(i).getTotalCalories() != null) {
               breakfastMeal.setTotalCalories(breakfastMeals.get(i).getTotalCalories());
-              //} else {
-              //  breakfastMeal.setTotalCalories(0);
-              //}
 
               finalBreakfastMeals.add(breakfastMeal);
             }
@@ -580,11 +576,7 @@ public class NutritionFragment extends Fragment {
               lunchMeal.setAmount(lunchMeals.get(i).getAmount());
               lunchMeal.setSectionType(2);
 
-              //if (lunchMeals.get(i).getTotalCalories() != null) {
               lunchMeal.setTotalCalories(lunchMeals.get(i).getTotalCalories());
-              //} else {
-              //  lunchMeal.setTotalCalories(0);
-              //}
 
               finalLunchMeals.add(lunchMeal);
             }
@@ -605,11 +597,7 @@ public class NutritionFragment extends Fragment {
               dinnerMeal.setAmount(dinnerMeals.get(i).getAmount());
               dinnerMeal.setSectionType(2);
 
-              //if (dinnerMeals.get(i).getTotalCalories() != null) {
               dinnerMeal.setTotalCalories(dinnerMeals.get(i).getTotalCalories());
-              //} else {
-              //  dinnerMeal.setTotalCalories(0);
-              //}
 
               finalDinnerMeals.add(dinnerMeal);
             }
@@ -630,11 +618,7 @@ public class NutritionFragment extends Fragment {
               snackMeal.setAmount(snackMeals.get(i).getAmount());
               snackMeal.setSectionType(2);
 
-              //if (snackMeals.get(i).getTotalCalories() != null) {
               snackMeal.setTotalCalories(snackMeals.get(i).getTotalCalories());
-              //} else {
-              //  snackMeal.setTotalCalories(0);
-              //}
 
               finalSnackMeals.add(snackMeal);
             }
@@ -816,65 +800,51 @@ public class NutritionFragment extends Fragment {
     touchHelper.attachToRecyclerView(mealListView);
   }
 
-  @Subscribe public void handle_BusEvents(final EventBusPoster ebp) {
-    String ebpMessage = ebp.getMessage();
+  @Subscribe public void reflectMealEntryChanged(MealEntryManipulatedEvent event){
+    getUserAddedMeals(finalDesiredDate);
+    getUiForSection("nutrition", finalDesiredDate);
 
-    switch (ebpMessage) {
-      case Constants.EXTRAS_DELETED_MEAL_ENTRY:
-      case Constants.EXTRAS_UPDATED_MEAL_ENTRY:
-      case Constants.EXTRAS_CREATED_NEW_MEAL_ENTRY:
-      case Constants.EXTRAS_CREATED_NEW_MEAL_ENTRY_ON_DATE:
-        getUserAddedMeals(finalDesiredDate);
-        getUiForSection("nutrition", finalDesiredDate);
+    metricProgressBar.setProgress(
+        ((Integer.parseInt(metricCounterTV.getText().toString()) + Integer.parseInt(
+            activeTV.getText().toString())) * 100) / Integer.parseInt(
+            goalTV.getText().toString()));
 
-        metricProgressBar.setProgress(
-            ((Integer.parseInt(metricCounterTV.getText().toString()) + Integer.parseInt(
-                activeTV.getText().toString())) * 100) / Integer.parseInt(
-                goalTV.getText().toString()));
+    cancelAllPendingAlarms();
+  }
 
-        cancelAllPendingAlarms();
-        break;
-      case Constants.EXTRAS_NUTRITION_WIDGETS_ORDER_ARRAY_CHANGED:
-        if (ebp.getNutritionWidgetsMap() != null) {
-          widgetsMap = ebp.getNutritionWidgetsMap();
-          setupWidgetViews(ebp.getNutritionWidgetsMap());
+  @Subscribe public void updateWidgetsOrder(NutritionWidgetsOrderChangedEvent event){
+    widgetsMap = event.getWidgetsMapNutrition();
+    setupWidgetViews(event.getWidgetsMapNutrition());
 
-          int[] widgets = new int[widgetsMap.size()];
-          int[] positions = new int[widgetsMap.size()];
+    int[] widgets = new int[widgetsMap.size()];
+    int[] positions = new int[widgetsMap.size()];
 
-          for (int i = 0; i < widgetsMap.size(); i++) {
-            widgets[i] = widgetsMap.get(i).getWidget_id();
-            positions[i] = widgetsMap.get(i).getPosition();
-          }
-
-          updateUserWidgets(widgets, positions);
-        }
-
-        break;
-      case EXTRAS_NUTRITION_CHARTS_ORDER_ARRAY_CHANGED:
-        List<DataChart> allDataCharts = ebp.getDataChartsListExtra();
-
-        cards_container.removeAllViews();
-
-        for (DataChart chart : allDataCharts) {
-          addNewBarChart(chart.getName());
-        }
-
-        int[] charts = new int[allDataCharts.size()];
-        int[] chartPositions = new int[allDataCharts.size()];
-
-        for (int i = 0; i < allDataCharts.size(); i++) {
-          charts[i] = allDataCharts.get(i).getChart_id();
-          chartPositions[i] = allDataCharts.get(i).getPosition();
-        }
-
-        updateUserCharts(charts, chartPositions);
-
-        break;
-      case Constants.EXTRAS_NUTRITION_CHART_DELETED:
-
-        break;
+    for (int i = 0; i < widgetsMap.size(); i++) {
+      widgets[i] = widgetsMap.get(i).getWidget_id();
+      positions[i] = widgetsMap.get(i).getPosition();
     }
+
+    updateUserWidgets(widgets, positions);
+  }
+
+  @Subscribe public void updateChartsOrder(DataChartsOrderChangedEvent event){
+    List<DataChart> allDataCharts = event.getDataChartsListExtra();
+
+    cards_container.removeAllViews();
+
+    for (DataChart chart : allDataCharts) {
+      addNewBarChart(chart.getName());
+    }
+
+    int[] charts = new int[allDataCharts.size()];
+    int[] chartPositions = new int[allDataCharts.size()];
+
+    for (int i = 0; i < allDataCharts.size(); i++) {
+      charts[i] = allDataCharts.get(i).getChart_id();
+      chartPositions[i] = allDataCharts.get(i).getPosition();
+    }
+
+    updateUserCharts(charts, chartPositions);
   }
 
   private void cancelAllPendingAlarms() {

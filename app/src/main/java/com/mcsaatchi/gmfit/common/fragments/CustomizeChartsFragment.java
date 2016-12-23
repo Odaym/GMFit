@@ -25,8 +25,6 @@ public class CustomizeChartsFragment extends Fragment {
 
   private List<DataChart> dataChartsMap;
 
-  private String CHARTS_ORDER_ARRAY_CHANGED_EVENT;
-
   @Override public void onAttach(Context context) {
     super.onAttach(context);
   }
@@ -49,18 +47,14 @@ public class CustomizeChartsFragment extends Fragment {
       if (typeOfFragmentToCustomizeFor != null) {
         switch (typeOfFragmentToCustomizeFor) {
           case Constants.EXTRAS_FITNESS_FRAGMENT:
-            CHARTS_ORDER_ARRAY_CHANGED_EVENT = Constants.EXTRAS_FITNESS_CHARTS_ORDER_ARRAY_CHANGED;
             dataChartsMap =
                 fragmentBundle.getParcelableArrayList(Constants.BUNDLE_FITNESS_CHARTS_MAP);
             break;
           case Constants.EXTRAS_NUTRITION_FRAGMENT:
-            CHARTS_ORDER_ARRAY_CHANGED_EVENT =
-                Constants.EXTRAS_NUTRITION_CHARTS_ORDER_ARRAY_CHANGED;
             dataChartsMap =
                 fragmentBundle.getParcelableArrayList(Constants.BUNDLE_NUTRITION_CHARTS_MAP);
             break;
           case Constants.EXTRAS_HEALTH_FRAGMENT:
-            CHARTS_ORDER_ARRAY_CHANGED_EVENT = Constants.EXTRAS_HEALTH_CHARTS_ORDER_ARRAY_CHANGED;
             break;
         }
       }
@@ -68,8 +62,7 @@ public class CustomizeChartsFragment extends Fragment {
 
     if (dataChartsMap != null) {
       CustomizeChartsRecyclerAdapter customizeChartsRecyclerAdapter =
-          new CustomizeChartsRecyclerAdapter(dataChartsMap, R.drawable.ic_menu_black_24dp,
-              CHARTS_ORDER_ARRAY_CHANGED_EVENT);
+          new CustomizeChartsRecyclerAdapter(dataChartsMap, R.drawable.ic_menu_black_24dp);
       ItemTouchHelper.Callback callback =
           new SimpleDragItemTouchHelperCallback(customizeChartsRecyclerAdapter);
       ItemTouchHelper touchHelper = new ItemTouchHelper(callback);

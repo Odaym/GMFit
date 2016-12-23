@@ -33,8 +33,13 @@ import com.j256.ormlite.stmt.QueryBuilder;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.GMFitApplication;
 import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
-import com.mcsaatchi.gmfit.architecture.otto.EventBusPoster;
+import com.mcsaatchi.gmfit.architecture.otto.CaloriesCounterIncrementedEvent;
+import com.mcsaatchi.gmfit.architecture.otto.DistanceCounterIncrementedEvent;
 import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
+import com.mcsaatchi.gmfit.architecture.otto.DataChartDeletedEvent;
+import com.mcsaatchi.gmfit.architecture.otto.DataChartsOrderChangedEvent;
+import com.mcsaatchi.gmfit.architecture.otto.FitnessWidgetsOrderChangedEvent;
+import com.mcsaatchi.gmfit.architecture.otto.StepCounterIncrementedEvent;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponseChartData;
 import com.mcsaatchi.gmfit.architecture.rest.ChartMetricBreakdownResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ChartMetricBreakdownResponseDatum;
@@ -480,91 +485,77 @@ public class FitnessFragment extends Fragment {
     return metricCountTextView;
   }
 
-  /**
-   * Events are received from the Event Bus and handled here.
-   * Notable events:
-   * - Steps counter
-   * - Distance counter (widget needs finding in the gridview before its value can be changed)
-   * - Calories counter (widget needs finding in the gridview before its value can be changed)
-   */
-  @Subscribe public void handle_BusEvents(EventBusPoster ebp) {
-    String ebpMessage = ebp.getMessage();
-    TextView fitnessWidget;
+  @Subscribe public void updateWidgetsOrder(FitnessWidgetsOrderChangedEvent event) {
+    widgetsMap = event.getWidgetsMapFitness();
+    setupWidgetViews(widgetsMap);
+  }
 
-    switch (ebpMessage) {
-      case Constants.EXTRAS_FITNESS_WIDGETS_ORDER_ARRAY_CHANGED:
-        if (ebp.getFitnessWidgetsMap() != null) {
-          widgetsMap = ebp.getFitnessWidgetsMap();
-          setupWidgetViews(widgetsMap);
-        }
-        break;
-      case Constants.EXTRAS_FITNESS_CHART_DELETED:
-        String chart_title = ebp.getChart_title();
+  @Subscribe public void chartDeleted(DataChartDeletedEvent event) {
+    String chart_title = event.getChartTitle();
 
-        for (int i = 0; i < chartsMap.size(); i++) {
-          if (chartsMap.get(i).getName().equals(chart_title)) {
-            deleteUserChart(String.valueOf(chartsMap.get(i).getChart_id()));
-            chartsMap.remove(i);
-          }
-        }
-
-        break;
-      case Constants.EXTRAS_FITNESS_CHARTS_ORDER_ARRAY_CHANGED:
-        List<DataChart> allDataCharts = ebp.getDataChartsListExtra();
-
-        cards_container.removeAllViews();
-
-        chartsMap = (ArrayList<DataChart>) allDataCharts;
-
-        setupChartViews(chartsMap, todayDate);
-
-        int[] charts = new int[allDataCharts.size()];
-        int[] chartPositions = new int[allDataCharts.size()];
-
-        for (int i = 0; i < allDataCharts.size(); i++) {
-          charts[i] = allDataCharts.get(i).getChart_id();
-          chartPositions[i] = allDataCharts.get(i).getPosition();
-        }
-
-        updateUserCharts(charts, chartPositions);
-
-        break;
-      case Constants.EVENT_STEP_COUNTER_INCREMENTED:
-        metricCounterTV.setText(String.valueOf(prefs.getInt(Helpers.getTodayDate() + "_steps", 0)));
-        todayTV.setText(String.valueOf(prefs.getInt(Helpers.getTodayDate() + "_steps", 0)));
-
-        if (!goalTV.getText().toString().isEmpty()
-            && !todayTV.getText().toString().isEmpty()
-            && !metricCounterTV.getText().toString().isEmpty()) {
-
-          int remainingValue = Integer.parseInt(goalTV.getText().toString()) - Integer.parseInt(
-              metricCounterTV.getText().toString());
-
-          if (remainingValue < 0) {
-            goalStatusWordTV.setText(getResources().getString(R.string.goal_exceeded_tv));
-          } else {
-            goalStatusWordTV.setText(getResources().getString(R.string.remaining_title));
-
-            metricProgressBar.setProgress(
-                ((Integer.parseInt(todayTV.getText().toString()) * 100) / Integer.parseInt(
-                    goalTV.getText().toString())));
-          }
-
-          remainingTV.setText(String.valueOf(Math.abs(remainingValue)));
-        }
-
-        break;
-      case Constants.EVENT_CALORIES_COUNTER_INCREMENTED:
-        fitnessWidget = findWidgetInGrid("Active Calories");
-        fitnessWidget.setText(
-            String.valueOf((int) prefs.getFloat(Helpers.getTodayDate() + "_calories", 0)));
-        break;
-      case Constants.EVENT_DISTANCE_COUNTER_INCREMENTED:
-        fitnessWidget = findWidgetInGrid("Distance Traveled");
-        fitnessWidget.setText(new DecimalFormat("##.###").format(
-            (prefs.getFloat(Helpers.getTodayDate() + "_distance", 0))));
-        break;
+    for (int i = 0; i < chartsMap.size(); i++) {
+      if (chartsMap.get(i).getName().equals(chart_title)) {
+        deleteUserChart(String.valueOf(chartsMap.get(i).getChart_id()));
+        chartsMap.remove(i);
+      }
     }
+  }
+
+  @Subscribe public void updateChartsOrder(DataChartsOrderChangedEvent event) {
+    List<DataChart> allDataCharts = event.getDataChartsListExtra();
+
+    cards_container.removeAllViews();
+
+    chartsMap = (ArrayList<DataChart>) allDataCharts;
+
+    setupChartViews(chartsMap, todayDate);
+
+    int[] charts = new int[allDataCharts.size()];
+    int[] chartPositions = new int[allDataCharts.size()];
+
+    for (int i = 0; i < allDataCharts.size(); i++) {
+      charts[i] = allDataCharts.get(i).getChart_id();
+      chartPositions[i] = allDataCharts.get(i).getPosition();
+    }
+
+    updateUserCharts(charts, chartPositions);
+  }
+
+  @Subscribe public void incrementStepCounter(StepCounterIncrementedEvent event) {
+    metricCounterTV.setText(String.valueOf(prefs.getInt(Helpers.getTodayDate() + "_steps", 0)));
+    todayTV.setText(String.valueOf(prefs.getInt(Helpers.getTodayDate() + "_steps", 0)));
+
+    if (!goalTV.getText().toString().isEmpty()
+        && !todayTV.getText().toString().isEmpty()
+        && !metricCounterTV.getText().toString().isEmpty()) {
+
+      int remainingValue = Integer.parseInt(goalTV.getText().toString()) - Integer.parseInt(
+          metricCounterTV.getText().toString());
+
+      if (remainingValue < 0) {
+        goalStatusWordTV.setText(getResources().getString(R.string.goal_exceeded_tv));
+      } else {
+        goalStatusWordTV.setText(getResources().getString(R.string.remaining_title));
+
+        metricProgressBar.setProgress(
+            ((Integer.parseInt(todayTV.getText().toString()) * 100) / Integer.parseInt(
+                goalTV.getText().toString())));
+      }
+
+      remainingTV.setText(String.valueOf(Math.abs(remainingValue)));
+    }
+  }
+
+  @Subscribe public void incrementDistanceCounter(DistanceCounterIncrementedEvent event) {
+    TextView fitnessWidget = findWidgetInGrid("Distance Traveled");
+    fitnessWidget.setText(new DecimalFormat("##.###").format(
+        (prefs.getFloat(Helpers.getTodayDate() + "_distance", 0))));
+  }
+
+  @Subscribe public void incrementCaloriesCounter(CaloriesCounterIncrementedEvent event) {
+    TextView fitnessWidget = findWidgetInGrid("Active Calories");
+    fitnessWidget.setText(
+        String.valueOf((int) prefs.getFloat(Helpers.getTodayDate() + "_calories", 0)));
   }
 
   private void updateUserCharts(int[] chartIds, int[] chartPositions) {

@@ -11,8 +11,10 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.otto.EventBusPoster;
 import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
+import com.mcsaatchi.gmfit.architecture.otto.FitnessWidgetsOrderChangedEvent;
+import com.mcsaatchi.gmfit.architecture.otto.HealthWidgetsOrderChangedEvent;
+import com.mcsaatchi.gmfit.architecture.otto.NutritionWidgetsOrderChangedEvent;
 import com.mcsaatchi.gmfit.architecture.reorderable_listview.DragSortListView;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
@@ -31,7 +33,6 @@ public class CustomizeWidgetsFragment extends Fragment {
   private NutritionWidgetsListAdapter customizeNutritionWidgetsAdapter;
   private HealthWidgetsListAdapter customizeHealthWidgetsAdapter;
 
-  private String WIDGETS_ORDER_ARRAY_CHANGED_EVENT;
   private Activity parentActivity;
   private String typeOfFragmentToCustomiseFor;
 
@@ -48,9 +49,7 @@ public class CustomizeWidgetsFragment extends Fragment {
   private DragSortListView.DropListener onDropFitnessItems = new DragSortListView.DropListener() {
     @Override public void drop(int from, int to) {
 
-      EventBusPoster ebp = new EventBusPoster(WIDGETS_ORDER_ARRAY_CHANGED_EVENT);
-      ebp.setWidgetsMapFitness(itemsMapFitness);
-      EventBusSingleton.getInstance().post(ebp);
+      EventBusSingleton.getInstance().post(new FitnessWidgetsOrderChangedEvent(itemsMapFitness));
 
       customizeFitnessWidgetsAdapter.notifyData();
 
@@ -63,9 +62,8 @@ public class CustomizeWidgetsFragment extends Fragment {
   private DragSortListView.DropListener onDropNutritionItems = new DragSortListView.DropListener() {
     @Override public void drop(int from, int to) {
 
-      EventBusPoster ebp = new EventBusPoster(WIDGETS_ORDER_ARRAY_CHANGED_EVENT);
-      ebp.setWidgetsMapNutrition(itemsMapNutrition);
-      EventBusSingleton.getInstance().post(ebp);
+      EventBusSingleton.getInstance()
+          .post(new NutritionWidgetsOrderChangedEvent(itemsMapNutrition));
 
       customizeNutritionWidgetsAdapter.notifyData();
 
@@ -78,9 +76,7 @@ public class CustomizeWidgetsFragment extends Fragment {
   private DragSortListView.DropListener onDropHealthItems = new DragSortListView.DropListener() {
     @Override public void drop(int from, int to) {
 
-      EventBusPoster ebp = new EventBusPoster(WIDGETS_ORDER_ARRAY_CHANGED_EVENT);
-      ebp.setWidgetsMapHealth(itemsMapHealth);
-      EventBusSingleton.getInstance().post(ebp);
+      EventBusSingleton.getInstance().post(new HealthWidgetsOrderChangedEvent(itemsMapHealth));
 
       customizeHealthWidgetsAdapter.notifyData();
     }
@@ -173,21 +169,16 @@ public class CustomizeWidgetsFragment extends Fragment {
           case Constants.EXTRAS_FITNESS_FRAGMENT:
             itemsMapFitness =
                 fragmentBundle.getParcelableArrayList(Constants.BUNDLE_FITNESS_WIDGETS_MAP);
-            WIDGETS_ORDER_ARRAY_CHANGED_EVENT =
-                Constants.EXTRAS_FITNESS_WIDGETS_ORDER_ARRAY_CHANGED;
             hookUpListWithFitnessItems(itemsMapFitness);
             break;
           case Constants.EXTRAS_NUTRITION_FRAGMENT:
             itemsMapNutrition =
                 fragmentBundle.getParcelableArrayList(Constants.BUNDLE_NUTRITION_WIDGETS_MAP);
-            WIDGETS_ORDER_ARRAY_CHANGED_EVENT =
-                Constants.EXTRAS_NUTRITION_WIDGETS_ORDER_ARRAY_CHANGED;
             hookUpListWithNutritionItems(itemsMapNutrition);
             break;
           case Constants.EXTRAS_HEALTH_FRAGMENT:
             itemsMapHealth =
                 fragmentBundle.getParcelableArrayList(Constants.BUNDLE_HEALTH_WIDGETS_MAP);
-            WIDGETS_ORDER_ARRAY_CHANGED_EVENT = Constants.EXTRAS_HEALTH_WIDGETS_ORDER_ARRAY_CHANGED;
             hookUpListWithHealthItems(itemsMapHealth);
             break;
         }

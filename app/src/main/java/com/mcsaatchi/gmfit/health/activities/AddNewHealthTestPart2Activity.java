@@ -33,8 +33,8 @@ import butterknife.ButterKnife;
 import com.andreabaccega.widget.FormEditText;
 import com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialogFragment;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.otto.EventBusPoster;
 import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
+import com.mcsaatchi.gmfit.architecture.otto.MedicalTestEditCreateEvent;
 import com.mcsaatchi.gmfit.architecture.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.architecture.rest.MedicalTestMetricsResponseBody;
 import com.mcsaatchi.gmfit.architecture.rest.TakenMedicalTestsResponseBody;
@@ -662,8 +662,7 @@ public class AddNewHealthTestPart2Activity extends BaseActivity
 
                 Helpers.hideKeyboard(getCurrentFocus(), AddNewHealthTestPart2Activity.this);
 
-                EventBusSingleton.getInstance()
-                    .post(new EventBusPoster(Constants.EXTRAS_TEST_EDIT_OR_CREATE_DONE));
+                EventBusSingleton.getInstance().post(new MedicalTestEditCreateEvent());
 
                 finish();
 
@@ -713,8 +712,7 @@ public class AddNewHealthTestPart2Activity extends BaseActivity
 
                 Helpers.hideKeyboard(getCurrentFocus(), AddNewHealthTestPart2Activity.this);
 
-                EventBusSingleton.getInstance()
-                    .post(new EventBusPoster(Constants.EXTRAS_TEST_EDIT_OR_CREATE_DONE));
+                EventBusSingleton.getInstance().post(new MedicalTestEditCreateEvent());
 
                 finish();
 

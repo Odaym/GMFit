@@ -13,8 +13,8 @@ import android.widget.TextView;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.GMFitApplication;
 import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
-import com.mcsaatchi.gmfit.architecture.otto.EventBusPoster;
 import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
+import com.mcsaatchi.gmfit.architecture.otto.MealEntryManipulatedEvent;
 import com.mcsaatchi.gmfit.architecture.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.architecture.touch_helpers.DragSwipeItemTouchHelperAdapter;
 import com.mcsaatchi.gmfit.common.Constants;
@@ -96,7 +96,7 @@ public class UserMealsRecyclerAdapterDragSwipe
             Log.d("TAG", "onResponse: Meal item removed!");
 
             EventBusSingleton.getInstance()
-                .post(new EventBusPoster(Constants.EXTRAS_DELETED_MEAL_ENTRY));
+                .post(new MealEntryManipulatedEvent());
 
             break;
         }

@@ -21,8 +21,10 @@ import com.mcsaatchi.gmfit.BuildConfig;
 import com.mcsaatchi.gmfit.architecture.GMFitApplication;
 import com.mcsaatchi.gmfit.architecture.data_access.DBHelper;
 import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
-import com.mcsaatchi.gmfit.architecture.otto.EventBusPoster;
+import com.mcsaatchi.gmfit.architecture.otto.CaloriesCounterIncrementedEvent;
+import com.mcsaatchi.gmfit.architecture.otto.DistanceCounterIncrementedEvent;
 import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
+import com.mcsaatchi.gmfit.architecture.otto.StepCounterIncrementedEvent;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponse;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.fitness.models.FitnessWidget;
@@ -138,11 +140,11 @@ public class SensorListener extends Service implements SensorEventListener {
 
   public void sendOutEventBusEvents() {
     EventBusSingleton.getInstance()
-        .post(new EventBusPoster(Constants.EVENT_STEP_COUNTER_INCREMENTED));
+        .post(new StepCounterIncrementedEvent());
     EventBusSingleton.getInstance()
-        .post(new EventBusPoster(Constants.EVENT_CALORIES_COUNTER_INCREMENTED));
+        .post(new CaloriesCounterIncrementedEvent());
     EventBusSingleton.getInstance()
-        .post(new EventBusPoster(Constants.EVENT_DISTANCE_COUNTER_INCREMENTED));
+        .post(new DistanceCounterIncrementedEvent());
   }
 
   @Override public IBinder onBind(final Intent intent) {

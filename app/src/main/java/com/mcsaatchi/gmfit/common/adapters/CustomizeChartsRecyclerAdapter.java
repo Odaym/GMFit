@@ -7,8 +7,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.otto.EventBusPoster;
 import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
+import com.mcsaatchi.gmfit.architecture.otto.DataChartsOrderChangedEvent;
 import com.mcsaatchi.gmfit.architecture.touch_helpers.DragItemTouchHelperAdapter;
 import com.mcsaatchi.gmfit.common.models.DataChart;
 import java.util.Collections;
@@ -20,13 +20,10 @@ public class CustomizeChartsRecyclerAdapter
 
   private List<DataChart> dataChartsMap;
   private int drawableResId;
-  private String array_order_changed_event;
 
-  public CustomizeChartsRecyclerAdapter(List<DataChart> dataChartsMap, int drawableResId,
-      String array_order_changed_event) {
+  public CustomizeChartsRecyclerAdapter(List<DataChart> dataChartsMap, int drawableResId) {
     this.dataChartsMap = dataChartsMap;
     this.drawableResId = drawableResId;
-    this.array_order_changed_event = array_order_changed_event;
   }
 
   @Override public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -65,7 +62,7 @@ public class CustomizeChartsRecyclerAdapter
 
   @Override public void onClearView() {
     EventBusSingleton.getInstance()
-        .post(new EventBusPoster(array_order_changed_event, dataChartsMap));
+        .post(new DataChartsOrderChangedEvent(dataChartsMap));
   }
 
   class MyViewHolder extends RecyclerView.ViewHolder {

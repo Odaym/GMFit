@@ -24,8 +24,9 @@ import butterknife.ButterKnife;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.GMFitApplication;
 import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
-import com.mcsaatchi.gmfit.architecture.otto.EventBusPoster;
 import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
+import com.mcsaatchi.gmfit.architecture.otto.HealthWidgetsOrderChangedEvent;
+import com.mcsaatchi.gmfit.architecture.otto.MedicalTestEditCreateEvent;
 import com.mcsaatchi.gmfit.architecture.rest.TakenMedicalTestsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.TakenMedicalTestsResponseBody;
 import com.mcsaatchi.gmfit.architecture.rest.WidgetsResponse;
@@ -162,7 +163,8 @@ public class HealthFragment extends Fragment {
             RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
             UserTestsRecyclerAdapter userTestsRecyclerAdapter =
                 new UserTestsRecyclerAdapter(getActivity(), takenMedicalTests);
-            ItemTouchHelper.Callback callback = new SimpleSwipeItemTouchHelperCallback(userTestsRecyclerAdapter);
+            ItemTouchHelper.Callback callback =
+                new SimpleSwipeItemTouchHelperCallback(userTestsRecyclerAdapter);
             ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
 
             userTestsListView.setLayoutManager(mLayoutManager);
@@ -184,21 +186,14 @@ public class HealthFragment extends Fragment {
     });
   }
 
-  @Subscribe public void handle_BusEvents(EventBusPoster ebp) {
-    String ebpMessage = ebp.getMessage();
+  @Subscribe public void updateWidgetsOrder(HealthWidgetsOrderChangedEvent event) {
+    healthWidgetsMap = event.getWidgetsMapHealth();
+    setupWidgetViews(healthWidgetsMap);
+  }
 
-    switch (ebpMessage) {
-      case Constants.EXTRAS_TEST_EDIT_OR_CREATE_DONE:
-        getWidgets();
-        getTakenMedicalTests();
-        break;
-      case Constants.EXTRAS_HEALTH_WIDGETS_ORDER_ARRAY_CHANGED:
-        if (ebp.getHealthWidgetsMap() != null) {
-          healthWidgetsMap = ebp.getHealthWidgetsMap();
-          setupWidgetViews(healthWidgetsMap);
-        }
-        break;
-    }
+  @Subscribe public void reflectMedicalTestEditCreate(MedicalTestEditCreateEvent event) {
+    getWidgets();
+    getTakenMedicalTests();
   }
 
   @Override public void onDestroy() {

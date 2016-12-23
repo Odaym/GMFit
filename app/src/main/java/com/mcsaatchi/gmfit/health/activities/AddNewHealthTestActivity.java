@@ -21,8 +21,8 @@ import android.widget.ImageView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.otto.EventBusPoster;
 import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
+import com.mcsaatchi.gmfit.architecture.otto.MedicalTestEditCreateEvent;
 import com.mcsaatchi.gmfit.architecture.rest.MedicalTestMetricsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.MedicalTestMetricsResponseBody;
 import com.mcsaatchi.gmfit.architecture.rest.TakenMedicalTestsResponseBody;
@@ -244,14 +244,8 @@ public class AddNewHealthTestActivity extends BaseActivity {
     availableTestMetricsListview.addItemDecoration(new SimpleDividerItemDecoration(this));
   }
 
-  @Subscribe public void handle_BusEvents(EventBusPoster ebp) {
-    String ebpMessage = ebp.getMessage();
-
-    switch (ebpMessage) {
-      case Constants.EXTRAS_TEST_EDIT_OR_CREATE_DONE:
-        finish();
-        break;
-    }
+  @Subscribe public void reflectMedicalTestEditCreate(MedicalTestEditCreateEvent event) {
+    finish();
   }
 
   @Override public void onDestroy() {

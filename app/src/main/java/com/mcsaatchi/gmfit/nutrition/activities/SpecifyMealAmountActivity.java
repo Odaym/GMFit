@@ -17,8 +17,8 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.andreabaccega.widget.FormEditText;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.otto.EventBusPoster;
 import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
+import com.mcsaatchi.gmfit.architecture.otto.MealEntryManipulatedEvent;
 import com.mcsaatchi.gmfit.architecture.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.architecture.rest.MealMetricsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.MealMetricsResponseDatum;
@@ -224,8 +224,7 @@ public class SpecifyMealAmountActivity extends BaseActivity {
                 resultIntent.putExtra(Constants.EXTRAS_MEAL_OBJECT_DETAILS, mealItem);
                 setResult(MEAL_AMOUNT_SPECIFIED, resultIntent);
 
-                EventBusSingleton.getInstance()
-                    .post(new EventBusPoster(Constants.EXTRAS_CREATED_NEW_MEAL_ENTRY_ON_DATE));
+                EventBusSingleton.getInstance().post(new MealEntryManipulatedEvent());
 
                 InputMethodManager imm =
                     (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -262,8 +261,7 @@ public class SpecifyMealAmountActivity extends BaseActivity {
                 mealItem.setTotalCalories(
                     Integer.parseInt(mealItem.getAmount()) * caloriesForThisMeal);
 
-                EventBusSingleton.getInstance()
-                    .post(new EventBusPoster(Constants.EXTRAS_UPDATED_MEAL_ENTRY_ON_DATE));
+                EventBusSingleton.getInstance().post(new MealEntryManipulatedEvent());
 
                 finish();
 
@@ -295,8 +293,7 @@ public class SpecifyMealAmountActivity extends BaseActivity {
                 mealItem.setTotalCalories(
                     (int) (Float.parseFloat(mealItem.getAmount()) * caloriesForThisMeal));
 
-                EventBusSingleton.getInstance()
-                    .post(new EventBusPoster(Constants.EXTRAS_UPDATED_MEAL_ENTRY));
+                EventBusSingleton.getInstance().post(new MealEntryManipulatedEvent());
 
                 finish();
 

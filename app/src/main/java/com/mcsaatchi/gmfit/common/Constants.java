@@ -55,38 +55,12 @@ public class Constants {
       "meal_item_purpose_adding_to_date";
   public static final String EXTRAS_DATE_TO_ADD_MEAL_ON = "date_to_add_meal_on";
   public static final String EXTRAS_TEST_OBJECT_DETAILS = "test_object_details";
-  public static final String EXTRAS_TEST_METRICS = "test_metrics";
-  public static final String EXTRAS_TEST_IMAGES = "test_images";
-  public static final String EXTRAS_TEST_INSTANCE_ID = "test_instance_id";
-  public static final String EXTRAS_CREATED_NEW_MEAL_ENTRY_ON_DATE =
-      "created_new_meal_entry_on_date";
-  public static final String EXTRAS_UPDATED_MEAL_ENTRY_ON_DATE = "updated_meal_entry_on_date";
-  public static final String EXTRAS_TEST_ITEM_PURPOSE_EDITING = "test_item_purpose_editing";
   public static final String EXTRAS_MEAL_ITEM_PURPOSE_EDITING = "meal_item_purpose_editing";
 
-  public static final String EXTRAS_FITNESS_CHART_DELETED = "fitness_chart_deleted";
-  public static final String EXTRAS_NUTRITION_CHART_DELETED = "nutrition_chart_deleted";
-  public static final String EXTRAS_FITNESS_WIDGETS_ORDER_ARRAY_CHANGED =
-      "fitness_widgets_order_array_changed";
-  public static final String EXTRAS_NUTRITION_WIDGETS_ORDER_ARRAY_CHANGED =
-      "nutrition_widgets_order_array_changed";
-  public static final String EXTRAS_HEALTH_WIDGETS_ORDER_ARRAY_CHANGED =
-      "health_widgets_order_array_changed";
-  public static final String EXTRAS_FITNESS_CHARTS_ORDER_ARRAY_CHANGED =
-      "fitness_charts_order_array_changed";
-  public static final String EXTRAS_NUTRITION_CHARTS_ORDER_ARRAY_CHANGED =
-      "nutrition_charts_order_array_changed";
-  public static final String EXTRAS_HEALTH_CHARTS_ORDER_ARRAY_CHANGED =
-      "health_charts_order_array_changed";
   public static final String EXTRAS_ADD_FITNESS_CHART = "add_fitness_chart";
   public static final String EXTRAS_ADD_NUTRIITION_CHART = "add_nutrition_chart";
   public static final String EXTRAS_MAIN_MEAL_NAME = "main_meal_name";
-  public static final String EXTRAS_CREATED_NEW_MEAL_ENTRY = "created_new_meal_entry";
-  public static final String EXTRAS_UPDATED_MEAL_ENTRY = "updated_meal_entry";
   public static final String EXTRAS_DELETED_MEAL_ENTRY = "deleted_meal_entry";
-  public static final String EXTRAS_TEST_TITLE = "test_title";
-  public static final String EXTRAS_TEST_SLUG = "test_slug";
-  public static final String EXTRAS_TEST_DATE_TAKEN = "test_date_taken";
   public static final String EXTRAS_TEST_EDIT_OR_CREATE_DONE = "test_edit_or_create_done";
 
   public static final String BUNDLE_ACTIVITY_TITLE = "activity_title";
@@ -112,9 +86,6 @@ public class Constants {
 
   public static final String EVENT_REMINDERS_STATUS_CHANGED = "reminders_status_changed";
   public static final String EVENT_USER_FINALIZE_SETUP_PROFILE = "user_finalize_setup_profile";
-  public static final String EVENT_STEP_COUNTER_INCREMENTED = "step_counter_incremented";
-  public static final String EVENT_CALORIES_COUNTER_INCREMENTED = "calories_counter_incremented";
-  public static final String EVENT_DISTANCE_COUNTER_INCREMENTED = "distance_counter_incremented";
 
   public static final String EVENT_SIGNNED_UP_SUCCESSFULLY_CLOSE_LOGIN_ACTIVITY =
       "signed_up_successfully_close_login_activity";

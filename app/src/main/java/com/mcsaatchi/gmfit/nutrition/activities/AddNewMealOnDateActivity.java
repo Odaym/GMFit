@@ -11,8 +11,8 @@ import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.otto.EventBusPoster;
 import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
+import com.mcsaatchi.gmfit.architecture.otto.MealEntryManipulatedEvent;
 import com.mcsaatchi.gmfit.architecture.rest.UserMealsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.UserMealsResponseBreakfast;
 import com.mcsaatchi.gmfit.architecture.rest.UserMealsResponseDinner;
@@ -97,15 +97,8 @@ public class AddNewMealOnDateActivity extends BaseActivity {
     EventBusSingleton.getInstance().unregister(this);
   }
 
-  @Subscribe public void handle_BusEvents(final EventBusPoster ebp) {
-    String ebpMessage = ebp.getMessage();
-
-    switch (ebpMessage) {
-      case Constants.EXTRAS_CREATED_NEW_MEAL_ENTRY_ON_DATE:
-      case Constants.EXTRAS_UPDATED_MEAL_ENTRY_ON_DATE:
-        getUserAddedMealsOnDate(chosenDate);
-        break;
-    }
+  @Subscribe public void reflectMealEntryChanged(MealEntryManipulatedEvent event) {
+    getUserAddedMealsOnDate(chosenDate);
   }
 
   public void handleScanMealEntry() {
