@@ -60,6 +60,7 @@ import com.mcsaatchi.gmfit.profile.activities.MetaTextsActivity;
 import com.mcsaatchi.gmfit.profile.activities.RemindersActivity;
 import com.mukesh.countrypicker.fragments.CountryPicker;
 import com.mukesh.countrypicker.interfaces.CountryPickerListener;
+import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -672,7 +673,8 @@ public class MainProfileFragment extends Fragment {
     }
   }
 
-  private void updateReminderTextviewFromStatus(RemindersStatusChangedEvent event) {
+  @Subscribe
+  public void updateReminderTextviewFromStatus(RemindersStatusChangedEvent event) {
     if (event.isReminderOn()) {
       appRemindersValueTV.setText("On");
     } else {
