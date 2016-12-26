@@ -18,8 +18,8 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.andreabaccega.widget.FormEditText;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.otto.EventBusPoster;
 import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
+import com.mcsaatchi.gmfit.architecture.otto.SignedUpSuccessfullyEvent;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponse;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponseInnerBody;
 import com.mcsaatchi.gmfit.common.Constants;
@@ -149,8 +149,7 @@ public class SignUpActivity extends BaseActivity {
                 prefs.edit().putString(Constants.EXTRAS_USER_PASSWORD, password).apply();
 
                 EventBusSingleton.getInstance()
-                    .post(new EventBusPoster(
-                        Constants.EVENT_SIGNNED_UP_SUCCESSFULLY_CLOSE_LOGIN_ACTIVITY));
+                    .post(new SignedUpSuccessfullyEvent());
 
                 Intent intent = new Intent(SignUpActivity.this, AccountVerificationActivity.class);
                 startActivity(intent);

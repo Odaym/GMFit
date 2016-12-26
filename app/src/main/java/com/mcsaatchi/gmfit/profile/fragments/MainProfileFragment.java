@@ -40,8 +40,8 @@ import com.facebook.login.LoginManager;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.GMFitApplication;
 import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
-import com.mcsaatchi.gmfit.architecture.otto.EventBusPoster;
 import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
+import com.mcsaatchi.gmfit.architecture.otto.RemindersStatusChangedEvent;
 import com.mcsaatchi.gmfit.architecture.picasso.CircleTransform;
 import com.mcsaatchi.gmfit.architecture.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.architecture.rest.EmergencyProfileResponse;
@@ -60,7 +60,6 @@ import com.mcsaatchi.gmfit.profile.activities.MetaTextsActivity;
 import com.mcsaatchi.gmfit.profile.activities.RemindersActivity;
 import com.mukesh.countrypicker.fragments.CountryPicker;
 import com.mukesh.countrypicker.interfaces.CountryPickerListener;
-import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -673,17 +672,11 @@ public class MainProfileFragment extends Fragment {
     }
   }
 
-  @Subscribe public void handle_BusEvents(EventBusPoster ebp) {
-    String ebpMessage = ebp.getMessage();
-
-    switch (ebpMessage) {
-      case Constants.EVENT_REMINDERS_STATUS_CHANGED:
-        if (ebp.isBooleanExtra()) {
-          appRemindersValueTV.setText("On");
-        } else {
-          appRemindersValueTV.setText("Off");
-        }
-        break;
+  private void updateReminderTextviewFromStatus(RemindersStatusChangedEvent event) {
+    if (event.isReminderOn()) {
+      appRemindersValueTV.setText("On");
+    } else {
+      appRemindersValueTV.setText("Off");
     }
   }
 

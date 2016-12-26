@@ -26,8 +26,9 @@ import com.facebook.GraphResponse;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.otto.EventBusPoster;
 import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
+import com.mcsaatchi.gmfit.architecture.otto.SignedInSuccessfullyEvent;
+import com.mcsaatchi.gmfit.architecture.otto.SignedUpSuccessfullyEvent;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponse;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponseChart;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponseInnerBody;
@@ -98,14 +99,14 @@ public class LoginActivity extends BaseActivity {
     EventBusSingleton.getInstance().unregister(this);
   }
 
-  @Subscribe public void handle_BusEvents(EventBusPoster ebp) {
-    String ebpMessage = ebp.getMessage();
+  @Subscribe
+  public void handleSuccessfulSignUp(SignedUpSuccessfullyEvent event) {
+    finish();
+  }
 
-    switch (ebpMessage) {
-      case Constants.EVENT_SIGNNED_UP_SUCCESSFULLY_CLOSE_LOGIN_ACTIVITY:
-        finish();
-        break;
-    }
+  @Subscribe
+  public void handleSuccessfulSignIn(SignedInSuccessfullyEvent event) {
+    finish();
   }
 
   private void setupViewPager() {
@@ -285,9 +286,7 @@ public class LoginActivity extends BaseActivity {
             if (userOnBoard.equals("1")) {
               getUiForSection(waitingDialog, "fitness");
             } else {
-              EventBusSingleton.getInstance()
-                  .post(new EventBusPoster(
-                      Constants.EVENT_SIGNNED_UP_SUCCESSFULLY_CLOSE_LOGIN_ACTIVITY));
+              EventBusSingleton.getInstance().post(new SignedUpSuccessfullyEvent());
 
               intent = new Intent(LoginActivity.this, SetupProfileActivity.class);
               startActivity(intent);
@@ -312,9 +311,7 @@ public class LoginActivity extends BaseActivity {
               case 200:
                 waitingDialog.dismiss();
 
-                EventBusSingleton.getInstance()
-                    .post(new EventBusPoster(
-                        Constants.EVENT_SIGNNED_UP_SUCCESSFULLY_CLOSE_LOGIN_ACTIVITY));
+                EventBusSingleton.getInstance().post(new SignedUpSuccessfullyEvent());
 
                 List<AuthenticationResponseChart> chartsMap =
                     response.body().getData().getBody().getCharts();

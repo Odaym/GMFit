@@ -18,8 +18,8 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.andreabaccega.widget.FormEditText;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.otto.EventBusPoster;
 import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
+import com.mcsaatchi.gmfit.architecture.otto.SignedInSuccessfullyEvent;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponse;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponseChart;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponseInnerBody;
@@ -197,8 +197,7 @@ public class SignInActivity extends BaseActivity {
               getUiForSection(waitingDialog, "fitness");
             } else {
               EventBusSingleton.getInstance()
-                  .post(new EventBusPoster(
-                      Constants.EVENT_SIGNNED_UP_SUCCESSFULLY_CLOSE_LOGIN_ACTIVITY));
+                  .post(new SignedInSuccessfullyEvent());
 
               intent = new Intent(SignInActivity.this, SetupProfileActivity.class);
               startActivity(intent);
@@ -224,8 +223,7 @@ public class SignInActivity extends BaseActivity {
                 waitingDialog.dismiss();
 
                 EventBusSingleton.getInstance()
-                    .post(new EventBusPoster(
-                        Constants.EVENT_SIGNNED_UP_SUCCESSFULLY_CLOSE_LOGIN_ACTIVITY));
+                    .post(new SignedInSuccessfullyEvent());
 
                 List<AuthenticationResponseChart> chartsMap =
                     response.body().getData().getBody().getCharts();

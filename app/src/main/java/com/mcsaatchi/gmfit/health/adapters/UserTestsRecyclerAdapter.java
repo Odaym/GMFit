@@ -12,7 +12,7 @@ import android.widget.TextView;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.GMFitApplication;
 import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
-import com.mcsaatchi.gmfit.architecture.otto.EventBusPoster;
+import com.mcsaatchi.gmfit.architecture.otto.DeletedMealEntryEvent;
 import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
 import com.mcsaatchi.gmfit.architecture.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.architecture.rest.TakenMedicalTestsResponseBody;
@@ -97,7 +97,7 @@ public class UserTestsRecyclerAdapter
             Log.d("TAG", "onResponse: User test removed!");
 
             EventBusSingleton.getInstance()
-                .post(new EventBusPoster(Constants.EXTRAS_DELETED_MEAL_ENTRY));
+                .post(new DeletedMealEntryEvent());
 
             break;
         }

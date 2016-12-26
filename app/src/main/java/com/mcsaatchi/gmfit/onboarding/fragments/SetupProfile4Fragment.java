@@ -25,8 +25,8 @@ import com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialo
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.GMFitApplication;
 import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
-import com.mcsaatchi.gmfit.architecture.otto.EventBusPoster;
 import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
+import com.mcsaatchi.gmfit.architecture.otto.UserFinalizedSetupProfileEvent;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponseChart;
 import com.mcsaatchi.gmfit.architecture.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.architecture.rest.MedicalConditionsResponse;
@@ -167,57 +167,51 @@ public class SetupProfile4Fragment extends Fragment
         new DateFormatSymbols().getMonths()[monthOfYear] + " " + dayOfMonth + ", " + year);
   }
 
-  @Subscribe public void handle_BusEvents(EventBusPoster ebp) {
-    String ebpMessage = ebp.getMessage();
+  @Subscribe
+  private void handleFinalizeSetupProfile(UserFinalizedSetupProfileEvent event){
+    int finalGender;
 
-    switch (ebpMessage) {
-      case Constants.EVENT_USER_FINALIZE_SETUP_PROFILE:
-        int finalGender;
+    finalGender = genderSpinner.getSelectedItem().toString().equals("Male") ? 0 : 1;
 
-        finalGender = genderSpinner.getSelectedItem().toString().equals("Male") ? 0 : 1;
+    String finalDateOfBirth;
 
-        String finalDateOfBirth;
-
-        if (!dateOfBirth.isEmpty()) {
-          finalDateOfBirth = dateOfBirth;
-        } else {
-          finalDateOfBirth = "1990-01-01";
-        }
-
-        String finalBloodType = bloodTypeSpinner.getSelectedItem().toString();
-
-        prefs.edit()
-            .putString(Constants.EXTRAS_USER_PROFILE_DATE_OF_BIRTH, finalDateOfBirth)
-            .apply();
-        prefs.edit().putInt(Constants.EXTRAS_USER_PROFILE_GENDER, finalGender).apply();
-        prefs.edit().putFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, finalWeight).apply();
-        prefs.edit().putFloat(Constants.EXTRAS_USER_PROFILE_HEIGHT, finalHeight).apply();
-        prefs.edit().putString(Constants.EXTRAS_USER_PROFILE_BLOOD_TYPE, finalBloodType).apply();
-
-        /**
-         * These values are from previous steps 1 and 2 in the Setup Profile process
-         */
-        String nationality = prefs.getString(Constants.EXTRAS_USER_PROFILE_NATIONALITY, "");
-        String measurementSystem =
-            prefs.getString(Constants.EXTRAS_USER_PROFILE_MEASUREMENT_SYSTEM, "");
-        int goalId = prefs.getInt(Constants.EXTRAS_USER_PROFILE_GOAL_ID, 0);
-        int activityLevelId = prefs.getInt(Constants.EXTRAS_USER_PROFILE_ACTIVITY_LEVEL_ID, 0);
-        int medicalConditionId = Integer.parseInt(
-            ((MedicalConditionsResponseDatum) medicalConditionsSpinner.getSelectedItem()).getId());
-
-        prefs.edit()
-            .putInt(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION_ID, medicalConditionId)
-            .apply();
-        prefs.edit()
-            .putString(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION,
-                ((MedicalConditionsResponseDatum) medicalConditionsSpinner.getSelectedItem()).getName())
-            .apply();
-
-        setupUserProfile(finalDateOfBirth, finalBloodType, nationality, medicalConditionId,
-            measurementSystem, goalId, activityLevelId, finalGender, finalHeight, finalWeight);
-
-        break;
+    if (!dateOfBirth.isEmpty()) {
+      finalDateOfBirth = dateOfBirth;
+    } else {
+      finalDateOfBirth = "1990-01-01";
     }
+
+    String finalBloodType = bloodTypeSpinner.getSelectedItem().toString();
+
+    prefs.edit()
+        .putString(Constants.EXTRAS_USER_PROFILE_DATE_OF_BIRTH, finalDateOfBirth)
+        .apply();
+    prefs.edit().putInt(Constants.EXTRAS_USER_PROFILE_GENDER, finalGender).apply();
+    prefs.edit().putFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, finalWeight).apply();
+    prefs.edit().putFloat(Constants.EXTRAS_USER_PROFILE_HEIGHT, finalHeight).apply();
+    prefs.edit().putString(Constants.EXTRAS_USER_PROFILE_BLOOD_TYPE, finalBloodType).apply();
+
+    /**
+     * These values are from previous steps 1 and 2 in the Setup Profile process
+     */
+    String nationality = prefs.getString(Constants.EXTRAS_USER_PROFILE_NATIONALITY, "");
+    String measurementSystem =
+        prefs.getString(Constants.EXTRAS_USER_PROFILE_MEASUREMENT_SYSTEM, "");
+    int goalId = prefs.getInt(Constants.EXTRAS_USER_PROFILE_GOAL_ID, 0);
+    int activityLevelId = prefs.getInt(Constants.EXTRAS_USER_PROFILE_ACTIVITY_LEVEL_ID, 0);
+    int medicalConditionId = Integer.parseInt(
+        ((MedicalConditionsResponseDatum) medicalConditionsSpinner.getSelectedItem()).getId());
+
+    prefs.edit()
+        .putInt(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION_ID, medicalConditionId)
+        .apply();
+    prefs.edit()
+        .putString(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION,
+            ((MedicalConditionsResponseDatum) medicalConditionsSpinner.getSelectedItem()).getName())
+        .apply();
+
+    setupUserProfile(finalDateOfBirth, finalBloodType, nationality, medicalConditionId,
+        measurementSystem, goalId, activityLevelId, finalGender, finalHeight, finalWeight);
   }
 
   private void getAndPopulateMedicalConditions() {

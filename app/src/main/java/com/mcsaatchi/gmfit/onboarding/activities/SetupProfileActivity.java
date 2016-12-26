@@ -17,9 +17,8 @@ import android.widget.Toast;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.otto.EventBusPoster;
 import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
-import com.mcsaatchi.gmfit.common.Constants;
+import com.mcsaatchi.gmfit.architecture.otto.UserFinalizedSetupProfileEvent;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.common.classes.NonSwipeableViewPager;
@@ -152,7 +151,7 @@ public class SetupProfileActivity extends BaseActivity {
         if (nextPageBTN.getText().toString().equals(getString(R.string.finish_setup))) {
           if (Helpers.isInternetAvailable(SetupProfileActivity.this)) {
             EventBusSingleton.getInstance()
-                .post(new EventBusPoster(Constants.EVENT_USER_FINALIZE_SETUP_PROFILE));
+                .post(new UserFinalizedSetupProfileEvent());
           } else {
             Helpers.showNoInternetDialog(SetupProfileActivity.this);
           }
