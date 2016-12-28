@@ -13,13 +13,13 @@ import com.mcsaatchi.gmfit.fitness.models.FitnessWidget;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
-public class FitnessWidgetsGridAdapter
-    extends RecyclerView.Adapter<FitnessWidgetsGridAdapter.RecyclerViewHolder> {
+public class FitnessWidgetsRecyclerAdapter
+    extends RecyclerView.Adapter<FitnessWidgetsRecyclerAdapter.RecyclerViewHolder> {
   private Context context;
   private ArrayList<FitnessWidget> widgetsMap;
   private int layoutResourceId;
 
-  public FitnessWidgetsGridAdapter(Context context, ArrayList<FitnessWidget> widgets,
+  public FitnessWidgetsRecyclerAdapter(Context context, ArrayList<FitnessWidget> widgets,
       int layoutResourceId) {
     this.context = context;
     this.widgetsMap = widgets;

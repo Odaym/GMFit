@@ -53,6 +53,7 @@
         android:id="@+id/widgetsGridViewLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:padding="@dimen/default_margin_1"
         >
 
       <ProgressBar
@@ -64,21 +65,10 @@
           style="?android:attr/progressBarStyleLarge"
           />
 
-      <GridView
+      <android.support.v7.widget.RecyclerView
           android:id="@+id/widgetsGridView"
           android:layout_width="match_parent"
           android:layout_height="@dimen/health_widgets_gridview_height"
-          android:layout_marginBottom="@dimen/default_margin_2"
-          android:layout_marginEnd="@dimen/default_margin_2"
-          android:layout_marginStart="@dimen/default_margin_2"
-          android:layout_marginTop="@dimen/default_margin_2"
-          android:columnWidth="80dp"
-          android:gravity="center"
-          android:horizontalSpacing="@dimen/default_margin_2"
-          android:numColumns="2"
-          android:scrollbars="none"
-          android:stretchMode="columnWidth"
-          android:verticalSpacing="@dimen/default_margin_2"
           />
     </RelativeLayout>
 

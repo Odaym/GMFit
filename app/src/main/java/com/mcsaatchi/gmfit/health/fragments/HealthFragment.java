@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -16,7 +17,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.GridView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import butterknife.Bind;
@@ -36,7 +36,7 @@ import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.CustomizeWidgetsAndChartsActivity;
 import com.mcsaatchi.gmfit.common.classes.SimpleDividerItemDecoration;
 import com.mcsaatchi.gmfit.health.activities.AddNewHealthTestActivity;
-import com.mcsaatchi.gmfit.health.adapters.HealthWidgetsGridAdapter;
+import com.mcsaatchi.gmfit.health.adapters.HealthWidgetsRecyclerAdapter;
 import com.mcsaatchi.gmfit.health.adapters.UserTestsRecyclerAdapter;
 import com.mcsaatchi.gmfit.health.models.HealthWidget;
 import com.squareup.otto.Subscribe;
@@ -54,7 +54,7 @@ public class HealthFragment extends Fragment {
   @Inject SharedPreferences prefs;
 
   @Bind(R.id.metricCounterTV) TextView metricCounterTV;
-  @Bind(R.id.widgetsGridView) GridView widgetsGridView;
+  @Bind(R.id.widgetsGridView) RecyclerView widgetsGridView;
   @Bind(R.id.addEntryBTN_MEDICAL_TESTS) TextView addEntryBTN_MEDICAL_TESTS;
   @Bind(R.id.userTestsListView) RecyclerView userTestsListView;
   @Bind(R.id.loadingWidgetsProgressBar) ProgressBar loadingWidgetsProgressBar;
@@ -205,10 +205,10 @@ public class HealthFragment extends Fragment {
     if (!healthWidgetsMap.isEmpty() && healthWidgetsMap.size() > 4) {
       healthWidgetsMap = new ArrayList<>(healthWidgetsMap.subList(0, 4));
 
-      HealthWidgetsGridAdapter healthWidgetsGridAdapter =
-          new HealthWidgetsGridAdapter(getActivity(), healthWidgetsMap,
+      HealthWidgetsRecyclerAdapter healthWidgetsGridAdapter =
+          new HealthWidgetsRecyclerAdapter(getActivity(), healthWidgetsMap,
               R.layout.grid_item_health_widgets);
-
+      widgetsGridView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
       widgetsGridView.setAdapter(healthWidgetsGridAdapter);
 
       loadingWidgetsProgressBar.setVisibility(View.GONE);

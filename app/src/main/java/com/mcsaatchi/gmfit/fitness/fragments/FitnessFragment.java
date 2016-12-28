@@ -58,7 +58,7 @@ import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.common.components.CustomBarChart;
 import com.mcsaatchi.gmfit.common.components.DateCarousel;
 import com.mcsaatchi.gmfit.common.models.DataChart;
-import com.mcsaatchi.gmfit.fitness.adapters.FitnessWidgetsGridAdapter;
+import com.mcsaatchi.gmfit.fitness.adapters.FitnessWidgetsRecyclerAdapter;
 import com.mcsaatchi.gmfit.fitness.models.FitnessWidget;
 import com.squareup.otto.Subscribe;
 import java.sql.SQLException;
@@ -97,7 +97,7 @@ public class FitnessFragment extends Fragment {
   private String todayDate;
   private String userEmail;
 
-  private FitnessWidgetsGridAdapter widgetsGridAdapter;
+  private FitnessWidgetsRecyclerAdapter widgetsGridAdapter;
   private ArrayList<FitnessWidget> widgetsMap;
   private ArrayList<DataChart> chartsMap;
   private RuntimeExceptionDao<FitnessWidget, Integer> fitnessWidgetsDAO;
@@ -373,6 +373,7 @@ public class FitnessFragment extends Fragment {
             if (remainingValue < 0) {
               goalStatusWordTV.setText(getResources().getString(R.string.goal_exceeded_tv));
             } else {
+              if (isAdded())
               goalStatusWordTV.setText(getResources().getString(R.string.remaining_title));
             }
 
@@ -461,7 +462,7 @@ public class FitnessFragment extends Fragment {
   }
 
   private void setupWidgetViews(ArrayList<FitnessWidget> widgetsMap) {
-    widgetsGridAdapter = new FitnessWidgetsGridAdapter(getActivity(), widgetsMap,
+    widgetsGridAdapter = new FitnessWidgetsRecyclerAdapter(getActivity(), widgetsMap,
         R.layout.grid_item_fitness_widgets);
 
     widgetsGridView.setLayoutManager(new GridLayoutManager(getActivity(), widgetsMap.size()));

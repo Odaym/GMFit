@@ -1,29 +1,30 @@
 package com.mcsaatchi.gmfit.health.adapters;
 
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.TextView;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.common.classes.FontTextView;
 import com.mcsaatchi.gmfit.health.models.HealthWidget;
 import java.util.ArrayList;
 
-public class HealthWidgetsGridAdapter extends BaseAdapter {
+public class HealthWidgetsRecyclerAdapter
+    extends RecyclerView.Adapter<HealthWidgetsRecyclerAdapter.RecyclerViewHolder> {
   private Context context;
   private ArrayList<HealthWidget> widgetsMap;
   private int layoutResourceId;
 
-  public HealthWidgetsGridAdapter(Context context, ArrayList<HealthWidget> widgetsMap,
+  public HealthWidgetsRecyclerAdapter(Context context, ArrayList<HealthWidget> widgetsMap,
       int layoutResourceId) {
     this.context = context;
     this.widgetsMap = widgetsMap;
     this.layoutResourceId = layoutResourceId;
   }
 
-  public int getCount() {
+  @Override public int getItemCount() {
     return widgetsMap.size();
   }
 
@@ -35,35 +36,30 @@ public class HealthWidgetsGridAdapter extends BaseAdapter {
     return 0;
   }
 
-  public View getView(int position, View convertView, ViewGroup parent) {
-    ViewHolder holder;
+  @Override public RecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    View itemView =
+        LayoutInflater.from(parent.getContext()).inflate(layoutResourceId, parent, false);
 
-    if (convertView == null) {
-      LayoutInflater inflater =
-          (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-      convertView = inflater.inflate(layoutResourceId, parent, false);
+    return new RecyclerViewHolder(itemView);
+  }
 
-      holder = new ViewHolder();
-
-      holder.metricTV = (FontTextView) convertView.findViewById(R.id.metricTV);
-      holder.measurementUnitTV = (TextView) convertView.findViewById(R.id.measurementUnitTV);
-      holder.metricTitleTV = (FontTextView) convertView.findViewById(R.id.metricTitleTV);
-
-      convertView.setTag(holder);
-    } else {
-      holder = (ViewHolder) convertView.getTag();
-    }
-
+  @Override public void onBindViewHolder(RecyclerViewHolder holder, int position) {
     holder.metricTitleTV.setText((widgetsMap.get(position)).getTitle());
     holder.metricTV.setText(String.valueOf((int) widgetsMap.get(position).getValue()));
     holder.measurementUnitTV.setText((widgetsMap.get(position)).getMeasurementUnit());
-
-    return convertView;
   }
 
-  class ViewHolder {
+  class RecyclerViewHolder extends RecyclerView.ViewHolder {
+
     FontTextView metricTV;
     TextView measurementUnitTV;
     FontTextView metricTitleTV;
+
+    RecyclerViewHolder(View itemView) {
+      super(itemView);
+      metricTV = (FontTextView) itemView.findViewById(R.id.metricTV);
+      measurementUnitTV = (TextView) itemView.findViewById(R.id.measurementUnitTV);
+      metricTitleTV = (FontTextView) itemView.findViewById(R.id.metricTitleTV);
+    }
   }
 }

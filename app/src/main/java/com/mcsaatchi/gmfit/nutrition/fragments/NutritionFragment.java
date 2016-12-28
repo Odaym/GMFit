@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -22,7 +23,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.GridView;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -72,7 +72,7 @@ import com.mcsaatchi.gmfit.common.models.DataChart;
 import com.mcsaatchi.gmfit.nutrition.activities.AddNewMealItemActivity;
 import com.mcsaatchi.gmfit.nutrition.activities.BarcodeCaptureActivity;
 import com.mcsaatchi.gmfit.nutrition.activities.SpecifyMealAmountActivity;
-import com.mcsaatchi.gmfit.nutrition.adapters.NutritionWidgetsGridAdapter;
+import com.mcsaatchi.gmfit.nutrition.adapters.NutritionWidgetsRecyclerAdapter;
 import com.mcsaatchi.gmfit.nutrition.adapters.UserMealsRecyclerAdapterDragSwipe;
 import com.mcsaatchi.gmfit.nutrition.models.MealItem;
 import com.mcsaatchi.gmfit.nutrition.models.NutritionWidget;
@@ -97,7 +97,7 @@ public class NutritionFragment extends Fragment {
   @Inject SharedPreferences prefs;
   @Inject LocalDate dt;
 
-  @Bind(R.id.widgetsGridView) GridView widgetsGridView;
+  @Bind(R.id.widgetsGridView) RecyclerView widgetsGridView;
   @Bind(R.id.metricCounterTV) FontTextView metricCounterTV;
   @Bind(R.id.metricProgressBar) ProgressBar metricProgressBar;
 
@@ -699,9 +699,9 @@ public class NutritionFragment extends Fragment {
 
     widgetsMap = new ArrayList<>(widgetsFromResponse.subList(0, 4));
 
-    NutritionWidgetsGridAdapter nutritionWidgets_GridAdapter =
-        new NutritionWidgetsGridAdapter(getActivity(), widgetsMap);
-
+    NutritionWidgetsRecyclerAdapter nutritionWidgets_GridAdapter =
+        new NutritionWidgetsRecyclerAdapter(getActivity(), widgetsMap, R.layout.grid_item_nutrition_widgets);
+    widgetsGridView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
     widgetsGridView.setAdapter(nutritionWidgets_GridAdapter);
 
     loadingWidgetsProgressBar.setVisibility(View.GONE);
