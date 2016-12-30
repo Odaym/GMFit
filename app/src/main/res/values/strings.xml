@@ -231,6 +231,10 @@
     <string name="enter_test_name_hint">Set a name for your test</string>
     <string name="test_date_taken">Date</string>
 
+    <!-- PILL REMINDER ACTIVITY -->
+    <string name="pill_reminder_activity_title">Pill Reminder</string>
+    <string name="add_medication">Add Medication</string>
+
     <!-- ADD NEW CHART -->
     <string name="add_new_chart_activity_title">Add New Chart</string>
     <string name="add_new_chart_prompt">Add a chart from the list below</string>

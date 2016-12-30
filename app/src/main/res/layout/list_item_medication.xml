@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.chauthai.swipereveallayout.SwipeRevealLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/swipe_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:dragEdge="right"
+    app:mode="normal"
+    >
+
+  <LinearLayout
+      android:layout_width="wrap_content"
+      android:layout_height="match_parent"
+      android:orientation="horizontal"
+      >
+
+    <RelativeLayout
+        android:id="@+id/deactivate_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@color/camera_gray_color"
+        android:gravity="center"
+        android:paddingEnd="@dimen/default_margin_1"
+        android:paddingStart="@dimen/default_margin_1"
+        >
+
+      <ImageView
+          android:id="@+id/deactivateImageIV"
+          android:layout_width="@dimen/action_items_delete_deactivate_icons"
+          android:layout_height="@dimen/action_items_delete_deactivate_icons"
+          android:layout_centerInParent="true"
+          android:src="@android:drawable/ic_menu_close_clear_cancel"
+          />
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_below="@+id/deactivateImageIV"
+          android:layout_centerHorizontal="true"
+          android:gravity="center"
+          android:text="Deactivate"
+          android:textColor="@android:color/white"
+          />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/delete_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@color/medication_list_delete_action_layout_red"
+        android:gravity="center"
+        android:paddingEnd="@dimen/default_margin_2"
+        android:paddingStart="@dimen/default_margin_2"
+        >
+
+      <ImageView
+          android:id="@+id/deleteImageIV"
+          android:layout_width="@dimen/action_items_delete_deactivate_icons"
+          android:layout_height="@dimen/action_items_delete_deactivate_icons"
+          android:layout_centerInParent="true"
+          android:src="@drawable/ic_delete_white_24dp"
+          />
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_below="@+id/deleteImageIV"
+          android:layout_centerHorizontal="true"
+          android:gravity="center"
+          android:text="Delete"
+          android:textColor="@android:color/white"
+          />
+    </RelativeLayout>
+  </LinearLayout>
+
+  <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="@dimen/medications_list_row_item_height"
+      android:background="@color/white"
+      >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingStart="@dimen/default_margin_2"
+        android:paddingTop="@dimen/default_margin_2"
+        >
+
+      <TextView
+          android:id="@+id/medicineNameTV"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:paddingBottom="@dimen/default_margin_1"
+          android:textColor="@android:color/black"
+          />
+
+      <TextView
+          android:id="@+id/medicineDescriptionTV"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:textColor="@color/medication_list_item_name_gray"
+          />
+
+      <TextView
+          android:id="@+id/medicineIntakeDetailsTV"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:textColor="@color/medication_list_item_name_gray"
+          />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="@dimen/right_arrow_layout_width"
+        android:layout_height="match_parent"
+        android:layout_alignParentEnd="true"
+        android:background="@color/much_lighter_gray"
+        android:gravity="center"
+        >
+
+      <ImageView
+          android:layout_width="@dimen/far_right_arrow_icon_dimens"
+          android:layout_height="@dimen/far_right_arrow_icon_dimens"
+          android:src="@drawable/ic_arrow_right_blue"
+          />
+    </LinearLayout>
+  </RelativeLayout>
+</com.chauthai.swipereveallayout.SwipeRevealLayout>

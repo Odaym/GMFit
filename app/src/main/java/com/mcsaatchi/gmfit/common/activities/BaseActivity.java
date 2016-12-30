@@ -17,8 +17,7 @@ import javax.inject.Inject;
 public class BaseActivity extends AppCompatActivity {
   @Inject public SharedPreferences prefs;
   @Inject public DataAccessHandler dataAccessHandler;
-
-  private DBHelper dbHelper = null;
+  @Inject public DBHelper dbHelper;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -55,13 +54,6 @@ public class BaseActivity extends AppCompatActivity {
       OpenHelperManager.releaseHelper();
       dbHelper = null;
     }
-  }
-
-  public DBHelper getDBHelper() {
-    if (dbHelper == null) {
-      dbHelper = OpenHelperManager.getHelper(this, DBHelper.class);
-    }
-    return dbHelper;
   }
 
   public void setupToolbar(Toolbar toolbar, String toolbarTitle, boolean backEnabled) {

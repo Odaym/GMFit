@@ -15,7 +15,6 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
-import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.mcsaatchi.gmfit.BuildConfig;
 import com.mcsaatchi.gmfit.architecture.GMFitApplication;
@@ -52,12 +51,12 @@ public class SensorListener extends Service implements SensorEventListener {
   private final Handler handler = new Handler();
   @Inject DataAccessHandler dataAccessHandler;
   @Inject SharedPreferences prefs;
+  @Inject DBHelper dbHelper;
   private Timer timer = new Timer();
   private String todayDate;
   private String yesterdayDate;
 
   private RuntimeExceptionDao<FitnessWidget, Integer> fitnessWidgetsDAO;
-  private DBHelper dbHelper = null;
 
   @Override public void onAccuracyChanged(final Sensor sensor, int accuracy) {
   }
@@ -169,7 +168,7 @@ public class SensorListener extends Service implements SensorEventListener {
 
     reRegisterSensor();
 
-    fitnessWidgetsDAO = getDBHelper().getFitnessWidgetsDAO();
+    fitnessWidgetsDAO = dbHelper.getFitnessWidgetsDAO();
 
     /**
      * Timer Task for calculating metrics as the phone is active
@@ -288,12 +287,5 @@ public class SensorListener extends Service implements SensorEventListener {
 
     // enable batching with delay of max 5 min
     sm.registerListener(this, sm.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR), 0, 0);
-  }
-
-  public DBHelper getDBHelper() {
-    if (dbHelper == null) {
-      dbHelper = OpenHelperManager.getHelper(getApplicationContext(), DBHelper.class);
-    }
-    return dbHelper;
   }
 }

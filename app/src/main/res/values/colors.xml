@@ -44,4 +44,7 @@
   <color name="camera_gray_color">#cccccc</color>
   <color name="faded_blue">#330B85DA</color>
   <color name="empty_meals_hint_text_gray">#B0B2BA</color>
+
+  <color name="medication_list_item_name_gray">#B2B3B9</color>
+  <color name="medication_list_delete_action_layout_red">#FE0000</color>
 </resources>

@@ -3,8 +3,10 @@ package com.mcsaatchi.gmfit.architecture.dagger;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.mcsaatchi.gmfit.architecture.GMFitApplication;
 import com.mcsaatchi.gmfit.architecture.data_access.ApiCallsHandler;
+import com.mcsaatchi.gmfit.architecture.data_access.DBHelper;
 import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.architecture.rest.RestClient;
 import com.mcsaatchi.gmfit.common.Constants;
@@ -26,6 +28,10 @@ import org.joda.time.LocalDate;
 
   @Provides @Singleton Resources provideActivityResources(Context app) {
     return app.getResources();
+  }
+
+  @Provides DBHelper providesDBHelper(Context app){
+    return OpenHelperManager.getHelper(app, DBHelper.class);
   }
 
   @Provides @Singleton ApiCallsHandler provideApiCallsHandler(Context app) {

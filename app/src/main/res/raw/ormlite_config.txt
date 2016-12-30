@@ -128,3 +128,30 @@ fieldName=widget_id
 # --table-fields-end--
 # --table-end--
 #################################
+# --table-start--
+dataClass=com.mcsaatchi.gmfit.health.models.Medication
+tableName=Medication
+# --table-fields-start--
+# --field-start--
+fieldName=id
+generatedId=true
+indexName=Medication_id_idx
+# --field-end--
+# --field-start--
+fieldName=name
+# --field-end--
+# --field-start--
+fieldName=description
+# --field-end--
+# --field-start--
+fieldName=dosage
+# --field-end--
+# --field-start--
+fieldName=when
+# --field-end--
+# --field-start--
+fieldName=frequency
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################

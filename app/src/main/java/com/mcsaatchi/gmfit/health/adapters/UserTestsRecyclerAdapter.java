@@ -40,7 +40,7 @@ public class UserTestsRecyclerAdapter
     this.userTests = userTests;
     this.context = context;
 
-    ((GMFitApplication) context.getApplicationContext()).getAppComponent().inject(this);
+    ((GMFitApplication) context).getAppComponent().inject(this);
   }
 
   @Override public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

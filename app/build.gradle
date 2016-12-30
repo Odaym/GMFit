@@ -83,6 +83,7 @@ dependencies {
   annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
 
   compile "com.google.android.gms:play-services-vision:$playServicesVersion"
+  compile 'com.chauthai.swipereveallayout:swipe-reveal-layout:1.4.0'
   compile "com.squareup.okhttp3:logging-interceptor:$OkHttpVersion"
   compile "com.android.support:recyclerview-v7:$supportLibVersion"
   compile "com.squareup.retrofit2:adapter-rxjava:$retroFitVersion"

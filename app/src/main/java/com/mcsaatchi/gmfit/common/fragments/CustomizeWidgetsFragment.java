@@ -147,8 +147,8 @@ public class CustomizeWidgetsFragment extends Fragment {
 
     if (context instanceof Activity) {
       parentActivity = (Activity) context;
-      fitnessWidgetsDAO = ((BaseActivity) parentActivity).getDBHelper().getFitnessWidgetsDAO();
-      nutritionWidgetsDAO = ((BaseActivity) parentActivity).getDBHelper().getNutritionWidgetsDAO();
+      fitnessWidgetsDAO = ((BaseActivity) parentActivity).dbHelper.getFitnessWidgetsDAO();
+      nutritionWidgetsDAO = ((BaseActivity) parentActivity).dbHelper.getNutritionWidgetsDAO();
     }
   }
 

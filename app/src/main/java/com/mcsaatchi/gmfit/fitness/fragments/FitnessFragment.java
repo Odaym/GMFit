@@ -1,6 +1,5 @@
 package com.mcsaatchi.gmfit.fitness.fragments;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -34,10 +33,10 @@ import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.GMFitApplication;
 import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.architecture.otto.CaloriesCounterIncrementedEvent;
-import com.mcsaatchi.gmfit.architecture.otto.DistanceCounterIncrementedEvent;
-import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
 import com.mcsaatchi.gmfit.architecture.otto.DataChartDeletedEvent;
 import com.mcsaatchi.gmfit.architecture.otto.DataChartsOrderChangedEvent;
+import com.mcsaatchi.gmfit.architecture.otto.DistanceCounterIncrementedEvent;
+import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
 import com.mcsaatchi.gmfit.architecture.otto.FitnessWidgetsOrderChangedEvent;
 import com.mcsaatchi.gmfit.architecture.otto.StepCounterIncrementedEvent;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponseChartData;
@@ -93,7 +92,6 @@ public class FitnessFragment extends Fragment {
   @Inject SharedPreferences prefs;
   @Inject LocalDate dt;
   @Inject DataAccessHandler dataAccessHandler;
-  private Activity parentActivity;
   private String todayDate;
   private String userEmail;
 
@@ -107,39 +105,35 @@ public class FitnessFragment extends Fragment {
   @RequiresApi(api = Build.VERSION_CODES.KITKAT) @Override public void onAttach(Context context) {
     super.onAttach(context);
 
-    if (context instanceof Activity) {
-      parentActivity = (Activity) context;
+    fitnessWidgetsDAO = ((BaseActivity) getActivity()).dbHelper.getFitnessWidgetsDAO();
+    fitnessQB = fitnessWidgetsDAO.queryBuilder();
 
-      fitnessWidgetsDAO = ((BaseActivity) parentActivity).getDBHelper().getFitnessWidgetsDAO();
-      fitnessQB = fitnessWidgetsDAO.queryBuilder();
+    dataChartDAO = ((BaseActivity) getActivity()).dbHelper.getDataChartDAO();
 
-      dataChartDAO = ((BaseActivity) parentActivity).getDBHelper().getDataChartDAO();
+    EventBusSingleton.getInstance().register(this);
 
-      EventBusSingleton.getInstance().register(this);
+    JodaTimeAndroid.init(getActivity());
+    ((GMFitApplication) getActivity().getApplication()).getAppComponent().inject(this);
 
-      JodaTimeAndroid.init(getActivity());
-      ((GMFitApplication) getActivity().getApplication()).getAppComponent().inject(this);
+    todayDate = dt.toString();
 
-      todayDate = dt.toString();
+    getUserGoalMetrics(todayDate, "fitness", false);
 
-      getUserGoalMetrics(todayDate, "fitness", false);
+    if (((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
+      ((AppCompatActivity) getActivity()).getSupportActionBar()
+          .setTitle(R.string.fitness_tab_title);
+    }
 
-      if (((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
-        ((AppCompatActivity) getActivity()).getSupportActionBar()
-            .setTitle(R.string.fitness_tab_title);
-      }
+    userEmail = prefs.getString(Constants.EXTRAS_USER_EMAIL, "");
 
-      userEmail = prefs.getString(Constants.EXTRAS_USER_EMAIL, "");
+    if (getArguments() != null) {
+      chartsMap = getArguments().getParcelableArrayList(Constants.BUNDLE_FITNESS_CHARTS_MAP);
+    }
 
-      if (getArguments() != null) {
-        chartsMap = getArguments().getParcelableArrayList(Constants.BUNDLE_FITNESS_CHARTS_MAP);
-      }
-
-      try {
-        widgetsMap = (ArrayList<FitnessWidget>) fitnessQB.orderBy("position", true).query();
-      } catch (SQLException e) {
-        e.printStackTrace();
-      }
+    try {
+      widgetsMap = (ArrayList<FitnessWidget>) fitnessQB.orderBy("position", true).query();
+    } catch (SQLException e) {
+      e.printStackTrace();
     }
   }
 
@@ -373,8 +367,9 @@ public class FitnessFragment extends Fragment {
             if (remainingValue < 0) {
               goalStatusWordTV.setText(getResources().getString(R.string.goal_exceeded_tv));
             } else {
-              if (isAdded())
-              goalStatusWordTV.setText(getResources().getString(R.string.remaining_title));
+              if (isAdded()) {
+                goalStatusWordTV.setText(getResources().getString(R.string.remaining_title));
+              }
             }
 
             remainingTV.setText(String.valueOf(Math.abs(remainingValue)));
@@ -603,7 +598,7 @@ public class FitnessFragment extends Fragment {
           case 200:
             waitingDialog.dismiss();
 
-            Toast.makeText(parentActivity, "Chart deleted successfully", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "Chart deleted successfully", Toast.LENGTH_SHORT).show();
 
             cards_container.removeAllViews();
 
