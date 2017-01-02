@@ -13,6 +13,7 @@ import com.mcsaatchi.gmfit.fitness.models.FitnessWidget;
 import com.mcsaatchi.gmfit.health.models.Medication;
 import com.mcsaatchi.gmfit.nutrition.models.NutritionWidget;
 import java.sql.SQLException;
+import timber.log.Timber;
 
 /**
  * Database helper class used to manage the creation and upgrading of your database. This class
@@ -21,9 +22,9 @@ import java.sql.SQLException;
  * the DAOs used by the other classes.
  */
 public class DBHelper extends OrmLiteSqliteOpenHelper {
-  private static final String DATABASE_NAME = "GMFit.db";
+  private static final String DATABASE_NAME = "GlobeMedFitDB.db";
 
-  private static final int DATABASE_VERSION = 2;
+  private static final int DATABASE_VERSION = 1;
 
   private RuntimeExceptionDao<FitnessWidget, Integer> fitnessWidgetsRunTimeDAO = null;
   private RuntimeExceptionDao<NutritionWidget, Integer> nutritionWidgetsRunTimeDAO = null;
@@ -32,10 +33,13 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
 
   public DBHelper(Context context) {
     super(context, DATABASE_NAME, null, DATABASE_VERSION, R.raw.ormlite_config);
+    Timber.d("Are we here?");
   }
 
   @Override public void onCreate(SQLiteDatabase db, ConnectionSource connectionSource) {
     try {
+
+      Timber.d("What about here? ");
       TableUtils.createTable(connectionSource, DataChart.class);
       TableUtils.createTable(connectionSource, FitnessWidget.class);
       TableUtils.createTable(connectionSource, NutritionWidget.class);

@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/health_background"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    >
+
+  <include layout="@layout/app_toolbar"/>
+
+  <FrameLayout
+      android:layout_width="match_parent"
+      android:layout_height="@dimen/default_button_height_1"
+      android:layout_marginBottom="@dimen/default_margin_2"
+      >
+
+    <EditText
+        android:id="@+id/searchMedicationsAutoCompleteTV"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/offwhite_more_transparent"
+        android:hint="@string/search_medication_hint"
+        android:imeOptions="actionSearch"
+        android:inputType="textCapSentences"
+        android:paddingStart="@dimen/default_margin_1_5"
+        android:textColor="@color/white"
+        android:textColorHint="@color/offwhite_transparent"
+        />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical|end"
+        android:orientation="horizontal"
+        >
+
+      <ProgressBar
+          android:id="@+id/pb_loading_indicator"
+          android:layout_width="50dp"
+          android:layout_height="50dp"
+          android:layout_gravity="center_vertical|end"
+          android:layout_marginEnd="@dimen/default_margin_1"
+          android:visibility="gone"
+          style="?android:attr/progressBarStyleSmall"
+          />
+
+      <ImageView
+          android:id="@+id/searchIconIV"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center_vertical|end"
+          android:paddingEnd="@dimen/default_margin_1_5"
+          android:src="@drawable/ic_search_white_24dp"
+          />
+    </LinearLayout>
+  </FrameLayout>
+
+  <LinearLayout
+      android:id="@+id/searchResultsListLayout"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:background="@color/offwhite_background_gray"
+      android:orientation="vertical"
+      >
+
+    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/searchResultsHintTV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/health_green"
+        android:gravity="center_vertical"
+        android:minHeight="?android:attr/listPreferredItemHeightSmall"
+        android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
+        android:paddingStart="?android:attr/listPreferredItemPaddingStart"
+        android:text="@string/most_popular_hint"
+        android:textAppearance="?android:attr/textAppearanceListItemSmall"
+        android:textColor="@android:color/white"
+        />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/mealsAvailableRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:scrollbars="vertical"
+        />
+  </LinearLayout>
+
+  <LinearLayout
+      android:id="@+id/noSearchResultsFoundLayout"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:gravity="center_horizontal"
+      android:orientation="vertical"
+      android:paddingEnd="@dimen/default_margin_2"
+      android:paddingStart="@dimen/default_margin_2"
+      android:visibility="gone"
+      >
+
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/ic_search_white_24dp"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/default_margin_3"
+        android:text="@string/no_results_found"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:textColor="@color/white"
+        />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/default_margin_2"
+        android:text="@string/manually_add_medication_button"
+        android:textAllCaps="false"
+        />
+
+  </LinearLayout>
+</LinearLayout>

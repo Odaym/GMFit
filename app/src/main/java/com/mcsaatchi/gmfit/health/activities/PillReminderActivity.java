@@ -1,5 +1,6 @@
 package com.mcsaatchi.gmfit.health.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -38,20 +39,11 @@ public class PillReminderActivity extends BaseActivity {
 
     setupToolbar(toolbar, getString(R.string.pill_reminder_activity_title), true);
 
-    //medicationDAO = dbHelper.getMedicationDAO();
-    //
-    //setupMedicationsList(medicationDAO.queryForAll());
+    medicationDAO = dbHelper.getMedicationDAO();
 
-    medicationsList.add(
-        new Medication("Augmentin", "475MG SYRP Syrp 475MG 70 ml", "10 ml", "Everyday", 3));
-    medicationsList.add(
-        new Medication("Vestibulum Elit", "100MG SYRP Syrp 100MG 9 ml", "900 ml", "2 days/week",
-            3));
-    medicationsList.add(
-        new Medication("Sed Interdum", "512MG SYRP Syrp 519MG 90 ml", "100 ml", "Everyday", 1));
-    medicationsList.add(
-        new Medication("Vulputate Ultrices", "123MG SYRP Syrp 658MG 190 ml", "50 ml", "4 days/week",
-            5));
+    medicationsList = medicationDAO.queryForAll();
+
+    setupMedicationsList(medicationsList);
 
     if (medicationsList.size() == 1) {
       numberOfMedicationsTV.setText(medicationsList.size() + " medication");
@@ -78,6 +70,8 @@ public class PillReminderActivity extends BaseActivity {
   @Override public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
       case R.id.addMedicationItem:
+        Intent intent = new Intent(this, AddMedicationActivity.class);
+        startActivity(intent);
         break;
     }
 

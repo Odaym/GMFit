@@ -30,7 +30,7 @@
           android:layout_width="@dimen/action_items_delete_deactivate_icons"
           android:layout_height="@dimen/action_items_delete_deactivate_icons"
           android:layout_centerInParent="true"
-          android:src="@android:drawable/ic_menu_close_clear_cancel"
+          android:src="@drawable/ic_deactivate_reminder"
           />
 
       <TextView
@@ -59,7 +59,7 @@
           android:layout_width="@dimen/action_items_delete_deactivate_icons"
           android:layout_height="@dimen/action_items_delete_deactivate_icons"
           android:layout_centerInParent="true"
-          android:src="@drawable/ic_delete_white_24dp"
+          android:src="@drawable/ic_delete_reminder"
           />
 
       <TextView
@@ -112,6 +112,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/arrowLayout"
         android:layout_width="@dimen/right_arrow_layout_width"
         android:layout_height="match_parent"
         android:layout_alignParentEnd="true"
@@ -125,5 +126,17 @@
           android:src="@drawable/ic_arrow_right_blue"
           />
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/reminderStatusIV"
+        android:layout_width="@dimen/reminder_status_icon_dimens"
+        android:layout_height="@dimen/reminder_status_icon_dimens"
+        android:layout_centerVertical="true"
+        android:layout_gravity="end|center_vertical"
+        android:layout_marginEnd="@dimen/default_margin_1"
+        android:layout_toStartOf="@+id/arrowLayout"
+        android:src="@drawable/ic_reminder_active"
+        />
+
   </RelativeLayout>
 </com.chauthai.swipereveallayout.SwipeRevealLayout>

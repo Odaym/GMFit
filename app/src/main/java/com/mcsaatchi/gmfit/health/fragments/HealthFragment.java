@@ -17,6 +17,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import butterknife.Bind;
@@ -36,6 +37,7 @@ import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.CustomizeWidgetsAndChartsActivity;
 import com.mcsaatchi.gmfit.common.classes.SimpleDividerItemDecoration;
 import com.mcsaatchi.gmfit.health.activities.AddNewHealthTestActivity;
+import com.mcsaatchi.gmfit.health.activities.PillReminderActivity;
 import com.mcsaatchi.gmfit.health.adapters.HealthWidgetsRecyclerAdapter;
 import com.mcsaatchi.gmfit.health.adapters.UserTestsRecyclerAdapter;
 import com.mcsaatchi.gmfit.health.models.HealthWidget;
@@ -59,6 +61,7 @@ public class HealthFragment extends Fragment {
   @Bind(R.id.userTestsListView) RecyclerView userTestsListView;
   @Bind(R.id.loadingWidgetsProgressBar) ProgressBar loadingWidgetsProgressBar;
   @Bind(R.id.loadingTestsProgressBar) ProgressBar loadingTestsProgressBar;
+  @Bind(R.id.pillReminderSection) LinearLayout pillReminderSection;
 
   private ArrayList<HealthWidget> healthWidgetsMap = new ArrayList<>();
 
@@ -86,6 +89,13 @@ public class HealthFragment extends Fragment {
     addEntryBTN_MEDICAL_TESTS.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View view) {
         Intent intent = new Intent(getActivity(), AddNewHealthTestActivity.class);
+        startActivity(intent);
+      }
+    });
+
+    pillReminderSection.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View view) {
+        Intent intent = new Intent(getActivity(), PillReminderActivity.class);
         startActivity(intent);
       }
     });
@@ -162,7 +172,7 @@ public class HealthFragment extends Fragment {
 
             RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
             UserTestsRecyclerAdapter userTestsRecyclerAdapter =
-                new UserTestsRecyclerAdapter(getActivity(), takenMedicalTests);
+                new UserTestsRecyclerAdapter(getActivity().getApplication(), takenMedicalTests);
             ItemTouchHelper.Callback callback =
                 new SimpleSwipeItemTouchHelperCallback(userTestsRecyclerAdapter);
             ItemTouchHelper touchHelper = new ItemTouchHelper(callback);

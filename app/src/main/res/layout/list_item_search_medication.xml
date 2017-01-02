@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/search_medications_list_row_item_height"
+    android:background="@color/white"
+    >
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:orientation="vertical"
+      android:paddingStart="@dimen/default_margin_2"
+      android:paddingTop="@dimen/default_margin_2"
+      >
+
+    <TextView
+        android:id="@+id/medicineNameTV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/default_margin_1"
+        android:textColor="@android:color/black"
+        />
+
+    <TextView
+        android:id="@+id/medicineDescriptionTV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/medication_list_item_name_gray"
+        />
+  </LinearLayout>
+
+  <LinearLayout
+      android:layout_width="@dimen/right_arrow_layout_width"
+      android:layout_height="match_parent"
+      android:layout_alignParentEnd="true"
+      android:background="@color/much_lighter_gray"
+      android:gravity="center"
+      >
+
+    <ImageView
+        android:layout_width="@dimen/far_right_arrow_icon_dimens"
+        android:layout_height="@dimen/far_right_arrow_icon_dimens"
+        android:src="@drawable/ic_arrow_right_blue"
+        />
+  </LinearLayout>
+</RelativeLayout>

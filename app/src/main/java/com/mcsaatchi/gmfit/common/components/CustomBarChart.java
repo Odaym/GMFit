@@ -147,7 +147,7 @@ public class CustomBarChart extends BarChart {
 
     barChart.setData(data);
 
-    barChart.getBarData().setDrawValues(true);
+    barChart.getBarData().setDrawValues(false);
 
     barChart.setRenderer(
         new CustomBarChartRenderer(context, whichFragment, barChart, barChart.getAnimator(),

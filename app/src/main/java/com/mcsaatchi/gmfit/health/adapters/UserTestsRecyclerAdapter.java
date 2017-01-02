@@ -96,8 +96,7 @@ public class UserTestsRecyclerAdapter
           case 200:
             Log.d("TAG", "onResponse: User test removed!");
 
-            EventBusSingleton.getInstance()
-                .post(new DeletedMealEntryEvent());
+            EventBusSingleton.getInstance().post(new DeletedMealEntryEvent());
 
             break;
         }

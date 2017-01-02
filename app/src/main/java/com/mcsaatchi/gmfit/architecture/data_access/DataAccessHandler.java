@@ -13,8 +13,10 @@ import com.mcsaatchi.gmfit.architecture.rest.MedicalConditionsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.MedicalTestMetricsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.MedicalTestsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.MetaTextsResponse;
+import com.mcsaatchi.gmfit.architecture.rest.MostPopularMedicationsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.RecentMealsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.SearchMealItemResponse;
+import com.mcsaatchi.gmfit.architecture.rest.SearchMedicinesResponse;
 import com.mcsaatchi.gmfit.architecture.rest.SlugBreakdownResponse;
 import com.mcsaatchi.gmfit.architecture.rest.TakenMedicalTestsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.UiResponse;
@@ -245,5 +247,18 @@ public class DataAccessHandler {
 
   public void getUserGoals(Callback<UserGoalsResponse> callback) {
     apiCallsHandler.getUserGoals(callback);
+  }
+
+  public void getMostPopularMedications(String indNbr, String contractNo, String country,
+      String language, String password, Callback<MostPopularMedicationsResponse> callback) {
+    apiCallsHandler.getMostPopularMedications(indNbr, contractNo, country, language, password,
+        callback);
+  }
+
+  public void searchMedicines(String indNbr, String contractNo, String country,
+      String language, String password, String key,
+      Callback<SearchMedicinesResponse> callback) {
+    apiCallsHandler.searchMedicines(indNbr, contractNo, country, language, password, key,
+        callback);
   }
 }

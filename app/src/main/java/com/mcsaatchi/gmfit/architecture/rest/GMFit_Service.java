@@ -139,4 +139,12 @@ public interface GMFit_Service {
   @GET("activity_levels") Call<ActivityLevelsResponse> getActivityLevels();
 
   @GET("user_goals") Call<UserGoalsResponse> getUserGoals();
+
+  @POST("insurance/medecines/most-popular")
+  Call<MostPopularMedicationsResponse> getMostPopularMedications(
+      @Body ApiCallsHandler.MostPopularMedicationsRequest mostPopularMedicationsRequest);
+
+  @POST("insurance/medecines/search")
+  Call<SearchMedicinesResponse> searchMedicines(
+      @Body ApiCallsHandler.SearchMedicinesRequest searchMedicinesRequest);
 }

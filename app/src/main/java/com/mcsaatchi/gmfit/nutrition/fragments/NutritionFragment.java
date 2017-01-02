@@ -959,8 +959,9 @@ public class NutritionFragment extends Fragment {
                       new AuthenticationResponseChartData(rawChartData.get(i).getDate(),
                           rawChartData.get(i).getValue()));
                 }
+
                 CustomBarChart customBarChart =
-                    new CustomBarChart(getActivity(), chartTitle, chartTitle);
+                    new CustomBarChart(getActivity().getApplication(), chartTitle, chartTitle);
 
                 /**
                  * Open the breakdown for the chart

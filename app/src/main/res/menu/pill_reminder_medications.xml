@@ -4,7 +4,7 @@
 
   <item
       android:id="@+id/addMedicationItem"
-      android:icon="@android:drawable/ic_menu_add"
+      android:icon="@drawable/ic_add_reminder"
       android:title="@string/add_medication"
       app:showAsAction="always"/>
 </menu>

@@ -16,8 +16,8 @@ repositories {
   maven { url 'https://maven.fabric.io/public' }
 }
 
-def supportLibVersion = '25.0.1'
-def playServicesVersion = '10.0.0'
+def supportLibVersion = '25.1.0'
+def playServicesVersion = '10.0.1'
 def retroFitVersion = '2.1.0'
 def OkHttpVersion = '3.4.1'
 def daggerVersion = '2.8'

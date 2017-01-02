@@ -13,9 +13,11 @@ import com.mcsaatchi.gmfit.architecture.rest.MedicalConditionsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.MedicalTestMetricsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.MedicalTestsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.MetaTextsResponse;
+import com.mcsaatchi.gmfit.architecture.rest.MostPopularMedicationsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.RecentMealsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.RestClient;
 import com.mcsaatchi.gmfit.architecture.rest.SearchMealItemResponse;
+import com.mcsaatchi.gmfit.architecture.rest.SearchMedicinesResponse;
 import com.mcsaatchi.gmfit.architecture.rest.SlugBreakdownResponse;
 import com.mcsaatchi.gmfit.architecture.rest.TakenMedicalTestsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.UiResponse;
@@ -759,6 +761,40 @@ public class ApiCallsHandler {
     });
   }
 
+  void searchMedicines(String indNbr, String contractNo, String country, String language,
+      String password, String key, final Callback<SearchMedicinesResponse> callback) {
+    Call<SearchMedicinesResponse> apiCall = restClient.getGMFitService()
+        .searchMedicines(
+            new SearchMedicinesRequest(indNbr, contractNo, country, language, password, key));
+
+    apiCall.enqueue(new Callback<SearchMedicinesResponse>() {
+      @Override public void onResponse(Call<SearchMedicinesResponse> call,
+          Response<SearchMedicinesResponse> response) {
+        callback.onResponse(call, response);
+      }
+
+      @Override public void onFailure(Call<SearchMedicinesResponse> call, Throwable t) {
+      }
+    });
+  }
+
+  void getMostPopularMedications(String indNbr, String contractNo, String country, String language,
+      String password, final Callback<MostPopularMedicationsResponse> callback) {
+    Call<MostPopularMedicationsResponse> apiCall = restClient.getGMFitService()
+        .getMostPopularMedications(
+            new MostPopularMedicationsRequest(indNbr, contractNo, country, language, password));
+
+    apiCall.enqueue(new Callback<MostPopularMedicationsResponse>() {
+      @Override public void onResponse(Call<MostPopularMedicationsResponse> call,
+          Response<MostPopularMedicationsResponse> response) {
+        callback.onResponse(call, response);
+      }
+
+      @Override public void onFailure(Call<MostPopularMedicationsResponse> call, Throwable t) {
+      }
+    });
+  }
+
   public class UpdateMetricsRequest {
     final String[] slug;
     final Number[] value;
@@ -950,6 +986,42 @@ public class ApiCallsHandler {
       this.old_password = old_password;
       this.new_password = new_password;
       this.confirm_new_password = new_password;
+    }
+  }
+
+  public class MostPopularMedicationsRequest {
+    String indNbr;
+    String contractNo;
+    String country;
+    String language;
+    String password;
+
+    public MostPopularMedicationsRequest(String indNbr, String contractNo, String country,
+        String language, String password) {
+      this.indNbr = indNbr;
+      this.contractNo = contractNo;
+      this.country = country;
+      this.language = language;
+      this.password = password;
+    }
+  }
+
+  public class SearchMedicinesRequest {
+    String indNbr;
+    String contractNo;
+    String country;
+    String language;
+    String password;
+    String key;
+
+    public SearchMedicinesRequest(String indNbr, String contractNo, String country, String language,
+        String password, String key) {
+      this.indNbr = indNbr;
+      this.contractNo = contractNo;
+      this.country = country;
+      this.language = language;
+      this.password = password;
+      this.key = key;
     }
   }
 }

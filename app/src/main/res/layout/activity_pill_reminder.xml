@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/insurance_background"
+    android:background="@drawable/health_background"
     android:orientation="vertical"
     >
 
@@ -34,7 +34,7 @@
         android:id="@+id/numberOfMedicationsTV"
         android:layout_width="match_parent"
         android:layout_height="@dimen/top_bar_tips_height"
-        android:background="@color/insurance_blue"
+        android:background="@color/health_green"
         android:gravity="center_vertical"
         android:paddingEnd="@dimen/activity_vertical_margin"
         android:paddingStart="@dimen/activity_vertical_margin"
