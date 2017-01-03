@@ -17,11 +17,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.GMFitApplication;
 import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
@@ -34,13 +34,15 @@ import com.mcsaatchi.gmfit.architecture.rest.WidgetsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.WidgetsResponseDatum;
 import com.mcsaatchi.gmfit.architecture.touch_helpers.SimpleSwipeItemTouchHelperCallback;
 import com.mcsaatchi.gmfit.common.Constants;
+import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.common.activities.CustomizeWidgetsAndChartsActivity;
 import com.mcsaatchi.gmfit.common.classes.SimpleDividerItemDecoration;
 import com.mcsaatchi.gmfit.health.activities.AddNewHealthTestActivity;
-import com.mcsaatchi.gmfit.health.activities.PillReminderActivity;
 import com.mcsaatchi.gmfit.health.adapters.HealthWidgetsRecyclerAdapter;
+import com.mcsaatchi.gmfit.health.adapters.MedicationsRecyclerAdapter;
 import com.mcsaatchi.gmfit.health.adapters.UserTestsRecyclerAdapter;
 import com.mcsaatchi.gmfit.health.models.HealthWidget;
+import com.mcsaatchi.gmfit.health.models.Medication;
 import com.squareup.otto.Subscribe;
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +63,10 @@ public class HealthFragment extends Fragment {
   @Bind(R.id.userTestsListView) RecyclerView userTestsListView;
   @Bind(R.id.loadingWidgetsProgressBar) ProgressBar loadingWidgetsProgressBar;
   @Bind(R.id.loadingTestsProgressBar) ProgressBar loadingTestsProgressBar;
-  @Bind(R.id.pillReminderSection) LinearLayout pillReminderSection;
+  @Bind(R.id.medicationsRecyclerView) RecyclerView medicationsRecyclerView;
+
+  private RuntimeExceptionDao<Medication, Integer> medicationDAO;
+  private List<Medication> medicationsList = new ArrayList<>();
 
   private ArrayList<HealthWidget> healthWidgetsMap = new ArrayList<>();
 
@@ -79,6 +84,12 @@ public class HealthFragment extends Fragment {
     ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.health_tab_title);
     ((GMFitApplication) getActivity().getApplication()).getAppComponent().inject(this);
 
+    medicationDAO = ((BaseActivity) getActivity()).dbHelper.getMedicationDAO();
+
+    medicationsList = medicationDAO.queryForAll();
+
+    setupMedicationsList(medicationsList);
+
     getWidgets();
 
     getTakenMedicalTests();
@@ -89,13 +100,6 @@ public class HealthFragment extends Fragment {
     addEntryBTN_MEDICAL_TESTS.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View view) {
         Intent intent = new Intent(getActivity(), AddNewHealthTestActivity.class);
-        startActivity(intent);
-      }
-    });
-
-    pillReminderSection.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View view) {
-        Intent intent = new Intent(getActivity(), PillReminderActivity.class);
         startActivity(intent);
       }
     });
@@ -120,6 +124,14 @@ public class HealthFragment extends Fragment {
     }
 
     return super.onOptionsItemSelected(item);
+  }
+
+  private void setupMedicationsList(List<Medication> medicationList) {
+    medicationsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+    MedicationsRecyclerAdapter medicationsRecyclerAdapter =
+        new MedicationsRecyclerAdapter(getActivity(), medicationList, medicationDAO);
+    medicationsRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
+    medicationsRecyclerView.setAdapter(medicationsRecyclerAdapter);
   }
 
   private void getWidgets() {
