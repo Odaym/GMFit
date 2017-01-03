@@ -70,7 +70,7 @@ public class PillReminderActivity extends BaseActivity {
   @Override public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
       case R.id.addMedicationItem:
-        Intent intent = new Intent(this, AddMedicationActivity.class);
+        Intent intent = new Intent(this, SearchMedicationsActivity.class);
         startActivity(intent);
         break;
     }

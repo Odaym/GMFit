@@ -35,7 +35,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import timber.log.Timber;
 
-public class AddMedicationActivity extends BaseActivity {
+public class SearchMedicationsActivity extends BaseActivity {
 
   @Bind(R.id.toolbar) Toolbar toolbar;
   @Bind(R.id.searchMedicationsAutoCompleteTV) EditText searchMedicationsAutoCompleteTV;
@@ -49,7 +49,7 @@ public class AddMedicationActivity extends BaseActivity {
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    setContentView(R.layout.activity_add_medication);
+    setContentView(R.layout.activity_search_medications);
 
     ButterKnife.bind(this);
 
@@ -152,7 +152,7 @@ public class AddMedicationActivity extends BaseActivity {
           @Override public void onFailure(Call<SearchMedicinesResponse> call, Throwable t) {
             Timber.d("Call failed with error : %s", t.getMessage());
             final AlertDialog alertDialog =
-                new AlertDialog.Builder(AddMedicationActivity.this).create();
+                new AlertDialog.Builder(SearchMedicationsActivity.this).create();
             alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
             alertDialog.show();
           }
@@ -202,7 +202,7 @@ public class AddMedicationActivity extends BaseActivity {
           @Override public void onFailure(Call<MostPopularMedicationsResponse> call, Throwable t) {
             Timber.d("Call failed with error : %s", t.getMessage());
             final AlertDialog alertDialog =
-                new AlertDialog.Builder(AddMedicationActivity.this).create();
+                new AlertDialog.Builder(SearchMedicationsActivity.this).create();
             alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
             alertDialog.show();
           }

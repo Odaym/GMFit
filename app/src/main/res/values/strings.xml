@@ -239,6 +239,8 @@
   <string name="add_medication_activity_title">Add Medication</string>
   <string name="most_popular_hint">Most Popular</string>
   <string name="manually_add_medication_button">Manually Add Medication</string>
+  <string name="medical_information_bar_title">Medical Information</string>
+  <string name="get_notifications_bar_title">Get Notifications</string>
 
   <!-- ADD NEW CHART -->
   <string name="add_new_chart_activity_title">Add New Chart</string>
@@ -377,4 +379,12 @@
   <string name="no_storage_permission">To be able to attach photos, GlobeMed Fit needs access to read from this device\'s external storage</string>
   <string name="creating_new_test_dialog_title">Creating a new test</string>
   <string name="editing_existing_test_dialog_title">Applying changes to medical test</string>
+  <string name="medication_name_label">Name</string>
+  <string name="posology_label">Posology</string>
+  <string name="counselling_information_label">View Counselling Information</string>
+  <string name="frequency_label">Frequency</string>
+  <string name="days_of_week_label">Days of Week</string>
+  <string name="duration_label">Duration</string>
+  <string name="times_per_day_label">Times per Day</string>
+
 </resources>

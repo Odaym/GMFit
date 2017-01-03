@@ -39,7 +39,7 @@ import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.common.activities.CustomizeWidgetsAndChartsActivity;
 import com.mcsaatchi.gmfit.common.classes.SimpleDividerItemDecoration;
-import com.mcsaatchi.gmfit.health.activities.AddMedicationActivity;
+import com.mcsaatchi.gmfit.health.activities.SearchMedicationsActivity;
 import com.mcsaatchi.gmfit.health.activities.AddNewHealthTestActivity;
 import com.mcsaatchi.gmfit.health.adapters.HealthWidgetsRecyclerAdapter;
 import com.mcsaatchi.gmfit.health.adapters.MedicationsRecyclerAdapter;
@@ -102,7 +102,7 @@ public class HealthFragment extends Fragment {
 
     addEntryBTN_MEDICATIONS.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View view) {
-        Intent intent = new Intent(getActivity(), AddMedicationActivity.class);
+        Intent intent = new Intent(getActivity(), SearchMedicationsActivity.class);
         startActivity(intent);
       }
     });

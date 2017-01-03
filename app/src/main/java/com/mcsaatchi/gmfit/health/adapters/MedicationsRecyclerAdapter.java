@@ -1,16 +1,21 @@
 package com.mcsaatchi.gmfit.health.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.chauthai.swipereveallayout.SwipeRevealLayout;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.mcsaatchi.gmfit.R;
+import com.mcsaatchi.gmfit.common.Constants;
+import com.mcsaatchi.gmfit.health.activities.AddExistingMedicationActivity;
 import com.mcsaatchi.gmfit.health.models.Medication;
 import java.util.List;
+import timber.log.Timber;
 
 public class MedicationsRecyclerAdapter extends RecyclerView.Adapter {
   private List<Medication> medicationsList;
@@ -49,6 +54,7 @@ public class MedicationsRecyclerAdapter extends RecyclerView.Adapter {
 
   private class ViewHolder extends RecyclerView.ViewHolder {
     private SwipeRevealLayout swipeLayout;
+    private LinearLayout clickableLayout;
     private View deleteLayout, deactivate_layout;
     private TextView medicineNameTV, medicineDescriptionTV, medicineIntakeDetailsTV;
 
@@ -56,13 +62,23 @@ public class MedicationsRecyclerAdapter extends RecyclerView.Adapter {
       super(itemView);
       swipeLayout = (SwipeRevealLayout) itemView.findViewById(R.id.swipe_layout);
       deleteLayout = itemView.findViewById(R.id.delete_layout);
-      //deactivate_layout = itemView.findViewById(R.id.deactivate_layout);
+      deactivate_layout = itemView.findViewById(R.id.deactivate_layout);
       medicineNameTV = (TextView) itemView.findViewById(R.id.medicineNameTV);
       medicineDescriptionTV = (TextView) itemView.findViewById(R.id.medicineDescriptionTV);
       medicineIntakeDetailsTV = (TextView) itemView.findViewById(R.id.medicineIntakeDetailsTV);
     }
 
     public void bind(Medication medicationItem) {
+      deactivate_layout.setOnClickListener(new View.OnClickListener() {
+        @Override public void onClick(View view) {
+          Timber.d("We are here!");
+          Intent intent = new Intent(context, AddExistingMedicationActivity.class);
+          intent.putExtra(Constants.EXTRAS_MEDICATION_ITEM,
+              medicationsList.get(getAdapterPosition()));
+          context.startActivity(intent);
+        }
+      });
+
       deleteLayout.setOnClickListener(new View.OnClickListener() {
         @Override public void onClick(View v) {
           medicationDAO.delete(medicationsList.get(getAdapterPosition()));

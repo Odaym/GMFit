@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/health_background"
+    android:orientation="vertical"
+    >
+
+  <FrameLayout
+      xmlns:android="http://schemas.android.com/apk/res/android"
+      android:id="@+id/toolbarFrameLayout"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      >
+
+    <android.support.v7.widget.Toolbar
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:theme="@style/TransparentToolbar"
+        />
+  </FrameLayout>
+
+  <ScrollView
+      xmlns:android="http://schemas.android.com/apk/res/android"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:background="@color/offwhite_background_gray"
+      >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="@dimen/add_medication_row_height"
+          android:background="@color/white"
+          android:paddingStart="@dimen/default_margin_2"
+          >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="@string/medication_name_label"
+            />
+
+        <TextView
+            android:id="@+id/medicineNameTV"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/much_lighter_gray"
+            android:gravity="center_vertical"
+            />
+      </LinearLayout>
+
+      <View
+          android:layout_width="match_parent"
+          android:layout_height="1dp"
+          android:background="@color/offwhite_background_gray"
+          />
+
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="@dimen/add_medication_row_height"
+          android:background="@color/white"
+          android:paddingStart="@dimen/default_margin_2"
+          >
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="@string/counselling_information_label"
+            />
+
+        <LinearLayout
+            android:layout_width="@dimen/right_arrow_layout_width"
+            android:layout_height="match_parent"
+            android:layout_gravity="end"
+            android:background="@color/much_lighter_gray"
+            android:gravity="center"
+            >
+
+          <ImageView
+              android:layout_width="@dimen/far_right_arrow_icon_dimens"
+              android:layout_height="@dimen/far_right_arrow_icon_dimens"
+              android:src="@drawable/ic_right_arrow_green"
+              />
+        </LinearLayout>
+      </LinearLayout>
+
+      <LinearLayout
+          android:id="@+id/chartTopBarLayout_MEDICAL_INFORMATION"
+          android:layout_width="match_parent"
+          android:layout_height="@dimen/add_medical_tests_layout_height"
+          android:layout_marginTop="@dimen/default_margin_3"
+          android:background="@color/add_medical_tests_bar_background"
+          android:gravity="center_vertical"
+          android:orientation="horizontal"
+          android:paddingEnd="@dimen/activity_vertical_margin"
+          android:paddingStart="@dimen/activity_vertical_margin"
+          >
+
+        <TextView
+            android:id="@+id/chartTitleTV_MEDICAL_INFORMATION"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="30"
+            android:text="@string/medical_information_bar_title"
+            android:textAppearance="?android:textAppearanceMedium"
+            android:textColor="@android:color/white"
+            />
+      </LinearLayout>
+
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="@dimen/add_medication_row_height"
+          android:background="@color/white"
+          android:paddingStart="@dimen/default_margin_2"
+          >
+
+        <TextView
+            android:layout_width="@dimen/add_medication_fields_width"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="@string/posology_label"
+            />
+
+        <TextView
+            android:id="@+id/posologyTV"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:background="@color/much_lighter_gray"
+            android:gravity="center_vertical"
+            android:paddingStart="@dimen/default_margin_2"
+            />
+
+        <TextView
+            android:id="@+id/posologyMeasurementTV"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@color/much_lighter_gray"
+            android:gravity="center_vertical|end"
+            android:paddingEnd="@dimen/default_margin_1"
+            android:text="jsfoijasd"
+            />
+      </LinearLayout>
+
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="@dimen/add_medication_row_height"
+          android:background="@color/white"
+          android:paddingStart="@dimen/default_margin_2"
+          >
+
+        <TextView
+            android:layout_width="@dimen/add_medication_fields_width"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="@string/frequency_label"
+            />
+
+        <TextView
+            android:id="@+id/frequencyTV"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:background="@color/much_lighter_gray"
+            android:gravity="center_vertical"
+            />
+
+        <LinearLayout
+            android:layout_width="@dimen/right_arrow_layout_width"
+            android:layout_height="match_parent"
+            android:layout_gravity="end"
+            android:background="@color/much_lighter_gray"
+            android:gravity="center"
+            >
+
+          <ImageView
+              android:layout_width="@dimen/far_right_arrow_icon_dimens"
+              android:layout_height="@dimen/far_right_arrow_icon_dimens"
+              android:src="@drawable/ic_right_arrow_green"
+              />
+        </LinearLayout>
+      </LinearLayout>
+
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="@dimen/add_medication_row_height"
+          android:background="@color/white"
+          android:paddingStart="@dimen/default_margin_2"
+          >
+
+        <TextView
+            android:layout_width="@dimen/add_medication_fields_width"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="@string/days_of_week_label"
+            />
+
+        <TextView
+            android:id="@+id/daysOfWeekTV"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/much_lighter_gray"
+            android:gravity="center_vertical"
+            />
+
+        <LinearLayout
+            android:layout_width="@dimen/right_arrow_layout_width"
+            android:layout_height="match_parent"
+            android:layout_gravity="end"
+            android:layout_weight="1"
+            android:background="@color/much_lighter_gray"
+            android:gravity="center"
+            >
+
+          <ImageView
+              android:layout_width="@dimen/far_right_arrow_icon_dimens"
+              android:layout_height="@dimen/far_right_arrow_icon_dimens"
+              android:src="@drawable/ic_right_arrow_green"
+              />
+        </LinearLayout>
+      </LinearLayout>
+
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="@dimen/add_medication_row_height"
+          android:background="@color/white"
+          android:paddingStart="@dimen/default_margin_2"
+          >
+
+        <TextView
+            android:layout_width="@dimen/add_medication_fields_width"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="@string/duration_label"
+            />
+
+        <TextView
+            android:id="@+id/durationTV"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:background="@color/much_lighter_gray"
+            android:gravity="center_vertical"
+            android:paddingStart="@dimen/default_margin_2"
+            />
+
+        <TextView
+            android:id="@+id/durationMeasurementTV"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@color/much_lighter_gray"
+            android:gravity="center_vertical|end"
+            android:paddingEnd="@dimen/default_margin_1"
+            android:text="day(s)"
+            />
+      </LinearLayout>
+
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="@dimen/add_medication_row_height"
+          android:background="@color/white"
+          android:paddingStart="@dimen/default_margin_2"
+          >
+
+        <TextView
+            android:layout_width="@dimen/add_medication_fields_width"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="@string/times_per_day_label"
+            />
+
+        <TextView
+            android:id="@+id/timesPerDayTV"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:background="@color/much_lighter_gray"
+            android:gravity="center_vertical"
+            android:paddingStart="@dimen/default_margin_2"
+            />
+
+        <TextView
+            android:id="@+id/timesPerDayMeasurementTV"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@color/much_lighter_gray"
+            android:gravity="center_vertical|end"
+            android:paddingEnd="@dimen/default_margin_1"
+            android:text="times per day"
+            />
+      </LinearLayout>
+
+      <LinearLayout
+          android:id="@+id/chartTopBarLayout_GET_NOTIFICATIONS"
+          android:layout_width="match_parent"
+          android:layout_height="@dimen/add_medical_tests_layout_height"
+          android:layout_marginTop="@dimen/default_margin_3"
+          android:background="@color/add_medical_tests_bar_background"
+          android:gravity="center_vertical"
+          android:orientation="horizontal"
+          android:paddingEnd="@dimen/activity_vertical_margin"
+          android:paddingStart="@dimen/activity_vertical_margin"
+          >
+
+        <TextView
+            android:id="@+id/chartTitleTV_GET_NOTIFICATIONS"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="30"
+            android:text="@string/get_notifications_bar_title"
+            android:textAppearance="?android:textAppearanceMedium"
+            android:textColor="@android:color/white"
+            />
+      </LinearLayout>
+
+    </LinearLayout>
+  </ScrollView>
+</LinearLayout>
