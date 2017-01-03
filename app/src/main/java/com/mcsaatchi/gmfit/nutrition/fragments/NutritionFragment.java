@@ -700,7 +700,8 @@ public class NutritionFragment extends Fragment {
     widgetsMap = new ArrayList<>(widgetsFromResponse.subList(0, 4));
 
     NutritionWidgetsRecyclerAdapter nutritionWidgets_GridAdapter =
-        new NutritionWidgetsRecyclerAdapter(getActivity(), widgetsMap, R.layout.grid_item_nutrition_widgets);
+        new NutritionWidgetsRecyclerAdapter(getActivity(), widgetsMap,
+            R.layout.grid_item_nutrition_widgets);
     widgetsGridView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
     widgetsGridView.setAdapter(nutritionWidgets_GridAdapter);
 
@@ -800,19 +801,18 @@ public class NutritionFragment extends Fragment {
     touchHelper.attachToRecyclerView(mealListView);
   }
 
-  @Subscribe public void reflectMealEntryChanged(MealEntryManipulatedEvent event){
+  @Subscribe public void reflectMealEntryChanged(MealEntryManipulatedEvent event) {
     getUserAddedMeals(finalDesiredDate);
     getUiForSection("nutrition", finalDesiredDate);
 
     metricProgressBar.setProgress(
         ((Integer.parseInt(metricCounterTV.getText().toString()) + Integer.parseInt(
-            activeTV.getText().toString())) * 100) / Integer.parseInt(
-            goalTV.getText().toString()));
+            activeTV.getText().toString())) * 100) / Integer.parseInt(goalTV.getText().toString()));
 
     cancelAllPendingAlarms();
   }
 
-  @Subscribe public void updateWidgetsOrder(NutritionWidgetsOrderChangedEvent event){
+  @Subscribe public void updateWidgetsOrder(NutritionWidgetsOrderChangedEvent event) {
     widgetsMap = event.getWidgetsMapNutrition();
     setupWidgetViews(event.getWidgetsMapNutrition());
 
@@ -827,7 +827,7 @@ public class NutritionFragment extends Fragment {
     updateUserWidgets(widgets, positions);
   }
 
-  @Subscribe public void updateChartsOrder(DataChartsOrderChangedEvent event){
+  @Subscribe public void updateChartsOrder(DataChartsOrderChangedEvent event) {
     List<DataChart> allDataCharts = event.getDataChartsListExtra();
 
     cards_container.removeAllViews();
@@ -960,20 +960,22 @@ public class NutritionFragment extends Fragment {
                           rawChartData.get(i).getValue()));
                 }
 
-                CustomBarChart customBarChart =
-                    new CustomBarChart(getActivity().getApplication(), chartTitle, chartTitle);
+                if (getActivity() != null) {
+                  CustomBarChart customBarChart =
+                      new CustomBarChart(getActivity().getApplication(), chartTitle, chartTitle);
 
-                /**
-                 * Open the breakdown for the chart
-                 */
-                customBarChart.addClickListener(new CustomBarChart.CustomBarChartClickListener() {
-                  @Override public void handleClick(String chartTitle, String chartType) {
-                    getSlugBreakdownForChart(chartTitle, chartType);
-                  }
-                });
+                  /**
+                   * Open the breakdown for the chart
+                   */
+                  customBarChart.addClickListener(new CustomBarChart.CustomBarChartClickListener() {
+                    @Override public void handleClick(String chartTitle, String chartType) {
+                      getSlugBreakdownForChart(chartTitle, chartType);
+                    }
+                  });
 
-                customBarChart.setBarChartDataAndDates(cards_container, newChartData,
-                    Constants.EXTRAS_NUTRITION_FRAGMENT);
+                  customBarChart.setBarChartDataAndDates(cards_container, newChartData,
+                      Constants.EXTRAS_NUTRITION_FRAGMENT);
+                }
               }
             }
           }
