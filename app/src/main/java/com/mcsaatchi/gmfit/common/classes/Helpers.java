@@ -123,7 +123,9 @@ public class Helpers {
 
     Calendar calendar = Calendar.getInstance();
 
-    DateTime timeNow = new DateTime(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+    int currentMonth = calendar.get(Calendar.MONTH) + 1;
+
+    DateTime timeNow = new DateTime(calendar.get(Calendar.YEAR), currentMonth,
         calendar.get(Calendar.DAY_OF_MONTH), calendar.get(Calendar.HOUR_OF_DAY),
         calendar.get(Calendar.MINUTE), calendar.get(Calendar.MINUTE));
 
@@ -131,14 +133,14 @@ public class Helpers {
 
     switch (mealType) {
       case "Breakfast":
-        desiredAlarmTime = new DateTime(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+        desiredAlarmTime = new DateTime(calendar.get(Calendar.YEAR), currentMonth,
             calendar.get(Calendar.DAY_OF_MONTH), 9, 0, 0);
 
         if (desiredAlarmTime.isAfter(timeNow)) {
-          calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+          calendar.set(calendar.get(Calendar.YEAR), currentMonth,
               calendar.get(Calendar.DAY_OF_MONTH), 9, 0, 0);
         } else {
-          calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+          calendar.set(calendar.get(Calendar.YEAR), currentMonth,
               calendar.get(Calendar.DAY_OF_MONTH) + 1, 9, 0, 0);
         }
 
@@ -149,14 +151,14 @@ public class Helpers {
 
         break;
       case "Lunch":
-        desiredAlarmTime = new DateTime(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+        desiredAlarmTime = new DateTime(calendar.get(Calendar.YEAR), currentMonth,
             calendar.get(Calendar.DAY_OF_MONTH), 14, 45, 0);
 
         if (desiredAlarmTime.isAfter(timeNow)) {
-          calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+          calendar.set(calendar.get(Calendar.YEAR), currentMonth,
               calendar.get(Calendar.DAY_OF_MONTH), 14, 45, 0);
         } else {
-          calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+          calendar.set(calendar.get(Calendar.YEAR), currentMonth,
               calendar.get(Calendar.DAY_OF_MONTH) + 1, 14, 45, 0);
         }
 
@@ -167,14 +169,14 @@ public class Helpers {
 
         break;
       case "Dinner":
-        desiredAlarmTime = new DateTime(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+        desiredAlarmTime = new DateTime(calendar.get(Calendar.YEAR), currentMonth,
             calendar.get(Calendar.DAY_OF_MONTH), 20, 0, 0);
 
         if (desiredAlarmTime.isAfter(timeNow)) {
-          calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+          calendar.set(calendar.get(Calendar.YEAR), currentMonth,
               calendar.get(Calendar.DAY_OF_MONTH), 20, 0, 0);
         } else {
-          calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+          calendar.set(calendar.get(Calendar.YEAR), currentMonth,
               calendar.get(Calendar.DAY_OF_MONTH) + 1, 20, 0, 0);
         }
 

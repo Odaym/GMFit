@@ -13,7 +13,6 @@ import com.mcsaatchi.gmfit.fitness.models.FitnessWidget;
 import com.mcsaatchi.gmfit.health.models.Medication;
 import com.mcsaatchi.gmfit.nutrition.models.NutritionWidget;
 import java.sql.SQLException;
-import timber.log.Timber;
 
 /**
  * Database helper class used to manage the creation and upgrading of your database. This class
@@ -33,13 +32,10 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
 
   public DBHelper(Context context) {
     super(context, DATABASE_NAME, null, DATABASE_VERSION, R.raw.ormlite_config);
-    Timber.d("Are we here?");
   }
 
   @Override public void onCreate(SQLiteDatabase db, ConnectionSource connectionSource) {
     try {
-
-      Timber.d("What about here? ");
       TableUtils.createTable(connectionSource, DataChart.class);
       TableUtils.createTable(connectionSource, FitnessWidget.class);
       TableUtils.createTable(connectionSource, NutritionWidget.class);
