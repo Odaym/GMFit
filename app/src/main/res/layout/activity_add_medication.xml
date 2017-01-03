@@ -99,9 +99,9 @@
       >
 
     <ImageView
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:src="@drawable/ic_search_white_24dp"
+        android:layout_width="@dimen/no_medications_found_magnifier_dimens"
+        android:layout_height="@dimen/no_medications_found_magnifier_dimens"
+        android:src="@drawable/ic_no_medication_found"
         />
 
     <TextView

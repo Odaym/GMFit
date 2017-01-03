@@ -30,7 +30,7 @@
           android:layout_width="@dimen/action_items_delete_deactivate_icons"
           android:layout_height="@dimen/action_items_delete_deactivate_icons"
           android:layout_centerInParent="true"
-          android:src="@drawable/ic_deactivate_reminder"
+          android:src="@drawable/ic_deactivate_medication"
           />
 
       <TextView
@@ -59,7 +59,7 @@
           android:layout_width="@dimen/action_items_delete_deactivate_icons"
           android:layout_height="@dimen/action_items_delete_deactivate_icons"
           android:layout_centerInParent="true"
-          android:src="@drawable/ic_delete_reminder"
+          android:src="@drawable/ic_delete_medication"
           />
 
       <TextView

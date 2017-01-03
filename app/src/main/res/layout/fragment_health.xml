@@ -79,7 +79,7 @@
         >
 
       <LinearLayout
-          android:id="@+id/chartTopBarLayout_PILL_REMINDER"
+          android:id="@+id/chartTopBarLayout_MEDICATIONS"
           android:layout_width="match_parent"
           android:layout_height="@dimen/add_medical_tests_layout_height"
           android:background="@color/add_medical_tests_bar_background"
@@ -90,11 +90,11 @@
           >
 
         <TextView
-            android:id="@+id/chartTitleTV_PILL_REMINDER"
+            android:id="@+id/chartTitleTV_MEDICATIONS"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="30"
-            android:text="@string/pill_reminder_bar_title"
+            android:text="@string/medications_bar_title"
             android:textAppearance="?android:textAppearanceMedium"
             android:textColor="@android:color/white"
             />
@@ -106,7 +106,7 @@
             >
 
           <TextView
-              android:id="@+id/addEntryBTN_PILL_REMINDER"
+              android:id="@+id/addEntryBTN_MEDICATIONS"
               android:layout_width="wrap_content"
               android:layout_height="match_parent"
               android:gravity="center"

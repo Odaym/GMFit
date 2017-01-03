@@ -30,6 +30,8 @@ import com.mcsaatchi.gmfit.architecture.otto.HealthWidgetsOrderChangedEvent;
 import com.mcsaatchi.gmfit.architecture.otto.MedicalTestEditCreateEvent;
 import com.mcsaatchi.gmfit.architecture.rest.TakenMedicalTestsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.TakenMedicalTestsResponseBody;
+import com.mcsaatchi.gmfit.architecture.rest.UserProfileResponse;
+import com.mcsaatchi.gmfit.architecture.rest.UserProfileResponseDatum;
 import com.mcsaatchi.gmfit.architecture.rest.WidgetsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.WidgetsResponseDatum;
 import com.mcsaatchi.gmfit.architecture.touch_helpers.SimpleSwipeItemTouchHelperCallback;
@@ -37,6 +39,7 @@ import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.common.activities.CustomizeWidgetsAndChartsActivity;
 import com.mcsaatchi.gmfit.common.classes.SimpleDividerItemDecoration;
+import com.mcsaatchi.gmfit.health.activities.AddMedicationActivity;
 import com.mcsaatchi.gmfit.health.activities.AddNewHealthTestActivity;
 import com.mcsaatchi.gmfit.health.adapters.HealthWidgetsRecyclerAdapter;
 import com.mcsaatchi.gmfit.health.adapters.MedicationsRecyclerAdapter;
@@ -46,6 +49,7 @@ import com.mcsaatchi.gmfit.health.models.Medication;
 import com.squareup.otto.Subscribe;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import javax.inject.Inject;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -60,13 +64,13 @@ public class HealthFragment extends Fragment {
   @Bind(R.id.metricCounterTV) TextView metricCounterTV;
   @Bind(R.id.widgetsGridView) RecyclerView widgetsGridView;
   @Bind(R.id.addEntryBTN_MEDICAL_TESTS) TextView addEntryBTN_MEDICAL_TESTS;
+  @Bind(R.id.addEntryBTN_MEDICATIONS) TextView addEntryBTN_MEDICATIONS;
   @Bind(R.id.userTestsListView) RecyclerView userTestsListView;
   @Bind(R.id.loadingWidgetsProgressBar) ProgressBar loadingWidgetsProgressBar;
   @Bind(R.id.loadingTestsProgressBar) ProgressBar loadingTestsProgressBar;
   @Bind(R.id.medicationsRecyclerView) RecyclerView medicationsRecyclerView;
 
   private RuntimeExceptionDao<Medication, Integer> medicationDAO;
-  private List<Medication> medicationsList = new ArrayList<>();
 
   private ArrayList<HealthWidget> healthWidgetsMap = new ArrayList<>();
 
@@ -86,7 +90,7 @@ public class HealthFragment extends Fragment {
 
     medicationDAO = ((BaseActivity) getActivity()).dbHelper.getMedicationDAO();
 
-    medicationsList = medicationDAO.queryForAll();
+    List<Medication> medicationsList = medicationDAO.queryForAll();
 
     setupMedicationsList(medicationsList);
 
@@ -94,8 +98,14 @@ public class HealthFragment extends Fragment {
 
     getTakenMedicalTests();
 
-    metricCounterTV.setText(
-        String.valueOf(prefs.getFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, 0)));
+    getUserProfile();
+
+    addEntryBTN_MEDICATIONS.setOnClickListener(new View.OnClickListener() {
+      @Override public void onClick(View view) {
+        Intent intent = new Intent(getActivity(), AddMedicationActivity.class);
+        startActivity(intent);
+      }
+    });
 
     addEntryBTN_MEDICAL_TESTS.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View view) {
@@ -132,6 +142,45 @@ public class HealthFragment extends Fragment {
         new MedicationsRecyclerAdapter(getActivity(), medicationList, medicationDAO);
     medicationsRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
     medicationsRecyclerView.setAdapter(medicationsRecyclerAdapter);
+  }
+
+  private void getUserProfile() {
+    dataAccessHandler.getUserProfile(new Callback<UserProfileResponse>() {
+      @Override public void onResponse(Call<UserProfileResponse> call,
+          Response<UserProfileResponse> response) {
+        switch (response.code()) {
+          case 200:
+            UserProfileResponseDatum userProfileData =
+                response.body().getData().getBody().getData();
+
+            SharedPreferences.Editor prefsEditor = prefs.edit();
+
+            if (userProfileData != null) {
+
+              /**
+               * Set the weight
+               */
+              if (userProfileData.getWeight() != null && !userProfileData.getWeight().isEmpty()) {
+                prefsEditor.putFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT,
+                    Float.parseFloat(userProfileData.getWeight()));
+                metricCounterTV.setText(String.valueOf(String.format(Locale.getDefault(), "%.1f",
+                    Float.parseFloat(userProfileData.getWeight()))));
+              }
+
+              prefsEditor.apply();
+
+              break;
+            }
+        }
+      }
+
+      @Override public void onFailure(Call<UserProfileResponse> call, Throwable t) {
+        Timber.d("Call failed with error : %s", t.getMessage());
+        final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+        alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
+        alertDialog.show();
+      }
+    });
   }
 
   private void getWidgets() {

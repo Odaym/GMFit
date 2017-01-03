@@ -132,7 +132,8 @@
         android:name=".health.activities.AddMedicationActivity"
         android:exported="true"
         android:screenOrientation="portrait"
-        android:theme="@style/No_Action_Bar_Theme"/>
+        android:theme="@style/No_Action_Bar_Theme"
+        android:windowSoftInputMode="stateHidden"/>
 
     <activity
         android:name=".nutrition.activities.SpecifyMealAmountActivity"
@@ -169,8 +170,6 @@
         android:name=".profile.activities.ContactUsActivity"
         android:screenOrientation="portrait"
         android:theme="@style/No_Action_Bar_Theme"/>
-
-    <!-- INSURANCE STUFF -->
 
     <activity
         android:name=".insurance.activities.UpdatePasswordActivity"
@@ -231,8 +230,6 @@
         android:name=".insurance.activities.chronic.SubmitChronicPrescriptionActivity"
         android:screenOrientation="portrait"
         android:theme="@style/No_Action_Bar_Theme"/>
-
-    <!-- INSURANCE STUFF -->
 
     <service android:name=".fitness.pedometer.SensorListener"/>
 

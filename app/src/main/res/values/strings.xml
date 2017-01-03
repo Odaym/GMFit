@@ -230,7 +230,7 @@
   <string name="test_name_empty_error">Test name cannot be empty</string>
   <string name="enter_test_name_hint">Set a name for your test</string>
   <string name="test_date_taken">Date</string>
-  <string name="pill_reminder_bar_title">Pill Reminder</string>
+  <string name="medications_bar_title">Medications</string>
 
   <!-- PILL REMINDER ACTIVITY -->
   <string name="pill_reminder_activity_title">Pill Reminder</string>
