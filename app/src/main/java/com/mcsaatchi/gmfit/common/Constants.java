@@ -60,8 +60,6 @@ public class Constants {
   public static final String EXTRAS_ADD_FITNESS_CHART = "add_fitness_chart";
   public static final String EXTRAS_ADD_NUTRIITION_CHART = "add_nutrition_chart";
   public static final String EXTRAS_MAIN_MEAL_NAME = "main_meal_name";
-  public static final String EXTRAS_DELETED_MEAL_ENTRY = "deleted_meal_entry";
-  public static final String EXTRAS_TEST_EDIT_OR_CREATE_DONE = "test_edit_or_create_done";
 
   public static final String BUNDLE_ACTIVITY_TITLE = "activity_title";
   public static final String BUNDLE_ACTIVITY_BACK_BUTTON_ENABLED = "activity_back_button_enabled";
@@ -84,16 +82,9 @@ public class Constants {
 
   public static final String BASE_URL_ADDRESS = "http://gmfit.mcsaatchi.me/api/v1/";
 
-  public static final String EVENT_REMINDERS_STATUS_CHANGED = "reminders_status_changed";
-  public static final String EVENT_USER_FINALIZE_SETUP_PROFILE = "user_finalize_setup_profile";
-
-  public static final String EVENT_SIGNNED_UP_SUCCESSFULLY_CLOSE_LOGIN_ACTIVITY =
-      "signed_up_successfully_close_login_activity";
-
   //REGISTERATION API
   public static final String NO_ACCESS_TOKEN_FOUND_IN_PREFS = "no_access_token_in_prefs";
   public static final String PREF_USER_ACCESS_TOKEN = "user_access_token";
-  public static final String USER_ACCESS_TOKEN_HEADER_PARAMETER = "Authorization";
 
   /**
    * REMINDERS ACTIVITY
