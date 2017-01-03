@@ -9,6 +9,7 @@
   <RelativeLayout
       android:layout_width="match_parent"
       android:layout_height="match_parent"
+      android:background="@color/white"
       >
 
     <RelativeLayout
@@ -70,6 +71,7 @@
           android:layout_height="wrap_content"
           android:layout_weight="1"
           android:gravity="start"
+          android:textColor="@color/black_alpha_50"
           />
 
       <TextView
@@ -78,6 +80,7 @@
           android:layout_height="wrap_content"
           android:layout_weight="1"
           android:gravity="center"
+          android:textColor="@color/black_alpha_50"
           />
 
       <TextView
@@ -86,6 +89,7 @@
           android:layout_height="wrap_content"
           android:layout_weight="1"
           android:gravity="center"
+          android:textColor="@color/black_alpha_50"
           />
 
       <TextView
@@ -94,6 +98,7 @@
           android:layout_height="wrap_content"
           android:layout_weight="1"
           android:gravity="end"
+          android:textColor="@color/black_alpha_50"
           />
     </LinearLayout>
 
