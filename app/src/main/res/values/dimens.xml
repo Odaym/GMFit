@@ -130,7 +130,7 @@
   <dimen name="search_medications_list_row_item_height">80dp</dimen>
   <dimen name="action_items_delete_deactivate_icons">30dp</dimen>
   <dimen name="delete_layout_width">60dp</dimen>
-  <dimen name="add_medication_fields_width">100dp</dimen>
+  <dimen name="add_medication_fields_width">120dp</dimen>
   <dimen name="deactivate_layout_width">80dp</dimen>
   <dimen name="right_arrow_layout_width">100dp</dimen>
   <dimen name="reminder_status_icon_dimens">10dp</dimen>

@@ -152,6 +152,9 @@ fieldName=when
 # --field-start--
 fieldName=frequency
 # --field-end--
+# --field-start--
+fieldName=unitForm
+# --field-end--
 # --table-fields-end--
 # --table-end--
 #################################

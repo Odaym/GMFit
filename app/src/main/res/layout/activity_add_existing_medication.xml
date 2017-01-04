@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/health_background"
+    android:fitsSystemWindows="true"
     android:orientation="vertical"
     >
 
@@ -44,58 +46,21 @@
           >
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/add_medication_fields_width"
             android:layout_height="match_parent"
-            android:layout_weight="1"
             android:gravity="center_vertical"
             android:text="@string/medication_name_label"
             />
 
-        <TextView
-            android:id="@+id/medicineNameTV"
-            android:layout_width="wrap_content"
+        <EditText
+            android:id="@+id/medicineNameET"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
             android:background="@color/much_lighter_gray"
             android:gravity="center_vertical"
+            android:paddingStart="@dimen/default_margin_2"
+            android:textColor="@color/black_alpha_50"
             />
-      </LinearLayout>
-
-      <View
-          android:layout_width="match_parent"
-          android:layout_height="1dp"
-          android:background="@color/offwhite_background_gray"
-          />
-
-      <LinearLayout
-          android:layout_width="match_parent"
-          android:layout_height="@dimen/add_medication_row_height"
-          android:background="@color/white"
-          android:paddingStart="@dimen/default_margin_2"
-          >
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:text="@string/counselling_information_label"
-            />
-
-        <LinearLayout
-            android:layout_width="@dimen/right_arrow_layout_width"
-            android:layout_height="match_parent"
-            android:layout_gravity="end"
-            android:background="@color/much_lighter_gray"
-            android:gravity="center"
-            >
-
-          <ImageView
-              android:layout_width="@dimen/far_right_arrow_icon_dimens"
-              android:layout_height="@dimen/far_right_arrow_icon_dimens"
-              android:src="@drawable/ic_right_arrow_green"
-              />
-        </LinearLayout>
       </LinearLayout>
 
       <LinearLayout
@@ -121,6 +86,7 @@
             />
       </LinearLayout>
 
+      <!-- POSOLOGY -->
       <LinearLayout
           android:layout_width="match_parent"
           android:layout_height="@dimen/add_medication_row_height"
@@ -135,14 +101,17 @@
             android:text="@string/posology_label"
             />
 
-        <TextView
-            android:id="@+id/posologyTV"
+        <EditText
+            android:id="@+id/posologyET"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="3"
             android:background="@color/much_lighter_gray"
             android:gravity="center_vertical"
+            android:inputType="number"
+            android:maxLength="2"
             android:paddingStart="@dimen/default_margin_2"
+            android:textColor="@color/black_alpha_50"
             />
 
         <TextView
@@ -152,10 +121,17 @@
             android:background="@color/much_lighter_gray"
             android:gravity="center_vertical|end"
             android:paddingEnd="@dimen/default_margin_1"
-            android:text="jsfoijasd"
+            android:textColor="@color/black_alpha_50"
             />
       </LinearLayout>
 
+      <View
+          android:layout_width="match_parent"
+          android:layout_height="1dp"
+          android:background="@color/offwhite_background_gray"
+          />
+
+      <!-- FREQUENCY -->
       <LinearLayout
           android:layout_width="match_parent"
           android:layout_height="@dimen/add_medication_row_height"
@@ -172,17 +148,19 @@
 
         <TextView
             android:id="@+id/frequencyTV"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="3"
+            android:layout_weight="4"
             android:background="@color/much_lighter_gray"
             android:gravity="center_vertical"
+            android:textColor="@color/black_alpha_50"
             />
 
         <LinearLayout
-            android:layout_width="@dimen/right_arrow_layout_width"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="end"
+            android:layout_weight="1"
             android:background="@color/much_lighter_gray"
             android:gravity="center"
             >
@@ -195,6 +173,13 @@
         </LinearLayout>
       </LinearLayout>
 
+      <View
+          android:layout_width="match_parent"
+          android:layout_height="1dp"
+          android:background="@color/offwhite_background_gray"
+          />
+
+      <!-- DAYS OF WEEK -->
       <LinearLayout
           android:layout_width="match_parent"
           android:layout_height="@dimen/add_medication_row_height"
@@ -213,13 +198,14 @@
             android:id="@+id/daysOfWeekTV"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_weight="4"
             android:background="@color/much_lighter_gray"
             android:gravity="center_vertical"
+            android:textColor="@color/black_alpha_50"
             />
 
         <LinearLayout
-            android:layout_width="@dimen/right_arrow_layout_width"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="end"
             android:layout_weight="1"
@@ -235,6 +221,13 @@
         </LinearLayout>
       </LinearLayout>
 
+      <View
+          android:layout_width="match_parent"
+          android:layout_height="1dp"
+          android:background="@color/offwhite_background_gray"
+          />
+
+      <!-- DURATION -->
       <LinearLayout
           android:layout_width="match_parent"
           android:layout_height="@dimen/add_medication_row_height"
@@ -249,20 +242,24 @@
             android:text="@string/duration_label"
             />
 
-        <TextView
-            android:id="@+id/durationTV"
-            android:layout_width="0dp"
+        <EditText
+            android:id="@+id/durationET"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="3"
+            android:layout_weight="4"
             android:background="@color/much_lighter_gray"
             android:gravity="center_vertical"
+            android:inputType="number"
+            android:maxLength="2"
             android:paddingStart="@dimen/default_margin_2"
+            android:textColor="@color/black_alpha_50"
             />
 
         <TextView
             android:id="@+id/durationMeasurementTV"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_weight="1"
             android:background="@color/much_lighter_gray"
             android:gravity="center_vertical|end"
             android:paddingEnd="@dimen/default_margin_1"
@@ -270,6 +267,13 @@
             />
       </LinearLayout>
 
+      <View
+          android:layout_width="match_parent"
+          android:layout_height="1dp"
+          android:background="@color/offwhite_background_gray"
+          />
+
+      <!-- TIMES PER WEEK -->
       <LinearLayout
           android:layout_width="match_parent"
           android:layout_height="@dimen/add_medication_row_height"
@@ -281,29 +285,39 @@
             android:layout_width="@dimen/add_medication_fields_width"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
-            android:text="@string/times_per_day_label"
+            android:text="@string/times_per_week_label"
             />
 
-        <TextView
-            android:id="@+id/timesPerDayTV"
+        <EditText
+            android:id="@+id/timesPerWeekET"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="3"
             android:background="@color/much_lighter_gray"
             android:gravity="center_vertical"
+            android:inputType="number"
+            android:maxLength="2"
             android:paddingStart="@dimen/default_margin_2"
+            android:textColor="@color/black_alpha_50"
             />
 
         <TextView
-            android:id="@+id/timesPerDayMeasurementTV"
+            android:id="@+id/timesPerWeekMeasurementTV"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:background="@color/much_lighter_gray"
             android:gravity="center_vertical|end"
             android:paddingEnd="@dimen/default_margin_1"
-            android:text="times per day"
+            android:text="@string/times_per_week_label_small"
+            android:textColor="@color/black_alpha_50"
             />
       </LinearLayout>
+
+      <View
+          android:layout_width="match_parent"
+          android:layout_height="1dp"
+          android:background="@color/offwhite_background_gray"
+          />
 
       <LinearLayout
           android:id="@+id/chartTopBarLayout_GET_NOTIFICATIONS"
@@ -327,6 +341,118 @@
             android:textColor="@android:color/white"
             />
       </LinearLayout>
+
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="@dimen/add_medication_row_height"
+          android:background="@color/white"
+          android:paddingStart="@dimen/default_margin_2"
+          >
+
+        <TextView
+            android:layout_width="@dimen/add_medication_fields_width"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="@string/enable_reminders_label"
+            />
+
+        <Switch
+            android:id="@+id/enableRemindersSwitch"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3"
+            android:gravity="center_vertical"
+            android:paddingEnd="@dimen/default_margin_2"
+            />
+      </LinearLayout>
+
+      <View
+          android:layout_width="match_parent"
+          android:layout_height="1dp"
+          android:background="@color/offwhite_background_gray"
+          />
+
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="@dimen/add_medication_row_height"
+          android:layout_marginTop="@dimen/default_margin_2"
+          android:background="@color/white"
+          android:paddingStart="@dimen/default_margin_2"
+          >
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="@string/check_compatibility_label"
+            />
+
+        <LinearLayout
+            android:layout_width="@dimen/right_arrow_layout_width"
+            android:layout_height="match_parent"
+            android:layout_gravity="end"
+            android:background="@color/much_lighter_gray"
+            android:gravity="center"
+            >
+
+          <ImageView
+              android:layout_width="@dimen/far_right_arrow_icon_dimens"
+              android:layout_height="@dimen/far_right_arrow_icon_dimens"
+              android:src="@drawable/ic_right_arrow_green"
+              />
+        </LinearLayout>
+      </LinearLayout>
+
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginBottom="@dimen/default_margin_2"
+          android:layout_marginStart="@dimen/default_margin_2"
+          android:layout_marginTop="@dimen/default_margin_2"
+          android:gravity="center_vertical"
+          >
+
+        <ImageView
+            android:layout_width="@dimen/navigation_icon_size"
+            android:layout_height="@dimen/navigation_icon_size"
+            android:layout_marginEnd="@dimen/default_margin_1"
+            android:src="@drawable/ic_attention"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:text="@string/check_compatibility_recommended_hint"
+            />
+      </LinearLayout>
+
+      <EditText
+          android:id="@+id/addYourNotesET"
+          android:layout_width="match_parent"
+          android:layout_height="150dp"
+          android:layout_marginBottom="@dimen/default_margin_2"
+          android:background="@color/white"
+          android:gravity="top"
+          android:hint="@string/add_your_remarks_here"
+          android:paddingStart="@dimen/default_margin_2"
+          android:paddingTop="@dimen/default_margin_2"
+          />
+
+      <Button
+          android:id="@+id/addMedicationBTN"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginBottom="@dimen/default_margin_2"
+          android:layout_marginEnd="@dimen/activity_vertical_margin"
+          android:layout_marginStart="@dimen/activity_vertical_margin"
+          android:layout_marginTop="@dimen/default_margin_2"
+          android:background="@color/fitness_dark_blue"
+          android:text="@string/add_medication_button"
+          android:textColor="@android:color/white"
+          style="?android:attr/borderlessButtonStyle"
+          />
 
     </LinearLayout>
   </ScrollView>

@@ -385,6 +385,14 @@
   <string name="frequency_label">Frequency</string>
   <string name="days_of_week_label">Days of Week</string>
   <string name="duration_label">Duration</string>
-  <string name="times_per_day_label">Times per Day</string>
+  <string name="times_per_week_label">Times per Week</string>
+  <string name="times_per_week_label_small">times per week</string>
+  <string name="enable_reminders_label">Enable Reminders</string>
+  <string name="reminder_1">Reminder 1</string>
+  <string name="reminder_2">Reminder 2</string>
+  <string name="reminder_3">Reminder 3</string>
+  <string name="check_compatibility_label">Check Compatibility</string>
+  <string name="check_compatibility_recommended_hint">It is recommended that you run the compatibility check before adding the medication</string>
+  <string name="add_medication_button">Add Medication</string>
 
 </resources>

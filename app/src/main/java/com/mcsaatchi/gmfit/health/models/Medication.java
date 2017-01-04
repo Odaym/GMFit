@@ -10,16 +10,18 @@ public class Medication implements Parcelable{
   private String dosage;
   private String when;
   private int frequency;
+  private String unitForm;
 
   public Medication() {
   }
 
-  public Medication(String name, String description, String dosage, String when, int frequency) {
+  public Medication(String name, String description, String dosage, String when, int frequency, String unitForm) {
     this.name = name;
     this.description = description;
     this.dosage = dosage;
     this.when = when;
     this.frequency = frequency;
+    this.unitForm = unitForm;
   }
 
   protected Medication(Parcel in) {
@@ -29,6 +31,7 @@ public class Medication implements Parcelable{
     dosage = in.readString();
     when = in.readString();
     frequency = in.readInt();
+    unitForm = in.readString();
   }
 
   public static final Creator<Medication> CREATOR = new Creator<Medication>() {
@@ -89,6 +92,14 @@ public class Medication implements Parcelable{
     this.frequency = frequency;
   }
 
+  public String getUnitForm() {
+    return unitForm;
+  }
+
+  public void setUnitForm(String unitForm) {
+    this.unitForm = unitForm;
+  }
+
   @Override public int describeContents() {
     return 0;
   }
@@ -100,5 +111,6 @@ public class Medication implements Parcelable{
     parcel.writeString(dosage);
     parcel.writeString(when);
     parcel.writeInt(frequency);
+    parcel.writeString(unitForm);
   }
 }
