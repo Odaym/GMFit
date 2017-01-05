@@ -130,10 +130,10 @@
   <string name="food_logging_message">Search, scan or log your meals and track your daily\ninstake of calories, protein, carbs and more.</string>
   <string name="health_tracking_title">Health Tracking &amp; Monitoring</string>
   <string name="health_tracking_message">Monitor your health and keep a record of all\nyour medical tests.</string>
-  <string name="recommendations_section_title">Recommandations,\nJust For You</string>
-  <string name="recommendations_section_message">Benefit from the smart cross-section recommendations,\nbased on your profile and activities.</string>
-  <string name="daily_goals_section_title">Daily Goals &amp; Achievements</string>
-  <string name="daily_goals_section_message">Complete your daily goals and unlock achievements and rewards.</string>
+  <string name="insurance_slider_section_title">Insurance</string>
+  <string name="insurance_slider_section_message">Manage all your insurance requests,\nreimbursements and claims,\nand benefit from a directory list of clinics.</string>
+  <string name="daily_goals_section_title">Daily Goals</string>
+  <string name="daily_goals_section_message">Complete your daily goals.</string>
   <string name="get_started_title">Let\'s Get Started</string>
   <string name="get_started_message">Sign up for the GM Fit app via e-mail\nor through Facebook. If you\'ve already signed up,\nyou can sign in below.</string>
 
@@ -239,7 +239,7 @@
   <string name="add_medication_activity_title">Add Medication</string>
   <string name="most_popular_hint">Most Popular</string>
   <string name="manually_add_medication_button">Manually Add Medication</string>
-  <string name="medical_information_bar_title">Medical Information</string>
+  <string name="posology_bar_title">Posology</string>
   <string name="get_notifications_bar_title">Get Notifications</string>
 
   <!-- ADD NEW CHART -->
@@ -372,7 +372,7 @@
   <!-- ADD NEW TEST ACTIVITY - AVAILABLE TESTS -->
   <string name="add_new_test_activity_title">Add new test</string>
   <string name="search_metrics_hint">Search for a metric</string>
-  <string name="fill_in_below_fields_hint">Please fill in the fields below</string>
+  <string name="fill_in_below_fields_hint">Please fill in all the required fields</string>
   <string name="fetching_test_data_dialog_title">Loading test data</string>
   <string name="add_test_photos_bar_title">Attach Photos</string>
   <string name="add_photo_hint">+ Add a photo</string>
@@ -380,19 +380,20 @@
   <string name="creating_new_test_dialog_title">Creating a new test</string>
   <string name="editing_existing_test_dialog_title">Applying changes to medical test</string>
   <string name="medication_name_label">Name</string>
-  <string name="posology_label">Posology</string>
+  <string name="units_label">Units</string>
   <string name="counselling_information_label">View Counselling Information</string>
   <string name="frequency_label">Frequency</string>
   <string name="days_of_week_label">Days of Week</string>
-  <string name="duration_label">Duration</string>
-  <string name="times_per_week_label">Times per Week</string>
-  <string name="times_per_week_label_small">times per week</string>
+  <string name="treatment_duration">Treatment Duration</string>
+  <string name="times_per_day_label_small">times per day</string>
+  <string name="times_per_week_label_small">weeks</string>
   <string name="enable_reminders_label">Enable Reminders</string>
   <string name="reminder_1">Reminder 1</string>
   <string name="reminder_2">Reminder 2</string>
   <string name="reminder_3">Reminder 3</string>
   <string name="check_compatibility_label">Check Compatibility</string>
   <string name="check_compatibility_recommended_hint">It is recommended that you run the compatibility check before adding the medication</string>
+  <string name="days_choice_activity_title">Days of Week</string>
   <string name="add_medication_button">Add Medication</string>
 
 </resources>

@@ -78,8 +78,6 @@
       android:layout_width="match_parent"
       android:layout_height="@dimen/medications_list_row_item_height"
       android:background="@color/white"
-      android:clickable="true"
-      android:focusable="true"
       >
 
     <LinearLayout

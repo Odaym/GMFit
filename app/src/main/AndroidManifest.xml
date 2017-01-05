@@ -136,6 +136,13 @@
         android:windowSoftInputMode="stateHidden"/>
 
     <activity
+        android:name=".health.activities.DaysChoiceListActivity"
+        android:exported="true"
+        android:screenOrientation="portrait"
+        android:theme="@style/No_Action_Bar_Theme"
+        android:windowSoftInputMode="stateHidden"/>
+
+    <activity
         android:name=".health.activities.AddExistingMedicationActivity"
         android:exported="true"
         android:screenOrientation="portrait"

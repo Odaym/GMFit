@@ -20,6 +20,8 @@ import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.mcsaatchi.gmfit.R;
+import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
+import com.mcsaatchi.gmfit.architecture.otto.MedicationItemCreatedEvent;
 import com.mcsaatchi.gmfit.architecture.rest.MostPopularMedicationsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.MostPopularMedicationsResponseDatum;
 import com.mcsaatchi.gmfit.architecture.rest.SearchMedicinesResponse;
@@ -28,6 +30,7 @@ import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.common.classes.SimpleDividerItemDecoration;
 import com.mcsaatchi.gmfit.health.adapters.SearchMedicationsRecyclerAdapter;
 import com.mcsaatchi.gmfit.health.models.Medication;
+import com.squareup.otto.Subscribe;
 import java.util.ArrayList;
 import java.util.List;
 import retrofit2.Call;
@@ -38,9 +41,10 @@ import timber.log.Timber;
 public class SearchMedicationsActivity extends BaseActivity {
 
   @Bind(R.id.toolbar) Toolbar toolbar;
-  @Bind(R.id.searchMedicationsAutoCompleteTV) EditText searchMedicationsAutoCompleteTV;
+  @Bind(R.id.searchMedicationsTV) EditText searchMedicationsTV;
   @Bind(R.id.searchIconIV) ImageView searchIconIV;
   @Bind(R.id.pb_loading_indicator) ProgressBar pb_loading_indicator;
+  @Bind(R.id.pb_loading_medications_indicator) ProgressBar pb_loading_medications_indicator;
   @Bind(R.id.mealsAvailableRecyclerView) RecyclerView mealsAvailableRecyclerView;
   @Bind(R.id.searchResultsHintTV) TextView searchResultsHintTV;
   @Bind(R.id.searchResultsListLayout) LinearLayout searchResultsListLayout;
@@ -55,9 +59,11 @@ public class SearchMedicationsActivity extends BaseActivity {
 
     setupToolbar(toolbar, getString(R.string.add_medication_activity_title), true);
 
+    EventBusSingleton.getInstance().register(this);
+
     getMostPopularMedications();
 
-    searchMedicationsAutoCompleteTV.addTextChangedListener(new TextWatcher() {
+    searchMedicationsTV.addTextChangedListener(new TextWatcher() {
       @Override public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
       }
@@ -80,7 +86,7 @@ public class SearchMedicationsActivity extends BaseActivity {
               searchIconIV.setImageResource(R.drawable.ic_clear_search);
               searchIconIV.setOnClickListener(new View.OnClickListener() {
                 @Override public void onClick(View view) {
-                  searchMedicationsAutoCompleteTV.setText("");
+                  searchMedicationsTV.setText("");
 
                   /**
                    * Hide keyboard
@@ -101,6 +107,11 @@ public class SearchMedicationsActivity extends BaseActivity {
 
       }
     });
+  }
+
+  @Override protected void onDestroy() {
+    super.onDestroy();
+    EventBusSingleton.getInstance().unregister(this);
   }
 
   private void searchMedicines(String key) {
@@ -216,5 +227,11 @@ public class SearchMedicationsActivity extends BaseActivity {
         new SearchMedicationsRecyclerAdapter(this, medicationList);
     mealsAvailableRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(this));
     mealsAvailableRecyclerView.setAdapter(medicationsRecyclerAdapter);
+
+    pb_loading_medications_indicator.setVisibility(View.GONE);
+  }
+
+  @Subscribe public void reactToMedicationAdded(MedicationItemCreatedEvent event) {
+    finish();
   }
 }

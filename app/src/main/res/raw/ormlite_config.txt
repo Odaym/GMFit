@@ -150,10 +150,16 @@ fieldName=dosage
 fieldName=when
 # --field-end--
 # --field-start--
+fieldName=units
+# --field-end--
+# --field-start--
 fieldName=frequency
 # --field-end--
 # --field-start--
 fieldName=unitForm
+# --field-end--
+# --field-start--
+fieldName=remarks
 # --field-end--
 # --table-fields-end--
 # --table-end--

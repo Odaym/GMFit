@@ -11,6 +11,7 @@ import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.health.models.Medication;
 import java.util.List;
+import org.apache.commons.lang3.text.WordUtils;
 
 public class MedicationsRecyclerAdapter extends RecyclerView.Adapter {
   private List<Medication> medicationsList;
@@ -77,7 +78,7 @@ public class MedicationsRecyclerAdapter extends RecyclerView.Adapter {
       //  }
       //});
 
-      medicineNameTV.setText(medicationItem.getName());
+      medicineNameTV.setText(WordUtils.capitalizeFully(medicationItem.getName()));
       medicineDescriptionTV.setText(medicationItem.getDescription());
       medicineIntakeDetailsTV.setText(medicationItem.getDosage()
           + " - "

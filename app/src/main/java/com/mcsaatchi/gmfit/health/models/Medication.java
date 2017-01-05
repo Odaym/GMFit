@@ -10,18 +10,25 @@ public class Medication implements Parcelable{
   private String dosage;
   private String when;
   private int frequency;
+  private int units;
   private String unitForm;
+  private String remarks;
+  private int treatmentDuration;
 
   public Medication() {
   }
 
-  public Medication(String name, String description, String dosage, String when, int frequency, String unitForm) {
+  public Medication(String name, String description, String dosage, String when, int frequency,
+      int units, String unitForm, int treatmentDuration, String remarks) {
     this.name = name;
     this.description = description;
     this.dosage = dosage;
     this.when = when;
     this.frequency = frequency;
+    this.units = units;
     this.unitForm = unitForm;
+    this.treatmentDuration = treatmentDuration;
+    this.remarks = remarks;
   }
 
   protected Medication(Parcel in) {
@@ -31,7 +38,10 @@ public class Medication implements Parcelable{
     dosage = in.readString();
     when = in.readString();
     frequency = in.readInt();
+    units = in.readInt();
     unitForm = in.readString();
+    treatmentDuration = in.readInt();
+    remarks = in.readString();
   }
 
   public static final Creator<Medication> CREATOR = new Creator<Medication>() {
@@ -92,12 +102,36 @@ public class Medication implements Parcelable{
     this.frequency = frequency;
   }
 
+  public int getUnits() {
+    return units;
+  }
+
+  public void setUnits(int units) {
+    this.units = units;
+  }
+
   public String getUnitForm() {
     return unitForm;
   }
 
   public void setUnitForm(String unitForm) {
     this.unitForm = unitForm;
+  }
+
+  public int getTreatmentDuration() {
+    return treatmentDuration;
+  }
+
+  public void setTreatmentDuration(int treatmentDuration) {
+    this.treatmentDuration = treatmentDuration;
+  }
+
+  public String getRemarks() {
+    return remarks;
+  }
+
+  public void setRemarks(String remarks) {
+    this.remarks = remarks;
   }
 
   @Override public int describeContents() {
@@ -111,6 +145,9 @@ public class Medication implements Parcelable{
     parcel.writeString(dosage);
     parcel.writeString(when);
     parcel.writeInt(frequency);
+    parcel.writeInt(units);
     parcel.writeString(unitForm);
+    parcel.writeInt(treatmentDuration);
+    parcel.writeString(remarks);
   }
 }

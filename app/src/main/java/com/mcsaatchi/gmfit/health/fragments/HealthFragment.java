@@ -28,6 +28,7 @@ import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
 import com.mcsaatchi.gmfit.architecture.otto.HealthWidgetsOrderChangedEvent;
 import com.mcsaatchi.gmfit.architecture.otto.MedicalTestEditCreateEvent;
+import com.mcsaatchi.gmfit.architecture.otto.MedicationItemCreatedEvent;
 import com.mcsaatchi.gmfit.architecture.rest.TakenMedicalTestsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.TakenMedicalTestsResponseBody;
 import com.mcsaatchi.gmfit.architecture.rest.UserProfileResponse;
@@ -39,8 +40,8 @@ import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.common.activities.CustomizeWidgetsAndChartsActivity;
 import com.mcsaatchi.gmfit.common.classes.SimpleDividerItemDecoration;
-import com.mcsaatchi.gmfit.health.activities.SearchMedicationsActivity;
 import com.mcsaatchi.gmfit.health.activities.AddNewHealthTestActivity;
+import com.mcsaatchi.gmfit.health.activities.SearchMedicationsActivity;
 import com.mcsaatchi.gmfit.health.adapters.HealthWidgetsRecyclerAdapter;
 import com.mcsaatchi.gmfit.health.adapters.MedicationsRecyclerAdapter;
 import com.mcsaatchi.gmfit.health.adapters.UserTestsRecyclerAdapter;
@@ -48,6 +49,7 @@ import com.mcsaatchi.gmfit.health.models.HealthWidget;
 import com.mcsaatchi.gmfit.health.models.Medication;
 import com.squareup.otto.Subscribe;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import javax.inject.Inject;
@@ -90,9 +92,7 @@ public class HealthFragment extends Fragment {
 
     medicationDAO = ((BaseActivity) getActivity()).dbHelper.getMedicationDAO();
 
-    List<Medication> medicationsList = medicationDAO.queryForAll();
-
-    setupMedicationsList(medicationsList);
+    setupMedicationsList(medicationDAO.queryForAll());
 
     getWidgets();
 
@@ -137,6 +137,8 @@ public class HealthFragment extends Fragment {
   }
 
   private void setupMedicationsList(List<Medication> medicationList) {
+    Collections.reverse(medicationList);
+
     medicationsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     MedicationsRecyclerAdapter medicationsRecyclerAdapter =
         new MedicationsRecyclerAdapter(getActivity(), medicationList, medicationDAO);
@@ -265,6 +267,10 @@ public class HealthFragment extends Fragment {
   @Subscribe public void reflectMedicalTestEditCreate(MedicalTestEditCreateEvent event) {
     getWidgets();
     getTakenMedicalTests();
+  }
+
+  @Subscribe public void updateMedicationsList(MedicationItemCreatedEvent event){
+    setupMedicationsList(medicationDAO.queryForAll());
   }
 
   @Override public void onDestroy() {

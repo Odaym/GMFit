@@ -16,7 +16,7 @@
       >
 
     <EditText
-        android:id="@+id/searchMedicationsAutoCompleteTV"
+        android:id="@+id/searchMedicationsTV"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/offwhite_more_transparent"
@@ -78,13 +78,27 @@
         android:textColor="@android:color/white"
         />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/mealsAvailableRecyclerView"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
-        android:scrollbars="vertical"
-        />
+        >
+
+      <ProgressBar
+          android:id="@+id/pb_loading_medications_indicator"
+          android:layout_width="50dp"
+          android:layout_height="50dp"
+          android:layout_centerInParent="true"
+          style="?android:attr/progressBarStyleSmall"
+          />
+
+      <android.support.v7.widget.RecyclerView
+          android:id="@+id/mealsAvailableRecyclerView"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:background="@color/white"
+          android:scrollbars="vertical"
+          />
+    </RelativeLayout>
   </LinearLayout>
 
   <LinearLayout

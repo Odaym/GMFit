@@ -53,15 +53,17 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
        * Create mock data Medications
        */
       getMedicationDAO().create(
-          new Medication("Augmentin", "475MG SYRP Syrp 475MG 70 ml", "10 ml", "Everyday", 3, "ml"));
+          new Medication("Augmentin", "475MG SYRP 475MG 70 ml", "10 ml", "Everyday", 3, 100,
+              "ml", 3, ""));
       getMedicationDAO().create(
-          new Medication("Vestibulum Elit", "100MG SYRP Syrp 100MG 9 ml", "900 ml", "2 days/week",
-              3, "ml"));
+          new Medication("Vestibulum Elit", "100MG SYRP 100MG 9 ml", "900 ml", "2 days/week",
+              3, 100, "ml", 2, ""));
       getMedicationDAO().create(
-          new Medication("Sed Interdum", "512MG SYRP Syrp 519MG 90 ml", "100 ml", "Everyday", 1, "ml"));
+          new Medication("Sed Interdum", "512MG SYRP 519MG 90 ml", "100 ml", "Everyday", 1,
+              100, "ml", 5, ""));
       getMedicationDAO().create(
-          new Medication("Vulputate Ultrices", "123MG SYRP Syrp 658MG 190 ml", "50 ml",
-              "4 days/week", 5, "ml"));
+          new Medication("Vulputate Ultrices", "123MG SYRP 658MG 190 ml", "50 ml",
+              "4 days/week", 5, 100, "ml", 1, ""));
     } catch (SQLException e) {
       Log.e(DBHelper.class.getName(), "Can't create database", e);
       throw new RuntimeException(e);

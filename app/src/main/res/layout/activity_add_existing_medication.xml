@@ -64,7 +64,7 @@
       </LinearLayout>
 
       <LinearLayout
-          android:id="@+id/chartTopBarLayout_MEDICAL_INFORMATION"
+          android:id="@+id/chartTopBarLayout_POSOLOGY"
           android:layout_width="match_parent"
           android:layout_height="@dimen/add_medical_tests_layout_height"
           android:layout_marginTop="@dimen/default_margin_3"
@@ -76,17 +76,17 @@
           >
 
         <TextView
-            android:id="@+id/chartTitleTV_MEDICAL_INFORMATION"
+            android:id="@+id/chartTitleTV_POSOLOGY"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="30"
-            android:text="@string/medical_information_bar_title"
+            android:text="@string/posology_bar_title"
             android:textAppearance="?android:textAppearanceMedium"
             android:textColor="@android:color/white"
             />
       </LinearLayout>
 
-      <!-- POSOLOGY -->
+      <!-- UNITS -->
       <LinearLayout
           android:layout_width="match_parent"
           android:layout_height="@dimen/add_medication_row_height"
@@ -98,14 +98,14 @@
             android:layout_width="@dimen/add_medication_fields_width"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
-            android:text="@string/posology_label"
+            android:text="@string/units_label"
             />
 
         <EditText
-            android:id="@+id/posologyET"
+            android:id="@+id/unitsET"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="3"
+            android:layout_weight="5"
             android:background="@color/much_lighter_gray"
             android:gravity="center_vertical"
             android:inputType="number"
@@ -115,14 +115,30 @@
             />
 
         <TextView
-            android:id="@+id/posologyMeasurementTV"
+            android:id="@+id/unitMeasurementTV"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_weight="1.47"
             android:background="@color/much_lighter_gray"
             android:gravity="center_vertical|end"
-            android:paddingEnd="@dimen/default_margin_1"
             android:textColor="@color/black_alpha_50"
             />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="end"
+            android:layout_weight="0.68"
+            android:background="@color/much_lighter_gray"
+            android:gravity="center"
+            >
+
+          <ImageView
+              android:layout_width="@dimen/far_right_arrow_icon_dimens"
+              android:layout_height="@dimen/far_right_arrow_icon_dimens"
+              android:src="@drawable/ic_right_arrow_green"
+              />
+        </LinearLayout>
       </LinearLayout>
 
       <View
@@ -146,13 +162,26 @@
             android:text="@string/frequency_label"
             />
 
-        <TextView
-            android:id="@+id/frequencyTV"
+        <EditText
+            android:id="@+id/frequencyET"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="4"
+            android:layout_weight="5"
             android:background="@color/much_lighter_gray"
             android:gravity="center_vertical"
+            android:inputType="number"
+            android:maxLength="2"
+            android:paddingStart="@dimen/default_margin_2"
+            android:textColor="@color/black_alpha_50"
+            />
+
+        <TextView
+            android:id="@+id/timesPerDayMeasurementTV"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@color/much_lighter_gray"
+            android:gravity="center_vertical|end"
+            android:text="@string/times_per_day_label_small"
             android:textColor="@color/black_alpha_50"
             />
 
@@ -160,7 +189,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="end"
-            android:layout_weight="1"
+            android:layout_weight="0.77"
             android:background="@color/much_lighter_gray"
             android:gravity="center"
             >
@@ -184,6 +213,9 @@
           android:layout_width="match_parent"
           android:layout_height="@dimen/add_medication_row_height"
           android:background="@color/white"
+          android:id="@+id/daysOfWeekLayout"
+          android:clickable="true"
+          android:focusable="true"
           android:paddingStart="@dimen/default_margin_2"
           >
 
@@ -197,8 +229,9 @@
         <TextView
             android:id="@+id/daysOfWeekTV"
             android:layout_width="wrap_content"
+            android:paddingStart="@dimen/default_margin_2"
             android:layout_height="match_parent"
-            android:layout_weight="4"
+            android:layout_weight="11"
             android:background="@color/much_lighter_gray"
             android:gravity="center_vertical"
             android:textColor="@color/black_alpha_50"
@@ -208,7 +241,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="end"
-            android:layout_weight="1"
+            android:layout_weight="1.17"
             android:background="@color/much_lighter_gray"
             android:gravity="center"
             >
@@ -227,7 +260,7 @@
           android:background="@color/offwhite_background_gray"
           />
 
-      <!-- DURATION -->
+      <!-- TREATMENT DURATION -->
       <LinearLayout
           android:layout_width="match_parent"
           android:layout_height="@dimen/add_medication_row_height"
@@ -239,12 +272,12 @@
             android:layout_width="@dimen/add_medication_fields_width"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
-            android:text="@string/duration_label"
+            android:text="@string/treatment_duration"
             />
 
         <EditText
-            android:id="@+id/durationET"
-            android:layout_width="wrap_content"
+            android:id="@+id/treatmentDurationET"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="4"
             android:background="@color/much_lighter_gray"
@@ -256,61 +289,30 @@
             />
 
         <TextView
-            android:id="@+id/durationMeasurementTV"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@color/much_lighter_gray"
-            android:gravity="center_vertical|end"
-            android:paddingEnd="@dimen/default_margin_1"
-            android:text="day(s)"
-            />
-      </LinearLayout>
-
-      <View
-          android:layout_width="match_parent"
-          android:layout_height="1dp"
-          android:background="@color/offwhite_background_gray"
-          />
-
-      <!-- TIMES PER WEEK -->
-      <LinearLayout
-          android:layout_width="match_parent"
-          android:layout_height="@dimen/add_medication_row_height"
-          android:background="@color/white"
-          android:paddingStart="@dimen/default_margin_2"
-          >
-
-        <TextView
-            android:layout_width="@dimen/add_medication_fields_width"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:text="@string/times_per_week_label"
-            />
-
-        <EditText
-            android:id="@+id/timesPerWeekET"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="3"
-            android:background="@color/much_lighter_gray"
-            android:gravity="center_vertical"
-            android:inputType="number"
-            android:maxLength="2"
-            android:paddingStart="@dimen/default_margin_2"
-            android:textColor="@color/black_alpha_50"
-            />
-
-        <TextView
-            android:id="@+id/timesPerWeekMeasurementTV"
+            android:id="@+id/treatmentDurationTV"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:background="@color/much_lighter_gray"
             android:gravity="center_vertical|end"
-            android:paddingEnd="@dimen/default_margin_1"
             android:text="@string/times_per_week_label_small"
             android:textColor="@color/black_alpha_50"
             />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="end"
+            android:layout_weight="0.48"
+            android:background="@color/much_lighter_gray"
+            android:gravity="center"
+            >
+
+          <ImageView
+              android:layout_width="@dimen/far_right_arrow_icon_dimens"
+              android:layout_height="@dimen/far_right_arrow_icon_dimens"
+              android:src="@drawable/ic_right_arrow_green"
+              />
+        </LinearLayout>
       </LinearLayout>
 
       <View
@@ -429,7 +431,7 @@
       </LinearLayout>
 
       <EditText
-          android:id="@+id/addYourNotesET"
+          android:id="@+id/yourNotesET"
           android:layout_width="match_parent"
           android:layout_height="150dp"
           android:layout_marginBottom="@dimen/default_margin_2"
