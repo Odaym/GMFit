@@ -17,6 +17,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import butterknife.Bind;
@@ -71,6 +72,8 @@ public class HealthFragment extends Fragment {
   @Bind(R.id.loadingWidgetsProgressBar) ProgressBar loadingWidgetsProgressBar;
   @Bind(R.id.loadingTestsProgressBar) ProgressBar loadingTestsProgressBar;
   @Bind(R.id.medicationsRecyclerView) RecyclerView medicationsRecyclerView;
+  @Bind(R.id.medicationsEmptyLayout) LinearLayout medicationsEmptyLayout;
+  @Bind(R.id.medicalTestsEmptyLayout) LinearLayout medicalTestsEmptyLayout;
 
   private RuntimeExceptionDao<Medication, Integer> medicationDAO;
 
@@ -137,13 +140,21 @@ public class HealthFragment extends Fragment {
   }
 
   private void setupMedicationsList(List<Medication> medicationList) {
-    Collections.reverse(medicationList);
+    if (medicationList.isEmpty()) {
+      medicationsRecyclerView.setVisibility(View.GONE);
+      medicationsEmptyLayout.setVisibility(View.VISIBLE);
+    } else {
+      medicationsRecyclerView.setVisibility(View.VISIBLE);
+      medicationsEmptyLayout.setVisibility(View.GONE);
 
-    medicationsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-    MedicationsRecyclerAdapter medicationsRecyclerAdapter =
-        new MedicationsRecyclerAdapter(getActivity(), medicationList, medicationDAO);
-    medicationsRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
-    medicationsRecyclerView.setAdapter(medicationsRecyclerAdapter);
+      Collections.reverse(medicationList);
+
+      medicationsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+      MedicationsRecyclerAdapter medicationsRecyclerAdapter =
+          new MedicationsRecyclerAdapter(getActivity(), medicationList, medicationDAO);
+      medicationsRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
+      medicationsRecyclerView.setAdapter(medicationsRecyclerAdapter);
+    }
   }
 
   private void getUserProfile() {
@@ -233,18 +244,26 @@ public class HealthFragment extends Fragment {
 
             loadingTestsProgressBar.setVisibility(View.GONE);
 
-            RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
-            UserTestsRecyclerAdapter userTestsRecyclerAdapter =
-                new UserTestsRecyclerAdapter(getActivity().getApplication(), takenMedicalTests);
-            ItemTouchHelper.Callback callback =
-                new SimpleSwipeItemTouchHelperCallback(userTestsRecyclerAdapter);
-            ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
+            if (takenMedicalTests.isEmpty()) {
+              userTestsListView.setVisibility(View.GONE);
+              medicalTestsEmptyLayout.setVisibility(View.VISIBLE);
+            } else {
+              userTestsListView.setVisibility(View.VISIBLE);
+              medicalTestsEmptyLayout.setVisibility(View.GONE);
 
-            userTestsListView.setLayoutManager(mLayoutManager);
-            userTestsListView.setNestedScrollingEnabled(false);
-            userTestsListView.setAdapter(userTestsRecyclerAdapter);
-            userTestsListView.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
-            touchHelper.attachToRecyclerView(userTestsListView);
+              RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+              UserTestsRecyclerAdapter userTestsRecyclerAdapter =
+                  new UserTestsRecyclerAdapter(getActivity().getApplication(), takenMedicalTests);
+              ItemTouchHelper.Callback callback =
+                  new SimpleSwipeItemTouchHelperCallback(userTestsRecyclerAdapter);
+              ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
+
+              userTestsListView.setLayoutManager(mLayoutManager);
+              userTestsListView.setNestedScrollingEnabled(false);
+              userTestsListView.setAdapter(userTestsRecyclerAdapter);
+              userTestsListView.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
+              touchHelper.attachToRecyclerView(userTestsListView);
+            }
 
             break;
         }
@@ -269,7 +288,7 @@ public class HealthFragment extends Fragment {
     getTakenMedicalTests();
   }
 
-  @Subscribe public void updateMedicationsList(MedicationItemCreatedEvent event){
+  @Subscribe public void updateMedicationsList(MedicationItemCreatedEvent event) {
     setupMedicationsList(medicationDAO.queryForAll());
   }
 

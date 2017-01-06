@@ -10,6 +10,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.mcsaatchi.gmfit.R;
+import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
+import com.mcsaatchi.gmfit.architecture.otto.MedicationItemCreatedEvent;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.health.activities.AddExistingMedicationActivity;
 import com.mcsaatchi.gmfit.health.models.Medication;
@@ -73,6 +75,8 @@ public class MedicationsRecyclerAdapter extends RecyclerView.Adapter {
           medicationDAO.delete(medicationsList.get(getAdapterPosition()));
           medicationsList.remove(getAdapterPosition());
           notifyItemRemoved(getAdapterPosition());
+
+          EventBusSingleton.getInstance().post(new MedicationItemCreatedEvent());
         }
       });
 

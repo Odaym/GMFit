@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="@dimen/default_margin_2"
+    android:layout_marginTop="@dimen/default_margin_2"
+    android:gravity="center"
+    android:orientation="horizontal"
+    >
+
+  <ImageView
+      android:id="@+id/testsEmptyIconIV"
+      android:layout_width="@dimen/empty_layouts_image_dimens"
+      android:layout_height="@dimen/empty_layouts_image_dimens"
+      android:src="@drawable/ic_no_pill_reminders_found"
+      />
+
+  <LinearLayout
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="@dimen/default_margin_4"
+      android:gravity="center_vertical"
+      android:orientation="vertical"
+      >
+
+    <TextView
+        android:id="@+id/typeOfEmptyMealTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/no_medications_found"
+        android:textColor="@color/black"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/medical_layouts_empty_tap_get_started"
+        android:textColor="@color/empty_meals_hint_text_gray"
+        />
+  </LinearLayout>
+</LinearLayout>

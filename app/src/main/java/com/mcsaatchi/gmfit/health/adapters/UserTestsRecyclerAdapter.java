@@ -14,6 +14,7 @@ import com.mcsaatchi.gmfit.architecture.GMFitApplication;
 import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.architecture.otto.DeletedMealEntryEvent;
 import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
+import com.mcsaatchi.gmfit.architecture.otto.MedicalTestEditCreateEvent;
 import com.mcsaatchi.gmfit.architecture.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.architecture.rest.TakenMedicalTestsResponseBody;
 import com.mcsaatchi.gmfit.architecture.touch_helpers.DragSwipeItemTouchHelperAdapter;
@@ -82,6 +83,8 @@ public class UserTestsRecyclerAdapter
       userTests.remove(position);
       notifyItemRemoved(position);
       notifyItemRangeChanged(position, userTests.size());
+
+      EventBusSingleton.getInstance().post(new MedicalTestEditCreateEvent());
     } catch (IndexOutOfBoundsException ignored) {
     }
   }

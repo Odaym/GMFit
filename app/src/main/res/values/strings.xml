@@ -231,6 +231,9 @@
   <string name="enter_test_name_hint">Set a name for your test</string>
   <string name="test_date_taken">Date</string>
   <string name="medications_bar_title">Medications</string>
+  <string name="no_medical_tests_found">No Tests Added</string>
+  <string name="no_medications_found">No Medications Added</string>
+  <string name="medical_layouts_empty_tap_get_started">Tap the \"Add\" button to start</string>
 
   <!-- PILL REMINDER ACTIVITY -->
   <string name="pill_reminder_activity_title">Pill Reminder</string>
