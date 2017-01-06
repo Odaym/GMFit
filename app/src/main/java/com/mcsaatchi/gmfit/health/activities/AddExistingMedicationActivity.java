@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -20,9 +21,11 @@ import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.health.models.DayChoice;
 import com.mcsaatchi.gmfit.health.models.Medication;
 import java.util.ArrayList;
+import timber.log.Timber;
 
 public class AddExistingMedicationActivity extends BaseActivity {
 
+  public static final int REMINDER_DAYS_CHOSEN = 231;
   @Bind(R.id.toolbar) Toolbar toolbar;
   @Bind(R.id.medicineNameET) EditText medicineNameET;
   @Bind(R.id.unitMeasurementTV) TextView unitMeasurementTV;
@@ -32,11 +35,10 @@ public class AddExistingMedicationActivity extends BaseActivity {
   @Bind(R.id.treatmentDurationET) EditText treatmentDurationET;
   @Bind(R.id.yourNotesET) EditText yourNotesET;
   @Bind(R.id.unitsET) EditText unitsET;
-
+  @Bind(R.id.addMedicationBTN) Button addMedicationBTN;
   private RuntimeExceptionDao<Medication, Integer> medicationDAO;
-
-  public static final int REMINDER_DAYS_CHOSEN = 231;
-
+  private boolean editPurpose = false;
+  private Medication medicationItem;
   private ArrayList<DayChoice> daysSelected = null;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -51,14 +53,25 @@ public class AddExistingMedicationActivity extends BaseActivity {
     medicationDAO = dbHelper.getMedicationDAO();
 
     if (getIntent().getExtras() != null) {
-      Medication medicationItem =
-          (Medication) getIntent().getExtras().get(Constants.EXTRAS_MEDICATION_ITEM);
+      medicationItem = (Medication) getIntent().getExtras().get(Constants.EXTRAS_MEDICATION_ITEM);
+
+      editPurpose = getIntent().getExtras()
+          .getBoolean(Constants.EXTRAS_PURPOSE_EDIT_MEDICATION_REMINDER, false);
 
       if (medicationItem != null) {
         medicineNameET.setText(medicationItem.getName());
         medicineNameET.setSelection(medicationItem.getName().length());
 
+        unitsET.setText(String.valueOf(medicationItem.getUnits()));
         unitMeasurementTV.setText(medicationItem.getUnitForm());
+        frequencyET.setText(String.valueOf(medicationItem.getFrequency()));
+        daysOfWeekTV.setText(medicationItem.getWhen());
+        treatmentDurationET.setText(String.valueOf(medicationItem.getTreatmentDuration()));
+        yourNotesET.setText(medicationItem.getRemarks());
+      }
+
+      if (editPurpose) {
+        addMedicationBTN.setText(getString(R.string.edit_medication_button));
       }
     }
   }
@@ -78,19 +91,38 @@ public class AddExistingMedicationActivity extends BaseActivity {
         unitMeasurementTV.getText().toString().isEmpty()) {
       Toast.makeText(this, R.string.fill_in_below_fields_hint, Toast.LENGTH_LONG).show();
     } else {
-      medication.setName(medicineNameET.getText().toString());
-      medication.setFrequency(Integer.parseInt(frequencyET.getText().toString()));
-      medication.setRemarks(yourNotesET.getText().toString());
-      medication.setUnits(Integer.parseInt(unitsET.getText().toString()));
-      medication.setUnitForm(unitMeasurementTV.getText().toString());
-      medication.setWhen(daysOfWeekTV.getText().toString() + "/week");
-      medication.setDosage("0.5 " + medication.getUnitForm());
-      medication.setTreatmentDuration(Integer.parseInt(treatmentDurationET.getText().toString()));
-      medication.setDescription(
-          medication.getUnits() + " " + medication.getUnitForm() + " " + medication.getUnitForm()
-              .toUpperCase() + " " + medication.getUnits() + " " + medication.getUnitForm());
+      if (medicationItem != null && editPurpose) {
+        Timber.d("Edit purpose is true, medicationItem != null");
 
-      medicationDAO.create(medication);
+        medication.setId(medicationItem.getId());
+        medication.setName(medicationItem.getName());
+        medication.setFrequency(medicationItem.getFrequency());
+        medication.setRemarks(medicationItem.getRemarks());
+        medication.setUnits(medicationItem.getUnits());
+        medication.setUnitForm(medicationItem.getUnitForm());
+        medication.setWhen(medicationItem.getWhen());
+        medication.setDosage(medicationItem.getUnitForm());
+        medication.setTreatmentDuration(medicationItem.getTreatmentDuration());
+        medication.setDescription(medicationItem.getDescription());
+
+        medicationDAO.update(medication);
+      } else {
+        Timber.d("Edit purpose is false, medicationitem is null");
+
+        medication.setName(medicineNameET.getText().toString());
+        medication.setFrequency(Integer.parseInt(frequencyET.getText().toString()));
+        medication.setRemarks(yourNotesET.getText().toString());
+        medication.setUnits(Integer.parseInt(unitsET.getText().toString()));
+        medication.setUnitForm(unitMeasurementTV.getText().toString());
+        medication.setWhen(daysOfWeekTV.getText().toString());
+        medication.setDosage("0.5 " + medication.getUnitForm());
+        medication.setTreatmentDuration(Integer.parseInt(treatmentDurationET.getText().toString()));
+        medication.setDescription(
+            medication.getUnits() + " " + medication.getUnitForm() + " " + medication.getUnitForm()
+                .toUpperCase() + " " + medication.getUnits() + " " + medication.getUnitForm());
+
+        medicationDAO.create(medication);
+      }
 
       EventBusSingleton.getInstance().post(new MedicationItemCreatedEvent());
 
