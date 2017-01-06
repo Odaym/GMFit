@@ -149,6 +149,10 @@ public class HealthFragment extends Fragment {
 
       Collections.reverse(medicationList);
 
+      for (Medication med : medicationList){
+        Timber.d(med.toString());
+      }
+
       medicationsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
       MedicationsRecyclerAdapter medicationsRecyclerAdapter =
           new MedicationsRecyclerAdapter(getActivity(), medicationList, medicationDAO);

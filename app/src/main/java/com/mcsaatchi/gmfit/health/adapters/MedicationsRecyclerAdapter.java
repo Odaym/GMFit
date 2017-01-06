@@ -43,8 +43,6 @@ public class MedicationsRecyclerAdapter extends RecyclerView.Adapter {
 
     if (medicationsList != null && 0 <= position && position < medicationsList.size()) {
       final Medication medicationItem = medicationsList.get(position);
-
-      // Bind your data here
       holder.bind(medicationItem);
     }
   }

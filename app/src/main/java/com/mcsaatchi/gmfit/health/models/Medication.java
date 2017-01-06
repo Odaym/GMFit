@@ -4,6 +4,15 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class Medication implements Parcelable{
+  public static final Creator<Medication> CREATOR = new Creator<Medication>() {
+    @Override public Medication createFromParcel(Parcel in) {
+      return new Medication(in);
+    }
+
+    @Override public Medication[] newArray(int size) {
+      return new Medication[size];
+    }
+  };
   private int id;
   private String name;
   private String description;
@@ -43,16 +52,6 @@ public class Medication implements Parcelable{
     treatmentDuration = in.readInt();
     remarks = in.readString();
   }
-
-  public static final Creator<Medication> CREATOR = new Creator<Medication>() {
-    @Override public Medication createFromParcel(Parcel in) {
-      return new Medication(in);
-    }
-
-    @Override public Medication[] newArray(int size) {
-      return new Medication[size];
-    }
-  };
 
   public int getId() {
     return id;
@@ -132,6 +131,21 @@ public class Medication implements Parcelable{
 
   public void setRemarks(String remarks) {
     this.remarks = remarks;
+  }
+
+  @Override public String toString() {
+    return "Medication{" +
+        "id=" + id +
+        ", name='" + name + '\'' +
+        ", description='" + description + '\'' +
+        ", dosage='" + dosage + '\'' +
+        ", when='" + when + '\'' +
+        ", frequency=" + frequency +
+        ", units=" + units +
+        ", unitForm='" + unitForm + '\'' +
+        ", remarks='" + remarks + '\'' +
+        ", treatmentDuration=" + treatmentDuration +
+        '}';
   }
 
   @Override public int describeContents() {

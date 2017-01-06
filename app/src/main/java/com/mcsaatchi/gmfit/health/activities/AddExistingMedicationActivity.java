@@ -21,7 +21,6 @@ import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.health.models.DayChoice;
 import com.mcsaatchi.gmfit.health.models.Medication;
 import java.util.ArrayList;
-import timber.log.Timber;
 
 public class AddExistingMedicationActivity extends BaseActivity {
 
@@ -83,7 +82,6 @@ public class AddExistingMedicationActivity extends BaseActivity {
   }
 
   @OnClick(R.id.addMedicationBTN) void addMedication() {
-    Medication medication = new Medication();
     if (medicineNameET.getText().toString().isEmpty() ||
         frequencyET.getText().toString().isEmpty() ||
         daysOfWeekTV.getText().toString().isEmpty() ||
@@ -91,36 +89,22 @@ public class AddExistingMedicationActivity extends BaseActivity {
         unitMeasurementTV.getText().toString().isEmpty()) {
       Toast.makeText(this, R.string.fill_in_below_fields_hint, Toast.LENGTH_LONG).show();
     } else {
-      if (medicationItem != null && editPurpose) {
-        Timber.d("Edit purpose is true, medicationItem != null");
+      Medication medication = new Medication();
+      medication.setName(medicineNameET.getText().toString());
+      medication.setFrequency(Integer.parseInt(frequencyET.getText().toString()));
+      medication.setRemarks(yourNotesET.getText().toString());
+      medication.setUnits(Integer.parseInt(unitsET.getText().toString()));
+      medication.setUnitForm(unitMeasurementTV.getText().toString());
+      medication.setWhen(daysOfWeekTV.getText().toString());
+      medication.setDosage("0.5 " + medication.getUnitForm());
+      medication.setTreatmentDuration(Integer.parseInt(treatmentDurationET.getText().toString()));
+      medication.setDescription(
+          medication.getUnits() + " " + medication.getUnitForm() + " " + medication.getUnitForm()
+              .toUpperCase() + " " + medication.getUnits() + " " + medication.getUnitForm());
 
-        medication.setId(medicationItem.getId());
-        medication.setName(medicationItem.getName());
-        medication.setFrequency(medicationItem.getFrequency());
-        medication.setRemarks(medicationItem.getRemarks());
-        medication.setUnits(medicationItem.getUnits());
-        medication.setUnitForm(medicationItem.getUnitForm());
-        medication.setWhen(medicationItem.getWhen());
-        medication.setDosage(medicationItem.getUnitForm());
-        medication.setTreatmentDuration(medicationItem.getTreatmentDuration());
-        medication.setDescription(medicationItem.getDescription());
-
+      if (editPurpose) {
         medicationDAO.update(medication);
       } else {
-        Timber.d("Edit purpose is false, medicationitem is null");
-
-        medication.setName(medicineNameET.getText().toString());
-        medication.setFrequency(Integer.parseInt(frequencyET.getText().toString()));
-        medication.setRemarks(yourNotesET.getText().toString());
-        medication.setUnits(Integer.parseInt(unitsET.getText().toString()));
-        medication.setUnitForm(unitMeasurementTV.getText().toString());
-        medication.setWhen(daysOfWeekTV.getText().toString());
-        medication.setDosage("0.5 " + medication.getUnitForm());
-        medication.setTreatmentDuration(Integer.parseInt(treatmentDurationET.getText().toString()));
-        medication.setDescription(
-            medication.getUnits() + " " + medication.getUnitForm() + " " + medication.getUnitForm()
-                .toUpperCase() + " " + medication.getUnits() + " " + medication.getUnitForm());
-
         medicationDAO.create(medication);
       }
 
