@@ -395,5 +395,6 @@
   <string name="check_compatibility_recommended_hint">It is recommended that you run the compatibility check before adding the medication</string>
   <string name="days_choice_activity_title">Days of Week</string>
   <string name="add_medication_button">Add Medication</string>
+  <string name="edit_medication_button">Edit Medication</string>
 
 </resources>

@@ -1,14 +1,17 @@
 package com.mcsaatchi.gmfit.health.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
-import com.chauthai.swipereveallayout.SwipeRevealLayout;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.mcsaatchi.gmfit.R;
+import com.mcsaatchi.gmfit.common.Constants;
+import com.mcsaatchi.gmfit.health.activities.AddExistingMedicationActivity;
 import com.mcsaatchi.gmfit.health.models.Medication;
 import java.util.List;
 import org.apache.commons.lang3.text.WordUtils;
@@ -49,13 +52,14 @@ public class MedicationsRecyclerAdapter extends RecyclerView.Adapter {
   }
 
   private class ViewHolder extends RecyclerView.ViewHolder {
-    private SwipeRevealLayout swipeLayout;
     private View deleteLayout, deactivate_layout;
+    private RelativeLayout parentLayout;
     private TextView medicineNameTV, medicineDescriptionTV, medicineIntakeDetailsTV;
 
     public ViewHolder(View itemView) {
       super(itemView);
-      swipeLayout = (SwipeRevealLayout) itemView.findViewById(R.id.swipe_layout);
+
+      parentLayout = (RelativeLayout) itemView.findViewById(R.id.parentLayout);
       deleteLayout = itemView.findViewById(R.id.delete_layout);
       deactivate_layout = itemView.findViewById(R.id.deactivate_layout);
       medicineNameTV = (TextView) itemView.findViewById(R.id.medicineNameTV);
@@ -63,7 +67,7 @@ public class MedicationsRecyclerAdapter extends RecyclerView.Adapter {
       medicineIntakeDetailsTV = (TextView) itemView.findViewById(R.id.medicineIntakeDetailsTV);
     }
 
-    public void bind(Medication medicationItem) {
+    public void bind(final Medication medicationItem) {
       deleteLayout.setOnClickListener(new View.OnClickListener() {
         @Override public void onClick(View v) {
           medicationDAO.delete(medicationsList.get(getAdapterPosition()));
@@ -85,6 +89,16 @@ public class MedicationsRecyclerAdapter extends RecyclerView.Adapter {
           + medicationItem.getWhen()
           + " - "
           + medicationItem.getFrequency());
+
+      parentLayout.setOnClickListener(new View.OnClickListener() {
+        @Override public void onClick(View view) {
+          Intent intent = new Intent(context, AddExistingMedicationActivity.class);
+          intent.putExtra(Constants.EXTRAS_PURPOSE_EDIT_MEDICATION_REMINDER, true);
+          intent.putExtra(Constants.EXTRAS_MEDICATION_ITEM,
+              medicationItem);
+          context.startActivity(intent);
+        }
+      });
     }
   }
 }
