@@ -11,7 +11,9 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.health.models.ReminderTime;
-import java.util.Calendar;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 public class RemindersRecyclerAdapter extends RecyclerView.Adapter {
@@ -41,6 +43,38 @@ public class RemindersRecyclerAdapter extends RecyclerView.Adapter {
     return reminderTimes.size();
   }
 
+  private String formatFinalTime(int hour, int minute) {
+    String finalTime = "";
+
+    try {
+      final SimpleDateFormat sdf = new SimpleDateFormat("H:mm");
+      final Date dateObj;
+
+      dateObj = sdf.parse(hour + ":" + minute);
+      finalTime = new SimpleDateFormat("HH:mm:a").format(dateObj);
+    } catch (ParseException e) {
+      e.printStackTrace();
+    }
+
+    return finalTime;
+  }
+
+  private String reverseFormatFinalTime(String originalTime) {
+    String finalTime = "";
+
+    try {
+      final SimpleDateFormat sdf = new SimpleDateFormat("H:mm");
+      final Date dateObj;
+
+      dateObj = sdf.parse(originalTime);
+      finalTime = new SimpleDateFormat("hh:mm:a").format(dateObj);
+    } catch (ParseException e) {
+      e.printStackTrace();
+    }
+
+    return finalTime;
+  }
+
   private class ViewHolder extends RecyclerView.ViewHolder {
     private LinearLayout clickableLayout;
     private TextView reminderValueTV, reminderLabelTV;
@@ -59,20 +93,34 @@ public class RemindersRecyclerAdapter extends RecyclerView.Adapter {
 
       clickableLayout.setOnClickListener(new View.OnClickListener() {
         @Override public void onClick(View v) {
-          Calendar currentTime = Calendar.getInstance();
-          int hour = currentTime.get(Calendar.HOUR_OF_DAY);
-          int minute = currentTime.get(Calendar.MINUTE);
-          TimePickerDialog mTimePicker;
-          mTimePicker = new TimePickerDialog(context, new TimePickerDialog.OnTimeSetListener() {
-            @Override
-            public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-              reminderItem.setMinute(selectedMinute);
-              reminderItem.setHour(selectedHour);
-              reminderValueTV.setText(selectedHour + ":" + selectedMinute);
-            }
-          }, hour, minute, true);
-          mTimePicker.setTitle("Select Time\n");
-          mTimePicker.show();
+
+          String[] timeValues = reminderValueTV.getText().toString().split(":");
+
+          TimePickerDialog timePicker =
+              new TimePickerDialog(context, new TimePickerDialog.OnTimeSetListener() {
+                @Override
+                public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+                  String finalTimeForAlarm = formatFinalTime(selectedHour, selectedMinute);
+
+                  String finalTimeForDisplay =
+                      reverseFormatFinalTime(selectedHour + ":" + selectedMinute);
+
+                  String[] timeValuesForDisplay = finalTimeForDisplay.split(":");
+
+                  reminderValueTV.setText(timeValuesForDisplay[0]
+                      + ":"
+                      + timeValuesForDisplay[1]
+                      + " "
+                      + timeValuesForDisplay[2]);
+
+                  //if (areAlarmsEnabled) {
+                  //  setupMealRemindersAlarm(RemindersActivity.this, prefs, "Dinner",
+                  //      finalTimeForAlarm);
+                  //}
+                }
+              }, Integer.parseInt(timeValues[0]), Integer.parseInt(timeValues[1].split(" ")[0]), false);
+
+          timePicker.show();
         }
       });
     }

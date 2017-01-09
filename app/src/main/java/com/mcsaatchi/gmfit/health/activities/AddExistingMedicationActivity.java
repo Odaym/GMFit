@@ -8,9 +8,12 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 import butterknife.Bind;
@@ -44,8 +47,11 @@ public class AddExistingMedicationActivity extends BaseActivity {
   @Bind(R.id.yourNotesET) EditText yourNotesET;
   @Bind(R.id.unitsET) EditText unitsET;
   @Bind(R.id.addMedicationBTN) Button addMedicationBTN;
+  @Bind(R.id.enableRemindersSwitch) Switch enableRemindersSwitch;
+
   private RuntimeExceptionDao<Medication, Integer> medicationDAO;
   private boolean editPurpose = false;
+  private boolean areRemindersEnabled = false;
   private Medication medicationItem;
   private ArrayList<DayChoice> daysSelected = null;
 
@@ -85,6 +91,18 @@ public class AddExistingMedicationActivity extends BaseActivity {
       }
     }
 
+    enableRemindersSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+      @Override public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
+        if (checked) {
+          remindersRecyclerView.setVisibility(View.VISIBLE);
+        } else {
+          remindersRecyclerView.setVisibility(View.GONE);
+        }
+
+        areRemindersEnabled = !areRemindersEnabled;
+      }
+    });
+
     frequencyET.addTextChangedListener(new TextWatcher() {
       @Override public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -94,14 +112,13 @@ public class AddExistingMedicationActivity extends BaseActivity {
       }
 
       @Override public void afterTextChanged(Editable editable) {
-        if (!editable.toString().isEmpty()) {
+        if (!editable.toString().isEmpty() && areRemindersEnabled) {
 
-          int frequncyNumber = Integer.parseInt(editable.toString());
+          int frequencyNumber = Integer.parseInt(editable.toString());
 
-          ArrayList<ReminderTime> reminderTimes =
-              new ArrayList<>(frequncyNumber);
+          ArrayList<ReminderTime> reminderTimes = new ArrayList<>(frequencyNumber);
 
-          for (int ind = 0; ind < frequncyNumber; ind++) {
+          for (int ind = 0; ind < frequencyNumber; ind++) {
             reminderTimes.add(new ReminderTime(9, 30, "9:30 AM"));
           }
 
