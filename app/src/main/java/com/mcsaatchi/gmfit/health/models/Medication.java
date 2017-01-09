@@ -2,37 +2,44 @@ package com.mcsaatchi.gmfit.health.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import com.j256.ormlite.field.DataType;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+import java.util.ArrayList;
 
-public class Medication implements Parcelable{
+@DatabaseTable(tableName = "Medication") public class Medication implements Parcelable {
   public static final Creator<Medication> CREATOR = new Creator<Medication>() {
-    @Override public Medication createFromParcel(Parcel in) {
-      return new Medication(in);
+    @Override public Medication createFromParcel(Parcel source) {
+      return new Medication(source);
     }
 
     @Override public Medication[] newArray(int size) {
       return new Medication[size];
     }
   };
-  private int id;
-  private String name;
-  private String description;
-  private String dosage;
-  private String when;
-  private int frequency;
-  private int units;
-  private String unitForm;
-  private String remarks;
-  private int treatmentDuration;
+  @DatabaseField(generatedId = true) private int id;
+  @DatabaseField private String name;
+  @DatabaseField private String description;
+  @DatabaseField private String dosage;
+  @DatabaseField(dataType = DataType.SERIALIZABLE) private ArrayList<DayChoice> when;
+  @DatabaseField private String whenString;
+  @DatabaseField private int frequency;
+  @DatabaseField private int units;
+  @DatabaseField private String unitForm;
+  @DatabaseField private String remarks;
+  @DatabaseField private int treatmentDuration;
 
   public Medication() {
   }
 
-  public Medication(String name, String description, String dosage, String when, int frequency,
-      int units, String unitForm, int treatmentDuration, String remarks) {
+  public Medication(String name, String description, String dosage, ArrayList<DayChoice> when,
+      String whenString, int frequency, int units, String unitForm, int treatmentDuration,
+      String remarks) {
     this.name = name;
     this.description = description;
     this.dosage = dosage;
     this.when = when;
+    this.whenString = whenString;
     this.frequency = frequency;
     this.units = units;
     this.unitForm = unitForm;
@@ -41,16 +48,17 @@ public class Medication implements Parcelable{
   }
 
   protected Medication(Parcel in) {
-    id = in.readInt();
-    name = in.readString();
-    description = in.readString();
-    dosage = in.readString();
-    when = in.readString();
-    frequency = in.readInt();
-    units = in.readInt();
-    unitForm = in.readString();
-    treatmentDuration = in.readInt();
-    remarks = in.readString();
+    this.id = in.readInt();
+    this.name = in.readString();
+    this.description = in.readString();
+    this.dosage = in.readString();
+    this.when = in.createTypedArrayList(DayChoice.CREATOR);
+    this.whenString = in.readString();
+    this.frequency = in.readInt();
+    this.units = in.readInt();
+    this.unitForm = in.readString();
+    this.remarks = in.readString();
+    this.treatmentDuration = in.readInt();
   }
 
   public int getId() {
@@ -85,12 +93,20 @@ public class Medication implements Parcelable{
     this.dosage = dosage;
   }
 
-  public String getWhen() {
+  public ArrayList<DayChoice> getWhen() {
     return when;
   }
 
-  public void setWhen(String when) {
+  public void setWhen(ArrayList<DayChoice> when) {
     this.when = when;
+  }
+
+  public String getWhenString() {
+    return whenString;
+  }
+
+  public void setWhenString(String whenString) {
+    this.whenString = whenString;
   }
 
   public int getFrequency() {
@@ -133,35 +149,21 @@ public class Medication implements Parcelable{
     this.remarks = remarks;
   }
 
-  @Override public String toString() {
-    return "Medication{" +
-        "id=" + id +
-        ", name='" + name + '\'' +
-        ", description='" + description + '\'' +
-        ", dosage='" + dosage + '\'' +
-        ", when='" + when + '\'' +
-        ", frequency=" + frequency +
-        ", units=" + units +
-        ", unitForm='" + unitForm + '\'' +
-        ", remarks='" + remarks + '\'' +
-        ", treatmentDuration=" + treatmentDuration +
-        '}';
-  }
-
   @Override public int describeContents() {
     return 0;
   }
 
-  @Override public void writeToParcel(Parcel parcel, int i) {
-    parcel.writeInt(id);
-    parcel.writeString(name);
-    parcel.writeString(description);
-    parcel.writeString(dosage);
-    parcel.writeString(when);
-    parcel.writeInt(frequency);
-    parcel.writeInt(units);
-    parcel.writeString(unitForm);
-    parcel.writeInt(treatmentDuration);
-    parcel.writeString(remarks);
+  @Override public void writeToParcel(Parcel dest, int flags) {
+    dest.writeInt(this.id);
+    dest.writeString(this.name);
+    dest.writeString(this.description);
+    dest.writeString(this.dosage);
+    dest.writeTypedList(this.when);
+    dest.writeString(this.whenString);
+    dest.writeInt(this.frequency);
+    dest.writeInt(this.units);
+    dest.writeString(this.unitForm);
+    dest.writeString(this.remarks);
+    dest.writeInt(this.treatmentDuration);
   }
 }

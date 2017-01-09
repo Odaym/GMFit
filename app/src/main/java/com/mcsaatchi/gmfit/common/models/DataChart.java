@@ -2,10 +2,13 @@ package com.mcsaatchi.gmfit.common.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import com.j256.ormlite.field.DataType;
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponseChartData;
 import java.util.ArrayList;
 
-public class DataChart implements Parcelable {
+@DatabaseTable(tableName = "DataChart") public class DataChart implements Parcelable {
 
   public static final Creator<DataChart> CREATOR = new Creator<DataChart>() {
     @Override public DataChart createFromParcel(Parcel source) {
@@ -16,20 +19,23 @@ public class DataChart implements Parcelable {
       return new DataChart[size];
     }
   };
-  private int id;
-  private String name;
-  private String type;
-  private String measurementUnit;
-  private int position;
-  private String username;
-  private int chart_id;
+
+  @DatabaseField(generatedId = true) private int id;
+  @DatabaseField private String name;
+  @DatabaseField private String type;
+  @DatabaseField private String measurementUnit;
+  @DatabaseField private int position;
+  @DatabaseField private String username;
+  @DatabaseField private int chart_id;
+  @DatabaseField(dataType = DataType.SERIALIZABLE)
   private ArrayList<AuthenticationResponseChartData> chartData;
+
   /**
    * 1 = FITNESS
    * 2 = NUTRITION
    * 3 = HEALTH
    */
-  private String whichFragment;
+  @DatabaseField private String whichFragment;
 
   public DataChart() {
   }

@@ -95,7 +95,7 @@ public class HealthFragment extends Fragment {
 
     medicationDAO = ((BaseActivity) getActivity()).dbHelper.getMedicationDAO();
 
-    setupMedicationsList(medicationDAO.queryForAll());
+    setupPillRemindersList(medicationDAO.queryForAll());
 
     getWidgets();
 
@@ -139,7 +139,7 @@ public class HealthFragment extends Fragment {
     return super.onOptionsItemSelected(item);
   }
 
-  private void setupMedicationsList(List<Medication> medicationList) {
+  private void setupPillRemindersList(List<Medication> medicationList) {
     if (medicationList.isEmpty()) {
       medicationsRecyclerView.setVisibility(View.GONE);
       medicationsEmptyLayout.setVisibility(View.VISIBLE);
@@ -293,7 +293,7 @@ public class HealthFragment extends Fragment {
   }
 
   @Subscribe public void updateMedicationsList(MedicationItemCreatedEvent event) {
-    setupMedicationsList(medicationDAO.queryForAll());
+    setupPillRemindersList(medicationDAO.queryForAll());
   }
 
   @Override public void onDestroy() {

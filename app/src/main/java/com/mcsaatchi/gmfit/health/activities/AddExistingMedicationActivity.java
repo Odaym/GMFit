@@ -58,13 +58,15 @@ public class AddExistingMedicationActivity extends BaseActivity {
           .getBoolean(Constants.EXTRAS_PURPOSE_EDIT_MEDICATION_REMINDER, false);
 
       if (medicationItem != null) {
+        daysSelected = medicationItem.getWhen();
+
         medicineNameET.setText(medicationItem.getName());
         medicineNameET.setSelection(medicationItem.getName().length());
 
         unitsET.setText(String.valueOf(medicationItem.getUnits()));
         unitMeasurementTV.setText(medicationItem.getUnitForm());
         frequencyET.setText(String.valueOf(medicationItem.getFrequency()));
-        daysOfWeekTV.setText(medicationItem.getWhen());
+        daysOfWeekTV.setText(medicationItem.getWhenString());
         treatmentDurationET.setText(String.valueOf(medicationItem.getTreatmentDuration()));
         yourNotesET.setText(medicationItem.getRemarks());
       }
@@ -95,7 +97,8 @@ public class AddExistingMedicationActivity extends BaseActivity {
       medication.setRemarks(yourNotesET.getText().toString());
       medication.setUnits(Integer.parseInt(unitsET.getText().toString()));
       medication.setUnitForm(unitMeasurementTV.getText().toString());
-      medication.setWhen(daysOfWeekTV.getText().toString());
+      medication.setWhen(daysSelected);
+      medication.setWhenString(daysOfWeekTV.getText().toString());
       medication.setDosage("0.5 " + medication.getUnitForm());
       medication.setTreatmentDuration(Integer.parseInt(treatmentDurationET.getText().toString()));
       medication.setDescription(

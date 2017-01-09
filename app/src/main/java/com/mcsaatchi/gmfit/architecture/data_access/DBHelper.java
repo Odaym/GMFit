@@ -31,7 +31,7 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
   private RuntimeExceptionDao<Medication, Integer> medicationRunTimeDAO = null;
 
   public DBHelper(Context context) {
-    super(context, DATABASE_NAME, null, DATABASE_VERSION, R.raw.ormlite_config);
+    super(context, DATABASE_NAME, null, DATABASE_VERSION);
   }
 
   @Override public void onCreate(SQLiteDatabase db, ConnectionSource connectionSource) {
@@ -49,21 +49,6 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
       getFitnessWidgetsDAO().create(
           new FitnessWidget("Active Calories", "Calories", 0, R.drawable.ic_calories_spent, 2));
 
-      /**
-       * Create mock data Medications
-       */
-      getMedicationDAO().create(
-          new Medication("Augmentin", "475MG SYRP 475MG 70 ml", "10 ml", "Everyday", 3, 100,
-              "ml", 3, ""));
-      getMedicationDAO().create(
-          new Medication("Vestibulum Elit", "100MG SYRP 100MG 9 ml", "900 ml", "2 days/week",
-              3, 100, "ml", 2, ""));
-      getMedicationDAO().create(
-          new Medication("Sed Interdum", "512MG SYRP 519MG 90 ml", "100 ml", "Everyday", 1,
-              100, "ml", 5, ""));
-      getMedicationDAO().create(
-          new Medication("Vulputate Ultrices", "123MG SYRP 658MG 190 ml", "50 ml",
-              "4 days/week", 5, 100, "ml", 1, ""));
     } catch (SQLException e) {
       Log.e(DBHelper.class.getName(), "Can't create database", e);
       throw new RuntimeException(e);

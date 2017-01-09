@@ -88,7 +88,7 @@ public class MedicationsRecyclerAdapter extends RecyclerView.Adapter {
       medicineDescriptionTV.setText(medicationItem.getDescription());
       medicineIntakeDetailsTV.setText(medicationItem.getDosage()
           + " - "
-          + medicationItem.getWhen()
+          + medicationItem.getWhenString()
           + " - "
           + medicationItem.getFrequency());
 

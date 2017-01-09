@@ -244,6 +244,7 @@
   <string name="manually_add_medication_button">Manually Add Medication</string>
   <string name="posology_bar_title">Posology</string>
   <string name="get_notifications_bar_title">Get Notifications</string>
+  <string name="days_choice_select_all">Select All</string>
 
   <!-- ADD NEW CHART -->
   <string name="add_new_chart_activity_title">Add New Chart</string>

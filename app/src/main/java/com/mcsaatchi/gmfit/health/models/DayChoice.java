@@ -2,8 +2,18 @@ package com.mcsaatchi.gmfit.health.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import java.io.Serializable;
 
-public class DayChoice implements Parcelable {
+public class DayChoice implements Parcelable, Serializable {
+  public static final Creator<DayChoice> CREATOR = new Creator<DayChoice>() {
+    @Override public DayChoice createFromParcel(Parcel in) {
+      return new DayChoice(in);
+    }
+
+    @Override public DayChoice[] newArray(int size) {
+      return new DayChoice[size];
+    }
+  };
   private String dayName;
   private boolean daySelected;
 
@@ -16,16 +26,6 @@ public class DayChoice implements Parcelable {
     dayName = in.readString();
     daySelected = in.readByte() != 0;
   }
-
-  public static final Creator<DayChoice> CREATOR = new Creator<DayChoice>() {
-    @Override public DayChoice createFromParcel(Parcel in) {
-      return new DayChoice(in);
-    }
-
-    @Override public DayChoice[] newArray(int size) {
-      return new DayChoice[size];
-    }
-  };
 
   public String getDayName() {
     return dayName;
