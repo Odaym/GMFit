@@ -122,7 +122,6 @@ public class AddExistingMedicationActivity extends BaseActivity {
             reminderTimes.add(new ReminderTime(9, 30, "9:30 AM"));
           }
 
-          Timber.d("About to setup reminders list");
           setupRemindersRecyclerView(reminderTimes);
         }
       }
@@ -152,7 +151,7 @@ public class AddExistingMedicationActivity extends BaseActivity {
         treatmentDurationET.getText().toString().isEmpty() ||
         unitMeasurementTV.getText().toString().isEmpty()) {
       Toast.makeText(this, R.string.fill_in_below_fields_hint, Toast.LENGTH_LONG).show();
-    } else {
+    } else if (!editPurpose) {
       Medication medication = new Medication();
       medication.setName(medicineNameET.getText().toString());
       medication.setFrequency(Integer.parseInt(frequencyET.getText().toString()));
@@ -167,16 +166,34 @@ public class AddExistingMedicationActivity extends BaseActivity {
           medication.getUnits() + " " + medication.getUnitForm() + " " + medication.getUnitForm()
               .toUpperCase() + " " + medication.getUnits() + " " + medication.getUnitForm());
 
-      if (editPurpose) {
-        medicationDAO.update(medication);
-      } else {
-        medicationDAO.create(medication);
-      }
+      medicationDAO.create(medication);
+    } else {
+      medicationItem.setName(medicineNameET.getText().toString());
+      medicationItem.setFrequency(Integer.parseInt(frequencyET.getText().toString()));
+      medicationItem.setRemarks(yourNotesET.getText().toString());
+      medicationItem.setUnits(Integer.parseInt(unitsET.getText().toString()));
+      medicationItem.setUnitForm(unitMeasurementTV.getText().toString());
+      medicationItem.setWhen(daysSelected);
+      medicationItem.setWhenString(daysOfWeekTV.getText().toString());
+      medicationItem.setDosage("0.5 " + medicationItem.getUnitForm());
+      medicationItem.setTreatmentDuration(
+          Integer.parseInt(treatmentDurationET.getText().toString()));
+      medicationItem.setDescription(medicationItem.getUnits()
+          + " "
+          + medicationItem.getUnitForm()
+          + " "
+          + medicationItem.getUnitForm().toUpperCase()
+          + " "
+          + medicationItem.getUnits()
+          + " "
+          + medicationItem.getUnitForm());
 
-      EventBusSingleton.getInstance().post(new MedicationItemCreatedEvent());
-
-      finish();
+      medicationDAO.update(medicationItem);
     }
+
+    EventBusSingleton.getInstance().post(new MedicationItemCreatedEvent());
+
+    finish();
   }
 
   @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
