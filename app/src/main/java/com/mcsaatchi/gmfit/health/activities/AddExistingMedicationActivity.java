@@ -3,7 +3,11 @@ package com.mcsaatchi.gmfit.health.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -18,9 +22,13 @@ import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
 import com.mcsaatchi.gmfit.architecture.otto.MedicationItemCreatedEvent;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
+import com.mcsaatchi.gmfit.common.classes.SimpleDividerItemDecoration;
+import com.mcsaatchi.gmfit.health.adapters.RemindersRecyclerAdapter;
 import com.mcsaatchi.gmfit.health.models.DayChoice;
 import com.mcsaatchi.gmfit.health.models.Medication;
+import com.mcsaatchi.gmfit.health.models.ReminderTime;
 import java.util.ArrayList;
+import timber.log.Timber;
 
 public class AddExistingMedicationActivity extends BaseActivity {
 
@@ -32,6 +40,7 @@ public class AddExistingMedicationActivity extends BaseActivity {
   @Bind(R.id.daysOfWeekTV) TextView daysOfWeekTV;
   @Bind(R.id.frequencyET) EditText frequencyET;
   @Bind(R.id.treatmentDurationET) EditText treatmentDurationET;
+  @Bind(R.id.remindersRecyclerView) RecyclerView remindersRecyclerView;
   @Bind(R.id.yourNotesET) EditText yourNotesET;
   @Bind(R.id.unitsET) EditText unitsET;
   @Bind(R.id.addMedicationBTN) Button addMedicationBTN;
@@ -75,6 +84,42 @@ public class AddExistingMedicationActivity extends BaseActivity {
         addMedicationBTN.setText(getString(R.string.edit_medication_button));
       }
     }
+
+    frequencyET.addTextChangedListener(new TextWatcher() {
+      @Override public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+      }
+
+      @Override public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+      }
+
+      @Override public void afterTextChanged(Editable editable) {
+        if (!editable.toString().isEmpty()) {
+
+          int frequncyNumber = Integer.parseInt(editable.toString());
+
+          ArrayList<ReminderTime> reminderTimes =
+              new ArrayList<>(frequncyNumber);
+
+          for (int ind = 0; ind < frequncyNumber; ind++) {
+            reminderTimes.add(new ReminderTime(9, 30, "9:30 AM"));
+          }
+
+          Timber.d("About to setup reminders list");
+          setupRemindersRecyclerView(reminderTimes);
+        }
+      }
+    });
+  }
+
+  private void setupRemindersRecyclerView(ArrayList<ReminderTime> reminderTimes) {
+    RemindersRecyclerAdapter remindersRecyclerAdapter =
+        new RemindersRecyclerAdapter(AddExistingMedicationActivity.this, reminderTimes);
+    remindersRecyclerView.setLayoutManager(
+        new LinearLayoutManager(AddExistingMedicationActivity.this));
+    remindersRecyclerView.addItemDecoration(
+        new SimpleDividerItemDecoration(AddExistingMedicationActivity.this));
+    remindersRecyclerView.setAdapter(remindersRecyclerAdapter);
   }
 
   @OnClick(R.id.daysOfWeekLayout) void openDaysChooser() {

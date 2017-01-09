@@ -1,6 +1,7 @@
 package com.mcsaatchi.gmfit.health.adapters;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,10 +49,12 @@ public class EditableTestMetricUnitsSpinnerAdapter extends BaseAdapter implement
 
   public View getView(int i, View view, ViewGroup viewgroup) {
     TextView txt = new TextView(activity);
+    Drawable drawable = activity.getResources().getDrawable(R.drawable.ic_arrow_down_green);
+    drawable.setBounds(0, 0, 50, 50);
     txt.setGravity(Gravity.CENTER | Gravity.CENTER_VERTICAL);
     txt.setPadding(activity.getResources().getDimensionPixelSize(R.dimen.default_margin_2), 16, 16,
         16);
-    txt.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_arrow_down_green, 0);
+    txt.setCompoundDrawables(null, null, drawable, null);
     txt.setText(listItems.get(i).getUnit());
     txt.setTextColor(activity.getResources().getColor(R.color.health_green));
     return txt;

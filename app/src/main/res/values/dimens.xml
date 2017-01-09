@@ -138,4 +138,5 @@
   <dimen name="reminder_status_icon_dimens">10dp</dimen>
   <dimen name="no_medications_found_magnifier_dimens">150dp</dimen>
   <dimen name="add_medication_row_height">70dp</dimen>
+  <dimen name="reminders_recyclerview_height">200dp</dimen>
 </resources>

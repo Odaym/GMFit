@@ -123,12 +123,6 @@
         android:windowSoftInputMode="stateHidden"/>
 
     <activity
-        android:name=".health.activities.PillReminderActivity"
-        android:exported="true"
-        android:screenOrientation="portrait"
-        android:theme="@style/No_Action_Bar_Theme"/>
-
-    <activity
         android:name=".health.activities.SearchMedicationsActivity"
         android:exported="true"
         android:screenOrientation="portrait"

@@ -210,10 +210,10 @@
 
       <!-- DAYS OF WEEK -->
       <LinearLayout
+          android:id="@+id/daysOfWeekLayout"
           android:layout_width="match_parent"
           android:layout_height="@dimen/add_medication_row_height"
           android:background="@color/white"
-          android:id="@+id/daysOfWeekLayout"
           android:clickable="true"
           android:focusable="true"
           android:paddingStart="@dimen/default_margin_2"
@@ -229,11 +229,11 @@
         <TextView
             android:id="@+id/daysOfWeekTV"
             android:layout_width="wrap_content"
-            android:paddingStart="@dimen/default_margin_2"
             android:layout_height="match_parent"
             android:layout_weight="11"
             android:background="@color/much_lighter_gray"
             android:gravity="center_vertical"
+            android:paddingStart="@dimen/default_margin_2"
             android:textColor="@color/black_alpha_50"
             />
 
@@ -348,6 +348,7 @@
           android:layout_width="match_parent"
           android:layout_height="@dimen/add_medication_row_height"
           android:background="@color/white"
+          android:orientation="horizontal"
           android:paddingStart="@dimen/default_margin_2"
           >
 
@@ -367,6 +368,19 @@
             android:paddingEnd="@dimen/default_margin_2"
             />
       </LinearLayout>
+
+      <View
+          android:layout_width="match_parent"
+          android:layout_height="1dp"
+          android:background="@color/offwhite_background_gray"
+          />
+
+      <android.support.v7.widget.RecyclerView
+          android:id="@+id/remindersRecyclerView"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:background="@color/white"
+          />
 
       <View
           android:layout_width="match_parent"
