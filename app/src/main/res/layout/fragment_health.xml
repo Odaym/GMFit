@@ -129,7 +129,7 @@
             />
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/medicationsRecyclerView"
+            android:id="@+id/medicationRemindersRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             />

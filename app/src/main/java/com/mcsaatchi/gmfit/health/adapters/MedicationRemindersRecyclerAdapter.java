@@ -10,19 +10,20 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.health.models.ReminderTime;
+import com.mcsaatchi.gmfit.health.models.MedicationReminder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-public class RemindersRecyclerAdapter extends RecyclerView.Adapter {
+public class MedicationRemindersRecyclerAdapter extends RecyclerView.Adapter {
   private Context context;
-  private List<ReminderTime> reminderTimes;
+  private List<MedicationReminder> medicationReminderTimes;
 
-  public RemindersRecyclerAdapter(Context context, List<ReminderTime> reminderTimes) {
+  public MedicationRemindersRecyclerAdapter(Context context,
+      List<MedicationReminder> medicationReminderTimes) {
     this.context = context;
-    this.reminderTimes = reminderTimes;
+    this.medicationReminderTimes = medicationReminderTimes;
   }
 
   @Override public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -36,11 +37,15 @@ public class RemindersRecyclerAdapter extends RecyclerView.Adapter {
   @Override public void onBindViewHolder(RecyclerView.ViewHolder h, int position) {
     final ViewHolder holder = (ViewHolder) h;
 
-    holder.bind(reminderTimes.get(position));
+    holder.bind(medicationReminderTimes.get(position));
   }
 
   @Override public int getItemCount() {
-    return reminderTimes.size();
+    return medicationReminderTimes.size();
+  }
+
+  public MedicationReminder getItem(int position) {
+    return medicationReminderTimes.get(position);
   }
 
   private String formatFinalTime(int hour, int minute) {
@@ -87,8 +92,12 @@ public class RemindersRecyclerAdapter extends RecyclerView.Adapter {
       reminderLabelTV = (TextView) itemView.findViewById(R.id.reminderLabelTV);
     }
 
-    public void bind(final ReminderTime reminderItem) {
-      reminderValueTV.setText(reminderItem.getFullTime());
+    public void bind(final MedicationReminder medicationReminderItem) {
+      reminderValueTV.setText(medicationReminderItem.getHour()
+          + ":"
+          + medicationReminderItem.getMinute()
+          + " "
+          + medicationReminderItem.getAM_PM());
       reminderLabelTV.setText("Reminder " + (getAdapterPosition() + 1));
 
       clickableLayout.setOnClickListener(new View.OnClickListener() {
@@ -118,7 +127,8 @@ public class RemindersRecyclerAdapter extends RecyclerView.Adapter {
                   //      finalTimeForAlarm);
                   //}
                 }
-              }, Integer.parseInt(timeValues[0]), Integer.parseInt(timeValues[1].split(" ")[0]), false);
+              }, Integer.parseInt(timeValues[0]), Integer.parseInt(timeValues[1].split(" ")[0]),
+                  false);
 
           timePicker.show();
         }

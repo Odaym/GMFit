@@ -11,6 +11,7 @@ import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.common.models.DataChart;
 import com.mcsaatchi.gmfit.fitness.models.FitnessWidget;
 import com.mcsaatchi.gmfit.health.models.Medication;
+import com.mcsaatchi.gmfit.health.models.MedicationReminder;
 import com.mcsaatchi.gmfit.nutrition.models.NutritionWidget;
 import java.sql.SQLException;
 
@@ -21,7 +22,7 @@ import java.sql.SQLException;
  * the DAOs used by the other classes.
  */
 public class DBHelper extends OrmLiteSqliteOpenHelper {
-  private static final String DATABASE_NAME = "GlobeMedFitDB.db";
+  private static final String DATABASE_NAME = "GlobeMedFit.db";
 
   private static final int DATABASE_VERSION = 1;
 
@@ -29,6 +30,7 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
   private RuntimeExceptionDao<NutritionWidget, Integer> nutritionWidgetsRunTimeDAO = null;
   private RuntimeExceptionDao<DataChart, Integer> dataChartRunTimeDAO = null;
   private RuntimeExceptionDao<Medication, Integer> medicationRunTimeDAO = null;
+  private RuntimeExceptionDao<MedicationReminder, Integer> medicationReminderRunTimeDAO = null;
 
   public DBHelper(Context context) {
     super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -40,6 +42,7 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
       TableUtils.createTable(connectionSource, FitnessWidget.class);
       TableUtils.createTable(connectionSource, NutritionWidget.class);
       TableUtils.createTable(connectionSource, Medication.class);
+      TableUtils.createTable(connectionSource, MedicationReminder.class);
 
       /**
        * Create starting Fitness Widgets
@@ -81,7 +84,6 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
     }
     return dataChartRunTimeDAO;
   }
-
   public RuntimeExceptionDao<Medication, Integer> getMedicationDAO() {
     if (medicationRunTimeDAO == null) {
       medicationRunTimeDAO = getRuntimeExceptionDao(Medication.class);
@@ -89,11 +91,19 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
     return medicationRunTimeDAO;
   }
 
+  public RuntimeExceptionDao<MedicationReminder, Integer> getMedicationReminderDAO() {
+    if (medicationReminderRunTimeDAO == null) {
+      medicationReminderRunTimeDAO = getRuntimeExceptionDao(MedicationReminder.class);
+    }
+    return medicationReminderRunTimeDAO;
+  }
+
   @Override public void close() {
     super.close();
     dataChartRunTimeDAO = null;
     nutritionWidgetsRunTimeDAO = null;
     fitnessWidgetsRunTimeDAO = null;
+    medicationRunTimeDAO = null;
     medicationRunTimeDAO = null;
   }
 }

@@ -27,7 +27,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import timber.log.Timber;
 
 public class RemindersActivity extends BaseActivity {
   @Bind(R.id.toolbar) Toolbar toolbar;
@@ -54,10 +53,8 @@ public class RemindersActivity extends BaseActivity {
     calendar.set(Calendar.SECOND, 0);
     calendar.set(Calendar.MILLISECOND, 0);
 
-    Timber.d("Hour for alarm : " + Integer.parseInt(finalTime.split(":")[0]));
-    Timber.d("Minute for alarm : " + Integer.parseInt(finalTime.split(":")[1]));
-
     Intent intent = new Intent(context, AlarmReceiver.class);
+    intent.putExtra(Constants.EXTRAS_ALARM_TYPE, "meals");
 
     PendingIntent pendingIntent = null;
 

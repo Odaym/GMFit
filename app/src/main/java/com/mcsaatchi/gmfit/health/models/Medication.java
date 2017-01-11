@@ -1,64 +1,30 @@
 package com.mcsaatchi.gmfit.health.models;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import com.j256.ormlite.dao.ForeignCollection;
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
+import java.io.Serializable;
 import java.util.ArrayList;
 
-@DatabaseTable(tableName = "Medication") public class Medication implements Parcelable {
-  public static final Creator<Medication> CREATOR = new Creator<Medication>() {
-    @Override public Medication createFromParcel(Parcel source) {
-      return new Medication(source);
-    }
-
-    @Override public Medication[] newArray(int size) {
-      return new Medication[size];
-    }
-  };
+@DatabaseTable(tableName = "Medication") public class Medication
+    implements Serializable {
   @DatabaseField(generatedId = true) private int id;
   @DatabaseField private String name;
   @DatabaseField private String description;
   @DatabaseField private String dosage;
+  @DatabaseField private int frequency;
+  @DatabaseField private int treatmentDuration;
+  @ForeignCollectionField private ForeignCollection<MedicationReminder> medicationReminders;
   @DatabaseField(dataType = DataType.SERIALIZABLE) private ArrayList<DayChoice> when;
   @DatabaseField private String whenString;
-  @DatabaseField private int frequency;
   @DatabaseField private int units;
   @DatabaseField private String unitForm;
   @DatabaseField private String remarks;
-  @DatabaseField private int treatmentDuration;
+  @DatabaseField private boolean remindersEnabled;
 
   public Medication() {
-  }
-
-  public Medication(String name, String description, String dosage, ArrayList<DayChoice> when,
-      String whenString, int frequency, int units, String unitForm, int treatmentDuration,
-      String remarks) {
-    this.name = name;
-    this.description = description;
-    this.dosage = dosage;
-    this.when = when;
-    this.whenString = whenString;
-    this.frequency = frequency;
-    this.units = units;
-    this.unitForm = unitForm;
-    this.treatmentDuration = treatmentDuration;
-    this.remarks = remarks;
-  }
-
-  protected Medication(Parcel in) {
-    this.id = in.readInt();
-    this.name = in.readString();
-    this.description = in.readString();
-    this.dosage = in.readString();
-    this.when = in.createTypedArrayList(DayChoice.CREATOR);
-    this.whenString = in.readString();
-    this.frequency = in.readInt();
-    this.units = in.readInt();
-    this.unitForm = in.readString();
-    this.remarks = in.readString();
-    this.treatmentDuration = in.readInt();
   }
 
   public int getId() {
@@ -91,6 +57,22 @@ import java.util.ArrayList;
 
   public void setDosage(String dosage) {
     this.dosage = dosage;
+  }
+
+  public int getTreatmentDuration() {
+    return treatmentDuration;
+  }
+
+  public void setTreatmentDuration(int treatmentDuration) {
+    this.treatmentDuration = treatmentDuration;
+  }
+
+  public ForeignCollection<MedicationReminder> getMedicationReminders() {
+    return medicationReminders;
+  }
+
+  public void setMedicationReminders(ForeignCollection<MedicationReminder> medicationReminders) {
+    this.medicationReminders = medicationReminders;
   }
 
   public ArrayList<DayChoice> getWhen() {
@@ -133,14 +115,6 @@ import java.util.ArrayList;
     this.unitForm = unitForm;
   }
 
-  public int getTreatmentDuration() {
-    return treatmentDuration;
-  }
-
-  public void setTreatmentDuration(int treatmentDuration) {
-    this.treatmentDuration = treatmentDuration;
-  }
-
   public String getRemarks() {
     return remarks;
   }
@@ -149,21 +123,11 @@ import java.util.ArrayList;
     this.remarks = remarks;
   }
 
-  @Override public int describeContents() {
-    return 0;
+  public boolean isRemindersEnabled() {
+    return remindersEnabled;
   }
 
-  @Override public void writeToParcel(Parcel dest, int flags) {
-    dest.writeInt(this.id);
-    dest.writeString(this.name);
-    dest.writeString(this.description);
-    dest.writeString(this.dosage);
-    dest.writeTypedList(this.when);
-    dest.writeString(this.whenString);
-    dest.writeInt(this.frequency);
-    dest.writeInt(this.units);
-    dest.writeString(this.unitForm);
-    dest.writeString(this.remarks);
-    dest.writeInt(this.treatmentDuration);
+  public void setRemindersEnabled(boolean remindersEnabled) {
+    this.remindersEnabled = remindersEnabled;
   }
 }

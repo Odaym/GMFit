@@ -61,8 +61,10 @@ public class Constants {
   public static final String EXTRAS_ADD_NUTRIITION_CHART = "add_nutrition_chart";
   public static final String EXTRAS_MAIN_MEAL_NAME = "main_meal_name";
 
-  public static final String EXTRAS_MEDICATION_ITEM = "medication_item";
+  public static final String EXTRAS_MEDICATION_REMINDER_ITEM = "medication_item";
   public static final String EXTRAS_PURPOSE_EDIT_MEDICATION_REMINDER = "purpose_edit_medication_reminder";
+
+  public static final String EXTRAS_ALARM_TYPE = "alarm_type";
 
   public static final String BUNDLE_ACTIVITY_TITLE = "activity_title";
   public static final String BUNDLE_ACTIVITY_BACK_BUTTON_ENABLED = "activity_back_button_enabled";

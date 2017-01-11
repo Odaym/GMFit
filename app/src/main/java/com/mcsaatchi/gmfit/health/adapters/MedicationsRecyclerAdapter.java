@@ -96,8 +96,7 @@ public class MedicationsRecyclerAdapter extends RecyclerView.Adapter {
         @Override public void onClick(View view) {
           Intent intent = new Intent(context, AddExistingMedicationActivity.class);
           intent.putExtra(Constants.EXTRAS_PURPOSE_EDIT_MEDICATION_REMINDER, true);
-          intent.putExtra(Constants.EXTRAS_MEDICATION_ITEM,
-              medicationItem);
+          intent.putExtra(Constants.EXTRAS_MEDICATION_REMINDER_ITEM, medicationItem);
           context.startActivity(intent);
         }
       });

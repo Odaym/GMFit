@@ -52,7 +52,7 @@ public class SearchMedicationsRecyclerAdapter extends RecyclerView.Adapter {
       itemView.setOnClickListener(new View.OnClickListener() {
         @Override public void onClick(View view) {
           Intent intent = new Intent(context, AddExistingMedicationActivity.class);
-          intent.putExtra(Constants.EXTRAS_MEDICATION_ITEM,
+          intent.putExtra(Constants.EXTRAS_MEDICATION_REMINDER_ITEM,
               medicationsList.get(getAdapterPosition()));
           context.startActivity(intent);
         }
