@@ -37,6 +37,9 @@ import com.mcsaatchi.gmfit.health.models.Medication;
 import com.mcsaatchi.gmfit.health.models.MedicationReminder;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
+import timber.log.Timber;
 
 public class AddExistingMedicationActivity extends BaseActivity {
 
@@ -61,6 +64,18 @@ public class AddExistingMedicationActivity extends BaseActivity {
   private boolean areRemindersEnabled = false;
   private ArrayList<DayChoice> daysSelected = null;
 
+  private int[] daysOfWeekArray;
+
+  private Map<String, Integer> daysOfweekMap = new HashMap<String, Integer>() {{
+    put("Monday", 1);
+    put("Tuesday", 2);
+    put("Wednesday", 3);
+    put("Thursday", 4);
+    put("Friday", 5);
+    put("Saturday", 6);
+    put("Sunday", 7);
+  }};
+
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
@@ -81,6 +96,14 @@ public class AddExistingMedicationActivity extends BaseActivity {
 
       if (medicationItem != null) {
         daysSelected = medicationItem.getWhen();
+
+        daysOfWeekArray = new int[daysSelected.size()];
+        for (int i = 0; i < daysSelected.size(); i++) {
+          if (daysSelected.get(i).isDaySelected()) {
+            daysOfWeekArray[i] = daysOfweekMap.get(daysSelected.get(i).getDayName());
+          }
+        }
+
         //
         //for (Medication med : dbHelper.getMedicationDAO().queryForAll()) {
         //  Timber.d("MedicationReminders SIZE : " + med.getMedicationReminders().size());
@@ -151,7 +174,7 @@ public class AddExistingMedicationActivity extends BaseActivity {
     medicationReminders = new ArrayList<>(frequencyNumber);
 
     for (int ind = 0; ind < frequencyNumber; ind++) {
-      medicationReminders.add(new MedicationReminder(new int[] { 1, 2 }, 9, 30, 0, "AM"));
+      medicationReminders.add(new MedicationReminder(9, 30, 0, "AM"));
     }
 
     setupRemindersRecyclerView(medicationReminders);
@@ -245,9 +268,12 @@ public class AddExistingMedicationActivity extends BaseActivity {
       String daysOfWeekResult = "";
 
       if (dayChoices != null) {
-        for (DayChoice day : dayChoices) {
-          if (day.isDaySelected()) {
-            daysOfWeekResult += day.getDayName().substring(0, 3) + ", ";
+        daysOfWeekArray = new int[dayChoices.size()];
+
+        for (int i = 0; i < dayChoices.size(); i++) {
+          if (dayChoices.get(i).isDaySelected()) {
+            daysOfWeekArray[i] = daysOfweekMap.get(dayChoices.get(i).getDayName());
+            daysOfWeekResult += dayChoices.get(i).getDayName().substring(0, 3) + ", ";
           }
         }
       }
@@ -257,9 +283,15 @@ public class AddExistingMedicationActivity extends BaseActivity {
   }
 
   public void setupMedicationReminders(MedicationReminder medReminder) {
+    Timber.d(medReminder.toString());
     Calendar calendar = Calendar.getInstance();
     calendar.setTimeInMillis(System.currentTimeMillis());
-    calendar.set(Calendar.DAY_OF_WEEK, medReminder.getDays_of_week()[0]);
+
+    for (Integer day : daysOfWeekArray) {
+      if (day != 0) {
+        calendar.set(Calendar.DAY_OF_WEEK, day);
+      }
+    }
     calendar.set(Calendar.HOUR_OF_DAY, medReminder.getHour());
     calendar.set(Calendar.MINUTE, medReminder.getMinute());
     calendar.set(Calendar.SECOND, medReminder.getSecond());
@@ -287,6 +319,7 @@ public class AddExistingMedicationActivity extends BaseActivity {
     for (int i = 0; i < adapter.getItemCount(); i++) {
       MedicationReminder medReminder = adapter.getItem(i);
       medReminder.setMedication(medicationObject);
+      medReminder.setDays_of_week(daysOfWeekArray);
       medicationObject.getMedicationReminders().add(medReminder);
 
       setupMedicationReminders(medReminder);

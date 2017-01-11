@@ -33,8 +33,7 @@ import java.util.Arrays;
   public MedicationReminder() {
   }
 
-  public MedicationReminder(int[] days_of_week, int hour, int minute, int second, String AM_PM) {
-    this.days_of_week = days_of_week;
+  public MedicationReminder(int hour, int minute, int second, String AM_PM) {
     this.hour = hour;
     this.minute = minute;
     this.second = second;

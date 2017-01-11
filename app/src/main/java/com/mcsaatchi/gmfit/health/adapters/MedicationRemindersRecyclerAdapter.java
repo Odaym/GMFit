@@ -48,22 +48,6 @@ public class MedicationRemindersRecyclerAdapter extends RecyclerView.Adapter {
     return medicationReminderTimes.get(position);
   }
 
-  private String formatFinalTime(int hour, int minute) {
-    String finalTime = "";
-
-    try {
-      final SimpleDateFormat sdf = new SimpleDateFormat("H:mm");
-      final Date dateObj;
-
-      dateObj = sdf.parse(hour + ":" + minute);
-      finalTime = new SimpleDateFormat("HH:mm:a").format(dateObj);
-    } catch (ParseException e) {
-      e.printStackTrace();
-    }
-
-    return finalTime;
-  }
-
   private String reverseFormatFinalTime(String originalTime) {
     String finalTime = "";
 
@@ -109,8 +93,6 @@ public class MedicationRemindersRecyclerAdapter extends RecyclerView.Adapter {
               new TimePickerDialog(context, new TimePickerDialog.OnTimeSetListener() {
                 @Override
                 public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                  String finalTimeForAlarm = formatFinalTime(selectedHour, selectedMinute);
-
                   String finalTimeForDisplay =
                       reverseFormatFinalTime(selectedHour + ":" + selectedMinute);
 
@@ -122,10 +104,10 @@ public class MedicationRemindersRecyclerAdapter extends RecyclerView.Adapter {
                       + " "
                       + timeValuesForDisplay[2]);
 
-                  //if (areAlarmsEnabled) {
-                  //  setupMealRemindersAlarm(RemindersActivity.this, prefs, "Dinner",
-                  //      finalTimeForAlarm);
-                  //}
+                  medicationReminderTimes.get(getAdapterPosition()).setHour(selectedHour);
+                  medicationReminderTimes.get(getAdapterPosition()).setMinute(selectedMinute);
+                  medicationReminderTimes.get(getAdapterPosition())
+                      .setAM_PM(timeValuesForDisplay[2]);
                 }
               }, Integer.parseInt(timeValues[0]), Integer.parseInt(timeValues[1].split(" ")[0]),
                   false);
