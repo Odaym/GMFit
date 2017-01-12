@@ -38,6 +38,8 @@ import com.mcsaatchi.gmfit.health.models.MedicationReminder;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Locale;
 import java.util.Map;
 import timber.log.Timber;
 
@@ -66,7 +68,7 @@ public class AddExistingMedicationActivity extends BaseActivity {
 
   private int[] daysOfWeekArray;
 
-  private Map<String, Integer> daysOfweekMap = new HashMap<String, Integer>() {{
+  private Map<String, Integer> daysOfWeekMap = new HashMap<String, Integer>() {{
     put("Monday", 1);
     put("Tuesday", 2);
     put("Wednesday", 3);
@@ -95,14 +97,22 @@ public class AddExistingMedicationActivity extends BaseActivity {
           .getBoolean(Constants.EXTRAS_PURPOSE_EDIT_MEDICATION_REMINDER, false);
 
       if (medicationItem != null) {
-        daysSelected = medicationItem.getWhen();
+        if (medicationItem.getWhen() != null) {
+          daysSelected = medicationItem.getWhen();
 
-        daysOfWeekArray = new int[daysSelected.size()];
-        for (int i = 0; i < daysSelected.size(); i++) {
-          if (daysSelected.get(i).isDaySelected()) {
-            daysOfWeekArray[i] = daysOfweekMap.get(daysSelected.get(i).getDayName());
+          daysOfWeekArray = new int[daysSelected.size()];
+
+          for (int i = 0; i < daysSelected.size(); i++) {
+            if (daysSelected.get(i).isDaySelected()) {
+              daysOfWeekArray[i] = daysOfWeekMap.get(daysSelected.get(i).getDayName());
+            }
           }
         }
+
+        dbHelper.getMedicationReminderDAO()
+            .delete(dbHelper.getMedicationReminderDAO().queryForAll());
+
+        //Timber.d("Medication object : " + medicationItem.toString());
 
         //
         //for (Medication med : dbHelper.getMedicationDAO().queryForAll()) {
@@ -272,7 +282,7 @@ public class AddExistingMedicationActivity extends BaseActivity {
 
         for (int i = 0; i < dayChoices.size(); i++) {
           if (dayChoices.get(i).isDaySelected()) {
-            daysOfWeekArray[i] = daysOfweekMap.get(dayChoices.get(i).getDayName());
+            daysOfWeekArray[i] = daysOfWeekMap.get(dayChoices.get(i).getDayName());
             daysOfWeekResult += dayChoices.get(i).getDayName().substring(0, 3) + ", ";
           }
         }
@@ -282,35 +292,46 @@ public class AddExistingMedicationActivity extends BaseActivity {
     }
   }
 
-  public void setupMedicationReminders(MedicationReminder medReminder) {
-    Timber.d(medReminder.toString());
-    Calendar calendar = Calendar.getInstance();
+  public void setupMedicationReminders(Iterator<MedicationReminder> medicationRemindersIterator) {
+    Calendar calendar = Calendar.getInstance(Locale.getDefault());
     calendar.setTimeInMillis(System.currentTimeMillis());
 
-    for (Integer day : daysOfWeekArray) {
-      if (day != 0) {
-        calendar.set(Calendar.DAY_OF_WEEK, day);
+    while (medicationRemindersIterator.hasNext()) {
+      MedicationReminder medReminder = medicationRemindersIterator.next();
+
+      for (int i = 0; i < medReminder.getDays_of_week().length; i++) {
+        int dayChosen = medReminder.getDays_of_week()[i];
+
+        if (dayChosen != 0) {
+          Timber.d("Day chosen : " + dayChosen);
+
+          calendar.set(Calendar.DAY_OF_WEEK, dayChosen);
+          calendar.set(Calendar.HOUR_OF_DAY, medReminder.getHour());
+          calendar.set(Calendar.MINUTE, medReminder.getMinute());
+          calendar.set(Calendar.SECOND, medReminder.getSecond());
+          if (medReminder.getAM_PM().equals("AM")) {
+            calendar.set(Calendar.AM_PM, Calendar.AM);
+          } else {
+            calendar.set(Calendar.AM_PM, Calendar.PM);
+          }
+
+          Intent intent = new Intent(AddExistingMedicationActivity.this, AlarmReceiver.class);
+          intent.putExtra(Constants.EXTRAS_ALARM_TYPE, "medications");
+          intent.putExtra(Constants.EXTRAS_MEDICATION_REMINDER_ITEM, (Parcelable) medReminder);
+
+          PendingIntent pendingIntent =
+              PendingIntent.getBroadcast(this, medReminder.getId(), intent,
+                  PendingIntent.FLAG_UPDATE_CURRENT);
+
+          AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+          am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+              AlarmManager.INTERVAL_DAY, pendingIntent);
+        }
       }
     }
-    calendar.set(Calendar.HOUR_OF_DAY, medReminder.getHour());
-    calendar.set(Calendar.MINUTE, medReminder.getMinute());
-    calendar.set(Calendar.SECOND, medReminder.getSecond());
-    calendar.set(Calendar.MILLISECOND, 0);
-
-    Intent intent = new Intent(AddExistingMedicationActivity.this, AlarmReceiver.class);
-    intent.putExtra(Constants.EXTRAS_ALARM_TYPE, "medications");
-    intent.putExtra(Constants.EXTRAS_MEDICATION_REMINDER_ITEM, (Parcelable) medReminder);
-
-    PendingIntent pendingIntent = PendingIntent.getBroadcast(this, medReminder.getId(), intent,
-        PendingIntent.FLAG_UPDATE_CURRENT);
-
-    AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-    am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY,
-        pendingIntent);
   }
 
   private void assignForeignCollectionToParentObject(Medication medicationObject) {
-
     medicationDAO.assignEmptyForeignCollection(medicationObject, "medicationReminders");
 
     MedicationRemindersRecyclerAdapter adapter =
@@ -320,9 +341,11 @@ public class AddExistingMedicationActivity extends BaseActivity {
       MedicationReminder medReminder = adapter.getItem(i);
       medReminder.setMedication(medicationObject);
       medReminder.setDays_of_week(daysOfWeekArray);
+      medReminder.setTotalTimesToTrigger(
+          medicationObject.getTreatmentDuration() * daysOfWeekArray.length);
       medicationObject.getMedicationReminders().add(medReminder);
-
-      setupMedicationReminders(medReminder);
     }
+
+    setupMedicationReminders(medicationObject.getMedicationReminders().iterator());
   }
 }

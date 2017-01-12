@@ -294,6 +294,7 @@ public class HealthFragment extends Fragment {
 
   @Subscribe public void updateMedicationRemindersList(MedicationItemCreatedEvent event) {
     setupMedicationRemindersList(medicationDAO.queryForAll());
+    //medicationDAO.delete(medicationDAO.queryForAll());
   }
 
   @Override public void onDestroy() {

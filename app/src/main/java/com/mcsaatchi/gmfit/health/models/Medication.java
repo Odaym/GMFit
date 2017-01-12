@@ -8,8 +8,7 @@ import com.j256.ormlite.table.DatabaseTable;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-@DatabaseTable(tableName = "Medication") public class Medication
-    implements Serializable {
+@DatabaseTable(tableName = "Medication") public class Medication implements Serializable {
   @DatabaseField(generatedId = true) private int id;
   @DatabaseField private String name;
   @DatabaseField private String description;
@@ -129,5 +128,23 @@ import java.util.ArrayList;
 
   public void setRemindersEnabled(boolean remindersEnabled) {
     this.remindersEnabled = remindersEnabled;
+  }
+
+  @Override public String toString() {
+    return "Medication{" +
+        "id=" + id +
+        ", name='" + name + '\'' +
+        ", description='" + description + '\'' +
+        ", dosage='" + dosage + '\'' +
+        ", frequency=" + frequency +
+        ", treatmentDuration=" + treatmentDuration +
+        ", medicationReminders size =" + medicationReminders +
+        ", when=" + when +
+        ", whenString='" + whenString + '\'' +
+        ", units=" + units +
+        ", unitForm='" + unitForm + '\'' +
+        ", remarks='" + remarks + '\'' +
+        ", remindersEnabled=" + remindersEnabled +
+        '}';
   }
 }

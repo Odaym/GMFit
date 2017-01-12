@@ -258,20 +258,21 @@ public class FitnessFragment extends Fragment {
                     responseDatum.getValue()));
               }
 
-              CustomBarChart customBarChart =
-                  new CustomBarChart(getActivity(), chartTitle, chart_slug);
+              if (getActivity() != null) {
+                CustomBarChart customBarChart =
+                    new CustomBarChart(getActivity(), chartTitle, chart_slug);
 
-              /**
-               * Open the breakdown for the chart
-               */
-              customBarChart.addClickListener(new CustomBarChart.CustomBarChartClickListener() {
-                @Override public void handleClick(String chartTitle, String chartType) {
-                  getSlugBreakdownForChart(chartTitle, chartType);
-                }
-              });
+                /**
+                 * Open the breakdown for the chart
+                 */
+                customBarChart.addClickListener(new CustomBarChart.CustomBarChartClickListener() {
+                  @Override public void handleClick(String chartTitle, String chartType) {
+                    getSlugBreakdownForChart(chartTitle, chartType);
+                  }
+                });
 
-              customBarChart.setBarChartDataAndDates(cards_container, newChartData,
-                  Constants.EXTRAS_FITNESS_FRAGMENT);
+                customBarChart.setBarChartDataAndDates(cards_container, newChartData, Constants.EXTRAS_FITNESS_FRAGMENT);
+              }
             }
           }
 
