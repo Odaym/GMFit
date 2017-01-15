@@ -72,23 +72,21 @@ public class AlarmReceiver extends BroadcastReceiver {
               intent.getExtras().getParcelable(Constants.EXTRAS_MEDICATION_REMINDER_ITEM);
 
           if (medReminder != null) {
-            //Timber.d("Medication Reminder ID: "
-            //    + medReminder.getId()
-            //    + " with time : "
-            //    + medReminder.getAlarmTime().get(Calendar.HOUR_OF_DAY)
-            //    + medReminder.getAlarmTime().get(Calendar.MINUTE)
-            //    + " on day "
-            //    + medReminder.getAlarmTime().get(Calendar.DAY_OF_WEEK)
-            //    + " for "
-            //    + medReminder.getMedication().getName());
-
             Calendar cal = Calendar.getInstance();
             cal.set(Calendar.DAY_OF_WEEK, medReminder.getAlarmTime().get(Calendar.DAY_OF_WEEK));
             cal.set(Calendar.HOUR_OF_DAY, medReminder.getAlarmTime().get(Calendar.HOUR_OF_DAY));
             cal.set(Calendar.MINUTE, medReminder.getAlarmTime().get(Calendar.MINUTE));
 
-            if (Calendar.getInstance().compareTo(cal) > 0) {
+            if (Calendar.getInstance().get(Calendar.DAY_OF_WEEK) == cal.get(
+                Calendar.DAY_OF_WEEK))
+              Timber.d("Day is not today");
+
+            if (Calendar.getInstance().compareTo(cal) > 0
+                && Calendar.getInstance().get(Calendar.DAY_OF_WEEK) == cal.get(
+                Calendar.DAY_OF_WEEK)) {
+
               Timber.d("MedReminder is after time now");
+
               if (medReminder.getTotalTimesToTrigger() == 0) {
                 Timber.d("Reminder id : " + medReminder.getId() + " about to be deleted");
                 medicationReminderDAO.delete(medReminder);

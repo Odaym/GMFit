@@ -313,7 +313,7 @@ public class AddExistingMedicationActivity extends BaseActivity {
           pendingIntent = PendingIntent.getBroadcast(this, new Random().nextInt(1000000) + 1, intent,
               PendingIntent.FLAG_ONE_SHOT);
 
-          am.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(),
+          am.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, cal.getTimeInMillis(),
               System.currentTimeMillis(), pendingIntent);
         }
       }
