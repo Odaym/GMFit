@@ -39,9 +39,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Locale;
 import java.util.Map;
-import timber.log.Timber;
+import java.util.Random;
 
 public class AddExistingMedicationActivity extends BaseActivity {
 
@@ -62,10 +61,8 @@ public class AddExistingMedicationActivity extends BaseActivity {
   private RuntimeExceptionDao<Medication, Integer> medicationDAO;
   private ArrayList<MedicationReminder> medicationReminders;
   private Medication medicationItem;
-  private boolean editPurpose = false;
-  private boolean areRemindersEnabled = false;
   private ArrayList<DayChoice> daysSelected = null;
-
+  private boolean editPurpose = false;
   private int[] daysOfWeekArray;
 
   private Map<String, Integer> daysOfWeekMap = new HashMap<String, Integer>() {{
@@ -93,74 +90,62 @@ public class AddExistingMedicationActivity extends BaseActivity {
       medicationItem =
           (Medication) getIntent().getExtras().get(Constants.EXTRAS_MEDICATION_REMINDER_ITEM);
 
-      editPurpose = getIntent().getExtras()
-          .getBoolean(Constants.EXTRAS_PURPOSE_EDIT_MEDICATION_REMINDER, false);
-
-      if (medicationItem != null) {
-        if (medicationItem.getWhen() != null) {
-          daysSelected = medicationItem.getWhen();
-
-          daysOfWeekArray = new int[daysSelected.size()];
-
-          for (int i = 0; i < daysSelected.size(); i++) {
-            if (daysSelected.get(i).isDaySelected()) {
-              daysOfWeekArray[i] = daysOfWeekMap.get(daysSelected.get(i).getDayName());
-            }
-          }
-        }
-
-        dbHelper.getMedicationReminderDAO()
-            .delete(dbHelper.getMedicationReminderDAO().queryForAll());
-
-        //Timber.d("Medication object : " + medicationItem.toString());
-
-        //
-        //for (Medication med : dbHelper.getMedicationDAO().queryForAll()) {
-        //  Timber.d("MedicationReminders SIZE : " + med.getMedicationReminders().size());
-        //
-        //  Iterator<MedicationReminder> itr = med.getMedicationReminders().iterator();
-        //
-        //  while (itr.hasNext()) {
-        //    MedicationReminder RM = itr.next();
-        //    Timber.d("Reminder #"
-        //        + RM.getId()
-        //        + " inside "
-        //        + med.getName()
-        //        + " has time : "
-        //        + RM.getHour()
-        //        + ":"
-        //        + RM.getMinute()
-        //        + " "
-        //        + RM.getAM_PM());
-        //  }
-        //}
-
-        medicineNameET.setText(medicationItem.getName());
-        medicineNameET.setSelection(medicationItem.getName().length());
-
-        unitsET.setText(String.valueOf(medicationItem.getUnits()));
-        unitMeasurementTV.setText(medicationItem.getUnitForm());
-        frequencyET.setText(String.valueOf(medicationItem.getFrequency()));
-        daysOfWeekTV.setText(medicationItem.getWhenString());
-        treatmentDurationET.setText(String.valueOf(medicationItem.getTreatmentDuration()));
-        yourNotesET.setText(medicationItem.getRemarks());
-      }
+      editPurpose =
+          getIntent().getExtras().getBoolean(Constants.EXTRAS_PURPOSE_EDIT_MEDICATION_REMINDER);
 
       if (editPurpose) {
         addMedicationBTN.setText(getString(R.string.edit_medication_button));
       }
+
+      if (medicationItem.getWhen() != null) {
+        daysSelected = medicationItem.getWhen();
+
+        daysOfWeekArray = new int[daysSelected.size()];
+
+        for (int i = 0; i < daysSelected.size(); i++) {
+          if (daysSelected.get(i).isDaySelected()) {
+            daysOfWeekArray[i] = daysOfWeekMap.get(daysSelected.get(i).getDayName());
+          }
+        }
+      }
+
+      medicineNameET.setText(medicationItem.getName());
+      medicineNameET.setSelection(medicationItem.getName().length());
+
+      if (medicationItem.isRemindersEnabled()) {
+        enableRemindersSwitch.setChecked(true);
+        medicationDAO.refresh(medicationItem);
+        medicationReminders = new ArrayList<>(medicationItem.getMedicationReminders());
+        remindersRecyclerView.setVisibility(View.VISIBLE);
+        setupRemindersRecyclerView(medicationReminders);
+      }
+
+      addMedicationBTN.setText(getString(R.string.edit_medication_button));
+      unitsET.setText(String.valueOf(medicationItem.getUnits()));
+      treatmentDurationET.setText(String.valueOf(medicationItem.getTreatmentDuration()));
+      unitMeasurementTV.setText(medicationItem.getUnitForm());
+      frequencyET.setText(String.valueOf(medicationItem.getFrequency()));
+      daysOfWeekTV.setText(medicationItem.getWhenString());
+      treatmentDurationET.setText(String.valueOf(medicationItem.getTreatmentDuration()));
+      yourNotesET.setText(medicationItem.getRemarks());
     }
 
     enableRemindersSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
       @Override public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
+        int frequencyNumber = Integer.parseInt(frequencyET.getText().toString());
+
         if (checked) {
-          prepareRemindersRecyclerView(Integer.parseInt(frequencyET.getText().toString()));
+          if (medicationItem != null && frequencyNumber == 0) {
+
+            setupRemindersRecyclerView(new ArrayList<>(medicationItem.getMedicationReminders()));
+          } else {
+            prepareRemindersRecyclerView(Integer.parseInt(frequencyET.getText().toString()));
+          }
+
           remindersRecyclerView.setVisibility(View.VISIBLE);
         } else {
           remindersRecyclerView.setVisibility(View.GONE);
         }
-
-        areRemindersEnabled = !areRemindersEnabled;
       }
     });
 
@@ -173,7 +158,7 @@ public class AddExistingMedicationActivity extends BaseActivity {
       }
 
       @Override public void afterTextChanged(Editable editable) {
-        if (!editable.toString().isEmpty() && areRemindersEnabled) {
+        if (!editable.toString().isEmpty() && enableRemindersSwitch.isChecked()) {
           prepareRemindersRecyclerView(Integer.parseInt(editable.toString()));
         }
       }
@@ -184,7 +169,7 @@ public class AddExistingMedicationActivity extends BaseActivity {
     medicationReminders = new ArrayList<>(frequencyNumber);
 
     for (int ind = 0; ind < frequencyNumber; ind++) {
-      medicationReminders.add(new MedicationReminder(9, 30, 0, "AM"));
+      medicationReminders.add(new MedicationReminder(Calendar.getInstance()));
     }
 
     setupRemindersRecyclerView(medicationReminders);
@@ -216,35 +201,18 @@ public class AddExistingMedicationActivity extends BaseActivity {
 
       Toast.makeText(this, R.string.fill_in_below_fields_hint, Toast.LENGTH_LONG).show();
     } else {
-      if (!editPurpose) {
-        Medication medication = new Medication();
-        medication.setName(medicineNameET.getText().toString());
-        medication.setRemarks(yourNotesET.getText().toString());
-        medication.setUnits(Integer.parseInt(unitsET.getText().toString()));
-        medication.setUnitForm(unitMeasurementTV.getText().toString());
-        medication.setWhen(daysSelected);
-        medication.setWhenString(daysOfWeekTV.getText().toString());
-        medication.setDosage("0.5 " + medication.getUnitForm());
-        medication.setDescription(
-            medication.getUnits() + " " + medication.getUnitForm() + " " + medication.getUnitForm()
-                .toUpperCase() + " " + medication.getUnits() + " " + medication.getUnitForm());
-
-        medicationDAO.create(medication);
-
-        if (areRemindersEnabled && medicationReminders != null) {
-          assignForeignCollectionToParentObject(medication);
-        }
-
-        medicationDAO.update(medication);
-      } else {
+      if (editPurpose) {
         medicationItem.setName(medicineNameET.getText().toString());
         medicationItem.setRemarks(yourNotesET.getText().toString());
         medicationItem.setUnits(Integer.parseInt(unitsET.getText().toString()));
+        medicationItem.setFrequency(Integer.parseInt(frequencyET.getText().toString()));
         medicationItem.setUnitForm(unitMeasurementTV.getText().toString());
         medicationItem.setWhen(daysSelected);
         medicationItem.setWhenString(daysOfWeekTV.getText().toString());
         medicationItem.setDosage("0.5 " + medicationItem.getUnitForm());
-        medicationItem.setRemindersEnabled(areRemindersEnabled);
+        medicationItem.setRemindersEnabled(enableRemindersSwitch.isChecked());
+        medicationItem.setTreatmentDuration(
+            Integer.parseInt(treatmentDurationET.getText().toString()));
         medicationItem.setDescription(medicationItem.getUnits()
             + " "
             + medicationItem.getUnitForm()
@@ -255,11 +223,40 @@ public class AddExistingMedicationActivity extends BaseActivity {
             + " "
             + medicationItem.getUnitForm());
 
-        medicationDAO.update(medicationItem);
-
-        if (areRemindersEnabled && medicationReminders != null) {
+        if (enableRemindersSwitch.isChecked() && medicationReminders != null) {
+          medicationItem.setRemindersEnabled(true);
           assignForeignCollectionToParentObject(medicationItem);
+        } else {
+          medicationItem.setRemindersEnabled(false);
         }
+
+        medicationDAO.update(medicationItem);
+      } else {
+        Medication medication = new Medication();
+        medication.setName(medicineNameET.getText().toString());
+        medication.setRemarks(yourNotesET.getText().toString());
+        medication.setUnits(Integer.parseInt(unitsET.getText().toString()));
+        medication.setFrequency(Integer.parseInt(frequencyET.getText().toString()));
+        medication.setUnitForm(unitMeasurementTV.getText().toString());
+        medication.setWhen(daysSelected);
+        medication.setWhenString(daysOfWeekTV.getText().toString());
+        medication.setDosage("0.5 " + medication.getUnitForm());
+        medication.setTreatmentDuration(Integer.parseInt(treatmentDurationET.getText().toString()));
+        medication.setRemindersEnabled(enableRemindersSwitch.isChecked());
+        medication.setDescription(
+            medication.getUnits() + " " + medication.getUnitForm() + " " + medication.getUnitForm()
+                .toUpperCase() + " " + medication.getUnits() + " " + medication.getUnitForm());
+
+        medicationDAO.create(medication);
+
+        if (enableRemindersSwitch.isChecked() && medicationReminders != null) {
+          medication.setRemindersEnabled(true);
+          assignForeignCollectionToParentObject(medication);
+        } else {
+          medication.setRemindersEnabled(false);
+        }
+
+        medicationDAO.update(medication);
       }
 
       EventBusSingleton.getInstance().post(new MedicationItemCreatedEvent());
@@ -293,39 +290,31 @@ public class AddExistingMedicationActivity extends BaseActivity {
   }
 
   public void setupMedicationReminders(Iterator<MedicationReminder> medicationRemindersIterator) {
-    Calendar calendar = Calendar.getInstance(Locale.getDefault());
-    calendar.setTimeInMillis(System.currentTimeMillis());
+    PendingIntent pendingIntent;
+    AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
     while (medicationRemindersIterator.hasNext()) {
       MedicationReminder medReminder = medicationRemindersIterator.next();
 
       for (int i = 0; i < medReminder.getDays_of_week().length; i++) {
+
         int dayChosen = medReminder.getDays_of_week()[i];
 
         if (dayChosen != 0) {
-          Timber.d("Day chosen : " + dayChosen);
-
-          calendar.set(Calendar.DAY_OF_WEEK, dayChosen);
-          calendar.set(Calendar.HOUR_OF_DAY, medReminder.getHour());
-          calendar.set(Calendar.MINUTE, medReminder.getMinute());
-          calendar.set(Calendar.SECOND, medReminder.getSecond());
-          if (medReminder.getAM_PM().equals("AM")) {
-            calendar.set(Calendar.AM_PM, Calendar.AM);
-          } else {
-            calendar.set(Calendar.AM_PM, Calendar.PM);
-          }
+          Calendar cal = Calendar.getInstance();
+          cal.set(Calendar.DAY_OF_WEEK, medReminder.getAlarmTime().get(Calendar.DAY_OF_WEEK));
+          cal.set(Calendar.HOUR_OF_DAY, medReminder.getAlarmTime().get(Calendar.HOUR_OF_DAY));
+          cal.set(Calendar.MINUTE, medReminder.getAlarmTime().get(Calendar.MINUTE));
 
           Intent intent = new Intent(AddExistingMedicationActivity.this, AlarmReceiver.class);
           intent.putExtra(Constants.EXTRAS_ALARM_TYPE, "medications");
           intent.putExtra(Constants.EXTRAS_MEDICATION_REMINDER_ITEM, (Parcelable) medReminder);
 
-          PendingIntent pendingIntent =
-              PendingIntent.getBroadcast(this, medReminder.getId(), intent,
-                  PendingIntent.FLAG_UPDATE_CURRENT);
+          pendingIntent = PendingIntent.getBroadcast(this, new Random().nextInt(1000000) + 1, intent,
+              PendingIntent.FLAG_ONE_SHOT);
 
-          AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-          am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
-              AlarmManager.INTERVAL_DAY, pendingIntent);
+          am.setRepeating(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(),
+              System.currentTimeMillis(), pendingIntent);
         }
       }
     }
@@ -337,12 +326,22 @@ public class AddExistingMedicationActivity extends BaseActivity {
     MedicationRemindersRecyclerAdapter adapter =
         (MedicationRemindersRecyclerAdapter) remindersRecyclerView.getAdapter();
 
+    //Clear previous reminders
+    medicationObject.getMedicationReminders().clear();
+
     for (int i = 0; i < adapter.getItemCount(); i++) {
+      int realDaysSelected = 0;
+
       MedicationReminder medReminder = adapter.getItem(i);
       medReminder.setMedication(medicationObject);
       medReminder.setDays_of_week(daysOfWeekArray);
+
+      for (int aDaysOfWeekArray : daysOfWeekArray) {
+        if (aDaysOfWeekArray != 0) realDaysSelected++;
+      }
+
       medReminder.setTotalTimesToTrigger(
-          medicationObject.getTreatmentDuration() * daysOfWeekArray.length);
+          Integer.parseInt(treatmentDurationET.getText().toString()) * realDaysSelected);
       medicationObject.getMedicationReminders().add(medReminder);
     }
 

@@ -15,8 +15,6 @@ import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.health.models.MedicationReminder;
 import com.mcsaatchi.gmfit.nutrition.activities.AddNewMealItemActivity;
 import java.util.Calendar;
-import java.util.Locale;
-import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import timber.log.Timber;
 
@@ -73,61 +71,56 @@ public class AlarmReceiver extends BroadcastReceiver {
           MedicationReminder medReminder =
               intent.getExtras().getParcelable(Constants.EXTRAS_MEDICATION_REMINDER_ITEM);
 
-          Calendar calendar = Calendar.getInstance(Locale.getDefault());
-          calendar.setTimeInMillis(System.currentTimeMillis());
-
-          DateTime timeNow = new DateTime();
-
-          Timber.d("Inside the receiver");
-
           if (medReminder != null) {
-            for (int i = 0; i < medReminder.getDays_of_week().length; i++) {
-              if (medReminder.getDays_of_week()[i] != 0) {
-                calendar.set(Calendar.DAY_OF_WEEK, medReminder.getDays_of_week()[i]);
-                calendar.set(Calendar.HOUR_OF_DAY, medReminder.getHour());
-                calendar.set(Calendar.MINUTE, medReminder.getMinute());
-                calendar.set(Calendar.SECOND, medReminder.getSecond());
+            //Timber.d("Medication Reminder ID: "
+            //    + medReminder.getId()
+            //    + " with time : "
+            //    + medReminder.getAlarmTime().get(Calendar.HOUR_OF_DAY)
+            //    + medReminder.getAlarmTime().get(Calendar.MINUTE)
+            //    + " on day "
+            //    + medReminder.getAlarmTime().get(Calendar.DAY_OF_WEEK)
+            //    + " for "
+            //    + medReminder.getMedication().getName());
 
-                medReminder.getDays_of_week()[i] = 0;
+            Calendar cal = Calendar.getInstance();
+            cal.set(Calendar.DAY_OF_WEEK, medReminder.getAlarmTime().get(Calendar.DAY_OF_WEEK));
+            cal.set(Calendar.HOUR_OF_DAY, medReminder.getAlarmTime().get(Calendar.HOUR_OF_DAY));
+            cal.set(Calendar.MINUTE, medReminder.getAlarmTime().get(Calendar.MINUTE));
 
-                break;
+            if (Calendar.getInstance().compareTo(cal) > 0) {
+              Timber.d("MedReminder is after time now");
+              if (medReminder.getTotalTimesToTrigger() == 0) {
+                Timber.d("Reminder id : " + medReminder.getId() + " about to be deleted");
+                medicationReminderDAO.delete(medReminder);
+              } else {
+                Uri sound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+
+                NotificationCompat.Builder notificationBuilder =
+                    (NotificationCompat.Builder) new NotificationCompat.Builder(
+                        context).setSmallIcon(R.drawable.app_logo)
+                        .setContentTitle("Medication Reminder")
+                        .setContentText("Remember to take your "
+                            + medReminder.getMedication().getName()
+                            + " medication")
+                        .setSound(sound)
+                        .setAutoCancel(true)
+                        .setWhen(when)
+                        .setVibrate(new long[] { 1000, 1000, 1000, 1000, 1000 });
+
+                notificationManager.notify(medReminder.getId(), notificationBuilder.build());
+
+                medReminder.setTotalTimesToTrigger(medReminder.getTotalTimesToTrigger() - 1);
+                medicationReminderDAO.update(medReminder);
+
+                Timber.d("Total times remaining for reminder ID : "
+                    + medReminder.getId()
+                    + " to trigger is : "
+                    + medReminder.getTotalTimesToTrigger());
               }
-            }
-
-            Timber.d("Time now is : " + timeNow.toString());
-
-            Timber.d("Alarm time supposedly : " + calendar.getTime());
-
-            if (calendar.after(timeNow)) {
-              Timber.d("Reminder just triggered : " + medReminder.toString());
-              medReminder.setTotalTimesToTrigger(medReminder.getTotalTimesToTrigger() - 1);
-              medicationReminderDAO.update(medReminder);
             } else {
-              Timber.d("Calendar is before time now");
+              Timber.d("MedReminder is BEFORE time now");
             }
           }
-          //  calendar.set(Calendar.MINUTE, medReminder.getMinute());
-          //  calendar.set(Calendar.SECOND, medReminder.getSecond());
-          //  calendar.set(Calendar.MILLISECOND, 0);
-          //
-          //  Intent alarmIntent = new Intent(context, AlarmReceiver.class);
-          //  alarmIntent.putExtra(Constants.EXTRAS_ALARM_TYPE, "medications");
-          //  alarmIntent.putExtra(Constants.EXTRAS_MEDICATION_REMINDER_ITEM,
-          //      (Parcelable) medReminder);
-          //
-          //  PendingIntent pendingAlarmIntent =
-          //      PendingIntent.getBroadcast(context, medReminder.getId(), alarmIntent,
-          //          PendingIntent.FLAG_UPDATE_CURRENT);
-          //
-          //  AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-          //  am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
-          //      AlarmManager.INTERVAL_DAY, pendingAlarmIntent);
-          //}
-          //
-          //Calendar calendar = Calendar.getInstance();
-          //calendar.setTimeInMillis(System.currentTimeMillis());
-          //
-          //break;
       }
     }
   }

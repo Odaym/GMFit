@@ -13,8 +13,13 @@ import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.health.models.MedicationReminder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import org.joda.time.LocalDateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 public class MedicationRemindersRecyclerAdapter extends RecyclerView.Adapter {
   private Context context;
@@ -37,7 +42,7 @@ public class MedicationRemindersRecyclerAdapter extends RecyclerView.Adapter {
   @Override public void onBindViewHolder(RecyclerView.ViewHolder h, int position) {
     final ViewHolder holder = (ViewHolder) h;
 
-    holder.bind(medicationReminderTimes.get(position));
+    holder.bind(medicationReminderTimes.get(position).getAlarmTime());
   }
 
   @Override public int getItemCount() {
@@ -46,22 +51,6 @@ public class MedicationRemindersRecyclerAdapter extends RecyclerView.Adapter {
 
   public MedicationReminder getItem(int position) {
     return medicationReminderTimes.get(position);
-  }
-
-  private String reverseFormatFinalTime(String originalTime) {
-    String finalTime = "";
-
-    try {
-      final SimpleDateFormat sdf = new SimpleDateFormat("H:mm");
-      final Date dateObj;
-
-      dateObj = sdf.parse(originalTime);
-      finalTime = new SimpleDateFormat("hh:mm:a").format(dateObj);
-    } catch (ParseException e) {
-      e.printStackTrace();
-    }
-
-    return finalTime;
   }
 
   private class ViewHolder extends RecyclerView.ViewHolder {
@@ -76,45 +65,66 @@ public class MedicationRemindersRecyclerAdapter extends RecyclerView.Adapter {
       reminderLabelTV = (TextView) itemView.findViewById(R.id.reminderLabelTV);
     }
 
-    public void bind(final MedicationReminder medicationReminderItem) {
-      reminderValueTV.setText(medicationReminderItem.getHour()
-          + ":"
-          + medicationReminderItem.getMinute()
-          + " "
-          + medicationReminderItem.getAM_PM());
+    public void bind(Calendar alarmTimeForMedication) {
+      final DateTimeFormatter timeFormatter =
+          DateTimeFormat.forPattern("hh:mm  a").withLocale(Locale.getDefault());
+
       reminderLabelTV.setText("Reminder " + (getAdapterPosition() + 1));
+
+      reminderValueTV.setText(formatFinalTime(alarmTimeForMedication.get(Calendar.HOUR_OF_DAY),
+          alarmTimeForMedication.get(Calendar.MINUTE)));
 
       clickableLayout.setOnClickListener(new View.OnClickListener() {
         @Override public void onClick(View v) {
 
-          String[] timeValues = reminderValueTV.getText().toString().split(":");
+          LocalDateTime timeForClockDisplay =
+              timeFormatter.parseLocalDateTime(reminderValueTV.getText().toString());
 
           TimePickerDialog timePicker =
               new TimePickerDialog(context, new TimePickerDialog.OnTimeSetListener() {
                 @Override
                 public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                  String finalTimeForDisplay =
-                      reverseFormatFinalTime(selectedHour + ":" + selectedMinute);
+                  Calendar calendarInstance = Calendar.getInstance(Locale.getDefault());
+                  LocalDateTime timeChosen = new LocalDateTime(calendarInstance.get(Calendar.YEAR),
+                      calendarInstance.get(Calendar.MONTH) + 1,
+                      calendarInstance.get(Calendar.DAY_OF_WEEK), selectedHour, selectedMinute, 0);
 
-                  String[] timeValuesForDisplay = finalTimeForDisplay.split(":");
+                  reminderValueTV.setText(timeFormatter.print(timeChosen));
 
-                  reminderValueTV.setText(timeValuesForDisplay[0]
-                      + ":"
-                      + timeValuesForDisplay[1]
-                      + " "
-                      + timeValuesForDisplay[2]);
-
-                  medicationReminderTimes.get(getAdapterPosition()).setHour(selectedHour);
-                  medicationReminderTimes.get(getAdapterPosition()).setMinute(selectedMinute);
                   medicationReminderTimes.get(getAdapterPosition())
-                      .setAM_PM(timeValuesForDisplay[2]);
+                      .getAlarmTime()
+                      .set(Calendar.HOUR_OF_DAY, selectedHour);
+
+                  medicationReminderTimes.get(getAdapterPosition())
+                      .getAlarmTime()
+                      .set(Calendar.MINUTE, selectedMinute);
+
+                  medicationReminderTimes.get(getAdapterPosition())
+                      .getAlarmTime()
+                      .set(Calendar.SECOND, 0);
                 }
-              }, Integer.parseInt(timeValues[0]), Integer.parseInt(timeValues[1].split(" ")[0]),
-                  false);
+              }, Integer.parseInt(timeForClockDisplay.hourOfDay().getAsText()),
+                  Integer.parseInt(timeForClockDisplay.minuteOfHour().getAsText()), false);
 
           timePicker.show();
         }
       });
     }
+  }
+
+  private String formatFinalTime(int hour, int minute) {
+    String finalTime = "";
+
+    try {
+      final SimpleDateFormat sdf = new SimpleDateFormat("H:mm");
+      final Date dateObj;
+
+      dateObj = sdf.parse(hour + ":" + minute);
+      finalTime = new SimpleDateFormat("hh:mm  a").format(dateObj);
+    } catch (ParseException e) {
+      e.printStackTrace();
+    }
+
+    return finalTime;
   }
 }
