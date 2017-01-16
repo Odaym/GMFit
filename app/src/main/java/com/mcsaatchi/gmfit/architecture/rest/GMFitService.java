@@ -29,6 +29,9 @@ public interface GMFitService {
   @POST("user/update-profile") Call<DefaultGetResponse> updateUserProfile(
       @Body ApiCallsHandler.UpdateProfileRequest updateProfileRequest);
 
+  @POST("user/update-profile") Call<DefaultGetResponse> updateUserWeight(
+      @Body ApiCallsHandler.UpdateUserWeightRequest updateUserWeightRequest);
+
   @Multipart @POST("user/profile/picture") Call<DefaultGetResponse> updateUserPicture(
       @PartMap() Map<String, RequestBody> profilePicture);
 
@@ -139,6 +142,8 @@ public interface GMFitService {
   @GET("activity_levels") Call<ActivityLevelsResponse> getActivityLevels();
 
   @GET("user_goals") Call<UserGoalsResponse> getUserGoals();
+
+  @GET("user/weight/history") Call<WeightHistoryResponse> getUserWeightHistory();
 
   @POST("insurance/medecines/most-popular")
   Call<MostPopularMedicationsResponse> getMostPopularMedications(

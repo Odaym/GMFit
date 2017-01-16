@@ -1,5 +1,8 @@
 package com.mcsaatchi.gmfit.health.fragments;
 
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -17,6 +20,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -30,16 +35,19 @@ import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
 import com.mcsaatchi.gmfit.architecture.otto.HealthWidgetsOrderChangedEvent;
 import com.mcsaatchi.gmfit.architecture.otto.MedicalTestEditCreateEvent;
 import com.mcsaatchi.gmfit.architecture.otto.MedicationItemCreatedEvent;
+import com.mcsaatchi.gmfit.architecture.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.architecture.rest.TakenMedicalTestsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.TakenMedicalTestsResponseBody;
 import com.mcsaatchi.gmfit.architecture.rest.UserProfileResponse;
 import com.mcsaatchi.gmfit.architecture.rest.UserProfileResponseDatum;
+import com.mcsaatchi.gmfit.architecture.rest.WeightHistoryResponse;
 import com.mcsaatchi.gmfit.architecture.rest.WidgetsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.WidgetsResponseDatum;
 import com.mcsaatchi.gmfit.architecture.touch_helpers.SimpleSwipeItemTouchHelperCallback;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.common.activities.CustomizeWidgetsAndChartsActivity;
+import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.common.classes.SimpleDividerItemDecoration;
 import com.mcsaatchi.gmfit.common.components.CustomLineChart;
 import com.mcsaatchi.gmfit.health.activities.AddNewHealthTestActivity;
@@ -55,6 +63,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import javax.inject.Inject;
+import org.joda.time.LocalDate;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -76,6 +85,8 @@ public class HealthFragment extends Fragment {
   @Bind(R.id.medicationsEmptyLayout) LinearLayout medicationsEmptyLayout;
   @Bind(R.id.medicalTestsEmptyLayout) LinearLayout medicalTestsEmptyLayout;
   @Bind(R.id.lineChartContainer) LinearLayout lineChartContainer;
+
+  private CustomLineChart customLineChart;
 
   private RuntimeExceptionDao<Medication, Integer> medicationDAO;
 
@@ -144,8 +155,112 @@ public class HealthFragment extends Fragment {
   }
 
   private void setupWeightChart() {
-    CustomLineChart customLineChart = new CustomLineChart(getActivity());
-    customLineChart.setLineChartData(lineChartContainer);
+    dataAccessHandler.getUserWeightHistory(new Callback<WeightHistoryResponse>() {
+      @Override public void onResponse(Call<WeightHistoryResponse> call,
+          Response<WeightHistoryResponse> response) {
+        switch (response.code()) {
+          case 200:
+            customLineChart = new CustomLineChart(getActivity());
+            customLineChart.setLineChartData(lineChartContainer,
+                response.body().getData().getBody().getData());
+
+            TextView updateUserWeightTV =
+                (TextView) customLineChart.getView().findViewById(R.id.updateWeightTV);
+
+            updateUserWeightTV.setOnClickListener(new View.OnClickListener() {
+              @Override public void onClick(View view) {
+                final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
+                dialogBuilder.setTitle(R.string.profile_edit_weight_dialog_title);
+
+                View dialogView = LayoutInflater.from(getActivity())
+                    .inflate(R.layout.profile_edit_weight_dialog, null);
+                final EditText editWeightET =
+                    (EditText) dialogView.findViewById(R.id.dialogWeightET);
+
+                editWeightET.setText(
+                    String.valueOf(prefs.getFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, 0)));
+                editWeightET.setSelection(editWeightET.getText().toString().length());
+
+                dialogBuilder.setView(dialogView);
+                dialogBuilder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                  @Override public void onClick(DialogInterface dialogInterface, int i) {
+                    double userWeight = Double.parseDouble(editWeightET.getText().toString());
+
+                    updateUserWeight(customLineChart, userWeight,
+                        Helpers.prepareDateForAPIRequest(new LocalDate()));
+                  }
+                });
+                dialogBuilder.setNegativeButton(R.string.decline_cancel,
+                    new DialogInterface.OnClickListener() {
+                      @Override public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                      }
+                    });
+
+                AlertDialog alertDialog = dialogBuilder.create();
+                alertDialog.show();
+              }
+            });
+            break;
+        }
+      }
+
+      @Override public void onFailure(Call<WeightHistoryResponse> call, Throwable t) {
+        Timber.d("Call failed with error : %s", t.getMessage());
+        final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+        alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
+        alertDialog.show();
+      }
+    });
+  }
+
+  private void updateUserWeight(final CustomLineChart customLineChart, double weight,
+      String created_at) {
+    final ProgressDialog waitingDialog = new ProgressDialog(getActivity());
+    waitingDialog.setTitle(getString(R.string.updating_user_profile_dialog_title));
+    waitingDialog.setMessage(getString(R.string.please_wait_dialog_message));
+    waitingDialog.show();
+
+    final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+    alertDialog.setTitle(R.string.updating_user_profile_dialog_title);
+    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
+        new DialogInterface.OnClickListener() {
+          public void onClick(DialogInterface dialog, int which) {
+            dialog.dismiss();
+
+            if (waitingDialog.isShowing()) waitingDialog.dismiss();
+          }
+        });
+
+    dataAccessHandler.updateUserWeight(weight, created_at, new Callback<DefaultGetResponse>() {
+      @Override
+      public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
+        switch (response.code()) {
+          case 200:
+
+            waitingDialog.dismiss();
+
+            Timber.d("We reaching here?");
+
+            lineChartContainer.removeAllViews();
+            lineChartContainer.invalidate();
+
+            setupWeightChart();
+
+            InputMethodManager imm =
+                (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+
+            break;
+        }
+      }
+
+      @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+        Timber.d("Call failed with error : %s", t.getMessage());
+        alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
+        alertDialog.show();
+      }
+    });
   }
 
   private void setupMedicationRemindersList(List<Medication> medicationsList) {

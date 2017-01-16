@@ -23,13 +23,24 @@
           android:id="@+id/chartTitleTV"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:gravity="center_vertical"
           android:layout_centerVertical="true"
-          android:paddingEnd="@dimen/default_margin_2"
-          android:paddingStart="@dimen/default_margin_2"
+          android:gravity="center_vertical"
+          android:paddingStart="@dimen/activity_vertical_margin"
           android:text="@string/my_weight_chart_label"
           android:textAppearance="?android:textAppearanceMedium"
           android:textColor="@android:color/white"
+          />
+
+      <TextView
+          android:id="@+id/updateWeightTV"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignParentEnd="true"
+          android:layout_centerVertical="true"
+          android:gravity="center_vertical"
+          android:paddingEnd="@dimen/default_margin_2"
+          android:text="@string/update_weight_label"
+          android:textColor="@color/white"
           />
 
     </RelativeLayout>

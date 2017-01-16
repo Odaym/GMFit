@@ -24,6 +24,7 @@ import com.mcsaatchi.gmfit.architecture.rest.UserGoalMetricsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.UserGoalsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.UserMealsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.UserProfileResponse;
+import com.mcsaatchi.gmfit.architecture.rest.WeightHistoryResponse;
 import com.mcsaatchi.gmfit.architecture.rest.WidgetsResponse;
 import java.util.Map;
 import javax.inject.Inject;
@@ -83,6 +84,11 @@ public class DataAccessHandler {
       Callback<DefaultGetResponse> callback) {
     apiCallsHandler.updateUserProfile(finalDateOfBirth, bloodType, nationality, medical_condition,
         measurementSystem, goalId, activityLevelId, finalGender, height, weight, onboard, callback);
+  }
+
+  public void updateUserWeight(double weight, String created_at,
+      Callback<DefaultGetResponse> callback) {
+    apiCallsHandler.updateUserWeight(weight, created_at, callback);
   }
 
   public void updateUserPicture(Map<String, RequestBody> profilePicture,
@@ -245,6 +251,10 @@ public class DataAccessHandler {
     apiCallsHandler.getActivityLevels(callback);
   }
 
+  public void getUserWeightHistory(Callback<WeightHistoryResponse> callback) {
+    apiCallsHandler.getUserWeightHistory(callback);
+  }
+
   public void getUserGoals(Callback<UserGoalsResponse> callback) {
     apiCallsHandler.getUserGoals(callback);
   }
@@ -255,10 +265,8 @@ public class DataAccessHandler {
         callback);
   }
 
-  public void searchMedicines(String indNbr, String contractNo, String country,
-      String language, String password, String key,
-      Callback<SearchMedicinesResponse> callback) {
-    apiCallsHandler.searchMedicines(indNbr, contractNo, country, language, password, key,
-        callback);
+  public void searchMedicines(String indNbr, String contractNo, String country, String language,
+      String password, String key, Callback<SearchMedicinesResponse> callback) {
+    apiCallsHandler.searchMedicines(indNbr, contractNo, country, language, password, key, callback);
   }
 }

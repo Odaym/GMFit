@@ -25,6 +25,7 @@ import com.mcsaatchi.gmfit.architecture.rest.UserGoalMetricsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.UserGoalsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.UserMealsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.UserProfileResponse;
+import com.mcsaatchi.gmfit.architecture.rest.WeightHistoryResponse;
 import com.mcsaatchi.gmfit.architecture.rest.WidgetsResponse;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
@@ -160,6 +161,22 @@ public class ApiCallsHandler {
         .updateUserProfile(
             new UpdateProfileRequest(finalDateOfBirth, bloodType, nationality, medical_condition,
                 measurementSystem, goalId, activityLevelId, finalGender, height, weight, onboard));
+
+    apiCall.enqueue(new Callback<DefaultGetResponse>() {
+      @Override
+      public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
+        callback.onResponse(call, response);
+      }
+
+      @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+      }
+    });
+  }
+
+  void updateUserWeight(double weight, String created_at,
+      final Callback<DefaultGetResponse> callback) {
+    Call<DefaultGetResponse> apiCall = restClient.getGMFitService()
+        .updateUserWeight(new UpdateUserWeightRequest(weight, created_at));
 
     apiCall.enqueue(new Callback<DefaultGetResponse>() {
       @Override
@@ -747,6 +764,20 @@ public class ApiCallsHandler {
     });
   }
 
+  void getUserWeightHistory(final Callback<WeightHistoryResponse> callback) {
+    Call<WeightHistoryResponse> apiCall = restClient.getGMFitService().getUserWeightHistory();
+
+    apiCall.enqueue(new Callback<WeightHistoryResponse>() {
+      @Override public void onResponse(Call<WeightHistoryResponse> call,
+          Response<WeightHistoryResponse> response) {
+        callback.onResponse(call, response);
+      }
+
+      @Override public void onFailure(Call<WeightHistoryResponse> call, Throwable t) {
+      }
+    });
+  }
+
   void getUserGoals(final Callback<UserGoalsResponse> callback) {
     Call<UserGoalsResponse> apiCall = restClient.getGMFitService().getUserGoals();
 
@@ -942,6 +973,16 @@ public class ApiCallsHandler {
 
     AddMetricChartRequest(int chart_id) {
       this.chart_id = chart_id;
+    }
+  }
+
+  public class UpdateUserWeightRequest {
+    final double weight;
+    final String created_at;
+
+    public UpdateUserWeightRequest(double weight, String created_at) {
+      this.weight = weight;
+      this.created_at = created_at;
     }
   }
 

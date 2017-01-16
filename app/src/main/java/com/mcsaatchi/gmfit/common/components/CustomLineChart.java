@@ -11,7 +11,9 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.mcsaatchi.gmfit.R;
+import com.mcsaatchi.gmfit.architecture.rest.WeightHistoryResponseDatum;
 import java.util.ArrayList;
+import java.util.List;
 
 public class CustomLineChart extends LineChart {
   private ArrayList<CustomBarChart.CustomBarChartClickListener> clickListeners = new ArrayList<>();
@@ -36,16 +38,19 @@ public class CustomLineChart extends LineChart {
     lineChartLayout.setLayoutParams(lp);
   }
 
-  public void setLineChartData(LinearLayout lineChartContainer) {
-    ArrayList<Entry> entries = new ArrayList<>();
-    entries.add(new Entry(4f, 0));
-    entries.add(new Entry(8f, 1));
-    entries.add(new Entry(6f, 2));
-    entries.add(new Entry(2f, 3));
-    entries.add(new Entry(18f, 4));
-    entries.add(new Entry(9f, 5));
+  public View getView(){
+    return lineChartLayout;
+  }
 
-    LineDataSet dataset = new LineDataSet(entries, "# of Calls");
+  public void setLineChartData(LinearLayout lineChartContainer,
+      List<WeightHistoryResponseDatum> weights) {
+    ArrayList<Entry> entries = new ArrayList<>();
+
+    for (int i = 0; i < weights.size(); i++) {
+      entries.add(new Entry(Float.parseFloat(String.valueOf(weights.get(i).getWeight())), i));
+    }
+
+    LineDataSet dataset = new LineDataSet(entries, "");
 
     ArrayList<String> labels = new ArrayList<String>();
     labels.add("January");
@@ -53,13 +58,16 @@ public class CustomLineChart extends LineChart {
     labels.add("March");
     labels.add("April");
     labels.add("May");
+    labels.add("May");
+    labels.add("May");
+    labels.add("May");
     labels.add("June");
 
     LineData data = new LineData(labels, dataset);
     dataset.setFillColor(R.color.health_green);
-    dataset.setLineWidth(2);
+    dataset.setLineWidth(3);
     //dataset.setCircleColorHole(R.color.health_green);
-    dataset.setCircleRadius(5);
+    dataset.setCircleRadius(8);
 
     lineChart.setScaleEnabled(false);
     lineChart.setDescription(null);
