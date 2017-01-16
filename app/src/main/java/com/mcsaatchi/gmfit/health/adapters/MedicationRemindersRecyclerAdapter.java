@@ -99,9 +99,7 @@ public class MedicationRemindersRecyclerAdapter extends RecyclerView.Adapter {
                       .getAlarmTime()
                       .set(Calendar.MINUTE, selectedMinute);
 
-                  medicationReminderTimes.get(getAdapterPosition())
-                      .getAlarmTime()
-                      .set(Calendar.SECOND, 0);
+                  notifyDataSetChanged();
                 }
               }, Integer.parseInt(timeForClockDisplay.hourOfDay().getAsText()),
                   Integer.parseInt(timeForClockDisplay.minuteOfHour().getAsText()), false);

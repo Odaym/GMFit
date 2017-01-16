@@ -41,6 +41,7 @@ import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.common.activities.CustomizeWidgetsAndChartsActivity;
 import com.mcsaatchi.gmfit.common.classes.SimpleDividerItemDecoration;
+import com.mcsaatchi.gmfit.common.components.CustomLineChart;
 import com.mcsaatchi.gmfit.health.activities.AddNewHealthTestActivity;
 import com.mcsaatchi.gmfit.health.activities.SearchMedicationsActivity;
 import com.mcsaatchi.gmfit.health.adapters.HealthWidgetsRecyclerAdapter;
@@ -74,6 +75,7 @@ public class HealthFragment extends Fragment {
   @Bind(R.id.medicationRemindersRecyclerView) RecyclerView medicationRemindersRecyclerView;
   @Bind(R.id.medicationsEmptyLayout) LinearLayout medicationsEmptyLayout;
   @Bind(R.id.medicalTestsEmptyLayout) LinearLayout medicalTestsEmptyLayout;
+  @Bind(R.id.lineChartContainer) LinearLayout lineChartContainer;
 
   private RuntimeExceptionDao<Medication, Integer> medicationDAO;
 
@@ -102,6 +104,8 @@ public class HealthFragment extends Fragment {
     getTakenMedicalTests();
 
     getUserProfile();
+
+    setupWeightChart();
 
     addEntryBTN_MEDICATIONS.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View view) {
@@ -139,6 +143,11 @@ public class HealthFragment extends Fragment {
     return super.onOptionsItemSelected(item);
   }
 
+  private void setupWeightChart() {
+    CustomLineChart customLineChart = new CustomLineChart(getActivity());
+    customLineChart.setLineChartData(lineChartContainer);
+  }
+
   private void setupMedicationRemindersList(List<Medication> medicationsList) {
     if (medicationsList.isEmpty()) {
       medicationRemindersRecyclerView.setVisibility(View.GONE);
@@ -152,7 +161,8 @@ public class HealthFragment extends Fragment {
       medicationRemindersRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
       MedicationsRecyclerAdapter medicationsRecyclerAdapter =
           new MedicationsRecyclerAdapter(getActivity(), medicationsList, medicationDAO);
-      medicationRemindersRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
+      medicationRemindersRecyclerView.addItemDecoration(
+          new SimpleDividerItemDecoration(getActivity()));
       medicationRemindersRecyclerView.setAdapter(medicationsRecyclerAdapter);
     }
   }

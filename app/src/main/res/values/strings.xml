@@ -234,6 +234,7 @@
   <string name="no_medical_tests_found">No Tests Added</string>
   <string name="no_medications_found">No Medications Added</string>
   <string name="medical_layouts_empty_tap_get_started">Tap the \"Add\" button to start</string>
+  <string name="my_weight_chart_label">My Weight</string>
 
   <!-- PILL REMINDER ACTIVITY -->
   <string name="pill_reminder_activity_title">Pill Reminder</string>

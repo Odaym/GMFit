@@ -4,6 +4,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
@@ -40,7 +41,6 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Random;
 
 public class AddExistingMedicationActivity extends BaseActivity {
 
@@ -301,20 +301,26 @@ public class AddExistingMedicationActivity extends BaseActivity {
         int dayChosen = medReminder.getDays_of_week()[i];
 
         if (dayChosen != 0) {
-          Calendar cal = Calendar.getInstance();
-          cal.set(Calendar.DAY_OF_WEEK, medReminder.getAlarmTime().get(Calendar.DAY_OF_WEEK));
-          cal.set(Calendar.HOUR_OF_DAY, medReminder.getAlarmTime().get(Calendar.HOUR_OF_DAY));
-          cal.set(Calendar.MINUTE, medReminder.getAlarmTime().get(Calendar.MINUTE));
+          medReminder.getAlarmTime().setTimeInMillis(System.currentTimeMillis());
+          medReminder.getAlarmTime().set(Calendar.DAY_OF_WEEK, dayChosen);
 
           Intent intent = new Intent(AddExistingMedicationActivity.this, AlarmReceiver.class);
           intent.putExtra(Constants.EXTRAS_ALARM_TYPE, "medications");
           intent.putExtra(Constants.EXTRAS_MEDICATION_REMINDER_ITEM, (Parcelable) medReminder);
 
-          pendingIntent = PendingIntent.getBroadcast(this, new Random().nextInt(1000000) + 1, intent,
-              PendingIntent.FLAG_ONE_SHOT);
+          pendingIntent = PendingIntent.getBroadcast(this, medReminder.getId(), intent,
+              PendingIntent.FLAG_UPDATE_CURRENT);
 
-          am.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, cal.getTimeInMillis(),
-              System.currentTimeMillis(), pendingIntent);
+          int ALARM_TYPE = AlarmManager.ELAPSED_REALTIME_WAKEUP;
+
+          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            am.setExactAndAllowWhileIdle(ALARM_TYPE, medReminder.getAlarmTime().getTimeInMillis(),
+                pendingIntent);
+          } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            am.setExact(ALARM_TYPE, medReminder.getAlarmTime().getTimeInMillis(), pendingIntent);
+          } else {
+            am.set(ALARM_TYPE, medReminder.getAlarmTime().getTimeInMillis(), pendingIntent);
+          }
         }
       }
     }

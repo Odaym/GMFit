@@ -2,11 +2,11 @@ package com.mcsaatchi.gmfit.common.classes;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.support.v4.content.WakefulBroadcastReceiver;
 import android.support.v7.app.NotificationCompat;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.mcsaatchi.gmfit.R;
@@ -18,7 +18,7 @@ import java.util.Calendar;
 import org.joda.time.LocalDate;
 import timber.log.Timber;
 
-public class AlarmReceiver extends BroadcastReceiver {
+public class AlarmReceiver extends WakefulBroadcastReceiver {
   private int mealNotificationID = 0;
 
   private DBHelper dbHelper;
@@ -72,20 +72,37 @@ public class AlarmReceiver extends BroadcastReceiver {
               intent.getExtras().getParcelable(Constants.EXTRAS_MEDICATION_REMINDER_ITEM);
 
           if (medReminder != null) {
-            Calendar cal = Calendar.getInstance();
-            cal.set(Calendar.DAY_OF_WEEK, medReminder.getAlarmTime().get(Calendar.DAY_OF_WEEK));
-            cal.set(Calendar.HOUR_OF_DAY, medReminder.getAlarmTime().get(Calendar.HOUR_OF_DAY));
-            cal.set(Calendar.MINUTE, medReminder.getAlarmTime().get(Calendar.MINUTE));
+            Calendar timeNow = Calendar.getInstance();
+            timeNow.set(Calendar.DAY_OF_WEEK, timeNow.get(Calendar.DAY_OF_WEEK) - 1);
 
-            if (Calendar.getInstance().get(Calendar.DAY_OF_WEEK) == cal.get(
-                Calendar.DAY_OF_WEEK))
-              Timber.d("Day is not today");
+            Timber.d("Day chosen "
+                + medReminder.getAlarmTime().get(Calendar.DAY_OF_WEEK)
+                + " - "
+                + timeNow.get(Calendar.DAY_OF_WEEK));
 
-            if (Calendar.getInstance().compareTo(cal) > 0
-                && Calendar.getInstance().get(Calendar.DAY_OF_WEEK) == cal.get(
+            Timber.d("This alarm was triggered "
+                + medReminder.getAlarmTime().get(Calendar.DAY_OF_WEEK)
+                + " at "
+                + medReminder.getAlarmTime().get(Calendar.HOUR)
+                + " : "
+                + medReminder.getAlarmTime().get(Calendar.MINUTE)
+                + " --- "
+                + " ON CURRENT TIME : "
+                + timeNow.get(Calendar.DAY_OF_WEEK)
+                + " at "
+                + timeNow.get(Calendar.HOUR)
+                + " : "
+                + timeNow.get(Calendar.MINUTE));
+
+            Timber.d("Difference between medReminder.getAlarmTime() and timeNow == "
+                + medReminder.getAlarmTime().compareTo(timeNow));
+
+            //noinspection WrongConstant
+            if (medReminder.getAlarmTime().after(timeNow)
+                && medReminder.getAlarmTime().get(Calendar.DAY_OF_WEEK) == timeNow.get(
                 Calendar.DAY_OF_WEEK)) {
 
-              Timber.d("MedReminder is after time now");
+              Timber.d("Day for alarm matches today");
 
               if (medReminder.getTotalTimesToTrigger() == 0) {
                 Timber.d("Reminder id : " + medReminder.getId() + " about to be deleted");
@@ -116,7 +133,7 @@ public class AlarmReceiver extends BroadcastReceiver {
                     + medReminder.getTotalTimesToTrigger());
               }
             } else {
-              Timber.d("MedReminder is BEFORE time now");
+              Timber.d("Not the appropriate time to trigger alarm: " + medReminder.getId());
             }
           }
       }
