@@ -75,37 +75,12 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
             Calendar timeNow = Calendar.getInstance();
             timeNow.set(Calendar.DAY_OF_WEEK, timeNow.get(Calendar.DAY_OF_WEEK) - 1);
 
-            Timber.d("Day chosen "
-                + medReminder.getAlarmTime().get(Calendar.DAY_OF_WEEK)
-                + " - "
-                + timeNow.get(Calendar.DAY_OF_WEEK));
-
-            Timber.d("This alarm was triggered "
-                + medReminder.getAlarmTime().get(Calendar.DAY_OF_WEEK)
-                + " at "
-                + medReminder.getAlarmTime().get(Calendar.HOUR)
-                + " : "
-                + medReminder.getAlarmTime().get(Calendar.MINUTE)
-                + " --- "
-                + " ON CURRENT TIME : "
-                + timeNow.get(Calendar.DAY_OF_WEEK)
-                + " at "
-                + timeNow.get(Calendar.HOUR)
-                + " : "
-                + timeNow.get(Calendar.MINUTE));
-
-            Timber.d("Difference between medReminder.getAlarmTime() and timeNow == "
-                + medReminder.getAlarmTime().compareTo(timeNow));
-
             //noinspection WrongConstant
             if (medReminder.getAlarmTime().after(timeNow)
                 && medReminder.getAlarmTime().get(Calendar.DAY_OF_WEEK) == timeNow.get(
                 Calendar.DAY_OF_WEEK)) {
 
-              Timber.d("Day for alarm matches today");
-
               if (medReminder.getTotalTimesToTrigger() == 0) {
-                Timber.d("Reminder id : " + medReminder.getId() + " about to be deleted");
                 medicationReminderDAO.delete(medReminder);
               } else {
                 Uri sound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
@@ -126,11 +101,6 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
 
                 medReminder.setTotalTimesToTrigger(medReminder.getTotalTimesToTrigger() - 1);
                 medicationReminderDAO.update(medReminder);
-
-                Timber.d("Total times remaining for reminder ID : "
-                    + medReminder.getId()
-                    + " to trigger is : "
-                    + medReminder.getTotalTimesToTrigger());
               }
             } else {
               Timber.d("Not the appropriate time to trigger alarm: " + medReminder.getId());

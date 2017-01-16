@@ -21,7 +21,7 @@ import static android.net.http.Headers.CACHE_CONTROL;
 
 public class CachingRestClient {
   private static final String TAG = "CachingRestClient";
-  private GMFit_Service apiService;
+  private GMFitService apiService;
 
   public CachingRestClient() {
 
@@ -41,7 +41,7 @@ public class CachingRestClient {
         .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
         .build();
 
-    apiService = retrofit.create(GMFit_Service.class);
+    apiService = retrofit.create(GMFitService.class);
   }
 
   private static Cache provideCache() {
@@ -85,7 +85,7 @@ public class CachingRestClient {
     };
   }
 
-  public GMFit_Service getGMFitService() {
+  public GMFitService getGMFitService() {
     return apiService;
   }
 }

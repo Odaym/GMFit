@@ -13,7 +13,7 @@ import retrofit2.http.PartMap;
 import retrofit2.http.Query;
 import retrofit2.http.Url;
 
-public interface GMFit_Service {
+public interface GMFitService {
 
   @POST("login") Call<AuthenticationResponse> signInUser(
       @Body ApiCallsHandler.SignInRequest userCredentails);

@@ -24,7 +24,7 @@ public class RestClient {
 
   private DateTime dt = new DateTime();
 
-  private GMFit_Service apiService;
+  private GMFitService apiService;
 
   public RestClient(Context context) {
     ((GMFitApplication) context).getAppComponent().inject(this);
@@ -73,10 +73,10 @@ public class RestClient {
         .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
         .build();
 
-    apiService = retrofit.create(GMFit_Service.class);
+    apiService = retrofit.create(GMFitService.class);
   }
 
-  public GMFit_Service getGMFitService() {
+  public GMFitService getGMFitService() {
     return apiService;
   }
 }
