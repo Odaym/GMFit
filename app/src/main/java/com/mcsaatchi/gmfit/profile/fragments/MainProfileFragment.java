@@ -673,8 +673,7 @@ public class MainProfileFragment extends Fragment {
     }
   }
 
-  @Subscribe
-  public void updateReminderTextviewFromStatus(RemindersStatusChangedEvent event) {
+  @Subscribe public void updateReminderTextviewFromStatus(RemindersStatusChangedEvent event) {
     if (event.isReminderOn()) {
       appRemindersValueTV.setText("On");
     } else {
@@ -1143,6 +1142,7 @@ public class MainProfileFragment extends Fragment {
                     Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS)
                 .apply();
             prefs.edit().putBoolean(Constants.EXTRAS_USER_LOGGED_IN, false).apply();
+            prefs.edit().putFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, 0f).apply();
 
             if (!prefs.getString(Constants.EXTRAS_USER_FACEBOOK_TOKEN, "-1").equals("-1")) {
               FacebookSdk.sdkInitialize(getActivity());

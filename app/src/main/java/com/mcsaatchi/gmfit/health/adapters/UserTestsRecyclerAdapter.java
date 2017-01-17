@@ -19,7 +19,7 @@ import com.mcsaatchi.gmfit.architecture.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.architecture.rest.TakenMedicalTestsResponseBody;
 import com.mcsaatchi.gmfit.architecture.touch_helpers.DragSwipeItemTouchHelperAdapter;
 import com.mcsaatchi.gmfit.common.Constants;
-import com.mcsaatchi.gmfit.health.activities.AddNewHealthTestActivity;
+import com.mcsaatchi.gmfit.health.activities.AddNewHealthTestPart2Activity;
 import java.util.List;
 import javax.inject.Inject;
 import org.joda.time.DateTime;
@@ -126,7 +126,7 @@ public class UserTestsRecyclerAdapter
     }
 
     @Override public void onClick(View view) {
-      Intent intent = new Intent(context, AddNewHealthTestActivity.class);
+      Intent intent = new Intent(context, AddNewHealthTestPart2Activity.class);
       intent.putExtra(Constants.EXTRAS_TEST_OBJECT_DETAILS, userTests.get(getAdapterPosition()));
       for (int i = 0; i < userTests.get(getAdapterPosition()).getImages().size(); i++) {
         Timber.d("Test images are : %s",
