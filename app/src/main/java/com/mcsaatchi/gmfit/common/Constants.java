@@ -5,6 +5,11 @@ public class Constants {
   public static final String APP_FIRST_RUN = "app_first_run";
   public static final String TAG = "GMFIT_DEBUG";
 
+  public static final String BASE_URL_ADDRESS = "http://gmfit.mcsaatchi.me/api/v1/";
+
+  public static final String NO_ACCESS_TOKEN_FOUND_IN_PREFS = "no_access_token_in_prefs";
+  public static final String PREF_USER_ACCESS_TOKEN = "user_access_token";
+
   public static final String EXTRAS_USER_LOGGED_IN = "user_logged_in";
   public static final String EXTRAS_USER_FULL_NAME = "user_full_name";
   public static final String EXTRAS_USER_EMAIL = "user_email_address";
@@ -83,13 +88,11 @@ public class Constants {
   public static final String BUNDLE_SLUG_BREAKDOWN_MEASUREMENT_UNIT =
       "slug_breakdown_measurement_unit";
 
-  public static final String TESTICULAR_METRICS_ARRAY = "testicular_metrics_array";
 
-  public static final String BASE_URL_ADDRESS = "http://gmfit.mcsaatchi.me/api/v1/";
-
-  //REGISTERATION API
-  public static final String NO_ACCESS_TOKEN_FOUND_IN_PREFS = "no_access_token_in_prefs";
-  public static final String PREF_USER_ACCESS_TOKEN = "user_access_token";
+  public static final String HEALTH_TEST_NAME = "health_test_name";
+  public static final String HEALTH_TEST_DATE_TAKEN = "health_test_date_taken";
+  public static final String HEALTH_TEST_PICTURE_PATHS = "health_test_picture_paths";
+  public static final String HEALTH_TEST_DELETED_IMAGE_IDS = "health_test_deleted_image_ids";
 
   /**
    * REMINDERS ACTIVITY
