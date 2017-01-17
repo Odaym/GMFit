@@ -22,6 +22,7 @@ import java.util.Calendar;
 import java.util.Date;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
@@ -83,6 +84,28 @@ public class Helpers {
         + formattedDate.getDayOfMonth();
   }
 
+  public static String prepareDateWithTimeForAPIRequest(LocalDateTime dt) {
+    String minuteFormatted = "";
+
+    if (dt.getMinuteOfHour() < 10) {
+      minuteFormatted = "0" + dt.getMinuteOfHour();
+    } else {
+      minuteFormatted = String.valueOf(dt.getMinuteOfHour());
+    }
+
+    return dt.getYear()
+        + "-"
+        + dt.getMonthOfYear()
+        + "-"
+        + dt.getDayOfMonth()
+        + " "
+        + dt.getHourOfDay()
+        + ":"
+        + minuteFormatted
+        + ":"
+        + dt.getSecondOfMinute();
+  }
+
   public static Bundle createActivityBundleWithProperties(int activityTitleResourceId,
       boolean enableBackButton) {
     Bundle bundle = new Bundle();
@@ -125,9 +148,10 @@ public class Helpers {
 
     int currentMonth = calendar.get(Calendar.MONTH) + 1;
 
-    DateTime timeNow = new DateTime(calendar.get(Calendar.YEAR), currentMonth,
-        calendar.get(Calendar.DAY_OF_MONTH), calendar.get(Calendar.HOUR_OF_DAY),
-        calendar.get(Calendar.MINUTE), calendar.get(Calendar.MINUTE));
+    DateTime timeNow =
+        new DateTime(calendar.get(Calendar.YEAR), currentMonth, calendar.get(Calendar.DAY_OF_MONTH),
+            calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE),
+            calendar.get(Calendar.MINUTE));
 
     DateTime desiredAlarmTime;
 

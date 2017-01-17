@@ -63,7 +63,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import javax.inject.Inject;
-import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -187,7 +187,7 @@ public class HealthFragment extends Fragment {
                     double userWeight = Double.parseDouble(editWeightET.getText().toString());
 
                     updateUserWeight(customLineChart, userWeight,
-                        Helpers.prepareDateForAPIRequest(new LocalDate()));
+                        Helpers.prepareDateWithTimeForAPIRequest(new LocalDateTime()));
                   }
                 });
                 dialogBuilder.setNegativeButton(R.string.decline_cancel,
@@ -239,8 +239,6 @@ public class HealthFragment extends Fragment {
           case 200:
 
             waitingDialog.dismiss();
-
-            Timber.d("We reaching here?");
 
             lineChartContainer.removeAllViews();
             lineChartContainer.invalidate();
