@@ -140,6 +140,12 @@ public class HealthFragment extends Fragment {
     super.onCreateOptionsMenu(menu, inflater);
 
     inflater.inflate(R.menu.main, menu);
+
+    MenuItem calendarTodayItem = menu.findItem(R.id.calendarToday);
+
+    if (calendarTodayItem != null) {
+      calendarTodayItem.setVisible(false);
+    }
   }
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {

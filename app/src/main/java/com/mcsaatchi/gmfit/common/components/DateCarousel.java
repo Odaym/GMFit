@@ -43,7 +43,7 @@ public class DateCarousel extends HorizontalScrollView {
     this.clickListeners.add(listener);
   }
 
-  private void setupDateCarousel() {
+  public void setupDateCarousel() {
     dt = new LocalDate();
 
     int daysExtraToShow = 3;
@@ -112,7 +112,7 @@ public class DateCarousel extends HorizontalScrollView {
     }
   }
 
-  private void focusOnView(LinearLayout dateCarouselContainer, final View view) {
+  public void focusOnView(LinearLayout dateCarouselContainer, final View view) {
     TextView dayOfMonthTV;
     TextView monthOfYearTV;
     LinearLayout dateEntryLayout;

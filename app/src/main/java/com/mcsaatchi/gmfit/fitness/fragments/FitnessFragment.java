@@ -231,6 +231,26 @@ public class FitnessFragment extends Fragment {
         intent.putExtra(Constants.BUNDLE_FITNESS_CHARTS_MAP, chartsMap);
         startActivity(intent);
         break;
+      case R.id.calendarToday:
+        LinearLayout dateCarouselContainer =
+            (LinearLayout) dateCarouselLayout.findViewById(R.id.dateCarouselContainer);
+
+        dateCarouselContainer.removeAllViews();
+        dateCarouselLayout.setupDateCarousel();
+
+        getUserGoalMetrics(todayDate, "fitness", false);
+
+        getWidgetsWithDate(todayDate);
+        setupChartViews(chartsMap, todayDate);
+
+        dateCarouselLayout.post(new Runnable() {
+          @Override public void run() {
+            dateCarouselLayout.setSmoothScrollingEnabled(true);
+            dateCarouselLayout.fullScroll(HorizontalScrollView.FOCUS_RIGHT);
+          }
+        });
+
+        break;
     }
 
     return super.onOptionsItemSelected(item);
@@ -271,7 +291,8 @@ public class FitnessFragment extends Fragment {
                   }
                 });
 
-                customBarChart.setBarChartDataAndDates(cards_container, newChartData, Constants.EXTRAS_FITNESS_FRAGMENT);
+                customBarChart.setBarChartDataAndDates(cards_container, newChartData,
+                    Constants.EXTRAS_FITNESS_FRAGMENT);
               }
             }
           }
@@ -353,7 +374,8 @@ public class FitnessFragment extends Fragment {
               try {
                 remainingValue =
                     Integer.parseInt(maxValue) - NumberFormat.getNumberInstance(Locale.US)
-                        .parse(metricCounterTV.getText().toString()).intValue();
+                        .parse(metricCounterTV.getText().toString())
+                        .intValue();
               } catch (ParseException e) {
                 e.printStackTrace();
               }
@@ -539,8 +561,9 @@ public class FitnessFragment extends Fragment {
 
       int remainingValue = 0;
       try {
-        remainingValue = Integer.parseInt(goalTV.getText().toString()) - NumberFormat.getNumberInstance(
-            Locale.US).parse(metricCounterTV.getText().toString()).intValue();
+        remainingValue =
+            Integer.parseInt(goalTV.getText().toString()) - NumberFormat.getNumberInstance(
+                Locale.US).parse(metricCounterTV.getText().toString()).intValue();
       } catch (ParseException e) {
         e.printStackTrace();
       }

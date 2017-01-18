@@ -21,6 +21,7 @@
   <string name="please_wait_dialog_message">Please wait…</string>
 
   <string name="ok">OK</string>
+  <string name="menu_item_calendar_today">Show today\'s\nvalues</string>
   <string name="finish_setup">Finish Setup</string>
   <string name="next_step">Next Step</string>
   <string name="previous_page">Back</string>

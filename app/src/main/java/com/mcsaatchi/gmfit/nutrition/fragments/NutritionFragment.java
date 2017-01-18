@@ -224,11 +224,36 @@ public class NutritionFragment extends Fragment {
   }
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {
-    Intent intent = new Intent(getActivity(), CustomizeWidgetsAndChartsActivity.class);
-    intent.putExtra(Constants.EXTRAS_FRAGMENT_TYPE, Constants.EXTRAS_NUTRITION_FRAGMENT);
-    intent.putParcelableArrayListExtra(Constants.BUNDLE_NUTRITION_WIDGETS_MAP, widgetsMap);
-    intent.putParcelableArrayListExtra(Constants.BUNDLE_NUTRITION_CHARTS_MAP, finalCharts);
-    startActivity(intent);
+    switch (item.getItemId()) {
+      case R.id.action_settings:
+        Intent intent = new Intent(getActivity(), CustomizeWidgetsAndChartsActivity.class);
+        intent.putExtra(Constants.EXTRAS_FRAGMENT_TYPE, Constants.EXTRAS_NUTRITION_FRAGMENT);
+        intent.putParcelableArrayListExtra(Constants.BUNDLE_NUTRITION_WIDGETS_MAP, widgetsMap);
+        intent.putParcelableArrayListExtra(Constants.BUNDLE_NUTRITION_CHARTS_MAP, finalCharts);
+        startActivity(intent);
+        break;
+      case R.id.calendarToday:
+        LinearLayout dateCarouselContainer =
+            (LinearLayout) dateCarouselLayout.findViewById(R.id.dateCarouselContainer);
+
+        dateCarouselContainer.removeAllViews();
+        dateCarouselLayout.setupDateCarousel();
+
+        showProgressBarsForLoading();
+
+        getUserGoalMetrics(finalDesiredDate, "nutrition");
+        getUserAddedMeals(finalDesiredDate);
+        getUiForSection("nutrition", finalDesiredDate);
+
+        dateCarouselLayout.post(new Runnable() {
+          @Override public void run() {
+            dateCarouselLayout.setSmoothScrollingEnabled(true);
+            dateCarouselLayout.fullScroll(HorizontalScrollView.FOCUS_RIGHT);
+          }
+        });
+
+        break;
+    }
 
     return super.onOptionsItemSelected(item);
   }

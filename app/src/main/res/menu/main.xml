@@ -3,6 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
   <item
+      android:id="@+id/calendarToday"
+      android:icon="@drawable/ic_action_calendar_today"
+      android:title="@string/menu_item_calendar_today"
+      app:showAsAction="always"/>
+
+  <item
       android:id="@+id/settings"
       android:icon="@drawable/ic_settings_white_24dp"
       android:title="@string/settings"
