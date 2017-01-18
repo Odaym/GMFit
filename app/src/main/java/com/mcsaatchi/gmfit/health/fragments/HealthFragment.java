@@ -41,6 +41,7 @@ import com.mcsaatchi.gmfit.architecture.rest.TakenMedicalTestsResponseBody;
 import com.mcsaatchi.gmfit.architecture.rest.UserProfileResponse;
 import com.mcsaatchi.gmfit.architecture.rest.UserProfileResponseDatum;
 import com.mcsaatchi.gmfit.architecture.rest.WeightHistoryResponse;
+import com.mcsaatchi.gmfit.architecture.rest.WeightHistoryResponseDatum;
 import com.mcsaatchi.gmfit.architecture.rest.WidgetsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.WidgetsResponseDatum;
 import com.mcsaatchi.gmfit.architecture.touch_helpers.SimpleSwipeItemTouchHelperCallback;
@@ -161,46 +162,54 @@ public class HealthFragment extends Fragment {
         switch (response.code()) {
           case 200:
             customLineChart = new CustomLineChart(getActivity());
-            customLineChart.setLineChartData(lineChartContainer,
-                response.body().getData().getBody().getData());
 
-            TextView updateUserWeightTV =
-                (TextView) customLineChart.getView().findViewById(R.id.updateWeightTV);
+            List<WeightHistoryResponseDatum> weightHistoryList =
+                response.body().getData().getBody().getData();
 
-            updateUserWeightTV.setOnClickListener(new View.OnClickListener() {
-              @Override public void onClick(View view) {
-                final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
-                dialogBuilder.setTitle(R.string.profile_edit_weight_dialog_title);
+            if (weightHistoryList != null) {
+              customLineChart.setLineChartData(lineChartContainer,
+                  weightHistoryList.subList(Math.max(weightHistoryList.size() - 6, 0),
+                      weightHistoryList.size()));
 
-                View dialogView = LayoutInflater.from(getActivity())
-                    .inflate(R.layout.profile_edit_weight_dialog, null);
-                final EditText editWeightET =
-                    (EditText) dialogView.findViewById(R.id.dialogWeightET);
+              final TextView updateUserWeightTV =
+                  (TextView) customLineChart.getView().findViewById(R.id.updateWeightTV);
 
-                editWeightET.setText(
-                    String.valueOf(prefs.getFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, 0)));
-                editWeightET.setSelection(editWeightET.getText().toString().length());
+              updateUserWeightTV.setOnClickListener(new View.OnClickListener() {
+                @Override public void onClick(View view) {
+                  final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
+                  dialogBuilder.setTitle(R.string.profile_edit_weight_dialog_title);
 
-                dialogBuilder.setView(dialogView);
-                dialogBuilder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-                  @Override public void onClick(DialogInterface dialogInterface, int i) {
-                    double userWeight = Double.parseDouble(editWeightET.getText().toString());
+                  View dialogView = LayoutInflater.from(getActivity())
+                      .inflate(R.layout.profile_edit_weight_dialog, null);
+                  final EditText editWeightET =
+                      (EditText) dialogView.findViewById(R.id.dialogWeightET);
 
-                    updateUserWeight(customLineChart, userWeight,
-                        Helpers.prepareDateWithTimeForAPIRequest(new LocalDateTime()));
-                  }
-                });
-                dialogBuilder.setNegativeButton(R.string.decline_cancel,
-                    new DialogInterface.OnClickListener() {
-                      @Override public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                      }
-                    });
+                  editWeightET.setText(
+                      String.valueOf(prefs.getFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, 0)));
+                  editWeightET.setSelection(editWeightET.getText().toString().length());
 
-                AlertDialog alertDialog = dialogBuilder.create();
-                alertDialog.show();
-              }
-            });
+                  dialogBuilder.setView(dialogView);
+                  dialogBuilder.setPositiveButton(R.string.ok,
+                      new DialogInterface.OnClickListener() {
+                        @Override public void onClick(DialogInterface dialogInterface, int i) {
+                          double userWeight = Double.parseDouble(editWeightET.getText().toString());
+
+                          updateUserWeight(editWeightET, userWeight,
+                              Helpers.prepareDateWithTimeForAPIRequest(new LocalDateTime()));
+                        }
+                      });
+                  dialogBuilder.setNegativeButton(R.string.decline_cancel,
+                      new DialogInterface.OnClickListener() {
+                        @Override public void onClick(DialogInterface dialogInterface, int i) {
+                          dialogInterface.dismiss();
+                        }
+                      });
+
+                  AlertDialog alertDialog = dialogBuilder.create();
+                  alertDialog.show();
+                }
+              });
+            }
             break;
         }
       }
@@ -214,8 +223,7 @@ public class HealthFragment extends Fragment {
     });
   }
 
-  private void updateUserWeight(final CustomLineChart customLineChart, double weight,
-      String created_at) {
+  private void updateUserWeight(final EditText editWeightET, double weight, String created_at) {
     final ProgressDialog waitingDialog = new ProgressDialog(getActivity());
     waitingDialog.setTitle(getString(R.string.updating_user_profile_dialog_title));
     waitingDialog.setMessage(getString(R.string.please_wait_dialog_message));
@@ -245,9 +253,11 @@ public class HealthFragment extends Fragment {
 
             setupWeightChart();
 
+            getUserProfile();
+
             InputMethodManager imm =
                 (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+            imm.hideSoftInputFromWindow(editWeightET.getWindowToken(), 0);
 
             break;
         }

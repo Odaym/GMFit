@@ -2,8 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="@dimen/fitness_widget_cell_height"
-    android:background="@color/fitness_dark_blue"
     android:layout_margin="@dimen/default_margin_1"
+    android:background="@color/fitness_dark_blue"
     android:orientation="horizontal"
     android:paddingEnd="@dimen/default_margin_1"
     android:paddingStart="@dimen/default_margin_1"
@@ -14,7 +14,7 @@
       android:id="@+id/metricTitleTV"
       android:layout_width="@dimen/widgets_metric_name_width"
       android:layout_height="wrap_content"
-      android:textColor="@color/fitness_teal"
+      android:textColor="@color/health_greenish"
       android:textSize="@dimen/nutrition_metric_title_font_size"
       />
 

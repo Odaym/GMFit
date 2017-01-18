@@ -38,7 +38,7 @@
           android:layout_alignParentEnd="true"
           android:layout_centerVertical="true"
           android:gravity="center_vertical"
-          android:paddingEnd="@dimen/default_margin_2"
+          android:paddingEnd="@dimen/activity_vertical_margin"
           android:text="@string/update_weight_label"
           android:textColor="@color/white"
           />
@@ -56,10 +56,20 @@
         android:focusable="true"
         />
 
-    <LinearLayout
+    <View
+        android:id="@+id/separatorView"
+        android:layout_width="match_parent"
+        android:layout_height="0.3dp"
+        android:layout_below="@id/lineChart"
+        android:layout_marginBottom="@dimen/default_margin_1"
+        android:alpha="0.5"
+        android:background="@color/bpDark_gray"
+        />
+
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/lineChart"
+        android:layout_below="@id/separatorView"
         android:layout_marginBottom="@dimen/default_margin_1"
         android:gravity="center_vertical"
         android:orientation="horizontal"
@@ -72,38 +82,61 @@
           android:id="@+id/dateTV_1"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_weight="1"
-          android:gravity="start"
+          android:layout_marginEnd="@dimen/default_margin_1"
           android:textColor="@color/black_alpha_50"
+          android:textSize="@dimen/date_plots_small_font"
           />
 
       <TextView
           android:id="@+id/dateTV_2"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_weight="1"
-          android:gravity="center"
+          android:layout_marginEnd="@dimen/default_margin_1"
+          android:layout_marginStart="@dimen/default_margin_2"
+          android:layout_toEndOf="@+id/dateTV_1"
           android:textColor="@color/black_alpha_50"
+          android:textSize="@dimen/date_plots_small_font"
           />
 
       <TextView
           android:id="@+id/dateTV_3"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_weight="1"
-          android:gravity="center"
+          android:layout_marginStart="@dimen/default_margin_3"
+          android:layout_toEndOf="@+id/dateTV_2"
           android:textColor="@color/black_alpha_50"
+          android:textSize="@dimen/date_plots_small_font"
           />
 
       <TextView
           android:id="@+id/dateTV_4"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_weight="1"
-          android:gravity="end"
+          android:layout_marginStart="@dimen/default_margin_3"
+          android:layout_toEndOf="@+id/dateTV_3"
           android:textColor="@color/black_alpha_50"
+          android:textSize="@dimen/date_plots_small_font"
           />
-    </LinearLayout>
 
+      <TextView
+          android:id="@+id/dateTV_5"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginStart="@dimen/default_margin_3"
+          android:layout_toEndOf="@+id/dateTV_4"
+          android:textColor="@color/black_alpha_50"
+          android:textSize="@dimen/date_plots_small_font"
+          />
+
+      <TextView
+          android:id="@+id/dateTV_6"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignParentEnd="true"
+          android:textColor="@color/black_alpha_50"
+          android:textSize="@dimen/date_plots_small_font"
+          />
+
+    </RelativeLayout>
   </RelativeLayout>
 </android.support.v7.widget.CardView>

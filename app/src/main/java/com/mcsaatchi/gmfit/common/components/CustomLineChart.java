@@ -5,15 +5,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.highlight.Highlight;
-import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.rest.WeightHistoryResponseDatum;
 import java.util.ArrayList;
@@ -28,6 +25,9 @@ public class CustomLineChart extends LineChart {
   @Bind(R.id.dateTV_2) TextView dateTV_2;
   @Bind(R.id.dateTV_3) TextView dateTV_3;
   @Bind(R.id.dateTV_4) TextView dateTV_4;
+  @Bind(R.id.dateTV_5) TextView dateTV_5;
+  @Bind(R.id.dateTV_6) TextView dateTV_6;
+
   private ArrayList<CustomBarChart.CustomBarChartClickListener> clickListeners = new ArrayList<>();
   private View lineChartLayout;
   private Context context;
@@ -44,7 +44,7 @@ public class CustomLineChart extends LineChart {
 
     LinearLayout.LayoutParams lp =
         new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-            getResources().getDimensionPixelSize(R.dimen.chart_height_2));
+            getResources().getDimensionPixelSize(R.dimen.weight_chart_height));
     lp.topMargin = getResources().getDimensionPixelSize(R.dimen.default_margin_1);
 
     lineChartLayout.setLayoutParams(lp);
@@ -85,15 +85,23 @@ public class CustomLineChart extends LineChart {
           dateTV_4.setText(
               date.getDayOfMonth() + " " + date.monthOfYear().getAsText().substring(0, 3));
           break;
+        case 4:
+          dateTV_5.setText(
+              date.getDayOfMonth() + " " + date.monthOfYear().getAsText().substring(0, 3));
+        case 5:
+          dateTV_6.setText(
+              date.getDayOfMonth() + " " + date.monthOfYear().getAsText().substring(0, 3));
+          break;
       }
     }
 
     LineDataSet dataset = new LineDataSet(entries, null);
 
     LineData data = new LineData(xVals, dataset);
-    dataset.setFillColor(R.color.health_green);
-    dataset.setLineWidth(3);
-    dataset.setCircleRadius(8);
+    dataset.setFillColor(R.color.health_greenish);
+    dataset.setLineWidth(1);
+    dataset.setCircleColorHole(0);
+    dataset.setCircleRadius(6);
 
     lineChart.setData(data);
     lineChart.animateY(1500);
@@ -108,20 +116,9 @@ public class CustomLineChart extends LineChart {
     lineChart.getXAxis().setEnabled(false);
     lineChart.getAxisLeft().setDrawLabels(false);
     lineChart.getAxisRight().setDrawLabels(false);
+    lineChart.getLineData().setHighlightEnabled(false);
 
     lineChart.getLineData().setDrawValues(true);
-
-    lineChart.getLineData().setHighlightEnabled(true);
-
-    lineChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
-      @Override public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
-        Toast.makeText(context, String.valueOf(e.getVal()), Toast.LENGTH_SHORT).show();
-      }
-
-      @Override public void onNothingSelected() {
-
-      }
-    });
 
     lineChartContainer.addView(lineChartLayout);
   }

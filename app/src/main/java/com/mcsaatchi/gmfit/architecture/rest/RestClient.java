@@ -44,8 +44,8 @@ public class RestClient {
               .header("Authorization", prefs.getString(Constants.PREF_USER_ACCESS_TOKEN,
                   Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS))
               .header("Date",
-                  new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss z", Locale.getDefault()).format(
-                      new SimpleDateFormat("yyyy MM dd HH:mm:ss", Locale.getDefault()).parse(
+                  new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss z", Locale.US).format(
+                      new SimpleDateFormat("yyyy MM dd HH:mm:ss", Locale.US).parse(
                           dt.getYear()
                               + " "
                               + dt.getMonthOfYear()
