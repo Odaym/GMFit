@@ -83,7 +83,7 @@
   <dimen name="nutrition_widgets_gridview_height">220dp</dimen>
   <dimen name="meal_item_name_width">250dp</dimen>
   <dimen name="add_and_scan_icons_dimens">20dp</dimen>
-  <dimen name="user_goal_labels_font_size">45sp</dimen>
+  <dimen name="user_goal_labels_font_size">35sp</dimen>
   <dimen name="user_goals_section_height">140dp</dimen>
   <dimen name="empty_layouts_image_dimens">70dp</dimen>
 

@@ -225,7 +225,7 @@ public class NutritionFragment extends Fragment {
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
-      case R.id.action_settings:
+      case R.id.settings:
         Intent intent = new Intent(getActivity(), CustomizeWidgetsAndChartsActivity.class);
         intent.putExtra(Constants.EXTRAS_FRAGMENT_TYPE, Constants.EXTRAS_NUTRITION_FRAGMENT);
         intent.putParcelableArrayListExtra(Constants.BUNDLE_NUTRITION_WIDGETS_MAP, widgetsMap);
@@ -384,14 +384,15 @@ public class NutritionFragment extends Fragment {
               String currentValue =
                   response.body().getData().getBody().getMetrics().getCalories().getValue();
 
-              todayTV.setText(String.valueOf((int) Double.parseDouble(currentValue)));
-              goalTV.setText(maxValue);
+              todayTV.setText(Helpers.getFormattedString((int) Double.parseDouble(currentValue)));
+              goalTV.setText(Helpers.getFormattedString(Integer.parseInt(maxValue)));
 
               getUserGoalMetrics(date, "fitness");
             } else {
               String activeCalories = activeCaloriesResponse.getValue();
 
-              activeTV.setText(String.valueOf((int) Double.parseDouble(activeCalories)));
+              activeTV.setText(
+                  Helpers.getFormattedString((int) Double.parseDouble(activeCalories)));
             }
 
             if (!activeTV.getText().toString().isEmpty()
@@ -399,8 +400,9 @@ public class NutritionFragment extends Fragment {
                 && !todayTV.getText().toString().isEmpty()
                 && !metricCounterTV.getText().toString().isEmpty()) {
 
-              int remainingValue = Integer.parseInt(goalTV.getText().toString()) + Integer.parseInt(
-                  activeTV.getText().toString()) - Integer.parseInt(todayTV.getText().toString());
+              int remainingValue = Helpers.getNumberFromFromattedString(goalTV.getText().toString())
+                  + Helpers.getNumberFromFromattedString(activeTV.getText().toString())
+                  - Helpers.getNumberFromFromattedString(todayTV.getText().toString());
 
               if (remainingValue < 0) {
                 goalStatusWordTV.setText(getResources().getString(R.string.goal_nutrition_excess));
@@ -412,7 +414,7 @@ public class NutritionFragment extends Fragment {
                 }
               }
 
-              remainingTV.setText(String.valueOf(Math.abs(remainingValue)));
+              remainingTV.setText(Helpers.getFormattedString(Math.abs(remainingValue)));
 
               changeMetricProgressValue();
             }
@@ -715,8 +717,9 @@ public class NutritionFragment extends Fragment {
 
     for (int i = 0; i < widgetsFromResponse.size(); i++) {
       if (widgetsFromResponse.get(i).getTitle().equals("Calories")) {
-        metricCounterTV.setText(String.valueOf((int) widgetsFromResponse.get(i).getValue()));
-        //todayTV.setText(String.valueOf((int) widgetsFromResponse.get(i).getValue()));
+        metricCounterTV.setText(
+            Helpers.getFormattedString((int) widgetsFromResponse.get(i).getValue()));
+        todayTV.setText(Helpers.getFormattedString((int) widgetsFromResponse.get(i).getValue()));
       }
     }
 
@@ -831,8 +834,9 @@ public class NutritionFragment extends Fragment {
     getUiForSection("nutrition", finalDesiredDate);
 
     metricProgressBar.setProgress(
-        ((Integer.parseInt(metricCounterTV.getText().toString()) + Integer.parseInt(
-            activeTV.getText().toString())) * 100) / Integer.parseInt(goalTV.getText().toString()));
+        ((Helpers.getNumberFromFromattedString(metricCounterTV.getText().toString())
+            + Helpers.getNumberFromFromattedString(activeTV.getText().toString())) * 100)
+            / Helpers.getNumberFromFromattedString(goalTV.getText().toString()));
 
     cancelAllPendingAlarms();
   }
@@ -903,8 +907,9 @@ public class NutritionFragment extends Fragment {
   }
 
   private void changeMetricProgressValue() {
-    int progressValue = ((Integer.parseInt(metricCounterTV.getText().toString()) + Integer.parseInt(
-        activeTV.getText().toString())) * 100) / Integer.parseInt(goalTV.getText().toString());
+    int progressValue = ((Helpers.getNumberFromFromattedString(metricCounterTV.getText().toString())
+        + Helpers.getNumberFromFromattedString(activeTV.getText().toString())) * 100)
+        / Helpers.getNumberFromFromattedString(goalTV.getText().toString());
 
     if (progressValue > 100) progressValue = 100;
 
@@ -947,7 +952,7 @@ public class NutritionFragment extends Fragment {
                 intent.putExtra(Constants.EXTRAS_FRAGMENT_TYPE,
                     Constants.EXTRAS_NUTRITION_FRAGMENT);
                 intent.putExtra(Constants.EXTRAS_CHART_FULL_NAME, chartTitle);
-                intent.putExtra(Constants.EXTRAS_CHART_TYPE_SELECTED, chartType);
+                intent.putExtra(Constants.EXTRAS_CHART_TYPE_SELECTED, chartTitle);
                 intent.putExtra(Constants.BUNDLE_SLUG_BREAKDOWN_DATA,
                     response.body().getData().getBody().getData());
                 getActivity().startActivity(intent);

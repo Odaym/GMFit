@@ -14,6 +14,7 @@ import java.util.ArrayList;
   @DatabaseField private String description;
   @DatabaseField private String dosage;
   @DatabaseField private int frequency;
+  @DatabaseField private int frequencyType;
   @DatabaseField private int treatmentDuration;
   @ForeignCollectionField private ForeignCollection<MedicationReminder> medicationReminders;
   @DatabaseField(dataType = DataType.SERIALIZABLE) private ArrayList<DayChoice> when;
@@ -98,6 +99,14 @@ import java.util.ArrayList;
     this.frequency = frequency;
   }
 
+  public int getFrequencyType() {
+    return frequencyType;
+  }
+
+  public void setFrequencyType(int frequencyType) {
+    this.frequencyType = frequencyType;
+  }
+
   public int getUnits() {
     return units;
   }
@@ -137,8 +146,9 @@ import java.util.ArrayList;
         ", description='" + description + '\'' +
         ", dosage='" + dosage + '\'' +
         ", frequency=" + frequency +
+        ", frequencyType=" + frequencyType +
         ", treatmentDuration=" + treatmentDuration +
-        ", medicationReminders size =" + medicationReminders +
+        ", medicationReminders=" + medicationReminders +
         ", when=" + when +
         ", whenString='" + whenString + '\'' +
         ", units=" + units +

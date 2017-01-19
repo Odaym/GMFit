@@ -62,11 +62,8 @@ import com.mcsaatchi.gmfit.fitness.models.FitnessWidget;
 import com.squareup.otto.Subscribe;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import javax.inject.Inject;
 import net.danlew.android.joda.JodaTimeAndroid;
 import org.joda.time.DateTime;
@@ -149,9 +146,9 @@ public class FitnessFragment extends Fragment {
 
     setHasOptionsMenu(true);
 
-    metricCounterTV.setText(String.valueOf(NumberFormat.getNumberInstance(Locale.US)
-        .format(prefs.getInt(Helpers.getTodayDate() + "_steps", 0))));
-    todayTV.setText(String.valueOf(prefs.getInt(Helpers.getTodayDate() + "_steps", 0)));
+    metricCounterTV.setText(
+        Helpers.getFormattedString(prefs.getInt(Helpers.getTodayDate() + "_steps", 0)));
+    todayTV.setText(Helpers.getFormattedString(prefs.getInt(Helpers.getTodayDate() + "_steps", 0)));
 
     setupWidgetViews(widgetsMap);
 
@@ -358,7 +355,7 @@ public class FitnessFragment extends Fragment {
 
             int remainingValue = 0;
 
-            goalTV.setText(maxValue);
+            goalTV.setText(Helpers.getFormattedString(Integer.parseInt(maxValue)));
 
             metricProgressBar.setProgress(
                 (int) ((Double.parseDouble(currentValue) * 100) / Double.parseDouble(maxValue)));
@@ -367,25 +364,20 @@ public class FitnessFragment extends Fragment {
              * Requesting today's data
              */
             if (!requestingPreviousData) {
-              metricCounterTV.setText(String.valueOf(NumberFormat.getNumberInstance(Locale.US)
-                  .format(prefs.getInt(Helpers.getTodayDate() + "_steps", 0))));
-              todayTV.setText(String.valueOf(prefs.getInt(Helpers.getTodayDate() + "_steps", 0)));
+              metricCounterTV.setText(
+                  Helpers.getFormattedString(prefs.getInt(Helpers.getTodayDate() + "_steps", 0)));
+              todayTV.setText(
+                  Helpers.getFormattedString(prefs.getInt(Helpers.getTodayDate() + "_steps", 0)));
 
-              try {
-                remainingValue =
-                    Integer.parseInt(maxValue) - NumberFormat.getNumberInstance(Locale.US)
-                        .parse(metricCounterTV.getText().toString())
-                        .intValue();
-              } catch (ParseException e) {
-                e.printStackTrace();
-              }
+              remainingValue = Integer.parseInt(maxValue) - Helpers.getNumberFromFromattedString(
+                  metricCounterTV.getText().toString());
             } else {
               /**
                * Requesting data from previous days
                */
-              metricCounterTV.setText(String.valueOf(NumberFormat.getNumberInstance(Locale.US)
-                  .format((int) Double.parseDouble(currentValue))));
-              todayTV.setText(String.valueOf((int) Double.parseDouble(currentValue)));
+              metricCounterTV.setText(
+                  Helpers.getFormattedString((int) Double.parseDouble(currentValue)));
+              todayTV.setText(Helpers.getFormattedString((int) Double.parseDouble(currentValue)));
 
               remainingValue =
                   (int) (Integer.parseInt(maxValue) - Double.parseDouble(currentValue));
@@ -405,7 +397,7 @@ public class FitnessFragment extends Fragment {
               }
             }
 
-            remainingTV.setText(String.valueOf(Math.abs(remainingValue)));
+            remainingTV.setText(Helpers.getFormattedString(Math.abs(remainingValue)));
 
             break;
         }
@@ -551,22 +543,18 @@ public class FitnessFragment extends Fragment {
   }
 
   @Subscribe public void incrementStepCounter(StepCounterIncrementedEvent event) {
-    metricCounterTV.setText(String.valueOf(NumberFormat.getNumberInstance(Locale.US)
-        .format(prefs.getInt(Helpers.getTodayDate() + "_steps", 0))));
-    todayTV.setText(String.valueOf(prefs.getInt(Helpers.getTodayDate() + "_steps", 0)));
+    metricCounterTV.setText(
+        Helpers.getFormattedString(prefs.getInt(Helpers.getTodayDate() + "_steps", 0)));
+    todayTV.setText(Helpers.getFormattedString(prefs.getInt(Helpers.getTodayDate() + "_steps", 0)));
 
     if (!goalTV.getText().toString().isEmpty()
         && !todayTV.getText().toString().isEmpty()
         && !metricCounterTV.getText().toString().isEmpty()) {
 
-      int remainingValue = 0;
-      try {
-        remainingValue =
-            Integer.parseInt(goalTV.getText().toString()) - NumberFormat.getNumberInstance(
-                Locale.US).parse(metricCounterTV.getText().toString()).intValue();
-      } catch (ParseException e) {
-        e.printStackTrace();
-      }
+      int remainingValue;
+
+      remainingValue = Helpers.getNumberFromFromattedString(goalTV.getText().toString())
+          - Helpers.getNumberFromFromattedString(metricCounterTV.getText().toString());
 
       if (remainingValue < 0) {
         goalStatusWordTV.setText(getResources().getString(R.string.goal_exceeded_tv));
@@ -574,11 +562,11 @@ public class FitnessFragment extends Fragment {
         goalStatusWordTV.setText(getResources().getString(R.string.remaining_title));
 
         metricProgressBar.setProgress(
-            ((Integer.parseInt(todayTV.getText().toString()) * 100) / Integer.parseInt(
-                goalTV.getText().toString())));
+            (Helpers.getNumberFromFromattedString(todayTV.getText().toString()) * 100)
+                / Helpers.getNumberFromFromattedString(goalTV.getText().toString()));
       }
 
-      remainingTV.setText(String.valueOf(Math.abs(remainingValue)));
+      remainingTV.setText(Helpers.getFormattedString(Math.abs(remainingValue)));
     }
   }
 

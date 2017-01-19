@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.common.classes.FontTextView;
+import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.nutrition.models.NutritionWidget;
 import java.util.ArrayList;
 
@@ -24,19 +25,16 @@ public class NutritionWidgetsRecyclerAdapter
     this.layoutResourceId = layoutResourceId;
   }
 
-  @Override
-  public RecyclerViewHolder onCreateViewHolder(ViewGroup parent,
-      int viewType) {
+  @Override public RecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     View itemView =
         LayoutInflater.from(parent.getContext()).inflate(layoutResourceId, parent, false);
 
     return new RecyclerViewHolder(itemView);
   }
 
-  @Override public void onBindViewHolder(RecyclerViewHolder holder,
-      int position) {
+  @Override public void onBindViewHolder(RecyclerViewHolder holder, int position) {
     holder.metricTitleTV.setText((widgetsMap.get(position)).getTitle());
-    holder.metricTV.setText(String.valueOf((int) widgetsMap.get(position).getValue()));
+    holder.metricTV.setText(Helpers.getFormattedString((int) widgetsMap.get(position).getValue()));
     holder.metricPercentageTV.setText("(" + (widgetsMap.get(position)).getPercentage() + "%)");
     holder.measurementUnitTV.setText((widgetsMap.get(position)).getMeasurementUnit());
   }

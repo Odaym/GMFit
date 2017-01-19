@@ -146,11 +146,10 @@ public class SlugBreakdownActivity extends BaseActivity {
         case "distance-traveled":
           measurementUnit = "km";
           break;
+        case "Calories":
         case "active-calories":
           measurementUnit = "kcal";
           break;
-        default:
-          measurementUnit = "units";
       }
     }
 

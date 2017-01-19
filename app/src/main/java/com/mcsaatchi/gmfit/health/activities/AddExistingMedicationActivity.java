@@ -3,17 +3,20 @@ package com.mcsaatchi.gmfit.health.activities;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -41,6 +44,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import timber.log.Timber;
 
 public class AddExistingMedicationActivity extends BaseActivity {
 
@@ -57,6 +61,7 @@ public class AddExistingMedicationActivity extends BaseActivity {
   @Bind(R.id.unitsET) EditText unitsET;
   @Bind(R.id.addMedicationBTN) Button addMedicationBTN;
   @Bind(R.id.enableRemindersSwitch) Switch enableRemindersSwitch;
+  @Bind(R.id.timesPerDayMeasurementTV) TextView timesPerDayMeasurementTV;
 
   private RuntimeExceptionDao<Medication, Integer> medicationDAO;
   private ArrayList<MedicationReminder> medicationReminders;
@@ -64,6 +69,8 @@ public class AddExistingMedicationActivity extends BaseActivity {
   private ArrayList<DayChoice> daysSelected = null;
   private boolean editPurpose = false;
   private int[] daysOfWeekArray;
+
+  private Map<String, Integer> frequencyTypeMap = new HashMap<>();
 
   private Map<String, Integer> daysOfWeekMap = new HashMap<String, Integer>() {{
     put("Monday", 1);
@@ -85,6 +92,10 @@ public class AddExistingMedicationActivity extends BaseActivity {
     setupToolbar(toolbar, getString(R.string.add_medication), true);
 
     medicationDAO = dbHelper.getMedicationDAO();
+
+    frequencyTypeMap.put(getString(R.string.frequency_type_weekly), 1);
+    frequencyTypeMap.put(getString(R.string.frequency_type_monthly), 2);
+    frequencyTypeMap.put(getString(R.string.frequency_type_when_needed), 3);
 
     if (getIntent().getExtras() != null) {
       medicationItem =
@@ -165,6 +176,32 @@ public class AddExistingMedicationActivity extends BaseActivity {
     });
   }
 
+  @OnClick(R.id.timesPerDayMeasurementTV) void showFrequencyTypeDialog() {
+    AlertDialog.Builder builderSingle = new AlertDialog.Builder(AddExistingMedicationActivity.this);
+    builderSingle.setTitle("Type of frequency\n");
+
+    final ArrayAdapter<String> arrayAdapter =
+        new ArrayAdapter<>(AddExistingMedicationActivity.this, android.R.layout.simple_list_item_1);
+    arrayAdapter.add(getString(R.string.frequency_type_weekly));
+    arrayAdapter.add(getString(R.string.frequency_type_monthly));
+    arrayAdapter.add(getString(R.string.frequency_type_when_needed));
+
+    builderSingle.setNegativeButton(R.string.decline_cancel, new DialogInterface.OnClickListener() {
+      @Override public void onClick(DialogInterface dialog, int which) {
+        dialog.dismiss();
+      }
+    });
+
+    builderSingle.setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
+      @Override public void onClick(DialogInterface dialog, int which) {
+        String strName = arrayAdapter.getItem(which);
+        timesPerDayMeasurementTV.setText(strName);
+      }
+    });
+
+    builderSingle.show();
+  }
+
   private void prepareRemindersRecyclerView(int frequencyNumber) {
     medicationReminders = new ArrayList<>(frequencyNumber);
 
@@ -206,6 +243,8 @@ public class AddExistingMedicationActivity extends BaseActivity {
         medicationItem.setRemarks(yourNotesET.getText().toString());
         medicationItem.setUnits(Integer.parseInt(unitsET.getText().toString()));
         medicationItem.setFrequency(Integer.parseInt(frequencyET.getText().toString()));
+        medicationItem.setFrequencyType(
+            frequencyTypeMap.get(timesPerDayMeasurementTV.getText().toString()));
         medicationItem.setUnitForm(unitMeasurementTV.getText().toString());
         medicationItem.setWhen(daysSelected);
         medicationItem.setWhenString(daysOfWeekTV.getText().toString());
@@ -237,6 +276,21 @@ public class AddExistingMedicationActivity extends BaseActivity {
         medication.setRemarks(yourNotesET.getText().toString());
         medication.setUnits(Integer.parseInt(unitsET.getText().toString()));
         medication.setFrequency(Integer.parseInt(frequencyET.getText().toString()));
+        if (timesPerDayMeasurementTV != null) {
+          Timber.d("times per day measurement TV was not null");
+        } else {
+          Timber.d("times per day measurement TV IS NULL");
+        }
+
+        if (frequencyTypeMap != null) {
+          Timber.d("frequencyTypeMap is null");
+        } else {
+
+          Timber.d("frequencyTypeMap is NOT null");
+        }
+
+        medication.setFrequencyType(
+            frequencyTypeMap.get(timesPerDayMeasurementTV.getText().toString()));
         medication.setUnitForm(unitMeasurementTV.getText().toString());
         medication.setWhen(daysSelected);
         medication.setWhenString(daysOfWeekTV.getText().toString());
@@ -257,6 +311,8 @@ public class AddExistingMedicationActivity extends BaseActivity {
         }
 
         medicationDAO.update(medication);
+
+        Timber.d("Medication frequency type is : " + medication.getFrequencyType());
       }
 
       EventBusSingleton.getInstance().post(new MedicationItemCreatedEvent());

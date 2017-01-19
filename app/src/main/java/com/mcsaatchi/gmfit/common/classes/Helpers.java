@@ -17,9 +17,12 @@ import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.common.Constants;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
@@ -57,6 +60,20 @@ public class Helpers {
     }
 
     return allValid;
+  }
+
+  public static String getFormattedString(int amount) {
+    return NumberFormat.getNumberInstance(Locale.US).format(amount);
+  }
+
+  public static int getNumberFromFromattedString(String formattedString) {
+    try {
+      return NumberFormat.getNumberInstance(Locale.US).parse(formattedString).intValue();
+    } catch (ParseException e) {
+      e.printStackTrace();
+    }
+
+    return 0;
   }
 
   public static String getTodayDate() {

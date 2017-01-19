@@ -134,6 +134,7 @@ public class SearchMedicationsActivity extends BaseActivity {
                     Medication medication = new Medication();
 
                     medication.setName(medicationDatum.getDescr());
+                    medication.setUnitForm(medicationDatum.getUnitForm());
                     medication.setDescription(medicationDatum.getMPres()
                         + " "
                         + medicationDatum.getMForm()
