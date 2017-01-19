@@ -51,7 +51,6 @@ import com.mcsaatchi.gmfit.architecture.rest.SearchMealItemResponseDatum;
 import com.mcsaatchi.gmfit.architecture.rest.SlugBreakdownResponse;
 import com.mcsaatchi.gmfit.architecture.rest.UiResponse;
 import com.mcsaatchi.gmfit.architecture.rest.UserGoalMetricsResponse;
-import com.mcsaatchi.gmfit.architecture.rest.UserGoalMetricsResponseActiveCalories;
 import com.mcsaatchi.gmfit.architecture.rest.UserMealsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.UserMealsResponseBreakfast;
 import com.mcsaatchi.gmfit.architecture.rest.UserMealsResponseDinner;
@@ -374,31 +373,21 @@ public class NutritionFragment extends Fragment {
 
         switch (response.code()) {
           case 200:
-            UserGoalMetricsResponseActiveCalories activeCaloriesResponse =
-                response.body().getData().getBody().getMetrics().getActiveCalories();
+            String maxValue =
+                response.body().getData().getBody().getMetrics().getCalories().getMaxValue();
 
-            if (activeCaloriesResponse == null) {
-              String maxValue =
-                  response.body().getData().getBody().getMetrics().getCalories().getMaxValue();
+            String currentValue =
+                response.body().getData().getBody().getMetrics().getCalories().getValue();
 
-              String currentValue =
-                  response.body().getData().getBody().getMetrics().getCalories().getValue();
+            todayTV.setText(Helpers.getFormattedString((int) Double.parseDouble(currentValue)));
+            goalTV.setText(Helpers.getFormattedString(Integer.parseInt(maxValue)));
 
-              todayTV.setText(Helpers.getFormattedString((int) Double.parseDouble(currentValue)));
-              goalTV.setText(Helpers.getFormattedString(Integer.parseInt(maxValue)));
-
-              getUserGoalMetrics(date, "fitness");
-            } else {
-              String activeCalories = activeCaloriesResponse.getValue();
-
-              activeTV.setText(
-                  Helpers.getFormattedString((int) Double.parseDouble(activeCalories)));
-            }
+            activeTV.setText(
+                String.valueOf((int) prefs.getFloat(Helpers.getTodayDate() + "_calories", 0)));
 
             if (!activeTV.getText().toString().isEmpty()
                 && !goalTV.getText().toString().isEmpty()
-                && !todayTV.getText().toString().isEmpty()
-                && !metricCounterTV.getText().toString().isEmpty()) {
+                && !todayTV.getText().toString().isEmpty()) {
 
               int remainingValue = Helpers.getNumberFromFromattedString(goalTV.getText().toString())
                   + Helpers.getNumberFromFromattedString(activeTV.getText().toString())
@@ -483,8 +472,6 @@ public class NutritionFragment extends Fragment {
               getActivity().runOnUiThread(new Runnable() {
                 @Override public void run() {
                   setupWidgetViews(finalWidgets);
-
-                  //getUserGoalMetrics(finalDesiredDate, "nutrition");
 
                   setupChartViews(finalCharts);
 
@@ -837,6 +824,8 @@ public class NutritionFragment extends Fragment {
         ((Helpers.getNumberFromFromattedString(metricCounterTV.getText().toString())
             + Helpers.getNumberFromFromattedString(activeTV.getText().toString())) * 100)
             / Helpers.getNumberFromFromattedString(goalTV.getText().toString()));
+
+    getUserGoalMetrics(finalDesiredDate, "nutrition");
 
     cancelAllPendingAlarms();
   }

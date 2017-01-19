@@ -57,13 +57,11 @@ public class UserMealsRecyclerAdapterDragSwipe
     holder.entryTitleTV.setText(meal.getName());
 
     if (meal.getAmount() != null) {
-      if (Float.parseFloat(meal.getAmount()) > 1) {
-        holder.entryDescriptionTV.setText(meal.getAmount() + " servings");
-      } else {
+      if (Float.parseFloat(meal.getAmount()) == 1) {
         holder.entryDescriptionTV.setText("1 serving");
+      } else {
+        holder.entryDescriptionTV.setText(meal.getAmount() + " servings");
       }
-    } else {
-      holder.entryDescriptionTV.setText("0 servings");
     }
 
     holder.entryUnitsTV.setText(meal.getTotalCalories() + " kcal");
@@ -95,8 +93,7 @@ public class UserMealsRecyclerAdapterDragSwipe
           case 200:
             Log.d("TAG", "onResponse: Meal item removed!");
 
-            EventBusSingleton.getInstance()
-                .post(new MealEntryManipulatedEvent());
+            EventBusSingleton.getInstance().post(new MealEntryManipulatedEvent());
 
             break;
         }

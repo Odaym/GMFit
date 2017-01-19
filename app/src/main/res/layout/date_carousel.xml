@@ -4,7 +4,6 @@
     android:id="@+id/dateCarousel"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:scrollbarSize="2dp"
     android:background="@color/offwhite_more_transparent"
     >
 

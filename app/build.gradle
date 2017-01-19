@@ -105,6 +105,7 @@ dependencies {
   compile "com.google.dagger:dagger:$daggerVersion"
   compile 'org.apache.commons:commons-lang3:3.5'
   compile 'com.jakewharton.timber:timber:4.3.1'
+  compile 'me.grantland:autofittextview:0.2.1'
   compile 'com.squareup.picasso:picasso:2.5.2'
   compile 'uk.co.chrisjenx:calligraphy:2.2.0'
   compile 'com.jakewharton:butterknife:7.0.1'

@@ -180,6 +180,7 @@ public class FitnessFragment extends Fragment {
       @Override public void onClick(View v) {
         Intent intent = new Intent(getActivity(), AddNewChartActivity.class);
         intent.putExtra(Constants.EXTRAS_ADD_CHART_WHAT_TYPE, Constants.EXTRAS_ADD_FITNESS_CHART);
+        intent.putExtra(Constants.BUNDLE_FITNESS_CHARTS_MAP, chartsMap);
         startActivityForResult(intent, ADD_NEW_FITNESS_CHART_REQUEST_CODE);
       }
     });

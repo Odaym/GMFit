@@ -22,15 +22,14 @@ import org.joda.time.DateTime;
 
 public class CustomBarChart extends BarChart {
 
-  private View barChartLayout;
-
   @Bind(R.id.barChart) BarChart barChart;
   @Bind(R.id.chartTitleTV) TextView chartTitleTV;
   @Bind(R.id.dateTV_1) TextView dateTV_1;
   @Bind(R.id.dateTV_2) TextView dateTV_2;
   @Bind(R.id.dateTV_3) TextView dateTV_3;
   @Bind(R.id.dateTV_4) TextView dateTV_4;
-
+  @Bind(R.id.dateTV_5) TextView dateTV_5;
+  private View barChartLayout;
   private String chartTitle, chartType;
 
   private Context context;
@@ -59,6 +58,20 @@ public class CustomBarChart extends BarChart {
     chartTitleTV.setText(chartTitle);
   }
 
+  private static int findLargestNumber(List<AuthenticationResponseChartData> rawChartData) {
+    int smallest = (int) Double.parseDouble(rawChartData.get(0).getValue());
+    int largest = (int) Double.parseDouble(rawChartData.get(0).getValue());
+
+    for (int i = 1; i < rawChartData.size(); i++) {
+      int currentValue = (int) Double.parseDouble(rawChartData.get(i).getValue());
+      if (currentValue > largest) {
+        largest = currentValue;
+      } else if (currentValue < smallest) smallest = currentValue;
+    }
+
+    return largest;
+  }
+
   public void addClickListener(CustomBarChartClickListener listener) {
     this.clickListeners.add(listener);
   }
@@ -74,20 +87,24 @@ public class CustomBarChart extends BarChart {
       date = new DateTime(newChartData.get(i).getDate());
 
       switch (i) {
-        case 5:
+        case 3:
           dateTV_1.setText(
               date.getDayOfMonth() + " " + date.monthOfYear().getAsText().substring(0, 3));
           break;
-        case 12:
+        case 10:
           dateTV_2.setText(
               date.getDayOfMonth() + " " + date.monthOfYear().getAsText().substring(0, 3));
           break;
-        case 19:
+        case 17:
           dateTV_3.setText(
               date.getDayOfMonth() + " " + date.monthOfYear().getAsText().substring(0, 3));
           break;
-        case 26:
+        case 24:
           dateTV_4.setText(
+              date.getDayOfMonth() + " " + date.monthOfYear().getAsText().substring(0, 3));
+          break;
+        case 31:
+          dateTV_5.setText(
               date.getDayOfMonth() + " " + date.monthOfYear().getAsText().substring(0, 3));
           break;
       }
@@ -168,19 +185,5 @@ public class CustomBarChart extends BarChart {
 
   public interface CustomBarChartClickListener {
     void handleClick(String chartTitle, String chartType);
-  }
-
-  private static int findLargestNumber(List<AuthenticationResponseChartData> rawChartData) {
-    int smallest = (int) Double.parseDouble(rawChartData.get(0).getValue());
-    int largest = (int) Double.parseDouble(rawChartData.get(0).getValue());
-
-    for (int i = 1; i < rawChartData.size(); i++) {
-      int currentValue = (int) Double.parseDouble(rawChartData.get(i).getValue());
-      if (currentValue > largest) {
-        largest = currentValue;
-      } else if (currentValue < smallest) smallest = currentValue;
-    }
-
-    return largest;
   }
 }

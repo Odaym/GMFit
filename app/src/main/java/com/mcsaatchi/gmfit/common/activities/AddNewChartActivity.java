@@ -38,6 +38,7 @@ public class AddNewChartActivity extends BaseActivity {
 
   private List<DataChart> chartItemsMap = new ArrayList<>();
 
+  private ArrayList<DataChart> chartsMap;
   private ProgressDialog waitingDialog;
   private AlertDialog alertDialog;
 
@@ -76,10 +77,16 @@ public class AddNewChartActivity extends BaseActivity {
           case Constants.EXTRAS_ADD_FITNESS_CHART:
             topLayout.setBackground(getResources().getDrawable(R.drawable.fitness_background));
 
+            chartsMap =
+                getIntent().getExtras().getParcelableArrayList(Constants.BUNDLE_FITNESS_CHARTS_MAP);
+
             getChartsBySection("fitness", ADD_NEW_FITNESS_CHART_REQUEST_CODE);
             break;
           case Constants.EXTRAS_ADD_NUTRIITION_CHART:
             topLayout.setBackground(getResources().getDrawable(R.drawable.nutrition_background));
+
+            chartsMap = getIntent().getExtras()
+                .getParcelableArrayList(Constants.BUNDLE_NUTRITION_CHARTS_MAP);
 
             getChartsBySection("nutrition", ADD_NEW_NUTRITION_CHART_REQUEST_CODE);
             break;
@@ -119,8 +126,20 @@ public class AddNewChartActivity extends BaseActivity {
 
                 DataChart dataChart = chartItemsMap.get(position);
 
-                if (!dataChart.getName().equals("Number of Steps")) {
+                Timber.d("current datachart name ; " + dataChart.getName());
 
+                boolean chartExists = false;
+
+                for (int i = 0; i < chartsMap.size(); i++) {
+                  if (dataChart.getName().equals(chartsMap.get(i).getName())) {
+                    chartExists = true;
+                  }
+                }
+
+                if (chartExists) {
+                  Toast.makeText(AddNewChartActivity.this, R.string.duplicate_chart_error,
+                      Toast.LENGTH_SHORT).show();
+                } else {
                   addMetricChart(dataChart.getChart_id());
 
                   Intent intent = new Intent();
@@ -129,9 +148,6 @@ public class AddNewChartActivity extends BaseActivity {
                   setResult(requestCodeToSendBack, intent);
 
                   finish();
-                } else {
-                  Toast.makeText(AddNewChartActivity.this, R.string.duplicate_chart_error,
-                      Toast.LENGTH_SHORT).show();
                 }
               }
             });

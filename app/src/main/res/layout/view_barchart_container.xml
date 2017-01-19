@@ -92,8 +92,18 @@
           android:textColor="@color/black_alpha_50"
           />
 
+
       <TextView
           android:id="@+id/dateTV_4"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:gravity="center"
+          android:textColor="@color/black_alpha_50"
+          />
+
+      <TextView
+          android:id="@+id/dateTV_5"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_weight="1"
