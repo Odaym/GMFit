@@ -36,7 +36,6 @@
       android:layout_height="wrap_content"
       android:layout_below="@+id/metricTV"
       android:layout_centerHorizontal="true"
-      android:layout_marginEnd="@dimen/default_margin_0"
       android:textColor="@android:color/white"
       />
 
