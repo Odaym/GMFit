@@ -93,13 +93,11 @@ public class FitnessFragment extends Fragment {
   @Inject LocalDate dt;
   @Inject DataAccessHandler dataAccessHandler;
   private String todayDate;
-  private String userEmail;
 
   private FitnessWidgetsRecyclerAdapter widgetsGridAdapter;
   private ArrayList<FitnessWidget> widgetsMap;
   private ArrayList<DataChart> chartsMap;
   private RuntimeExceptionDao<FitnessWidget, Integer> fitnessWidgetsDAO;
-  private RuntimeExceptionDao<DataChart, Integer> dataChartDAO;
   private QueryBuilder<FitnessWidget, Integer> fitnessQB;
 
   @RequiresApi(api = Build.VERSION_CODES.KITKAT) @Override public void onAttach(Context context) {
@@ -107,8 +105,6 @@ public class FitnessFragment extends Fragment {
 
     fitnessWidgetsDAO = ((BaseActivity) getActivity()).dbHelper.getFitnessWidgetsDAO();
     fitnessQB = fitnessWidgetsDAO.queryBuilder();
-
-    dataChartDAO = ((BaseActivity) getActivity()).dbHelper.getDataChartDAO();
 
     EventBusSingleton.getInstance().register(this);
 
@@ -123,8 +119,6 @@ public class FitnessFragment extends Fragment {
       ((AppCompatActivity) getActivity()).getSupportActionBar()
           .setTitle(R.string.fitness_tab_title);
     }
-
-    userEmail = prefs.getString(Constants.EXTRAS_USER_EMAIL, "");
 
     if (getArguments() != null) {
       chartsMap = getArguments().getParcelableArrayList(Constants.BUNDLE_FITNESS_CHARTS_MAP);
@@ -191,25 +185,14 @@ public class FitnessFragment extends Fragment {
   @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
 
-    /**
-     * Added a new chart for Fitness, get the chart details from the result and use them to actually create that chart in the UI
-     * Save it in the DB under the user's email
-     */
     if (requestCode == ADD_NEW_FITNESS_CHART_REQUEST_CODE) {
       if (data != null) {
 
-        String chartType = data.getStringExtra(Constants.EXTRAS_CHART_TYPE_SELECTED);
-        String chartName = data.getStringExtra(Constants.EXTRAS_CHART_FULL_NAME);
+        DataChart chartObjectAdded = data.getParcelableExtra(Constants.EXTRAS_CHART_OBJECT);
 
-        addNewBarChart(chartName, chartType, todayDate);
+        chartsMap.add(chartObjectAdded);
 
-        chartsMap.add(
-            new DataChart(chartName, chartType, dataChartDAO.queryForAll().size() + 1, userEmail,
-                Constants.EXTRAS_FITNESS_FRAGMENT));
-
-        dataChartDAO.create(
-            new DataChart(chartName, chartType, dataChartDAO.queryForAll().size() + 1, userEmail,
-                Constants.EXTRAS_FITNESS_FRAGMENT));
+        addNewBarChart(chartObjectAdded, todayDate);
       }
     }
   }
@@ -259,10 +242,9 @@ public class FitnessFragment extends Fragment {
     EventBusSingleton.getInstance().unregister(this);
   }
 
-  private void getPeriodicalChartData(final String chartTitle, String desiredDate,
-      final String chart_slug) {
+  private void getPeriodicalChartData(final DataChart chartObject, String desiredDate) {
     dataAccessHandler.getPeriodicalChartData(dt.minusMonths(1).toString(), desiredDate, "fitness",
-        chart_slug, new Callback<ChartMetricBreakdownResponse>() {
+        chartObject.getType(), new Callback<ChartMetricBreakdownResponse>() {
           @Override public void onResponse(Call<ChartMetricBreakdownResponse> call,
               Response<ChartMetricBreakdownResponse> response) {
             if (response.code() == 200) {
@@ -278,14 +260,14 @@ public class FitnessFragment extends Fragment {
 
               if (getActivity() != null) {
                 CustomBarChart customBarChart =
-                    new CustomBarChart(getActivity(), chartTitle, chart_slug);
+                    new CustomBarChart(getActivity(), chartObject.getName(), chartObject.getType());
 
                 /**
                  * Open the breakdown for the chart
                  */
                 customBarChart.addClickListener(new CustomBarChart.CustomBarChartClickListener() {
                   @Override public void handleClick(String chartTitle, String chartType) {
-                    getSlugBreakdownForChart(chartTitle, chartType);
+                    getSlugBreakdownForChart(chartObject);
                   }
                 });
 
@@ -409,21 +391,21 @@ public class FitnessFragment extends Fragment {
     });
   }
 
-  public void addNewBarChart(final String chartTitle, final String chartType, String desiredDate) {
-    switch (chartType) {
+  public void addNewBarChart(DataChart chartObject, String desiredDate) {
+    switch (chartObject.getType()) {
       case "steps-count":
-        getPeriodicalChartData(chartTitle, desiredDate, "steps-count");
+        getPeriodicalChartData(chartObject, desiredDate);
         break;
       case "active-calories":
-        getPeriodicalChartData(chartTitle, desiredDate, "active-calories");
+        getPeriodicalChartData(chartObject, desiredDate);
         break;
       case "distance-traveled":
-        getPeriodicalChartData(chartTitle, desiredDate, "distance-traveled");
+        getPeriodicalChartData(chartObject, desiredDate);
         break;
     }
   }
 
-  private void getSlugBreakdownForChart(final String chartTitle, final String chartType) {
+  private void getSlugBreakdownForChart(final DataChart chartObject) {
     final ProgressDialog waitingDialog = new ProgressDialog(getActivity());
     waitingDialog.setTitle(
         getActivity().getResources().getString(R.string.grabbing_breakdown_data_dialog_title));
@@ -442,42 +424,37 @@ public class FitnessFragment extends Fragment {
           }
         });
 
-    dataAccessHandler.getSlugBreakdownForChart(chartType, new Callback<SlugBreakdownResponse>() {
-      @Override public void onResponse(Call<SlugBreakdownResponse> call,
-          Response<SlugBreakdownResponse> response) {
-        switch (response.code()) {
-          case 200:
-            waitingDialog.dismiss();
+    dataAccessHandler.getSlugBreakdownForChart(chartObject.getType(),
+        new Callback<SlugBreakdownResponse>() {
+          @Override public void onResponse(Call<SlugBreakdownResponse> call,
+              Response<SlugBreakdownResponse> response) {
+            switch (response.code()) {
+              case 200:
+                waitingDialog.dismiss();
 
-            Intent intent = new Intent(getActivity(), SlugBreakdownActivity.class);
-            intent.putExtra(Constants.EXTRAS_FRAGMENT_TYPE, Constants.EXTRAS_FITNESS_FRAGMENT);
-            intent.putExtra(Constants.EXTRAS_CHART_FULL_NAME, chartTitle);
-            intent.putExtra(Constants.EXTRAS_CHART_TYPE_SELECTED, chartType);
-            intent.putExtra(Constants.BUNDLE_SLUG_BREAKDOWN_DATA,
-                response.body().getData().getBody().getData());
-            getActivity().startActivity(intent);
-            break;
-        }
-      }
+                Intent intent = new Intent(getActivity(), SlugBreakdownActivity.class);
+                intent.putExtra(Constants.EXTRAS_FRAGMENT_TYPE, Constants.EXTRAS_FITNESS_FRAGMENT);
+                intent.putExtra(Constants.EXTRAS_CHART_OBJECT, chartObject);
+                intent.putExtra(Constants.BUNDLE_SLUG_BREAKDOWN_DATA,
+                    response.body().getData().getBody().getData());
+                getActivity().startActivity(intent);
+                break;
+            }
+          }
 
-      @Override public void onFailure(Call<SlugBreakdownResponse> call, Throwable t) {
-      }
-    });
+          @Override public void onFailure(Call<SlugBreakdownResponse> call, Throwable t) {
+          }
+        });
   }
 
-  /**
-   * Grab all charts from DB, remove all containing views, add the default bar chart, add the
-   * remaining barcharts
-   * (the ones from DB)
-   */
   public void setupChartViews(List<DataChart> dataChartsMap, String desiredDate) {
     cards_container.removeAllViews();
 
-    addNewBarChart("Steps Count", "steps-count", desiredDate);
+    addNewBarChart(new DataChart("Steps Count", "steps-count"), desiredDate);
 
     if (!dataChartsMap.isEmpty()) {
       for (DataChart chart : dataChartsMap) {
-        addNewBarChart(chart.getName(), chart.getType(), desiredDate);
+        addNewBarChart(chart, desiredDate);
       }
     }
   }
@@ -513,14 +490,10 @@ public class FitnessFragment extends Fragment {
   }
 
   @Subscribe public void chartDeleted(DataChartDeletedEvent event) {
-    String chart_title = event.getChartTitle();
 
-    for (int i = 0; i < chartsMap.size(); i++) {
-      if (chartsMap.get(i).getName().equals(chart_title)) {
-        deleteUserChart(String.valueOf(chartsMap.get(i).getChart_id()));
-        chartsMap.remove(i);
-      }
-    }
+    DataChart chartObject = event.getChartObject();
+
+    deleteUserChart(chartObject);
   }
 
   @Subscribe public void updateChartsOrder(DataChartsOrderChangedEvent event) {
@@ -601,7 +574,7 @@ public class FitnessFragment extends Fragment {
         });
   }
 
-  private void deleteUserChart(String chart_id) {
+  private void deleteUserChart(final DataChart chartObject) {
     final ProgressDialog waitingDialog = new ProgressDialog(getActivity());
     waitingDialog.setTitle(
         getActivity().getResources().getString(R.string.deleting_chart_dialog_title));
@@ -620,25 +593,33 @@ public class FitnessFragment extends Fragment {
           }
         });
 
-    dataAccessHandler.deleteUserChart(chart_id, new Callback<DefaultGetResponse>() {
-      @Override
-      public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
-        switch (response.code()) {
-          case 200:
-            waitingDialog.dismiss();
+    dataAccessHandler.deleteUserChart(String.valueOf(chartObject.getChart_id()),
+        new Callback<DefaultGetResponse>() {
+          @Override public void onResponse(Call<DefaultGetResponse> call,
+              Response<DefaultGetResponse> response) {
+            switch (response.code()) {
+              case 200:
+                waitingDialog.dismiss();
 
-            Toast.makeText(getActivity(), "Chart deleted successfully", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Chart deleted successfully", Toast.LENGTH_SHORT)
+                    .show();
 
-            cards_container.removeAllViews();
+                cards_container.removeAllViews();
 
-            setupChartViews(chartsMap, todayDate);
+                for (int i = 0; i < chartsMap.size(); i++) {
+                  if (chartsMap.get(i).getName().equals(chartObject.getName())) {
+                    chartsMap.remove(i);
+                  }
+                }
 
-            break;
-        }
-      }
+                setupChartViews(chartsMap, todayDate);
 
-      @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
-      }
-    });
+                break;
+            }
+          }
+
+          @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+          }
+        });
   }
 }

@@ -8,7 +8,6 @@ import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.common.models.DataChart;
 import com.mcsaatchi.gmfit.fitness.models.FitnessWidget;
 import com.mcsaatchi.gmfit.health.models.Medication;
 import com.mcsaatchi.gmfit.health.models.MedicationReminder;
@@ -28,7 +27,6 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
 
   private RuntimeExceptionDao<FitnessWidget, Integer> fitnessWidgetsRunTimeDAO = null;
   private RuntimeExceptionDao<NutritionWidget, Integer> nutritionWidgetsRunTimeDAO = null;
-  private RuntimeExceptionDao<DataChart, Integer> dataChartRunTimeDAO = null;
   private RuntimeExceptionDao<Medication, Integer> medicationRunTimeDAO = null;
   private RuntimeExceptionDao<MedicationReminder, Integer> medicationReminderRunTimeDAO = null;
 
@@ -38,7 +36,6 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
 
   @Override public void onCreate(SQLiteDatabase db, ConnectionSource connectionSource) {
     try {
-      TableUtils.createTable(connectionSource, DataChart.class);
       TableUtils.createTable(connectionSource, FitnessWidget.class);
       TableUtils.createTable(connectionSource, NutritionWidget.class);
       TableUtils.createTable(connectionSource, Medication.class);
@@ -78,12 +75,6 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
     return nutritionWidgetsRunTimeDAO;
   }
 
-  public RuntimeExceptionDao<DataChart, Integer> getDataChartDAO() {
-    if (dataChartRunTimeDAO == null) {
-      dataChartRunTimeDAO = getRuntimeExceptionDao(DataChart.class);
-    }
-    return dataChartRunTimeDAO;
-  }
   public RuntimeExceptionDao<Medication, Integer> getMedicationDAO() {
     if (medicationRunTimeDAO == null) {
       medicationRunTimeDAO = getRuntimeExceptionDao(Medication.class);
@@ -100,7 +91,6 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
 
   @Override public void close() {
     super.close();
-    dataChartRunTimeDAO = null;
     nutritionWidgetsRunTimeDAO = null;
     fitnessWidgetsRunTimeDAO = null;
     medicationRunTimeDAO = null;

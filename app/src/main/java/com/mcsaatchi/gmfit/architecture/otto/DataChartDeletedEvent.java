@@ -1,13 +1,15 @@
 package com.mcsaatchi.gmfit.architecture.otto;
 
-public class DataChartDeletedEvent {
-  private String chartTitle;
+import com.mcsaatchi.gmfit.common.models.DataChart;
 
-  public DataChartDeletedEvent(String chartTitle) {
-    this.chartTitle = chartTitle;
+public class DataChartDeletedEvent {
+  private DataChart chartObject;
+
+  public DataChartDeletedEvent(DataChart chartObject) {
+    this.chartObject = chartObject;
   }
 
-  public String getChartTitle() {
-    return chartTitle;
+  public DataChart getChartObject() {
+    return chartObject;
   }
 }

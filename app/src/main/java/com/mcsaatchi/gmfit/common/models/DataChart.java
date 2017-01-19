@@ -40,12 +40,9 @@ import java.util.ArrayList;
   public DataChart() {
   }
 
-  public DataChart(String name, String type, int position, String username, String whichFragment) {
+  public DataChart(String name, String type) {
     this.name = name;
     this.type = type;
-    this.position = position;
-    this.username = username;
-    this.whichFragment = whichFragment;
   }
 
   protected DataChart(Parcel in) {
@@ -138,5 +135,13 @@ import java.util.ArrayList;
     dest.writeInt(this.chart_id);
     dest.writeTypedList(this.chartData);
     dest.writeString(this.whichFragment);
+  }
+
+  @Override public String toString() {
+    return "DataChart{" +
+        "name='" + name + '\'' +
+        ", type='" + type + '\'' +
+        ", chart_id=" + chart_id +
+        '}';
   }
 }

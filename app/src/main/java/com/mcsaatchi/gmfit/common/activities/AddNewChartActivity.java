@@ -126,8 +126,6 @@ public class AddNewChartActivity extends BaseActivity {
 
                 DataChart dataChart = chartItemsMap.get(position);
 
-                Timber.d("current datachart name ; " + dataChart.getName());
-
                 boolean chartExists = false;
 
                 for (int i = 0; i < chartsMap.size(); i++) {
@@ -143,8 +141,7 @@ public class AddNewChartActivity extends BaseActivity {
                   addMetricChart(dataChart.getChart_id());
 
                   Intent intent = new Intent();
-                  intent.putExtra(Constants.EXTRAS_CHART_FULL_NAME, dataChart.getName());
-                  intent.putExtra(Constants.EXTRAS_CHART_TYPE_SELECTED, dataChart.getType());
+                  intent.putExtra(Constants.EXTRAS_CHART_OBJECT, dataChart);
                   setResult(requestCodeToSendBack, intent);
 
                   finish();

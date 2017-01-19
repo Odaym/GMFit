@@ -24,6 +24,7 @@ import com.mcsaatchi.gmfit.common.classes.SlidingTabLayout;
 import com.mcsaatchi.gmfit.common.fragments.SlugBreakdownFragmentDaily;
 import com.mcsaatchi.gmfit.common.fragments.SlugBreakdownFragmentMonthly;
 import com.mcsaatchi.gmfit.common.fragments.SlugBreakdownFragmentYearly;
+import com.mcsaatchi.gmfit.common.models.DataChart;
 import java.util.ArrayList;
 
 public class SlugBreakdownActivity extends BaseActivity {
@@ -36,8 +37,7 @@ public class SlugBreakdownActivity extends BaseActivity {
   @Bind(R.id.parentLayoutToCustomize) LinearLayout parentLayoutToCustomize;
   private String typeOfFragmentToCustomizeFor;
   private SlugBreakdownResponseInnerData slugBreakdownData;
-  private String chartTitle;
-  private String chartType;
+  private DataChart chartObject;
 
   private String[] tabTitles = new String[] {
       "Day", "Month", "Year"
@@ -54,14 +54,12 @@ public class SlugBreakdownActivity extends BaseActivity {
 
     //Grab the Fragment type from one of the three Fragments (Fitness, Nutrition, Health)
     if (intentExtras != null) {
-      chartTitle = intentExtras.getString(Constants.EXTRAS_CHART_FULL_NAME);
+      chartObject = intentExtras.getParcelable(Constants.EXTRAS_CHART_OBJECT);
 
-      setupToolbar(toolbar, chartTitle, true);
+      setupToolbar(toolbar, chartObject.getName(), true);
 
       typeOfFragmentToCustomizeFor = intentExtras.getString(Constants.EXTRAS_FRAGMENT_TYPE);
       slugBreakdownData = intentExtras.getParcelable(Constants.BUNDLE_SLUG_BREAKDOWN_DATA);
-      chartType = intentExtras.getString(Constants.EXTRAS_CHART_TYPE_SELECTED, "");
-      chartTitle = intentExtras.getString(Constants.EXTRAS_CHART_FULL_NAME, "");
 
       switch (typeOfFragmentToCustomizeFor) {
         case Constants.EXTRAS_FITNESS_FRAGMENT:
@@ -79,7 +77,7 @@ public class SlugBreakdownActivity extends BaseActivity {
 
     SlugBreakdownViewPager_Adapter fragmentsPagerAdapter =
         new SlugBreakdownViewPager_Adapter(getSupportFragmentManager(), tabTitles,
-            slugBreakdownData, chartType, typeOfFragmentToCustomizeFor);
+            slugBreakdownData, chartObject.getType(), typeOfFragmentToCustomizeFor);
 
     tabs.setDistributeEvenly(true);
     tabs.setSelectedIndicatorColors(getResources().getColor(android.R.color.white));
@@ -104,7 +102,7 @@ public class SlugBreakdownActivity extends BaseActivity {
             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
               public void onClick(DialogInterface dialog, int which) {
 
-                EventBusSingleton.getInstance().post(new DataChartDeletedEvent(chartTitle));
+                EventBusSingleton.getInstance().post(new DataChartDeletedEvent(chartObject));
 
                 finish();
               }
