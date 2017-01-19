@@ -82,7 +82,7 @@ public class SensorListener extends Service implements SensorEventListener {
       float distanceToday = calculateDistance(STEP_LENGTH);
 
       if (new Random().nextBoolean()) {
-        storeStepsToday(stepsToday, 3000, "steps");
+        storeStepsToday(stepsToday, 3, "steps");
       } else {
         storeStepsToday(stepsToday, 1, "steps");
       }
