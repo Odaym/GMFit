@@ -18,11 +18,11 @@
       icon="@drawable/ic_bottom_bar_health_inactive"
       id="@+id/item_three"/>
 
-  <tab
-      activeColor="@color/insurance_blue"
-      barColorWhenSelected="@color/white"
-      icon="@drawable/ic_bottom_bar_insurance_inactive"
-      id="@+id/item_four"/>
+  <!--<tab-->
+      <!--activeColor="@color/insurance_blue"-->
+      <!--barColorWhenSelected="@color/white"-->
+      <!--icon="@drawable/ic_bottom_bar_insurance_inactive"-->
+      <!--id="@+id/item_four"/>-->
 
   <tab
       activeColor="@color/profile_blue"
