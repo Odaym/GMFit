@@ -17,6 +17,7 @@ import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.common.Constants;
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -102,21 +103,6 @@ public class Helpers {
   }
 
   public static String prepareDateWithTimeForAPIRequest(LocalDateTime dt) {
-    String minuteFormatted = "";
-    String secondFormatted = "";
-
-    if (dt.getMinuteOfHour() < 10) {
-      minuteFormatted = "0" + dt.getMinuteOfHour();
-    } else {
-      minuteFormatted = String.valueOf(dt.getMinuteOfHour());
-    }
-
-    if (dt.getSecondOfMinute() < 10) {
-      secondFormatted = "0" + dt.secondOfMinute();
-    } else {
-      secondFormatted = String.valueOf(dt.getSecondOfMinute());
-    }
-
     return dt.getYear()
         + "-"
         + dt.getMonthOfYear()
@@ -125,9 +111,9 @@ public class Helpers {
         + " "
         + dt.getHourOfDay()
         + ":"
-        + minuteFormatted
+        + new DecimalFormat("00").format(dt.getMinuteOfHour())
         + ":"
-        + secondFormatted;
+        + new DecimalFormat("00").format(dt.getSecondOfMinute());
   }
 
   public static Bundle createActivityBundleWithProperties(int activityTitleResourceId,
