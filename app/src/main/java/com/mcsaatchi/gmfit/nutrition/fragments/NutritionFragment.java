@@ -36,6 +36,7 @@ import com.google.android.gms.vision.barcode.Barcode;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.GMFitApplication;
 import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
+import com.mcsaatchi.gmfit.architecture.otto.DataChartDeletedEvent;
 import com.mcsaatchi.gmfit.architecture.otto.DataChartsOrderChangedEvent;
 import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
 import com.mcsaatchi.gmfit.architecture.otto.MealEntryManipulatedEvent;
@@ -265,9 +266,11 @@ public class NutritionFragment extends Fragment {
     switch (requestCode) {
       case ADD_NEW_NUTRITION_CHART_REQUEST:
         if (data != null) {
-          String chartTitle = data.getStringExtra(Constants.EXTRAS_CHART_FULL_NAME);
+          DataChart chartObject = data.getParcelableExtra(Constants.EXTRAS_CHART_OBJECT);
 
-          addNewBarChart(chartTitle);
+          finalCharts.add(chartObject);
+
+          addNewBarChart(chartObject);
         }
         break;
       case BARCODE_CAPTURE_RC:
@@ -729,7 +732,7 @@ public class NutritionFragment extends Fragment {
     if (!chartsMap.isEmpty()) {
       for (DataChart chart : chartsMap) {
 
-        addNewBarChart(chart.getName());
+        addNewBarChart(chart);
       }
     }
   }
@@ -816,6 +819,13 @@ public class NutritionFragment extends Fragment {
     touchHelper.attachToRecyclerView(mealListView);
   }
 
+  @Subscribe public void chartDeleted(DataChartDeletedEvent event) {
+
+    DataChart chartObject = event.getChartObject();
+
+    deleteUserChart(chartObject);
+  }
+
   @Subscribe public void reflectMealEntryChanged(MealEntryManipulatedEvent event) {
     getUserAddedMeals(finalDesiredDate);
     getUiForSection("nutrition", finalDesiredDate);
@@ -851,7 +861,7 @@ public class NutritionFragment extends Fragment {
     cards_container.removeAllViews();
 
     for (DataChart chart : allDataCharts) {
-      addNewBarChart(chart.getName());
+      addNewBarChart(chart);
     }
 
     int[] charts = new int[allDataCharts.size()];
@@ -905,11 +915,11 @@ public class NutritionFragment extends Fragment {
     metricProgressBar.setProgress(progressValue);
   }
 
-  private void addNewBarChart(final String chartTitle) {
-    getDefaultChartMonthlyBreakdown(chartTitle);
+  private void addNewBarChart(DataChart chartObject) {
+    getDefaultChartMonthlyBreakdown(chartObject);
   }
 
-  private void getSlugBreakdownForChart(final String chartTitle, final String chartType) {
+  private void getSlugBreakdownForChart(final DataChart chartObject) {
     final ProgressDialog waitingDialog = new ProgressDialog(getActivity());
     waitingDialog.setTitle(
         getActivity().getResources().getString(R.string.grabbing_breakdown_data_dialog_title));
@@ -928,7 +938,7 @@ public class NutritionFragment extends Fragment {
           }
         });
 
-    dataAccessHandler.getSlugBreakdownForChart(chartType,
+    dataAccessHandler.getSlugBreakdownForChart(chartObject.getType(),
 
         new Callback<SlugBreakdownResponse>() {
           @Override public void onResponse(Call<SlugBreakdownResponse> call,
@@ -940,8 +950,7 @@ public class NutritionFragment extends Fragment {
                 Intent intent = new Intent(getActivity(), SlugBreakdownActivity.class);
                 intent.putExtra(Constants.EXTRAS_FRAGMENT_TYPE,
                     Constants.EXTRAS_NUTRITION_FRAGMENT);
-                intent.putExtra(Constants.EXTRAS_CHART_FULL_NAME, chartTitle);
-                intent.putExtra(Constants.EXTRAS_CHART_TYPE_SELECTED, chartTitle);
+                intent.putExtra(Constants.EXTRAS_CHART_OBJECT, chartObject);
                 intent.putExtra(Constants.BUNDLE_SLUG_BREAKDOWN_DATA,
                     response.body().getData().getBody().getData());
                 getActivity().startActivity(intent);
@@ -957,13 +966,13 @@ public class NutritionFragment extends Fragment {
         });
   }
 
-  private void getDefaultChartMonthlyBreakdown(final String chartTitle) {
+  private void getDefaultChartMonthlyBreakdown(final DataChart chartObject) {
 
     final String todayDate;
     todayDate = dt.toString();
 
     dataAccessHandler.getPeriodicalChartData(dt.minusMonths(1).toString(), todayDate, "nutrition",
-        chartTitle, new Callback<ChartMetricBreakdownResponse>() {
+        chartObject.getName(), new Callback<ChartMetricBreakdownResponse>() {
           @Override public void onResponse(Call<ChartMetricBreakdownResponse> call,
               Response<ChartMetricBreakdownResponse> response) {
             if (response.body().getData().getBody() != null) {
@@ -981,14 +990,14 @@ public class NutritionFragment extends Fragment {
 
                 if (getActivity() != null) {
                   CustomBarChart customBarChart =
-                      new CustomBarChart(getActivity().getApplication(), chartTitle, chartTitle);
+                      new CustomBarChart(getActivity().getApplication(), chartObject);
 
                   /**
                    * Open the breakdown for the chart
                    */
                   customBarChart.addClickListener(new CustomBarChart.CustomBarChartClickListener() {
-                    @Override public void handleClick(String chartTitle, String chartType) {
-                      getSlugBreakdownForChart(chartTitle, chartType);
+                    @Override public void handleClick(DataChart chartObject) {
+                      getSlugBreakdownForChart(chartObject);
                     }
                   });
 
@@ -1004,6 +1013,55 @@ public class NutritionFragment extends Fragment {
             final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
             alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
             alertDialog.show();
+          }
+        });
+  }
+
+  private void deleteUserChart(final DataChart chartObject) {
+    final ProgressDialog waitingDialog = new ProgressDialog(getActivity());
+    waitingDialog.setTitle(
+        getActivity().getResources().getString(R.string.deleting_chart_dialog_title));
+    waitingDialog.setMessage(
+        getActivity().getResources().getString(R.string.please_wait_dialog_message));
+    waitingDialog.show();
+
+    final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+    alertDialog.setTitle(R.string.deleting_chart_dialog_title);
+    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE,
+        getActivity().getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
+          public void onClick(DialogInterface dialog, int which) {
+            dialog.dismiss();
+
+            if (waitingDialog.isShowing()) waitingDialog.dismiss();
+          }
+        });
+
+    dataAccessHandler.deleteUserChart(String.valueOf(chartObject.getChart_id()),
+        new Callback<DefaultGetResponse>() {
+          @Override public void onResponse(Call<DefaultGetResponse> call,
+              Response<DefaultGetResponse> response) {
+            switch (response.code()) {
+              case 200:
+                waitingDialog.dismiss();
+
+                Toast.makeText(getActivity(), "Chart deleted successfully", Toast.LENGTH_SHORT)
+                    .show();
+
+                cards_container.removeAllViews();
+
+                for (int i = 0; i < finalCharts.size(); i++) {
+                  if (finalCharts.get(i).getName().equals(chartObject.getName())) {
+                    finalCharts.remove(i);
+                  }
+                }
+
+                setupChartViews(finalCharts);
+
+                break;
+            }
+          }
+
+          @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
           }
         });
   }

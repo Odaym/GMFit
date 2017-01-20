@@ -137,24 +137,24 @@ public class SetupProfileActivity extends BaseActivity {
                     "Please fill in your Height and Weight to proceed", Toast.LENGTH_SHORT).show();
               } else {
                 viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
+
+                /**
+                 * Time for submission
+                 */
+                if (nextPageBTN.getText().toString().equals(getString(R.string.finish_setup))) {
+                  if (Helpers.isInternetAvailable(SetupProfileActivity.this)) {
+                    EventBusSingleton.getInstance()
+                        .post(new UserFinalizedSetupProfileEvent());
+                  } else {
+                    Helpers.showNoInternetDialog(SetupProfileActivity.this);
+                  }
+                }
               }
             }
 
             break;
           default:
             viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
-        }
-
-        /**
-         * Time for submission
-         */
-        if (nextPageBTN.getText().toString().equals(getString(R.string.finish_setup))) {
-          if (Helpers.isInternetAvailable(SetupProfileActivity.this)) {
-            EventBusSingleton.getInstance()
-                .post(new UserFinalizedSetupProfileEvent());
-          } else {
-            Helpers.showNoInternetDialog(SetupProfileActivity.this);
-          }
         }
       }
     });

@@ -70,8 +70,6 @@ public class AddExistingMedicationActivity extends BaseActivity {
   private boolean editPurpose = false;
   private int[] daysOfWeekArray;
 
-  private Map<String, Integer> frequencyTypeMap = new HashMap<>();
-
   private Map<String, Integer> daysOfWeekMap = new HashMap<String, Integer>() {{
     put("Monday", 1);
     put("Tuesday", 2);
@@ -92,10 +90,6 @@ public class AddExistingMedicationActivity extends BaseActivity {
     setupToolbar(toolbar, getString(R.string.add_medication), true);
 
     medicationDAO = dbHelper.getMedicationDAO();
-
-    frequencyTypeMap.put(getString(R.string.frequency_type_weekly), 1);
-    frequencyTypeMap.put(getString(R.string.frequency_type_monthly), 2);
-    frequencyTypeMap.put(getString(R.string.frequency_type_when_needed), 3);
 
     if (getIntent().getExtras() != null) {
       medicationItem =
@@ -243,8 +237,6 @@ public class AddExistingMedicationActivity extends BaseActivity {
         medicationItem.setRemarks(yourNotesET.getText().toString());
         medicationItem.setUnits(Integer.parseInt(unitsET.getText().toString()));
         medicationItem.setFrequency(Integer.parseInt(frequencyET.getText().toString()));
-        medicationItem.setFrequencyType(
-            frequencyTypeMap.get(timesPerDayMeasurementTV.getText().toString()));
         medicationItem.setUnitForm(unitMeasurementTV.getText().toString());
         medicationItem.setWhen(daysSelected);
         medicationItem.setWhenString(daysOfWeekTV.getText().toString());
@@ -261,6 +253,7 @@ public class AddExistingMedicationActivity extends BaseActivity {
             + medicationItem.getUnits()
             + " "
             + medicationItem.getUnitForm());
+        setFrequencyType(medicationItem);
 
         if (enableRemindersSwitch.isChecked() && medicationReminders != null) {
           medicationItem.setRemindersEnabled(true);
@@ -276,21 +269,6 @@ public class AddExistingMedicationActivity extends BaseActivity {
         medication.setRemarks(yourNotesET.getText().toString());
         medication.setUnits(Integer.parseInt(unitsET.getText().toString()));
         medication.setFrequency(Integer.parseInt(frequencyET.getText().toString()));
-        if (timesPerDayMeasurementTV != null) {
-          Timber.d("times per day measurement TV was not null");
-        } else {
-          Timber.d("times per day measurement TV IS NULL");
-        }
-
-        if (frequencyTypeMap != null) {
-          Timber.d("frequencyTypeMap is null");
-        } else {
-
-          Timber.d("frequencyTypeMap is NOT null");
-        }
-
-        medication.setFrequencyType(
-            frequencyTypeMap.get(timesPerDayMeasurementTV.getText().toString()));
         medication.setUnitForm(unitMeasurementTV.getText().toString());
         medication.setWhen(daysSelected);
         medication.setWhenString(daysOfWeekTV.getText().toString());
@@ -300,6 +278,7 @@ public class AddExistingMedicationActivity extends BaseActivity {
         medication.setDescription(
             medication.getUnits() + " " + medication.getUnitForm() + " " + medication.getUnitForm()
                 .toUpperCase() + " " + medication.getUnits() + " " + medication.getUnitForm());
+        setFrequencyType(medication);
 
         medicationDAO.create(medication);
 
@@ -408,5 +387,21 @@ public class AddExistingMedicationActivity extends BaseActivity {
     }
 
     setupMedicationReminders(medicationObject.getMedicationReminders().iterator());
+  }
+
+  private void setFrequencyType(Medication medication) {
+    Timber.d(timesPerDayMeasurementTV.getText().toString());
+
+    switch (timesPerDayMeasurementTV.getText().toString()) {
+      case "times per week":
+        medication.setFrequencyType(1);
+        break;
+      case "times per month":
+        medication.setFrequencyType(2);
+        break;
+      case "when needed":
+        medication.setFrequencyType(3);
+        break;
+    }
   }
 }

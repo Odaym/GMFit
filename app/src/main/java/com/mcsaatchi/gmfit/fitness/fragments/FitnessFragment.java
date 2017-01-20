@@ -259,14 +259,13 @@ public class FitnessFragment extends Fragment {
               }
 
               if (getActivity() != null) {
-                CustomBarChart customBarChart =
-                    new CustomBarChart(getActivity(), chartObject.getName(), chartObject.getType());
+                CustomBarChart customBarChart = new CustomBarChart(getActivity(), chartObject);
 
                 /**
                  * Open the breakdown for the chart
                  */
                 customBarChart.addClickListener(new CustomBarChart.CustomBarChartClickListener() {
-                  @Override public void handleClick(String chartTitle, String chartType) {
+                  @Override public void handleClick(DataChart chartObject) {
                     getSlugBreakdownForChart(chartObject);
                   }
                 });
@@ -449,8 +448,6 @@ public class FitnessFragment extends Fragment {
 
   public void setupChartViews(List<DataChart> dataChartsMap, String desiredDate) {
     cards_container.removeAllViews();
-
-    addNewBarChart(new DataChart("Steps Count", "steps-count"), desiredDate);
 
     if (!dataChartsMap.isEmpty()) {
       for (DataChart chart : dataChartsMap) {

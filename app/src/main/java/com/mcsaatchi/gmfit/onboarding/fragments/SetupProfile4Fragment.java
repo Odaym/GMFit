@@ -168,7 +168,7 @@ public class SetupProfile4Fragment extends Fragment
   }
 
   @Subscribe
-  private void handleFinalizeSetupProfile(UserFinalizedSetupProfileEvent event){
+  public void handleFinalizeSetupProfile(UserFinalizedSetupProfileEvent event){
     int finalGender;
 
     finalGender = genderSpinner.getSelectedItem().toString().equals("Male") ? 0 : 1;

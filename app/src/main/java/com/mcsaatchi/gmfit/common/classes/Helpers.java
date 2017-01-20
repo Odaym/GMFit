@@ -103,11 +103,18 @@ public class Helpers {
 
   public static String prepareDateWithTimeForAPIRequest(LocalDateTime dt) {
     String minuteFormatted = "";
+    String secondFormatted = "";
 
     if (dt.getMinuteOfHour() < 10) {
       minuteFormatted = "0" + dt.getMinuteOfHour();
     } else {
       minuteFormatted = String.valueOf(dt.getMinuteOfHour());
+    }
+
+    if (dt.getSecondOfMinute() < 10) {
+      secondFormatted = "0" + dt.secondOfMinute();
+    } else {
+      secondFormatted = String.valueOf(dt.getSecondOfMinute());
     }
 
     return dt.getYear()
@@ -120,7 +127,7 @@ public class Helpers {
         + ":"
         + minuteFormatted
         + ":"
-        + dt.getSecondOfMinute();
+        + secondFormatted;
   }
 
   public static Bundle createActivityBundleWithProperties(int activityTitleResourceId,

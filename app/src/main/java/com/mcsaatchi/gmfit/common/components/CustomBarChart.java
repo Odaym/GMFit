@@ -15,6 +15,7 @@ import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponseChartData;
 import com.mcsaatchi.gmfit.common.classes.CustomBarChartRenderer;
+import com.mcsaatchi.gmfit.common.models.DataChart;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -30,17 +31,17 @@ public class CustomBarChart extends BarChart {
   @Bind(R.id.dateTV_4) TextView dateTV_4;
   @Bind(R.id.dateTV_5) TextView dateTV_5;
   private View barChartLayout;
-  private String chartTitle, chartType;
+
+  private DataChart chartObject;
 
   private Context context;
   private ArrayList<CustomBarChartClickListener> clickListeners = new ArrayList<>();
 
-  public CustomBarChart(Context context, String chartTitle, String chartType) {
+  public CustomBarChart(Context context, DataChart chartObject) {
     super(context);
     this.context = context;
 
-    this.chartTitle = chartTitle;
-    this.chartType = chartType;
+    this.chartObject = chartObject;
 
     LayoutInflater mInflater =
         (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -55,7 +56,7 @@ public class CustomBarChart extends BarChart {
 
     barChartLayout.setLayoutParams(lp);
 
-    chartTitleTV.setText(chartTitle);
+    chartTitleTV.setText(chartObject.getName());
   }
 
   private static int findLargestNumber(List<AuthenticationResponseChartData> rawChartData) {
@@ -175,7 +176,7 @@ public class CustomBarChart extends BarChart {
     for (final CustomBarChartClickListener listener : clickListeners) {
       barChart.setOnClickListener(new OnClickListener() {
         @Override public void onClick(View view) {
-          listener.handleClick(chartTitle, chartType);
+          listener.handleClick(chartObject);
         }
       });
     }
@@ -184,6 +185,6 @@ public class CustomBarChart extends BarChart {
   }
 
   public interface CustomBarChartClickListener {
-    void handleClick(String chartTitle, String chartType);
+    void handleClick(DataChart chartObject);
   }
 }

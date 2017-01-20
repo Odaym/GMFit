@@ -4,10 +4,10 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
@@ -21,12 +21,6 @@ import org.joda.time.format.DateTimeFormatter;
 
 public class CustomLineChart extends LineChart {
   @Bind(R.id.lineChart) LineChart lineChart;
-  @Bind(R.id.dateTV_1) TextView dateTV_1;
-  @Bind(R.id.dateTV_2) TextView dateTV_2;
-  @Bind(R.id.dateTV_3) TextView dateTV_3;
-  @Bind(R.id.dateTV_4) TextView dateTV_4;
-  @Bind(R.id.dateTV_5) TextView dateTV_5;
-  @Bind(R.id.dateTV_6) TextView dateTV_6;
 
   private ArrayList<CustomBarChart.CustomBarChartClickListener> clickListeners = new ArrayList<>();
   private View lineChartLayout;
@@ -65,34 +59,9 @@ public class CustomLineChart extends LineChart {
 
       DateTime date = formatter.parseDateTime(weights.get(i).getDate());
 
-      xVals.add("");
+      xVals.add(date.getDayOfMonth() + " " + date.monthOfYear().getAsText().substring(0, 3));
 
       entries.add(new Entry(Float.parseFloat(String.valueOf(weights.get(i).getWeight())), i));
-      switch (i) {
-        case 0:
-          dateTV_1.setText(
-              date.getDayOfMonth() + " " + date.monthOfYear().getAsText().substring(0, 3));
-          break;
-        case 1:
-          dateTV_2.setText(
-              date.getDayOfMonth() + " " + date.monthOfYear().getAsText().substring(0, 3));
-          break;
-        case 2:
-          dateTV_3.setText(
-              date.getDayOfMonth() + " " + date.monthOfYear().getAsText().substring(0, 3));
-          break;
-        case 3:
-          dateTV_4.setText(
-              date.getDayOfMonth() + " " + date.monthOfYear().getAsText().substring(0, 3));
-          break;
-        case 4:
-          dateTV_5.setText(
-              date.getDayOfMonth() + " " + date.monthOfYear().getAsText().substring(0, 3));
-        case 5:
-          dateTV_6.setText(
-              date.getDayOfMonth() + " " + date.monthOfYear().getAsText().substring(0, 3));
-          break;
-      }
     }
 
     LineDataSet dataset = new LineDataSet(entries, null);
@@ -113,11 +82,11 @@ public class CustomLineChart extends LineChart {
     lineChart.getAxisRight().setEnabled(false);
     lineChart.getAxisLeft().setEnabled(false);
     lineChart.getXAxis().setDrawGridLines(false);
-    lineChart.getXAxis().setEnabled(false);
-    lineChart.getAxisLeft().setDrawLabels(false);
+    lineChart.getAxisLeft().setDrawLabels(true);
     lineChart.getAxisRight().setDrawLabels(false);
     lineChart.getLineData().setHighlightEnabled(false);
 
+    lineChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
     lineChart.getLineData().setDrawValues(true);
 
     lineChartContainer.addView(lineChartLayout);
