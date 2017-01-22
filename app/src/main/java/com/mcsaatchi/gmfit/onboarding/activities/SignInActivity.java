@@ -160,6 +160,9 @@ public class SignInActivity extends BaseActivity {
           case 403:
             waitingDialog.dismiss();
 
+            EventBusSingleton.getInstance()
+                .post(new SignedInSuccessfullyEvent());
+
             Intent userNotVerifiedIntent =
                 new Intent(SignInActivity.this, AccountVerificationActivity.class);
             startActivity(userNotVerifiedIntent);
