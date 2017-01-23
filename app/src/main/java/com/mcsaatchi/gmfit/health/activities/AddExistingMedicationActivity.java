@@ -140,8 +140,9 @@ public class AddExistingMedicationActivity extends BaseActivity {
         int frequencyNumber = Integer.parseInt(frequencyET.getText().toString());
 
         if (checked) {
-          if (medicationItem != null && frequencyNumber == 0) {
-
+          if (medicationItem != null
+              && medicationItem.getMedicationReminders() != null
+              && frequencyNumber == 0) {
             setupRemindersRecyclerView(new ArrayList<>(medicationItem.getMedicationReminders()));
           } else {
             prepareRemindersRecyclerView(Integer.parseInt(frequencyET.getText().toString()));
@@ -290,8 +291,6 @@ public class AddExistingMedicationActivity extends BaseActivity {
         }
 
         medicationDAO.update(medication);
-
-        Timber.d("Medication frequency type is : " + medication.getFrequencyType());
       }
 
       EventBusSingleton.getInstance().post(new MedicationItemCreatedEvent());
@@ -322,6 +321,34 @@ public class AddExistingMedicationActivity extends BaseActivity {
 
       daysOfWeekTV.setText(daysOfWeekResult.replaceAll(", $", ""));
     }
+  }
+
+  private void assignForeignCollectionToParentObject(Medication medicationObject) {
+    medicationDAO.assignEmptyForeignCollection(medicationObject, "medicationReminders");
+
+    MedicationRemindersRecyclerAdapter adapter =
+        (MedicationRemindersRecyclerAdapter) remindersRecyclerView.getAdapter();
+
+    //Clear previous reminders
+    medicationObject.getMedicationReminders().clear();
+
+    for (int i = 0; i < adapter.getItemCount(); i++) {
+      int realDaysSelected = 0;
+
+      MedicationReminder medReminder = adapter.getItem(i);
+      medReminder.setMedication(medicationObject);
+      medReminder.setDays_of_week(daysOfWeekArray);
+
+      for (int aDaysOfWeekArray : daysOfWeekArray) {
+        if (aDaysOfWeekArray != 0) realDaysSelected++;
+      }
+
+      medReminder.setTotalTimesToTrigger(
+          Integer.parseInt(treatmentDurationET.getText().toString()) * realDaysSelected);
+      medicationObject.getMedicationReminders().add(medReminder);
+    }
+
+    setupMedicationReminders(medicationObject.getMedicationReminders().iterator());
   }
 
   public void setupMedicationReminders(Iterator<MedicationReminder> medicationRemindersIterator) {
@@ -359,34 +386,6 @@ public class AddExistingMedicationActivity extends BaseActivity {
         }
       }
     }
-  }
-
-  private void assignForeignCollectionToParentObject(Medication medicationObject) {
-    medicationDAO.assignEmptyForeignCollection(medicationObject, "medicationReminders");
-
-    MedicationRemindersRecyclerAdapter adapter =
-        (MedicationRemindersRecyclerAdapter) remindersRecyclerView.getAdapter();
-
-    //Clear previous reminders
-    medicationObject.getMedicationReminders().clear();
-
-    for (int i = 0; i < adapter.getItemCount(); i++) {
-      int realDaysSelected = 0;
-
-      MedicationReminder medReminder = adapter.getItem(i);
-      medReminder.setMedication(medicationObject);
-      medReminder.setDays_of_week(daysOfWeekArray);
-
-      for (int aDaysOfWeekArray : daysOfWeekArray) {
-        if (aDaysOfWeekArray != 0) realDaysSelected++;
-      }
-
-      medReminder.setTotalTimesToTrigger(
-          Integer.parseInt(treatmentDurationET.getText().toString()) * realDaysSelected);
-      medicationObject.getMedicationReminders().add(medReminder);
-    }
-
-    setupMedicationReminders(medicationObject.getMedicationReminders().iterator());
   }
 
   private void setFrequencyType(Medication medication) {
