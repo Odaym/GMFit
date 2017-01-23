@@ -363,24 +363,48 @@ public class AddExistingMedicationActivity extends BaseActivity {
         int dayChosen = medReminder.getDays_of_week()[i];
 
         if (dayChosen != 0) {
-          medReminder.getAlarmTime().setTimeInMillis(System.currentTimeMillis());
           medReminder.getAlarmTime().set(Calendar.DAY_OF_WEEK, dayChosen);
 
           Intent intent = new Intent(AddExistingMedicationActivity.this, AlarmReceiver.class);
           intent.putExtra(Constants.EXTRAS_ALARM_TYPE, "medications");
           intent.putExtra(Constants.EXTRAS_MEDICATION_REMINDER_ITEM, (Parcelable) medReminder);
 
-          pendingIntent = PendingIntent.getBroadcast(this, medReminder.getId(), intent,
-              PendingIntent.FLAG_UPDATE_CURRENT);
+          medReminder.setId(Math.abs((int) medReminder.getAlarmTime().getTimeInMillis()));
 
-          int ALARM_TYPE = AlarmManager.ELAPSED_REALTIME_WAKEUP;
+          Timber.d(
+              "Alarm ID: "
+                  + medReminder.getId()
+                  + " Alarm time : "
+                  + medReminder.getAlarmTime()
+                  .get(Calendar.YEAR)
+                  + "/"
+                  + medReminder.getAlarmTime().get(Calendar.MONTH)
+                  + "/"
+                  + medReminder.getAlarmTime().get(Calendar.DAY_OF_MONTH)
+                  + " day of week: "
+                  + medReminder.getAlarmTime().get(Calendar.DAY_OF_WEEK)
+                  + " -- "
+                  + medReminder.getAlarmTime().get(Calendar.HOUR_OF_DAY)
+                  + ":"
+                  + medReminder.getAlarmTime().get(Calendar.MINUTE)
+                  + ":"
+                  + medReminder.getAlarmTime().get(Calendar.SECOND));
+
+          pendingIntent = PendingIntent.getBroadcast(this, medReminder.getId(), intent,
+              PendingIntent.FLAG_ONE_SHOT);
+
+          int ALARM_TYPE = AlarmManager.RTC_WAKEUP;
 
           if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            am.setExactAndAllowWhileIdle(ALARM_TYPE, medReminder.getAlarmTime().getTimeInMillis(),
-                pendingIntent);
+            Timber.d(
+                "ALARMS - Build version bigger or equal to Marshmallow " + Build.VERSION.SDK_INT);
+            am.setRepeating(AlarmManager.RTC_WAKEUP, medReminder.getAlarmTime().getTimeInMillis(),
+                AlarmManager.INTERVAL_DAY, pendingIntent);
           } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Timber.d("ALARMS - Build version bigger or equal to Lollipop " + Build.VERSION.SDK_INT);
             am.setExact(ALARM_TYPE, medReminder.getAlarmTime().getTimeInMillis(), pendingIntent);
           } else {
+            Timber.d("ALARMS - Build version " + Build.VERSION.SDK_INT);
             am.set(ALARM_TYPE, medReminder.getAlarmTime().getTimeInMillis(), pendingIntent);
           }
         }

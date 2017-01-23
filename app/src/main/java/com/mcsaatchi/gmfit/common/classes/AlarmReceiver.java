@@ -85,6 +85,8 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
               } else {
                 Uri sound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
+                Timber.d("Triggered alarm : " + medReminder.getId());
+
                 NotificationCompat.Builder notificationBuilder =
                     (NotificationCompat.Builder) new NotificationCompat.Builder(
                         context).setSmallIcon(R.drawable.app_logo)
