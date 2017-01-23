@@ -167,15 +167,13 @@ public class HealthFragment extends Fragment {
           Response<WeightHistoryResponse> response) {
         switch (response.code()) {
           case 200:
-            customLineChart = new CustomLineChart(getActivity());
+            if (getActivity() != null) customLineChart = new CustomLineChart(getActivity());
 
             List<WeightHistoryResponseDatum> weightHistoryList =
                 response.body().getData().getBody().getData();
 
             if (weightHistoryList != null) {
-              customLineChart.setLineChartData(lineChartContainer,
-                  weightHistoryList.subList(Math.max(weightHistoryList.size() - 6, 0),
-                      weightHistoryList.size()));
+              customLineChart.setLineChartData(lineChartContainer, weightHistoryList);
 
               final TextView updateUserWeightTV =
                   (TextView) customLineChart.getView().findViewById(R.id.updateWeightTV);

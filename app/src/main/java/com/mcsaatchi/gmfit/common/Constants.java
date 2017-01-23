@@ -5,7 +5,7 @@ public class Constants {
   public static final String APP_FIRST_RUN = "app_first_run";
   public static final String TAG = "GMFIT_DEBUG";
 
-  public static final String BASE_URL_ADDRESS = "http://mobileapp.globemedfit.com/api/v1/";
+  public static final String BASE_URL_ADDRESS = "http://gmfit.mcsaatchi.me/api/v1/";
 
   public static final String NO_ACCESS_TOKEN_FOUND_IN_PREFS = "no_access_token_in_prefs";
   public static final String PREF_USER_ACCESS_TOKEN = "user_access_token";

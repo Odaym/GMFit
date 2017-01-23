@@ -87,6 +87,7 @@ public class CustomLineChart extends LineChart {
     lineChart.getLineData().setHighlightEnabled(false);
 
     lineChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
+    lineChart.getXAxis().setSpaceBetweenLabels(0);
     lineChart.getLineData().setDrawValues(true);
 
     lineChartContainer.addView(lineChartLayout);
