@@ -92,7 +92,7 @@
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:background="@android:color/white"
-        android:text="@string/submit_a_reimbursement"
+        android:text="@string/submit"
         android:textAllCaps="false"
         />
   </LinearLayout>

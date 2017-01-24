@@ -14,6 +14,7 @@ import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.insurance.activities.approval_request.ApprovalRequestsStatusEmptyActivity;
 import com.mcsaatchi.gmfit.insurance.activities.approval_request.ApprovalRequestsStatusListActivity;
 import com.mcsaatchi.gmfit.insurance.activities.chronic.ChronicPrescriptionEmptyActivity;
+import com.mcsaatchi.gmfit.insurance.activities.chronic.ChronicStatusListActivity;
 import com.mcsaatchi.gmfit.insurance.activities.reimbursement.ClaimReimbursementActivity;
 import com.mcsaatchi.gmfit.insurance.activities.reimbursement.ReimbursementStatusListActivity;
 import com.mcsaatchi.gmfit.insurance.models.InsuranceOperationWidget;
@@ -26,10 +27,12 @@ public class InsuranceOperationWidgetsGridAdapter
   private static final int MEMBER_GUIDE_ITEM = 2;
   private static final int COVERAGE_ITEM = 3;
   private static final int SNAPSHOT_ITEM = 4;
+
   private static final int REIMBURSEMENT_ITEM = 0;
   private static final int APPROVAL_REQUEST_ITEM = 1;
   private static final int CHRONIC_ITEM = 2;
   private static final int REQUESTS_ITEM = 3;
+
   private ArrayList<InsuranceOperationWidget> widgetsMap;
   private Context context;
   private String[] dialogItems =
@@ -94,31 +97,44 @@ public class InsuranceOperationWidgetsGridAdapter
       builder.setTitle("What would you like to submit?")
           .setItems(dialogItems, new DialogInterface.OnClickListener() {
             @Override public void onClick(DialogInterface dialogInterface, int position) {
+
+              Intent intent;
+
               switch (position) {
                 case REIMBURSEMENT_ITEM:
-                  if (request_purpose == SUBMIT_ITEM) {
-                    Intent intent = new Intent(context, ClaimReimbursementActivity.class);
-                    context.startActivity(intent);
-                  } else if (request_purpose == TRACK_ITEM) {
-                    Intent intent = new Intent(context, ReimbursementStatusListActivity.class);
-                    context.startActivity(intent);
+                  switch (request_purpose) {
+                    case SUBMIT_ITEM:
+                      intent = new Intent(context, ClaimReimbursementActivity.class);
+                      context.startActivity(intent);
+                      break;
+                    case TRACK_ITEM:
+                      intent = new Intent(context, ReimbursementStatusListActivity.class);
+                      context.startActivity(intent);
+                      break;
                   }
                   break;
                 case APPROVAL_REQUEST_ITEM:
-                  if (request_purpose == SUBMIT_ITEM) {
-                    Intent intent = new Intent(context, ApprovalRequestsStatusEmptyActivity.class);
-                    context.startActivity(intent);
-                  } else if (request_purpose == TRACK_ITEM) {
-                    Intent intent = new Intent(context, ApprovalRequestsStatusListActivity.class);
-                    context.startActivity(intent);
+                  switch (request_purpose) {
+                    case SUBMIT_ITEM:
+                      intent = new Intent(context, ApprovalRequestsStatusEmptyActivity.class);
+                      context.startActivity(intent);
+                      break;
+                    case TRACK_ITEM:
+                      intent = new Intent(context, ApprovalRequestsStatusListActivity.class);
+                      context.startActivity(intent);
+                      break;
                   }
                   break;
                 case CHRONIC_ITEM:
-                  if (request_purpose == SUBMIT_ITEM) {
-                    Intent intent = new Intent(context, ChronicPrescriptionEmptyActivity.class);
-                    context.startActivity(intent);
-                  } else if (request_purpose == TRACK_ITEM) {
-                    //TODO:
+                  switch (request_purpose) {
+                    case SUBMIT_ITEM:
+                      intent = new Intent(context, ChronicPrescriptionEmptyActivity.class);
+                      context.startActivity(intent);
+                      break;
+                    case TRACK_ITEM:
+                      intent = new Intent(context, ChronicStatusListActivity.class);
+                      context.startActivity(intent);
+                      break;
                   }
                   break;
                 case REQUESTS_ITEM:

@@ -18,6 +18,7 @@ import com.mcsaatchi.gmfit.common.models.DataChart;
 import com.mcsaatchi.gmfit.fitness.fragments.FitnessFragment;
 import com.mcsaatchi.gmfit.fitness.pedometer.SensorListener;
 import com.mcsaatchi.gmfit.health.fragments.HealthFragment;
+import com.mcsaatchi.gmfit.insurance.fragments.InsuranceFragment;
 import com.mcsaatchi.gmfit.nutrition.fragments.NutritionFragment;
 import com.mcsaatchi.gmfit.profile.fragments.MainProfileFragment;
 import com.roughike.bottombar.BottomBar;
@@ -91,8 +92,8 @@ public class MainActivity extends BaseActivity {
     bottomBar.getTabWithId(R.id.item_three).findViewById(R.id.bb_bottom_bar_icon).setScaleX(1.1f);
     bottomBar.getTabWithId(R.id.item_three).findViewById(R.id.bb_bottom_bar_icon).setScaleY(1.1f);
 
-    //bottomBar.getTabWithId(R.id.item_four).findViewById(R.id.bb_bottom_bar_icon).setScaleX(1.1f);
-    //bottomBar.getTabWithId(R.id.item_four).findViewById(R.id.bb_bottom_bar_icon).setScaleY(1.1f);
+    bottomBar.getTabWithId(R.id.item_four).findViewById(R.id.bb_bottom_bar_icon).setScaleX(1.1f);
+    bottomBar.getTabWithId(R.id.item_four).findViewById(R.id.bb_bottom_bar_icon).setScaleY(1.1f);
 
     bottomBar.getTabWithId(R.id.item_five).findViewById(R.id.bb_bottom_bar_icon).setScaleX(1.1f);
     bottomBar.getTabWithId(R.id.item_five).findViewById(R.id.bb_bottom_bar_icon).setScaleY(1.1f);
@@ -137,13 +138,13 @@ public class MainActivity extends BaseActivity {
             mainContentLayout.setBackground(
                 getResources().getDrawable(R.drawable.health_background));
             break;
-          //case R.id.item_four:
-          //  getSupportFragmentManager().beginTransaction()
-          //      .replace(R.id.fragment_container, new InsuranceFragment())
-          //      .commit();
-          //  mainContentLayout.setBackground(
-          //      getResources().getDrawable(R.drawable.insurance_background));
-          //  break;
+          case R.id.item_four:
+            getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, new InsuranceFragment())
+                .commit();
+            mainContentLayout.setBackground(
+                getResources().getDrawable(R.drawable.insurance_background));
+            break;
           case R.id.item_five:
             getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, mainProfileFragment)

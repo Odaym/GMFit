@@ -156,12 +156,6 @@
     <string name="enable_notifications_location_hint">To further improve your GlobeMed Fit experience, we would like to send you push notifications and
         access your location
     </string>
-  <string name="no_reimbursements_available">No Reimbursements Available</string>
-  <string name="you_did_not_submit_any_reimbursement_yet">You did not submit any reimbursement yet.</string>
-  <string name="submit_a_reimbursement">Submit a Reimbursement</string>
-  <string name="add_your_remarks_here">Add your remarks here</string>
-  <string name="fill_in_the_required_fields_below">Fill in the required fields below</string>
-  <string name="attach_all_the_required_documents_below">Attach all the required documents below</string>
   <string name="enable_notifications_location_permissions">Enable Notifications &amp; Location</string>
   <string name="gender_hint">Gender</string>
   <string name="date_of_birth_hint">Date of Birth</string>
@@ -347,6 +341,14 @@
   <string name="widget_coverage_description">Coverage\nDescription</string>
   <string name="widget_snapshot">Snapshot</string>
   <string name="medication_information">Medication Information</string>
+  <string name="no_reimbursements_available">No Reimbursements Available</string>
+  <string name="you_did_not_submit_any_reimbursement_yet">You did not submit any reimbursement yet.</string>
+  <string name="add_your_remarks_here">Add your remarks here</string>
+  <string name="fill_in_the_required_fields_below">Fill in the required fields below</string>
+  <string name="attach_all_the_required_documents_below">Attach all the required documents below</string>
+  <string name="active_treatments">Active Treatments</string>
+  <string name="inactive_treatments">Inactive Treatments</string>
+  <string name="chronic_status_list_activity_title">Chronic Prescription Status</string>
 
   <!-- INSURANCE UPDATE PASSWORD ACTIVITY -->
   <string name="insurance_update_password_activity_title">Update Password</string>
@@ -406,5 +408,7 @@
   <string name="days_choice_activity_title">Days of Week</string>
   <string name="add_medication_button">Add Medication</string>
   <string name="edit_medication_button">Edit Medication</string>
+
+
 
 </resources>

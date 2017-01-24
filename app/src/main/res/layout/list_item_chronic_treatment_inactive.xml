@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/parentLayout"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/medications_list_row_item_height"
+    android:background="@color/white"
+    android:clickable="false"
+    android:focusable="true"
+    >
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:background="?android:attr/selectableItemBackground"
+      android:clickable="false"
+      android:focusable="true"
+      android:orientation="vertical"
+      android:paddingStart="@dimen/default_margin_2"
+      android:paddingTop="@dimen/default_margin_2"
+      >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+
+      <TextView
+          android:id="@+id/treatmentNameTV"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:paddingBottom="@dimen/default_margin_1"
+          android:textColor="@android:color/black"
+          />
+
+      <TextView
+          android:id="@+id/treatmentStatusTV"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginStart="@dimen/default_margin_1"
+          android:textColor="@android:color/black"
+          android:textSize="12sp"
+          />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/treatmentDescriptionTV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/medication_list_item_name_gray"
+        />
+
+  </LinearLayout>
+
+  <LinearLayout
+      android:id="@+id/arrowLayout"
+      android:layout_width="@dimen/right_arrow_layout_width"
+      android:layout_height="match_parent"
+      android:layout_alignParentEnd="true"
+      android:background="@color/much_lighter_gray"
+      android:gravity="center"
+      >
+
+    <ImageView
+        android:layout_width="@dimen/far_right_arrow_icon_dimens"
+        android:layout_height="@dimen/far_right_arrow_icon_dimens"
+        android:src="@drawable/ic_arrow_right_blue"
+        />
+  </LinearLayout>
+
+</RelativeLayout>
