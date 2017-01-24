@@ -73,7 +73,9 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
 
           if (medReminder != null) {
             Calendar timeNow = Calendar.getInstance();
-            timeNow.set(Calendar.DAY_OF_WEEK, timeNow.get(Calendar.DAY_OF_WEEK) - 1);
+            //timeNow.set(Calendar.DAY_OF_WEEK, timeNow.get(Calendar.DAY_OF_WEEK) );
+
+            Timber.d("DAY OF WEEK TODAY IS : " + timeNow.get(Calendar.DAY_OF_WEEK));
 
             //noinspection WrongConstant
             if (medReminder.getAlarmTime().after(timeNow)
