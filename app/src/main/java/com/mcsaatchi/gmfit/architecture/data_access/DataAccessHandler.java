@@ -8,6 +8,7 @@ import com.mcsaatchi.gmfit.architecture.rest.ChartMetricBreakdownResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ChartsBySectionResponse;
 import com.mcsaatchi.gmfit.architecture.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.architecture.rest.EmergencyProfileResponse;
+import com.mcsaatchi.gmfit.architecture.rest.InsuranceLoginResponse;
 import com.mcsaatchi.gmfit.architecture.rest.MealMetricsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.MedicalConditionsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.MedicalTestMetricsResponse;
@@ -259,6 +260,8 @@ public class DataAccessHandler {
     apiCallsHandler.getUserGoals(callback);
   }
 
+  //INSURANCE API's
+
   public void getMostPopularMedications(String indNbr, String contractNo, String country,
       String language, String password, Callback<MostPopularMedicationsResponse> callback) {
     apiCallsHandler.getMostPopularMedications(indNbr, contractNo, country, language, password,
@@ -268,5 +271,10 @@ public class DataAccessHandler {
   public void searchMedicines(String indNbr, String contractNo, String country, String language,
       String password, String key, Callback<SearchMedicinesResponse> callback) {
     apiCallsHandler.searchMedicines(indNbr, contractNo, country, language, password, key, callback);
+  }
+
+  public void insuranceUserLogin(String indNbr, String contractNo, String country, String language,
+      String password, Callback<InsuranceLoginResponse> callback) {
+    apiCallsHandler.insuranceUserLogin(indNbr, contractNo, country, language, password, callback);
   }
 }

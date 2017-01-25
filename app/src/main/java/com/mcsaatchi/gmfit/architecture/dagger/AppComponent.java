@@ -9,6 +9,7 @@ import com.mcsaatchi.gmfit.fitness.fragments.FitnessFragment;
 import com.mcsaatchi.gmfit.fitness.pedometer.SensorListener;
 import com.mcsaatchi.gmfit.health.adapters.UserTestsRecyclerAdapter;
 import com.mcsaatchi.gmfit.health.fragments.HealthFragment;
+import com.mcsaatchi.gmfit.insurance.fragments.InsuranceLoginFragment;
 import com.mcsaatchi.gmfit.nutrition.adapters.UserMealsRecyclerAdapterDragSwipe;
 import com.mcsaatchi.gmfit.nutrition.fragments.NutritionFragment;
 import com.mcsaatchi.gmfit.onboarding.activities.SplashActivity;
@@ -55,4 +56,6 @@ import javax.inject.Singleton;
   void inject(SetupProfile3Fragment setup_profile_3_fragment);
 
   void inject(SetupProfile4Fragment setup_profile_4_fragment);
+
+  void inject(InsuranceLoginFragment insuranceLoginFragment);
 }

@@ -105,6 +105,7 @@ public class HealthFragment extends Fragment {
     setHasOptionsMenu(true);
 
     ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.health_tab_title);
+
     ((GMFitApplication) getActivity().getApplication()).getAppComponent().inject(this);
 
     medicationDAO = ((BaseActivity) getActivity()).dbHelper.getMedicationDAO();
@@ -167,52 +168,57 @@ public class HealthFragment extends Fragment {
           Response<WeightHistoryResponse> response) {
         switch (response.code()) {
           case 200:
-            if (getActivity() != null) customLineChart = new CustomLineChart(getActivity());
+            if (getActivity() != null) {
 
-            List<WeightHistoryResponseDatum> weightHistoryList =
-                response.body().getData().getBody().getData();
+              customLineChart = new CustomLineChart(getActivity());
 
-            if (weightHistoryList != null) {
-              customLineChart.setLineChartData(lineChartContainer, weightHistoryList);
+              List<WeightHistoryResponseDatum> weightHistoryList =
+                  response.body().getData().getBody().getData();
 
-              final TextView updateUserWeightTV =
-                  (TextView) customLineChart.getView().findViewById(R.id.updateWeightTV);
+              if (weightHistoryList != null) {
+                customLineChart.setLineChartData(lineChartContainer, weightHistoryList);
 
-              updateUserWeightTV.setOnClickListener(new View.OnClickListener() {
-                @Override public void onClick(View view) {
-                  final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
-                  dialogBuilder.setTitle(R.string.profile_edit_weight_dialog_title);
+                final TextView updateUserWeightTV =
+                    (TextView) customLineChart.getView().findViewById(R.id.updateWeightTV);
 
-                  View dialogView = LayoutInflater.from(getActivity())
-                      .inflate(R.layout.profile_edit_weight_dialog, null);
-                  final EditText editWeightET =
-                      (EditText) dialogView.findViewById(R.id.dialogWeightET);
+                updateUserWeightTV.setOnClickListener(new View.OnClickListener() {
+                  @Override public void onClick(View view) {
+                    final AlertDialog.Builder dialogBuilder =
+                        new AlertDialog.Builder(getActivity());
+                    dialogBuilder.setTitle(R.string.profile_edit_weight_dialog_title);
 
-                  editWeightET.setText(
-                      String.valueOf(prefs.getFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, 0)));
-                  editWeightET.setSelection(editWeightET.getText().toString().length());
+                    View dialogView = LayoutInflater.from(getActivity())
+                        .inflate(R.layout.profile_edit_weight_dialog, null);
+                    final EditText editWeightET =
+                        (EditText) dialogView.findViewById(R.id.dialogWeightET);
 
-                  dialogBuilder.setView(dialogView);
-                  dialogBuilder.setPositiveButton(R.string.ok,
-                      new DialogInterface.OnClickListener() {
-                        @Override public void onClick(DialogInterface dialogInterface, int i) {
-                          double userWeight = Double.parseDouble(editWeightET.getText().toString());
+                    editWeightET.setText(
+                        String.valueOf(prefs.getFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, 0)));
+                    editWeightET.setSelection(editWeightET.getText().toString().length());
 
-                          updateUserWeight(editWeightET, userWeight,
-                              Helpers.prepareDateWithTimeForAPIRequest(new LocalDateTime()));
-                        }
-                      });
-                  dialogBuilder.setNegativeButton(R.string.decline_cancel,
-                      new DialogInterface.OnClickListener() {
-                        @Override public void onClick(DialogInterface dialogInterface, int i) {
-                          dialogInterface.dismiss();
-                        }
-                      });
+                    dialogBuilder.setView(dialogView);
+                    dialogBuilder.setPositiveButton(R.string.ok,
+                        new DialogInterface.OnClickListener() {
+                          @Override public void onClick(DialogInterface dialogInterface, int i) {
+                            double userWeight =
+                                Double.parseDouble(editWeightET.getText().toString());
 
-                  AlertDialog alertDialog = dialogBuilder.create();
-                  alertDialog.show();
-                }
-              });
+                            updateUserWeight(editWeightET, userWeight,
+                                Helpers.prepareDateWithTimeForAPIRequest(new LocalDateTime()));
+                          }
+                        });
+                    dialogBuilder.setNegativeButton(R.string.decline_cancel,
+                        new DialogInterface.OnClickListener() {
+                          @Override public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                          }
+                        });
+
+                    AlertDialog alertDialog = dialogBuilder.create();
+                    alertDialog.show();
+                  }
+                });
+              }
             }
             break;
         }

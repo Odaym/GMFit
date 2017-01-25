@@ -35,7 +35,6 @@
           android:id="@+id/cardOwnerTV"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:text="Aad Elsie"
           android:textColor="@color/white"
           android:textSize="20sp"
           />
@@ -45,7 +44,6 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_marginTop="@dimen/default_margin_0"
-          android:text="Libano-Suisse s.a.l"
           android:textColor="@color/white"
           />
 

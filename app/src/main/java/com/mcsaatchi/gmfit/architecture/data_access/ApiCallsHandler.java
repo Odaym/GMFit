@@ -8,6 +8,7 @@ import com.mcsaatchi.gmfit.architecture.rest.ChartMetricBreakdownResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ChartsBySectionResponse;
 import com.mcsaatchi.gmfit.architecture.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.architecture.rest.EmergencyProfileResponse;
+import com.mcsaatchi.gmfit.architecture.rest.InsuranceLoginResponse;
 import com.mcsaatchi.gmfit.architecture.rest.MealMetricsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.MedicalConditionsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.MedicalTestMetricsResponse;
@@ -792,6 +793,10 @@ public class ApiCallsHandler {
     });
   }
 
+  /**
+   * INSURANCE API's
+   */
+
   void searchMedicines(String indNbr, String contractNo, String country, String language,
       String password, String key, final Callback<SearchMedicinesResponse> callback) {
     Call<SearchMedicinesResponse> apiCall = restClient.getGMFitService()
@@ -822,6 +827,23 @@ public class ApiCallsHandler {
       }
 
       @Override public void onFailure(Call<MostPopularMedicationsResponse> call, Throwable t) {
+      }
+    });
+  }
+
+  void insuranceUserLogin(String indNbr, String contractNo, String country, String language,
+      String password, final Callback<InsuranceLoginResponse> callback) {
+    Call<InsuranceLoginResponse> apiCall = restClient.getGMFitService()
+        .insuranceUserLogin(
+            new InsuranceUserLoginRequest(indNbr, contractNo, country, language, password));
+
+    apiCall.enqueue(new Callback<InsuranceLoginResponse>() {
+      @Override public void onResponse(Call<InsuranceLoginResponse> call,
+          Response<InsuranceLoginResponse> response) {
+        callback.onResponse(call, response);
+      }
+
+      @Override public void onFailure(Call<InsuranceLoginResponse> call, Throwable t) {
       }
     });
   }
@@ -1063,6 +1085,23 @@ public class ApiCallsHandler {
       this.language = language;
       this.password = password;
       this.key = key;
+    }
+  }
+
+  public class InsuranceUserLoginRequest {
+    String indNbr;
+    String contractNo;
+    String country;
+    String language;
+    String password;
+
+    public InsuranceUserLoginRequest(String indNbr, String contractNo, String country,
+        String language, String password) {
+      this.indNbr = indNbr;
+      this.contractNo = contractNo;
+      this.country = country;
+      this.language = language;
+      this.password = password;
     }
   }
 }

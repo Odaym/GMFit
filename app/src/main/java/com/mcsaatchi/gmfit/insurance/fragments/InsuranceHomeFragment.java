@@ -7,9 +7,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.mcsaatchi.gmfit.R;
+import com.mcsaatchi.gmfit.architecture.rest.InsuranceLoginResponseInnerData;
+import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.insurance.adapters.InsuranceOperationWidgetsGridAdapter;
 import com.mcsaatchi.gmfit.insurance.models.InsuranceOperationWidget;
 import java.util.ArrayList;
@@ -17,6 +20,11 @@ import java.util.ArrayList;
 public class InsuranceHomeFragment extends Fragment {
 
   @Bind(R.id.insurancePathsGridView) RecyclerView insurancePathsGridView;
+  @Bind(R.id.cardOwnerTV) TextView cardOwnerTV;
+  @Bind(R.id.bankNameTV) TextView bankNameTV;
+  @Bind(R.id.cardNumberTV) TextView cardNumberTV;
+
+  private InsuranceLoginResponseInnerData insuranceUserData;
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
@@ -25,18 +33,26 @@ public class InsuranceHomeFragment extends Fragment {
 
     ButterKnife.bind(this, fragmentView);
 
-    setupInsurancePathsGrid(new ArrayList<InsuranceOperationWidget>() {{
-      add(new InsuranceOperationWidget(R.drawable.ic_insurance_operations_submit,
-          getString(R.string.widget_submit)));
-      add(new InsuranceOperationWidget(R.drawable.ic_insurance_operation_track,
-          getString(R.string.widget_track)));
-      add(new InsuranceOperationWidget(R.drawable.ic_insurance_operation_member_guide,
-          getString(R.string.widget_members_guide)));
-      add(new InsuranceOperationWidget(R.drawable.ic_insurance_operation_coverage_desc,
-          getString(R.string.widget_coverage_description)));
-      add(new InsuranceOperationWidget(R.drawable.ic_insurance_operation_snapshot,
-          getString(R.string.widget_snapshot)));
-    }});
+    if (getArguments() != null) {
+      insuranceUserData = (InsuranceLoginResponseInnerData) getArguments().get(
+          Constants.BUNDLE_INSURANCE_USER_OBJECT);
+
+      cardOwnerTV.setText(insuranceUserData.getUsername());
+      bankNameTV.setText(insuranceUserData.getInsuranceCompany());
+
+      setupInsurancePathsGrid(new ArrayList<InsuranceOperationWidget>() {{
+        add(new InsuranceOperationWidget(R.drawable.ic_insurance_operations_submit,
+            getString(R.string.widget_submit)));
+        add(new InsuranceOperationWidget(R.drawable.ic_insurance_operation_track,
+            getString(R.string.widget_track)));
+        add(new InsuranceOperationWidget(R.drawable.ic_insurance_operation_member_guide,
+            getString(R.string.widget_members_guide)));
+        add(new InsuranceOperationWidget(R.drawable.ic_insurance_operation_coverage_desc,
+            getString(R.string.widget_coverage_description)));
+        add(new InsuranceOperationWidget(R.drawable.ic_insurance_operation_snapshot,
+            getString(R.string.widget_snapshot)));
+      }});
+    }
 
     return fragmentView;
   }

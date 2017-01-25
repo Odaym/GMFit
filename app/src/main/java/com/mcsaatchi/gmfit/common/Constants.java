@@ -80,6 +80,9 @@ public class Constants {
   public static final String BUNDLE_NUTRITION_WIDGETS_MAP = "nutrition_widgets_map";
   public static final String BUNDLE_NUTRITION_CHARTS_MAP = "nutrition_charts_map";
 
+  public static final String BUNDLE_INSURANCE_USER_OBJECT = "insurance_user_object";
+
+
   public static final String BUNDLE_SLUG_BREAKDOWN_DATA = "slug_breakdown_data";
   public static final String BUNDLE_SLUG_BREAKDOWN_DATA_DAILY = "slug_breakdown_data_daily";
   public static final String BUNDLE_SLUG_BREAKDOWN_DATA_MONTHLY = "slug_breakdown_data_monthly";

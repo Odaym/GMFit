@@ -145,6 +145,8 @@ public interface GMFitService {
 
   @GET("user/weight/history") Call<WeightHistoryResponse> getUserWeightHistory();
 
+  //INSURANCE API's
+
   @POST("insurance/medecines/most-popular")
   Call<MostPopularMedicationsResponse> getMostPopularMedications(
       @Body ApiCallsHandler.MostPopularMedicationsRequest mostPopularMedicationsRequest);
@@ -152,4 +154,8 @@ public interface GMFitService {
   @POST("insurance/medecines/search")
   Call<SearchMedicinesResponse> searchMedicines(
       @Body ApiCallsHandler.SearchMedicinesRequest searchMedicinesRequest);
+
+  @POST("insurance/login")
+  Call<InsuranceLoginResponse> insuranceUserLogin(
+      @Body ApiCallsHandler.InsuranceUserLoginRequest insuranceUserLoginRequest);
 }
