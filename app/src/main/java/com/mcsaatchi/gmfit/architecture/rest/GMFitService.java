@@ -149,13 +149,14 @@ public interface GMFitService {
 
   @POST("insurance/medecines/most-popular")
   Call<MostPopularMedicationsResponse> getMostPopularMedications(
-      @Body ApiCallsHandler.MostPopularMedicationsRequest mostPopularMedicationsRequest);
+      @Body ApiCallsHandler.DefaultBodyForInsuranceRequests mostPopularMedicationsRequest);
 
-  @POST("insurance/medecines/search")
-  Call<SearchMedicinesResponse> searchMedicines(
+  @POST("insurance/medecines/search") Call<SearchMedicinesResponse> searchMedicines(
       @Body ApiCallsHandler.SearchMedicinesRequest searchMedicinesRequest);
 
-  @POST("insurance/login")
-  Call<InsuranceLoginResponse> insuranceUserLogin(
-      @Body ApiCallsHandler.InsuranceUserLoginRequest insuranceUserLoginRequest);
+  @POST("insurance/login") Call<InsuranceLoginResponse> insuranceUserLogin(
+      @Body ApiCallsHandler.DefaultBodyForInsuranceRequests insuranceUserLoginRequest);
+
+  @POST("insurance/coverage") Call<CoverageDescriptionResponse> getCoverageDescription(
+      @Body ApiCallsHandler.DefaultBodyForInsuranceRequests insuranceUserLoginRequest);
 }

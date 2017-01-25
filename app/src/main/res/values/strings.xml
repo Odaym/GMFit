@@ -349,6 +349,10 @@
   <string name="active_treatments">Active Treatments</string>
   <string name="inactive_treatments">Inactive Treatments</string>
   <string name="chronic_status_list_activity_title">Chronic Prescription Status</string>
+  <string name="members_guide_activity_entry">Member\'s Guide</string>
+
+  <!-- COVERAGE DESCRIPTION -->
+  <string name="coverage_description_activity_title">Coverage Description</string>
 
   <!-- INSURANCE UPDATE PASSWORD ACTIVITY -->
   <string name="insurance_update_password_activity_title">Update Password</string>
@@ -408,7 +412,6 @@
   <string name="days_choice_activity_title">Days of Week</string>
   <string name="add_medication_button">Add Medication</string>
   <string name="edit_medication_button">Edit Medication</string>
-
 
 
 </resources>

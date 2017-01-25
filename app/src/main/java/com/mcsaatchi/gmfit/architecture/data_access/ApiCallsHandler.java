@@ -6,6 +6,7 @@ import com.mcsaatchi.gmfit.architecture.rest.ActivityLevelsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ChartMetricBreakdownResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ChartsBySectionResponse;
+import com.mcsaatchi.gmfit.architecture.rest.CoverageDescriptionResponse;
 import com.mcsaatchi.gmfit.architecture.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.architecture.rest.EmergencyProfileResponse;
 import com.mcsaatchi.gmfit.architecture.rest.InsuranceLoginResponse;
@@ -818,7 +819,7 @@ public class ApiCallsHandler {
       String password, final Callback<MostPopularMedicationsResponse> callback) {
     Call<MostPopularMedicationsResponse> apiCall = restClient.getGMFitService()
         .getMostPopularMedications(
-            new MostPopularMedicationsRequest(indNbr, contractNo, country, language, password));
+            new DefaultBodyForInsuranceRequests(indNbr, contractNo, country, language, password));
 
     apiCall.enqueue(new Callback<MostPopularMedicationsResponse>() {
       @Override public void onResponse(Call<MostPopularMedicationsResponse> call,
@@ -835,7 +836,7 @@ public class ApiCallsHandler {
       String password, final Callback<InsuranceLoginResponse> callback) {
     Call<InsuranceLoginResponse> apiCall = restClient.getGMFitService()
         .insuranceUserLogin(
-            new InsuranceUserLoginRequest(indNbr, contractNo, country, language, password));
+            new DefaultBodyForInsuranceRequests(indNbr, contractNo, country, language, password));
 
     apiCall.enqueue(new Callback<InsuranceLoginResponse>() {
       @Override public void onResponse(Call<InsuranceLoginResponse> call,
@@ -844,6 +845,23 @@ public class ApiCallsHandler {
       }
 
       @Override public void onFailure(Call<InsuranceLoginResponse> call, Throwable t) {
+      }
+    });
+  }
+
+  void getCoverageDescription(String indNbr, String contractNo, String country, String language,
+      String password, final Callback<CoverageDescriptionResponse> callback) {
+    Call<CoverageDescriptionResponse> apiCall = restClient.getGMFitService()
+        .getCoverageDescription(
+            new DefaultBodyForInsuranceRequests(indNbr, contractNo, country, language, password));
+
+    apiCall.enqueue(new Callback<CoverageDescriptionResponse>() {
+      @Override public void onResponse(Call<CoverageDescriptionResponse> call,
+          Response<CoverageDescriptionResponse> response) {
+        callback.onResponse(call, response);
+      }
+
+      @Override public void onFailure(Call<CoverageDescriptionResponse> call, Throwable t) {
       }
     });
   }
@@ -1052,14 +1070,14 @@ public class ApiCallsHandler {
     }
   }
 
-  public class MostPopularMedicationsRequest {
+  public class DefaultBodyForInsuranceRequests {
     String indNbr;
     String contractNo;
     String country;
     String language;
     String password;
 
-    public MostPopularMedicationsRequest(String indNbr, String contractNo, String country,
+    public DefaultBodyForInsuranceRequests(String indNbr, String contractNo, String country,
         String language, String password) {
       this.indNbr = indNbr;
       this.contractNo = contractNo;
@@ -1085,23 +1103,6 @@ public class ApiCallsHandler {
       this.language = language;
       this.password = password;
       this.key = key;
-    }
-  }
-
-  public class InsuranceUserLoginRequest {
-    String indNbr;
-    String contractNo;
-    String country;
-    String language;
-    String password;
-
-    public InsuranceUserLoginRequest(String indNbr, String contractNo, String country,
-        String language, String password) {
-      this.indNbr = indNbr;
-      this.contractNo = contractNo;
-      this.country = country;
-      this.language = language;
-      this.password = password;
     }
   }
 }

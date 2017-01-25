@@ -6,6 +6,7 @@ import com.mcsaatchi.gmfit.architecture.rest.ActivityLevelsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ChartMetricBreakdownResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ChartsBySectionResponse;
+import com.mcsaatchi.gmfit.architecture.rest.CoverageDescriptionResponse;
 import com.mcsaatchi.gmfit.architecture.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.architecture.rest.EmergencyProfileResponse;
 import com.mcsaatchi.gmfit.architecture.rest.InsuranceLoginResponse;
@@ -276,5 +277,11 @@ public class DataAccessHandler {
   public void insuranceUserLogin(String indNbr, String contractNo, String country, String language,
       String password, Callback<InsuranceLoginResponse> callback) {
     apiCallsHandler.insuranceUserLogin(indNbr, contractNo, country, language, password, callback);
+  }
+
+  public void getCoverageDescription(String indNbr, String contractNo, String country,
+      String language, String password, Callback<CoverageDescriptionResponse> callback) {
+    apiCallsHandler.getCoverageDescription(indNbr, contractNo, country, language, password,
+        callback);
   }
 }

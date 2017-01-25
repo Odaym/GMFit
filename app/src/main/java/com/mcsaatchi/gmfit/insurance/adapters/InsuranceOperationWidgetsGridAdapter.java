@@ -1,8 +1,10 @@
 package com.mcsaatchi.gmfit.insurance.adapters;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,6 +13,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.mcsaatchi.gmfit.R;
+import com.mcsaatchi.gmfit.architecture.GMFitApplication;
+import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
+import com.mcsaatchi.gmfit.architecture.rest.CoverageDescriptionResponse;
+import com.mcsaatchi.gmfit.insurance.activities.CoverageDescriptionActivity;
 import com.mcsaatchi.gmfit.insurance.activities.approval_request.ApprovalRequestsStatusEmptyActivity;
 import com.mcsaatchi.gmfit.insurance.activities.approval_request.ApprovalRequestsStatusListActivity;
 import com.mcsaatchi.gmfit.insurance.activities.chronic.ChronicPrescriptionEmptyActivity;
@@ -19,6 +25,11 @@ import com.mcsaatchi.gmfit.insurance.activities.reimbursement.ClaimReimbursement
 import com.mcsaatchi.gmfit.insurance.activities.reimbursement.ReimbursementStatusListActivity;
 import com.mcsaatchi.gmfit.insurance.models.InsuranceOperationWidget;
 import java.util.ArrayList;
+import javax.inject.Inject;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import timber.log.Timber;
 
 public class InsuranceOperationWidgetsGridAdapter
     extends RecyclerView.Adapter<InsuranceOperationWidgetsGridAdapter.RecyclerViewHolder> {
@@ -32,16 +43,20 @@ public class InsuranceOperationWidgetsGridAdapter
   private static final int APPROVAL_REQUEST_ITEM = 1;
   private static final int CHRONIC_ITEM = 2;
   private static final int REQUESTS_ITEM = 3;
-
+  @Inject DataAccessHandler dataAccessHandler;
   private ArrayList<InsuranceOperationWidget> widgetsMap;
+  private FragmentActivity fragmentActivity;
   private Context context;
   private String[] dialogItems =
       new String[] { "Reimbursement", "Approval Request", "Chronic", "Requests" };
 
-  public InsuranceOperationWidgetsGridAdapter(Context context,
+  public InsuranceOperationWidgetsGridAdapter(FragmentActivity fragmentActivity, Context context,
       ArrayList<InsuranceOperationWidget> widgets) {
     this.widgetsMap = widgets;
     this.context = context;
+    this.fragmentActivity = fragmentActivity;
+
+    ((GMFitApplication) context).getAppComponent().inject(this);
   }
 
   @Override public RecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -58,6 +73,49 @@ public class InsuranceOperationWidgetsGridAdapter
 
   @Override public int getItemCount() {
     return widgetsMap.size();
+  }
+
+  private void getCoverageDescription() {
+    final ProgressDialog waitingDialog = new ProgressDialog(fragmentActivity);
+    waitingDialog.setTitle(context.getResources().getString(R.string.loading_data_dialog_title));
+    waitingDialog.setMessage(context.getResources().getString(R.string.please_wait_dialog_message));
+    waitingDialog.show();
+
+    final AlertDialog alertDialog = new AlertDialog.Builder(context).create();
+    alertDialog.setTitle(R.string.loading_data_dialog_title);
+    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE,
+        context.getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
+          public void onClick(DialogInterface dialog, int which) {
+            dialog.dismiss();
+
+            if (waitingDialog.isShowing()) waitingDialog.dismiss();
+          }
+        });
+
+    dataAccessHandler.getCoverageDescription("2012250", "1892870", "422", "2", "walid123",
+        new Callback<CoverageDescriptionResponse>() {
+          @Override public void onResponse(Call<CoverageDescriptionResponse> call,
+              Response<CoverageDescriptionResponse> response) {
+
+            switch (response.code()) {
+              case 200:
+                waitingDialog.dismiss();
+
+                Intent intent = new Intent(context, CoverageDescriptionActivity.class);
+                intent.putExtra("PDF",
+                    response.body().getData().getBody().getData().replace("\\", ""));
+
+                fragmentActivity.startActivity(intent);
+            }
+          }
+
+          @Override public void onFailure(Call<CoverageDescriptionResponse> call, Throwable t) {
+            Timber.d("Call failed with error : %s", t.getMessage());
+            alertDialog.setMessage(
+                context.getString(R.string.error_response_from_server_incorrect));
+            alertDialog.show();
+          }
+        });
   }
 
   class RecyclerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -86,6 +144,7 @@ public class InsuranceOperationWidgetsGridAdapter
         case MEMBER_GUIDE_ITEM:
           break;
         case COVERAGE_ITEM:
+          getCoverageDescription();
           break;
         case SNAPSHOT_ITEM:
           break;
