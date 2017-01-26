@@ -219,13 +219,13 @@
   <!-- HEALTH FRAGMENT -->
   <string name="user_weight_label_metric">Kilograms</string>
   <string name="user_weight_label_imperial">Pounds</string>
-  <string name="medical_tests_bar_title">Medical Tests</string>
+  <string name="medical_tests_bar_title">My Medical Tests</string>
   <string name="view_more_tests_btn">View More</string>
   <string name="test_name_hint">Test Name</string>
   <string name="test_name_empty_error">Test name cannot be empty</string>
   <string name="enter_test_name_hint">Set a name for your test</string>
   <string name="test_date_taken">Date</string>
-  <string name="medications_bar_title">Medications</string>
+  <string name="medications_bar_title">My Medications</string>
   <string name="no_medical_tests_found">No Tests Added</string>
   <string name="no_medications_found">No Medications Added</string>
   <string name="medical_layouts_empty_tap_get_started">Tap the \"Add\" button to start</string>
@@ -350,6 +350,10 @@
   <string name="inactive_treatments">Inactive Treatments</string>
   <string name="chronic_status_list_activity_title">Chronic Prescription Status</string>
   <string name="members_guide_activity_entry">Member\'s Guide</string>
+  <string name="treatment_status_section_title">Treatment Status</string>
+  <string name="status_input_label">Status</string>
+  <string name="start_date_input_label">Start Date</string>
+  <string name="end_date_input_label">End Date</string>
 
   <!-- COVERAGE DESCRIPTION -->
   <string name="coverage_description_activity_title">Coverage Description</string>

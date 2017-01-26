@@ -15,7 +15,7 @@ public class SubmitChronicPrescriptionActivity extends BaseActivity {
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_submit_chronic_prescription);
+    setContentView(R.layout.activity_chronic_prescription_submit);
     ButterKnife.bind(this);
     setupToolbar(toolbar, "Submit Chronic Prescription", true);
   }

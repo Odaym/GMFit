@@ -12,7 +12,7 @@ import com.mcsaatchi.gmfit.insurance.models.MedicalInformationModel;
 import com.mcsaatchi.gmfit.insurance.models.ReimbursementModel;
 import com.mcsaatchi.gmfit.insurance.widget.ItemLabel;
 
-public class ReimbursementStatusActivity extends BaseActivity {
+public class ReimbursementStatusDetailsActivity extends BaseActivity {
 
   public static final String REIMBURSEMENT_MODEL_KEY = "reimbursement_model";
   @Bind(R.id.toolbar) Toolbar toolbar;

@@ -28,7 +28,7 @@ public class SubmitApprovalRequestsActivity extends BaseActivity {
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_submit_approval_requests);
+    setContentView(R.layout.activity_approval_requests_submit);
     ButterKnife.bind(this);
     setupToolbar(toolbar, "Submit Approval Request", true);
 

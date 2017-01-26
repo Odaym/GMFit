@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/insurance_background"
     android:orientation="vertical"
-    tools:context="com.mcsaatchi.gmfit.insurance.activities.approval_request.ApprovalRequestStatusActivity">
+    tools:context="com.mcsaatchi.gmfit.insurance.activities.approval_request.ApprovalRequestStatusDetailsActivity">
 
     <LinearLayout
         android:layout_width="match_parent"

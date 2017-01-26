@@ -203,7 +203,7 @@
         android:windowSoftInputMode="adjustPan"/>
 
     <activity
-        android:name=".insurance.activities.reimbursement.ReimbursementStatusActivity"
+        android:name=".insurance.activities.reimbursement.ReimbursementStatusDetailsActivity"
         android:screenOrientation="portrait"
         android:theme="@style/No_Action_Bar_Theme"/>
 
@@ -225,7 +225,7 @@
         android:windowSoftInputMode="adjustPan"/>
 
     <activity
-        android:name=".insurance.activities.approval_request.ApprovalRequestStatusActivity"
+        android:name=".insurance.activities.approval_request.ApprovalRequestStatusDetailsActivity"
         android:screenOrientation="portrait"
         android:theme="@style/No_Action_Bar_Theme"/>
 
@@ -236,6 +236,11 @@
 
     <activity
         android:name=".insurance.activities.chronic.ChronicStatusListActivity"
+        android:screenOrientation="portrait"
+        android:theme="@style/No_Action_Bar_Theme"/>
+
+    <activity
+        android:name=".insurance.activities.chronic.ChornicPrescriptionStatusDetailsActivity"
         android:screenOrientation="portrait"
         android:theme="@style/No_Action_Bar_Theme"/>
 

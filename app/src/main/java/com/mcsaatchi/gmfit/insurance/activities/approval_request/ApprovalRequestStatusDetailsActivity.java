@@ -14,7 +14,7 @@ import com.mcsaatchi.gmfit.insurance.widget.ItemLabel;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class ApprovalRequestStatusActivity extends BaseActivity {
+public class ApprovalRequestStatusDetailsActivity extends BaseActivity {
   public static final String REIMBURSEMENT_MODEL_KEY = "reimbursement_model";
   @Bind(R.id.toolbar) Toolbar toolbar;
   @Bind(R.id.status) ItemLabel status;

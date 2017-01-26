@@ -25,7 +25,7 @@ public class MedicalInformationAdapter
   public MedicalInformationAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
     View v;
     LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-    v = inflater.inflate(R.layout.medical_information_status_item, parent, false);
+    v = inflater.inflate(R.layout.list_item_medical_information_status, parent, false);
     return new MedicalInformationAdapter.ViewHolder(v);
   }
 

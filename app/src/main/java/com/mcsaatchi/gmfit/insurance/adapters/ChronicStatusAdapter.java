@@ -1,6 +1,7 @@
 package com.mcsaatchi.gmfit.insurance.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.mcsaatchi.gmfit.R;
+import com.mcsaatchi.gmfit.common.Constants;
+import com.mcsaatchi.gmfit.insurance.activities.chronic.ChornicPrescriptionStatusDetailsActivity;
 import com.mcsaatchi.gmfit.insurance.models.TreatmentsModel;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -19,8 +22,7 @@ public class ChronicStatusAdapter extends RecyclerView.Adapter {
   private List<TreatmentsModel> treatmentsList;
   private Context context;
 
-  public ChronicStatusAdapter(Context context,
-      List<TreatmentsModel> treatmentsList) {
+  public ChronicStatusAdapter(Context context, List<TreatmentsModel> treatmentsList) {
     this.context = context;
     this.treatmentsList = treatmentsList;
   }
@@ -91,10 +93,11 @@ public class ChronicStatusAdapter extends RecyclerView.Adapter {
 
       parentLayout.setOnClickListener(new View.OnClickListener() {
         @Override public void onClick(View view) {
-          //Intent intent = new Intent(context, AddExistingMedicationActivity.class);
+          Intent intent = new Intent(context, ChornicPrescriptionStatusDetailsActivity.class);
+          intent.putExtra("CHRONIC_OBJECT", treatmentsList.get(getAdapterPosition()));
           //intent.putExtra(Constants.EXTRAS_PURPOSE_EDIT_MEDICATION_REMINDER, true);
           //intent.putExtra(Constants.EXTRAS_MEDICATION_REMINDER_ITEM, medicationItem);
-          //context.startActivity(intent);
+          context.startActivity(intent);
         }
       });
     }

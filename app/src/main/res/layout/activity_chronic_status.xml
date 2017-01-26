@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/insurance_background"
+    android:orientation="vertical"
+    >
+
+  <FrameLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:fitsSystemWindows="true"
+      >
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
+        custom:theme="@style/TransparentToolbar"
+        />
+  </FrameLayout>
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:background="@color/offwhite_background_gray"
+      android:orientation="vertical"
+      >
+
+    <com.mcsaatchi.gmfit.insurance.widget.ItemHeader
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        custom:header_text="@string/treatment_status_section_title"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/insurance_input_row_height"
+        android:paddingStart="@dimen/default_margin_2"
+        >
+
+      <TextView
+          android:layout_width="@dimen/add_medication_fields_width"
+          android:layout_height="match_parent"
+          android:gravity="center_vertical"
+          android:text="@string/status_input_label"
+          />
+
+      <TextView
+          android:id="@+id/statusValueTV"
+          android:layout_width="0dp"
+          android:layout_height="match_parent"
+          android:layout_weight="5"
+          android:background="@color/much_lighter_gray"
+          android:gravity="center_vertical"
+          android:paddingStart="@dimen/default_margin_2"
+          android:textColor="@color/black_alpha_50"
+          />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/insurance_input_row_height"
+        android:paddingStart="@dimen/default_margin_2"
+        >
+
+      <TextView
+          android:layout_width="@dimen/insurance_input_row_width"
+          android:layout_height="match_parent"
+          android:gravity="center_vertical"
+          android:text="@string/start_date_input_label"
+          />
+
+      <TextView
+          android:id="@+id/startDateTv"
+          android:layout_width="0dp"
+          android:layout_height="match_parent"
+          android:layout_weight="5"
+          android:background="@color/much_lighter_gray"
+          android:gravity="center_vertical"
+          android:paddingStart="@dimen/default_margin_2"
+          android:textColor="@color/black_alpha_50"
+          />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/insurance_input_row_height"
+        android:paddingStart="@dimen/default_margin_2"
+        >
+
+      <TextView
+          android:layout_width="@dimen/insurance_input_row_width"
+          android:layout_height="match_parent"
+          android:gravity="center_vertical"
+          android:text="@string/end_date_input_label"
+          />
+
+      <TextView
+          android:id="@+id/endDateTV"
+          android:layout_width="0dp"
+          android:layout_height="match_parent"
+          android:layout_weight="5"
+          android:background="@color/much_lighter_gray"
+          android:gravity="center_vertical"
+          android:paddingStart="@dimen/default_margin_2"
+          android:textColor="@color/black_alpha_50"
+          />
+    </LinearLayout>
+
+    <com.mcsaatchi.gmfit.insurance.widget.ItemHeader
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/default_margin_4"
+        custom:header_text="@string/medication_information"
+        />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/medicalRemindersRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:nestedScrollingEnabled="false"
+        />
+
+
+  </LinearLayout>
+
+</LinearLayout>

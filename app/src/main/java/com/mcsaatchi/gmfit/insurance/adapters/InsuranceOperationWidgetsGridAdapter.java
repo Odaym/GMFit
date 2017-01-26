@@ -38,7 +38,6 @@ public class InsuranceOperationWidgetsGridAdapter
   private static final int MEMBER_GUIDE_ITEM = 2;
   private static final int COVERAGE_ITEM = 3;
   private static final int SNAPSHOT_ITEM = 4;
-
   private static final int REIMBURSEMENT_ITEM = 0;
   private static final int APPROVAL_REQUEST_ITEM = 1;
   private static final int CHRONIC_ITEM = 2;
@@ -152,7 +151,7 @@ public class InsuranceOperationWidgetsGridAdapter
     }
 
     void setDropDownItems(final int request_purpose) {
-      final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+      final AlertDialog.Builder builder = new AlertDialog.Builder(fragmentActivity);
       builder.setTitle("What would you like to submit?")
           .setItems(dialogItems, new DialogInterface.OnClickListener() {
             @Override public void onClick(DialogInterface dialogInterface, int position) {
@@ -164,35 +163,35 @@ public class InsuranceOperationWidgetsGridAdapter
                   switch (request_purpose) {
                     case SUBMIT_ITEM:
                       intent = new Intent(context, ClaimReimbursementActivity.class);
-                      context.startActivity(intent);
+                      fragmentActivity.startActivity(intent);
                       break;
                     case TRACK_ITEM:
-                      intent = new Intent(context, ReimbursementStatusListActivity.class);
-                      context.startActivity(intent);
+                      intent = new Intent(fragmentActivity, ReimbursementStatusListActivity.class);
+                      fragmentActivity.startActivity(intent);
                       break;
                   }
                   break;
                 case APPROVAL_REQUEST_ITEM:
                   switch (request_purpose) {
                     case SUBMIT_ITEM:
-                      intent = new Intent(context, ApprovalRequestsStatusEmptyActivity.class);
-                      context.startActivity(intent);
+                      intent = new Intent(fragmentActivity, ApprovalRequestsStatusEmptyActivity.class);
+                      fragmentActivity.startActivity(intent);
                       break;
                     case TRACK_ITEM:
-                      intent = new Intent(context, ApprovalRequestsStatusListActivity.class);
-                      context.startActivity(intent);
+                      intent = new Intent(fragmentActivity, ApprovalRequestsStatusListActivity.class);
+                      fragmentActivity.startActivity(intent);
                       break;
                   }
                   break;
                 case CHRONIC_ITEM:
                   switch (request_purpose) {
                     case SUBMIT_ITEM:
-                      intent = new Intent(context, ChronicPrescriptionEmptyActivity.class);
-                      context.startActivity(intent);
+                      intent = new Intent(fragmentActivity, ChronicPrescriptionEmptyActivity.class);
+                      fragmentActivity.startActivity(intent);
                       break;
                     case TRACK_ITEM:
-                      intent = new Intent(context, ChronicStatusListActivity.class);
-                      context.startActivity(intent);
+                      intent = new Intent(fragmentActivity, ChronicStatusListActivity.class);
+                      fragmentActivity.startActivity(intent);
                       break;
                   }
                   break;

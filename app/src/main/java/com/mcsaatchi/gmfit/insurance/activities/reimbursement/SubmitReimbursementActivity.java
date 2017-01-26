@@ -28,7 +28,7 @@ public class SubmitReimbursementActivity extends BaseActivity {
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_submit_reimbursement);
+    setContentView(R.layout.activity_reimbursement_submit);
     ButterKnife.bind(this);
     setupToolbar(toolbar, "Submit Reimbursement", true);
 

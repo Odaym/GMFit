@@ -23,7 +23,7 @@ public class ReimbursementStatusListActivity extends BaseActivity {
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_reimbursement_list_status);
+    setContentView(R.layout.activity_reimbursement_status_list);
     ButterKnife.bind(this);
     setupToolbar(toolbar, "Reimbursement Status", true);
 
@@ -56,8 +56,8 @@ public class ReimbursementStatusListActivity extends BaseActivity {
     statusAdapter = new StatusAdapter(mock, new StatusAdapter.OnClickListener() {
       @Override public void onClick(ReimbursementModel reimbursementModel, int index) {
         Intent intent =
-            new Intent(ReimbursementStatusListActivity.this, ReimbursementStatusActivity.class);
-        intent.putExtra(ReimbursementStatusActivity.REIMBURSEMENT_MODEL_KEY, reimbursementModel);
+            new Intent(ReimbursementStatusListActivity.this, ReimbursementStatusDetailsActivity.class);
+        intent.putExtra(ReimbursementStatusDetailsActivity.REIMBURSEMENT_MODEL_KEY, reimbursementModel);
         startActivity(intent);
       }
     });

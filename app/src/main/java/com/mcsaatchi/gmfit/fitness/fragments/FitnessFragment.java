@@ -543,14 +543,14 @@ public class FitnessFragment extends Fragment {
 
   @Subscribe public void incrementDistanceCounter(DistanceCounterIncrementedEvent event) {
     TextView fitnessWidget = findWidgetInGrid("Distance Traveled");
-    fitnessWidget.setText(new DecimalFormat("##.###").format(
+    fitnessWidget.setText(new DecimalFormat("##.##").format(
         (prefs.getFloat(Helpers.getTodayDate() + "_distance", 0))));
   }
 
   @Subscribe public void incrementCaloriesCounter(CaloriesCounterIncrementedEvent event) {
     TextView fitnessWidget = findWidgetInGrid("Active Calories");
     fitnessWidget.setText(
-        String.valueOf((int) prefs.getFloat(Helpers.getTodayDate() + "_calories", 0)));
+        new DecimalFormat("##.#").format(prefs.getFloat(Helpers.getTodayDate() + "_calories", 0)));
   }
 
   private void updateUserCharts(int[] chartIds, int[] chartPositions) {

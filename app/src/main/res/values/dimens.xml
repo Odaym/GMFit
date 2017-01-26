@@ -126,6 +126,8 @@
   <dimen name="operation_box_width">150dp</dimen>
   <dimen name="operation_box_height">100dp</dimen>
   <dimen name="home_card_image_width">320dp</dimen>
+  <dimen name="insurance_input_row_height">70dp</dimen>
+  <dimen name="insurance_input_row_width">125dp</dimen>
 
   <!-- PILL REMINDER SECTION -->
   <dimen name="medications_list_row_item_height">100dp</dimen>

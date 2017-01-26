@@ -59,12 +59,12 @@ public class CustomBarChart extends BarChart {
     chartTitleTV.setText(chartObject.getName());
   }
 
-  private static int findLargestNumber(List<AuthenticationResponseChartData> rawChartData) {
-    int smallest = (int) Double.parseDouble(rawChartData.get(0).getValue());
-    int largest = (int) Double.parseDouble(rawChartData.get(0).getValue());
+  private static double findLargestNumber(List<AuthenticationResponseChartData> rawChartData) {
+    double smallest = Double.parseDouble(rawChartData.get(0).getValue());
+    double largest = Double.parseDouble(rawChartData.get(0).getValue());
 
     for (int i = 1; i < rawChartData.size(); i++) {
-      int currentValue = (int) Double.parseDouble(rawChartData.get(i).getValue());
+      double currentValue = Double.parseDouble(rawChartData.get(i).getValue());
       if (currentValue > largest) {
         largest = currentValue;
       } else if (currentValue < smallest) smallest = currentValue;
@@ -124,7 +124,7 @@ public class CustomBarChart extends BarChart {
     for (int i = 0; i < chartData.size(); i++) {
       xVals.add("");
 
-      BarEntry val1 = new BarEntry((int) Float.parseFloat(chartData.get(i).getValue()), k);
+      BarEntry val1 = new BarEntry(Float.parseFloat(chartData.get(i).getValue()), k);
       valsMetrics.add(val1);
 
       k++;
@@ -153,7 +153,7 @@ public class CustomBarChart extends BarChart {
 
     barChart.getXAxis().setEnabled(false);
 
-    barChart.getAxisLeft().setAxisMaxValue(findLargestNumber(chartData));
+    barChart.getAxisLeft().setAxisMaxValue((float) findLargestNumber(chartData));
     barChart.getAxisLeft().setShowOnlyMinMax(true);
     barChart.getAxisRight().setShowOnlyMinMax(true);
 

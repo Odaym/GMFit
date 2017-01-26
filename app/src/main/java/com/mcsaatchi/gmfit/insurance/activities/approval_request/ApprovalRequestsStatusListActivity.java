@@ -59,8 +59,8 @@ public class ApprovalRequestsStatusListActivity extends BaseActivity {
     statusAdapter = new StatusAdapter(mock, new StatusAdapter.OnClickListener() {
       @Override public void onClick(ReimbursementModel reimbursementModel, int index) {
         Intent intent = new Intent(ApprovalRequestsStatusListActivity.this,
-            ApprovalRequestStatusActivity.class);
-        intent.putExtra(ApprovalRequestStatusActivity.REIMBURSEMENT_MODEL_KEY, reimbursementModel);
+            ApprovalRequestStatusDetailsActivity.class);
+        intent.putExtra(ApprovalRequestStatusDetailsActivity.REIMBURSEMENT_MODEL_KEY, reimbursementModel);
         startActivity(intent);
       }
     });

@@ -17,7 +17,7 @@ public class ApprovalRequestsStatusEmptyActivity extends BaseActivity {
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_approval_requests_status);
+    setContentView(R.layout.activity_approval_requests_empty);
     ButterKnife.bind(this);
     setupToolbar(toolbar, "Approval Requests Status", true);
   }
