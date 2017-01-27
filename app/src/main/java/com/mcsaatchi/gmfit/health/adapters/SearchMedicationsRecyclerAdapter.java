@@ -57,7 +57,7 @@ public class SearchMedicationsRecyclerAdapter extends RecyclerView.Adapter {
           context.startActivity(intent);
         }
       });
-      
+
       medicineNameTV = (TextView) itemView.findViewById(R.id.medicineNameTV);
       medicineDescriptionTV = (TextView) itemView.findViewById(R.id.medicineDescriptionTV);
     }

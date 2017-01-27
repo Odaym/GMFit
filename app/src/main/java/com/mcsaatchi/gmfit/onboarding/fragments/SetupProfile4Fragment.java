@@ -167,8 +167,7 @@ public class SetupProfile4Fragment extends Fragment
         new DateFormatSymbols().getMonths()[monthOfYear] + " " + dayOfMonth + ", " + year);
   }
 
-  @Subscribe
-  public void handleFinalizeSetupProfile(UserFinalizedSetupProfileEvent event){
+  @Subscribe public void handleFinalizeSetupProfile(UserFinalizedSetupProfileEvent event) {
     int finalGender;
 
     finalGender = genderSpinner.getSelectedItem().toString().equals("Male") ? 0 : 1;
@@ -183,9 +182,7 @@ public class SetupProfile4Fragment extends Fragment
 
     String finalBloodType = bloodTypeSpinner.getSelectedItem().toString();
 
-    prefs.edit()
-        .putString(Constants.EXTRAS_USER_PROFILE_DATE_OF_BIRTH, finalDateOfBirth)
-        .apply();
+    prefs.edit().putString(Constants.EXTRAS_USER_PROFILE_DATE_OF_BIRTH, finalDateOfBirth).apply();
     prefs.edit().putInt(Constants.EXTRAS_USER_PROFILE_GENDER, finalGender).apply();
     prefs.edit().putFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, finalWeight).apply();
     prefs.edit().putFloat(Constants.EXTRAS_USER_PROFILE_HEIGHT, finalHeight).apply();

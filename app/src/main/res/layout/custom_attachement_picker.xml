@@ -1,80 +1,90 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:background="@android:color/white"
-              android:orientation="vertical">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white"
+    android:orientation="vertical"
+    >
 
-    <TextView
-        android:id="@+id/headerText"
-        android:layout_width="match_parent"
+  <TextView
+      android:id="@+id/headerText"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="8dp"
+      android:paddingLeft="20dp"
+      android:paddingRight="20dp"
+      android:paddingTop="20dp"
+      tools:text="Medical Report"
+      />
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal"
+      android:paddingLeft="20dp"
+      android:paddingRight="20dp"
+      >
+
+    <ImageView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        android:paddingTop="20dp"
-        tools:text="Medical Report"/>
+        android:background="@color/offwhite_background_gray"
+        android:padding="16dp"
+        android:src="@drawable/ic_photo_camera_white_24dp"
+        android:tint="@color/camera_gray_color"
+        />
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <ImageView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp">
+        android:layout_marginLeft="8dp"
+        android:background="@color/offwhite_background_gray"
+        android:padding="16dp"
+        android:src="@drawable/ic_photo_camera_white_24dp"
+        android:tint="@color/camera_gray_color"
+        />
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/offwhite_background_gray"
-            android:padding="16dp"
-            android:src="@drawable/ic_photo_camera_white_24dp"
-            android:tint="@color/camera_gray_color"/>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:background="@color/offwhite_background_gray"
+        android:padding="16dp"
+        android:src="@drawable/ic_photo_camera_white_24dp"
+        android:tint="@color/camera_gray_color"
+        />
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:background="@color/offwhite_background_gray"
-            android:padding="16dp"
-            android:src="@drawable/ic_photo_camera_white_24dp"
-            android:tint="@color/camera_gray_color"/>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:background="@color/offwhite_background_gray"
+        android:padding="16dp"
+        android:src="@drawable/ic_photo_camera_white_24dp"
+        android:tint="@color/camera_gray_color"
+        />
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:background="@color/offwhite_background_gray"
-            android:padding="16dp"
-            android:src="@drawable/ic_photo_camera_white_24dp"
-            android:tint="@color/camera_gray_color"/>
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:background="@color/offwhite_background_gray"
+        android:padding="16dp"
+        android:src="@drawable/ic_photo_camera_white_24dp"
+        android:tint="@color/camera_gray_color"
+        />
+  </LinearLayout>
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:background="@color/offwhite_background_gray"
-            android:padding="16dp"
-            android:src="@drawable/ic_photo_camera_white_24dp"
-            android:tint="@color/camera_gray_color"/>
+  <View
+      android:layout_width="match_parent"
+      android:layout_height="20dp"
+      />
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:background="@color/offwhite_background_gray"
-            android:padding="16dp"
-            android:src="@drawable/ic_photo_camera_white_24dp"
-            android:tint="@color/camera_gray_color"/>
-    </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="20dp"/>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/offwhite_background_gray"/>
+  <View
+      android:layout_width="match_parent"
+      android:layout_height="1dp"
+      android:background="@color/offwhite_background_gray"
+      />
 
 </LinearLayout>

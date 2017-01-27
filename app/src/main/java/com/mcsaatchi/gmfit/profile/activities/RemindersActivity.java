@@ -140,8 +140,7 @@ public class RemindersActivity extends BaseActivity {
           cancelAllPendingAlarms();
         }
 
-        EventBusSingleton.getInstance()
-            .post(new RemindersStatusChangedEvent(areAlarmsEnabled));
+        EventBusSingleton.getInstance().post(new RemindersStatusChangedEvent(areAlarmsEnabled));
       }
     });
 

@@ -67,7 +67,8 @@ public class Constants {
   public static final String EXTRAS_MAIN_MEAL_NAME = "main_meal_name";
 
   public static final String EXTRAS_MEDICATION_REMINDER_ITEM = "medication_item";
-  public static final String EXTRAS_PURPOSE_EDIT_MEDICATION_REMINDER = "purpose_edit_medication_reminder";
+  public static final String EXTRAS_PURPOSE_EDIT_MEDICATION_REMINDER =
+      "purpose_edit_medication_reminder";
 
   public static final String EXTRAS_ALARM_TYPE = "alarm_type";
 
@@ -82,7 +83,6 @@ public class Constants {
 
   public static final String BUNDLE_INSURANCE_USER_OBJECT = "insurance_user_object";
 
-
   public static final String BUNDLE_SLUG_BREAKDOWN_DATA = "slug_breakdown_data";
   public static final String BUNDLE_SLUG_BREAKDOWN_DATA_DAILY = "slug_breakdown_data_daily";
   public static final String BUNDLE_SLUG_BREAKDOWN_DATA_MONTHLY = "slug_breakdown_data_monthly";
@@ -90,7 +90,6 @@ public class Constants {
   public static final String BUNDLE_SLUG_BREAKDOWN_YEARLY_TOTAL = "slug_breakdown_yearly_total";
   public static final String BUNDLE_SLUG_BREAKDOWN_MEASUREMENT_UNIT =
       "slug_breakdown_measurement_unit";
-
 
   public static final String HEALTH_TEST_NAME = "health_test_name";
   public static final String HEALTH_TEST_DATE_TAKEN = "health_test_date_taken";

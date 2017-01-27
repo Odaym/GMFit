@@ -8,79 +8,89 @@
     android:layout_height="match_parent"
     android:background="@drawable/insurance_background"
     android:orientation="vertical"
-    tools:context="com.mcsaatchi.gmfit.insurance.activities.approval_request.ApprovalRequestsStatusListActivity">
+    tools:context="com.mcsaatchi.gmfit.insurance.activities.approval_request.ApprovalRequestsStatusListActivity"
+    >
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:fitsSystemWindows="true"
+      android:orientation="vertical"
+      >
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
+        custom:theme="@style/TransparentToolbar"
+        />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fitsSystemWindows="true"
-        android:orientation="vertical">
+        android:layout_marginBottom="12dp"
+        android:layout_marginTop="12dp"
+        android:background="@color/offwhite_transparent"
+        android:orientation="horizontal"
+        android:paddingLeft="20dp"
+        android:weightSum="1"
+        >
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
+      <RelativeLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_weight=".2"
+          android:paddingBottom="8dp"
+          android:paddingTop="8dp"
+          >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="15dp"
+            android:src="@drawable/ic_search_holo_light"
+            android:tint="@color/white"
+            />
+
+        <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fitsSystemWindows="true"
-            custom:theme="@style/TransparentToolbar"/>
+            android:layout_centerVertical="true"
+            android:background="#00FFFFFF"
+            android:hint="Search"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
+            />
+      </RelativeLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
+      <RelativeLayout
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:layout_weight=".8"
+          android:background="@color/offwhite_transparent"
+          android:clickable="true"
+          android:foreground="?android:selectableItemBackground"
+          >
+
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
-            android:layout_marginTop="12dp"
-            android:background="@color/offwhite_transparent"
-            android:orientation="horizontal"
-            android:paddingLeft="20dp"
-            android:weightSum="1">
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight=".2"
-                android:paddingBottom="8dp"
-                android:paddingTop="8dp">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginEnd="15dp"
-                    android:src="@drawable/ic_search_holo_light"
-                    android:tint="@color/white"/>
-
-                <EditText
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:background="#00FFFFFF"
-                    android:hint="Search"
-                    android:textColor="@color/white"
-                    android:textColorHint="@color/white"/>
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight=".8"
-                android:background="@color/offwhite_transparent"
-                android:clickable="true"
-                android:foreground="?android:selectableItemBackground">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_centerVertical="true"
-                    android:text="Filters"
-                    android:textColor="@color/white"/>
-            </RelativeLayout>
-        </LinearLayout>
-
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="Filters"
+            android:textColor="@color/white"
+            />
+      </RelativeLayout>
     </LinearLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+  </LinearLayout>
+
+  <android.support.v7.widget.RecyclerView
+      android:id="@+id/recyclerView"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      />
 </LinearLayout>

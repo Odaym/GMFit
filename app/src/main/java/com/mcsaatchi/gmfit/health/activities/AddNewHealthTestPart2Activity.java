@@ -366,9 +366,9 @@ public class AddNewHealthTestPart2Activity extends BaseActivity {
         });
 
     dataAccessHandler.editExistingHealthTest(
-        toRequestBody(String.valueOf(existingMedicaltest.getInstanceId())),
-        toRequestBody(testName), toRequestBody(testDateTaken), metrics,
-        imageParts, deletedImagesForRequest, new Callback<DefaultGetResponse>() {
+        toRequestBody(String.valueOf(existingMedicaltest.getInstanceId())), toRequestBody(testName),
+        toRequestBody(testDateTaken), metrics, imageParts, deletedImagesForRequest,
+        new Callback<DefaultGetResponse>() {
           @Override public void onResponse(Call<DefaultGetResponse> call,
               Response<DefaultGetResponse> response) {
             switch (response.code()) {

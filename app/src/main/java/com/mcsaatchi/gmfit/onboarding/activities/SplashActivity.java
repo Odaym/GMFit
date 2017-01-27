@@ -173,8 +173,7 @@ public class SplashActivity extends AppCompatActivity {
             if (userOnBoard.equals("1")) {
               getUiForSection("fitness");
             } else {
-              EventBusSingleton.getInstance()
-                  .post(new SignedUpSuccessfullyEvent());
+              EventBusSingleton.getInstance().post(new SignedUpSuccessfullyEvent());
 
               intent = new Intent(SplashActivity.this, SetupProfileActivity.class);
               startActivity(intent);
@@ -197,8 +196,7 @@ public class SplashActivity extends AppCompatActivity {
           @Override public void onResponse(Call<UiResponse> call, Response<UiResponse> response) {
             switch (response.code()) {
               case 200:
-                EventBusSingleton.getInstance()
-                    .post(new SignedUpSuccessfullyEvent());
+                EventBusSingleton.getInstance().post(new SignedUpSuccessfullyEvent());
 
                 List<AuthenticationResponseChart> chartsMap =
                     response.body().getData().getBody().getCharts();

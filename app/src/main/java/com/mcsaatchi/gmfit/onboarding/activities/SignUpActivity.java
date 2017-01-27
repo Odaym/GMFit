@@ -148,8 +148,7 @@ public class SignUpActivity extends BaseActivity {
                 prefs.edit().putString(Constants.EXTRAS_USER_EMAIL, email).apply();
                 prefs.edit().putString(Constants.EXTRAS_USER_PASSWORD, password).apply();
 
-                EventBusSingleton.getInstance()
-                    .post(new SignedUpSuccessfullyEvent());
+                EventBusSingleton.getInstance().post(new SignedUpSuccessfullyEvent());
 
                 Intent intent = new Intent(SignUpActivity.this, AccountVerificationActivity.class);
                 startActivity(intent);

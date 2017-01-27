@@ -7,82 +7,94 @@
     android:layout_height="match_parent"
     android:background="@drawable/insurance_background"
     android:orientation="vertical"
-    tools:context="com.mcsaatchi.gmfit.insurance.activities.chronic.ChronicPrescriptionEmptyActivity">
+    tools:context="com.mcsaatchi.gmfit.insurance.activities.chronic.ChronicPrescriptionEmptyActivity"
+    >
 
-    <FrameLayout
+  <FrameLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:fitsSystemWindows="true"
+      >
+
+    <android.support.v7.widget.Toolbar
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fitsSystemWindows="true">
+        android:fitsSystemWindows="true"
+        app:theme="@style/TransparentToolbar"
+        />
 
-        <android.support.v7.widget.Toolbar
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fitsSystemWindows="true"
-            app:theme="@style/TransparentToolbar"/>
+  </FrameLayout>
 
-    </FrameLayout>
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_marginTop="12dp"
+      android:orientation="vertical"
+      >
 
-    <LinearLayout
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@drawable/circular_background"
+        >
+
+      <ImageView
+          android:id="@+id/imageView"
+          android:layout_width="75dp"
+          android:layout_height="75dp"
+          android:layout_centerHorizontal="true"
+          android:layout_centerVertical="true"
+          android:src="@drawable/folder_icon"
+          />
+    </RelativeLayout>
+
+    <View
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="12dp"
-        android:orientation="vertical">
+        android:layout_height="24dp"
+        />
 
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="@drawable/circular_background">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="No Chronic Treatments Available"
+        android:textAlignment="center"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        />
 
-            <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="75dp"
-                android:layout_height="75dp"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:src="@drawable/folder_icon"/>
-        </RelativeLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="12dp"
+        />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="24dp"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="You did not submit any chronic treatment yet."
+        android:textAlignment="center"
+        android:textColor="@color/offwhite_transparent"
+        android:textSize="12sp"
+        />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="No Chronic Treatments Available"
-            android:textAlignment="center"
-            android:textColor="@android:color/white"
-            android:textSize="18sp"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="24dp"
+        />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="12dp"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="You did not submit any chronic treatment yet."
-            android:textAlignment="center"
-            android:textColor="@color/offwhite_transparent"
-            android:textSize="12sp"/>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="24dp"/>
-
-        <Button
-            android:id="@+id/submitChronicTreatmentBTN"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:background="@android:color/white"
-            android:text="Submit a Chronic Treatment"
-            android:textAllCaps="false"/>
-    </LinearLayout>
+    <Button
+        android:id="@+id/submitChronicTreatmentBTN"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:background="@android:color/white"
+        android:text="Submit a Chronic Treatment"
+        android:textAllCaps="false"
+        />
+  </LinearLayout>
 
 </LinearLayout>

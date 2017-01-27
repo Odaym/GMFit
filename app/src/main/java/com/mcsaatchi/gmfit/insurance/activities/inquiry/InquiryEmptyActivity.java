@@ -1,4 +1,4 @@
-package com.mcsaatchi.gmfit.insurance.activities.chronic;
+package com.mcsaatchi.gmfit.insurance.activities.inquiry;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,17 +9,18 @@ import butterknife.OnClick;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 
-public class ChronicPrescriptionEmptyActivity extends BaseActivity {
+public class InquiryEmptyActivity extends BaseActivity {
   @Bind(R.id.toolbar) Toolbar toolbar;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_chronic_prescription_empty);
+    setContentView(R.layout.activity_inquiry_empty);
     ButterKnife.bind(this);
-    setupToolbar(toolbar, "Chronic Prescription Status", true);
+    setupToolbar(toolbar, "Complaint/Inquiry Status", true);
   }
 
-  @OnClick(R.id.submitChronicTreatmentBTN) public void submitChronicTreatment() {
-    startActivity(new Intent(this, SubmitChronicPrescriptionActivity.class));
+  @OnClick(R.id.submitInquiryBTN) public void submitInquiry() {
+    startActivity(new Intent(this, SubmitInquiryActivity.class));
+    finish();
   }
 }

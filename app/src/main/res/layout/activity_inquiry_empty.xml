@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/insurance_background"
     android:orientation="vertical"
-    tools:context="com.mcsaatchi.gmfit.insurance.activities.reimbursement.ReimbursementEmptyActivity"
+    tools:context="com.mcsaatchi.gmfit.insurance.activities.approval_request.ApprovalRequestsEmptyActivity"
     >
 
   <FrameLayout
@@ -60,7 +60,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/no_reimbursements_available"
+        android:text="No Complaints or Inquiries Available"
         android:textAlignment="center"
         android:textColor="@android:color/white"
         android:textSize="18sp"
@@ -74,7 +74,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/you_did_not_submit_any_reimbursement_yet"
+        android:text="You did not submit any requests yet."
         android:textAlignment="center"
         android:textColor="@color/offwhite_transparent"
         android:textSize="12sp"
@@ -86,13 +86,13 @@
         />
 
     <Button
-        android:id="@+id/submitReimbursement"
+        android:id="@+id/submitInquiryBTN"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:background="@android:color/white"
-        android:text="@string/submit"
+        android:text="Submit a Complaint/Inquiry"
         android:textAllCaps="false"
         />
   </LinearLayout>

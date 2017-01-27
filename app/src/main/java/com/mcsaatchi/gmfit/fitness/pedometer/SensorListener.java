@@ -138,12 +138,9 @@ public class SensorListener extends Service implements SensorEventListener {
   }
 
   public void sendOutEventBusEvents() {
-    EventBusSingleton.getInstance()
-        .post(new StepCounterIncrementedEvent());
-    EventBusSingleton.getInstance()
-        .post(new CaloriesCounterIncrementedEvent());
-    EventBusSingleton.getInstance()
-        .post(new DistanceCounterIncrementedEvent());
+    EventBusSingleton.getInstance().post(new StepCounterIncrementedEvent());
+    EventBusSingleton.getInstance().post(new CaloriesCounterIncrementedEvent());
+    EventBusSingleton.getInstance().post(new DistanceCounterIncrementedEvent());
   }
 
   @Override public IBinder onBind(final Intent intent) {

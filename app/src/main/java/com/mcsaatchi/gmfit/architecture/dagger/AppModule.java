@@ -30,7 +30,7 @@ import org.joda.time.LocalDate;
     return app.getResources();
   }
 
-  @Provides DBHelper providesDBHelper(Context app){
+  @Provides DBHelper providesDBHelper(Context app) {
     return OpenHelperManager.getHelper(app, DBHelper.class);
   }
 

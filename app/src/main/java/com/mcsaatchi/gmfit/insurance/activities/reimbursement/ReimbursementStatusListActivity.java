@@ -55,9 +55,10 @@ public class ReimbursementStatusListActivity extends BaseActivity {
 
     statusAdapter = new StatusAdapter(mock, new StatusAdapter.OnClickListener() {
       @Override public void onClick(ReimbursementModel reimbursementModel, int index) {
-        Intent intent =
-            new Intent(ReimbursementStatusListActivity.this, ReimbursementStatusDetailsActivity.class);
-        intent.putExtra(ReimbursementStatusDetailsActivity.REIMBURSEMENT_MODEL_KEY, reimbursementModel);
+        Intent intent = new Intent(ReimbursementStatusListActivity.this,
+            ReimbursementStatusDetailsActivity.class);
+        intent.putExtra(ReimbursementStatusDetailsActivity.REIMBURSEMENT_MODEL_KEY,
+            reimbursementModel);
         startActivity(intent);
       }
     });

@@ -99,13 +99,11 @@ public class LoginActivity extends BaseActivity {
     EventBusSingleton.getInstance().unregister(this);
   }
 
-  @Subscribe
-  public void handleSuccessfulSignUp(SignedUpSuccessfullyEvent event) {
+  @Subscribe public void handleSuccessfulSignUp(SignedUpSuccessfullyEvent event) {
     finish();
   }
 
-  @Subscribe
-  public void handleSuccessfulSignIn(SignedInSuccessfullyEvent event) {
+  @Subscribe public void handleSuccessfulSignIn(SignedInSuccessfullyEvent event) {
     finish();
   }
 

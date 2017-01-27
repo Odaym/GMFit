@@ -17,11 +17,13 @@ import com.mcsaatchi.gmfit.architecture.GMFitApplication;
 import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.architecture.rest.CoverageDescriptionResponse;
 import com.mcsaatchi.gmfit.insurance.activities.CoverageDescriptionActivity;
-import com.mcsaatchi.gmfit.insurance.activities.approval_request.ApprovalRequestsStatusEmptyActivity;
+import com.mcsaatchi.gmfit.insurance.activities.approval_request.ApprovalRequestsEmptyActivity;
 import com.mcsaatchi.gmfit.insurance.activities.approval_request.ApprovalRequestsStatusListActivity;
 import com.mcsaatchi.gmfit.insurance.activities.chronic.ChronicPrescriptionEmptyActivity;
 import com.mcsaatchi.gmfit.insurance.activities.chronic.ChronicStatusListActivity;
-import com.mcsaatchi.gmfit.insurance.activities.reimbursement.ClaimReimbursementActivity;
+import com.mcsaatchi.gmfit.insurance.activities.inquiry.InquiryEmptyActivity;
+import com.mcsaatchi.gmfit.insurance.activities.inquiry.SubmitInquiryActivity;
+import com.mcsaatchi.gmfit.insurance.activities.reimbursement.ReimbursementEmptyActivity;
 import com.mcsaatchi.gmfit.insurance.activities.reimbursement.ReimbursementStatusListActivity;
 import com.mcsaatchi.gmfit.insurance.models.InsuranceOperationWidget;
 import java.util.ArrayList;
@@ -41,8 +43,10 @@ public class InsuranceOperationWidgetsGridAdapter
   private static final int REIMBURSEMENT_ITEM = 0;
   private static final int APPROVAL_REQUEST_ITEM = 1;
   private static final int CHRONIC_ITEM = 2;
-  private static final int REQUESTS_ITEM = 3;
+  private static final int INQUIRY_REQUESTS_ITEM = 3;
+
   @Inject DataAccessHandler dataAccessHandler;
+
   private ArrayList<InsuranceOperationWidget> widgetsMap;
   private FragmentActivity fragmentActivity;
   private Context context;
@@ -162,7 +166,7 @@ public class InsuranceOperationWidgetsGridAdapter
                 case REIMBURSEMENT_ITEM:
                   switch (request_purpose) {
                     case SUBMIT_ITEM:
-                      intent = new Intent(context, ClaimReimbursementActivity.class);
+                      intent = new Intent(context, ReimbursementEmptyActivity.class);
                       fragmentActivity.startActivity(intent);
                       break;
                     case TRACK_ITEM:
@@ -174,11 +178,12 @@ public class InsuranceOperationWidgetsGridAdapter
                 case APPROVAL_REQUEST_ITEM:
                   switch (request_purpose) {
                     case SUBMIT_ITEM:
-                      intent = new Intent(fragmentActivity, ApprovalRequestsStatusEmptyActivity.class);
+                      intent = new Intent(fragmentActivity, ApprovalRequestsEmptyActivity.class);
                       fragmentActivity.startActivity(intent);
                       break;
                     case TRACK_ITEM:
-                      intent = new Intent(fragmentActivity, ApprovalRequestsStatusListActivity.class);
+                      intent =
+                          new Intent(fragmentActivity, ApprovalRequestsStatusListActivity.class);
                       fragmentActivity.startActivity(intent);
                       break;
                   }
@@ -195,7 +200,17 @@ public class InsuranceOperationWidgetsGridAdapter
                       break;
                   }
                   break;
-                case REQUESTS_ITEM:
+                case INQUIRY_REQUESTS_ITEM:
+                  switch (request_purpose) {
+                    case SUBMIT_ITEM:
+                      intent = new Intent(fragmentActivity, SubmitInquiryActivity.class);
+                      fragmentActivity.startActivity(intent);
+                      break;
+                    case TRACK_ITEM:
+                      intent = new Intent(fragmentActivity, InquiryEmptyActivity.class);
+                      fragmentActivity.startActivity(intent);
+                      break;
+                  }
                   break;
               }
             }

@@ -7,8 +7,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
 import com.mcsaatchi.gmfit.architecture.otto.DataChartsOrderChangedEvent;
+import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
 import com.mcsaatchi.gmfit.architecture.touch_helpers.DragItemTouchHelperAdapter;
 import com.mcsaatchi.gmfit.common.models.DataChart;
 import java.util.Collections;
@@ -61,8 +61,7 @@ public class CustomizeChartsRecyclerAdapter
   }
 
   @Override public void onClearView() {
-    EventBusSingleton.getInstance()
-        .post(new DataChartsOrderChangedEvent(dataChartsMap));
+    EventBusSingleton.getInstance().post(new DataChartsOrderChangedEvent(dataChartsMap));
   }
 
   class MyViewHolder extends RecyclerView.ViewHolder {

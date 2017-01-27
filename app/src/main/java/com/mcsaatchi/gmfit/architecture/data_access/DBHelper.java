@@ -48,7 +48,6 @@ public class DBHelper extends OrmLiteSqliteOpenHelper {
           new FitnessWidget("Distance Traveled", "Km", 0, R.drawable.ic_distance_traveled, 1));
       getFitnessWidgetsDAO().create(
           new FitnessWidget("Active Calories", "Calories", 0, R.drawable.ic_calories_spent, 2));
-
     } catch (SQLException e) {
       Log.e(DBHelper.class.getName(), "Can't create database", e);
       throw new RuntimeException(e);

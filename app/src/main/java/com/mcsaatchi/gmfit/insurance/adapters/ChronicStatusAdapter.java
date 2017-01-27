@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.insurance.activities.chronic.ChornicPrescriptionStatusDetailsActivity;
 import com.mcsaatchi.gmfit.insurance.models.TreatmentsModel;
 import java.text.SimpleDateFormat;

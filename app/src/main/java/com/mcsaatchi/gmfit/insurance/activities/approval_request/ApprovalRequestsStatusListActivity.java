@@ -5,18 +5,15 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.insurance.adapters.StatusAdapter;
 import com.mcsaatchi.gmfit.insurance.models.MedicalInformationModel;
 import com.mcsaatchi.gmfit.insurance.models.ReimbursementModel;
-
 import java.util.ArrayList;
 import java.util.List;
-
-import butterknife.Bind;
-import butterknife.ButterKnife;
 
 public class ApprovalRequestsStatusListActivity extends BaseActivity {
 
@@ -60,7 +57,8 @@ public class ApprovalRequestsStatusListActivity extends BaseActivity {
       @Override public void onClick(ReimbursementModel reimbursementModel, int index) {
         Intent intent = new Intent(ApprovalRequestsStatusListActivity.this,
             ApprovalRequestStatusDetailsActivity.class);
-        intent.putExtra(ApprovalRequestStatusDetailsActivity.REIMBURSEMENT_MODEL_KEY, reimbursementModel);
+        intent.putExtra(ApprovalRequestStatusDetailsActivity.REIMBURSEMENT_MODEL_KEY,
+            reimbursementModel);
         startActivity(intent);
       }
     });

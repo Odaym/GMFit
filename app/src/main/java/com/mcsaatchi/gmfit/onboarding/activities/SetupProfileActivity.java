@@ -143,8 +143,7 @@ public class SetupProfileActivity extends BaseActivity {
                  */
                 if (nextPageBTN.getText().toString().equals(getString(R.string.finish_setup))) {
                   if (Helpers.isInternetAvailable(SetupProfileActivity.this)) {
-                    EventBusSingleton.getInstance()
-                        .post(new UserFinalizedSetupProfileEvent());
+                    EventBusSingleton.getInstance().post(new UserFinalizedSetupProfileEvent());
                   } else {
                     Helpers.showNoInternetDialog(SetupProfileActivity.this);
                   }

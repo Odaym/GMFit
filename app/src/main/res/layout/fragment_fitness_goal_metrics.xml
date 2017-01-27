@@ -2,7 +2,6 @@
 
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/userGoalsSection"
     android:layout_width="match_parent"
     android:layout_height="@dimen/user_goals_section_height"

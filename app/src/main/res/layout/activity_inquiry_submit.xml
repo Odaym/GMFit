@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/insurance_background"
+    android:orientation="vertical"
+    >
+
+  <FrameLayout
+      xmlns:android="http://schemas.android.com/apk/res/android"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      >
+
+    <android.support.v7.widget.Toolbar
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:theme="@style/TransparentToolbar"
+        />
+
+  </FrameLayout>
+
+  <ScrollView
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:background="@color/offwhite_background_gray"
+      >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+
+      <com.mcsaatchi.gmfit.insurance.widget.ItemHeader
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          custom:header_text="@string/your_info_section_title"
+          />
+
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="@dimen/complaint_inquiry_row_height"
+          >
+
+        <TextView
+            android:layout_width="@dimen/insurance_input_row_width"
+            android:layout_height="match_parent"
+            android:background="@color/much_lighter_gray"
+            android:gravity="center_vertical"
+            android:paddingStart="@dimen/default_margin_2"
+            android:text="@string/full_name_label"
+            />
+
+        <EditText
+            android:id="@+id/fullNameET"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="5"
+            android:background="@null"
+            android:gravity="center_vertical"
+            android:paddingStart="@dimen/default_margin_2"
+            android:textColor="@color/black_alpha_50"
+            />
+      </LinearLayout>
+
+      <View
+          android:layout_width="match_parent"
+          android:layout_height="1dp"
+          android:background="@color/offwhite_background_gray"
+          />
+
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="@dimen/complaint_inquiry_row_height"
+          >
+
+        <TextView
+            android:layout_width="@dimen/insurance_input_row_width"
+            android:layout_height="match_parent"
+            android:background="@color/much_lighter_gray"
+            android:gravity="center_vertical"
+            android:paddingStart="@dimen/default_margin_2"
+            android:text="@string/card_number_label"
+            />
+
+        <EditText
+            android:id="@+id/cardNumberET"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="5"
+            android:background="@null"
+            android:gravity="center_vertical"
+            android:paddingStart="@dimen/default_margin_2"
+            android:textColor="@color/black_alpha_50"
+            />
+      </LinearLayout>
+
+      <View
+          android:layout_width="match_parent"
+          android:layout_height="1dp"
+          android:background="@color/offwhite_background_gray"
+          />
+
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="@dimen/complaint_inquiry_row_height"
+          >
+
+        <TextView
+            android:layout_width="@dimen/insurance_input_row_width"
+            android:layout_height="match_parent"
+            android:background="@color/much_lighter_gray"
+            android:gravity="center_vertical"
+            android:paddingStart="@dimen/default_margin_2"
+            android:text="@string/risk_carrier_label"
+            />
+
+        <EditText
+            android:id="@+id/riskCarrierET"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="5"
+            android:background="@null"
+            android:gravity="center_vertical"
+            android:paddingStart="@dimen/default_margin_2"
+            android:textColor="@color/black_alpha_50"
+            />
+      </LinearLayout>
+
+      <com.mcsaatchi.gmfit.insurance.widget.ItemHeader
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="@dimen/default_margin_4"
+          custom:header_text="@string/request_details_label"
+          />
+
+      <com.mcsaatchi.gmfit.insurance.widget.CustomPicker
+          android:id="@+id/categoryPicker"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          />
+
+
+      <com.mcsaatchi.gmfit.insurance.widget.CustomPicker
+          android:id="@+id/subCategoryPicker"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          />
+
+
+      <com.mcsaatchi.gmfit.insurance.widget.CustomPicker
+          android:id="@+id/areaPicker"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          />
+
+      <com.mcsaatchi.gmfit.insurance.widget.ItemHeader
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="@dimen/default_margin_4"
+          custom:header_text="@string/title_and_description_label"
+          />
+
+      <EditText
+          android:id="@+id/requestDetailsET"
+          android:layout_width="match_parent"
+          android:layout_height="200dp"
+          android:background="@color/white"
+          android:gravity="top"
+          android:hint="Request Title"
+          android:paddingStart="@dimen/default_margin_2"
+          android:paddingTop="@dimen/default_margin_2"
+          android:textSize="15sp"
+          />
+
+      <com.mcsaatchi.gmfit.insurance.widget.ItemHeader
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="@dimen/default_margin_4"
+          custom:header_text="@string/attach_photo_hint"
+          />
+
+      <com.mcsaatchi.gmfit.insurance.widget.CustomAttachementPicker
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          custom:header_text="Medical Report"
+          />
+
+      <Button
+          android:id="@+id/submitApprovalRequestBTN"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_margin="@dimen/default_margin_2"
+          android:background="@color/buttons_blue"
+          android:text="@string/submit"
+          android:textAllCaps="false"
+          android:textColor="@color/white"
+          />
+    </LinearLayout>
+  </ScrollView>
+</LinearLayout>

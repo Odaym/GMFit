@@ -160,8 +160,7 @@ public class SignInActivity extends BaseActivity {
           case 403:
             waitingDialog.dismiss();
 
-            EventBusSingleton.getInstance()
-                .post(new SignedInSuccessfullyEvent());
+            EventBusSingleton.getInstance().post(new SignedInSuccessfullyEvent());
 
             Intent userNotVerifiedIntent =
                 new Intent(SignInActivity.this, AccountVerificationActivity.class);
@@ -199,8 +198,7 @@ public class SignInActivity extends BaseActivity {
             if (userOnBoard.equals("1")) {
               getUiForSection(waitingDialog, "fitness");
             } else {
-              EventBusSingleton.getInstance()
-                  .post(new SignedInSuccessfullyEvent());
+              EventBusSingleton.getInstance().post(new SignedInSuccessfullyEvent());
 
               intent = new Intent(SignInActivity.this, SetupProfileActivity.class);
               startActivity(intent);
@@ -225,8 +223,7 @@ public class SignInActivity extends BaseActivity {
               case 200:
                 waitingDialog.dismiss();
 
-                EventBusSingleton.getInstance()
-                    .post(new SignedInSuccessfullyEvent());
+                EventBusSingleton.getInstance().post(new SignedInSuccessfullyEvent());
 
                 List<AuthenticationResponseChart> chartsMap =
                     response.body().getData().getBody().getCharts();

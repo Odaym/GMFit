@@ -3,16 +3,14 @@ package com.mcsaatchi.gmfit.insurance.activities.approval_request;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-
+import butterknife.Bind;
+import butterknife.ButterKnife;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.insurance.adapters.MedicalInformationAdapter;
 import com.mcsaatchi.gmfit.insurance.models.MedicalInformationModel;
 import com.mcsaatchi.gmfit.insurance.models.ReimbursementModel;
 import com.mcsaatchi.gmfit.insurance.widget.ItemLabel;
-
-import butterknife.Bind;
-import butterknife.ButterKnife;
 
 public class ApprovalRequestStatusDetailsActivity extends BaseActivity {
   public static final String REIMBURSEMENT_MODEL_KEY = "reimbursement_model";
