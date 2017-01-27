@@ -30,6 +30,8 @@ android {
   dexOptions {
     jumboMode true
     preDexLibraries true
+    maxProcessCount 4
+    javaMaxHeapSize "2g"
   }
 
   defaultConfig {
@@ -41,20 +43,6 @@ android {
     multiDexEnabled true
     versionName "1.0"
   }
-
-  dexOptions {
-    maxProcessCount 4
-    javaMaxHeapSize "2g"
-  }
-
-  //    buildTypes {
-  //        release {
-  //            applicationIdSuffix ".release"
-  //            shrinkResources true
-  ////            minifyEnabled true
-  //            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-  //        }
-  //    }
 
   repositories {
     maven { url "https://jitpack.io" }
