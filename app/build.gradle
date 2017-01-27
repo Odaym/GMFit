@@ -29,6 +29,7 @@ android {
 
   dexOptions {
     jumboMode true
+    preDexLibraries true
   }
 
   defaultConfig {
