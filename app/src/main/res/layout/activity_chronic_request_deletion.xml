@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/insurance_background"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    >
+
+  <FrameLayout
+      xmlns:android="http://schemas.android.com/apk/res/android"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      >
+
+    <android.support.v7.widget.Toolbar
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:theme="@style/TransparentToolbar"
+        />
+
+  </FrameLayout>
+
+  <TextView
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:paddingStart="@dimen/default_margin_2"
+      android:paddingTop="@dimen/default_margin_2"
+      android:text="@string/request_deletion_hint"
+      android:textColor="@color/white"
+      />
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="@dimen/complaint_inquiry_row_height"
+      android:layout_marginBottom="@dimen/default_margin_2"
+      android:layout_marginTop="@dimen/default_margin_2"
+      >
+
+    <TextView
+        android:layout_width="@dimen/insurance_input_row_width"
+        android:layout_height="match_parent"
+        android:background="@color/insurance_transparent_white"
+        android:gravity="center_vertical"
+        android:paddingStart="@dimen/default_margin_2"
+        android:text="@string/password_label"
+        android:textColor="@color/white"
+        />
+
+    <EditText
+        android:id="@+id/passwordET"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="5"
+        android:background="@null"
+        android:foreground="@color/insurance_more_transparent_white"
+        android:gravity="center_vertical"
+        android:hint="@string/enter_your_password_hint"
+        android:inputType="textPassword"
+        android:paddingStart="@dimen/default_margin_2"
+        android:textColor="@color/black_alpha_50"
+        android:textColorHint="@color/edittext_hint_color_white"
+        android:textSize="15sp"
+        android:typeface="normal"
+        />
+  </LinearLayout>
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:background="@color/offwhite_background_gray"
+      android:orientation="vertical"
+      >
+
+    <com.mcsaatchi.gmfit.insurance.widget.CustomAttachementPicker
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/doctor_confirmation_picker_height"
+        custom:header_text="Doctor\'s Confirmation"
+        />
+
+    <Button
+        android:id="@+id/submitApprovalRequestBTN"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/default_margin_2"
+        android:layout_marginStart="@dimen/default_margin_2"
+        android:background="@color/buttons_blue"
+        android:text="@string/request_deletion_button_text"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        />
+
+  </LinearLayout>
+</LinearLayout>

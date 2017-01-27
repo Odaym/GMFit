@@ -11,6 +11,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.insurance.activities.chronic.ChornicPrescriptionStatusDetailsActivity;
+import com.mcsaatchi.gmfit.insurance.activities.chronic.RequestChronicDeletionActivity;
 import com.mcsaatchi.gmfit.insurance.models.TreatmentsModel;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -64,8 +65,12 @@ public class ChronicStatusAdapter extends RecyclerView.Adapter {
 
       deleteLayout.setOnClickListener(new View.OnClickListener() {
         @Override public void onClick(View v) {
-          treatmentsList.remove(getAdapterPosition());
-          notifyItemRemoved(getAdapterPosition());
+          Intent intent = new Intent(context, RequestChronicDeletionActivity.class);
+          intent.putExtra("CHRONIC_OBJECT", treatmentsList.get(getAdapterPosition()));
+          context.startActivity(intent);
+
+          //treatmentsList.remove(getAdapterPosition());
+          //notifyItemRemoved(getAdapterPosition());
         }
       });
 

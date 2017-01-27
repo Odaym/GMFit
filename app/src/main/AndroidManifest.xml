@@ -261,6 +261,12 @@
         android:windowSoftInputMode="stateHidden"/>
 
     <activity
+        android:name=".insurance.activities.chronic.RequestChronicDeletionActivity"
+        android:screenOrientation="portrait"
+        android:theme="@style/No_Action_Bar_Theme"
+        android:windowSoftInputMode="stateHidden"/>
+
+    <activity
         android:name=".insurance.activities.CoverageDescriptionActivity"
         android:screenOrientation="portrait"
         android:theme="@style/No_Action_Bar_Theme"/>

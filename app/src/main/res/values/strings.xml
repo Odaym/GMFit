@@ -366,6 +366,8 @@
   <string name="request_title_hint">Request Title</string>
   <string name="attach_photo_hint">Attach Photo (optional)</string>
   <string name="medical_report_hint">Medical Report</string>
+  <string name="request_deletion_hint">To request the deletion of this item, please enter your password and attach the doctor\'s confirmation below.</string>
+  <string name="request_deletion_button_text">Request Deletion</string>
 
   <!-- COVERAGE DESCRIPTION -->
   <string name="coverage_description_activity_title">Coverage Description</string>

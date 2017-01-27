@@ -26,6 +26,9 @@
 
   <color name="buttons_blue">#47589a</color>
 
+  <color name="insurance_transparent_white">#26FFFFFF</color>
+  <color name="insurance_more_transparent_white">#40FFFFFF</color>
+
   <color name="nutrition_orange_faded_transparent">#FE826D</color>
   <color name="nutrition_goals_pink">#C4458A</color>
 
