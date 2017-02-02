@@ -42,6 +42,9 @@ android {
     versionCode 1
     multiDexEnabled true
     versionName "1.0"
+    manifestPlaceholders = [onesignal_app_id               : "c3770e88-9f44-4f4d-bd4f-2b952d0d198a",
+                            // Project number pulled from dashboard, local value is ignored.
+                            onesignal_google_project_number: "REMOTE"]
   }
 
   repositories {
@@ -71,7 +74,10 @@ dependencies {
 
   annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
 
+  compile "com.google.android.gms:play-services-location:$playServicesVersion"
   compile "com.google.android.gms:play-services-vision:$playServicesVersion"
+  compile "com.google.android.gms:play-services-maps:$playServicesVersion"
+  compile "com.google.android.gms:play-services-gcm:$playServicesVersion"
   compile 'com.chauthai.swipereveallayout:swipe-reveal-layout:1.4.0'
   compile "com.squareup.okhttp3:logging-interceptor:$OkHttpVersion"
   compile "com.android.support:recyclerview-v7:$supportLibVersion"
@@ -99,6 +105,7 @@ dependencies {
   compile 'uk.co.chrisjenx:calligraphy:2.2.0'
   compile 'com.jakewharton:butterknife:7.0.1'
   compile 'net.danlew:android.joda:2.9.4.1'
+  compile 'com.onesignal:OneSignal:3.+@aar'
   compile 'com.mukesh:countrypicker:1.1.4'
   compile 'com.roughike:bottom-bar:2.0.2'
   compile 'com.google.code.gson:gson:2.4'

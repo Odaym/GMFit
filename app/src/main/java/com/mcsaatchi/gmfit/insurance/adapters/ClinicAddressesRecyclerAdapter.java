@@ -1,0 +1,64 @@
+package com.mcsaatchi.gmfit.insurance.adapters;
+
+import android.content.Context;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import com.mcsaatchi.gmfit.R;
+import com.mcsaatchi.gmfit.insurance.models.Clinic;
+import java.util.List;
+import org.apache.commons.lang3.text.WordUtils;
+
+public class ClinicAddressesRecyclerAdapter extends RecyclerView.Adapter {
+  private List<Clinic> clinicsList;
+  private Context context;
+
+  public ClinicAddressesRecyclerAdapter(Context context, List<Clinic> clinicsList) {
+    this.context = context;
+    this.clinicsList = clinicsList;
+  }
+
+  @Override public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    LayoutInflater inflater =
+        (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    View view = inflater.inflate(R.layout.list_item_clinic_addresses, parent, false);
+
+    return new ViewHolder(view);
+  }
+
+  @Override public void onBindViewHolder(RecyclerView.ViewHolder h, int position) {
+    final ViewHolder holder = (ViewHolder) h;
+
+    holder.bind(clinicsList.get(position));
+  }
+
+  @Override public int getItemCount() {
+    return clinicsList.size();
+  }
+
+  private class ViewHolder extends RecyclerView.ViewHolder {
+    private TextView clinicNameTV, clinicAddressTV;
+    private LinearLayout parentLayout;
+
+    public ViewHolder(View itemView) {
+      super(itemView);
+
+      parentLayout = (LinearLayout) itemView.findViewById(R.id.parentLayout);
+      clinicNameTV = (TextView) itemView.findViewById(R.id.clinicNameTV);
+      clinicAddressTV = (TextView) itemView.findViewById(R.id.clinicAddressTV);
+    }
+
+    public void bind(Clinic clinic) {
+      clinicNameTV.setText(WordUtils.capitalizeFully(clinic.getName()));
+      clinicAddressTV.setText(clinic.getAddress());
+
+      parentLayout.setOnClickListener(new View.OnClickListener() {
+        @Override public void onClick(View view) {
+        }
+      });
+    }
+  }
+}

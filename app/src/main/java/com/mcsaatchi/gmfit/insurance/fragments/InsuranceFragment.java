@@ -61,7 +61,7 @@ public class InsuranceFragment extends Fragment {
       if (position == 0) {
         return new InsuranceRootFragment();
       } else {
-        return new InsuranceLoginFragment();
+        return new InsuranceDirectoryFragment();
       }
     }
 

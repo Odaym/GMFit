@@ -13,6 +13,7 @@ import com.mcsaatchi.gmfit.architecture.dagger.DaggerAppComponent;
 import com.mcsaatchi.gmfit.architecture.timber.TimberReleaseTree;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
+import com.onesignal.OneSignal;
 import io.fabric.sdk.android.Fabric;
 import timber.log.Timber;
 
@@ -34,6 +35,8 @@ public class GMFitApplication extends Application {
 
   @Override public void onCreate() {
     super.onCreate();
+
+    OneSignal.startInit(this).init();
 
     initDagger();
 
