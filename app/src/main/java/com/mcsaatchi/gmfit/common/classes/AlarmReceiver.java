@@ -14,9 +14,7 @@ import com.mcsaatchi.gmfit.architecture.data_access.DBHelper;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.health.models.MedicationReminder;
 import com.mcsaatchi.gmfit.nutrition.activities.AddNewMealItemActivity;
-import java.util.Calendar;
 import org.joda.time.LocalDate;
-import timber.log.Timber;
 
 public class AlarmReceiver extends WakefulBroadcastReceiver {
   private int mealNotificationID = 0;
@@ -72,43 +70,21 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
               intent.getExtras().getParcelable(Constants.EXTRAS_MEDICATION_REMINDER_ITEM);
 
           if (medReminder != null) {
-            Calendar timeNow = Calendar.getInstance();
-            //timeNow.set(Calendar.DAY_OF_WEEK, timeNow.get(Calendar.DAY_OF_WEEK) );
+            Uri sound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 
-            Timber.d("DAY OF WEEK TODAY IS : " + timeNow.get(Calendar.DAY_OF_WEEK));
+            NotificationCompat.Builder notificationBuilder =
+                (NotificationCompat.Builder) new NotificationCompat.Builder(context).setSmallIcon(
+                    R.drawable.app_logo)
+                    .setContentTitle("Medication Reminder")
+                    .setContentText("Remember to take your "
+                        + medReminder.getMedication().getName()
+                        + " medication")
+                    .setSound(sound)
+                    .setAutoCancel(true)
+                    .setWhen(when)
+                    .setVibrate(new long[] { 1000, 1000, 1000, 1000, 1000 });
 
-            //noinspection WrongConstant
-            if (medReminder.getAlarmTime().after(timeNow)
-                && medReminder.getAlarmTime().get(Calendar.DAY_OF_WEEK) == timeNow.get(
-                Calendar.DAY_OF_WEEK)) {
-
-              if (medReminder.getTotalTimesToTrigger() == 0) {
-                medicationReminderDAO.delete(medReminder);
-              } else {
-                Uri sound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-
-                Timber.d("Triggered alarm : " + medReminder.getId());
-
-                NotificationCompat.Builder notificationBuilder =
-                    (NotificationCompat.Builder) new NotificationCompat.Builder(
-                        context).setSmallIcon(R.drawable.app_logo)
-                        .setContentTitle("Medication Reminder")
-                        .setContentText("Remember to take your "
-                            + medReminder.getMedication().getName()
-                            + " medication")
-                        .setSound(sound)
-                        .setAutoCancel(true)
-                        .setWhen(when)
-                        .setVibrate(new long[] { 1000, 1000, 1000, 1000, 1000 });
-
-                notificationManager.notify(medReminder.getId(), notificationBuilder.build());
-
-                medReminder.setTotalTimesToTrigger(medReminder.getTotalTimesToTrigger() - 1);
-                medicationReminderDAO.update(medReminder);
-              }
-            } else {
-              Timber.d("Not the appropriate time to trigger alarm: " + medReminder.getId());
-            }
+            notificationManager.notify(medReminder.getId(), notificationBuilder.build());
           }
       }
     }

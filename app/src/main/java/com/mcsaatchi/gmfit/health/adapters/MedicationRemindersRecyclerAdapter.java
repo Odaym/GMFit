@@ -18,6 +18,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import org.joda.time.LocalDateTime;
+import org.joda.time.LocalTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
@@ -42,7 +43,11 @@ public class MedicationRemindersRecyclerAdapter extends RecyclerView.Adapter {
   @Override public void onBindViewHolder(RecyclerView.ViewHolder h, int position) {
     final ViewHolder holder = (ViewHolder) h;
 
-    holder.bind(medicationReminderTimes.get(position).getAlarmTime());
+    Calendar dummyCalendar = Calendar.getInstance();
+    dummyCalendar.set(Calendar.HOUR_OF_DAY, medicationReminderTimes.get(position).getHour());
+    dummyCalendar.set(Calendar.MINUTE, medicationReminderTimes.get(position).getMinute());
+
+    holder.bind(dummyCalendar, medicationReminderTimes.get(position));
   }
 
   @Override public int getItemCount() {
@@ -65,7 +70,7 @@ public class MedicationRemindersRecyclerAdapter extends RecyclerView.Adapter {
       reminderLabelTV = (TextView) itemView.findViewById(R.id.reminderLabelTV);
     }
 
-    public void bind(Calendar alarmTimeForMedication) {
+    public void bind(Calendar alarmTimeForMedication, final MedicationReminder medReminder) {
       final DateTimeFormatter timeFormatter =
           DateTimeFormat.forPattern("hh:mm  a").withLocale(Locale.getDefault());
 
@@ -84,20 +89,14 @@ public class MedicationRemindersRecyclerAdapter extends RecyclerView.Adapter {
               new TimePickerDialog(context, new TimePickerDialog.OnTimeSetListener() {
                 @Override
                 public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                  Calendar calendarInstance = Calendar.getInstance(Locale.getDefault());
-                  LocalDateTime timeChosen = new LocalDateTime(calendarInstance.get(Calendar.YEAR),
-                      calendarInstance.get(Calendar.MONTH) + 1,
-                      calendarInstance.get(Calendar.DAY_OF_WEEK), selectedHour, selectedMinute, 0);
+
+                  LocalTime timeChosen = LocalTime.parse(selectedHour + ":" + selectedMinute,
+                      DateTimeFormat.forPattern("HH:mm"));
 
                   reminderValueTV.setText(timeFormatter.print(timeChosen));
 
-                  medicationReminderTimes.get(getAdapterPosition())
-                      .getAlarmTime()
-                      .set(Calendar.HOUR_OF_DAY, selectedHour);
-
-                  medicationReminderTimes.get(getAdapterPosition())
-                      .getAlarmTime()
-                      .set(Calendar.MINUTE, selectedMinute);
+                  medReminder.setMinute(selectedMinute);
+                  medReminder.setHour(selectedHour);
 
                   notifyDataSetChanged();
                 }

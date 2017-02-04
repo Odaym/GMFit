@@ -41,6 +41,7 @@ import com.mcsaatchi.gmfit.health.models.Medication;
 import com.mcsaatchi.gmfit.health.models.MedicationReminder;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -78,6 +79,16 @@ public class AddExistingMedicationActivity extends BaseActivity {
     put("Friday", 5);
     put("Saturday", 6);
     put("Sunday", 7);
+  }};
+
+  private Map<String, Integer> calendarDays = new HashMap<String, Integer>() {{
+    put("Monday", 2);
+    put("Tuesday", 3);
+    put("Wednesday", 4);
+    put("Thursday", 5);
+    put("Friday", 6);
+    put("Saturday", 7);
+    put("Sunday", 1);
   }};
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -143,6 +154,7 @@ public class AddExistingMedicationActivity extends BaseActivity {
           if (medicationItem != null
               && medicationItem.getMedicationReminders() != null
               && frequencyNumber == 0) {
+            medicationDAO.refresh(medicationItem);
             setupRemindersRecyclerView(new ArrayList<>(medicationItem.getMedicationReminders()));
           } else {
             prepareRemindersRecyclerView(Integer.parseInt(frequencyET.getText().toString()));
@@ -225,11 +237,11 @@ public class AddExistingMedicationActivity extends BaseActivity {
   }
 
   @OnClick(R.id.addMedicationBTN) void addMedication() {
-    if (medicineNameET.getText().toString().isEmpty() ||
-        frequencyET.getText().toString().isEmpty() ||
-        daysOfWeekTV.getText().toString().isEmpty() ||
-        treatmentDurationET.getText().toString().isEmpty() ||
-        unitMeasurementTV.getText().toString().isEmpty()) {
+    if (medicineNameET.getText().toString().isEmpty()
+        || frequencyET.getText().toString().isEmpty()
+        || daysOfWeekTV.getText().toString().isEmpty()
+        || treatmentDurationET.getText().toString().isEmpty()
+        || unitMeasurementTV.getText().toString().isEmpty()) {
 
       Toast.makeText(this, R.string.fill_in_below_fields_hint, Toast.LENGTH_LONG).show();
     } else {
@@ -264,6 +276,8 @@ public class AddExistingMedicationActivity extends BaseActivity {
         }
 
         medicationDAO.update(medicationItem);
+
+        setupMedicationReminders(medicationItem.getMedicationReminders().iterator());
       } else {
         Medication medication = new Medication();
         medication.setName(medicineNameET.getText().toString());
@@ -291,6 +305,8 @@ public class AddExistingMedicationActivity extends BaseActivity {
         }
 
         medicationDAO.update(medication);
+
+        setupMedicationReminders(medication.getMedicationReminders().iterator());
       }
 
       EventBusSingleton.getInstance().post(new MedicationItemCreatedEvent());
@@ -333,79 +349,66 @@ public class AddExistingMedicationActivity extends BaseActivity {
     medicationObject.getMedicationReminders().clear();
 
     for (int i = 0; i < adapter.getItemCount(); i++) {
-      int realDaysSelected = 0;
-
       MedicationReminder medReminder = adapter.getItem(i);
       medReminder.setMedication(medicationObject);
       medReminder.setDays_of_week(daysOfWeekArray);
+      medReminder.setEnabled(true);
+      medReminder.setHour(adapter.getItem(i).getHour());
+      medReminder.setMinute(adapter.getItem(i).getMinute());
 
-      for (int aDaysOfWeekArray : daysOfWeekArray) {
-        if (aDaysOfWeekArray != 0) realDaysSelected++;
-      }
-
-      medReminder.setTotalTimesToTrigger(
-          Integer.parseInt(treatmentDurationET.getText().toString()) * realDaysSelected);
       medicationObject.getMedicationReminders().add(medReminder);
     }
-
-    setupMedicationReminders(medicationObject.getMedicationReminders().iterator());
   }
 
   public void setupMedicationReminders(Iterator<MedicationReminder> medicationRemindersIterator) {
+
     PendingIntent pendingIntent;
     AlarmManager am = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
     while (medicationRemindersIterator.hasNext()) {
       MedicationReminder medReminder = medicationRemindersIterator.next();
 
-      for (int i = 0; i < medReminder.getDays_of_week().length; i++) {
+      for (int j = 0; j < Integer.parseInt(treatmentDurationET.getText().toString()); j++) {
 
-        int dayChosen = medReminder.getDays_of_week()[i];
+        for (int i = 0; i < medReminder.getDays_of_week().length; i++) {
+          int dayChosen = medReminder.getDays_of_week()[i];
 
-        if (dayChosen != 0) {
-          medReminder.getAlarmTime().set(Calendar.DAY_OF_WEEK, dayChosen);
+          if (dayChosen != 0) {
 
-          Intent intent = new Intent(AddExistingMedicationActivity.this, AlarmReceiver.class);
-          intent.putExtra(Constants.EXTRAS_ALARM_TYPE, "medications");
-          intent.putExtra(Constants.EXTRAS_MEDICATION_REMINDER_ITEM, (Parcelable) medReminder);
+            Calendar cal = Calendar.getInstance();
+            cal.set(Calendar.DAY_OF_WEEK, dayChosen + 1);
+            cal.set(Calendar.HOUR_OF_DAY, medReminder.getHour());
+            cal.set(Calendar.MINUTE, medReminder.getMinute());
+            cal.set(Calendar.SECOND, 0);
 
-          medReminder.setId(Math.abs((int) medReminder.getAlarmTime().getTimeInMillis()));
+            /**
+             * Add 1 week to the calendar if its time is in the past
+             */
+            if (cal.before(Calendar.getInstance())) {
+              cal.add(Calendar.DATE, 7 * (j + 1));
+            } else if (j >= 1) {
+              cal.add(Calendar.DATE, 7 * j);
+            }
 
-          Timber.d(
-              "Alarm ID: "
-                  + medReminder.getId()
-                  + " Alarm time : "
-                  + medReminder.getAlarmTime()
-                  .get(Calendar.YEAR)
-                  + "/"
-                  + medReminder.getAlarmTime().get(Calendar.MONTH)
-                  + "/"
-                  + medReminder.getAlarmTime().get(Calendar.DAY_OF_MONTH)
-                  + " day of week: "
-                  + medReminder.getAlarmTime().get(Calendar.DAY_OF_WEEK)
-                  + " -- "
-                  + medReminder.getAlarmTime().get(Calendar.HOUR_OF_DAY)
-                  + ":"
-                  + medReminder.getAlarmTime().get(Calendar.MINUTE)
-                  + ":"
-                  + medReminder.getAlarmTime().get(Calendar.SECOND));
+            Intent intent = new Intent(AddExistingMedicationActivity.this, AlarmReceiver.class);
+            intent.putExtra(Constants.EXTRAS_ALARM_TYPE, "medications");
+            intent.putExtra(Constants.EXTRAS_MEDICATION_REMINDER_ITEM, (Parcelable) medReminder);
 
-          pendingIntent = PendingIntent.getBroadcast(this, medReminder.getId(), intent,
-              PendingIntent.FLAG_ONE_SHOT);
+            pendingIntent = PendingIntent.getBroadcast(this, medReminder.getId(), intent,
+                PendingIntent.FLAG_ONE_SHOT);
 
-          int ALARM_TYPE = AlarmManager.RTC_WAKEUP;
+            int ALARM_TYPE = AlarmManager.RTC_WAKEUP;
 
-          if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            Timber.d(
-                "ALARMS - Build version bigger or equal to Marshmallow " + Build.VERSION.SDK_INT);
-            am.setRepeating(AlarmManager.RTC_WAKEUP, medReminder.getAlarmTime().getTimeInMillis(),
-                AlarmManager.INTERVAL_DAY, pendingIntent);
-          } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            Timber.d("ALARMS - Build version bigger or equal to Lollipop " + Build.VERSION.SDK_INT);
-            am.setExact(ALARM_TYPE, medReminder.getAlarmTime().getTimeInMillis(), pendingIntent);
-          } else {
-            Timber.d("ALARMS - Build version " + Build.VERSION.SDK_INT);
-            am.set(ALARM_TYPE, medReminder.getAlarmTime().getTimeInMillis(), pendingIntent);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+              am.setRepeating(ALARM_TYPE, cal.getTimeInMillis(), AlarmManager.INTERVAL_DAY,
+                  pendingIntent);
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+              am.setExact(ALARM_TYPE, cal.getTimeInMillis(), pendingIntent);
+            } else {
+              am.set(ALARM_TYPE, cal.getTimeInMillis(), pendingIntent);
+            }
+
+            Timber.d("Final date is : " + new Date(cal.getTimeInMillis()));
           }
         }
       }
@@ -413,8 +416,6 @@ public class AddExistingMedicationActivity extends BaseActivity {
   }
 
   private void setFrequencyType(Medication medication) {
-    Timber.d(timesPerDayMeasurementTV.getText().toString());
-
     switch (timesPerDayMeasurementTV.getText().toString()) {
       case "times per week":
         medication.setFrequencyType(1);

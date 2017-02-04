@@ -13,8 +13,9 @@ import java.util.Calendar;
 
   @DatabaseField(generatedId = true) private int id;
   @DatabaseField(dataType = DataType.SERIALIZABLE, foreign = true) private Medication medication;
-  @DatabaseField(dataType = DataType.SERIALIZABLE) private Calendar alarmTime;
   @DatabaseField(dataType = DataType.SERIALIZABLE) private int[] days_of_week;
+  @DatabaseField private int hour;
+  @DatabaseField private int minute;
   @DatabaseField private boolean enabled;
   @DatabaseField private int totalTimesToTrigger;
 
@@ -22,7 +23,7 @@ import java.util.Calendar;
   }
 
   public MedicationReminder(Calendar alarmTime) {
-    this.alarmTime = alarmTime;
+
   }
 
   public int getId() {
@@ -31,14 +32,6 @@ import java.util.Calendar;
 
   public void setId(int id) {
     this.id = id;
-  }
-
-  public Calendar getAlarmTime() {
-    return alarmTime;
-  }
-
-  public void setAlarmTime(Calendar alarmTime) {
-    this.alarmTime = alarmTime;
   }
 
   public Medication getMedication() {
@@ -65,12 +58,32 @@ import java.util.Calendar;
     return days_of_week;
   }
 
+  public int getHour() {
+    return hour;
+  }
+
+  public void setHour(int hour) {
+    this.hour = hour;
+  }
+
+  public int getMinute() {
+    return minute;
+  }
+
+  public void setMinute(int minute) {
+    this.minute = minute;
+  }
+
   public void setDays_of_week(int[] days_of_week) {
     this.days_of_week = days_of_week;
   }
 
   public void setTotalTimesToTrigger(int totalTimesToTrigger) {
     this.totalTimesToTrigger = totalTimesToTrigger;
+  }
+
+  public static Creator<MedicationReminder> getCREATOR() {
+    return CREATOR;
   }
 
   @Override public int describeContents() {
@@ -80,17 +93,19 @@ import java.util.Calendar;
   @Override public void writeToParcel(Parcel dest, int flags) {
     dest.writeInt(this.id);
     dest.writeSerializable(this.medication);
-    dest.writeSerializable(this.alarmTime);
     dest.writeIntArray(this.days_of_week);
+    dest.writeInt(hour);
+    dest.writeInt(minute);
     dest.writeByte(this.enabled ? (byte) 1 : (byte) 0);
     dest.writeInt(this.totalTimesToTrigger);
   }
 
-  protected MedicationReminder(Parcel in) {
+  public MedicationReminder(Parcel in) {
     this.id = in.readInt();
     this.medication = (Medication) in.readSerializable();
-    this.alarmTime = (Calendar) in.readSerializable();
     this.days_of_week = in.createIntArray();
+    this.hour = in.readInt();
+    this.minute = in.readInt();
     this.enabled = in.readByte() != 0;
     this.totalTimesToTrigger = in.readInt();
   }

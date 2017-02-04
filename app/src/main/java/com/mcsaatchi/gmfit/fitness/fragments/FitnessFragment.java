@@ -108,7 +108,6 @@ public class FitnessFragment extends Fragment {
 
     EventBusSingleton.getInstance().register(this);
 
-    JodaTimeAndroid.init(getActivity());
     ((GMFitApplication) getActivity().getApplication()).getAppComponent().inject(this);
 
     todayDate = dt.toString();

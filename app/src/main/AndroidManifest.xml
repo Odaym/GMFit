@@ -241,6 +241,7 @@
 
     <activity
         android:name=".insurance.activities.chronic.ChornicPrescriptionStatusDetailsActivity"
+        android:exported="true"
         android:screenOrientation="portrait"
         android:theme="@style/No_Action_Bar_Theme"/>
 

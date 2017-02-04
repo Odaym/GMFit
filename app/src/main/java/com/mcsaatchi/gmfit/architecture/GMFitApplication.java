@@ -15,6 +15,7 @@ import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.onesignal.OneSignal;
 import io.fabric.sdk.android.Fabric;
+import net.danlew.android.joda.JodaTimeAndroid;
 import timber.log.Timber;
 
 public class GMFitApplication extends Application {
@@ -39,6 +40,8 @@ public class GMFitApplication extends Application {
     OneSignal.startInit(this).init();
 
     initDagger();
+
+    JodaTimeAndroid.init(this);
 
     prefs = getSharedPreferences(Constants.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
 
