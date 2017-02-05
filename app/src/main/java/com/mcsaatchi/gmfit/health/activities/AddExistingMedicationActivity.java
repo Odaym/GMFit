@@ -41,11 +41,9 @@ import com.mcsaatchi.gmfit.health.models.Medication;
 import com.mcsaatchi.gmfit.health.models.MedicationReminder;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import timber.log.Timber;
 
 public class AddExistingMedicationActivity extends BaseActivity {
 
@@ -79,16 +77,6 @@ public class AddExistingMedicationActivity extends BaseActivity {
     put("Friday", 5);
     put("Saturday", 6);
     put("Sunday", 7);
-  }};
-
-  private Map<String, Integer> calendarDays = new HashMap<String, Integer>() {{
-    put("Monday", 2);
-    put("Tuesday", 3);
-    put("Wednesday", 4);
-    put("Thursday", 5);
-    put("Friday", 6);
-    put("Saturday", 7);
-    put("Sunday", 1);
   }};
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -213,7 +201,7 @@ public class AddExistingMedicationActivity extends BaseActivity {
     medicationReminders = new ArrayList<>(frequencyNumber);
 
     for (int ind = 0; ind < frequencyNumber; ind++) {
-      medicationReminders.add(new MedicationReminder(Calendar.getInstance()));
+      medicationReminders.add(new MedicationReminder());
     }
 
     setupRemindersRecyclerView(medicationReminders);
@@ -275,9 +263,9 @@ public class AddExistingMedicationActivity extends BaseActivity {
           medicationItem.setRemindersEnabled(false);
         }
 
-        medicationDAO.update(medicationItem);
-
         setupMedicationReminders(medicationItem.getMedicationReminders().iterator());
+
+        medicationDAO.update(medicationItem);
       } else {
         Medication medication = new Medication();
         medication.setName(medicineNameET.getText().toString());
@@ -304,9 +292,9 @@ public class AddExistingMedicationActivity extends BaseActivity {
           medication.setRemindersEnabled(false);
         }
 
-        medicationDAO.update(medication);
-
         setupMedicationReminders(medication.getMedicationReminders().iterator());
+
+        medicationDAO.update(medication);
       }
 
       EventBusSingleton.getInstance().post(new MedicationItemCreatedEvent());
@@ -394,7 +382,7 @@ public class AddExistingMedicationActivity extends BaseActivity {
             intent.putExtra(Constants.EXTRAS_ALARM_TYPE, "medications");
             intent.putExtra(Constants.EXTRAS_MEDICATION_REMINDER_ITEM, (Parcelable) medReminder);
 
-            pendingIntent = PendingIntent.getBroadcast(this, medReminder.getId(), intent,
+            pendingIntent = PendingIntent.getBroadcast(this, (int) cal.getTimeInMillis(), intent,
                 PendingIntent.FLAG_ONE_SHOT);
 
             int ALARM_TYPE = AlarmManager.RTC_WAKEUP;
@@ -407,8 +395,6 @@ public class AddExistingMedicationActivity extends BaseActivity {
             } else {
               am.set(ALARM_TYPE, cal.getTimeInMillis(), pendingIntent);
             }
-
-            Timber.d("Final date is : " + new Date(cal.getTimeInMillis()));
           }
         }
       }

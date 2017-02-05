@@ -6,7 +6,6 @@ import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 import java.io.Serializable;
-import java.util.Calendar;
 
 @DatabaseTable(tableName = "MedicationReminder") public class MedicationReminder
     implements Parcelable, Serializable {
@@ -17,13 +16,9 @@ import java.util.Calendar;
   @DatabaseField private int hour;
   @DatabaseField private int minute;
   @DatabaseField private boolean enabled;
-  @DatabaseField private int totalTimesToTrigger;
+  @DatabaseField private long actualAlarmTime;
 
   public MedicationReminder() {
-  }
-
-  public MedicationReminder(Calendar alarmTime) {
-
   }
 
   public int getId() {
@@ -50,12 +45,16 @@ import java.util.Calendar;
     this.enabled = enabled;
   }
 
-  public int getTotalTimesToTrigger() {
-    return totalTimesToTrigger;
-  }
-
   public int[] getDays_of_week() {
     return days_of_week;
+  }
+
+  public long getActualAlarmTime() {
+    return actualAlarmTime;
+  }
+
+  public void setActualAlarmTime(long actualAlarmTime) {
+    this.actualAlarmTime = actualAlarmTime;
   }
 
   public int getHour() {
@@ -78,14 +77,6 @@ import java.util.Calendar;
     this.days_of_week = days_of_week;
   }
 
-  public void setTotalTimesToTrigger(int totalTimesToTrigger) {
-    this.totalTimesToTrigger = totalTimesToTrigger;
-  }
-
-  public static Creator<MedicationReminder> getCREATOR() {
-    return CREATOR;
-  }
-
   @Override public int describeContents() {
     return 0;
   }
@@ -94,20 +85,20 @@ import java.util.Calendar;
     dest.writeInt(this.id);
     dest.writeSerializable(this.medication);
     dest.writeIntArray(this.days_of_week);
-    dest.writeInt(hour);
-    dest.writeInt(minute);
+    dest.writeInt(this.hour);
+    dest.writeInt(this.minute);
     dest.writeByte(this.enabled ? (byte) 1 : (byte) 0);
-    dest.writeInt(this.totalTimesToTrigger);
+    dest.writeLong(this.actualAlarmTime);
   }
 
-  public MedicationReminder(Parcel in) {
+  protected MedicationReminder(Parcel in) {
     this.id = in.readInt();
     this.medication = (Medication) in.readSerializable();
     this.days_of_week = in.createIntArray();
     this.hour = in.readInt();
     this.minute = in.readInt();
     this.enabled = in.readByte() != 0;
-    this.totalTimesToTrigger = in.readInt();
+    this.actualAlarmTime = in.readLong();
   }
 
   public static final Creator<MedicationReminder> CREATOR = new Creator<MedicationReminder>() {
