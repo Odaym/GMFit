@@ -15,11 +15,12 @@ import android.widget.LinearLayout;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.mcsaatchi.gmfit.R;
+import com.mcsaatchi.gmfit.common.classes.NonSwipeableViewPager;
 import java.util.ArrayList;
 import java.util.List;
 
 public class InsuranceFragment extends Fragment {
-  @Bind(R.id.pager) ViewPager pager;
+  @Bind(R.id.pager) NonSwipeableViewPager pager;
   @Bind(R.id.tabs) TabLayout tabs;
   @Bind(R.id.fragment_container) FrameLayout fragment_container;
   @Bind(R.id.parentLayoutToCustomize) LinearLayout parentLayoutToCustomize;

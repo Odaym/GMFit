@@ -149,4 +149,6 @@
   <!-- INSURANCE DIRECTORY -->
   <dimen name="clinic_address_row_height">70dp</dimen>
   <dimen name="clinic_address_status_icon_dimens">20dp</dimen>
+  <dimen name="address_icons_indicators_dimens">15dp</dimen>
+
 </resources>

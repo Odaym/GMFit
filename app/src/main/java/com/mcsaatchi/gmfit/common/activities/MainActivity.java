@@ -139,6 +139,7 @@ public class MainActivity extends BaseActivity {
                 getResources().getDrawable(R.drawable.health_background));
             break;
           case R.id.item_four:
+            myScrollingContent.setClickable(false);
             getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, new InsuranceFragment())
                 .commit();

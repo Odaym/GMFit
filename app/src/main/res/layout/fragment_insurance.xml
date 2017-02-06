@@ -25,7 +25,7 @@
         />
 
     <ImageView
-        android:id="@+id/showDirectoryOptionsIV"
+        android:id="@+id/switchMapViewBTN"
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_gravity="center_vertical"
@@ -34,7 +34,7 @@
         />
   </LinearLayout>
 
-  <android.support.v4.view.ViewPager
+  <com.mcsaatchi.gmfit.common.classes.NonSwipeableViewPager
       android:id="@+id/pager"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
@@ -45,5 +45,5 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         />
-  </android.support.v4.view.ViewPager>
+  </com.mcsaatchi.gmfit.common.classes.NonSwipeableViewPager>
 </LinearLayout>
