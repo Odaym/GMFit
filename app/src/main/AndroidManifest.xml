@@ -271,6 +271,12 @@
         android:screenOrientation="portrait"
         android:theme="@style/No_Action_Bar_Theme"/>
 
+    <activity
+        android:name=".insurance.activities.directory.ClinicDetailsActivity"
+        android:screenOrientation="portrait"
+        android:theme="@style/No_Action_Bar_Theme"/>
+
+
     <service android:name=".fitness.pedometer.SensorListener"/>
 
     <receiver android:name=".common.classes.AlarmReceiver"/>

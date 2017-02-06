@@ -431,5 +431,22 @@
   <string name="add_medication_button">Add Medication</string>
   <string name="edit_medication_button">Edit Medication</string>
 
-
+  <!-- INSURANCE DIRECTORY -->
+  <string name="within_network_icon_hint">Within Network</string>
+  <string name="open_247_icon_hint">24/7</string>
+  <string name="online_right_now_icon_hint">Online</string>
+  <string name="clinic_details_header_contact_information">Contact Information</string>
+  <string name="clinic_details_activity_title">Details</string>
+  <string name="clinic_phone_hint">Phone</string>
+  <string name="clinic_mobile_hint">Mobile</string>
+  <string name="clinic_email_address_hint">Email Address</string>
+  <string name="clinic_location_header_text">Location</string>
+  <string name="clinic_working_hours_header_text">Working Hours</string>
+  <string name="clinic_working_hours_monday">Monday</string>
+  <string name="clinic_working_hours_tuesday">Tuesday</string>
+  <string name="clinic_working_hours_wednesday">Wednesday</string>
+  <string name="clinic_working_hours_thursday">Thursday</string>
+  <string name="clinic_working_hours_friday">Friday</string>
+  <string name="clinic_working_hours_saturday">Saturday</string>
+  <string name="clinic_working_hours_sunday">Sunday</string>
 </resources>

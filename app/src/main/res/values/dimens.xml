@@ -150,5 +150,7 @@
   <dimen name="clinic_address_row_height">70dp</dimen>
   <dimen name="clinic_address_status_icon_dimens">20dp</dimen>
   <dimen name="address_icons_indicators_dimens">15dp</dimen>
+  <dimen name="clinic_details_top_box_height">150dp</dimen>
+  <dimen name="clinic_title_text_font_size">22sp</dimen>
 
 </resources>

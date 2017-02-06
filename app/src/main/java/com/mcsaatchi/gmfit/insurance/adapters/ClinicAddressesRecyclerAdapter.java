@@ -1,13 +1,16 @@
 package com.mcsaatchi.gmfit.insurance.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.mcsaatchi.gmfit.R;
+import com.mcsaatchi.gmfit.insurance.activities.directory.ClinicDetailsActivity;
 import com.mcsaatchi.gmfit.insurance.models.Clinic;
 import java.util.List;
 import org.apache.commons.lang3.text.WordUtils;
@@ -42,6 +45,7 @@ public class ClinicAddressesRecyclerAdapter extends RecyclerView.Adapter {
   private class ViewHolder extends RecyclerView.ViewHolder {
     private TextView clinicNameTV, clinicAddressTV;
     private LinearLayout parentLayout;
+    private ImageView withinNetworkIV, open247IV, onlineNowIV;
 
     public ViewHolder(View itemView) {
       super(itemView);
@@ -49,14 +53,26 @@ public class ClinicAddressesRecyclerAdapter extends RecyclerView.Adapter {
       parentLayout = (LinearLayout) itemView.findViewById(R.id.parentLayout);
       clinicNameTV = (TextView) itemView.findViewById(R.id.clinicNameTV);
       clinicAddressTV = (TextView) itemView.findViewById(R.id.clinicAddressTV);
+      withinNetworkIV = (ImageView) itemView.findViewById(R.id.withinNetworkIV);
+      open247IV = (ImageView) itemView.findViewById(R.id.open247IV);
+      onlineNowIV = (ImageView) itemView.findViewById(R.id.onlineNowIV);
     }
 
     public void bind(Clinic clinic) {
       clinicNameTV.setText(WordUtils.capitalizeFully(clinic.getName()));
       clinicAddressTV.setText(clinic.getAddress());
 
+      if (clinic.isOnline()) onlineNowIV.setVisibility(View.VISIBLE);
+
+      if (clinic.isWithin_network()) withinNetworkIV.setVisibility(View.VISIBLE);
+
+      if (clinic.isOpen_247()) open247IV.setVisibility(View.VISIBLE);
+
       parentLayout.setOnClickListener(new View.OnClickListener() {
         @Override public void onClick(View view) {
+          Intent intent = new Intent(context, ClinicDetailsActivity.class);
+          intent.putExtra("CLINIC_OBJECT", clinicsList.get(getAdapterPosition()));
+          context.startActivity(intent);
         }
       });
     }

@@ -37,11 +37,13 @@
           />
 
       <EditText
+          android:id="@+id/searchBoxET"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_centerVertical="true"
           android:background="#00FFFFFF"
           android:hint="Search"
+          android:inputType="textCapSentences"
           android:textColor="@color/white"
           android:textColorHint="@color/white"
           />

@@ -6,9 +6,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -21,11 +24,13 @@ import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.common.classes.SimpleDividerItemDecoration;
 import com.mcsaatchi.gmfit.insurance.adapters.ClinicAddressesRecyclerAdapter;
 import com.mcsaatchi.gmfit.insurance.models.Clinic;
+import com.mcsaatchi.gmfit.insurance.models.ClinicOpeningHours;
 import java.util.ArrayList;
 import java.util.List;
 
 public class InsuranceDirectoryFragment extends Fragment implements OnMapReadyCallback {
   @Bind(R.id.clinicAddressesRecyclerView) RecyclerView clinicAddressRecycler;
+  @Bind(R.id.searchBoxET) EditText searchBoxET;
 
   private boolean listingVisible = false;
 
@@ -44,16 +49,45 @@ public class InsuranceDirectoryFragment extends Fragment implements OnMapReadyCa
 
     parentFragmentView = ((ViewGroup) getParentFragment().getView());
 
-    List<Clinic> listOfClinics = new ArrayList<>();
+    final List<Clinic> listOfClinics = new ArrayList<>();
 
-    listOfClinics.add(new Clinic("Clinic 1", "Beirut, Achrafieh"));
-    listOfClinics.add(new Clinic("Clinic 2", "Beirut, Ras Beirut"));
-    listOfClinics.add(new Clinic("Clinic 4", "Beirut, Sanayeh"));
-    listOfClinics.add(new Clinic("Clinic 1", "Beirut, Fassouh"));
-    listOfClinics.add(new Clinic("Clinic 52", "Beirut, Ras el Nabaa"));
-    listOfClinics.add(new Clinic("Clinic 52", "Beirut, Ras el Nabaa"));
-    listOfClinics.add(new Clinic("Clinic 52", "Beirut, Ras el Nabaa"));
-    listOfClinics.add(new Clinic("Clinic 52", "Beirut, Ras el Nabaa"));
+    listOfClinics.add(new Clinic("Clinic 1", "Beirut, Hamra",
+        new ClinicOpeningHours("9:00 AM - 6:00 PM", "9:00 AM - 6:00 PM", "9:00 AM - 6:00 PM",
+            "9:00 AM - 6:00 PM", "9:00 AM - 6:00 PM", "9:00 AM - 2:30 PM", "closed"), false, true,
+        false));
+
+    listOfClinics.add(new Clinic("Hotel Dieu de France", "Beirut, Achrafieh",
+        new ClinicOpeningHours("9:00 AM - 5:00 PM", "9:00 AM - 5:00 PM", "9:00 AM - 5:00 PM",
+            "9:00 AM - 5:00 PM", "9:00 AM - 5:00 PM", "closed", "closed"), false, false, false));
+
+    listOfClinics.add(new Clinic("Hospital 422", "Beirut, Koraytem",
+        new ClinicOpeningHours("9:00 AM - 5:00 PM", "9:00 AM - 5:00 PM", "9:00 AM - 5:00 PM",
+            "9:00 AM - 5:00 PM", "9:00 AM - 5:00 PM", "closed", "closed"), true, false, true));
+
+    listOfClinics.add(new Clinic("Sample Hospital 210", "Aley",
+        new ClinicOpeningHours("9:00 AM - 5:00 PM", "9:00 AM - 5:00 PM", "9:00 AM - 5:00 PM",
+            "9:00 AM - 5:00 PM", "9:00 AM - 5:00 PM", "closed", "closed"), false, false, true));
+
+    listOfClinics.add(new Clinic("AUBMC", "Beirut, Sanayeh",
+        new ClinicOpeningHours("9:00 AM - 5:00 PM", "9:00 AM - 5:00 PM", "9:00 AM - 5:00 PM",
+            "9:00 AM - 5:00 PM", "9:00 AM - 5:00 PM", "closed", "closed"), true, true, false));
+
+    listOfClinics.add(new Clinic("Zahraa Hospital", "Beirut, Verdun",
+        new ClinicOpeningHours("9:00 AM - 5:00 PM", "9:00 AM - 5:00 PM", "9:00 AM - 5:00 PM",
+            "9:00 AM - 5:00 PM", "9:00 AM - 5:00 PM", "closed", "closed"), false, true, false));
+
+    listOfClinics.add(new Clinic("Traad Hospital", "Beirut, Mkalles",
+        new ClinicOpeningHours("9:00 AM - 12:00 AM", "9:00 AM - 12:00 AM", "9:00 AM - 12:00 AM",
+            "9:00 AM - 12:00 AM", "9:00 AM - 12:00 AM", "9:00 AM - 2:00 PM", "closed"), true, true,
+        true));
+
+    listOfClinics.add(new Clinic("Clinic 233", "Beirut, Ras El Nabaa",
+        new ClinicOpeningHours("9:00 AM - 5:00 PM", "9:00 AM - 5:00 PM", "9:00 AM - 5:00 PM",
+            "9:00 AM - 5:00 PM", "9:00 AM - 5:00 PM", "closed", "closed"), false, false, true));
+
+    listOfClinics.add(new Clinic("Medicinal House Building", "Beirut, Ras El Nabaa",
+        new ClinicOpeningHours("9:00 AM - 5:00 PM", "9:00 AM - 5:00 PM", "9:00 AM - 5:00 PM",
+            "9:00 AM - 5:00 PM", "9:00 AM - 5:00 PM", "closed", "closed"), false, false, false));
 
     mapFragment = ((WorkaroundMapFragment) getChildFragmentManager().findFragmentById(R.id.map));
     mapFragment.getMapAsync(this);
@@ -74,6 +108,36 @@ public class InsuranceDirectoryFragment extends Fragment implements OnMapReadyCa
     clinicAddressRecycler.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
     clinicAddressRecycler.setHasFixedSize(true);
     clinicAddressRecycler.setAdapter(clinicAddressesRecyclerAdapter);
+
+    searchBoxET.addTextChangedListener(new TextWatcher() {
+      @Override public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+      }
+
+      @Override public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+      }
+
+      @Override public void afterTextChanged(Editable editable) {
+        List<Clinic> searchResults = new ArrayList<Clinic>();
+
+        for (int j = 0; j < listOfClinics.size(); j++) {
+          if (listOfClinics.get(j)
+              .getName()
+              .toLowerCase()
+              .contains(editable.toString().toLowerCase())) {
+            searchResults.add(listOfClinics.get(j));
+          }
+        }
+
+        ClinicAddressesRecyclerAdapter clinicAddressesRecyclerAdapter =
+            new ClinicAddressesRecyclerAdapter(getActivity(), searchResults);
+
+        clinicAddressRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
+        clinicAddressRecycler.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
+        clinicAddressRecycler.setHasFixedSize(true);
+        clinicAddressRecycler.setAdapter(clinicAddressesRecyclerAdapter);
+      }
+    });
 
     return fragmentView;
   }

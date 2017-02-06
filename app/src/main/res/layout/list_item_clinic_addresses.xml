@@ -43,24 +43,30 @@
           />
 
       <ImageView
+          android:id="@+id/withinNetworkIV"
           android:layout_width="@dimen/address_icons_indicators_dimens"
           android:layout_height="@dimen/address_icons_indicators_dimens"
           android:layout_marginEnd="@dimen/default_margin_0"
           android:src="@drawable/ic_directory_within_network"
+          android:visibility="gone"
           />
 
       <ImageView
+          android:id="@+id/open247IV"
           android:layout_width="@dimen/address_icons_indicators_dimens"
           android:layout_height="@dimen/address_icons_indicators_dimens"
           android:layout_marginEnd="@dimen/default_margin_0"
           android:src="@drawable/ic_directory_247"
+          android:visibility="gone"
           />
 
       <ImageView
+          android:id="@+id/onlineNowIV"
           android:layout_width="@dimen/address_icons_indicators_dimens"
           android:layout_height="@dimen/address_icons_indicators_dimens"
           android:layout_marginEnd="@dimen/default_margin_0"
           android:src="@drawable/ic_directory_online"
+          android:visibility="gone"
           />
 
     </LinearLayout>
