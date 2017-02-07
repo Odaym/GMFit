@@ -9,11 +9,11 @@
 
   <ImageView
       android:id="@+id/memberImageIV"
-      android:layout_width="120dp"
-      android:layout_height="120dp"
+      android:layout_width="100dp"
+      android:layout_height="100dp"
       android:layout_gravity="center_horizontal"
       android:layout_marginTop="@dimen/default_margin_2"
-      android:src="@drawable/fitness_background"
+      android:src="@drawable/insurance_login_icon"
       />
 
   <TextView

@@ -6,8 +6,11 @@ import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -22,7 +25,7 @@ import org.joda.time.format.DateTimeFormatter;
 
 public class DateCarousel extends HorizontalScrollView {
 
-  @Bind(R.id.dateCarousel) HorizontalScrollView dateCarousel;
+  @Bind(R.id.dateCarousel) ScrollView dateCarousel;
   @Bind(R.id.dateCarouselContainer) LinearLayout dateCarouselContainer;
   private LocalDate dt;
   private LayoutInflater mInflater;
@@ -45,6 +48,12 @@ public class DateCarousel extends HorizontalScrollView {
 
   public void setupDateCarousel() {
     dt = new LocalDate();
+
+    dateCarousel.setVerticalScrollBarEnabled(false);
+    dateCarousel.setHorizontalScrollBarEnabled(false);
+
+    dateCarousel.setLayoutParams(new ScrollView.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+        getResources().getDimensionPixelSize(R.dimen.date_carousel_height)));
 
     int daysExtraToShow = 3;
 
@@ -115,6 +124,7 @@ public class DateCarousel extends HorizontalScrollView {
   public void focusOnView(LinearLayout dateCarouselContainer, final View view) {
     TextView dayOfMonthTV;
     TextView monthOfYearTV;
+    ImageView indicatorArrowIV;
     LinearLayout dateEntryLayout;
 
     for (int i = 0; i < dateCarouselContainer.getChildCount(); i++) {
@@ -123,8 +133,15 @@ public class DateCarousel extends HorizontalScrollView {
       dayOfMonthTV = (TextView) dateCarouselContainer.getChildAt(i).findViewById(R.id.dayOfMonthTV);
       monthOfYearTV =
           (TextView) dateCarouselContainer.getChildAt(i).findViewById(R.id.monthOfYearTV);
+      indicatorArrowIV =
+          (ImageView) dateCarouselContainer.getChildAt(i).findViewById(R.id.indicatorArrowIV);
 
       dateEntryLayout.setBackgroundColor(0);
+      dateEntryLayout.setLayoutParams(new LinearLayout.LayoutParams(
+          getResources().getDimensionPixelSize(R.dimen.date_carousel_unfocused_item_cell_width),
+          ViewGroup.LayoutParams.WRAP_CONTENT));
+
+      indicatorArrowIV.setVisibility(View.GONE);
       dayOfMonthTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
       monthOfYearTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
       dayOfMonthTV.setTypeface(null, Typeface.NORMAL);
@@ -134,7 +151,13 @@ public class DateCarousel extends HorizontalScrollView {
     dateEntryLayout = (LinearLayout) view.findViewById(R.id.dateEntryLayout);
     dayOfMonthTV = (TextView) view.findViewById(R.id.dayOfMonthTV);
     monthOfYearTV = (TextView) view.findViewById(R.id.monthOfYearTV);
+    indicatorArrowIV = (ImageView) view.findViewById(R.id.indicatorArrowIV);
 
+    dateEntryLayout.setLayoutParams(new LinearLayout.LayoutParams(
+        getResources().getDimensionPixelSize(R.dimen.date_carousel_focused_item_cell_width),
+        ViewGroup.LayoutParams.WRAP_CONTENT));
+
+    indicatorArrowIV.setVisibility(View.VISIBLE);
     dateEntryLayout.setBackgroundColor(getResources().getColor(R.color.offwhite_transparent));
     dayOfMonthTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
     monthOfYearTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);

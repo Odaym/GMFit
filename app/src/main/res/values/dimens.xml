@@ -70,7 +70,11 @@
   <dimen name="add_new_chart_list_item_edge_width">90dp</dimen>
   <dimen name="metric_image_dimen">30dp</dimen>
   <dimen name="date_carousel_height">70dp</dimen>
+  <dimen name="date_carousel_indicator_dimens">25dp</dimen>
   <dimen name="chart_title_headline_bar_height">60dp</dimen>
+  <dimen name="date_carousel_cell_height">68dp</dimen>
+  <dimen name="date_carousel_focused_item_cell_width">80dp</dimen>
+  <dimen name="date_carousel_unfocused_item_cell_width">60dp</dimen>
   <dimen name="date_carousel_items_font_size_normal">12sp</dimen>
   <dimen name="date_carousel_items_font_size_large">15sp</dimen>
 
@@ -120,7 +124,7 @@
   <dimen name="profile_row_field_height">120dp</dimen>
 
   <!-- INSURANCE SECTION -->
-  <dimen name="insurance_home_header_section_height">130dp</dimen>
+  <dimen name="insurance_home_header_section_height">150dp</dimen>
   <dimen name="insurance_widgets_name_font_size">15sp</dimen>
   <dimen name="insurance_widget_icon_dimen">30dp</dimen>
   <dimen name="operation_box_width">150dp</dimen>

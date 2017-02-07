@@ -4,6 +4,7 @@ import android.content.Context;
 import com.mcsaatchi.gmfit.architecture.GMFitApplication;
 import com.mcsaatchi.gmfit.architecture.rest.ActivityLevelsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponse;
+import com.mcsaatchi.gmfit.architecture.rest.CardDetailsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ChartMetricBreakdownResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ChartsBySectionResponse;
 import com.mcsaatchi.gmfit.architecture.rest.CoverageDescriptionResponse;
@@ -49,9 +50,9 @@ public class ApiCallsHandler {
   void getSlugBreakdownForChart(final String chartType,
       final Callback<SlugBreakdownResponse> callback) {
 
-    Call<SlugBreakdownResponse> apiCall =
-        restClient.getGMFitService().getBreakdownForSlug(Constants.BASE_URL_ADDRESS +
-            "user/metrics/breakdown?slug=" + chartType);
+    Call<SlugBreakdownResponse> apiCall = restClient.getGMFitService()
+        .getBreakdownForSlug(
+            Constants.BASE_URL_ADDRESS + "user/metrics/breakdown?slug=" + chartType);
 
     apiCall.enqueue(new Callback<SlugBreakdownResponse>() {
       @Override public void onResponse(Call<SlugBreakdownResponse> call,
@@ -466,9 +467,8 @@ public class ApiCallsHandler {
   }
 
   void getChartsBySection(String chartSection, final Callback<ChartsBySectionResponse> callback) {
-    Call<ChartsBySectionResponse> apiCall =
-        restClient.getGMFitService().getChartsBySection(Constants.BASE_URL_ADDRESS +
-            "charts?section=" + chartSection);
+    Call<ChartsBySectionResponse> apiCall = restClient.getGMFitService()
+        .getChartsBySection(Constants.BASE_URL_ADDRESS + "charts?section=" + chartSection);
 
     apiCall.enqueue(new Callback<ChartsBySectionResponse>() {
       @Override public void onResponse(Call<ChartsBySectionResponse> call,
@@ -862,6 +862,23 @@ public class ApiCallsHandler {
       }
 
       @Override public void onFailure(Call<CoverageDescriptionResponse> call, Throwable t) {
+      }
+    });
+  }
+
+  void getCardDetails(String indNbr, String contractNo, String country, String language,
+      String password, final Callback<CardDetailsResponse> callback) {
+    Call<CardDetailsResponse> apiCall = restClient.getGMFitService()
+        .getCardDetails(
+            new DefaultBodyForInsuranceRequests(indNbr, contractNo, country, language, password));
+
+    apiCall.enqueue(new Callback<CardDetailsResponse>() {
+      @Override public void onResponse(Call<CardDetailsResponse> call,
+          Response<CardDetailsResponse> response) {
+        callback.onResponse(call, response);
+      }
+
+      @Override public void onFailure(Call<CardDetailsResponse> call, Throwable t) {
       }
     });
   }

@@ -272,6 +272,11 @@
         android:theme="@style/No_Action_Bar_Theme"/>
 
     <activity
+        android:name=".insurance.activities.CardDetailsActivity"
+        android:screenOrientation="portrait"
+        android:theme="@style/No_Action_Bar_Theme"/>
+
+    <activity
         android:name=".insurance.activities.directory.ClinicDetailsActivity"
         android:screenOrientation="portrait"
         android:theme="@style/No_Action_Bar_Theme"/>

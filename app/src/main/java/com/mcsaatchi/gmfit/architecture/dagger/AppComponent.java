@@ -10,6 +10,7 @@ import com.mcsaatchi.gmfit.fitness.pedometer.SensorListener;
 import com.mcsaatchi.gmfit.health.adapters.UserTestsRecyclerAdapter;
 import com.mcsaatchi.gmfit.health.fragments.HealthFragment;
 import com.mcsaatchi.gmfit.insurance.adapters.InsuranceOperationWidgetsGridAdapter;
+import com.mcsaatchi.gmfit.insurance.fragments.InsuranceHomeFragment;
 import com.mcsaatchi.gmfit.insurance.fragments.InsuranceLoginFragment;
 import com.mcsaatchi.gmfit.nutrition.adapters.UserMealsRecyclerAdapterDragSwipe;
 import com.mcsaatchi.gmfit.nutrition.fragments.NutritionFragment;
@@ -39,6 +40,8 @@ import javax.inject.Singleton;
   void inject(NutritionFragment nutrition_fragment);
 
   void inject(HealthFragment health_fragment);
+
+  void inject(InsuranceHomeFragment insuranceHomeFragment);
 
   void inject(UserMealsRecyclerAdapterDragSwipe userMealsRecyclerAdapterDragSwipe);
 

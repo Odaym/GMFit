@@ -339,6 +339,7 @@
   <string name="widget_track">Track</string>
   <string name="widget_members_guide">Member\'s\nGuide</string>
   <string name="widget_coverage_description">Coverage\nDescription</string>
+  <string name="card_details_activity_title">Card Details</string>
   <string name="widget_snapshot">Snapshot</string>
   <string name="medication_information">Medication Information</string>
   <string name="no_reimbursements_available">No Reimbursements Available</string>

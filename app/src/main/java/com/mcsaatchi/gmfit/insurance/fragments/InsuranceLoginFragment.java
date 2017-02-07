@@ -18,13 +18,11 @@ import com.andreabaccega.widget.FormEditText;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.GMFitApplication;
 import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
-import com.mcsaatchi.gmfit.architecture.picasso.CircleTransform;
 import com.mcsaatchi.gmfit.architecture.rest.InsuranceLoginResponse;
 import com.mcsaatchi.gmfit.architecture.rest.InsuranceLoginResponseInnerData;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.insurance.activities.UpdatePasswordActivity;
-import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import javax.inject.Inject;
 import retrofit2.Call;
@@ -50,11 +48,6 @@ public class InsuranceLoginFragment extends Fragment {
     ((GMFitApplication) getActivity().getApplication()).getAppComponent().inject(this);
 
     ButterKnife.bind(this, fragmentView);
-
-    Picasso.with(getActivity())
-        .load(R.drawable.welcome_slider_banner)
-        .transform(new CircleTransform())
-        .into(memberImageIV);
 
     memberIdET.setText("2012250");
     passwordET.setText("walid123");
@@ -126,6 +119,7 @@ public class InsuranceLoginFragment extends Fragment {
 
           Bundle bundle = new Bundle();
           bundle.putParcelable(Constants.BUNDLE_INSURANCE_USER_OBJECT, insuranceUserData);
+          bundle.putString("CARD_NUMBER", memberIdET.getText().toString());
           InsuranceHomeFragment insuranceHomeFragment = new InsuranceHomeFragment();
           insuranceHomeFragment.setArguments(bundle);
 

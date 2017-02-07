@@ -41,9 +41,11 @@ import com.mcsaatchi.gmfit.health.models.Medication;
 import com.mcsaatchi.gmfit.health.models.MedicationReminder;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import timber.log.Timber;
 
 public class AddExistingMedicationActivity extends BaseActivity {
 
@@ -124,7 +126,6 @@ public class AddExistingMedicationActivity extends BaseActivity {
         setupRemindersRecyclerView(medicationReminders);
       }
 
-      addMedicationBTN.setText(getString(R.string.edit_medication_button));
       unitsET.setText(String.valueOf(medicationItem.getUnits()));
       treatmentDurationET.setText(String.valueOf(medicationItem.getTreatmentDuration()));
       unitMeasurementTV.setText(medicationItem.getUnitForm());
@@ -367,7 +368,6 @@ public class AddExistingMedicationActivity extends BaseActivity {
             cal.set(Calendar.DAY_OF_WEEK, dayChosen + 1);
             cal.set(Calendar.HOUR_OF_DAY, medReminder.getHour());
             cal.set(Calendar.MINUTE, medReminder.getMinute());
-            cal.set(Calendar.SECOND, 0);
 
             /**
              * Add 1 week to the calendar if its time is in the past
@@ -386,6 +386,8 @@ public class AddExistingMedicationActivity extends BaseActivity {
                 PendingIntent.FLAG_ONE_SHOT);
 
             int ALARM_TYPE = AlarmManager.RTC_WAKEUP;
+
+            Timber.d("Alarm is : " + new Date(cal.getTimeInMillis()).toString());
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
               am.setRepeating(ALARM_TYPE, cal.getTimeInMillis(), AlarmManager.INTERVAL_DAY,

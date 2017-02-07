@@ -2,9 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/dateEntryLayout"
     android:layout_width="wrap_content"
-    android:layout_height="match_parent"
-    android:layout_weight="1"
-    android:gravity="center"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
     >
 
@@ -12,6 +10,8 @@
       android:id="@+id/dayOfMonthTV"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
+      android:layout_gravity="center_horizontal"
+      android:layout_marginTop="1dp"
       android:gravity="center_horizontal"
       android:textColor="@color/white"
       android:textSize="@dimen/date_carousel_items_font_size_large"
@@ -21,9 +21,20 @@
       android:id="@+id/monthOfYearTV"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
+      android:layout_gravity="center_horizontal"
       android:gravity="center_horizontal"
       android:textColor="@color/white"
       android:textSize="@dimen/date_carousel_items_font_size_normal"
+      />
+
+  <ImageView
+      android:id="@+id/indicatorArrowIV"
+      android:layout_width="@dimen/date_carousel_indicator_dimens"
+      android:layout_height="@dimen/date_carousel_indicator_dimens"
+      android:layout_gravity="bottom|center_horizontal"
+      android:scaleType="fitXY"
+      android:src="@drawable/ic_date_carousel_indicator_arrow"
+      android:visibility="gone"
       />
 
 </LinearLayout>
