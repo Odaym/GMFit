@@ -84,7 +84,7 @@
   <!-- NUTRITION FRAGMENT -->
   <dimen name="nutrition_metric_title_font_size">15sp</dimen>
   <dimen name="add_meal_item_layout_height">60dp</dimen>
-  <dimen name="nutrition_widgets_gridview_height">220dp</dimen>
+  <dimen name="nutrition_widgets_gridview_height">110dp</dimen>
   <dimen name="meal_item_name_width">250dp</dimen>
   <dimen name="add_and_scan_icons_dimens">20dp</dimen>
   <dimen name="user_goal_labels_font_size">35sp</dimen>

@@ -284,7 +284,7 @@ public class SetupProfile4Fragment extends Fragment
   }
 
   private void getUiForSection(final ProgressDialog waitingDialog, String section) {
-    dataAccessHandler.getUiForSection("http://gmfit.mcsaatchi.me/api/v1/user/ui?section=" + section,
+    dataAccessHandler.getUiForSection(Constants.BASE_URL_ADDRESS + "user/ui?section=" + section,
         new Callback<UiResponse>() {
           @Override public void onResponse(Call<UiResponse> call, Response<UiResponse> response) {
             switch (response.code()) {

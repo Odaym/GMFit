@@ -21,7 +21,7 @@
   <string name="please_wait_dialog_message">Please wait…</string>
 
   <string name="ok">OK</string>
-  <string name="menu_item_calendar_today">Show today\'s\nvalues</string>
+  <string name="menu_item_calendar_today">Today\'s\nvalues</string>
   <string name="finish_setup">Finish Setup</string>
   <string name="next_step">Next Step</string>
   <string name="previous_page">Back</string>
@@ -300,7 +300,7 @@
   <string name="country_entry">Country</string>
   <string name="units_entry">Units</string>
   <string name="terms_and_conditions_entry">Terms and Conditions</string>
-  <string name="privacy_and_security_entry">Privacy and Security</string>
+  <string name="privacy_and_security_entry">Privacy Policy</string>
   <string name="contact_us_entry">Contact Us</string>
   <string name="share_the_app_entry">Share the App</string>
   <string name="log_out_button">Log Out</string>

@@ -343,7 +343,7 @@ public class AddNewMealItemActivity extends BaseActivity {
         });
 
     dataAccessHandler.getRecentMeals(
-        "http://gmfit.mcsaatchi.me/api/v1/user/meals/recent?when=" + mealType.toLowerCase(),
+        Constants.BASE_URL_ADDRESS + "user/meals/recent?when=" + mealType.toLowerCase(),
         new Callback<RecentMealsResponse>() {
           @Override public void onResponse(Call<RecentMealsResponse> call,
               Response<RecentMealsResponse> response) {

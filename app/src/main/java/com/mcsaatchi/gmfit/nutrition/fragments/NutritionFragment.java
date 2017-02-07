@@ -163,6 +163,8 @@ public class NutritionFragment extends Fragment {
   private ArrayList<NutritionWidget> finalWidgets;
   private ArrayList<DataChart> finalCharts;
 
+  private ArrayList<NutritionWidget> allWidgets;
+
   /**
    * TOP LAYOUT WITH WIDGETS
    */
@@ -206,6 +208,7 @@ public class NutritionFragment extends Fragment {
         Intent intent = new Intent(getActivity(), AddNewChartActivity.class);
         intent.putExtra(Constants.EXTRAS_ADD_CHART_WHAT_TYPE,
             Constants.EXTRAS_ADD_NUTRIITION_CHART);
+        intent.putParcelableArrayListExtra(Constants.BUNDLE_NUTRITION_CHARTS_MAP, finalCharts);
         startActivityForResult(intent, ADD_NEW_NUTRITION_CHART_REQUEST);
       }
     });
@@ -228,7 +231,7 @@ public class NutritionFragment extends Fragment {
       case R.id.settings:
         Intent intent = new Intent(getActivity(), CustomizeWidgetsAndChartsActivity.class);
         intent.putExtra(Constants.EXTRAS_FRAGMENT_TYPE, Constants.EXTRAS_NUTRITION_FRAGMENT);
-        intent.putParcelableArrayListExtra(Constants.BUNDLE_NUTRITION_WIDGETS_MAP, widgetsMap);
+        intent.putParcelableArrayListExtra(Constants.BUNDLE_NUTRITION_WIDGETS_MAP, allWidgets);
         intent.putParcelableArrayListExtra(Constants.BUNDLE_NUTRITION_CHARTS_MAP, finalCharts);
         startActivity(intent);
         break;
@@ -424,10 +427,9 @@ public class NutritionFragment extends Fragment {
     String finalUrl;
 
     if (desiredDate == null) {
-      finalUrl = "http://gmfit.mcsaatchi.me/api/v1/user/ui?section=" + section;
+      finalUrl = Constants.BASE_URL_ADDRESS + "user/ui?section=" + section;
     } else {
-      finalUrl =
-          "http://gmfit.mcsaatchi.me/api/v1/user/ui?section=" + section + "&date=" + desiredDate;
+      finalUrl = Constants.BASE_URL_ADDRESS + "user/ui?section=" + section + "&date=" + desiredDate;
     }
 
     dataAccessHandler.getUiForSection(finalUrl, new Callback<UiResponse>() {
@@ -705,6 +707,8 @@ public class NutritionFragment extends Fragment {
 
   private void setupWidgetViews(ArrayList<NutritionWidget> widgetsFromResponse) {
 
+    allWidgets = widgetsFromResponse;
+
     for (int i = 0; i < widgetsFromResponse.size(); i++) {
       if (widgetsFromResponse.get(i).getTitle().equals("Calories")) {
         metricCounterTV.setText(
@@ -715,7 +719,7 @@ public class NutritionFragment extends Fragment {
 
     loadingMetricProgressBar.setVisibility(View.GONE);
 
-    widgetsMap = new ArrayList<>(widgetsFromResponse.subList(0, 4));
+    widgetsMap = new ArrayList<>(widgetsFromResponse.subList(0, 2));
 
     NutritionWidgetsRecyclerAdapter nutritionWidgets_GridAdapter =
         new NutritionWidgetsRecyclerAdapter(getActivity(), widgetsMap,

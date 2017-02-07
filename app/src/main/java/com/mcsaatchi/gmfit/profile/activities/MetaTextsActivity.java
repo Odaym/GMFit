@@ -38,7 +38,7 @@ public class MetaTextsActivity extends BaseActivity {
 
       //No effect
       settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
-      metaTextsWebView.setInitialScale(300);
+      metaTextsWebView.setInitialScale(1);
 
       String finalHTMLString = "<!DOCTYPE html>\n" +
           "<html>\n" +
