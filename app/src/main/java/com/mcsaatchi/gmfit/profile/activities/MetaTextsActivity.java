@@ -27,7 +27,7 @@ public class MetaTextsActivity extends BaseActivity {
 
       String activityTitle = getIntent().getExtras().getString(Constants.BUNDLE_ACTIVITY_TITLE);
 
-      setupToolbar(toolbar, activityTitle, true);
+      setupToolbar(getClass().getSimpleName(), toolbar, activityTitle, true);
 
       WebSettings settings = metaTextsWebView.getSettings();
       settings.setLoadWithOverviewMode(true);
@@ -40,12 +40,12 @@ public class MetaTextsActivity extends BaseActivity {
       settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
       metaTextsWebView.setInitialScale(1);
 
-      String finalHTMLString = "<!DOCTYPE html>\n" +
-          "<html>\n" +
-          "<body>\n" +
-          metaTextString +
-          "</body>\n" +
-          "</html>\n";
+      String finalHTMLString = "<!DOCTYPE html>\n"
+          + "<html>\n"
+          + "<body>\n"
+          + metaTextString
+          + "</body>\n"
+          + "</html>\n";
 
       metaTextsWebView.loadData(finalHTMLString, "text/html", "UTF-8");
     }

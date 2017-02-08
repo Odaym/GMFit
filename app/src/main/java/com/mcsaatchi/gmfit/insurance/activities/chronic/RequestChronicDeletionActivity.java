@@ -15,6 +15,6 @@ public class RequestChronicDeletionActivity extends BaseActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_chronic_request_deletion);
     ButterKnife.bind(this);
-    setupToolbar(toolbar, "Request Deletion", true);
+    setupToolbar(getClass().getSimpleName(), toolbar, "Request Deletion", true);
   }
 }

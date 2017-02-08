@@ -6,13 +6,11 @@ import org.junit.Test;
 
 public class DateTest {
 
-  @Test
-  public void shouldPass() {
+  @Test public void shouldPass() {
     Assert.assertEquals(1, 1);
   }
 
-  @Test
-  public void testingDates() {
+  @Test public void testingDates() {
     Calendar cal = new GregorianCalendar(Locale.UK);
 
     System.out.println(cal.getFirstDayOfWeek());

@@ -34,7 +34,8 @@ public class ChronicStatusListActivity extends BaseActivity {
 
     ButterKnife.bind(this);
 
-    setupToolbar(toolbar, getString(R.string.chronic_status_list_activity_title), true);
+    setupToolbar(getClass().getSimpleName(), toolbar,
+        getString(R.string.chronic_status_list_activity_title), true);
 
     setupActiveTreatmentsList();
 

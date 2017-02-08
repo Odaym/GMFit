@@ -85,7 +85,7 @@ public class AddNewMealItemActivity extends BaseActivity {
 
     ButterKnife.bind(this);
 
-    setupToolbar(toolbar, actionBarTitle, true);
+    setupToolbar(getClass().getSimpleName(), toolbar, actionBarTitle, true);
 
     loadRecentMealsFromServer(mealType);
 

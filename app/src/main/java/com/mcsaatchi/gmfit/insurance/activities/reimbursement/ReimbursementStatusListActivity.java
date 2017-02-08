@@ -25,7 +25,7 @@ public class ReimbursementStatusListActivity extends BaseActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_reimbursement_status_list);
     ButterKnife.bind(this);
-    setupToolbar(toolbar, "Reimbursement Status", true);
+    setupToolbar(getClass().getSimpleName(), toolbar, "Reimbursement Status", true);
 
     List<MedicalInformationModel> medicines = new ArrayList<>();
     medicines.add(new MedicalInformationModel("Panadol Extra Tab 500mg", "Approved", "2 tablets",

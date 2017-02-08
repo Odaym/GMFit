@@ -54,8 +54,17 @@
           android:src="@drawable/ic_search_white_24dp"
           />
     </LinearLayout>
-
   </FrameLayout>
+
+  <TextView
+      android:layout_width="match_parent"
+      android:layout_height="@dimen/search_medications_hint_height"
+      android:background="@color/health_green"
+      android:gravity="center_vertical"
+      android:paddingStart="@dimen/default_margin_1"
+      android:text="@string/search_tests_hint"
+      android:textColor="@color/white"
+      />
 
   <android.support.v7.widget.RecyclerView
       android:id="@+id/availableTestMetricsListview"

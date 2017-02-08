@@ -16,11 +16,12 @@ repositories {
   maven { url 'https://maven.fabric.io/public' }
 }
 
-def supportLibVersion = '25.1.0'
+def supportLibVersion = '25.1.1'
 def playServicesVersion = '10.0.1'
 def retroFitVersion = '2.1.0'
 def OkHttpVersion = '3.4.1'
 def daggerVersion = '2.8'
+def ormLiteVersion = '4.48'
 
 android {
   compileSdkVersion 25
@@ -54,22 +55,9 @@ android {
 
 dependencies {
   compile fileTree(dir: 'libs', include: ['*.jar'])
-  compile files('libs/ormlite-android-4.48.jar')
-  compile files('libs/ormlite-core-4.48.jar')
 
   compile('com.crashlytics.sdk.android:crashlytics:2.6.2@aar') {
     transitive = true;
-  }
-
-  androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2', {
-    exclude group: 'com.android.support', module: 'support-annotations'
-  }
-
-  androidTestCompile 'com.android.support.test.espresso:espresso-contrib:2.2.2', {
-    exclude group: 'com.android.support', module: 'support-annotations'
-    exclude group: 'com.android.support', module: 'support-v4'
-    exclude group: 'com.android.support', module: 'design'
-    exclude group: 'com.android.support', module: 'recyclerview-v7'
   }
 
   annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
@@ -80,6 +68,7 @@ dependencies {
   compile "com.google.android.gms:play-services-gcm:$playServicesVersion"
   compile 'com.chauthai.swipereveallayout:swipe-reveal-layout:1.4.0'
   compile "com.squareup.okhttp3:logging-interceptor:$OkHttpVersion"
+  compile "com.google.firebase:firebase-core:$playServicesVersion"
   compile "com.android.support:recyclerview-v7:$supportLibVersion"
   compile "com.squareup.retrofit2:adapter-rxjava:$retroFitVersion"
   compile "com.squareup.retrofit2:converter-gson:$retroFitVersion"
@@ -88,6 +77,8 @@ dependencies {
   compile 'com.andreabaccega:android-form-edittext:1.2.1@aar'
   compile "com.squareup.retrofit2:retrofit:$retroFitVersion"
   compile 'com.facebook.android:facebook-android-sdk:4.13.2'
+  compile "com.j256.ormlite:ormlite-android:$ormLiteVersion"
+  compile "com.j256.ormlite:ormlite-core:$ormLiteVersion"
   compile "com.android.support:design:$supportLibVersion"
   compile 'com.code-troopers.betterpickers:library:2.5.3'
   compile 'com.github.florent37:materialtextfield:1.0.4'

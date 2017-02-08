@@ -38,7 +38,8 @@ public class ReimbursementStatusDetailsActivity extends BaseActivity {
       reimbursementModel = incomingExtras.getParcelable(REIMBURSEMENT_MODEL_KEY);
 
       if (reimbursementModel != null) {
-        setupToolbar(toolbar, "Reimbursement #" + reimbursementModel.getId(), true);
+        setupToolbar(getClass().getSimpleName(), toolbar,
+            "Reimbursement #" + reimbursementModel.getId(), true);
 
         amount.setLabel("Amount", reimbursementModel.getAmount());
         serviceDate.setLabel("Service Date", reimbursementModel.getServiceDate());

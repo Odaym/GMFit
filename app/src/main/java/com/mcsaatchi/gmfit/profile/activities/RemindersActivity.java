@@ -95,7 +95,8 @@ public class RemindersActivity extends BaseActivity {
 
     ButterKnife.bind(this);
 
-    setupToolbar(toolbar, getResources().getString(R.string.set_reminders_entry), true);
+    setupToolbar(getClass().getSimpleName(), toolbar,
+        getResources().getString(R.string.set_reminders_entry), true);
 
     areAlarmsEnabled = prefs.getBoolean(Constants.ARE_ALARMS_ENABLED, false);
 

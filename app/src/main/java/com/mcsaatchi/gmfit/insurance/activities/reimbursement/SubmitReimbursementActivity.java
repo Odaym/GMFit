@@ -30,7 +30,7 @@ public class SubmitReimbursementActivity extends BaseActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_reimbursement_submit);
     ButterKnife.bind(this);
-    setupToolbar(toolbar, "Submit Reimbursement", true);
+    setupToolbar(getClass().getSimpleName(), toolbar, "Submit Reimbursement", true);
 
     subcategory.setUpDropDown("Subcategory", "Choose a subcategory",
         new String[] { "item 1", "item 2", "item 3" }, new CustomPicker.OnDropDownClickListener() {

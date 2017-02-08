@@ -17,7 +17,7 @@ public class ReimbursementEmptyActivity extends BaseActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_reimbursement_empty);
     ButterKnife.bind(this);
-    setupToolbar(toolbar, "Reimbursement Status", true);
+    setupToolbar(getClass().getSimpleName(), toolbar, "Reimbursement Status", true);
   }
 
   @OnClick(R.id.submitReimbursement) public void submitReimbursement() {

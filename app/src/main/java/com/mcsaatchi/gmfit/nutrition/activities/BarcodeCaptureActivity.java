@@ -90,7 +90,8 @@ public final class BarcodeCaptureActivity extends BaseActivity {
 
     ButterKnife.bind(this);
 
-    setupToolbar(toolbar, getResources().getString(R.string.barcode_capture_activity_title), true);
+    setupToolbar(getClass().getSimpleName(), toolbar,
+        getResources().getString(R.string.barcode_capture_activity_title), true);
 
     mPreview = (CameraSourcePreview) findViewById(R.id.preview);
     mGraphicOverlay = (GraphicOverlay<BarcodeGraphic>) findViewById(R.id.graphicOverlay);
@@ -254,8 +255,9 @@ public final class BarcodeCaptureActivity extends BaseActivity {
       return;
     }
 
-    Log.e(TAG, "Permission not granted: results len = " + grantResults.length +
-        " Result code = " + (grantResults.length > 0 ? grantResults[0] : "(empty)"));
+    Log.e(TAG,
+        "Permission not granted: results len = " + grantResults.length + " Result code = " + (
+            grantResults.length > 0 ? grantResults[0] : "(empty)"));
 
     DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
       public void onClick(DialogInterface dialog, int id) {

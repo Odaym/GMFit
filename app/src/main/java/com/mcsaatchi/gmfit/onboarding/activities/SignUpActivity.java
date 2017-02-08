@@ -54,7 +54,8 @@ public class SignUpActivity extends BaseActivity {
 
     ButterKnife.bind(this);
 
-    setupToolbar(toolbar, getResources().getString(R.string.sign_up_activity_title), true);
+    setupToolbar(getClass().getSimpleName(), toolbar,
+        getResources().getString(R.string.sign_up_activity_title), true);
 
     allFields.add(firstNameET);
     allFields.add(lastNameET);

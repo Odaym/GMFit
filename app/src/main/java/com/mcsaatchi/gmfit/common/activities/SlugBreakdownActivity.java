@@ -56,7 +56,7 @@ public class SlugBreakdownActivity extends BaseActivity {
     if (intentExtras != null) {
       chartObject = intentExtras.getParcelable(Constants.EXTRAS_CHART_OBJECT);
 
-      setupToolbar(toolbar, chartObject.getName(), true);
+      setupToolbar(getClass().getSimpleName(), toolbar, chartObject.getName(), true);
 
       typeOfFragmentToCustomizeFor = intentExtras.getString(Constants.EXTRAS_FRAGMENT_TYPE);
       slugBreakdownData = intentExtras.getParcelable(Constants.BUNDLE_SLUG_BREAKDOWN_DATA);

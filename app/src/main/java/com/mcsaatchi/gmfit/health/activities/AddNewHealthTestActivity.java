@@ -115,7 +115,8 @@ public class AddNewHealthTestActivity extends BaseActivity
 
     EventBusSingleton.getInstance().register(this);
 
-    setupToolbar(toolbar, getResources().getString(R.string.add_new_test_activity_title), true);
+    setupToolbar(getClass().getSimpleName(), toolbar,
+        getResources().getString(R.string.add_new_test_activity_title), true);
 
     allFields.add(testNameET);
 

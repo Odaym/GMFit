@@ -79,11 +79,11 @@ public class ChornicPrescriptionStatusDetailsActivity extends BaseActivity {
 
     if (getIntent().getExtras() != null) {
       treatmentsModel = (TreatmentsModel) getIntent().getExtras().get("CHRONIC_OBJECT");
-      setupToolbar(toolbar, treatmentsModel.getName(), true);
+      setupToolbar(getClass().getSimpleName(), toolbar, treatmentsModel.getName(), true);
       statusValueTV.setText(treatmentsModel.getStatus());
     } else {
-      setupToolbar(toolbar, getResources().getString(R.string.treatment_status_section_title),
-          true);
+      setupToolbar(getClass().getSimpleName(), toolbar,
+          getResources().getString(R.string.treatment_status_section_title), true);
     }
 
     List<MedicalInformationModel> medicines = new ArrayList<>();

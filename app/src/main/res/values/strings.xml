@@ -15,7 +15,7 @@
   <string name="intro_text">Hi! Let\'s listen to some available data sources! Check the menu for more actions!</string>
   <string name="action_unregister_listener">Unregister listener</string>
   <string name="permission_rationale">Location data is used as part of the Google Fit API</string>
-    <string name="permission_denied_explanation">Permission was denied, but is needed for core
+  <string name="permission_denied_explanation">Permission was denied, but is needed for core
         functionality.
     </string>
   <string name="please_wait_dialog_message">Please wait…</string>
@@ -30,7 +30,7 @@
 
   <string name="no_internet_conection_dialog_title">Failed to connect</string>
   <string name="no_internet_connection_dialog_message">Oops! Please check your Internet connection and try again.</string>
-    <string name="error_response_from_server_incorrect">Oops! Something went wrong while trying to communicate with the server, please try again later
+  <string name="error_response_from_server_incorrect">Oops! Something went wrong while trying to communicate with the server, please try again later
         .
     </string>
 
@@ -85,13 +85,13 @@
 
   <!-- RESET PASSWORD ACTIVITY -->
   <string name="reset_password_activity_title">Reset Password</string>
-    <string name="reset_password_enter_code_hint">We sent the verification code to your email address, enter it below to be able to choose a new
+  <string name="reset_password_enter_code_hint">We sent the verification code to your email address, enter it below to be able to choose a new
         password
     </string>
   <string name="password_change_successful">Your password was changed successfully.</string>
 
   <!-- VERIFY ACCOUNT ACTIVITY -->
-    <string name="verify_account_hint">We\'ve just sent a verification code to your email address, please enter that code below to complete the
+  <string name="verify_account_hint">We\'ve just sent a verification code to your email address, please enter that code below to complete the
         registration process.
     </string>
   <string name="verification_code_hint">6-digit code</string>
@@ -103,7 +103,7 @@
 
   <!-- TERMS OF USAGE ACTIVITY -->
   <string name="tos_activity_title">Terms of Use</string>
-    <string name="terms_of_use_value">Lorem ipsum dolor sit amet, accumsan praesent vulputate has ad, vel ne liber zril. Ea qui audire suavitate, ut stet
+  <string name="terms_of_use_value">Lorem ipsum dolor sit amet, accumsan praesent vulputate has ad, vel ne liber zril. Ea qui audire suavitate, ut stet
         debitis complectitur nec. Ex vim wisi mutat denique, his sint congue ne. Ut duo partiendo percipitur, et eum dolorum mandamus. Mea dicam vivendum ex, ad
         labitur quaerendum cum.
 
@@ -153,7 +153,7 @@
   <string name="goal_purpose_maintain_weight">Maintain Weight</string>
   <string name="goal_purpose_gain_weight">Gain Weight</string>
   <string name="notifications_and_location_title">Notifications &amp; Location</string>
-    <string name="enable_notifications_location_hint">To further improve your GlobeMed Fit experience, we would like to send you push notifications and
+  <string name="enable_notifications_location_hint">To further improve your GlobeMed Fit experience, we would like to send you push notifications and
         access your location
     </string>
   <string name="enable_notifications_location_permissions">Enable Notifications &amp; Location</string>
@@ -193,6 +193,7 @@
   <string name="steps_shorthand_unit">steps</string>
   <string name="goal_exceeded_tv">Goal Exceeded!</string>
   <string name="goal_nutrition_excess">Excess!</string>
+  <string name="active_calories_calculation_hint_message">Tracking of some metrics such as calories burnt, requires the presence of specific devices or wearables.</string>
 
   <!-- BREAKDOWN ACTIVITY -->
   <string name="all_time_breakdown_bar_hint">All Time</string>
@@ -231,6 +232,7 @@
   <string name="medical_layouts_empty_tap_get_started">Tap the \"Add\" button to start</string>
   <string name="my_weight_chart_label">My Weight</string>
   <string name="update_weight_label">+ Update</string>
+  <string name="search_tests_hint">Find a test from the list below</string>
 
   <!-- PILL REMINDER ACTIVITY -->
   <string name="pill_reminder_activity_title">Pill Reminder</string>
@@ -287,7 +289,7 @@
   <string name="downloading_pdf_profile_dialog_message">Please Wait…</string>
   <string name="profile_information_section_title">Profile Information</string>
   <string name="emergency_profile_section_title">Emergency Profile</string>
-    <string name="emergency_profile_section_hint">In the case of an emergency, you can share this profile via email as a PDF file.
+  <string name="emergency_profile_section_hint">In the case of an emergency, you can share this profile via email as a PDF file.
         The file will include profile information, medical conditions and the list of medications.
     </string>
   <string name="share_emergency_profile_btn">Share Emergency Profile</string>

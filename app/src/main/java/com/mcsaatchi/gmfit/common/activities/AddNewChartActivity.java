@@ -49,7 +49,8 @@ public class AddNewChartActivity extends BaseActivity {
 
     ButterKnife.bind(this);
 
-    setupToolbar(toolbar, getResources().getString(R.string.add_new_chart_activity_title), true);
+    setupToolbar(getClass().getSimpleName(), toolbar,
+        getResources().getString(R.string.add_new_chart_activity_title), true);
 
     Bundle extras = getIntent().getExtras();
 

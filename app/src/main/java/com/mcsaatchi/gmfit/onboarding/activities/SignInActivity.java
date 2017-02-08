@@ -56,7 +56,8 @@ public class SignInActivity extends BaseActivity {
 
     ButterKnife.bind(this);
 
-    setupToolbar(toolbar, getResources().getString(R.string.sign_in_activity_title), true);
+    setupToolbar(getClass().getSimpleName(), toolbar,
+        getResources().getString(R.string.sign_in_activity_title), true);
 
     allFields.add(emailET);
     allFields.add(passwordET);

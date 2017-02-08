@@ -88,7 +88,7 @@ public class AddExistingMedicationActivity extends BaseActivity {
 
     ButterKnife.bind(this);
 
-    setupToolbar(toolbar, getString(R.string.add_medication), true);
+    setupToolbar(getClass().getSimpleName(), toolbar, getString(R.string.add_medication), true);
 
     medicationDAO = dbHelper.getMedicationDAO();
 

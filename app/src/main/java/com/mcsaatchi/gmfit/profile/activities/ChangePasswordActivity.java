@@ -38,7 +38,8 @@ public class ChangePasswordActivity extends BaseActivity {
 
     ButterKnife.bind(this);
 
-    setupToolbar(toolbar, getString(R.string.change_password_activity_title), true);
+    setupToolbar(getClass().getSimpleName(), toolbar,
+        getString(R.string.change_password_activity_title), true);
 
     allFields.add(oldPasswordET);
     allFields.add(retypeNewPasswordET);

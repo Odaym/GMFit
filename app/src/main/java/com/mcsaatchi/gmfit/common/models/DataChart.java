@@ -138,10 +138,15 @@ import java.util.ArrayList;
   }
 
   @Override public String toString() {
-    return "DataChart{" +
-        "name='" + name + '\'' +
-        ", type='" + type + '\'' +
-        ", chart_id=" + chart_id +
-        '}';
+    return "DataChart{"
+        + "name='"
+        + name
+        + '\''
+        + ", type='"
+        + type
+        + '\''
+        + ", chart_id="
+        + chart_id
+        + '}';
   }
 }

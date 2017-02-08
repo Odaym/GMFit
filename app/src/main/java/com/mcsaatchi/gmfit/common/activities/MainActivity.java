@@ -52,7 +52,8 @@ public class MainActivity extends BaseActivity {
 
     ButterKnife.bind(this);
 
-    setupToolbar(toolbar, getResources().getString(R.string.app_name), false);
+    setupToolbar(getClass().getSimpleName(), toolbar, getResources().getString(R.string.app_name),
+        false);
 
     Timber.d("onCreate: User access token is : %s ",
         prefs.getString(Constants.PREF_USER_ACCESS_TOKEN,

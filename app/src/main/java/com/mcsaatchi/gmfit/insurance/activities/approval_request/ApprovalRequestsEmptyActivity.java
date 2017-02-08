@@ -17,7 +17,7 @@ public class ApprovalRequestsEmptyActivity extends BaseActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_approval_requests_empty);
     ButterKnife.bind(this);
-    setupToolbar(toolbar, "Approval Requests Status", true);
+    setupToolbar(getClass().getSimpleName(), toolbar, "Approval Requests Status", true);
   }
 
   @OnClick(R.id.submitRequestBTN) public void submitRequest() {

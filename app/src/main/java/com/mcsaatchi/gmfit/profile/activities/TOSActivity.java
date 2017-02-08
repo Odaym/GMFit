@@ -23,6 +23,7 @@ public class TOSActivity extends BaseActivity {
 
     termsOfUseTV.setMovementMethod(LinkMovementMethod.getInstance());
 
-    setupToolbar(toolbar, getResources().getString(R.string.tos_activity_title), true);
+    setupToolbar(getClass().getSimpleName(), toolbar,
+        getResources().getString(R.string.tos_activity_title), true);
   }
 }

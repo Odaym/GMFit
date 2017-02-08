@@ -986,7 +986,7 @@ public class MainProfileFragment extends Fragment {
                * Set the profile picture
                */
               if (userProfileData.getProfile_picture() != null
-                  && !userProfileData.getProfile_picture().equals("http://gmfit.mcsaatchi.me/")
+                  && !userProfileData.getProfile_picture().equals(Constants.BASE_URL_ADDRESS)
                   && getActivity() != null) {
 
                 prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_IMAGE,

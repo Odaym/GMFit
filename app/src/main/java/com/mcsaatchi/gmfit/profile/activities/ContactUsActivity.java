@@ -18,6 +18,7 @@ public class ContactUsActivity extends BaseActivity {
 
     ButterKnife.bind(this);
 
-    setupToolbar(toolbar, getResources().getString(R.string.contact_us_activity_title), true);
+    setupToolbar(getClass().getSimpleName(), toolbar,
+        getResources().getString(R.string.contact_us_activity_title), true);
   }
 }

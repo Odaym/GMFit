@@ -34,7 +34,8 @@ public class DaysChoiceListActivity extends BaseActivity {
 
     ButterKnife.bind(this);
 
-    setupToolbar(toolbar, getString(R.string.days_choice_activity_title), true);
+    setupToolbar(getClass().getSimpleName(), toolbar,
+        getString(R.string.days_choice_activity_title), true);
 
     if (getIntent().getExtras() != null) {
       days = getIntent().getExtras().getParcelableArrayList("REMINDER_DAYS");

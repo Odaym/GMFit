@@ -140,21 +140,41 @@ import java.util.ArrayList;
   }
 
   @Override public String toString() {
-    return "Medication{" +
-        "id=" + id +
-        ", name='" + name + '\'' +
-        ", description='" + description + '\'' +
-        ", dosage='" + dosage + '\'' +
-        ", frequency=" + frequency +
-        ", frequencyType=" + frequencyType +
-        ", treatmentDuration=" + treatmentDuration +
-        ", medicationReminders=" + medicationReminders +
-        ", when=" + when +
-        ", whenString='" + whenString + '\'' +
-        ", units=" + units +
-        ", unitForm='" + unitForm + '\'' +
-        ", remarks='" + remarks + '\'' +
-        ", remindersEnabled=" + remindersEnabled +
-        '}';
+    return "Medication{"
+        + "id="
+        + id
+        + ", name='"
+        + name
+        + '\''
+        + ", description='"
+        + description
+        + '\''
+        + ", dosage='"
+        + dosage
+        + '\''
+        + ", frequency="
+        + frequency
+        + ", frequencyType="
+        + frequencyType
+        + ", treatmentDuration="
+        + treatmentDuration
+        + ", medicationReminders="
+        + medicationReminders
+        + ", when="
+        + when
+        + ", whenString='"
+        + whenString
+        + '\''
+        + ", units="
+        + units
+        + ", unitForm='"
+        + unitForm
+        + '\''
+        + ", remarks='"
+        + remarks
+        + '\''
+        + ", remindersEnabled="
+        + remindersEnabled
+        + '}';
   }
 }

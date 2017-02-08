@@ -24,7 +24,8 @@ public class CoverageDescriptionActivity extends BaseActivity {
 
     ButterKnife.bind(this);
 
-    setupToolbar(toolbar, getString(R.string.coverage_description_activity_title), true);
+    setupToolbar(getClass().getSimpleName(), toolbar,
+        getString(R.string.coverage_description_activity_title), true);
 
     if (getIntent().getExtras() != null) {
       pdfUrl = getIntent().getExtras().getString("PDF");

@@ -36,7 +36,8 @@ public class ResetPasswordActivity extends BaseActivity {
 
     ButterKnife.bind(this);
 
-    setupToolbar(toolbar, getResources().getString(R.string.reset_password_activity_title), true);
+    setupToolbar(getClass().getSimpleName(), toolbar,
+        getResources().getString(R.string.reset_password_activity_title), true);
 
     allFields.add(passwordET);
     allFields.add(verifyCodeET);

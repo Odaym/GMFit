@@ -84,7 +84,7 @@ public class AddNewMealOnDateActivity extends BaseActivity {
       chosenDate = getIntent().getExtras().getString(Constants.EXTRAS_DATE_TO_ADD_MEAL_ON, "");
     }
 
-    setupToolbar(toolbar, chosenDate, true);
+    setupToolbar(getClass().getSimpleName(), toolbar, chosenDate, true);
 
     hookupMealSectionRowsClickListeners();
 

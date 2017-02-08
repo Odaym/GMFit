@@ -42,7 +42,8 @@ public class ClinicDetailsActivity extends BaseActivity {
 
     ButterKnife.bind(this);
 
-    setupToolbar(toolbar, getString(R.string.clinic_details_activity_title), true);
+    setupToolbar(getClass().getSimpleName(), toolbar,
+        getString(R.string.clinic_details_activity_title), true);
 
     if (getIntent().getExtras() != null) {
       clinicObject = getIntent().getExtras().getParcelable("CLINIC_OBJECT");

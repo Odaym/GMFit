@@ -72,7 +72,7 @@ public class SpecifyMealAmountActivity extends BaseActivity {
       chosenDate = getIntent().getExtras().getString(Constants.EXTRAS_DATE_TO_ADD_MEAL_ON, "");
 
       if (mealItem != null) {
-        setupToolbar(toolbar, mealItem.getName(), true);
+        setupToolbar(getClass().getSimpleName(), toolbar, mealItem.getName(), true);
 
         if (purposeIsEditMeal) {
           mealAmountET.setText(mealItem.getAmount());
@@ -104,7 +104,7 @@ public class SpecifyMealAmountActivity extends BaseActivity {
           }
         });
 
-    dataAccessHandler.getMealMetrics("http://gmfit.mcsaatchi.me/api/v1/meals/" + meal_id,
+    dataAccessHandler.getMealMetrics(Constants.BASE_URL_ADDRESS + "meals/" + meal_id,
         new Callback<MealMetricsResponse>() {
           @Override public void onResponse(Call<MealMetricsResponse> call,
               Response<MealMetricsResponse> response) {

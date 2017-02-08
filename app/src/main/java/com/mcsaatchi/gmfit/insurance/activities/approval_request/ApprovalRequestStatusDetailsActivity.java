@@ -34,7 +34,8 @@ public class ApprovalRequestStatusDetailsActivity extends BaseActivity {
       reimbursementModel = incomingExtras.getParcelable(REIMBURSEMENT_MODEL_KEY);
 
       if (reimbursementModel != null) {
-        setupToolbar(toolbar, "Reimbursement #" + reimbursementModel.getId(), true);
+        setupToolbar(getClass().getSimpleName(), toolbar,
+            "Reimbursement #" + reimbursementModel.getId(), true);
 
         serviceDate.setLabel("Service Date", reimbursementModel.getServiceDate());
         subCategory.setLabel("Sub Category", reimbursementModel.getSubCategory());

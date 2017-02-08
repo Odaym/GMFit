@@ -20,7 +20,7 @@ public class SubmitInquiryActivity extends BaseActivity {
 
     setContentView(R.layout.activity_inquiry_submit);
     ButterKnife.bind(this);
-    setupToolbar(toolbar, "Submit Complaint/Inquiry", true);
+    setupToolbar(getClass().getSimpleName(), toolbar, "Submit Complaint/Inquiry", true);
 
     categoryPicker.setUpDropDown("Category", "Choose a category",
         new String[] { "item 1", "item 2", "item 3" }, new CustomPicker.OnDropDownClickListener() {

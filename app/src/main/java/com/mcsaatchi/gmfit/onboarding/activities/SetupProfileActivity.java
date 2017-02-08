@@ -42,7 +42,8 @@ public class SetupProfileActivity extends BaseActivity {
 
     setupProfileAdapter = new SetupProfile_Adapter(getSupportFragmentManager());
 
-    setupToolbar(toolbar, getResources().getString(R.string.setup_profile_step_1_title), true);
+    setupToolbar(getClass().getSimpleName(), toolbar,
+        getResources().getString(R.string.setup_profile_step_1_title), true);
 
     setupViewPager(setupProfileAdapter);
   }

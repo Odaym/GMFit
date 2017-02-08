@@ -25,7 +25,7 @@ public class ApprovalRequestsStatusListActivity extends BaseActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_approval_requests_status_list);
     ButterKnife.bind(this);
-    setupToolbar(toolbar, "Approval Requests Status", true);
+    setupToolbar(getClass().getSimpleName(), toolbar, "Approval Requests Status", true);
 
     List<MedicalInformationModel> medicines = new ArrayList<>();
     medicines.add(new MedicalInformationModel("Panadol Extra Tab 500mg", "Approved", "2 tablets",

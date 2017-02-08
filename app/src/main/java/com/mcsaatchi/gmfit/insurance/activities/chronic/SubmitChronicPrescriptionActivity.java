@@ -15,6 +15,6 @@ public class SubmitChronicPrescriptionActivity extends BaseActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_chronic_prescription_submit);
     ButterKnife.bind(this);
-    setupToolbar(toolbar, "Submit Chronic Prescription", true);
+    setupToolbar(getClass().getSimpleName(), toolbar, "Submit Chronic Prescription", true);
   }
 }

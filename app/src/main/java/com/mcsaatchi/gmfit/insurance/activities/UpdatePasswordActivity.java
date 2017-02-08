@@ -31,7 +31,8 @@ public class UpdatePasswordActivity extends BaseActivity {
 
     ButterKnife.bind(this);
 
-    setupToolbar(toolbar, getString(R.string.insurance_update_password_activity_title), true);
+    setupToolbar(getClass().getSimpleName(), toolbar,
+        getString(R.string.insurance_update_password_activity_title), true);
 
     if (getIntent().getExtras() != null) {
       insuranceUserData = (InsuranceLoginResponseInnerData) getIntent().getExtras()

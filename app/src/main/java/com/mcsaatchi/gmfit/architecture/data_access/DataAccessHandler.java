@@ -286,9 +286,8 @@ public class DataAccessHandler {
         callback);
   }
 
-  public void getCardDetails(String indNbr, String contractNo, String country,
-      String language, String password, Callback<CardDetailsResponse> callback) {
-    apiCallsHandler.getCardDetails(indNbr, contractNo, country, language, password,
-        callback);
+  public void getCardDetails(String indNbr, String contractNo, String country, String language,
+      String password, Callback<CardDetailsResponse> callback) {
+    apiCallsHandler.getCardDetails(indNbr, contractNo, country, language, password, callback);
   }
 }

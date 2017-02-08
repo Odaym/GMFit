@@ -16,7 +16,7 @@ public class ChronicPrescriptionEmptyActivity extends BaseActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_chronic_prescription_empty);
     ButterKnife.bind(this);
-    setupToolbar(toolbar, "Chronic Prescription Status", true);
+    setupToolbar(getClass().getSimpleName(), toolbar, "Chronic Prescription Status", true);
   }
 
   @OnClick(R.id.submitChronicTreatmentBTN) public void submitChronicTreatment() {

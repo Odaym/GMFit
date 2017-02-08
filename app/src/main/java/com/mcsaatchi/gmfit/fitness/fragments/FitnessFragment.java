@@ -65,7 +65,6 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
-import net.danlew.android.joda.JodaTimeAndroid;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import retrofit2.Call;

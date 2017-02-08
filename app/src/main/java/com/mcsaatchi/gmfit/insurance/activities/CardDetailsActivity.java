@@ -25,7 +25,8 @@ public class CardDetailsActivity extends BaseActivity {
 
     ButterKnife.bind(this);
 
-    setupToolbar(toolbar, getString(R.string.card_details_activity_title), true);
+    setupToolbar(getClass().getSimpleName(), toolbar,
+        getString(R.string.card_details_activity_title), true);
 
     if (getIntent().getExtras() != null) {
       pdfUrl = getIntent().getExtras().getString("PDF");
@@ -41,8 +42,6 @@ public class CardDetailsActivity extends BaseActivity {
       webView.setHorizontalScrollBarEnabled(false);
       webView.setWebViewClient(new WebViewClient());
       webView.setInitialScale(1);
-
-      Timber.d("https://docs.google.com/gview?embedded=true&url=" + pdfUrl);
 
       webView.loadUrl("https://docs.google.com/gview?embedded=true&url=" + pdfUrl);
     }

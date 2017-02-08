@@ -28,7 +28,7 @@ public class SubmitApprovalRequestsActivity extends BaseActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_approval_requests_submit);
     ButterKnife.bind(this);
-    setupToolbar(toolbar, "Submit Approval Request", true);
+    setupToolbar(getClass().getSimpleName(), toolbar, "Submit Approval Request", true);
 
     subcategory.setUpDropDown("Subcategory", "Choose a subcategory",
         new String[] { "item 1", "item 2", "item 3" }, new CustomPicker.OnDropDownClickListener() {
