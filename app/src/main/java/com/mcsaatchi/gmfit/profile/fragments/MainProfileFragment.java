@@ -57,7 +57,7 @@ import com.mcsaatchi.gmfit.onboarding.activities.LoginActivity;
 import com.mcsaatchi.gmfit.profile.activities.ChangePasswordActivity;
 import com.mcsaatchi.gmfit.profile.activities.ContactUsActivity;
 import com.mcsaatchi.gmfit.profile.activities.MetaTextsActivity;
-import com.mcsaatchi.gmfit.profile.activities.RemindersActivity;
+import com.mcsaatchi.gmfit.profile.activities.MealRemindersActivity;
 import com.mukesh.countrypicker.fragments.CountryPicker;
 import com.mukesh.countrypicker.interfaces.CountryPickerListener;
 import com.squareup.otto.Subscribe;
@@ -573,7 +573,7 @@ public class MainProfileFragment extends Fragment {
      */
     appRemindersLayout.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View view) {
-        Intent intent = new Intent(getActivity(), RemindersActivity.class);
+        Intent intent = new Intent(getActivity(), MealRemindersActivity.class);
         startActivity(intent);
       }
     });

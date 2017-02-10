@@ -36,8 +36,8 @@
 
     <activity
         android:name=".common.activities.MainActivity"
-        android:screenOrientation="portrait"
         android:exported="true"
+        android:screenOrientation="portrait"
         android:theme="@style/No_Action_Bar_Theme"
         android:windowSoftInputMode="stateHidden|adjustPan"/>
 
@@ -165,7 +165,7 @@
         android:theme="@style/No_Action_Bar_Theme"/>
 
     <activity
-        android:name=".profile.activities.RemindersActivity"
+        android:name=".profile.activities.MealRemindersActivity"
         android:screenOrientation="portrait"
         android:theme="@style/No_Action_Bar_Theme"/>
 

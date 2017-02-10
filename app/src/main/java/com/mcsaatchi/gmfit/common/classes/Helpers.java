@@ -1,5 +1,6 @@
 package com.mcsaatchi.gmfit.common.classes;
 
+import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -11,9 +12,6 @@ import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import com.andreabaccega.widget.FormEditText;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.formatter.ValueFormatter;
-import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.common.Constants;
 import java.text.DecimalFormat;
@@ -153,72 +151,63 @@ public class Helpers {
 
     PendingIntent pendingIntent = null;
 
+    Calendar calendar = null;
+
     switch (mealType) {
       case "Breakfast":
-        //desiredAlarmTime = new DateTime(calendar.get(Calendar.YEAR), currentMonth,
-        //    calendar.get(Calendar.DAY_OF_MONTH), 9, 0, 0);
-        //
-        //if (desiredAlarmTime.isAfter(timeNow)) {
-        //  calendar.set(calendar.get(Calendar.YEAR), currentMonth,
-        //      calendar.get(Calendar.DAY_OF_MONTH), 9, 0, 0);
-        //} else {
-        //  calendar.set(calendar.get(Calendar.YEAR), currentMonth,
-        //      calendar.get(Calendar.DAY_OF_MONTH) + 1, 9, 0, 0);
-        //}
-        //
-        //intent.putExtra("MEAL_TYPE", "Breakfast");
-        //pendingIntent =
-        //    PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 9);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+
+        if (calendar.before(Calendar.getInstance())) {
+          calendar.add(Calendar.DATE, 1);
+        }
+
+        intent.putExtra("MEAL_TYPE", "Breakfast");
+        pendingIntent =
+            PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         prefs.edit().putString(Constants.BREAKFAST_REMINDER_ALARM_TIME, "09:00 AM").apply();
 
         break;
       case "Lunch":
-        //desiredAlarmTime = new DateTime(calendar.get(Calendar.YEAR), currentMonth,
-        //    calendar.get(Calendar.DAY_OF_MONTH), 14, 45, 0);
-        //
-        //if (desiredAlarmTime.isAfter(timeNow)) {
-        //  calendar.set(calendar.get(Calendar.YEAR), currentMonth,
-        //      calendar.get(Calendar.DAY_OF_MONTH), 14, 45, 0);
-        //} else {
-        //  calendar.set(calendar.get(Calendar.YEAR), currentMonth,
-        //      calendar.get(Calendar.DAY_OF_MONTH) + 1, 14, 45, 0);
-        //}
-        //
-        //intent.putExtra("MEAL_TYPE", "Lunch");
-        //pendingIntent =
-        //    PendingIntent.getBroadcast(context, 1, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 14);
+        calendar.set(Calendar.MINUTE, 45);
+        calendar.set(Calendar.SECOND, 0);
+
+        if (calendar.before(Calendar.getInstance())) {
+          calendar.add(Calendar.DATE, 1);
+        }
+
+        intent.putExtra("MEAL_TYPE", "Lunch");
+        pendingIntent =
+            PendingIntent.getBroadcast(context, 1, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         prefs.edit().putString(Constants.LUNCH_REMINDER_ALARM_TIME, "02:45 PM").apply();
 
         break;
       case "Dinner":
-        //desiredAlarmTime = new DateTime(calendar.get(Calendar.YEAR), currentMonth,
-        //    calendar.get(Calendar.DAY_OF_MONTH), 20, 0, 0);
-        //
-        //if (desiredAlarmTime.isAfter(timeNow)) {
-        //  calendar.set(calendar.get(Calendar.YEAR), currentMonth,
-        //      calendar.get(Calendar.DAY_OF_MONTH), 20, 0, 0);
-        //} else {
-        //  calendar.set(calendar.get(Calendar.YEAR), currentMonth,
-        //      calendar.get(Calendar.DAY_OF_MONTH) + 1, 20, 0, 0);
-        //}
-        //
-        //intent.putExtra("MEAL_TYPE", "Dinner");
-        //pendingIntent =
-        //    PendingIntent.getBroadcast(context, 2, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 20);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+
+        if (calendar.before(Calendar.getInstance())) {
+          calendar.add(Calendar.DATE, 1);
+        }
+
+        intent.putExtra("MEAL_TYPE", "Dinner");
+        pendingIntent =
+            PendingIntent.getBroadcast(context, 2, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         prefs.edit().putString(Constants.DINNER_REMINDER_ALARM_TIME, "08:00 PM").apply();
 
         break;
     }
 
-    //AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-    //am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY,
-    //    pendingIntent);
-  }
-
-  public static class MyValueFormatter implements ValueFormatter {
-    @Override public String getFormattedValue(float value, Entry entry, int dataSetIndex,
-        ViewPortHandler viewPortHandler) {
-      return Math.round(value) + "";
+    if (calendar != null) {
+      AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+      am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+          AlarmManager.INTERVAL_DAY, pendingIntent);
     }
   }
 }
