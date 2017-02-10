@@ -73,6 +73,7 @@
           android:textColor="@color/white"
           android:textColorHint="@color/edittext_hint_color_white"
           android:textCursorDrawable="@null"
+          android:typeface="normal"
           validator:emptyErrorString="@string/member_id_empty_error"
           />
 

@@ -4,7 +4,6 @@ import android.content.Context;
 import com.mcsaatchi.gmfit.architecture.GMFitApplication;
 import com.mcsaatchi.gmfit.architecture.rest.ActivityLevelsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponse;
-import com.mcsaatchi.gmfit.architecture.rest.CardDetailsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ChartMetricBreakdownResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ChartsBySectionResponse;
 import com.mcsaatchi.gmfit.architecture.rest.CoverageDescriptionResponse;
@@ -23,6 +22,7 @@ import com.mcsaatchi.gmfit.architecture.rest.SearchMedicinesResponse;
 import com.mcsaatchi.gmfit.architecture.rest.SlugBreakdownResponse;
 import com.mcsaatchi.gmfit.architecture.rest.TakenMedicalTestsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.UiResponse;
+import com.mcsaatchi.gmfit.architecture.rest.UpdateInsurancePasswordResponse;
 import com.mcsaatchi.gmfit.architecture.rest.UserGoalMetricsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.UserGoalsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.UserMealsResponse;
@@ -262,7 +262,9 @@ public class DataAccessHandler {
     apiCallsHandler.getUserGoals(callback);
   }
 
-  //INSURANCE API's
+  /**
+   * INSURANCE API's
+   */
 
   public void getMostPopularMedications(String indNbr, String contractNo, String country,
       String language, String password, Callback<MostPopularMedicationsResponse> callback) {
@@ -286,8 +288,14 @@ public class DataAccessHandler {
         callback);
   }
 
-  public void getCardDetails(String indNbr, String contractNo, String country, String language,
-      String password, Callback<CardDetailsResponse> callback) {
-    apiCallsHandler.getCardDetails(indNbr, contractNo, country, language, password, callback);
+  public void updateInsurancePassword(String contractNo, String oldPassword, String newPassword,
+      String email, String mobileNumber, Callback<UpdateInsurancePasswordResponse> callback) {
+    apiCallsHandler.updateInsurancePassword(contractNo, oldPassword, newPassword, email,
+        mobileNumber, callback);
   }
+
+  //public void getCardDetails(String indNbr, String contractNo, String country, String language,
+  //    String password, Callback<CardDetailsResponse> callback) {
+  //  apiCallsHandler.getCardDetails(indNbr, contractNo, country, language, password, callback);
+  //}
 }

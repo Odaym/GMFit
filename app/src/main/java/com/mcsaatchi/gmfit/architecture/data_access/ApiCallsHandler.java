@@ -4,7 +4,6 @@ import android.content.Context;
 import com.mcsaatchi.gmfit.architecture.GMFitApplication;
 import com.mcsaatchi.gmfit.architecture.rest.ActivityLevelsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponse;
-import com.mcsaatchi.gmfit.architecture.rest.CardDetailsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ChartMetricBreakdownResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ChartsBySectionResponse;
 import com.mcsaatchi.gmfit.architecture.rest.CoverageDescriptionResponse;
@@ -24,6 +23,7 @@ import com.mcsaatchi.gmfit.architecture.rest.SearchMedicinesResponse;
 import com.mcsaatchi.gmfit.architecture.rest.SlugBreakdownResponse;
 import com.mcsaatchi.gmfit.architecture.rest.TakenMedicalTestsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.UiResponse;
+import com.mcsaatchi.gmfit.architecture.rest.UpdateInsurancePasswordResponse;
 import com.mcsaatchi.gmfit.architecture.rest.UserGoalMetricsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.UserGoalsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.UserMealsResponse;
@@ -866,6 +866,25 @@ public class ApiCallsHandler {
     });
   }
 
+  void updateInsurancePassword(String contractNo, String oldPassword, String newPassword,
+      String email, String mobileNumber, final Callback<UpdateInsurancePasswordResponse> callback) {
+    Call<UpdateInsurancePasswordResponse> apiCall = restClient.getGMFitService()
+        .updateInsurancePassword(
+            new UpdateInsurancePasswordRequest(contractNo, oldPassword, newPassword, email,
+                mobileNumber));
+
+    apiCall.enqueue(new Callback<UpdateInsurancePasswordResponse>() {
+      @Override public void onResponse(Call<UpdateInsurancePasswordResponse> call,
+          Response<UpdateInsurancePasswordResponse> response) {
+        callback.onResponse(call, response);
+      }
+
+      @Override public void onFailure(Call<UpdateInsurancePasswordResponse> call, Throwable t) {
+      }
+    });
+  }
+
+  /*
   void getCardDetails(String indNbr, String contractNo, String country, String language,
       String password, final Callback<CardDetailsResponse> callback) {
     Call<CardDetailsResponse> apiCall = restClient.getGMFitService()
@@ -882,6 +901,7 @@ public class ApiCallsHandler {
       }
     });
   }
+  */
 
   public class UpdateMetricsRequest {
     final String[] slug;
@@ -1120,6 +1140,23 @@ public class ApiCallsHandler {
       this.language = language;
       this.password = password;
       this.key = key;
+    }
+  }
+
+  public class UpdateInsurancePasswordRequest {
+    String contractNo;
+    String oldPswrd;
+    String newPswrd;
+    String email;
+    String mobileNo;
+
+    public UpdateInsurancePasswordRequest(String contractNo, String oldPswrd, String newPswrd,
+        String email, String mobileNo) {
+      this.contractNo = contractNo;
+      this.oldPswrd = oldPswrd;
+      this.newPswrd = newPswrd;
+      this.email = email;
+      this.mobileNo = mobileNo;
     }
   }
 }

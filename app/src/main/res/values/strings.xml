@@ -381,7 +381,7 @@
   <string name="new_password_label">New Password</string>
   <string name="new_password_hint">Enter your password</string>
   <string name="retype_password_label">Retype Password</string>
-  <string name="retype_password_hint">Enter your password again</string>
+  <string name="retype_password_hint">Repeat your password</string>
   <string name="contact_information_tip_label">Keep your contact information up to date (optional)</string>
   <string name="email_address_hint">Enter your email address</string>
   <string name="phone_number_label">Phone Number</string>
@@ -452,4 +452,5 @@
   <string name="clinic_working_hours_friday">Friday</string>
   <string name="clinic_working_hours_saturday">Saturday</string>
   <string name="clinic_working_hours_sunday">Sunday</string>
+  <string name="updating_password_dialog_title">Updating your password</string>
 </resources>

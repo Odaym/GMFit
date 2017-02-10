@@ -3,6 +3,7 @@ package com.mcsaatchi.gmfit.insurance.fragments;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -37,6 +38,7 @@ public class InsuranceLoginFragment extends Fragment {
   @Bind(R.id.passwordET) FormEditText passwordET;
 
   @Inject DataAccessHandler dataAccessHandler;
+  @Inject SharedPreferences prefs;
 
   private ArrayList<FormEditText> allFields = new ArrayList<>();
 
@@ -89,11 +91,49 @@ public class InsuranceLoginFragment extends Fragment {
               case 200:
                 waitingDialog.dismiss();
 
-                Intent intent = new Intent(getActivity(), UpdatePasswordActivity.class);
-                intent.putExtra(Constants.BUNDLE_INSURANCE_USER_OBJECT,
-                    response.body().getData().getBody().getData());
-                startActivityForResult(intent, INFO_UPDATED_SUCCESSFULLY_AFTER_LOGIN);
+                prefs.edit()
+                    .putString(Constants.EXTRAS_INSURANCE_USER_PASSWORD,
+                        passwordET.getText().toString())
+                    .apply();
+                prefs.edit()
+                    .putString(Constants.EXTRAS_INSURANCE_USER_USERNAME,
+                        memberIdET.getText().toString())
+                    .apply();
 
+                /**
+                 * First time logging in, prompt them to change password
+                 */
+                if (response.body().getData().getBody().getData().getFirstLogin()) {
+                  Intent intent = new Intent(getActivity(), UpdatePasswordActivity.class);
+                  intent.putExtra("OLD_PASSWORD", passwordET.getText().toString());
+                  intent.putExtra(Constants.BUNDLE_INSURANCE_USER_OBJECT,
+                      response.body().getData().getBody().getData());
+                  startActivityForResult(intent, INFO_UPDATED_SUCCESSFULLY_AFTER_LOGIN);
+                } else {
+                  /**
+                   * Not the first time logging in, assume password should have been changed.
+                   * Send them to where they were originally suppposed to go (InsuranceHomeFragment)
+                   */
+                  Bundle bundle = new Bundle();
+                  bundle.putParcelable(Constants.BUNDLE_INSURANCE_USER_OBJECT,
+                      response.body().getData().getBody().getData());
+                  bundle.putString("CARD_NUMBER", memberIdET.getText().toString());
+                  InsuranceHomeFragment insuranceHomeFragment = new InsuranceHomeFragment();
+                  insuranceHomeFragment.setArguments(bundle);
+
+                  getFragmentManager().beginTransaction()
+                      .replace(R.id.root_frame, insuranceHomeFragment)
+                      .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                      .addToBackStack(null)
+                      .commitAllowingStateLoss();
+                }
+
+                break;
+              case 449:
+                waitingDialog.dismiss();
+
+                alertDialog.setMessage(getString(R.string.login_failed_wrong_credentials));
+                alertDialog.show();
                 break;
             }
           }
@@ -116,7 +156,6 @@ public class InsuranceLoginFragment extends Fragment {
           InsuranceLoginResponseInnerData insuranceUserData =
               (InsuranceLoginResponseInnerData) intent.getExtras()
                   .get(Constants.BUNDLE_INSURANCE_USER_OBJECT);
-
           Bundle bundle = new Bundle();
           bundle.putParcelable(Constants.BUNDLE_INSURANCE_USER_OBJECT, insuranceUserData);
           bundle.putString("CARD_NUMBER", memberIdET.getText().toString());

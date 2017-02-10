@@ -145,9 +145,11 @@ public interface GMFitService {
 
   @GET("user/weight/history") Call<WeightHistoryResponse> getUserWeightHistory();
 
-  //INSURANCE API's
+  /**
+   * INSURANCE API's
+   */
 
-  @POST("insurance/insurance-card-details") Call<CardDetailsResponse> getCardDetails(
+  @POST("insurance/insurance-card-details") Call<InsuranceLoginResponse> getCardDetails(
       @Body ApiCallsHandler.DefaultBodyForInsuranceRequests insuranceUserLoginRequest);
 
   @POST("insurance/medecines/most-popular")
@@ -162,4 +164,8 @@ public interface GMFitService {
 
   @POST("insurance/coverage") Call<CoverageDescriptionResponse> getCoverageDescription(
       @Body ApiCallsHandler.DefaultBodyForInsuranceRequests insuranceUserLoginRequest);
+
+  @POST("insurance/update-info")
+  Call<UpdateInsurancePasswordResponse> updateInsurancePassword(
+      @Body ApiCallsHandler.UpdateInsurancePasswordRequest updateInsurancePasswordRequest);
 }

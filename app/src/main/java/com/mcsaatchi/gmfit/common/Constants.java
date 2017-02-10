@@ -18,6 +18,9 @@ public class Constants {
   public static final String EXTRAS_META_HTML_CONTENT = "meta_html_content";
   public static final String EXTRAS_USER_FACEBOOK_TOKEN = "user_facebook_token";
 
+  public static final String EXTRAS_INSURANCE_USER_PASSWORD = "insurance_user_password";
+  public static final String EXTRAS_INSURANCE_USER_USERNAME = "insurance_user_username";
+
   public static final String EXTRAS_FIRST_APP_LAUNCH = "first_app_launch";
 
   public static final int WAIT_TIME_BEFORE_CHECKING_METRICS_SERVICE = 12000000;
