@@ -79,7 +79,7 @@ public class DaysChoiceListActivity extends BaseActivity {
   }
 
   private void setupDaysChoiceList(ArrayList<DayChoice> daysToSetup) {
-    daysChoiceRecyclerAdapter = new DaysChoiceRecyclerAdapter(this, daysToSetup);
+    daysChoiceRecyclerAdapter = new DaysChoiceRecyclerAdapter(daysToSetup);
     daysRecyclerView.setLayoutManager(new LinearLayoutManager(this));
     daysRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(this));
     daysRecyclerView.setAdapter(daysChoiceRecyclerAdapter);

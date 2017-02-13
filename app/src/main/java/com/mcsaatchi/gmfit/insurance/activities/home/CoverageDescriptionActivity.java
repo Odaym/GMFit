@@ -1,4 +1,4 @@
-package com.mcsaatchi.gmfit.insurance.activities;
+package com.mcsaatchi.gmfit.insurance.activities.home;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

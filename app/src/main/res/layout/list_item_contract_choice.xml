@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/days_choice_checkbox_height"
+    android:background="@color/white"
+    android:clickable="true"
+    android:orientation="horizontal"
+    >
+
+  <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:background="?android:attr/selectableItemBackground"
+      android:clickable="false"
+      android:focusable="true"
+      >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:paddingStart="@dimen/default_margin_1"
+        android:paddingTop="@dimen/default_margin_1"
+        >
+
+      <TextView
+          android:id="@+id/contractTitleTV"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:paddingStart="@dimen/default_margin_2"
+          android:textAppearance="?android:textAppearanceMedium"
+          android:textColor="@color/black"
+          />
+
+      <TextView
+          android:id="@+id/contractInsuranceCompanyTV"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:paddingStart="@dimen/default_margin_2"
+          />
+
+      <TextView
+          android:id="@+id/contractExpiryDateTV"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:paddingStart="@dimen/default_margin_2"
+          />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/contractCheckedLayout"
+        android:layout_width="@dimen/contracts_choice_checkbox_width"
+        android:layout_height="match_parent"
+        android:layout_alignParentEnd="true"
+        android:layout_gravity="end"
+        android:background="@color/much_lighter_gray"
+        android:gravity="center"
+        android:visibility="gone"
+        >
+
+      <ImageView
+          android:layout_width="@dimen/far_right_arrow_icon_dimens"
+          android:layout_height="@dimen/far_right_arrow_icon_dimens"
+          android:src="@drawable/ic_checkmark_day_chosen"
+          />
+    </LinearLayout>
+  </RelativeLayout>
+</RelativeLayout>

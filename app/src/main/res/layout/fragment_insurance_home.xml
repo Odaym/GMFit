@@ -1,78 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
+    android:layout_height="match_parent"
     >
 
-  <LinearLayout
-      android:id="@+id/cardDetailsLayout"
+  <RelativeLayout
+      android:id="@+id/parentLayout"
       android:layout_width="match_parent"
-      android:layout_height="@dimen/insurance_home_header_section_height"
-      android:gravity="center_vertical"
-      android:orientation="horizontal"
-      android:paddingBottom="@dimen/default_margin_2"
-      android:paddingTop="@dimen/default_margin_2"
+      android:layout_height="match_parent"
       >
 
-    <ImageView
-        android:id="@+id/cardImageIV"
-        android:layout_width="@dimen/home_card_image_width"
-        android:layout_height="match_parent"
-        android:layout_marginEnd="@dimen/default_margin_2"
-        android:layout_marginStart="@dimen/default_margin_1"
-        android:layout_weight="1"
-        android:src="@drawable/insurance_card_overlay_sample"
-        />
-
     <LinearLayout
+        android:id="@+id/cardDetailsLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1.5"
-        android:orientation="vertical"
+        android:layout_height="@dimen/insurance_home_header_section_height"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/default_margin_2"
+        android:paddingTop="@dimen/default_margin_2"
         >
 
-      <TextView
-          android:id="@+id/cardOwnerTV"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:textColor="@color/white"
-          android:textSize="20sp"
+      <ImageView
+          android:id="@+id/cardImageIV"
+          android:layout_width="@dimen/home_card_image_width"
+          android:layout_height="match_parent"
+          android:layout_marginEnd="@dimen/default_margin_2"
+          android:layout_marginStart="@dimen/default_margin_1"
+          android:layout_weight="1"
+          android:src="@drawable/insurance_card_overlay_sample"
           />
 
-      <TextView
-          android:id="@+id/bankNameTV"
-          android:layout_width="wrap_content"
+      <LinearLayout
+          android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:layout_marginTop="@dimen/default_margin_0"
-          android:textColor="@color/white"
-          />
+          android:layout_weight="1.5"
+          android:orientation="vertical"
+          >
 
-      <TextView
-          android:id="@+id/cardNumberTV"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_marginTop="@dimen/default_margin_0"
-          android:textColor="@color/white"
-          />
+        <TextView
+            android:id="@+id/cardOwnerTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            />
 
+        <TextView
+            android:id="@+id/bankNameTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/default_margin_0"
+            android:textColor="@color/white"
+            />
+
+        <TextView
+            android:id="@+id/cardNumberTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/default_margin_0"
+            android:textColor="@color/white"
+            />
+
+      </LinearLayout>
+
+      <ImageView
+          android:layout_width="30dp"
+          android:layout_height="30dp"
+          android:src="@drawable/ic_arrow_right"
+          />
     </LinearLayout>
 
-    <ImageView
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:src="@drawable/ic_arrow_right"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/insurancePathsGridView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/cardDetailsLayout"
+        android:layout_gravity="center"
+        android:background="@color/white"
+        android:paddingStart="@dimen/default_margin_2_5"
+        android:paddingTop="@dimen/default_margin_2"
+        android:scrollbars="vertical"
         />
-  </LinearLayout>
-
-  <android.support.v7.widget.RecyclerView
-      android:id="@+id/insurancePathsGridView"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_gravity="center"
-      android:background="@color/white"
-      android:paddingStart="@dimen/default_margin_2_5"
-      android:paddingTop="@dimen/default_margin_2"
-      android:scrollbars="vertical"
-      />
-</LinearLayout>
+  </RelativeLayout>
+</RelativeLayout>

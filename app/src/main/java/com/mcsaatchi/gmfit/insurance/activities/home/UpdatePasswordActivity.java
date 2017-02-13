@@ -1,4 +1,4 @@
-package com.mcsaatchi.gmfit.insurance.activities;
+package com.mcsaatchi.gmfit.insurance.activities.home;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;

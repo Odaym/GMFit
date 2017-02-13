@@ -16,7 +16,7 @@ import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.GMFitApplication;
 import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.architecture.rest.CoverageDescriptionResponse;
-import com.mcsaatchi.gmfit.insurance.activities.CoverageDescriptionActivity;
+import com.mcsaatchi.gmfit.insurance.activities.home.CoverageDescriptionActivity;
 import com.mcsaatchi.gmfit.insurance.activities.approval_request.ApprovalRequestsEmptyActivity;
 import com.mcsaatchi.gmfit.insurance.activities.approval_request.ApprovalRequestsStatusListActivity;
 import com.mcsaatchi.gmfit.insurance.activities.chronic.ChronicPrescriptionEmptyActivity;

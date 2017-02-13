@@ -11,6 +11,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -21,10 +26,13 @@ import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.architecture.rest.CardDetailsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.InsuranceLoginResponseInnerData;
 import com.mcsaatchi.gmfit.common.Constants;
-import com.mcsaatchi.gmfit.insurance.activities.CardDetailsActivity;
+import com.mcsaatchi.gmfit.insurance.activities.home.CardDetailsActivity;
+import com.mcsaatchi.gmfit.insurance.activities.home.ContractsChoiceView;
 import com.mcsaatchi.gmfit.insurance.adapters.InsuranceOperationWidgetsGridAdapter;
+import com.mcsaatchi.gmfit.insurance.models.InsuranceContract;
 import com.mcsaatchi.gmfit.insurance.models.InsuranceOperationWidget;
 import java.util.ArrayList;
+import java.util.List;
 import javax.inject.Inject;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -34,15 +42,22 @@ import timber.log.Timber;
 public class InsuranceHomeFragment extends Fragment {
 
   @Bind(R.id.insurancePathsGridView) RecyclerView insurancePathsGridView;
+  @Bind(R.id.parentLayout) RelativeLayout parentLayout;
   @Bind(R.id.cardOwnerTV) TextView cardOwnerTV;
   @Bind(R.id.bankNameTV) TextView bankNameTV;
   @Bind(R.id.cardNumberTV) TextView cardNumberTV;
 
   @Inject DataAccessHandler dataAccessHandler;
 
-  private InsuranceLoginResponseInnerData insuranceUserData;
+  private int animationDuration = 200;
 
+  private List<InsuranceContract> insuranceContracts = new ArrayList<>();
+
+  private InsuranceLoginResponseInnerData insuranceUserData;
+  private ViewGroup parentFragmentView;
+  private ImageView contractSelectorBTN;
   private String cardNumber;
+  private boolean contractsSelectorShowing = false;
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
@@ -53,6 +68,10 @@ public class InsuranceHomeFragment extends Fragment {
 
     ((GMFitApplication) getActivity().getApplication()).getAppComponent().inject(this);
 
+    parentFragmentView = ((ViewGroup) getParentFragment().getView());
+
+    setupContractSelectorButton();
+
     if (getArguments() != null) {
       insuranceUserData = (InsuranceLoginResponseInnerData) getArguments().get(
           Constants.BUNDLE_INSURANCE_USER_OBJECT);
@@ -62,6 +81,14 @@ public class InsuranceHomeFragment extends Fragment {
 
       cardOwnerTV.setText(insuranceUserData.getUsername());
       bankNameTV.setText(insuranceUserData.getContracts().get(0).getCompany());
+
+      for (int i = 0; i < insuranceUserData.getContracts().size(); i++) {
+        InsuranceContract contract = new InsuranceContract();
+        contract.setNumber(String.valueOf(insuranceUserData.getContracts().get(i).getNumber()));
+        contract.setInsuranceCompany(insuranceUserData.getContracts().get(i).getCompany());
+
+        insuranceContracts.add(contract);
+      }
 
       setupInsurancePathsGrid(new ArrayList<InsuranceOperationWidget>() {{
         add(new InsuranceOperationWidget(R.drawable.ic_insurance_operations_submit,
@@ -142,5 +169,76 @@ public class InsuranceHomeFragment extends Fragment {
         alertDialog.show();
       }
     });
+  }
+
+  private void setupContractSelectorButton() {
+    if (parentFragmentView != null) {
+      final ContractsChoiceView contractsChoiceView =
+          new ContractsChoiceView(getActivity(), insuranceContracts);
+
+      contractSelectorBTN = (ImageView) parentFragmentView.findViewById(R.id.contractChooserBTN);
+
+      contractSelectorBTN.setVisibility(View.VISIBLE);
+
+      contractSelectorBTN.setOnClickListener(new View.OnClickListener() {
+        @Override public void onClick(final View view) {
+
+          if (contractsSelectorShowing) {
+            fadeOutContractsSelector(contractsChoiceView);
+          } else {
+            parentLayout.addView(contractsChoiceView);
+
+            fadeInContractsSelector(contractsChoiceView);
+          }
+
+          contractsSelectorShowing = !contractsSelectorShowing;
+        }
+      });
+    }
+  }
+
+  private void fadeOutContractsSelector(final ContractsChoiceView contractsChoiceView) {
+    Animation fadeOut = new AlphaAnimation(1, 0);
+    fadeOut.setInterpolator(new AccelerateInterpolator());
+    fadeOut.setDuration(animationDuration);
+
+    fadeOut.setAnimationListener(new Animation.AnimationListener() {
+      public void onAnimationEnd(Animation animation) {
+        contractsChoiceView.setVisibility(View.GONE);
+        parentLayout.removeView(contractsChoiceView);
+        contractSelectorBTN.setEnabled(true);
+      }
+
+      public void onAnimationRepeat(Animation animation) {
+      }
+
+      public void onAnimationStart(Animation animation) {
+        contractSelectorBTN.setEnabled(false);
+      }
+    });
+
+    contractsChoiceView.startAnimation(fadeOut);
+  }
+
+  private void fadeInContractsSelector(final ContractsChoiceView contractsChoiceView) {
+    Animation fadeIn = new AlphaAnimation(0, 1);
+    fadeIn.setInterpolator(new AccelerateInterpolator());
+    fadeIn.setDuration(animationDuration);
+
+    fadeIn.setAnimationListener(new Animation.AnimationListener() {
+      public void onAnimationEnd(Animation animation) {
+        contractsChoiceView.setVisibility(View.VISIBLE);
+        contractSelectorBTN.setEnabled(true);
+      }
+
+      public void onAnimationRepeat(Animation animation) {
+      }
+
+      public void onAnimationStart(Animation animation) {
+        contractSelectorBTN.setEnabled(false);
+      }
+    });
+
+    contractsChoiceView.startAnimation(fadeIn);
   }
 }

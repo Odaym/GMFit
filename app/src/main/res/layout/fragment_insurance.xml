@@ -13,6 +13,18 @@
       android:orientation="horizontal"
       >
 
+    <ImageView
+        android:id="@+id/contractChooserBTN"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="@dimen/default_margin_1"
+        android:layout_marginStart="@dimen/default_margin_1"
+        android:layout_weight="1"
+        android:src="@drawable/ic_contract_chooser"
+        android:visibility="gone"
+        />
+
     <android.support.design.widget.TabLayout
         android:id="@+id/tabs"
         android:layout_width="wrap_content"
@@ -26,11 +38,14 @@
 
     <ImageView
         android:id="@+id/switchMapViewBTN"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_gravity="center_vertical"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="@dimen/default_margin_1"
+        android:layout_marginEnd="@dimen/default_margin_1"
         android:layout_weight="1"
         android:src="@drawable/ic_show_directory_as_listing"
+        android:visibility="gone"
         />
   </LinearLayout>
 

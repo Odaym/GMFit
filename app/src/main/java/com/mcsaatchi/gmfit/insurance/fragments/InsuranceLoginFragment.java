@@ -23,7 +23,7 @@ import com.mcsaatchi.gmfit.architecture.rest.InsuranceLoginResponse;
 import com.mcsaatchi.gmfit.architecture.rest.InsuranceLoginResponseInnerData;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
-import com.mcsaatchi.gmfit.insurance.activities.UpdatePasswordActivity;
+import com.mcsaatchi.gmfit.insurance.activities.home.UpdatePasswordActivity;
 import java.util.ArrayList;
 import javax.inject.Inject;
 import retrofit2.Call;
@@ -52,7 +52,7 @@ public class InsuranceLoginFragment extends Fragment {
     ButterKnife.bind(this, fragmentView);
 
     memberIdET.setText("2012250");
-    passwordET.setText("walid123");
+    passwordET.setText("odayoday");
 
     allFields.add(memberIdET);
     allFields.add(passwordET);

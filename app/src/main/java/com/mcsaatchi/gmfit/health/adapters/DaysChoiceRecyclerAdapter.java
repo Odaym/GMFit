@@ -1,6 +1,5 @@
 package com.mcsaatchi.gmfit.health.adapters;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,11 +12,9 @@ import java.util.ArrayList;
 
 public class DaysChoiceRecyclerAdapter
     extends RecyclerView.Adapter<DaysChoiceRecyclerAdapter.RecyclerViewHolder> {
-  private Context context;
   private ArrayList<DayChoice> days;
 
-  public DaysChoiceRecyclerAdapter(Context context, ArrayList<DayChoice> days) {
-    this.context = context;
+  public DaysChoiceRecyclerAdapter(ArrayList<DayChoice> days) {
     this.days = days;
   }
 

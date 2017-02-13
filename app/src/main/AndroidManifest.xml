@@ -180,7 +180,7 @@
         android:theme="@style/No_Action_Bar_Theme"/>
 
     <activity
-        android:name=".insurance.activities.UpdatePasswordActivity"
+        android:name=".insurance.activities.home.UpdatePasswordActivity"
         android:screenOrientation="portrait"
         android:theme="@style/No_Action_Bar_Theme"
         android:windowSoftInputMode="stateHidden"/>
@@ -268,12 +268,12 @@
         android:windowSoftInputMode="stateHidden"/>
 
     <activity
-        android:name=".insurance.activities.CoverageDescriptionActivity"
+        android:name=".insurance.activities.home.CoverageDescriptionActivity"
         android:screenOrientation="portrait"
         android:theme="@style/No_Action_Bar_Theme"/>
 
     <activity
-        android:name=".insurance.activities.CardDetailsActivity"
+        android:name=".insurance.activities.home.CardDetailsActivity"
         android:screenOrientation="portrait"
         android:theme="@style/No_Action_Bar_Theme"/>
 
