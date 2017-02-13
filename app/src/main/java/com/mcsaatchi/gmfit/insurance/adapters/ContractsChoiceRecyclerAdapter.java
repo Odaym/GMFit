@@ -51,6 +51,10 @@ public class ContractsChoiceRecyclerAdapter
     }
   }
 
+  private InsuranceContract getItem(int position) {
+    return contracts.get(position);
+  }
+
   class RecyclerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
     TextView contractTitleTV;
     TextView contractInsuranceCompanyTV;
@@ -70,13 +74,14 @@ public class ContractsChoiceRecyclerAdapter
     }
 
     @Override public void onClick(View view) {
-      if (contracts.get(getAdapterPosition()).isSelected()) {
-        contracts.get(getAdapterPosition()).setSelected(false);
-        contractCheckedLayout.setVisibility(View.GONE);
-      } else {
-        contracts.get(getAdapterPosition()).setSelected(true);
-        contractCheckedLayout.setVisibility(View.VISIBLE);
+      for (int i = 0; i < getItemCount(); i++) {
+        getItem(i).setSelected(false);
       }
+
+      contracts.get(getAdapterPosition()).setSelected(true);
+      contractCheckedLayout.setVisibility(View.VISIBLE);
+
+      notifyDataSetChanged();
     }
   }
 }
