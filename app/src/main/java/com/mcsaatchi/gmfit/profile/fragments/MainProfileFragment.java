@@ -56,8 +56,8 @@ import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.onboarding.activities.LoginActivity;
 import com.mcsaatchi.gmfit.profile.activities.ChangePasswordActivity;
 import com.mcsaatchi.gmfit.profile.activities.ContactUsActivity;
-import com.mcsaatchi.gmfit.profile.activities.MetaTextsActivity;
 import com.mcsaatchi.gmfit.profile.activities.MealRemindersActivity;
+import com.mcsaatchi.gmfit.profile.activities.MetaTextsActivity;
 import com.mukesh.countrypicker.fragments.CountryPicker;
 import com.mukesh.countrypicker.interfaces.CountryPickerListener;
 import com.squareup.otto.Subscribe;
@@ -1143,6 +1143,11 @@ public class MainProfileFragment extends Fragment {
                 .apply();
             prefs.edit().putBoolean(Constants.EXTRAS_USER_LOGGED_IN, false).apply();
             prefs.edit().putFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, 0f).apply();
+
+            prefs.edit().putString(Constants.EXTRAS_USER_EMAIL, "").apply();
+            prefs.edit().putString(Constants.EXTRAS_USER_PASSWORD, "").apply();
+            prefs.edit().putString(Constants.EXTRAS_INSURANCE_USER_USERNAME, "").apply();
+            prefs.edit().putString(Constants.EXTRAS_INSURANCE_USER_PASSWORD, "").apply();
 
             if (!prefs.getString(Constants.EXTRAS_USER_FACEBOOK_TOKEN, "-1").equals("-1")) {
               FacebookSdk.sdkInitialize(getActivity());

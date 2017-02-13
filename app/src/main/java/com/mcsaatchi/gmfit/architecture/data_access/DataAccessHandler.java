@@ -4,6 +4,7 @@ import android.content.Context;
 import com.mcsaatchi.gmfit.architecture.GMFitApplication;
 import com.mcsaatchi.gmfit.architecture.rest.ActivityLevelsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponse;
+import com.mcsaatchi.gmfit.architecture.rest.CardDetailsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ChartMetricBreakdownResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ChartsBySectionResponse;
 import com.mcsaatchi.gmfit.architecture.rest.CoverageDescriptionResponse;
@@ -294,8 +295,7 @@ public class DataAccessHandler {
         mobileNumber, callback);
   }
 
-  //public void getCardDetails(String indNbr, String contractNo, String country, String language,
-  //    String password, Callback<CardDetailsResponse> callback) {
-  //  apiCallsHandler.getCardDetails(indNbr, contractNo, country, language, password, callback);
-  //}
+  public void getCardDetails(String contractNo, Callback<CardDetailsResponse> callback) {
+    apiCallsHandler.getCardDetails(contractNo, callback);
+  }
 }

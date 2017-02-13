@@ -15,16 +15,15 @@ import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.onesignal.OneSignal;
 import io.fabric.sdk.android.Fabric;
+import javax.inject.Inject;
 import net.danlew.android.joda.JodaTimeAndroid;
 import timber.log.Timber;
 
 public class GMFitApplication extends Application {
 
   private static GMFitApplication instance;
-
+  @Inject SharedPreferences prefs;
   private AppComponent component;
-
-  private SharedPreferences prefs;
 
   public static boolean hasNetwork() {
     return instance.checkIfHasNetwork();
@@ -78,8 +77,6 @@ public class GMFitApplication extends Application {
   }
 
   private void addMealAlarms() {
-    prefs = getSharedPreferences(Constants.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
-
     if (prefs.getBoolean(Constants.APP_FIRST_RUN, true)) {
       prefs.edit().putBoolean(Constants.APP_FIRST_RUN, false).apply();
       Helpers.setupAlarmForMeal(this, prefs, "Breakfast");

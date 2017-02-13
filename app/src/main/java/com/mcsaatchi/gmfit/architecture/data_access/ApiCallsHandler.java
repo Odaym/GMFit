@@ -4,6 +4,7 @@ import android.content.Context;
 import com.mcsaatchi.gmfit.architecture.GMFitApplication;
 import com.mcsaatchi.gmfit.architecture.rest.ActivityLevelsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponse;
+import com.mcsaatchi.gmfit.architecture.rest.CardDetailsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ChartMetricBreakdownResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ChartsBySectionResponse;
 import com.mcsaatchi.gmfit.architecture.rest.CoverageDescriptionResponse;
@@ -884,12 +885,9 @@ public class ApiCallsHandler {
     });
   }
 
-  /*
-  void getCardDetails(String indNbr, String contractNo, String country, String language,
-      String password, final Callback<CardDetailsResponse> callback) {
-    Call<CardDetailsResponse> apiCall = restClient.getGMFitService()
-        .getCardDetails(
-            new DefaultBodyForInsuranceRequests(indNbr, contractNo, country, language, password));
+  void getCardDetails(String contractNo, final Callback<CardDetailsResponse> callback) {
+    Call<CardDetailsResponse> apiCall =
+        restClient.getGMFitService().getCardDetails(new SimpleInsuranceRequest(contractNo));
 
     apiCall.enqueue(new Callback<CardDetailsResponse>() {
       @Override public void onResponse(Call<CardDetailsResponse> call,
@@ -901,7 +899,6 @@ public class ApiCallsHandler {
       }
     });
   }
-  */
 
   public class UpdateMetricsRequest {
     final String[] slug;
@@ -1121,6 +1118,14 @@ public class ApiCallsHandler {
       this.country = country;
       this.language = language;
       this.password = password;
+    }
+  }
+
+  public class SimpleInsuranceRequest {
+    String contractNo;
+
+    public SimpleInsuranceRequest(String contractNo) {
+      this.contractNo = contractNo;
     }
   }
 

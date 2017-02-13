@@ -108,9 +108,9 @@ public class InsuranceFragment extends Fragment {
                 InsuranceHomeFragment insuranceHomeFragment = new InsuranceHomeFragment();
                 insuranceHomeFragment.setArguments(bundle);
 
-                getFragmentManager().beginTransaction()
+                getChildFragmentManager().beginTransaction()
                     .replace(R.id.root_frame, insuranceHomeFragment)
-                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
                     .addToBackStack(null)
                     .commitAllowingStateLoss();
 

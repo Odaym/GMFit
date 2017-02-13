@@ -149,8 +149,8 @@ public interface GMFitService {
    * INSURANCE API's
    */
 
-  @POST("insurance/insurance-card-details") Call<InsuranceLoginResponse> getCardDetails(
-      @Body ApiCallsHandler.DefaultBodyForInsuranceRequests insuranceUserLoginRequest);
+  @POST("insurance/insurance-card-details") Call<CardDetailsResponse> getCardDetails(
+      @Body ApiCallsHandler.SimpleInsuranceRequest simpleInsuranceRequest);
 
   @POST("insurance/medecines/most-popular")
   Call<MostPopularMedicationsResponse> getMostPopularMedications(

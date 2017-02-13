@@ -1,7 +1,11 @@
 package com.mcsaatchi.gmfit.insurance.fragments;
 
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,15 +14,22 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.GMFitApplication;
 import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
+import com.mcsaatchi.gmfit.architecture.rest.CardDetailsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.InsuranceLoginResponseInnerData;
 import com.mcsaatchi.gmfit.common.Constants;
+import com.mcsaatchi.gmfit.insurance.activities.CardDetailsActivity;
 import com.mcsaatchi.gmfit.insurance.adapters.InsuranceOperationWidgetsGridAdapter;
 import com.mcsaatchi.gmfit.insurance.models.InsuranceOperationWidget;
 import java.util.ArrayList;
 import javax.inject.Inject;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import timber.log.Timber;
 
 public class InsuranceHomeFragment extends Fragment {
 
@@ -89,49 +100,47 @@ public class InsuranceHomeFragment extends Fragment {
     insurancePathsGridView.setAdapter(widgetsAdapter);
   }
 
-  //@OnClick(R.id.cardDetailsLayout) public void handleCardDetailsClicked() {
-  //  getCardDetails();
-  //}
+  @OnClick(R.id.cardDetailsLayout) public void handleCardDetailsClicked() {
+    getCardDetails();
+  }
 
-  //private void getCardDetails() {
-  //  final ProgressDialog waitingDialog = new ProgressDialog(getActivity());
-  //  waitingDialog.setTitle(getResources().getString(R.string.loading_data_dialog_title));
-  //  waitingDialog.setMessage(getResources().getString(R.string.please_wait_dialog_message));
-  //  waitingDialog.show();
-  //
-  //  final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
-  //  alertDialog.setTitle(R.string.loading_data_dialog_title);
-  //  alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getResources().getString(R.string.ok),
-  //      new DialogInterface.OnClickListener() {
-  //        public void onClick(DialogInterface dialog, int which) {
-  //          dialog.dismiss();
-  //
-  //          if (waitingDialog.isShowing()) waitingDialog.dismiss();
-  //        }
-  //      });
-  //
-  //  dataAccessHandler.getCardDetails("2012250", "1892870", "422", "2", "walid123",
-  //      new Callback<InsuranceLoginResponse>() {
-  //        @Override public void onResponse(Call<InsuranceLoginResponse> call,
-  //            Response<InsuranceLoginResponse> response) {
-  //
-  //          switch (response.code()) {
-  //            case 200:
-  //              waitingDialog.dismiss();
-  //
-  //              Intent intent = new Intent(getActivity(), CardDetailsActivity.class);
-  //              intent.putExtra("PDF",
-  //                  response.body().getData().getBody().getData().replace("\\", ""));
-  //
-  //              startActivity(intent);
-  //          }
-  //        }
-  //
-  //        @Override public void onFailure(Call<InsuranceLoginResponse> call, Throwable t) {
-  //          Timber.d("Call failed with error : %s", t.getMessage());
-  //          alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
-  //          alertDialog.show();
-  //        }
-  //      });
-  //}
+  private void getCardDetails() {
+    final ProgressDialog waitingDialog = new ProgressDialog(getActivity());
+    waitingDialog.setTitle(getResources().getString(R.string.loading_data_dialog_title));
+    waitingDialog.setMessage(getResources().getString(R.string.please_wait_dialog_message));
+    waitingDialog.show();
+
+    final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+    alertDialog.setTitle(R.string.loading_data_dialog_title);
+    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getResources().getString(R.string.ok),
+        new DialogInterface.OnClickListener() {
+          public void onClick(DialogInterface dialog, int which) {
+            dialog.dismiss();
+
+            if (waitingDialog.isShowing()) waitingDialog.dismiss();
+          }
+        });
+
+    dataAccessHandler.getCardDetails("1892870", new Callback<CardDetailsResponse>() {
+      @Override public void onResponse(Call<CardDetailsResponse> call,
+          Response<CardDetailsResponse> response) {
+
+        switch (response.code()) {
+          case 200:
+            waitingDialog.dismiss();
+
+            Intent intent = new Intent(getActivity(), CardDetailsActivity.class);
+            intent.putExtra("PDF", response.body().getData().getBody().getData().replace("\\", ""));
+
+            startActivity(intent);
+        }
+      }
+
+      @Override public void onFailure(Call<CardDetailsResponse> call, Throwable t) {
+        Timber.d("Call failed with error : %s", t.getMessage());
+        alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
+        alertDialog.show();
+      }
+    });
+  }
 }
