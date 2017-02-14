@@ -78,6 +78,7 @@ dependencies {
   compile "com.squareup.retrofit2:retrofit:$retroFitVersion"
   compile 'com.facebook.android:facebook-android-sdk:4.13.2'
   compile "com.j256.ormlite:ormlite-android:$ormLiteVersion"
+  debugCompile 'com.readystatesoftware.chuck:library:1.0.2'
   compile "com.j256.ormlite:ormlite-core:$ormLiteVersion"
   compile "com.android.support:design:$supportLibVersion"
   compile 'com.code-troopers.betterpickers:library:2.5.3'

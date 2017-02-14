@@ -137,7 +137,8 @@
   <dimen name="complaint_inquiry_row_height">60dp</dimen>
   <dimen name="doctor_confirmation_picker_height">140dp</dimen>
   <dimen name="contracts_choice_checkbox_width">100dp</dimen>
-  <dimen name="contracts_selector_height">300dp</dimen>
+  <dimen name="contracts_selector_height">500dp</dimen>
+  <dimen name="contract_choice_row_height">90dp</dimen>
 
   <!-- PILL REMINDER SECTION -->
   <dimen name="medications_list_row_item_height">100dp</dimen>

@@ -371,6 +371,7 @@
   <string name="medical_report_hint">Medical Report</string>
   <string name="request_deletion_hint">To request the deletion of this item, please enter your password and attach the doctor\'s confirmation below.</string>
   <string name="request_deletion_button_text">Request Deletion</string>
+  <string name="choose_contract_dialog_title">Select Contract</string>
 
   <!-- COVERAGE DESCRIPTION -->
   <string name="coverage_description_activity_title">Coverage Description</string>

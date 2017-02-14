@@ -8,8 +8,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.insurance.models.InsuranceContract;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Calendar;
 
 public class ContractsChoiceRecyclerAdapter
     extends RecyclerView.Adapter<ContractsChoiceRecyclerAdapter.RecyclerViewHolder> {
@@ -46,8 +47,9 @@ public class ContractsChoiceRecyclerAdapter
     holder.contractInsuranceCompanyTV.setText(contracts.get(position).getInsuranceCompany());
 
     if (contracts.get(position).getExpiryDate() != null) {
+      Calendar expiryCal = contracts.get(position).getExpiryDate();
       holder.contractExpiryDateTV.setText(
-          new Date(contracts.get(position).getExpiryDate().getTimeInMillis()).toString());
+          "Expiry date: " + new SimpleDateFormat("dd MMMM yyyy").format(expiryCal.getTime()));
     }
   }
 

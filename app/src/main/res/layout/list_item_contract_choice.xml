@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/days_choice_checkbox_height"
+    android:layout_height="@dimen/contract_choice_row_height"
     android:background="@color/white"
     android:clickable="true"
     android:orientation="horizontal"
@@ -20,6 +20,7 @@
         android:layout_height="match_parent"
         android:gravity="center_vertical"
         android:orientation="vertical"
+        android:paddingBottom="@dimen/default_margin_1"
         android:paddingStart="@dimen/default_margin_1"
         android:paddingTop="@dimen/default_margin_1"
         >

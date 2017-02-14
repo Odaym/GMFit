@@ -1,12 +1,10 @@
 package com.mcsaatchi.gmfit.insurance.activities.home;
 
 import android.content.Context;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -29,9 +27,6 @@ public class ContractsChoiceView extends LinearLayout {
     LayoutInflater inflater =
         (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     View v = inflater.inflate(R.layout.view_contracts_choice, this, true);
-
-    v.setLayoutParams(new LinearLayoutCompat.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-        getResources().getDimensionPixelSize(R.dimen.contracts_selector_height)));
 
     ButterKnife.bind(this, v);
 

@@ -2,26 +2,46 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/offwhite_background_gray"
+    android:background="@drawable/insurance_background"
     android:orientation="vertical"
     >
+
+  <TextView
+      android:id="@+id/dialogTitleTV"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_margin="@dimen/default_margin_2"
+      android:text="@string/choose_contract_dialog_title"
+      android:textAppearance="?android:textAppearanceLarge"
+      android:textColor="@color/white"
+      />
 
   <android.support.v7.widget.RecyclerView
       android:id="@+id/contractsRecyclerView"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
+      android:layout_below="@+id/dialogTitleTV"
       />
 
-  <Button
-      android:id="@+id/updateContractBTN"
+  <LinearLayout
       android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_alignParentBottom="true"
-      android:layout_margin="@dimen/default_margin_2"
-      android:background="@color/buttons_blue"
-      android:text="@string/update_button_label"
-      android:textAllCaps="false"
-      android:textColor="@color/white"
-      />
+      android:layout_height="match_parent"
+      android:layout_below="@+id/contractsRecyclerView"
+      android:background="@color/offwhite_background_gray"
+      android:gravity="bottom"
+      >
 
+    <Button
+        android:id="@+id/updateContractBTN"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/default_margin_1"
+        android:layout_marginEnd="@dimen/default_margin_2"
+        android:layout_marginStart="@dimen/default_margin_2"
+        android:background="@color/buttons_blue"
+        android:text="@string/update_button_label"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        />
+  </LinearLayout>
 </RelativeLayout>

@@ -1,5 +1,6 @@
 package com.mcsaatchi.gmfit.insurance.fragments;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,9 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -32,6 +31,7 @@ import com.mcsaatchi.gmfit.insurance.adapters.InsuranceOperationWidgetsGridAdapt
 import com.mcsaatchi.gmfit.insurance.models.InsuranceContract;
 import com.mcsaatchi.gmfit.insurance.models.InsuranceOperationWidget;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import javax.inject.Inject;
 import retrofit2.Call;
@@ -49,15 +49,12 @@ public class InsuranceHomeFragment extends Fragment {
 
   @Inject DataAccessHandler dataAccessHandler;
 
-  private int animationDuration = 200;
-
   private List<InsuranceContract> insuranceContracts = new ArrayList<>();
 
   private InsuranceLoginResponseInnerData insuranceUserData;
   private ViewGroup parentFragmentView;
   private ImageView contractSelectorBTN;
   private String cardNumber;
-  private boolean contractsSelectorShowing = false;
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
@@ -89,6 +86,25 @@ public class InsuranceHomeFragment extends Fragment {
 
         insuranceContracts.add(contract);
       }
+
+      InsuranceContract contract = new InsuranceContract();
+      contract.setInsuranceCompany("SAICO");
+      contract.setNumber("1092384");
+      contract.setTitle("Tanios Karim");
+      Calendar expiryCal = Calendar.getInstance();
+      expiryCal.add(Calendar.YEAR, 2);
+      contract.setExpiryDate(expiryCal);
+      insuranceContracts.add(contract);
+
+      InsuranceContract contract2 = new InsuranceContract();
+      contract2.setInsuranceCompany("Libano-Suisse S.A.L.");
+      contract2.setNumber("1239287");
+      contract2.setTitle("Tanios Elias Karam");
+      expiryCal = Calendar.getInstance();
+      expiryCal.add(Calendar.YEAR, 2);
+      expiryCal.add(Calendar.MONTH, 4);
+      expiryCal.set(Calendar.DAY_OF_MONTH, 13);
+      insuranceContracts.add(contract2);
 
       setupInsurancePathsGrid(new ArrayList<InsuranceOperationWidget>() {{
         add(new InsuranceOperationWidget(R.drawable.ic_insurance_operations_submit,
@@ -176,69 +192,32 @@ public class InsuranceHomeFragment extends Fragment {
       final ContractsChoiceView contractsChoiceView =
           new ContractsChoiceView(getActivity(), insuranceContracts);
 
+      final Dialog contractChooserDialog = new Dialog(getActivity());
+      contractChooserDialog.setContentView(contractsChoiceView);
+
+      contractChooserDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+        @Override public void onCancel(DialogInterface dialogInterface) {
+          contractSelectorBTN.setImageResource(R.drawable.ic_contract_chooser);
+        }
+      });
+
+      WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+      lp.copyFrom(contractChooserDialog.getWindow().getAttributes());
+      lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+      lp.height = getResources().getDimensionPixelSize(R.dimen.contracts_selector_height);
+
+      contractChooserDialog.getWindow().setAttributes(lp);
+
       contractSelectorBTN = (ImageView) parentFragmentView.findViewById(R.id.contractChooserBTN);
 
       contractSelectorBTN.setVisibility(View.VISIBLE);
 
       contractSelectorBTN.setOnClickListener(new View.OnClickListener() {
         @Override public void onClick(final View view) {
-
-          if (contractsSelectorShowing) {
-            fadeOutContractsSelector(contractsChoiceView);
-          } else {
-            parentLayout.addView(contractsChoiceView);
-
-            fadeInContractsSelector(contractsChoiceView);
-          }
-
-          contractsSelectorShowing = !contractsSelectorShowing;
+          contractSelectorBTN.setImageResource(R.drawable.ic_contract_chooser_active);
+          contractChooserDialog.show();
         }
       });
     }
-  }
-
-  private void fadeOutContractsSelector(final ContractsChoiceView contractsChoiceView) {
-    Animation fadeOut = new AlphaAnimation(1, 0);
-    fadeOut.setInterpolator(new AccelerateInterpolator());
-    fadeOut.setDuration(animationDuration);
-
-    fadeOut.setAnimationListener(new Animation.AnimationListener() {
-      public void onAnimationEnd(Animation animation) {
-        contractsChoiceView.setVisibility(View.GONE);
-        parentLayout.removeView(contractsChoiceView);
-        contractSelectorBTN.setEnabled(true);
-      }
-
-      public void onAnimationRepeat(Animation animation) {
-      }
-
-      public void onAnimationStart(Animation animation) {
-        contractSelectorBTN.setEnabled(false);
-      }
-    });
-
-    contractsChoiceView.startAnimation(fadeOut);
-  }
-
-  private void fadeInContractsSelector(final ContractsChoiceView contractsChoiceView) {
-    Animation fadeIn = new AlphaAnimation(0, 1);
-    fadeIn.setInterpolator(new AccelerateInterpolator());
-    fadeIn.setDuration(animationDuration);
-
-    fadeIn.setAnimationListener(new Animation.AnimationListener() {
-      public void onAnimationEnd(Animation animation) {
-        contractsChoiceView.setVisibility(View.VISIBLE);
-        contractSelectorBTN.setEnabled(true);
-      }
-
-      public void onAnimationRepeat(Animation animation) {
-      }
-
-      public void onAnimationStart(Animation animation) {
-        contractSelectorBTN.setEnabled(false);
-      }
-    });
-
-    contractsChoiceView.startAnimation(fadeIn);
   }
 }
