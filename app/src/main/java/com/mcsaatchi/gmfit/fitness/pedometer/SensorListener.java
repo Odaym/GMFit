@@ -27,15 +27,16 @@ import com.mcsaatchi.gmfit.architecture.otto.StepCounterIncrementedEvent;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponse;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.fitness.models.FitnessWidget;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 import javax.inject.Inject;
-import org.joda.time.LocalDate;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import timber.log.Timber;
 
 /**
  * Background service which keeps the step-sensor listener alive to always get
@@ -53,108 +54,8 @@ public class SensorListener extends Service implements SensorEventListener {
   @Inject SharedPreferences prefs;
   @Inject DBHelper dbHelper;
   private Timer timer = new Timer();
-  private String todayDate;
-  private String yesterdayDate;
 
   private RuntimeExceptionDao<FitnessWidget, Integer> fitnessWidgetsDAO;
-
-  @Override public void onAccuracyChanged(final Sensor sensor, int accuracy) {
-  }
-
-  @Override public void onSensorChanged(final SensorEvent event) {
-    LocalDate dt = new LocalDate();
-
-    todayDate = dt.toString();
-    yesterdayDate = dt.minusDays(1).toString();
-
-    int stepsToday = prefs.getInt(todayDate + "_steps", 0);
-
-    if (prefs.getBoolean(Constants.EXTRAS_FIRST_APP_LAUNCH, true)) {
-      prefs.edit().putBoolean(Constants.EXTRAS_FIRST_APP_LAUNCH, false).apply();
-
-      prefs.edit().putInt(todayDate + "_steps", 0).apply();
-      prefs.edit().putFloat(todayDate + "_calories", 0).apply();
-      prefs.edit().putFloat(todayDate + "_distance", 0.00f).apply();
-    } else {
-      float caloriesToday =
-          calculateCalories(prefs.getFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, 70),
-              METRIC_RUNNING_FACTOR, STEP_LENGTH);
-      float distanceToday = calculateDistance(STEP_LENGTH);
-
-      if (new Random().nextBoolean()) {
-        storeStepsToday(stepsToday, 3, "steps");
-      } else {
-        storeStepsToday(stepsToday, 1, "steps");
-      }
-
-      storeCaloriesToday(caloriesToday, prefs.getFloat(todayDate + "_calories", 0), "calories");
-      storeDistanceToday(distanceToday, prefs.getFloat(todayDate + "_distance", 0), "distance");
-
-      List<FitnessWidget> fitnessWidgets = fitnessWidgetsDAO.queryForAll();
-
-      findAndUpdateWidgetsInDB(fitnessWidgets, caloriesToday, distanceToday);
-
-      sendOutEventBusEvents();
-    }
-  }
-
-  public float calculateCalories(float weight, float metricRunningFactor, float stepLength) {
-    return weight * metricRunningFactor * stepLength / 100000.0f;
-  }
-
-  public float calculateDistance(float stepLength) {
-    return stepLength / 100000.0f;
-  }
-
-  public void storeStepsToday(int stepsToday, int stepsRightNow, String metricName) {
-    prefs.edit().putInt(todayDate + "_" + metricName, stepsToday + stepsRightNow).apply();
-  }
-
-  public void storeCaloriesToday(float caloriesToday, float caloriesSoFar, String metricName) {
-    prefs.edit().putFloat(todayDate + "_" + metricName, caloriesToday + caloriesSoFar).apply();
-  }
-
-  public void storeDistanceToday(float distanceToday, float distanceSoFar, String metricName) {
-    prefs.edit().putFloat(todayDate + "_" + metricName, distanceToday + distanceSoFar).apply();
-  }
-
-  public void findAndUpdateWidgetsInDB(List<FitnessWidget> fitnessWidgets, float calculatedCalories,
-      float calculatedDistance) {
-    for (int i = 0; i < fitnessWidgets.size(); i++) {
-      switch (fitnessWidgets.get(i).getTitle()) {
-        case "Active Calories":
-          fitnessWidgets.get(i)
-              .setValue(
-                  (int) ((calculatedCalories + prefs.getFloat(todayDate + "_calories", 0)) * 1));
-          break;
-        case "Distance Traveled":
-          fitnessWidgets.get(i)
-              .setValue((calculatedDistance + prefs.getFloat(todayDate + "_distance", 0)));
-          break;
-      }
-
-      fitnessWidgetsDAO.update(fitnessWidgets.get(i));
-    }
-  }
-
-  public void sendOutEventBusEvents() {
-    EventBusSingleton.getInstance().post(new StepCounterIncrementedEvent());
-    EventBusSingleton.getInstance().post(new CaloriesCounterIncrementedEvent());
-    EventBusSingleton.getInstance().post(new DistanceCounterIncrementedEvent());
-  }
-
-  @Override public IBinder onBind(final Intent intent) {
-    return null;
-  }
-
-  @Override public int onStartCommand(final Intent intent, int flags, int startId) {
-    ((AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE)).set(
-        AlarmManager.RTC, System.currentTimeMillis() + AlarmManager.INTERVAL_HOUR,
-        PendingIntent.getService(getApplicationContext(), 2, new Intent(this, SensorListener.class),
-            PendingIntent.FLAG_UPDATE_CURRENT));
-
-    return START_STICKY;
-  }
 
   @Override public void onCreate() {
     super.onCreate();
@@ -184,6 +85,97 @@ public class SensorListener extends Service implements SensorEventListener {
     timer.schedule(doAsynchronousTask, 0, Constants.WAIT_TIME_BEFORE_CHECKING_METRICS_SERVICE);
   }
 
+  @Override public void onAccuracyChanged(final Sensor sensor, int accuracy) {
+  }
+
+  @Override public void onSensorChanged(final SensorEvent event) {
+    if (prefs.getBoolean(Constants.EXTRAS_FIRST_APP_LAUNCH, true)) {
+      prefs.edit().putBoolean(Constants.EXTRAS_FIRST_APP_LAUNCH, false).apply();
+
+      clearMetricsInPrefs();
+
+    } else {
+      float caloriesToday =
+          calculateCalories(prefs.getFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, 70),
+              METRIC_RUNNING_FACTOR, STEP_LENGTH);
+      float distanceToday = calculateDistance(STEP_LENGTH);
+
+      int stepsToday = prefs.getInt("steps_taken", 0);
+
+      if (new Random().nextBoolean()) {
+        storeStepsToday(stepsToday, 3);
+      } else {
+        storeStepsToday(stepsToday, 1);
+      }
+
+      storeCaloriesToday(caloriesToday, prefs.getFloat("calories_spent", 0));
+      storeDistanceToday(distanceToday, prefs.getFloat("distance_traveled", 0));
+
+      List<FitnessWidget> fitnessWidgets = fitnessWidgetsDAO.queryForAll();
+
+      findAndUpdateWidgetsInDB(fitnessWidgets, caloriesToday, distanceToday);
+
+      sendOutEventBusEvents();
+    }
+  }
+
+  public float calculateCalories(float weight, float metricRunningFactor, float stepLength) {
+    return weight * metricRunningFactor * stepLength / 100000.0f;
+  }
+
+  public float calculateDistance(float stepLength) {
+    return stepLength / 100000.0f;
+  }
+
+  public void storeStepsToday(int stepsToday, int stepsRightNow) {
+    prefs.edit().putInt("steps_taken", stepsToday + stepsRightNow).apply();
+  }
+
+  public void storeCaloriesToday(float caloriesToday, float caloriesRightNow) {
+    prefs.edit().putFloat("calories_spent", caloriesToday + caloriesRightNow).apply();
+  }
+
+  public void storeDistanceToday(float distanceToday, float distanceRightNow) {
+    prefs.edit().putFloat("distance_traveled", distanceToday + distanceRightNow).apply();
+  }
+
+  public void findAndUpdateWidgetsInDB(List<FitnessWidget> fitnessWidgets, float calculatedCalories,
+      float calculatedDistance) {
+    for (int i = 0; i < fitnessWidgets.size(); i++) {
+      switch (fitnessWidgets.get(i).getTitle()) {
+        case "Active Calories":
+          fitnessWidgets.get(i)
+              .setValue((int) ((calculatedCalories + prefs.getFloat("calories_spent", 0)) * 1));
+          break;
+        case "Distance Traveled":
+          fitnessWidgets.get(i)
+              .setValue((calculatedDistance + prefs.getFloat("distance_traveled", 0)));
+          break;
+      }
+
+      fitnessWidgetsDAO.update(fitnessWidgets.get(i));
+    }
+  }
+
+  public void sendOutEventBusEvents() {
+    EventBusSingleton.getInstance().post(new StepCounterIncrementedEvent());
+    EventBusSingleton.getInstance().post(new CaloriesCounterIncrementedEvent());
+    EventBusSingleton.getInstance().post(new DistanceCounterIncrementedEvent());
+  }
+
+  @Override public IBinder onBind(final Intent intent) {
+    return null;
+  }
+
+  @Override public int onStartCommand(final Intent intent, int flags, int startId) {
+    ((AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE)).set(
+        AlarmManager.RTC, System.currentTimeMillis() + AlarmManager.INTERVAL_HOUR,
+        PendingIntent.getService(getApplicationContext(), 2, new Intent(this, SensorListener.class),
+            PendingIntent.FLAG_UPDATE_CURRENT));
+
+    return START_STICKY;
+  }
+
   private void refreshAccessToken() {
     dataAccessHandler.refreshAccessToken(new Callback<AuthenticationResponse>() {
       @Override public void onResponse(Call<AuthenticationResponse> call,
@@ -200,9 +192,8 @@ public class SensorListener extends Service implements SensorEventListener {
             };
 
             Number[] valuesArray = new Number[] {
-                prefs.getInt(todayDate + "_steps", 0),
-                (int) prefs.getFloat(todayDate + "_calories", 0),
-                prefs.getFloat(todayDate + "_distance", 0)
+                prefs.getInt("steps_taken", 0), (int) prefs.getFloat("calories_spent", 0),
+                prefs.getFloat("distance_traveled", 0)
             };
 
             synchronizeMetricsWithServer(slugsArray, valuesArray);
@@ -220,20 +211,27 @@ public class SensorListener extends Service implements SensorEventListener {
   private void synchronizeMetricsWithServer(String[] slugsArray, Number[] valuesArray) {
     dataAccessHandler.synchronizeMetricsWithServer(slugsArray, valuesArray);
 
-    wipeOutFitnessMetricsAtMidnight();
+    int hourOfDay = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+
+    if (hourOfDay == 0) {
+      wipeOutFitnessMetricsAtMidnight();
+    }
   }
 
   private void wipeOutFitnessMetricsAtMidnight() {
-    /**
-     * Doesn't contain today's date as a key, but DOES contain yesterday's day as a key
-     */
-    if (!prefs.contains(todayDate + "_steps") && prefs.contains(yesterdayDate)) {
-      Log.d("TAGTAG",
-          "run: Doesn't contain today's date as a key, but DOES contain yesterday's day as a key");
+    Calendar cal = Calendar.getInstance();
 
-      prefs.edit().remove(yesterdayDate + "_steps").apply();
-      prefs.edit().remove(yesterdayDate + "_distance").apply();
-      prefs.edit().remove(yesterdayDate + "_calories").apply();
+    String dayToday = cal.get(Calendar.YEAR) + "_" + cal.get(Calendar.MONTH) + "_" + cal.get(
+        Calendar.DAY_OF_MONTH);
+
+    if (!prefs.getBoolean("CLEARED_" + dayToday, false) && !prefs.getBoolean(
+        Constants.EXTRAS_FIRST_APP_LAUNCH, false)) {
+
+      Timber.d("Clearing them now, setting cleared to true");
+
+      prefs.edit().putBoolean("CLEARED_" + dayToday, true).apply();
+
+      clearMetricsInPrefs();
 
       List<FitnessWidget> fitnessWidgets = fitnessWidgetsDAO.queryForAll();
 
@@ -243,6 +241,12 @@ public class SensorListener extends Service implements SensorEventListener {
         fitnessWidgetsDAO.update(fitnessWidgets.get(i));
       }
     }
+  }
+
+  private void clearMetricsInPrefs(){
+    prefs.edit().putInt("steps_taken", 0).apply();
+    prefs.edit().putFloat("calories_spent", 0).apply();
+    prefs.edit().putFloat("distance_traveled", 0.00f).apply();
   }
 
   @Override public void onTaskRemoved(final Intent rootIntent) {

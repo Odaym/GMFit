@@ -23,7 +23,7 @@ public class Constants {
 
   public static final String EXTRAS_FIRST_APP_LAUNCH = "first_app_launch";
 
-  public static final int WAIT_TIME_BEFORE_CHECKING_METRICS_SERVICE = 12000000;
+  public static final int WAIT_TIME_BEFORE_CHECKING_METRICS_SERVICE = 10000;
 
   public static final int NUMBER_OF_DAYS_IN_DATE_CAROUSEL = 30;
 

@@ -138,9 +138,8 @@ public class FitnessFragment extends Fragment {
 
     setHasOptionsMenu(true);
 
-    metricCounterTV.setText(
-        Helpers.getFormattedString(prefs.getInt(Helpers.getTodayDate() + "_steps", 0)));
-    todayTV.setText(Helpers.getFormattedString(prefs.getInt(Helpers.getTodayDate() + "_steps", 0)));
+    metricCounterTV.setText(Helpers.getFormattedString(prefs.getInt("steps_taken", 0)));
+    todayTV.setText(Helpers.getFormattedString(prefs.getInt("steps_taken", 0)));
 
     setupWidgetViews(widgetsMap);
 
@@ -344,10 +343,8 @@ public class FitnessFragment extends Fragment {
              * Requesting today's data
              */
             if (!requestingPreviousData) {
-              metricCounterTV.setText(
-                  Helpers.getFormattedString(prefs.getInt(Helpers.getTodayDate() + "_steps", 0)));
-              todayTV.setText(
-                  Helpers.getFormattedString(prefs.getInt(Helpers.getTodayDate() + "_steps", 0)));
+              metricCounterTV.setText(Helpers.getFormattedString(prefs.getInt("steps_taken", 0)));
+              todayTV.setText(Helpers.getFormattedString(prefs.getInt("steps_taken", 0)));
 
               remainingValue = Integer.parseInt(maxValue) - Helpers.getNumberFromFromattedString(
                   metricCounterTV.getText().toString());
@@ -512,9 +509,8 @@ public class FitnessFragment extends Fragment {
   }
 
   @Subscribe public void incrementStepCounter(StepCounterIncrementedEvent event) {
-    metricCounterTV.setText(
-        Helpers.getFormattedString(prefs.getInt(Helpers.getTodayDate() + "_steps", 0)));
-    todayTV.setText(Helpers.getFormattedString(prefs.getInt(Helpers.getTodayDate() + "_steps", 0)));
+    metricCounterTV.setText(Helpers.getFormattedString(prefs.getInt("steps_taken", 0)));
+    todayTV.setText(Helpers.getFormattedString(prefs.getInt("steps_taken", 0)));
 
     if (!goalTV.getText().toString().isEmpty()
         && !todayTV.getText().toString().isEmpty()
@@ -541,14 +537,13 @@ public class FitnessFragment extends Fragment {
 
   @Subscribe public void incrementDistanceCounter(DistanceCounterIncrementedEvent event) {
     TextView fitnessWidget = findWidgetInGrid("Distance Traveled");
-    fitnessWidget.setText(new DecimalFormat("##.##").format(
-        (prefs.getFloat(Helpers.getTodayDate() + "_distance", 0))));
+    fitnessWidget.setText(
+        new DecimalFormat("##.##").format((prefs.getFloat("distance_traveled", 0))));
   }
 
   @Subscribe public void incrementCaloriesCounter(CaloriesCounterIncrementedEvent event) {
     TextView fitnessWidget = findWidgetInGrid("Active Calories");
-    fitnessWidget.setText(
-        new DecimalFormat("##.#").format(prefs.getFloat(Helpers.getTodayDate() + "_calories", 0)));
+    fitnessWidget.setText(new DecimalFormat("##.#").format(prefs.getFloat("calories_spent", 0)));
   }
 
   private void updateUserCharts(int[] chartIds, int[] chartPositions) {
