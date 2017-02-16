@@ -67,10 +67,14 @@ public class SignInActivity extends BaseActivity {
 
     signInBTN.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
-        if (Helpers.isInternetAvailable(SignInActivity.this)) {
-          signInUser(emailET.getText().toString(), passwordET.getText().toString());
+        if (Helpers.validateFields(allFields)) {
+          if (Helpers.isInternetAvailable(SignInActivity.this)) {
+            signInUser(emailET.getText().toString(), passwordET.getText().toString());
+          } else {
+            Helpers.showNoInternetDialog(SignInActivity.this);
+          }
         } else {
-          Helpers.showNoInternetDialog(SignInActivity.this);
+          showPasswordTV.setVisibility(View.GONE);
         }
       }
     });

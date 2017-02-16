@@ -14,6 +14,7 @@ import com.andreabaccega.widget.FormEditText;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
+import com.mcsaatchi.gmfit.common.classes.Helpers;
 import java.util.ArrayList;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -42,7 +43,9 @@ public class ForgotPasswordActivity extends BaseActivity {
 
     submitForgotPasswordEmailBTN.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
-        forgotPasswordSendToken(emailET.getText().toString());
+        if (Helpers.validateFields(allFields)) {
+          forgotPasswordSendToken(emailET.getText().toString());
+        }
       }
     });
   }
