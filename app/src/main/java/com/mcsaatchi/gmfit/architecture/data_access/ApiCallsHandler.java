@@ -10,6 +10,7 @@ import com.mcsaatchi.gmfit.architecture.rest.ChartsBySectionResponse;
 import com.mcsaatchi.gmfit.architecture.rest.CoverageDescriptionResponse;
 import com.mcsaatchi.gmfit.architecture.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.architecture.rest.EmergencyProfileResponse;
+import com.mcsaatchi.gmfit.architecture.rest.GetNearbyClinicsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.InsuranceLoginResponse;
 import com.mcsaatchi.gmfit.architecture.rest.MealMetricsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.MedicalConditionsResponse;
@@ -361,9 +362,6 @@ public class ApiCallsHandler {
     });
   }
 
-  /**
-   * Non-Caching
-   */
   void getUserAddedMeals(final Callback<UserMealsResponse> callback) {
     Call<UserMealsResponse> apiCall = restClient.getGMFitService().getUserAddedMeals();
 
@@ -916,6 +914,25 @@ public class ApiCallsHandler {
     });
   }
 
+  void getNearbyClinics(String contractNo, String providerTypesCode, int searchCtry,
+      double longitude, double latitude, int fetchClosest,
+      final Callback<GetNearbyClinicsResponse> callback) {
+    Call<GetNearbyClinicsResponse> apiCall = restClient.getGMFitService()
+        .getNearbyClinics(
+            new NearbyClinicsRequest(contractNo, providerTypesCode, searchCtry, longitude, latitude,
+                fetchClosest));
+
+    apiCall.enqueue(new Callback<GetNearbyClinicsResponse>() {
+      @Override public void onResponse(Call<GetNearbyClinicsResponse> call,
+          Response<GetNearbyClinicsResponse> response) {
+        callback.onResponse(call, response);
+      }
+
+      @Override public void onFailure(Call<GetNearbyClinicsResponse> call, Throwable t) {
+      }
+    });
+  }
+
   public class UpdateMetricsRequest {
     final String[] slug;
     final Number[] value;
@@ -1178,6 +1195,25 @@ public class ApiCallsHandler {
       this.newPswrd = newPswrd;
       this.email = email;
       this.mobileNo = mobileNo;
+    }
+  }
+
+  public class NearbyClinicsRequest {
+    String contractNo;
+    String providerTypesCode;
+    int searchCtry;
+    double longitude;
+    double latitude;
+    int fetchClosest;
+
+    public NearbyClinicsRequest(String contractNo, String providerTypesCode, int searchCtry,
+        double longitude, double latitude, int fetchClosest) {
+      this.contractNo = contractNo;
+      this.providerTypesCode = providerTypesCode;
+      this.searchCtry = searchCtry;
+      this.longitude = longitude;
+      this.latitude = latitude;
+      this.fetchClosest = fetchClosest;
     }
   }
 }

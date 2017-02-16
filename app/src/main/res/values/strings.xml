@@ -441,6 +441,7 @@
   <string name="open_247_icon_hint">24/7</string>
   <string name="online_right_now_icon_hint">Online</string>
   <string name="clinic_details_header_contact_information">Contact Information</string>
+  <string name="get_nearby_clinics_message">Getting nearby clinics</string>
   <string name="clinic_details_activity_title">Details</string>
   <string name="clinic_phone_hint">Phone</string>
   <string name="clinic_mobile_hint">Mobile</string>

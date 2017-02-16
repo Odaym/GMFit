@@ -10,6 +10,7 @@ import com.mcsaatchi.gmfit.architecture.rest.ChartsBySectionResponse;
 import com.mcsaatchi.gmfit.architecture.rest.CoverageDescriptionResponse;
 import com.mcsaatchi.gmfit.architecture.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.architecture.rest.EmergencyProfileResponse;
+import com.mcsaatchi.gmfit.architecture.rest.GetNearbyClinicsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.InsuranceLoginResponse;
 import com.mcsaatchi.gmfit.architecture.rest.MealMetricsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.MedicalConditionsResponse;
@@ -302,5 +303,12 @@ public class DataAccessHandler {
 
   public void getSubCategories(String contractNo, Callback<SubCategoriesResponse> callback) {
     apiCallsHandler.getSubCategories(contractNo, callback);
+  }
+
+  public void getNearbyClinics(String contractNo, String providerTypesCode, int searchCtry,
+      double longitude, double latitude, int fetchClosest,
+      Callback<GetNearbyClinicsResponse> callback) {
+    apiCallsHandler.getNearbyClinics(contractNo, providerTypesCode, searchCtry, longitude, latitude,
+        fetchClosest, callback);
   }
 }

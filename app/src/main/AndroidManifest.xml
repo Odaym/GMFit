@@ -6,6 +6,7 @@
   <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
   <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
   <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+  <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
   <uses-permission android:name="com.android.alarm.permission.SET_ALARM"/>
   <uses-permission android:name="android.permission.CAMERA"/>
   <uses-permission android:name="android.permission.INTERNET"/>
@@ -307,7 +308,7 @@
 
     <meta-data
         android:name="com.google.android.geo.API_KEY"
-        android:value="AIzaSyBzptbw8-xsnunOTUpQfAM7xe5YyGk87i4	"/>
+        android:value="AIzaSyDzwRq628GqkaxN3cZQoTuAergqlZJms6k"/>
 
   </application>
 

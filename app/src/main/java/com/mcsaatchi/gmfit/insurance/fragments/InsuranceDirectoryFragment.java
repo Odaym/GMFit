@@ -1,9 +1,19 @@
 package com.mcsaatchi.gmfit.insurance.fragments;
 
+import android.Manifest;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.NestedScrollView;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -21,18 +31,29 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.mcsaatchi.gmfit.R;
+import com.mcsaatchi.gmfit.architecture.GMFitApplication;
+import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
+import com.mcsaatchi.gmfit.architecture.rest.GetNearbyClinicsResponse;
+import com.mcsaatchi.gmfit.architecture.rest.GetNearbyClinicsResponseDatum;
 import com.mcsaatchi.gmfit.common.classes.SimpleDividerItemDecoration;
 import com.mcsaatchi.gmfit.insurance.adapters.ClinicAddressesRecyclerAdapter;
-import com.mcsaatchi.gmfit.insurance.models.Clinic;
-import com.mcsaatchi.gmfit.insurance.models.ClinicOpeningHours;
 import java.util.ArrayList;
 import java.util.List;
+import javax.inject.Inject;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import timber.log.Timber;
 
 public class InsuranceDirectoryFragment extends Fragment implements OnMapReadyCallback {
+  private static final int PERMISSION_LOCATION_REQUEST_CODE = 375;
   @Bind(R.id.clinicAddressesRecyclerView) RecyclerView clinicAddressRecycler;
   @Bind(R.id.searchBoxET) EditText searchBoxET;
-
+  @Inject DataAccessHandler dataAccessHandler;
   private boolean listingVisible = false;
+  private List<GetNearbyClinicsResponseDatum> clinicsWithLocation = new ArrayList<>();
+  private LocationManager lm;
+  private double[] userLatLong = new double[2];
 
   private WorkaroundMapFragment mapFragment;
   private ImageView switchMapViewBTN;
@@ -47,67 +68,17 @@ public class InsuranceDirectoryFragment extends Fragment implements OnMapReadyCa
 
     ButterKnife.bind(this, fragmentView);
 
+    ((GMFitApplication) getActivity().getApplication()).getAppComponent().inject(this);
+
     parentFragmentView = ((ViewGroup) getParentFragment().getView());
 
-    final List<Clinic> listOfClinics = new ArrayList<>();
-
-    listOfClinics.add(new Clinic("Clinic 1", "Beirut, Hamra",
-        new ClinicOpeningHours("9:00 AM - 6:00 PM", "9:00 AM - 6:00 PM", "9:00 AM - 6:00 PM",
-            "9:00 AM - 6:00 PM", "9:00 AM - 6:00 PM", "9:00 AM - 2:30 PM", "closed"), false, true,
-        false));
-
-    listOfClinics.add(new Clinic("Hotel Dieu de France", "Beirut, Achrafieh",
-        new ClinicOpeningHours("9:00 AM - 5:00 PM", "9:00 AM - 5:00 PM", "9:00 AM - 5:00 PM",
-            "9:00 AM - 5:00 PM", "9:00 AM - 5:00 PM", "closed", "closed"), false, false, false));
-
-    listOfClinics.add(new Clinic("Hospital 422", "Beirut, Koraytem",
-        new ClinicOpeningHours("9:00 AM - 5:00 PM", "9:00 AM - 5:00 PM", "9:00 AM - 5:00 PM",
-            "9:00 AM - 5:00 PM", "9:00 AM - 5:00 PM", "closed", "closed"), true, false, true));
-
-    listOfClinics.add(new Clinic("Sample Hospital 210", "Aley",
-        new ClinicOpeningHours("9:00 AM - 5:00 PM", "9:00 AM - 5:00 PM", "9:00 AM - 5:00 PM",
-            "9:00 AM - 5:00 PM", "9:00 AM - 5:00 PM", "closed", "closed"), false, false, true));
-
-    listOfClinics.add(new Clinic("AUBMC", "Beirut, Sanayeh",
-        new ClinicOpeningHours("9:00 AM - 5:00 PM", "9:00 AM - 5:00 PM", "9:00 AM - 5:00 PM",
-            "9:00 AM - 5:00 PM", "9:00 AM - 5:00 PM", "closed", "closed"), true, true, false));
-
-    listOfClinics.add(new Clinic("Zahraa Hospital", "Beirut, Verdun",
-        new ClinicOpeningHours("9:00 AM - 5:00 PM", "9:00 AM - 5:00 PM", "9:00 AM - 5:00 PM",
-            "9:00 AM - 5:00 PM", "9:00 AM - 5:00 PM", "closed", "closed"), false, true, false));
-
-    listOfClinics.add(new Clinic("Traad Hospital", "Beirut, Mkalles",
-        new ClinicOpeningHours("9:00 AM - 12:00 AM", "9:00 AM - 12:00 AM", "9:00 AM - 12:00 AM",
-            "9:00 AM - 12:00 AM", "9:00 AM - 12:00 AM", "9:00 AM - 2:00 PM", "closed"), true, true,
-        true));
-
-    listOfClinics.add(new Clinic("Clinic 233", "Beirut, Ras El Nabaa",
-        new ClinicOpeningHours("9:00 AM - 5:00 PM", "9:00 AM - 5:00 PM", "9:00 AM - 5:00 PM",
-            "9:00 AM - 5:00 PM", "9:00 AM - 5:00 PM", "closed", "closed"), false, false, true));
-
-    listOfClinics.add(new Clinic("Medicinal House Building", "Beirut, Ras El Nabaa",
-        new ClinicOpeningHours("9:00 AM - 5:00 PM", "9:00 AM - 5:00 PM", "9:00 AM - 5:00 PM",
-            "9:00 AM - 5:00 PM", "9:00 AM - 5:00 PM", "closed", "closed"), false, false, false));
+    lm = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
 
     mapFragment = ((WorkaroundMapFragment) getChildFragmentManager().findFragmentById(R.id.map));
-    mapFragment.getMapAsync(this);
-    mapFragment.setListener(new WorkaroundMapFragment.OnTouchListener() {
-      @Override public void onTouch() {
-        NestedScrollView myScrollingContent =
-            ((NestedScrollView) getActivity().findViewById(R.id.myScrollingContent));
-        myScrollingContent.requestDisallowInterceptTouchEvent(true);
-      }
-    });
 
     setupSwitchMapViewButton();
 
-    ClinicAddressesRecyclerAdapter clinicAddressesRecyclerAdapter =
-        new ClinicAddressesRecyclerAdapter(getActivity(), listOfClinics);
-
-    clinicAddressRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
-    clinicAddressRecycler.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
-    clinicAddressRecycler.setHasFixedSize(true);
-    clinicAddressRecycler.setAdapter(clinicAddressesRecyclerAdapter);
+    getUserLocation();
 
     searchBoxET.addTextChangedListener(new TextWatcher() {
       @Override public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -118,14 +89,14 @@ public class InsuranceDirectoryFragment extends Fragment implements OnMapReadyCa
       }
 
       @Override public void afterTextChanged(Editable editable) {
-        List<Clinic> searchResults = new ArrayList<Clinic>();
+        List<GetNearbyClinicsResponseDatum> searchResults = new ArrayList<>();
 
-        for (int j = 0; j < listOfClinics.size(); j++) {
-          if (listOfClinics.get(j)
+        for (int i = 0; i < clinicsWithLocation.size(); i++) {
+          if (clinicsWithLocation.get(i)
               .getName()
               .toLowerCase()
               .contains(editable.toString().toLowerCase())) {
-            searchResults.add(listOfClinics.get(j));
+            searchResults.add(clinicsWithLocation.get(i));
           }
         }
 
@@ -145,33 +116,90 @@ public class InsuranceDirectoryFragment extends Fragment implements OnMapReadyCa
   @Override public void onMapReady(GoogleMap googleMap) {
     map = googleMap;
 
-    map.addMarker(
-        new MarkerOptions().position(new LatLng(44.968046, -94.420307)).title("Marker in 1"));
-    map.addMarker(
-        new MarkerOptions().position(new LatLng(49.33328, -89.132008)).title("Marker in 2"));
-    map.addMarker(
-        new MarkerOptions().position(new LatLng(33.755787, -116.359998)).title("Marker in 2"));
-    map.addMarker(
-        new MarkerOptions().position(new LatLng(33.844843, -116.54911)).title("Marker in 3"));
-    map.addMarker(
-        new MarkerOptions().position(new LatLng(46.92057, -93.44786)).title("Marker in 4"));
-    map.addMarker(
-        new MarkerOptions().position(new LatLng(42.240309, -91.493619)).title("Marker in 5"));
-    map.addMarker(
-        new MarkerOptions().position(new LatLng(41.968041, -94.419696)).title("Marker in 6"));
-    map.addMarker(
-        new MarkerOptions().position(new LatLng(44.333304, -89.132027)).title("Marker in 7"));
-    map.addMarker(
-        new MarkerOptions().position(new LatLng(33.755783, -116.360066)).title("Marker in 8"));
-    map.addMarker(
-        new MarkerOptions().position(new LatLng(33.844847, -116.549069)).title("Marker in 9"));
-    map.addMarker(
-        new MarkerOptions().position(new LatLng(31.920474, .447851)).title("Marker in 10"));
+    filterClinicsAndAddMarkers();
+  }
 
-    map.addMarker(
-        new MarkerOptions().position(new LatLng(33.8938, 35.5018)).title("Marker in Beirut"));
+  @Override public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+      @NonNull int[] grantResults) {
+    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-    map.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(33.8938, 35.5018)));
+    switch (requestCode) {
+      case PERMISSION_LOCATION_REQUEST_CODE: {
+        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+          Timber.d("PERMISSIONS: Permission was granted on callback");
+
+          Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+          userLatLong[0] = location.getLatitude();
+          userLatLong[1] = location.getLongitude();
+
+          getNearbyClinics();
+        }
+      }
+    }
+  }
+
+  private void getNearbyClinics() {
+    final ProgressDialog waitingDialog = new ProgressDialog(getActivity());
+    waitingDialog.setTitle(getString(R.string.get_nearby_clinics_message));
+    waitingDialog.setMessage(getString(R.string.please_wait_dialog_message));
+    waitingDialog.show();
+
+    final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+    alertDialog.setTitle(R.string.get_nearby_clinics_message);
+    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
+        new DialogInterface.OnClickListener() {
+          public void onClick(DialogInterface dialog, int which) {
+            dialog.dismiss();
+
+            if (waitingDialog.isShowing()) waitingDialog.dismiss();
+          }
+        });
+
+    dataAccessHandler.getNearbyClinics("1892870", "H", 22, 123, 333, 1,
+        new Callback<GetNearbyClinicsResponse>() {
+          @Override public void onResponse(Call<GetNearbyClinicsResponse> call,
+              Response<GetNearbyClinicsResponse> response) {
+            switch (response.code()) {
+              case 200:
+                waitingDialog.dismiss();
+
+                List<GetNearbyClinicsResponseDatum> clinicsList =
+                    response.body().getData().getBody().getData();
+
+                for (int i = 0; i < clinicsList.size(); i++) {
+                  if (clinicsList.get(i).getLatitude() != null
+                      && clinicsList.get(i).getLongitude() != null) {
+                    clinicsWithLocation.add(clinicsList.get(i));
+                  }
+                }
+
+                ClinicAddressesRecyclerAdapter clinicAddressesRecyclerAdapter =
+                    new ClinicAddressesRecyclerAdapter(getActivity(), clinicsWithLocation);
+
+                clinicAddressRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
+                clinicAddressRecycler.addItemDecoration(
+                    new SimpleDividerItemDecoration(getActivity()));
+                clinicAddressRecycler.setHasFixedSize(true);
+                clinicAddressRecycler.setAdapter(clinicAddressesRecyclerAdapter);
+
+                mapFragment.getMapAsync(InsuranceDirectoryFragment.this);
+                mapFragment.setListener(new WorkaroundMapFragment.OnTouchListener() {
+                  @Override public void onTouch() {
+                    NestedScrollView myScrollingContent =
+                        ((NestedScrollView) getActivity().findViewById(R.id.myScrollingContent));
+                    myScrollingContent.requestDisallowInterceptTouchEvent(true);
+                  }
+                });
+            }
+          }
+
+          @Override public void onFailure(Call<GetNearbyClinicsResponse> call, Throwable t) {
+            Timber.d("Call failed with error : %s", t.getMessage());
+            alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
+            alertDialog.show();
+          }
+        });
   }
 
   private void setupSwitchMapViewButton() {
@@ -193,6 +221,62 @@ public class InsuranceDirectoryFragment extends Fragment implements OnMapReadyCa
           listingVisible = !listingVisible;
         }
       });
+    }
+  }
+
+  private void filterClinicsAndAddMarkers() {
+    List<GetNearbyClinicsResponseDatum> filteredClinics =
+        filterValidClinics(userLatLong, clinicsWithLocation);
+
+    addMarkersToMap(filteredClinics);
+
+    map.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(userLatLong[0], userLatLong[1])));
+  }
+
+  private List<GetNearbyClinicsResponseDatum> filterValidClinics(double[] userLatLong,
+      List<GetNearbyClinicsResponseDatum> clinicsToWorkWith) {
+    Location userLocation = new Location("You");
+    userLocation.setLatitude(userLatLong[0]);
+    userLocation.setLongitude(userLatLong[1]);
+
+    List<GetNearbyClinicsResponseDatum> filteredClinics = new ArrayList<>();
+
+    for (int i = 0; i < clinicsToWorkWith.size(); i++) {
+      Location targetLocation = new Location(clinicsToWorkWith.get(i).getName());
+      targetLocation.setLongitude(Double.parseDouble(clinicsToWorkWith.get(i).getLongitude()));
+      targetLocation.setLatitude(Double.parseDouble(clinicsToWorkWith.get(i).getLatitude()));
+
+      if (userLocation.distanceTo(targetLocation) < 10000) {
+        filteredClinics.add(clinicsToWorkWith.get(i));
+      }
+    }
+
+    return filteredClinics;
+  }
+
+  private void addMarkersToMap(List<GetNearbyClinicsResponseDatum> validClinics) {
+    for (int i = 0; i < validClinics.size(); i++) {
+      map.addMarker(new MarkerOptions().position(
+          new LatLng(Double.parseDouble(validClinics.get(i).getLatitude()),
+              Double.parseDouble(validClinics.get(i).getLongitude())))
+          .title(validClinics.get(i).getName()));
+    }
+  }
+
+  private void getUserLocation() {
+    if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
+        != PackageManager.PERMISSION_GRANTED) {
+      requestPermissions(new String[] {
+          Manifest.permission.ACCESS_FINE_LOCATION
+      }, PERMISSION_LOCATION_REQUEST_CODE);
+    } else {
+      Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+      userLatLong[0] = location.getLatitude();
+      userLatLong[1] = location.getLongitude();
+
+      Timber.d("Permission already granted");
+
+      getNearbyClinics();
     }
   }
 }

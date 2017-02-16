@@ -10,16 +10,17 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.mcsaatchi.gmfit.R;
+import com.mcsaatchi.gmfit.architecture.rest.GetNearbyClinicsResponseDatum;
 import com.mcsaatchi.gmfit.insurance.activities.directory.ClinicDetailsActivity;
-import com.mcsaatchi.gmfit.insurance.models.Clinic;
 import java.util.List;
 import org.apache.commons.lang3.text.WordUtils;
 
 public class ClinicAddressesRecyclerAdapter extends RecyclerView.Adapter {
-  private List<Clinic> clinicsList;
+  private List<GetNearbyClinicsResponseDatum> clinicsList;
   private Context context;
 
-  public ClinicAddressesRecyclerAdapter(Context context, List<Clinic> clinicsList) {
+  public ClinicAddressesRecyclerAdapter(Context context,
+      List<GetNearbyClinicsResponseDatum> clinicsList) {
     this.context = context;
     this.clinicsList = clinicsList;
   }
@@ -58,15 +59,27 @@ public class ClinicAddressesRecyclerAdapter extends RecyclerView.Adapter {
       onlineNowIV = (ImageView) itemView.findViewById(R.id.onlineNowIV);
     }
 
-    public void bind(Clinic clinic) {
+    public void bind(GetNearbyClinicsResponseDatum clinic) {
       clinicNameTV.setText(WordUtils.capitalizeFully(clinic.getName()));
       clinicAddressTV.setText(clinic.getAddress());
 
-      if (clinic.isOnline()) onlineNowIV.setVisibility(View.VISIBLE);
+      if (clinic.getOnline() != null) {
+        if (clinic.getOnline()) {
+          onlineNowIV.setVisibility(View.VISIBLE);
+        }
+      }
 
-      if (clinic.isWithin_network()) withinNetworkIV.setVisibility(View.VISIBLE);
+      if (clinic.getPartOfNetwork() != null) {
+        if (clinic.getPartOfNetwork()) {
+          withinNetworkIV.setVisibility(View.VISIBLE);
+        }
+      }
 
-      if (clinic.isOpen_247()) open247IV.setVisibility(View.VISIBLE);
+      if (clinic.getTwentyfourseven() != null) {
+        if (clinic.getTwentyfourseven()) {
+          open247IV.setVisibility(View.VISIBLE);
+        }
+      }
 
       parentLayout.setOnClickListener(new View.OnClickListener() {
         @Override public void onClick(View view) {

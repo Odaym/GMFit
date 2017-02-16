@@ -173,4 +173,7 @@ public interface GMFitService {
   Call<SubCategoriesResponse> getSubCategories(
       @Body ApiCallsHandler.SimpleInsuranceRequest simpleInsuranceRequest);
 
+  @POST("insurance/network/advanced-search")
+  Call<GetNearbyClinicsResponse> getNearbyClinics(
+      @Body ApiCallsHandler.NearbyClinicsRequest simpleInsuranceRequest);
 }
