@@ -67,14 +67,10 @@ public class SignInActivity extends BaseActivity {
 
     signInBTN.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
-        if (Helpers.validateFields(allFields)) {
-          if (Helpers.isInternetAvailable(SignInActivity.this)) {
-            signInUser(emailET.getText().toString(), passwordET.getText().toString());
-          } else {
-            Helpers.showNoInternetDialog(SignInActivity.this);
-          }
+        if (Helpers.isInternetAvailable(SignInActivity.this)) {
+          signInUser(emailET.getText().toString(), passwordET.getText().toString());
         } else {
-          showPasswordTV.setVisibility(View.GONE);
+          Helpers.showNoInternetDialog(SignInActivity.this);
         }
       }
     });
@@ -155,6 +151,7 @@ public class SignInActivity extends BaseActivity {
           case 401:
             waitingDialog.dismiss();
 
+            alertDialog.setTitle(getString(R.string.error_occurred_dialog_title));
             alertDialog.setMessage(getString(R.string.login_failed_wrong_credentials));
             alertDialog.show();
             break;
@@ -168,6 +165,11 @@ public class SignInActivity extends BaseActivity {
             startActivity(userNotVerifiedIntent);
 
             finish();
+            break;
+          case 449:
+            alertDialog.setMessage(
+                getResources().getString(R.string.error_response_from_server_incorrect));
+            alertDialog.show();
             break;
           case 500:
             alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));

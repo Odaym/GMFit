@@ -22,6 +22,7 @@ import com.mcsaatchi.gmfit.architecture.rest.RestClient;
 import com.mcsaatchi.gmfit.architecture.rest.SearchMealItemResponse;
 import com.mcsaatchi.gmfit.architecture.rest.SearchMedicinesResponse;
 import com.mcsaatchi.gmfit.architecture.rest.SlugBreakdownResponse;
+import com.mcsaatchi.gmfit.architecture.rest.SubCategoriesResponse;
 import com.mcsaatchi.gmfit.architecture.rest.TakenMedicalTestsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.UiResponse;
 import com.mcsaatchi.gmfit.architecture.rest.UpdateInsurancePasswordResponse;
@@ -896,6 +897,21 @@ public class ApiCallsHandler {
       }
 
       @Override public void onFailure(Call<CardDetailsResponse> call, Throwable t) {
+      }
+    });
+  }
+
+  void getSubCategories(String contractNo, final Callback<SubCategoriesResponse> callback) {
+    Call<SubCategoriesResponse> apiCall =
+        restClient.getGMFitService().getSubCategories(new SimpleInsuranceRequest(contractNo));
+
+    apiCall.enqueue(new Callback<SubCategoriesResponse>() {
+      @Override public void onResponse(Call<SubCategoriesResponse> call,
+          Response<SubCategoriesResponse> response) {
+        callback.onResponse(call, response);
+      }
+
+      @Override public void onFailure(Call<SubCategoriesResponse> call, Throwable t) {
       }
     });
   }

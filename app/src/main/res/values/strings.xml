@@ -74,8 +74,9 @@
   <string name="sign_in_activity_title">Sign In</string>
   <string name="forgot_password_button">&lt;u>Forgot Password?&lt;u></string>
   <string name="signing_in_dialog_title">Logging in</string>
-  <string name="login_failed_alert_dialog_title">Login failed</string>
+  <string name="error_occurred_dialog_title">An Error Occurred</string>
   <string name="login_failed_wrong_credentials">Wrong email and password combination, please try again.</string>
+  <string name="error_email_address_not_valid">The email address you entered is not valid. Please try again.</string>
   <string name="show_password">Show</string>
   <string name="hide_password">Hide</string>
 

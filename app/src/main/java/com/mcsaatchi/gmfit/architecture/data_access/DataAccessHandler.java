@@ -21,6 +21,7 @@ import com.mcsaatchi.gmfit.architecture.rest.RecentMealsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.SearchMealItemResponse;
 import com.mcsaatchi.gmfit.architecture.rest.SearchMedicinesResponse;
 import com.mcsaatchi.gmfit.architecture.rest.SlugBreakdownResponse;
+import com.mcsaatchi.gmfit.architecture.rest.SubCategoriesResponse;
 import com.mcsaatchi.gmfit.architecture.rest.TakenMedicalTestsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.UiResponse;
 import com.mcsaatchi.gmfit.architecture.rest.UpdateInsurancePasswordResponse;
@@ -297,5 +298,9 @@ public class DataAccessHandler {
 
   public void getCardDetails(String contractNo, Callback<CardDetailsResponse> callback) {
     apiCallsHandler.getCardDetails(contractNo, callback);
+  }
+
+  public void getSubCategories(String contractNo, Callback<SubCategoriesResponse> callback) {
+    apiCallsHandler.getSubCategories(contractNo, callback);
   }
 }

@@ -8,14 +8,12 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.andreabaccega.widget.FormEditText;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
-import com.mcsaatchi.gmfit.common.classes.Helpers;
 import java.util.ArrayList;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -44,9 +42,7 @@ public class ForgotPasswordActivity extends BaseActivity {
 
     submitForgotPasswordEmailBTN.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View v) {
-        if (Helpers.validateFields(allFields)) {
-          forgotPasswordSendToken(emailET.getText().toString());
-        }
+        forgotPasswordSendToken(emailET.getText().toString());
       }
     });
   }
@@ -78,11 +74,14 @@ public class ForgotPasswordActivity extends BaseActivity {
             Intent intent = new Intent(ForgotPasswordActivity.this, ResetPasswordActivity.class);
             startActivity(intent);
 
-            Toast.makeText(ForgotPasswordActivity.this, R.string.password_change_successful,
-                Toast.LENGTH_SHORT).show();
-
             finish();
 
+            break;
+          case 404:
+            alertDialog.setTitle(getString(R.string.error_occurred_dialog_title));
+            alertDialog.setMessage(
+                getResources().getString(R.string.error_response_from_server_incorrect));
+            alertDialog.show();
             break;
         }
       }

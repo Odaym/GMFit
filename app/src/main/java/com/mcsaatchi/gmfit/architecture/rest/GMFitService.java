@@ -168,4 +168,9 @@ public interface GMFitService {
   @POST("insurance/update-info")
   Call<UpdateInsurancePasswordResponse> updateInsurancePassword(
       @Body ApiCallsHandler.UpdateInsurancePasswordRequest updateInsurancePasswordRequest);
+
+  @POST("insurance/sub-categories")
+  Call<SubCategoriesResponse> getSubCategories(
+      @Body ApiCallsHandler.SimpleInsuranceRequest simpleInsuranceRequest);
+
 }
