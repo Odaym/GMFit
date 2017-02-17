@@ -63,7 +63,7 @@ public class FitnessWidgetsRecyclerAdapter
         holder.moreInfoIV.setVisibility(View.GONE);
         holder.metricIcon.setImageResource(R.drawable.ic_distance_traveled);
         holder.metricTV.setText(String.valueOf(
-            new DecimalFormat("##.###").format(this.widgetsMap.get(position).getValue())));
+            new DecimalFormat("##.##").format(this.widgetsMap.get(position).getValue())));
         holder.measurementUnitTV.setText(this.widgetsMap.get(position).getMeasurementUnit());
         break;
     }
