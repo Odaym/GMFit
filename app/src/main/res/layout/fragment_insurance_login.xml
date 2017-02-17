@@ -9,8 +9,8 @@
 
   <ImageView
       android:id="@+id/memberImageIV"
-      android:layout_width="100dp"
-      android:layout_height="100dp"
+      android:layout_width="@dimen/insurance_login_screen_icon"
+      android:layout_height="@dimen/insurance_login_screen_icon"
       android:layout_gravity="center_horizontal"
       android:layout_marginTop="@dimen/default_margin_2"
       android:src="@drawable/insurance_login_icon"

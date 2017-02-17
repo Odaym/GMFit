@@ -62,8 +62,9 @@ public class DataAccessHandler {
     apiCallsHandler.refreshAccessToken(callback);
   }
 
-  public void synchronizeMetricsWithServer(String[] slugsArray, Number[] valuesArray) {
-    apiCallsHandler.synchronizeMetricsWithServer(slugsArray, valuesArray);
+  public void synchronizeMetricsWithServer(String[] slugsArray, Number[] valuesArray,
+      Callback<DefaultGetResponse> callback) {
+    apiCallsHandler.synchronizeMetricsWithServer(slugsArray, valuesArray, callback);
   }
 
   public void signInUser(String email, String password, Callback<AuthenticationResponse> callback) {

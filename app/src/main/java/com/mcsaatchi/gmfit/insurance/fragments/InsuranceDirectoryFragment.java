@@ -1,7 +1,6 @@
 package com.mcsaatchi.gmfit.insurance.fragments;
 
 import android.Manifest;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
@@ -23,8 +22,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -49,6 +50,8 @@ public class InsuranceDirectoryFragment extends Fragment implements OnMapReadyCa
   private static final int PERMISSION_LOCATION_REQUEST_CODE = 375;
   @Bind(R.id.clinicAddressesRecyclerView) RecyclerView clinicAddressRecycler;
   @Bind(R.id.searchBoxET) EditText searchBoxET;
+  @Bind(R.id.loadingMapProgress) ProgressBar loadingMapProgress;
+
   @Inject DataAccessHandler dataAccessHandler;
   private boolean listingVisible = false;
   private List<GetNearbyClinicsResponseDatum> clinicsWithLocation = new ArrayList<>();
@@ -77,8 +80,6 @@ public class InsuranceDirectoryFragment extends Fragment implements OnMapReadyCa
     mapFragment = ((WorkaroundMapFragment) getChildFragmentManager().findFragmentById(R.id.map));
 
     setupSwitchMapViewButton();
-
-    getUserLocation();
 
     searchBoxET.addTextChangedListener(new TextWatcher() {
       @Override public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -113,6 +114,13 @@ public class InsuranceDirectoryFragment extends Fragment implements OnMapReadyCa
     return fragmentView;
   }
 
+  @Override public void setUserVisibleHint(boolean isVisibleToUser) {
+    super.setUserVisibleHint(isVisibleToUser);
+    if (isVisibleToUser) {
+      getUserLocation();
+    }
+  }
+
   @Override public void onMapReady(GoogleMap googleMap) {
     map = googleMap;
 
@@ -140,10 +148,7 @@ public class InsuranceDirectoryFragment extends Fragment implements OnMapReadyCa
   }
 
   private void getNearbyClinics() {
-    final ProgressDialog waitingDialog = new ProgressDialog(getActivity());
-    waitingDialog.setTitle(getString(R.string.get_nearby_clinics_message));
-    waitingDialog.setMessage(getString(R.string.please_wait_dialog_message));
-    waitingDialog.show();
+    loadingMapProgress.setVisibility(View.VISIBLE);
 
     final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
     alertDialog.setTitle(R.string.get_nearby_clinics_message);
@@ -151,8 +156,6 @@ public class InsuranceDirectoryFragment extends Fragment implements OnMapReadyCa
         new DialogInterface.OnClickListener() {
           public void onClick(DialogInterface dialog, int which) {
             dialog.dismiss();
-
-            if (waitingDialog.isShowing()) waitingDialog.dismiss();
           }
         });
 
@@ -162,8 +165,6 @@ public class InsuranceDirectoryFragment extends Fragment implements OnMapReadyCa
               Response<GetNearbyClinicsResponse> response) {
             switch (response.code()) {
               case 200:
-                waitingDialog.dismiss();
-
                 List<GetNearbyClinicsResponseDatum> clinicsList =
                     response.body().getData().getBody().getData();
 
@@ -229,8 +230,6 @@ public class InsuranceDirectoryFragment extends Fragment implements OnMapReadyCa
         filterValidClinics(userLatLong, clinicsWithLocation);
 
     addMarkersToMap(filteredClinics);
-
-    map.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(userLatLong[0], userLatLong[1])));
   }
 
   private List<GetNearbyClinicsResponseDatum> filterValidClinics(double[] userLatLong,
@@ -255,12 +254,17 @@ public class InsuranceDirectoryFragment extends Fragment implements OnMapReadyCa
   }
 
   private void addMarkersToMap(List<GetNearbyClinicsResponseDatum> validClinics) {
+    map.addMarker(
+        new MarkerOptions().position(new LatLng(userLatLong[0], userLatLong[1])).title("You"));
+
     for (int i = 0; i < validClinics.size(); i++) {
       map.addMarker(new MarkerOptions().position(
           new LatLng(Double.parseDouble(validClinics.get(i).getLatitude()),
               Double.parseDouble(validClinics.get(i).getLongitude())))
           .title(validClinics.get(i).getName()));
     }
+
+    zoomAnimateCamera();
   }
 
   private void getUserLocation() {
@@ -274,9 +278,17 @@ public class InsuranceDirectoryFragment extends Fragment implements OnMapReadyCa
       userLatLong[0] = location.getLatitude();
       userLatLong[1] = location.getLongitude();
 
-      Timber.d("Permission already granted");
-
       getNearbyClinics();
     }
+  }
+
+  private void zoomAnimateCamera() {
+    CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(userLatLong[0], userLatLong[1]));
+    CameraUpdate zoom = CameraUpdateFactory.zoomTo(13);
+
+    map.moveCamera(center);
+    map.animateCamera(zoom, 400, null);
+
+    loadingMapProgress.setVisibility(View.GONE);
   }
 }

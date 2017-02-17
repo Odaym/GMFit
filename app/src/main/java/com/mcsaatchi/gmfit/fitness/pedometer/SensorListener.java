@@ -25,6 +25,7 @@ import com.mcsaatchi.gmfit.architecture.otto.DistanceCounterIncrementedEvent;
 import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
 import com.mcsaatchi.gmfit.architecture.otto.StepCounterIncrementedEvent;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponse;
+import com.mcsaatchi.gmfit.architecture.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.fitness.models.FitnessWidget;
 import java.util.Calendar;
@@ -68,9 +69,6 @@ public class SensorListener extends Service implements SensorEventListener {
 
     fitnessWidgetsDAO = dbHelper.getFitnessWidgetsDAO();
 
-    /**
-     * Timer Task for calculating metrics as the phone is active
-     */
     TimerTask doAsynchronousTask = new TimerTask() {
       @Override public void run() {
 
@@ -93,7 +91,6 @@ public class SensorListener extends Service implements SensorEventListener {
       prefs.edit().putBoolean(Constants.EXTRAS_FIRST_APP_LAUNCH, false).apply();
 
       clearMetricsInPrefs();
-
     } else {
       float caloriesToday =
           calculateCalories(prefs.getFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, 70),
@@ -209,41 +206,50 @@ public class SensorListener extends Service implements SensorEventListener {
   }
 
   private void synchronizeMetricsWithServer(String[] slugsArray, Number[] valuesArray) {
-    dataAccessHandler.synchronizeMetricsWithServer(slugsArray, valuesArray);
+    dataAccessHandler.synchronizeMetricsWithServer(slugsArray, valuesArray,
+        new Callback<DefaultGetResponse>() {
+          @Override public void onResponse(Call<DefaultGetResponse> call,
+              Response<DefaultGetResponse> response) {
+            switch (response.code()) {
+              case 200:
 
-    int hourOfDay = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+                Calendar c = Calendar.getInstance();
+                int hour = c.get(Calendar.HOUR_OF_DAY);
+                int minute = c.get(Calendar.MINUTE);
+                int second = c.get(Calendar.SECOND);
 
-    if (hourOfDay == 0) {
-      wipeOutFitnessMetricsAtMidnight();
-    }
+                //If current time is between 12AM and 12:02AM, clear metrics
+                if (hour * 3600 + minute * 60 + second < 120) {
+                  Timber.d("Time is between, wiping metrics");
+                  wipeOutFitnessMetricsAtMidnight();
+                  sendOutEventBusEvents();
+                } else {
+                  Timber.d("Time is not between");
+                }
+
+                break;
+            }
+          }
+
+          @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+
+          }
+        });
   }
 
   private void wipeOutFitnessMetricsAtMidnight() {
-    Calendar cal = Calendar.getInstance();
+    clearMetricsInPrefs();
 
-    String dayToday = cal.get(Calendar.YEAR) + "_" + cal.get(Calendar.MONTH) + "_" + cal.get(
-        Calendar.DAY_OF_MONTH);
+    List<FitnessWidget> fitnessWidgets = fitnessWidgetsDAO.queryForAll();
 
-    if (!prefs.getBoolean("CLEARED_" + dayToday, false) && !prefs.getBoolean(
-        Constants.EXTRAS_FIRST_APP_LAUNCH, false)) {
+    for (int i = 0; i < fitnessWidgets.size(); i++) {
+      fitnessWidgets.get(i).setValue(0);
 
-      Timber.d("Clearing them now, setting cleared to true");
-
-      prefs.edit().putBoolean("CLEARED_" + dayToday, true).apply();
-
-      clearMetricsInPrefs();
-
-      List<FitnessWidget> fitnessWidgets = fitnessWidgetsDAO.queryForAll();
-
-      for (int i = 0; i < fitnessWidgets.size(); i++) {
-        fitnessWidgets.get(i).setValue(0);
-
-        fitnessWidgetsDAO.update(fitnessWidgets.get(i));
-      }
+      fitnessWidgetsDAO.update(fitnessWidgets.get(i));
     }
   }
 
-  private void clearMetricsInPrefs(){
+  private void clearMetricsInPrefs() {
     prefs.edit().putInt("steps_taken", 0).apply();
     prefs.edit().putFloat("calories_spent", 0).apply();
     prefs.edit().putFloat("distance_traveled", 0.00f).apply();

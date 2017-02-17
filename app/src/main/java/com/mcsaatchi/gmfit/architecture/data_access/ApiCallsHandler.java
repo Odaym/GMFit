@@ -82,7 +82,8 @@ public class ApiCallsHandler {
     });
   }
 
-  void synchronizeMetricsWithServer(String[] slugsArray, Number[] valuesArray) {
+  void synchronizeMetricsWithServer(String[] slugsArray, Number[] valuesArray,
+      final Callback<DefaultGetResponse> callback) {
     Call<DefaultGetResponse> apiCall = restClient.getGMFitService()
         .updateMetrics(
             new UpdateMetricsRequest(slugsArray, valuesArray, Helpers.getCalendarDate()));
@@ -90,6 +91,7 @@ public class ApiCallsHandler {
     apiCall.enqueue(new Callback<DefaultGetResponse>() {
       @Override
       public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
+        callback.onResponse(call, response);
       }
 
       @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
