@@ -11,12 +11,12 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.mcsaatchi.gmfit.R;
 
-public class CustomAttachementPicker extends LinearLayout {
+public class CustomAttachmentPicker extends LinearLayout {
   public static final int REQUEST_PICK_IMAGE_GALLERY = 586;
   public static final int CAPTURE_NEW_PICTURE_REQUEST_CODE = 871;
   @Bind(R.id.headerText) TextView headerTextTV;
 
-  public CustomAttachementPicker(Context context, AttributeSet attrs) {
+  public CustomAttachmentPicker(Context context, AttributeSet attrs) {
     super(context, attrs);
 
     LayoutInflater mInflater =

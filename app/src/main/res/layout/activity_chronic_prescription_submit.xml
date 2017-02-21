@@ -45,19 +45,22 @@
           custom:header_text="@string/attach_all_the_required_documents_below"
           />
 
-      <com.mcsaatchi.gmfit.insurance.widget.CustomAttachementPicker
+      <com.mcsaatchi.gmfit.insurance.widget.CustomAttachmentPicker
+          android:id="@+id/medicalReportImagesPicker"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           custom:header_text="Medical Report"
           />
 
-      <com.mcsaatchi.gmfit.insurance.widget.CustomAttachementPicker
+      <com.mcsaatchi.gmfit.insurance.widget.CustomAttachmentPicker
+          android:id="@+id/invoiceImagesPicker"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           custom:header_text="Invoice"
           />
 
-      <com.mcsaatchi.gmfit.insurance.widget.CustomAttachementPicker
+      <com.mcsaatchi.gmfit.insurance.widget.CustomAttachmentPicker
+          android:id="@+id/identityCardImagesPicker"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           custom:header_text="Identity Card"

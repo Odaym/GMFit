@@ -25,7 +25,7 @@ import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.rest.SubCategoriesResponse;
 import com.mcsaatchi.gmfit.architecture.rest.SubCategoriesResponseDatum;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
-import com.mcsaatchi.gmfit.insurance.widget.CustomAttachementPicker;
+import com.mcsaatchi.gmfit.insurance.widget.CustomAttachmentPicker;
 import com.mcsaatchi.gmfit.insurance.widget.CustomPicker;
 import com.mcsaatchi.gmfit.insurance.widget.CustomToggle;
 import com.squareup.picasso.Picasso;
@@ -40,8 +40,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import timber.log.Timber;
 
-import static com.mcsaatchi.gmfit.insurance.widget.CustomAttachementPicker.CAPTURE_NEW_PICTURE_REQUEST_CODE;
-import static com.mcsaatchi.gmfit.insurance.widget.CustomAttachementPicker.REQUEST_PICK_IMAGE_GALLERY;
+import static com.mcsaatchi.gmfit.insurance.widget.CustomAttachmentPicker.CAPTURE_NEW_PICTURE_REQUEST_CODE;
+import static com.mcsaatchi.gmfit.insurance.widget.CustomAttachmentPicker.REQUEST_PICK_IMAGE_GALLERY;
 
 public class SubmitReimbursementActivity extends BaseActivity {
 
@@ -52,11 +52,11 @@ public class SubmitReimbursementActivity extends BaseActivity {
   @Bind(R.id.reimbursementAmount) CustomPicker amount;
   @Bind(R.id.categoryInOutToggle) CustomToggle categoryToggle;
   @Bind(R.id.submitReimbursementBTN) Button submitReimbursementBTN;
-  @Bind(R.id.medicalReportImagesPicker) CustomAttachementPicker medicalReportImagesPicker;
-  @Bind(R.id.invoiceImagesPicker) CustomAttachementPicker invoiceImagesPicker;
-  @Bind(R.id.identityCardImagesPicker) CustomAttachementPicker identityCardImagesPicker;
-  @Bind(R.id.passportImagesPicker) CustomAttachementPicker passportImagesPicker;
-  @Bind(R.id.testResultsImagesPicker) CustomAttachementPicker testResultsImagesPicker;
+  @Bind(R.id.medicalReportImagesPicker) CustomAttachmentPicker medicalReportImagesPicker;
+  @Bind(R.id.invoiceImagesPicker) CustomAttachmentPicker invoiceImagesPicker;
+  @Bind(R.id.identityCardImagesPicker) CustomAttachmentPicker identityCardImagesPicker;
+  @Bind(R.id.passportImagesPicker) CustomAttachmentPicker passportImagesPicker;
+  @Bind(R.id.testResultsImagesPicker) CustomAttachmentPicker testResultsImagesPicker;
 
   private File photoFile;
   private Uri photoFileUri;
@@ -116,7 +116,7 @@ public class SubmitReimbursementActivity extends BaseActivity {
     hookupImagesPickerImages(testResultsImagesPicker);
   }
 
-  private void hookupImagesPickerImages(CustomAttachementPicker imagePicker) {
+  private void hookupImagesPickerImages(CustomAttachmentPicker imagePicker) {
     LinearLayout parentLayout = (LinearLayout) imagePicker.getChildAt(0);
     final LinearLayout innerLayoutWithPickers = (LinearLayout) parentLayout.getChildAt(1);
 
@@ -218,7 +218,7 @@ public class SubmitReimbursementActivity extends BaseActivity {
     builderSingle.show();
   }
 
-  public String getPhotoPathFromGallery(Uri uri) {
+  private String getPhotoPathFromGallery(Uri uri) {
     if (uri == null) {
       // TODO perform some logging or show user feedback
       return null;

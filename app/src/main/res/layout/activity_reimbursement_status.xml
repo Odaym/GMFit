@@ -106,37 +106,37 @@
           custom:header_text="Attachements"
           />
 
-      <com.mcsaatchi.gmfit.insurance.widget.CustomAttachementPicker
+      <com.mcsaatchi.gmfit.insurance.widget.CustomAttachmentPicker
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           custom:header_text="Medical Report"
           />
 
-      <com.mcsaatchi.gmfit.insurance.widget.CustomAttachementPicker
+      <com.mcsaatchi.gmfit.insurance.widget.CustomAttachmentPicker
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           custom:header_text="Invoice"
           />
 
-      <com.mcsaatchi.gmfit.insurance.widget.CustomAttachementPicker
+      <com.mcsaatchi.gmfit.insurance.widget.CustomAttachmentPicker
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           custom:header_text="Identity Card"
           />
 
-      <com.mcsaatchi.gmfit.insurance.widget.CustomAttachementPicker
+      <com.mcsaatchi.gmfit.insurance.widget.CustomAttachmentPicker
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           custom:header_text="Passport"
           />
 
-      <com.mcsaatchi.gmfit.insurance.widget.CustomAttachementPicker
+      <com.mcsaatchi.gmfit.insurance.widget.CustomAttachmentPicker
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           custom:header_text="Test Results"
           />
 
-      <com.mcsaatchi.gmfit.insurance.widget.CustomAttachementPicker
+      <com.mcsaatchi.gmfit.insurance.widget.CustomAttachmentPicker
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           custom:header_text="Other Documents"

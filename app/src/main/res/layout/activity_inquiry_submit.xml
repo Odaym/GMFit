@@ -188,7 +188,8 @@
           custom:header_text="@string/attach_photo_hint"
           />
 
-      <com.mcsaatchi.gmfit.insurance.widget.CustomAttachementPicker
+      <com.mcsaatchi.gmfit.insurance.widget.CustomAttachmentPicker
+          android:id="@+id/medicalReportImagesPicker"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           custom:header_text="Medical Report"

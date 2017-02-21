@@ -76,7 +76,7 @@
       android:orientation="vertical"
       >
 
-    <com.mcsaatchi.gmfit.insurance.widget.CustomAttachementPicker
+    <com.mcsaatchi.gmfit.insurance.widget.CustomAttachmentPicker
         android:layout_width="match_parent"
         android:layout_height="@dimen/doctor_confirmation_picker_height"
         custom:header_text="Doctor\'s Confirmation"
