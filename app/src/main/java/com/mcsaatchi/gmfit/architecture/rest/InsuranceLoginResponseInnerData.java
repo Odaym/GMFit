@@ -6,7 +6,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
-public class InsuranceLoginResponseInnerData implements Parcelable {
+public class InsuranceLoginResponseInnerData implements Parcelable{
   public static final Creator<InsuranceLoginResponseInnerData> CREATOR =
       new Creator<InsuranceLoginResponseInnerData>() {
         @Override public InsuranceLoginResponseInnerData createFromParcel(Parcel source) {
@@ -19,9 +19,11 @@ public class InsuranceLoginResponseInnerData implements Parcelable {
       };
   @SerializedName("username") @Expose private String username;
   @SerializedName("email") @Expose private String email;
-  @SerializedName("isFirstLogin") @Expose private Boolean isFirstLogin;
+  @SerializedName("isFirstLogin") @Expose private boolean isFirstLogin;
   @SerializedName("mobile") @Expose private String mobile;
-  @SerializedName("contracts") @Expose private List<InsuranceLoginResponseContract> contracts;
+  @SerializedName("contracts") @Expose private List<InsuranceLoginResponseContract> contracts =
+      null;
+  @SerializedName("raw") @Expose private InsuranceLoginResponseRawData raw;
 
   public InsuranceLoginResponseInnerData() {
   }
@@ -29,9 +31,10 @@ public class InsuranceLoginResponseInnerData implements Parcelable {
   protected InsuranceLoginResponseInnerData(Parcel in) {
     this.username = in.readString();
     this.email = in.readString();
-    this.isFirstLogin = (Boolean) in.readValue(Boolean.class.getClassLoader());
+    this.isFirstLogin = in.readByte() != 0;
     this.mobile = in.readString();
     this.contracts = in.createTypedArrayList(InsuranceLoginResponseContract.CREATOR);
+    this.raw = in.readParcelable(InsuranceLoginResponseRawData.class.getClassLoader());
   }
 
   public String getUsername() {
@@ -50,11 +53,11 @@ public class InsuranceLoginResponseInnerData implements Parcelable {
     this.email = email;
   }
 
-  public Boolean getIsFirstLogin() {
+  public boolean getIsFirstLogin() {
     return isFirstLogin;
   }
 
-  public void setIsFirstLogin(Boolean isFirstLogin) {
+  public void setIsFirstLogin(boolean isFirstLogin) {
     this.isFirstLogin = isFirstLogin;
   }
 
@@ -66,20 +69,20 @@ public class InsuranceLoginResponseInnerData implements Parcelable {
     this.mobile = mobile;
   }
 
-  public Boolean getFirstLogin() {
-    return isFirstLogin;
-  }
-
-  public void setFirstLogin(Boolean firstLogin) {
-    isFirstLogin = firstLogin;
-  }
-
   public List<InsuranceLoginResponseContract> getContracts() {
     return contracts;
   }
 
   public void setContracts(List<InsuranceLoginResponseContract> contracts) {
     this.contracts = contracts;
+  }
+
+  public InsuranceLoginResponseRawData getRaw() {
+    return raw;
+  }
+
+  public void setRaw(InsuranceLoginResponseRawData raw) {
+    this.raw = raw;
   }
 
   @Override public int describeContents() {
@@ -89,8 +92,9 @@ public class InsuranceLoginResponseInnerData implements Parcelable {
   @Override public void writeToParcel(Parcel dest, int flags) {
     dest.writeString(this.username);
     dest.writeString(this.email);
-    dest.writeValue(this.isFirstLogin);
+    dest.writeByte(this.isFirstLogin ? (byte) 1 : (byte) 0);
     dest.writeString(this.mobile);
     dest.writeTypedList(this.contracts);
+    dest.writeParcelable(this.raw, flags);
   }
 }

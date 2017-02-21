@@ -11,6 +11,7 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.GMFitApplication;
+import com.mcsaatchi.gmfit.architecture.PermissionsChecker;
 import com.mcsaatchi.gmfit.architecture.data_access.DBHelper;
 import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
 import javax.inject.Inject;
@@ -20,6 +21,7 @@ public class BaseActivity extends AppCompatActivity {
   @Inject public SharedPreferences prefs;
   @Inject public DataAccessHandler dataAccessHandler;
   @Inject public DBHelper dbHelper;
+  @Inject public PermissionsChecker permChecker;
 
   private FirebaseAnalytics firebaseAnalytics;
 

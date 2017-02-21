@@ -1,7 +1,9 @@
 package com.mcsaatchi.gmfit.insurance.activities.approval_request;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
@@ -21,6 +23,8 @@ import retrofit2.Response;
 import timber.log.Timber;
 
 public class SubmitApprovalRequestsActivity extends BaseActivity {
+
+  private static final int REQUEST_CAPTURE_PERMISSIONS = 123;
 
   @Bind(R.id.toolbar) Toolbar toolbar;
   @Bind(R.id.reimbursementSubcategory) CustomPicker subcategory;
@@ -60,6 +64,20 @@ public class SubmitApprovalRequestsActivity extends BaseActivity {
         finish();
       }
     });
+
+    if (permChecker.lacksPermissions(Manifest.permission.CAMERA)) {
+      requestCapturePermissions(Manifest.permission.CAMERA);
+    }
+  }
+
+  private void requestCapturePermissions(String missingPermission) {
+    if (!ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)
+        || !ActivityCompat.shouldShowRequestPermissionRationale(this,
+        Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+      ActivityCompat.requestPermissions(this, new String[] { missingPermission },
+          REQUEST_CAPTURE_PERMISSIONS);
+      return;
+    }
   }
 
   private void getSubCategories() {

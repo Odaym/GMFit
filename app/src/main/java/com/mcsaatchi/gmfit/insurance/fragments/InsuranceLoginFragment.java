@@ -103,7 +103,7 @@ public class InsuranceLoginFragment extends Fragment {
                 /**
                  * First time logging in, prompt them to change password
                  */
-                if (response.body().getData().getBody().getData().getFirstLogin()) {
+                if (response.body().getData().getBody().getData().getIsFirstLogin()) {
                   Intent intent = new Intent(getActivity(), UpdatePasswordActivity.class);
                   intent.putExtra("OLD_PASSWORD", passwordET.getText().toString());
                   intent.putExtra(Constants.BUNDLE_INSURANCE_USER_OBJECT,

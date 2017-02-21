@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.mcsaatchi.gmfit.architecture.GMFitApplication;
+import com.mcsaatchi.gmfit.architecture.PermissionsChecker;
 import com.mcsaatchi.gmfit.architecture.data_access.ApiCallsHandler;
 import com.mcsaatchi.gmfit.architecture.data_access.DBHelper;
 import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
@@ -52,5 +53,9 @@ import org.joda.time.LocalDate;
 
   @Provides @Singleton DataAccessHandler provideDataAccessHandler(Context app) {
     return new DataAccessHandler(app);
+  }
+
+  @Provides @Singleton PermissionsChecker providePermissionsChcecker(Context app) {
+    return new PermissionsChecker(app);
   }
 }

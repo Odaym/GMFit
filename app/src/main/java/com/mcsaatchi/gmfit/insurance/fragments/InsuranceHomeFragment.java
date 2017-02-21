@@ -1,10 +1,12 @@
 package com.mcsaatchi.gmfit.insurance.fragments;
 
+import android.Manifest;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
@@ -21,6 +23,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.GMFitApplication;
+import com.mcsaatchi.gmfit.architecture.PermissionsChecker;
 import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.architecture.rest.CardDetailsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.InsuranceLoginResponseInnerData;
@@ -41,14 +44,15 @@ import timber.log.Timber;
 
 public class InsuranceHomeFragment extends Fragment {
 
+  private static final int REQUEST_CAPTURE_PERMISSIONS = 123;
+  private static final int ASK_CAMERA_PERMISSION = 834;
   @Bind(R.id.insurancePathsGridView) RecyclerView insurancePathsGridView;
   @Bind(R.id.parentLayout) RelativeLayout parentLayout;
   @Bind(R.id.cardOwnerTV) TextView cardOwnerTV;
   @Bind(R.id.bankNameTV) TextView bankNameTV;
   @Bind(R.id.cardNumberTV) TextView cardNumberTV;
-
   @Inject DataAccessHandler dataAccessHandler;
-
+  @Inject PermissionsChecker permChecker;
   private List<InsuranceContract> insuranceContracts = new ArrayList<>();
 
   private InsuranceLoginResponseInnerData insuranceUserData;
@@ -120,7 +124,20 @@ public class InsuranceHomeFragment extends Fragment {
       }});
     }
 
+    if (permChecker.lacksPermissions(Manifest.permission.CAMERA)) {
+      requestCapturePermissions(Manifest.permission.CAMERA);
+    }
+
     return fragmentView;
+  }
+
+  private void requestCapturePermissions(String missingPermission) {
+    if (!ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
+        Manifest.permission.CAMERA) || !ActivityCompat.shouldShowRequestPermissionRationale(
+        getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+      requestPermissions(new String[] { missingPermission }, REQUEST_CAPTURE_PERMISSIONS);
+      return;
+    }
   }
 
   private void setupInsurancePathsGrid(

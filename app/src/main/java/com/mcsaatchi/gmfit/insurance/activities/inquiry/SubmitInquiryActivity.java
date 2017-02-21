@@ -1,8 +1,10 @@
 package com.mcsaatchi.gmfit.insurance.activities.inquiry;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.Toolbar;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -18,6 +20,8 @@ import retrofit2.Response;
 import timber.log.Timber;
 
 public class SubmitInquiryActivity extends BaseActivity {
+
+  private static final int REQUEST_CAPTURE_PERMISSIONS = 123;
 
   @Bind(R.id.toolbar) Toolbar toolbar;
   @Bind(R.id.categoryPicker) CustomPicker categoryPicker;
@@ -47,6 +51,20 @@ public class SubmitInquiryActivity extends BaseActivity {
 
           }
         });
+
+    if (permChecker.lacksPermissions(Manifest.permission.CAMERA)) {
+      requestCapturePermissions(Manifest.permission.CAMERA);
+    }
+  }
+
+  private void requestCapturePermissions(String missingPermission) {
+    if (!ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)
+        || !ActivityCompat.shouldShowRequestPermissionRationale(this,
+        Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+      ActivityCompat.requestPermissions(this, new String[] { missingPermission },
+          REQUEST_CAPTURE_PERMISSIONS);
+      return;
+    }
   }
 
   private void getSubCategories() {
