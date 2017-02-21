@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -100,13 +101,18 @@ public class SubmitReimbursementActivity extends BaseActivity {
       requestCapturePermissions(Manifest.permission.CAMERA);
     }
 
-    for (int i = 0; i < medicalReportImagesPicker.getChildCount(); i++) {
-      Timber.d("children for custom attachment picker " + medicalReportImagesPicker.getChildCount());
-      if (medicalReportImagesPicker.getChildAt(i) instanceof ImageView) {
+    LinearLayout parentLayout = (LinearLayout) medicalReportImagesPicker.getChildAt(0);
+    final LinearLayout innerLayoutWithPickers = (LinearLayout) parentLayout.getChildAt(1);
+
+    for (int i = 0; i < innerLayoutWithPickers.getChildCount(); i++) {
+      Timber.d(
+          "children for custom attachment picker " + medicalReportImagesPicker.getChildCount());
+
+      if (innerLayoutWithPickers.getChildAt(i) instanceof ImageView) {
         final int finalI = i;
-        medicalReportImagesPicker.getChildAt(i).setOnClickListener(new View.OnClickListener() {
+        innerLayoutWithPickers.getChildAt(i).setOnClickListener(new View.OnClickListener() {
           @Override public void onClick(View view) {
-            showImagePickerDialog((ImageView) medicalReportImagesPicker.getChildAt(finalI));
+            showImagePickerDialog((ImageView) innerLayoutWithPickers.getChildAt(finalI));
           }
         });
       }
