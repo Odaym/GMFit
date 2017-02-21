@@ -53,6 +53,11 @@ public class SubmitReimbursementActivity extends BaseActivity {
   @Bind(R.id.categoryInOutToggle) CustomToggle categoryToggle;
   @Bind(R.id.submitReimbursementBTN) Button submitReimbursementBTN;
   @Bind(R.id.medicalReportImagesPicker) CustomAttachementPicker medicalReportImagesPicker;
+  @Bind(R.id.invoiceImagesPicker) CustomAttachementPicker invoiceImagesPicker;
+  @Bind(R.id.identityCardImagesPicker) CustomAttachementPicker identityCardImagesPicker;
+  @Bind(R.id.passportImagesPicker) CustomAttachementPicker passportImagesPicker;
+  @Bind(R.id.testResultsImagesPicker) CustomAttachementPicker testResultsImagesPicker;
+
   private File photoFile;
   private Uri photoFileUri;
   private List<SubCategoriesResponseDatum> subCategoriesList;
@@ -97,22 +102,32 @@ public class SubmitReimbursementActivity extends BaseActivity {
       }
     });
 
-    if (permChecker.lacksPermissions(Manifest.permission.CAMERA)) {
-      requestCapturePermissions(Manifest.permission.CAMERA);
+    if (permChecker.lacksPermissions(Manifest.permission.CAMERA,
+        Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+      ActivityCompat.requestPermissions(this,
+          new String[] { Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE },
+          REQUEST_CAPTURE_PERMISSIONS);
     }
 
-    LinearLayout parentLayout = (LinearLayout) medicalReportImagesPicker.getChildAt(0);
+    hookupImagesPickerImages(medicalReportImagesPicker);
+    hookupImagesPickerImages(invoiceImagesPicker);
+    hookupImagesPickerImages(identityCardImagesPicker);
+    hookupImagesPickerImages(passportImagesPicker);
+    hookupImagesPickerImages(testResultsImagesPicker);
+  }
+
+  private void hookupImagesPickerImages(CustomAttachementPicker imagePicker) {
+    LinearLayout parentLayout = (LinearLayout) imagePicker.getChildAt(0);
     final LinearLayout innerLayoutWithPickers = (LinearLayout) parentLayout.getChildAt(1);
 
     for (int i = 0; i < innerLayoutWithPickers.getChildCount(); i++) {
-      Timber.d(
-          "children for custom attachment picker " + medicalReportImagesPicker.getChildCount());
-
       if (innerLayoutWithPickers.getChildAt(i) instanceof ImageView) {
         final int finalI = i;
         innerLayoutWithPickers.getChildAt(i).setOnClickListener(new View.OnClickListener() {
           @Override public void onClick(View view) {
-            showImagePickerDialog((ImageView) innerLayoutWithPickers.getChildAt(finalI));
+            ImageView imageView = (ImageView) innerLayoutWithPickers.findViewById(
+                innerLayoutWithPickers.getChildAt(finalI).getId());
+            showImagePickerDialog(imageView);
           }
         });
       }
@@ -127,7 +142,8 @@ public class SubmitReimbursementActivity extends BaseActivity {
         if (photoFile.getTotalSpace() > 0) {
           Picasso.with(this)
               .load(new File(photoFile.getAbsolutePath()))
-              .resize(500, 500)
+              .resize(getResources().getDimensionPixelSize(R.dimen.attached_images_dimens),
+                  getResources().getDimensionPixelSize(R.dimen.attached_images_dimens))
               .centerInside()
               .into(currentImageView);
         } else {
@@ -142,7 +158,8 @@ public class SubmitReimbursementActivity extends BaseActivity {
 
           Picasso.with(this)
               .load(new File(selectedImagePath))
-              .resize(500, 500)
+              .resize(getResources().getDimensionPixelSize(R.dimen.attached_images_dimens),
+                  getResources().getDimensionPixelSize(R.dimen.attached_images_dimens))
               .centerInside()
               .into(currentImageView);
         }
@@ -239,16 +256,6 @@ public class SubmitReimbursementActivity extends BaseActivity {
 
   private File createImageFile(String imagePath) throws IOException {
     return new File(imagePath);
-  }
-
-  private void requestCapturePermissions(String missingPermission) {
-    if (!ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)
-        || !ActivityCompat.shouldShowRequestPermissionRationale(this,
-        Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-      ActivityCompat.requestPermissions(this, new String[] { missingPermission },
-          REQUEST_CAPTURE_PERMISSIONS);
-      return;
-    }
   }
 
   private void getSubCategories() {

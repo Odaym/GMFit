@@ -6,7 +6,6 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
@@ -124,20 +123,14 @@ public class InsuranceHomeFragment extends Fragment {
       }});
     }
 
-    if (permChecker.lacksPermissions(Manifest.permission.CAMERA)) {
-      requestCapturePermissions(Manifest.permission.CAMERA);
+    if (permChecker.lacksPermissions(Manifest.permission.CAMERA,
+        Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+      requestPermissions(
+          new String[] { Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE },
+          REQUEST_CAPTURE_PERMISSIONS);
     }
 
     return fragmentView;
-  }
-
-  private void requestCapturePermissions(String missingPermission) {
-    if (!ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
-        Manifest.permission.CAMERA) || !ActivityCompat.shouldShowRequestPermissionRationale(
-        getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-      requestPermissions(new String[] { missingPermission }, REQUEST_CAPTURE_PERMISSIONS);
-      return;
-    }
   }
 
   private void setupInsurancePathsGrid(

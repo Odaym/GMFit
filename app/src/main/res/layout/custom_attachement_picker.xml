@@ -26,56 +26,46 @@
 
     <ImageView
         android:id="@+id/imagePicker1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/attached_images_dimens"
+        android:layout_height="@dimen/attached_images_dimens"
         android:background="@color/offwhite_background_gray"
-        android:padding="16dp"
         android:src="@drawable/ic_photo_camera_white_24dp"
-        android:tint="@color/camera_gray_color"
         />
 
     <ImageView
         android:id="@+id/imagePicker2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/attached_images_dimens"
+        android:layout_height="@dimen/attached_images_dimens"
         android:layout_marginLeft="8dp"
         android:background="@color/offwhite_background_gray"
-        android:padding="16dp"
         android:src="@drawable/ic_photo_camera_white_24dp"
-        android:tint="@color/camera_gray_color"
         />
 
     <ImageView
         android:id="@+id/imagePicker3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/attached_images_dimens"
+        android:layout_height="@dimen/attached_images_dimens"
         android:layout_marginLeft="8dp"
         android:background="@color/offwhite_background_gray"
-        android:padding="16dp"
         android:src="@drawable/ic_photo_camera_white_24dp"
-        android:tint="@color/camera_gray_color"
         />
 
     <ImageView
         android:id="@+id/imagePicker4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/attached_images_dimens"
+        android:layout_height="@dimen/attached_images_dimens"
         android:layout_marginLeft="8dp"
         android:background="@color/offwhite_background_gray"
-        android:padding="16dp"
         android:src="@drawable/ic_photo_camera_white_24dp"
-        android:tint="@color/camera_gray_color"
         />
 
     <ImageView
         android:id="@+id/imagePicker5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/attached_images_dimens"
+        android:layout_height="@dimen/attached_images_dimens"
         android:layout_marginLeft="8dp"
         android:background="@color/offwhite_background_gray"
-        android:padding="16dp"
         android:src="@drawable/ic_photo_camera_white_24dp"
-        android:tint="@color/camera_gray_color"
         />
   </LinearLayout>
 
