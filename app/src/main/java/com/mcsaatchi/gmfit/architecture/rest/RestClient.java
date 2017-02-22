@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import com.mcsaatchi.gmfit.architecture.GMFitApplication;
 import com.mcsaatchi.gmfit.common.Constants;
-import com.readystatesoftware.chuck.ChuckInterceptor;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -35,7 +34,6 @@ public class RestClient {
 
     OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
     httpClient.addInterceptor(loggingInterceptor);
-    httpClient.addInterceptor(new ChuckInterceptor(context));
     httpClient.addInterceptor(new Interceptor() {
       @Override public Response intercept(Interceptor.Chain chain) throws IOException {
         Request original = chain.request();
