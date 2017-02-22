@@ -23,6 +23,7 @@ import butterknife.ButterKnife;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.rest.SubCategoriesResponse;
 import com.mcsaatchi.gmfit.architecture.rest.SubCategoriesResponseDatum;
+import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.insurance.widget.CustomAttachmentPicker;
 import com.mcsaatchi.gmfit.insurance.widget.CustomPicker;
@@ -44,16 +45,15 @@ import static com.mcsaatchi.gmfit.insurance.widget.CustomAttachmentPicker.REQUES
 public class SubmitInquiryActivity extends BaseActivity {
 
   private static final int REQUEST_CAPTURE_PERMISSIONS = 123;
-  private File photoFile;
-  private Uri photoFileUri;
-  private ImageView currentImageView;
-  private List<SubCategoriesResponseDatum> subCategoriesList;
-
   @Bind(R.id.toolbar) Toolbar toolbar;
   @Bind(R.id.categoryPicker) CustomPicker categoryPicker;
   @Bind(R.id.subCategoryPicker) CustomPicker subCategoryPicker;
   @Bind(R.id.areaPicker) CustomPicker areaPicker;
   @Bind(R.id.medicalReportImagesPicker) CustomAttachmentPicker medicalReportImagesPicker;
+  private File photoFile;
+  private Uri photoFileUri;
+  private ImageView currentImageView;
+  private List<SubCategoriesResponseDatum> subCategoriesList;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -236,32 +236,34 @@ public class SubmitInquiryActivity extends BaseActivity {
     waitingDialog.setMessage(getResources().getString(R.string.please_wait_dialog_message));
     waitingDialog.show();
 
-    dataAccessHandler.getSubCategories("1892870", new Callback<SubCategoriesResponse>() {
-      @Override public void onResponse(Call<SubCategoriesResponse> call,
-          Response<SubCategoriesResponse> response) {
-        switch (response.code()) {
-          case 200:
-            waitingDialog.dismiss();
+    dataAccessHandler.getSubCategories(
+        prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""),
+        new Callback<SubCategoriesResponse>() {
+          @Override public void onResponse(Call<SubCategoriesResponse> call,
+              Response<SubCategoriesResponse> response) {
+            switch (response.code()) {
+              case 200:
+                waitingDialog.dismiss();
 
-            subCategoriesList = response.body().getData().getBody().getData();
-            String[] finalCategoryNames = new String[subCategoriesList.size()];
+                subCategoriesList = response.body().getData().getBody().getData();
+                String[] finalCategoryNames = new String[subCategoriesList.size()];
 
-            for (int i = 0; i < subCategoriesList.size(); i++) {
-              finalCategoryNames[i] = subCategoriesList.get(i).getName();
+                for (int i = 0; i < subCategoriesList.size(); i++) {
+                  finalCategoryNames[i] = subCategoriesList.get(i).getName();
+                }
+
+                subCategoryPicker.setUpDropDown("Subcategory", "Choose a subcategory",
+                    finalCategoryNames, new CustomPicker.OnDropDownClickListener() {
+                      @Override public void onClick(int index, String selected) {
+
+                      }
+                    });
             }
+          }
 
-            subCategoryPicker.setUpDropDown("Subcategory", "Choose a subcategory",
-                finalCategoryNames, new CustomPicker.OnDropDownClickListener() {
-                  @Override public void onClick(int index, String selected) {
-
-                  }
-                });
-        }
-      }
-
-      @Override public void onFailure(Call<SubCategoriesResponse> call, Throwable t) {
-        Timber.d("Call failed with error : %s", t.getMessage());
-      }
-    });
+          @Override public void onFailure(Call<SubCategoriesResponse> call, Throwable t) {
+            Timber.d("Call failed with error : %s", t.getMessage());
+          }
+        });
   }
 }
