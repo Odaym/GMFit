@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
@@ -42,8 +43,7 @@ import timber.log.Timber;
 
 public class InsuranceHomeFragment extends Fragment {
 
-  private static final int REQUEST_CAPTURE_PERMISSIONS = 123;
-  private static final int ASK_CAMERA_PERMISSION = 834;
+  private static final int REQUEST_CAMERA_AND_STORAGE_PERMISSIONS = 123;
   @Bind(R.id.insurancePathsGridView) RecyclerView insurancePathsGridView;
   @Bind(R.id.parentLayout) RelativeLayout parentLayout;
   @Bind(R.id.cardOwnerTV) TextView cardOwnerTV;
@@ -51,6 +51,7 @@ public class InsuranceHomeFragment extends Fragment {
   @Bind(R.id.cardNumberTV) TextView cardNumberTV;
   @Inject DataAccessHandler dataAccessHandler;
   @Inject PermissionsChecker permChecker;
+  @Inject SharedPreferences prefs;
   private List<InsuranceContract> insuranceContracts = new ArrayList<>();
 
   private InsuranceLoginResponseInnerData insuranceUserData;
@@ -90,6 +91,11 @@ public class InsuranceHomeFragment extends Fragment {
         insuranceContracts.add(contract);
       }
 
+      if (insuranceContracts.size() > 1 && prefs.getString(
+          Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, "").isEmpty()) {
+        contractSelectorBTN.performClick();
+      }
+
       setupInsurancePathsGrid(new ArrayList<InsuranceOperationWidget>() {{
         add(new InsuranceOperationWidget(R.drawable.ic_insurance_operations_submit,
             getString(R.string.widget_submit)));
@@ -108,7 +114,7 @@ public class InsuranceHomeFragment extends Fragment {
         Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
       requestPermissions(
           new String[] { Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE },
-          REQUEST_CAPTURE_PERMISSIONS);
+          REQUEST_CAMERA_AND_STORAGE_PERMISSIONS);
     }
 
     return fragmentView;
@@ -155,27 +161,30 @@ public class InsuranceHomeFragment extends Fragment {
           }
         });
 
-    dataAccessHandler.getCardDetails("1892870", new Callback<CardDetailsResponse>() {
-      @Override public void onResponse(Call<CardDetailsResponse> call,
-          Response<CardDetailsResponse> response) {
+    dataAccessHandler.getCardDetails(
+        prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""),
+        new Callback<CardDetailsResponse>() {
+          @Override public void onResponse(Call<CardDetailsResponse> call,
+              Response<CardDetailsResponse> response) {
 
-        switch (response.code()) {
-          case 200:
-            waitingDialog.dismiss();
+            switch (response.code()) {
+              case 200:
+                waitingDialog.dismiss();
 
-            Intent intent = new Intent(getActivity(), CardDetailsActivity.class);
-            intent.putExtra("PDF", response.body().getData().getBody().getData().replace("\\", ""));
+                Intent intent = new Intent(getActivity(), CardDetailsActivity.class);
+                intent.putExtra("PDF",
+                    response.body().getData().getBody().getData().replace("\\", ""));
 
-            startActivity(intent);
-        }
-      }
+                startActivity(intent);
+            }
+          }
 
-      @Override public void onFailure(Call<CardDetailsResponse> call, Throwable t) {
-        Timber.d("Call failed with error : %s", t.getMessage());
-        alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
-        alertDialog.show();
-      }
-    });
+          @Override public void onFailure(Call<CardDetailsResponse> call, Throwable t) {
+            Timber.d("Call failed with error : %s", t.getMessage());
+            alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
+            alertDialog.show();
+          }
+        });
   }
 
   private void setupContractSelectorButton() {
@@ -191,6 +200,8 @@ public class InsuranceHomeFragment extends Fragment {
           contractSelectorBTN.setImageResource(R.drawable.ic_contract_chooser);
         }
       });
+
+      contractChooserDialog.setCancelable(false);
 
       WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
       lp.copyFrom(contractChooserDialog.getWindow().getAttributes());

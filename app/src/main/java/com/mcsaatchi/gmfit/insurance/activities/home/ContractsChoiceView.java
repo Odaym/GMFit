@@ -57,6 +57,8 @@ public class ContractsChoiceView extends LinearLayout {
         prefs.edit()
             .putString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, contract.getNumber())
             .apply();
+
+        getRootView().setVisibility(View.GONE);
       }
     }
   }

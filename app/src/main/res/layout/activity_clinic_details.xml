@@ -48,7 +48,6 @@
             android:id="@+id/clinicNameTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="aosidjaosidjads"
             android:textColor="@color/black"
             android:textSize="@dimen/clinic_title_text_font_size"
             />
@@ -58,7 +57,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/default_margin_2"
-            android:text="aosidjaosidjads"
             />
 
         <LinearLayout
@@ -250,229 +248,54 @@
           app:header_text="@string/clinic_location_header_text"
           />
 
-      <com.mcsaatchi.gmfit.insurance.widget.ItemHeader
+      <LinearLayout
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:layout_marginTop="@dimen/default_margin_2"
-          app:header_text="@string/clinic_working_hours_header_text"
-          />
-
-      <LinearLayout
-          android:layout_width="match_parent"
-          android:layout_height="@dimen/insurance_input_row_height"
+          android:background="@color/white"
+          android:orientation="horizontal"
+          android:paddingBottom="@dimen/default_margin_3"
+          android:paddingEnd="@dimen/default_margin_1"
+          android:paddingStart="@dimen/default_margin_1"
+          android:paddingTop="@dimen/default_margin_1"
           >
 
-        <TextView
-            android:layout_width="@dimen/insurance_input_row_width"
-            android:layout_height="match_parent"
-            android:background="@color/white"
-            android:gravity="center_vertical"
-            android:paddingStart="@dimen/default_margin_2"
-            android:text="@string/clinic_working_hours_monday"
+        <fragment class="com.google.android.gms.maps.SupportMapFragment"
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/map"
+            android:layout_width="@dimen/map_dimensions_box_clinic_details"
+            android:layout_height="@dimen/map_dimensions_box_clinic_details"
+            android:layout_marginEnd="@dimen/default_margin_1"
+            tools:context=".MapsActivity"
             />
 
-        <TextView
-            android:id="@+id/mondayTV"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="5"
-            android:background="@color/much_lighter_gray"
-            android:gravity="center_vertical"
-            android:paddingStart="@dimen/default_margin_2"
-            android:textColor="@color/black_alpha_50"
-            />
-      </LinearLayout>
+            android:orientation="vertical"
+            >
 
-      <View
-          android:layout_width="match_parent"
-          android:layout_height="1dp"
-          android:background="@color/offwhite_background_gray"
-          />
+          <TextView
+              android:id="@+id/clinicNameOnMapTV"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:textColor="@color/black"
+              />
+          <TextView
+              android:id="@+id/clinicAddressOnMapTV"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              />
 
-      <LinearLayout
-          android:layout_width="match_parent"
-          android:layout_height="@dimen/insurance_input_row_height"
-          >
+          <TextView
+              android:id="@+id/viewOnMapTV"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:text="View on Map >"
+              android:textColor="@color/bpBlue"
+              />
 
-        <TextView
-            android:layout_width="@dimen/insurance_input_row_width"
-            android:layout_height="match_parent"
-            android:background="@color/white"
-            android:gravity="center_vertical"
-            android:paddingStart="@dimen/default_margin_2"
-            android:text="@string/clinic_working_hours_tuesday"
-            />
-
-        <TextView
-            android:id="@+id/tuesdayTV"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="5"
-            android:background="@color/much_lighter_gray"
-            android:gravity="center_vertical"
-            android:paddingStart="@dimen/default_margin_2"
-            android:textColor="@color/black_alpha_50"
-            />
-      </LinearLayout>
-
-      <View
-          android:layout_width="match_parent"
-          android:layout_height="1dp"
-          android:background="@color/offwhite_background_gray"
-          />
-
-      <LinearLayout
-          android:layout_width="match_parent"
-          android:layout_height="@dimen/insurance_input_row_height"
-          >
-
-        <TextView
-            android:layout_width="@dimen/insurance_input_row_width"
-            android:layout_height="match_parent"
-            android:background="@color/white"
-            android:gravity="center_vertical"
-            android:paddingStart="@dimen/default_margin_2"
-            android:text="@string/clinic_working_hours_wednesday"
-            />
-
-        <TextView
-            android:id="@+id/wednesdayTV"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="5"
-            android:background="@color/much_lighter_gray"
-            android:gravity="center_vertical"
-            android:paddingStart="@dimen/default_margin_2"
-            android:textColor="@color/black_alpha_50"
-            />
-      </LinearLayout>
-
-      <View
-          android:layout_width="match_parent"
-          android:layout_height="1dp"
-          android:background="@color/offwhite_background_gray"
-          />
-
-      <LinearLayout
-          android:layout_width="match_parent"
-          android:layout_height="@dimen/insurance_input_row_height"
-          >
-
-        <TextView
-            android:layout_width="@dimen/insurance_input_row_width"
-            android:layout_height="match_parent"
-            android:background="@color/white"
-            android:gravity="center_vertical"
-            android:paddingStart="@dimen/default_margin_2"
-            android:text="@string/clinic_working_hours_thursday"
-            />
-
-        <TextView
-            android:id="@+id/thursdayTV"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="5"
-            android:background="@color/much_lighter_gray"
-            android:gravity="center_vertical"
-            android:paddingStart="@dimen/default_margin_2"
-            android:textColor="@color/black_alpha_50"
-            />
-      </LinearLayout>
-
-      <View
-          android:layout_width="match_parent"
-          android:layout_height="1dp"
-          android:background="@color/offwhite_background_gray"
-          />
-
-      <LinearLayout
-          android:layout_width="match_parent"
-          android:layout_height="@dimen/insurance_input_row_height"
-          >
-
-        <TextView
-            android:layout_width="@dimen/insurance_input_row_width"
-            android:layout_height="match_parent"
-            android:background="@color/white"
-            android:gravity="center_vertical"
-            android:paddingStart="@dimen/default_margin_2"
-            android:text="@string/clinic_working_hours_friday"
-            />
-
-        <TextView
-            android:id="@+id/fridayTV"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="5"
-            android:background="@color/much_lighter_gray"
-            android:gravity="center_vertical"
-            android:paddingStart="@dimen/default_margin_2"
-            android:textColor="@color/black_alpha_50"
-            />
-      </LinearLayout>
-
-      <View
-          android:layout_width="match_parent"
-          android:layout_height="1dp"
-          android:background="@color/offwhite_background_gray"
-          />
-
-      <LinearLayout
-          android:layout_width="match_parent"
-          android:layout_height="@dimen/insurance_input_row_height"
-          >
-
-        <TextView
-            android:layout_width="@dimen/insurance_input_row_width"
-            android:layout_height="match_parent"
-            android:background="@color/white"
-            android:gravity="center_vertical"
-            android:paddingStart="@dimen/default_margin_2"
-            android:text="@string/clinic_working_hours_saturday"
-            />
-
-        <TextView
-            android:id="@+id/saturdayTV"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="5"
-            android:background="@color/much_lighter_gray"
-            android:gravity="center_vertical"
-            android:paddingStart="@dimen/default_margin_2"
-            android:textColor="@color/black_alpha_50"
-            />
-      </LinearLayout>
-
-      <View
-          android:layout_width="match_parent"
-          android:layout_height="1dp"
-          android:background="@color/offwhite_background_gray"
-          />
-
-      <LinearLayout
-          android:layout_width="match_parent"
-          android:layout_height="@dimen/insurance_input_row_height"
-          >
-
-        <TextView
-            android:layout_width="@dimen/insurance_input_row_width"
-            android:layout_height="match_parent"
-            android:background="@color/white"
-            android:gravity="center_vertical"
-            android:paddingStart="@dimen/default_margin_2"
-            android:text="@string/clinic_working_hours_sunday"
-            />
-
-        <TextView
-            android:id="@+id/sundayTV"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="5"
-            android:background="@color/much_lighter_gray"
-            android:gravity="center_vertical"
-            android:paddingStart="@dimen/default_margin_2"
-            android:textColor="@color/black_alpha_50"
-            />
+        </LinearLayout>
       </LinearLayout>
     </LinearLayout>
   </ScrollView>

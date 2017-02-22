@@ -135,8 +135,6 @@ public class InsuranceDirectoryFragment extends Fragment implements OnMapReadyCa
       case PERMISSION_LOCATION_REQUEST_CODE: {
         if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-          Timber.d("PERMISSIONS: Permission was granted on callback");
-
           Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
           userLatLong[0] = location.getLatitude();
           userLatLong[1] = location.getLongitude();

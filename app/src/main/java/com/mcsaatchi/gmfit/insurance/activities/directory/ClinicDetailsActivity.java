@@ -8,11 +8,18 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.rest.GetNearbyClinicsResponseDatum;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 
-public class ClinicDetailsActivity extends BaseActivity {
+public class ClinicDetailsActivity extends BaseActivity implements OnMapReadyCallback {
 
   @Bind(R.id.toolbar) Toolbar toolbar;
 
@@ -21,19 +28,16 @@ public class ClinicDetailsActivity extends BaseActivity {
   @Bind(R.id.phoneTV) TextView phoneTV;
   @Bind(R.id.mobileTV) TextView mobileTV;
   @Bind(R.id.emailAddressTV) TextView emailAddressTV;
+  @Bind(R.id.clinicNameOnMapTV) TextView clinicNameOnMapTV;
+  @Bind(R.id.clinicAddressOnMapTV) TextView clinicAddressOnMapTV;
 
   @Bind(R.id.withinNetworkLayout) LinearLayout withinNetworkLayout;
   @Bind(R.id.open247Layout) LinearLayout open247Layout;
   @Bind(R.id.onlineNowLayout) LinearLayout onlineNowLayout;
-  @Bind(R.id.mondayTV) TextView workingHoursMonday;
-  @Bind(R.id.tuesdayTV) TextView workingHoursTuesday;
-  @Bind(R.id.wednesdayTV) TextView workingHoursWednesday;
-  @Bind(R.id.thursdayTV) TextView workingHoursThursday;
-  @Bind(R.id.fridayTV) TextView workingHoursFriday;
-  @Bind(R.id.saturdayTV) TextView workingHoursSaturday;
-  @Bind(R.id.sundayTV) TextView workingHoursSunday;
 
   private GetNearbyClinicsResponseDatum clinicObject;
+  private GoogleMap map;
+  private SupportMapFragment mapFragment;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -62,9 +66,36 @@ public class ClinicDetailsActivity extends BaseActivity {
 
         if (clinicObject.getTwentyfourseven()) open247Layout.setVisibility(View.VISIBLE);
 
-        workingHoursMonday.setText(clinicObject.getOpeninghours());
-        workingHoursMonday.setTextColor(getResources().getColor(R.color.bpRed));
+        clinicNameOnMapTV.setText(clinicObject.getName());
+        clinicAddressTV.setText(clinicObject.getAddress());
+
+        mapFragment = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map));
+        mapFragment.getMapAsync(this);
       }
     }
+  }
+
+  @Override public void onMapReady(GoogleMap googleMap) {
+    map = googleMap;
+    map.getUiSettings().setRotateGesturesEnabled(false);
+    map.getUiSettings().setZoomControlsEnabled(false);
+    map.getUiSettings().setZoomGesturesEnabled(false);
+    map.getUiSettings().setTiltGesturesEnabled(false);
+
+    zoomAnimateCamera();
+  }
+
+  private void zoomAnimateCamera() {
+    map.addMarker(new MarkerOptions().position(
+        new LatLng(Double.parseDouble(clinicObject.getLatitude()),
+            Double.parseDouble(clinicObject.getLongitude()))).title(clinicObject.getName()));
+
+    CameraUpdate center = CameraUpdateFactory.newLatLng(
+        new LatLng(Double.parseDouble(clinicObject.getLatitude()),
+            Double.parseDouble(clinicObject.getLongitude())));
+    CameraUpdate zoom = CameraUpdateFactory.zoomTo(13);
+
+    map.moveCamera(center);
+    map.animateCamera(zoom, 400, null);
   }
 }
