@@ -45,7 +45,7 @@ public class ContractsChoiceView extends LinearLayout {
 
   private void setupContractsChoiceList(ArrayList<InsuranceContract> contracts) {
     ContractsChoiceRecyclerAdapter contractsChoiceRecyclerAdapter =
-        new ContractsChoiceRecyclerAdapter(contracts);
+        new ContractsChoiceRecyclerAdapter(context, contracts);
     contractsRecyclerView.setLayoutManager(new LinearLayoutManager(context));
     contractsRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(context));
     contractsRecyclerView.setAdapter(contractsChoiceRecyclerAdapter);

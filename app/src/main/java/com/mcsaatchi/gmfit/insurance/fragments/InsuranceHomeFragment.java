@@ -201,8 +201,6 @@ public class InsuranceHomeFragment extends Fragment {
         }
       });
 
-      contractChooserDialog.setCancelable(false);
-
       WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
       lp.copyFrom(contractChooserDialog.getWindow().getAttributes());
       lp.width = WindowManager.LayoutParams.MATCH_PARENT;

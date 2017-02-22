@@ -1,5 +1,7 @@
 package com.mcsaatchi.gmfit.insurance.adapters;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,17 +9,27 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.mcsaatchi.gmfit.R;
+import com.mcsaatchi.gmfit.architecture.GMFitApplication;
+import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.insurance.models.InsuranceContract;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Objects;
+import javax.inject.Inject;
 
 public class ContractsChoiceRecyclerAdapter
     extends RecyclerView.Adapter<ContractsChoiceRecyclerAdapter.RecyclerViewHolder> {
-  private ArrayList<InsuranceContract> contracts;
 
-  public ContractsChoiceRecyclerAdapter(ArrayList<InsuranceContract> contracts) {
+  @Inject SharedPreferences prefs;
+  private ArrayList<InsuranceContract> contracts;
+  private Context context;
+
+  public ContractsChoiceRecyclerAdapter(Context context, ArrayList<InsuranceContract> contracts) {
     this.contracts = contracts;
+    this.context = context;
+
+    ((GMFitApplication) context).getAppComponent().inject(this);
   }
 
   @Override public int getItemCount() {
@@ -40,6 +52,12 @@ public class ContractsChoiceRecyclerAdapter
       holder.contractCheckedLayout.setVisibility(View.VISIBLE);
     } else {
       holder.contractCheckedLayout.setVisibility(View.GONE);
+    }
+
+    if (Objects.equals(contracts.get(position).getNumber(),
+        prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""))) {
+      contracts.get(position).setSelected(true);
+      holder.contractCheckedLayout.setVisibility(View.VISIBLE);
     }
 
     holder.contractTitleTV.setText(
@@ -81,6 +99,10 @@ public class ContractsChoiceRecyclerAdapter
       }
 
       contracts.get(getAdapterPosition()).setSelected(true);
+      prefs.edit()
+          .putString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER,
+              contracts.get(getAdapterPosition()).getNumber())
+          .apply();
       contractCheckedLayout.setVisibility(View.VISIBLE);
 
       notifyDataSetChanged();
