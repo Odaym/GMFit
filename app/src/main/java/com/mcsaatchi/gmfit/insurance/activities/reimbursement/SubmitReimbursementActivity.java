@@ -21,7 +21,9 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import com.mcsaatchi.gmfit.R;
+import com.mcsaatchi.gmfit.architecture.rest.CreateNewRequestResponse;
 import com.mcsaatchi.gmfit.architecture.rest.SubCategoriesResponse;
 import com.mcsaatchi.gmfit.architecture.rest.SubCategoriesResponseDatum;
 import com.mcsaatchi.gmfit.common.Constants;
@@ -33,9 +35,13 @@ import com.squareup.picasso.Picasso;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -59,6 +65,11 @@ public class SubmitReimbursementActivity extends BaseActivity {
   @Bind(R.id.passportImagesPicker) CustomAttachmentPicker passportImagesPicker;
   @Bind(R.id.testResultsImagesPicker) CustomAttachmentPicker testResultsImagesPicker;
 
+  private String categoryValue;
+  private String serviceDateValue;
+  private String amountValue;
+  private String subCategoryId;
+
   private File photoFile;
   private Uri photoFileUri;
   private List<SubCategoriesResponseDatum> subCategoriesList;
@@ -78,20 +89,32 @@ public class SubmitReimbursementActivity extends BaseActivity {
     serviceDate.setUpDatePicker("Service Date", "Choose a date",
         new CustomPicker.OnDatePickerClickListener() {
           @Override public void dateSet(int year, int month, int dayOfMonth) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(Calendar.YEAR, year);
+            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            calendar.set(Calendar.MONTH, month);
 
+            Date d = new Date(calendar.getTimeInMillis());
+
+            SimpleDateFormat dateFormatter = new SimpleDateFormat("dd MMM, yyyy");
+            serviceDateValue = dateFormatter.format(d);
+            serviceDate.setSelectedItem(serviceDateValue);
           }
         });
 
     amount.setUpDropDown("Amount", "Enter amount", new String[] { "item 1", "item 2", "item 3" },
         new CustomPicker.OnDropDownClickListener() {
           @Override public void onClick(int index, String selected) {
-
+            amountValue = selected;
+            Timber.d("Amount selected : " + amountValue);
           }
         });
 
     categoryToggle.setUp("Category", "Out", "In", new CustomToggle.OnToggleListener() {
       @Override public void selected(String option) {
+        categoryValue = option;
 
+        Timber.d("category selected : " + categoryValue);
       }
     });
 
@@ -115,6 +138,10 @@ public class SubmitReimbursementActivity extends BaseActivity {
     hookupImagesPickerImages(identityCardImagesPicker);
     hookupImagesPickerImages(passportImagesPicker);
     hookupImagesPickerImages(testResultsImagesPicker);
+  }
+
+  @OnClick(R.id.submitReimbursementBTN) public void handleSubmitReimbursement() {
+
   }
 
   private void hookupImagesPickerImages(CustomAttachmentPicker imagePicker) {
@@ -258,6 +285,67 @@ public class SubmitReimbursementActivity extends BaseActivity {
   private File createImageFile(String imagePath) throws IOException {
     return new File(imagePath);
   }
+
+  public static RequestBody toRequestBody(String value) {
+    return RequestBody.create(MediaType.parse("text/plain"), value);
+  }
+
+  private void submitReimbursement() {
+    final ProgressDialog waitingDialog = new ProgressDialog(this);
+    waitingDialog.setTitle(getResources().getString(R.string.loading_data_dialog_title));
+    waitingDialog.setMessage(getResources().getString(R.string.please_wait_dialog_message));
+    waitingDialog.show();
+
+    dataAccessHandler.createNewRequest(
+        toRequestBody(prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, "")),
+        toRequestBody(categoryValue), toRequestBody("2"), toRequestBody("1"), toRequestBody("10"),
+        toRequestBody("2"), toRequestBody("2016-10-10TT16:27:32+02:00"), toRequestBody("D"),
+        toRequestBody("Remarks"), new Callback<CreateNewRequestResponse>() {
+          @Override public void onResponse(Call<CreateNewRequestResponse> call,
+              Response<CreateNewRequestResponse> response) {
+            switch (response.code()) {
+              case 200:
+                waitingDialog.dismiss();
+
+                subCategoriesList = response.body().getData().getBody().getData();
+                String[] finalCategoryNames = new String[subCategoriesList.size()];
+
+                for (int i = 0; i < subCategoriesList.size(); i++) {
+                  finalCategoryNames[i] = subCategoriesList.get(i).getName();
+                }
+
+                subcategory.setUpDropDown("Subcategory", "Choose a subcategory", finalCategoryNames,
+                    new CustomPicker.OnDropDownClickListener() {
+                      @Override public void onClick(int index, String selected) {
+
+                      }
+                    });
+            }
+          }
+
+          @Override public void onFailure(Call<CreateNewRequestResponse> call, Throwable t) {
+            Timber.d("Call failed with error : %s", t.getMessage());
+          }
+        });
+  }
+
+  private HashMap<String, RequestBody> constructSelectedImagesForRequest() {
+    HashMap<String, RequestBody> imageParts = new HashMap<>();
+
+    RequestBody file;
+    File imageFile;
+
+    for (int i = 0; i < picturePaths.size(); i++) {
+      if (picturePaths.get(i) != null) {
+        imageFile = new File(picturePaths.get(i));
+        file = RequestBody.create(MediaType.parse("image/jpeg"), imageFile);
+        imageParts.put("attachements[" + 0 + "]\"; filename=\"" + picturePaths.get(i), file);
+      }
+    }
+
+    return imageParts;
+  }
+
 
   private void getSubCategories() {
     final ProgressDialog waitingDialog = new ProgressDialog(this);

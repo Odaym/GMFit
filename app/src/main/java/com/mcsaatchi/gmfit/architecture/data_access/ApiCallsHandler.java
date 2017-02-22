@@ -8,6 +8,7 @@ import com.mcsaatchi.gmfit.architecture.rest.CardDetailsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ChartMetricBreakdownResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ChartsBySectionResponse;
 import com.mcsaatchi.gmfit.architecture.rest.CoverageDescriptionResponse;
+import com.mcsaatchi.gmfit.architecture.rest.CreateNewRequestResponse;
 import com.mcsaatchi.gmfit.architecture.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.architecture.rest.EmergencyProfileResponse;
 import com.mcsaatchi.gmfit.architecture.rest.GetNearbyClinicsResponse;
@@ -834,11 +835,10 @@ public class ApiCallsHandler {
     });
   }
 
-  void insuranceUserLogin(String indNbr, String country, String language,
-      String password, final Callback<InsuranceLoginResponse> callback) {
+  void insuranceUserLogin(String indNbr, String country, String language, String password,
+      final Callback<InsuranceLoginResponse> callback) {
     Call<InsuranceLoginResponse> apiCall = restClient.getGMFitService()
-        .insuranceUserLogin(
-            new InsuranceLoginRequest(indNbr, country, language, password));
+        .insuranceUserLogin(new InsuranceLoginRequest(indNbr, country, language, password));
 
     apiCall.enqueue(new Callback<InsuranceLoginResponse>() {
       @Override public void onResponse(Call<InsuranceLoginResponse> call,
@@ -931,6 +931,24 @@ public class ApiCallsHandler {
       }
 
       @Override public void onFailure(Call<GetNearbyClinicsResponse> call, Throwable t) {
+      }
+    });
+  }
+
+  void createNewRequest(RequestBody contractNo, RequestBody categ, RequestBody subCategId,
+      RequestBody requestTypeId, RequestBody claimedAmount, RequestBody currencyCode,
+      Map<String, RequestBody> imageFiles, final Callback<CreateNewRequestResponse> callback) {
+    Call<CreateNewRequestResponse> apiCall = restClient.getGMFitService()
+        .createNewRequest(contractNo, categ, subCategId, requestTypeId, claimedAmount, currencyCode,
+            imageFiles);
+
+    apiCall.enqueue(new Callback<CreateNewRequestResponse>() {
+      @Override public void onResponse(Call<CreateNewRequestResponse> call,
+          Response<CreateNewRequestResponse> response) {
+        callback.onResponse(call, response);
+      }
+
+      @Override public void onFailure(Call<CreateNewRequestResponse> call, Throwable t) {
       }
     });
   }
@@ -1145,8 +1163,7 @@ public class ApiCallsHandler {
     String language;
     String password;
 
-    public InsuranceLoginRequest(String indNbr, String country,
-        String language, String password) {
+    public InsuranceLoginRequest(String indNbr, String country, String language, String password) {
       this.indNbr = indNbr;
       this.country = country;
       this.language = language;
@@ -1224,6 +1241,25 @@ public class ApiCallsHandler {
     int fetchClosest;
 
     public NearbyClinicsRequest(String contractNo, String providerTypesCode, int searchCtry,
+        double longitude, double latitude, int fetchClosest) {
+      this.contractNo = contractNo;
+      this.providerTypesCode = providerTypesCode;
+      this.searchCtry = searchCtry;
+      this.longitude = longitude;
+      this.latitude = latitude;
+      this.fetchClosest = fetchClosest;
+    }
+  }
+
+  public class CreateNewRequestRequest {
+    String contractNo;
+    String providerTypesCode;
+    int searchCtry;
+    double longitude;
+    double latitude;
+    int fetchClosest;
+
+    public CreateNewRequestRequest(String contractNo, String providerTypesCode, int searchCtry,
         double longitude, double latitude, int fetchClosest) {
       this.contractNo = contractNo;
       this.providerTypesCode = providerTypesCode;

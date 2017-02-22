@@ -148,7 +148,6 @@ public interface GMFitService {
   /**
    * INSURANCE API's
    */
-
   @POST("insurance/insurance-card-details") Call<CardDetailsResponse> getCardDetails(
       @Body ApiCallsHandler.SimpleInsuranceRequest simpleInsuranceRequest);
 
@@ -165,15 +164,19 @@ public interface GMFitService {
   @POST("insurance/coverage") Call<CoverageDescriptionResponse> getCoverageDescription(
       @Body ApiCallsHandler.DefaultBodyForInsuranceRequests insuranceUserLoginRequest);
 
-  @POST("insurance/update-info")
-  Call<UpdateInsurancePasswordResponse> updateInsurancePassword(
+  @POST("insurance/update-info") Call<UpdateInsurancePasswordResponse> updateInsurancePassword(
       @Body ApiCallsHandler.UpdateInsurancePasswordRequest updateInsurancePasswordRequest);
 
-  @POST("insurance/sub-categories")
-  Call<SubCategoriesResponse> getSubCategories(
+  @POST("insurance/sub-categories") Call<SubCategoriesResponse> getSubCategories(
       @Body ApiCallsHandler.SimpleInsuranceRequest simpleInsuranceRequest);
 
-  @POST("insurance/network/advanced-search")
-  Call<GetNearbyClinicsResponse> getNearbyClinics(
+  @POST("insurance/network/advanced-search") Call<GetNearbyClinicsResponse> getNearbyClinics(
       @Body ApiCallsHandler.NearbyClinicsRequest simpleInsuranceRequest);
+
+  @Multipart @POST("insurance/request/create") Call<CreateNewRequestResponse> createNewRequest(
+      @Part("contractNo") RequestBody contractNo, @Part("categ") RequestBody categ,
+      @Part("subCategId") RequestBody subCategId, @Part("requestTypeId") RequestBody requestTypeId,
+      @Part("claimedAmount") RequestBody claimedAmount,
+      @Part("currencyCode") RequestBody currencyCode,
+      @PartMap() Map<String, RequestBody> attachements);
 }
