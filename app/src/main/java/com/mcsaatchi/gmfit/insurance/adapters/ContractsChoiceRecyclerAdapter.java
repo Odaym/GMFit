@@ -43,7 +43,7 @@ public class ContractsChoiceRecyclerAdapter
     }
 
     holder.contractTitleTV.setText(
-        (contracts.get(position)).getNumber() + " - " + contracts.get(position).getTitle());
+        (contracts.get(position)).getNumber() + " - " + contracts.get(position).getHoldername());
     holder.contractInsuranceCompanyTV.setText(contracts.get(position).getInsuranceCompany());
 
     if (contracts.get(position).getExpiryDate() != null) {

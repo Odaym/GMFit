@@ -281,9 +281,9 @@ public class DataAccessHandler {
     apiCallsHandler.searchMedicines(indNbr, contractNo, country, language, password, key, callback);
   }
 
-  public void insuranceUserLogin(String indNbr, String contractNo, String country, String language,
-      String password, Callback<InsuranceLoginResponse> callback) {
-    apiCallsHandler.insuranceUserLogin(indNbr, contractNo, country, language, password, callback);
+  public void insuranceUserLogin(String indNbr, String country, String language, String password,
+      Callback<InsuranceLoginResponse> callback) {
+    apiCallsHandler.insuranceUserLogin(indNbr, country, language, password, callback);
   }
 
   public void getCoverageDescription(String indNbr, String contractNo, String country,

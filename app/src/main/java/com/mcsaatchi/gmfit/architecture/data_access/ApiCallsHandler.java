@@ -834,11 +834,11 @@ public class ApiCallsHandler {
     });
   }
 
-  void insuranceUserLogin(String indNbr, String contractNo, String country, String language,
+  void insuranceUserLogin(String indNbr, String country, String language,
       String password, final Callback<InsuranceLoginResponse> callback) {
     Call<InsuranceLoginResponse> apiCall = restClient.getGMFitService()
         .insuranceUserLogin(
-            new DefaultBodyForInsuranceRequests(indNbr, contractNo, country, language, password));
+            new InsuranceLoginRequest(indNbr, country, language, password));
 
     apiCall.enqueue(new Callback<InsuranceLoginResponse>() {
       @Override public void onResponse(Call<InsuranceLoginResponse> call,
@@ -1136,6 +1136,21 @@ public class ApiCallsHandler {
       this.old_password = old_password;
       this.new_password = new_password;
       this.confirm_new_password = new_password;
+    }
+  }
+
+  public class InsuranceLoginRequest {
+    String indNbr;
+    String country;
+    String language;
+    String password;
+
+    public InsuranceLoginRequest(String indNbr, String country,
+        String language, String password) {
+      this.indNbr = indNbr;
+      this.country = country;
+      this.language = language;
+      this.password = password;
     }
   }
 

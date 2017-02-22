@@ -17,6 +17,7 @@ public class InsuranceContract implements Parcelable {
   private String title;
   private String number;
   private String insuranceCompany;
+  private String holdername;
   private Calendar expiryDate;
   private boolean selected;
 
@@ -27,6 +28,7 @@ public class InsuranceContract implements Parcelable {
     this.title = in.readString();
     this.number = in.readString();
     this.insuranceCompany = in.readString();
+    this.holdername = in.readString();
     this.expiryDate = (Calendar) in.readSerializable();
     this.selected = in.readByte() != 0;
   }
@@ -71,6 +73,14 @@ public class InsuranceContract implements Parcelable {
     this.selected = selected;
   }
 
+  public String getHoldername() {
+    return holdername;
+  }
+
+  public void setHoldername(String holdername) {
+    this.holdername = holdername;
+  }
+
   @Override public int describeContents() {
     return 0;
   }
@@ -79,6 +89,7 @@ public class InsuranceContract implements Parcelable {
     dest.writeString(this.title);
     dest.writeString(this.number);
     dest.writeString(this.insuranceCompany);
+    dest.writeString(this.holdername);
     dest.writeSerializable(this.expiryDate);
     dest.writeByte(this.selected ? (byte) 1 : (byte) 0);
   }

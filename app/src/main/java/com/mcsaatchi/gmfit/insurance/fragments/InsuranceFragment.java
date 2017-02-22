@@ -93,7 +93,7 @@ public class InsuranceFragment extends Fragment {
           }
         });
 
-    dataAccessHandler.insuranceUserLogin(username, "1892870", "422", "2", password,
+    dataAccessHandler.insuranceUserLogin(username, "422", "2", password,
         new Callback<InsuranceLoginResponse>() {
           @Override public void onResponse(Call<InsuranceLoginResponse> call,
               Response<InsuranceLoginResponse> response) {

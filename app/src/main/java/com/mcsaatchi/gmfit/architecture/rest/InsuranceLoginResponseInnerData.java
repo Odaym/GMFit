@@ -23,7 +23,6 @@ public class InsuranceLoginResponseInnerData implements Parcelable{
   @SerializedName("mobile") @Expose private String mobile;
   @SerializedName("contracts") @Expose private List<InsuranceLoginResponseContract> contracts =
       null;
-  @SerializedName("raw") @Expose private InsuranceLoginResponseRawData raw;
 
   public InsuranceLoginResponseInnerData() {
   }
@@ -34,7 +33,6 @@ public class InsuranceLoginResponseInnerData implements Parcelable{
     this.isFirstLogin = in.readByte() != 0;
     this.mobile = in.readString();
     this.contracts = in.createTypedArrayList(InsuranceLoginResponseContract.CREATOR);
-    this.raw = in.readParcelable(InsuranceLoginResponseRawData.class.getClassLoader());
   }
 
   public String getUsername() {
@@ -77,14 +75,6 @@ public class InsuranceLoginResponseInnerData implements Parcelable{
     this.contracts = contracts;
   }
 
-  public InsuranceLoginResponseRawData getRaw() {
-    return raw;
-  }
-
-  public void setRaw(InsuranceLoginResponseRawData raw) {
-    this.raw = raw;
-  }
-
   @Override public int describeContents() {
     return 0;
   }
@@ -95,6 +85,5 @@ public class InsuranceLoginResponseInnerData implements Parcelable{
     dest.writeByte(this.isFirstLogin ? (byte) 1 : (byte) 0);
     dest.writeString(this.mobile);
     dest.writeTypedList(this.contracts);
-    dest.writeParcelable(this.raw, flags);
   }
 }

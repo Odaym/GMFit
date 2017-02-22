@@ -33,7 +33,6 @@ import com.mcsaatchi.gmfit.insurance.adapters.InsuranceOperationWidgetsGridAdapt
 import com.mcsaatchi.gmfit.insurance.models.InsuranceContract;
 import com.mcsaatchi.gmfit.insurance.models.InsuranceOperationWidget;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import javax.inject.Inject;
 import retrofit2.Call;
@@ -86,28 +85,10 @@ public class InsuranceHomeFragment extends Fragment {
         InsuranceContract contract = new InsuranceContract();
         contract.setNumber(String.valueOf(insuranceUserData.getContracts().get(i).getNumber()));
         contract.setInsuranceCompany(insuranceUserData.getContracts().get(i).getCompany());
+        contract.setHoldername(insuranceUserData.getContracts().get(i).getHoldername());
 
         insuranceContracts.add(contract);
       }
-
-      InsuranceContract contract = new InsuranceContract();
-      contract.setInsuranceCompany("SAICO");
-      contract.setNumber("1092384");
-      contract.setTitle("Tanios Karim");
-      Calendar expiryCal = Calendar.getInstance();
-      expiryCal.add(Calendar.YEAR, 2);
-      contract.setExpiryDate(expiryCal);
-      insuranceContracts.add(contract);
-
-      InsuranceContract contract2 = new InsuranceContract();
-      contract2.setInsuranceCompany("Libano-Suisse S.A.L.");
-      contract2.setNumber("1239287");
-      contract2.setTitle("Tanios Elias Karam");
-      expiryCal = Calendar.getInstance();
-      expiryCal.add(Calendar.YEAR, 2);
-      expiryCal.add(Calendar.MONTH, 4);
-      expiryCal.set(Calendar.DAY_OF_MONTH, 13);
-      insuranceContracts.add(contract2);
 
       setupInsurancePathsGrid(new ArrayList<InsuranceOperationWidget>() {{
         add(new InsuranceOperationWidget(R.drawable.ic_insurance_operations_submit,
@@ -200,7 +181,7 @@ public class InsuranceHomeFragment extends Fragment {
   private void setupContractSelectorButton() {
     if (parentFragmentView != null) {
       final ContractsChoiceView contractsChoiceView =
-          new ContractsChoiceView(getActivity(), insuranceContracts);
+          new ContractsChoiceView(getActivity().getApplication(), insuranceContracts);
 
       final Dialog contractChooserDialog = new Dialog(getActivity());
       contractChooserDialog.setContentView(contractsChoiceView);

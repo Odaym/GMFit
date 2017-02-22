@@ -1148,6 +1148,7 @@ public class MainProfileFragment extends Fragment {
             prefs.edit().putString(Constants.EXTRAS_USER_PASSWORD, "").apply();
             prefs.edit().putString(Constants.EXTRAS_INSURANCE_USER_USERNAME, "").apply();
             prefs.edit().putString(Constants.EXTRAS_INSURANCE_USER_PASSWORD, "").apply();
+            prefs.edit().putString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, "").apply();
 
             if (!prefs.getString(Constants.EXTRAS_USER_FACEBOOK_TOKEN, "-1").equals("-1")) {
               FacebookSdk.sdkInitialize(getActivity());

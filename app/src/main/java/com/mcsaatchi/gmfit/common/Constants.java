@@ -20,6 +20,7 @@ public class Constants {
 
   public static final String EXTRAS_INSURANCE_USER_PASSWORD = "insurance_user_password";
   public static final String EXTRAS_INSURANCE_USER_USERNAME = "insurance_user_username";
+  public static final String EXTRAS_INSURANCE_CONTRACT_NUMBER = "insurance_contract_number";
 
   public static final String EXTRAS_FIRST_APP_LAUNCH = "first_app_launch";
 

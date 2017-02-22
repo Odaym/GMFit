@@ -160,7 +160,7 @@ public interface GMFitService {
       @Body ApiCallsHandler.SearchMedicinesRequest searchMedicinesRequest);
 
   @POST("insurance/login") Call<InsuranceLoginResponse> insuranceUserLogin(
-      @Body ApiCallsHandler.DefaultBodyForInsuranceRequests insuranceUserLoginRequest);
+      @Body ApiCallsHandler.InsuranceLoginRequest insuranceUserLoginRequest);
 
   @POST("insurance/coverage") Call<CoverageDescriptionResponse> getCoverageDescription(
       @Body ApiCallsHandler.DefaultBodyForInsuranceRequests insuranceUserLoginRequest);

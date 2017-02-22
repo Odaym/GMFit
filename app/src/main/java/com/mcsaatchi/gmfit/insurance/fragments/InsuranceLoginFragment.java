@@ -51,9 +51,6 @@ public class InsuranceLoginFragment extends Fragment {
 
     ButterKnife.bind(this, fragmentView);
 
-    memberIdET.setText("2012250");
-    passwordET.setText("odayoday");
-
     allFields.add(memberIdET);
     allFields.add(passwordET);
 
@@ -83,7 +80,7 @@ public class InsuranceLoginFragment extends Fragment {
           }
         });
 
-    dataAccessHandler.insuranceUserLogin(memberIdET.getText().toString(), "1892870", "422", "2",
+    dataAccessHandler.insuranceUserLogin(memberIdET.getText().toString(), "422", "2",
         passwordET.getText().toString(), new Callback<InsuranceLoginResponse>() {
           @Override public void onResponse(Call<InsuranceLoginResponse> call,
               Response<InsuranceLoginResponse> response) {
