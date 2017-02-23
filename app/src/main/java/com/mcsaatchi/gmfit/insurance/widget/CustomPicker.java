@@ -43,7 +43,7 @@ public class CustomPicker extends LinearLayout implements View.OnClickListener {
       final OnDropDownClickListener onDropDownClickListener) {
     customPickerType = CustomPickerType.DropDownPicker;
     setItemName(itemName);
-    setSelected(selected);
+    setSelectedItem(selected);
     setDropDownItems(itemName, items, onDropDownClickListener);
   }
 
@@ -51,27 +51,27 @@ public class CustomPicker extends LinearLayout implements View.OnClickListener {
       OnDatePickerClickListener onDatePickerClickListener) {
     customPickerType = DatePicker;
     setItemName(itemName);
-    setSelected(selected);
+    setSelectedItem(selected);
     setDatePicker(onDatePickerClickListener);
   }
 
   private void setDatePicker(final OnDatePickerClickListener datePickerClickListener) {
     final Calendar c = Calendar.getInstance();
-    int hour = c.get(Calendar.HOUR_OF_DAY);
-    int minute = c.get(Calendar.MINUTE);
-    int dayOfMonth = c.get(Calendar.DAY_OF_MONTH);
+    int day = c.get(Calendar.DAY_OF_MONTH);
+    int month = c.get(Calendar.MONTH);
+    int year = c.get(Calendar.YEAR);
     datePickerDialog = new DatePickerDialog(context, new DatePickerDialog.OnDateSetListener() {
       @Override public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
         datePickerClickListener.dateSet(year, month, dayOfMonth);
       }
-    }, hour, minute, dayOfMonth);
+    }, year, month, day);
   }
 
   private void setItemName(String itemName) {
     itemNameTv.setText(itemName);
   }
 
-  private void setSelected(String selected) {
+  public void setSelectedItem(String selected) {
     itemSelectedTv.setText(selected);
   }
 
@@ -80,7 +80,7 @@ public class CustomPicker extends LinearLayout implements View.OnClickListener {
     builder = new AlertDialog.Builder(context);
     builder.setTitle("Pick " + itemName).setItems(items, new DialogInterface.OnClickListener() {
       @Override public void onClick(DialogInterface dialogInterface, int i) {
-        setSelected(items[i]);
+        setSelectedItem(items[i]);
         onDropDownClickListener.onClick(i, items[i]);
       }
     });

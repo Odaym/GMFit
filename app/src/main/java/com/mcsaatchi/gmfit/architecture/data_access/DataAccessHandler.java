@@ -8,6 +8,7 @@ import com.mcsaatchi.gmfit.architecture.rest.CardDetailsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ChartMetricBreakdownResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ChartsBySectionResponse;
 import com.mcsaatchi.gmfit.architecture.rest.CoverageDescriptionResponse;
+import com.mcsaatchi.gmfit.architecture.rest.CreateNewRequestResponse;
 import com.mcsaatchi.gmfit.architecture.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.architecture.rest.EmergencyProfileResponse;
 import com.mcsaatchi.gmfit.architecture.rest.GetNearbyClinicsResponse;
@@ -311,5 +312,12 @@ public class DataAccessHandler {
       Callback<GetNearbyClinicsResponse> callback) {
     apiCallsHandler.getNearbyClinics(contractNo, providerTypesCode, searchCtry, longitude, latitude,
         fetchClosest, callback);
+  }
+
+  public void createNewRequest(RequestBody contractNo, RequestBody categ, RequestBody subCategId,
+      RequestBody requestTypeId, RequestBody claimedAmount, RequestBody currencyCode,
+      Map<String, RequestBody> imageFiles, final Callback<CreateNewRequestResponse> callback) {
+    apiCallsHandler.createNewRequest(contractNo, categ, subCategId, requestTypeId, claimedAmount,
+        currencyCode, imageFiles, callback);
   }
 }
