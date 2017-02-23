@@ -63,10 +63,85 @@
           android:layout_height="wrap_content"
           />
 
-      <com.mcsaatchi.gmfit.insurance.widget.CustomPicker
-          android:id="@+id/reimbursementAmount"
+      <LinearLayout
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
+          android:orientation="horizontal"
+          android:weightSum="1"
+          >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_weight=".6"
+            android:background="@android:color/white"
+            android:padding="20dp"
+            >
+
+          <TextView
+              android:id="@+id/item_name"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_gravity="center_vertical"
+              android:textColor="@color/buttons_text_color"
+              android:text="Amount"
+              />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/touchableContainer"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_weight=".4"
+            android:background="@color/much_lighter_gray"
+            android:clickable="true"
+            android:foreground="?android:selectableItemBackground"
+            android:padding="20dp"
+            >
+
+          <EditText
+              android:id="@+id/amountClaimedET"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@null"
+              android:textColor="@color/buttons_text_color"
+              android:inputType="numberDecimal"
+              />
+
+          <LinearLayout
+              android:id="@+id/currencyLayout"
+              android:layout_width="wrap_content"
+              android:layout_height="match_parent"
+              android:layout_alignParentEnd="true"
+              android:orientation="horizontal"
+              >
+
+            <TextView
+                android:id="@+id/currencyLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="@dimen/default_margin_1"
+                android:gravity="center_vertical"
+                android:text="LBP"
+                android:textColor="@color/insurance_blue"
+                />
+
+            <ImageView
+                android:id="@+id/arrowImage"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/ic_arrow_down_green"
+                android:tint="@color/arrow_blue"
+                />
+          </LinearLayout>
+        </RelativeLayout>
+      </LinearLayout>
+
+      <View
+          android:layout_width="match_parent"
+          android:layout_height="1dp"
+          android:background="@color/offwhite_background_gray"
           />
 
       <EditText

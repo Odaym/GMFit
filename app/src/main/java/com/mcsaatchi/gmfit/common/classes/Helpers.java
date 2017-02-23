@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
@@ -201,8 +202,16 @@ public class Helpers {
 
     if (calendar != null) {
       AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-      am.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
-          AlarmManager.INTERVAL_DAY, pendingIntent);
+      int ALARM_TYPE = AlarmManager.RTC_WAKEUP;
+
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        am.setRepeating(ALARM_TYPE, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY,
+            pendingIntent);
+      } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        am.setExact(ALARM_TYPE, calendar.getTimeInMillis(), pendingIntent);
+      } else {
+        am.set(ALARM_TYPE, calendar.getTimeInMillis(), pendingIntent);
+      }
     }
   }
 }

@@ -16,15 +16,15 @@ import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.GMFitApplication;
 import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.architecture.rest.CoverageDescriptionResponse;
-import com.mcsaatchi.gmfit.insurance.activities.home.CoverageDescriptionActivity;
 import com.mcsaatchi.gmfit.insurance.activities.approval_request.ApprovalRequestsEmptyActivity;
 import com.mcsaatchi.gmfit.insurance.activities.approval_request.ApprovalRequestsStatusListActivity;
 import com.mcsaatchi.gmfit.insurance.activities.chronic.ChronicPrescriptionEmptyActivity;
 import com.mcsaatchi.gmfit.insurance.activities.chronic.ChronicStatusListActivity;
+import com.mcsaatchi.gmfit.insurance.activities.home.CoverageDescriptionActivity;
 import com.mcsaatchi.gmfit.insurance.activities.inquiry.InquiryEmptyActivity;
 import com.mcsaatchi.gmfit.insurance.activities.inquiry.SubmitInquiryActivity;
-import com.mcsaatchi.gmfit.insurance.activities.reimbursement.ReimbursementEmptyActivity;
 import com.mcsaatchi.gmfit.insurance.activities.reimbursement.ReimbursementStatusListActivity;
+import com.mcsaatchi.gmfit.insurance.activities.reimbursement.SubmitReimbursementActivity;
 import com.mcsaatchi.gmfit.insurance.models.InsuranceOperationWidget;
 import java.util.ArrayList;
 import javax.inject.Inject;
@@ -166,7 +166,7 @@ public class InsuranceOperationWidgetsGridAdapter
                 case REIMBURSEMENT_ITEM:
                   switch (request_purpose) {
                     case SUBMIT_ITEM:
-                      intent = new Intent(context, ReimbursementEmptyActivity.class);
+                      intent = new Intent(context, SubmitReimbursementActivity.class);
                       fragmentActivity.startActivity(intent);
                       break;
                     case TRACK_ITEM:
