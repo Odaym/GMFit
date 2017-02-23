@@ -5,6 +5,8 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -12,13 +14,12 @@ import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -32,9 +33,11 @@ import com.mcsaatchi.gmfit.insurance.widget.CustomAttachmentPicker;
 import com.mcsaatchi.gmfit.insurance.widget.CustomPicker;
 import com.mcsaatchi.gmfit.insurance.widget.CustomToggle;
 import com.squareup.picasso.Picasso;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -58,12 +61,13 @@ public class SubmitReimbursementActivity extends BaseActivity {
   @Bind(R.id.reimbursementServiceDate) CustomPicker serviceDate;
   @Bind(R.id.reimbursementAmount) CustomPicker amount;
   @Bind(R.id.categoryInOutToggle) CustomToggle categoryToggle;
-  @Bind(R.id.submitReimbursementBTN) Button submitReimbursementBTN;
   @Bind(R.id.medicalReportImagesPicker) CustomAttachmentPicker medicalReportImagesPicker;
   @Bind(R.id.invoiceImagesPicker) CustomAttachmentPicker invoiceImagesPicker;
   @Bind(R.id.identityCardImagesPicker) CustomAttachmentPicker identityCardImagesPicker;
   @Bind(R.id.passportImagesPicker) CustomAttachmentPicker passportImagesPicker;
   @Bind(R.id.testResultsImagesPicker) CustomAttachmentPicker testResultsImagesPicker;
+
+  private ArrayList<String> imagePaths = new ArrayList<>();
 
   private String categoryValue;
   private String serviceDateValue;
@@ -118,14 +122,6 @@ public class SubmitReimbursementActivity extends BaseActivity {
       }
     });
 
-    submitReimbursementBTN.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View view) {
-        Toast.makeText(SubmitReimbursementActivity.this, "Submitted successfully",
-            Toast.LENGTH_SHORT).show();
-        finish();
-      }
-    });
-
     if (permChecker.lacksPermissions(Manifest.permission.CAMERA,
         Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
       ActivityCompat.requestPermissions(this,
@@ -141,7 +137,9 @@ public class SubmitReimbursementActivity extends BaseActivity {
   }
 
   @OnClick(R.id.submitReimbursementBTN) public void handleSubmitReimbursement() {
+    HashMap<String, RequestBody> attachments = constructSelectedImagesForRequest();
 
+    submitReimbursement(attachments);
   }
 
   private void hookupImagesPickerImages(CustomAttachmentPicker imagePicker) {
@@ -174,6 +172,8 @@ public class SubmitReimbursementActivity extends BaseActivity {
                   getResources().getDimensionPixelSize(R.dimen.attached_images_dimens))
               .centerInside()
               .into(currentImageView);
+
+          imagePaths.add(photoFile.getAbsolutePath());
         } else {
           Timber.d("No picture was taken, photoFile size : %d", photoFile.getTotalSpace());
         }
@@ -190,6 +190,8 @@ public class SubmitReimbursementActivity extends BaseActivity {
                   getResources().getDimensionPixelSize(R.dimen.attached_images_dimens))
               .centerInside()
               .into(currentImageView);
+
+          imagePaths.add(selectedImagePath);
         }
     }
   }
@@ -290,9 +292,9 @@ public class SubmitReimbursementActivity extends BaseActivity {
     return RequestBody.create(MediaType.parse("text/plain"), value);
   }
 
-  private void submitReimbursement() {
+  private void submitReimbursement(HashMap<String, RequestBody> attachments) {
     final ProgressDialog waitingDialog = new ProgressDialog(this);
-    waitingDialog.setTitle(getResources().getString(R.string.loading_data_dialog_title));
+    waitingDialog.setTitle(getResources().getString(R.string.submit_new_reimbursement));
     waitingDialog.setMessage(getResources().getString(R.string.please_wait_dialog_message));
     waitingDialog.show();
 
@@ -300,26 +302,27 @@ public class SubmitReimbursementActivity extends BaseActivity {
         toRequestBody(prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, "")),
         toRequestBody(categoryValue), toRequestBody("2"), toRequestBody("1"), toRequestBody("10"),
         toRequestBody("2"), toRequestBody("2016-10-10TT16:27:32+02:00"), toRequestBody("D"),
-        toRequestBody("Remarks"), new Callback<CreateNewRequestResponse>() {
+        toRequestBody("Remarks"), attachments, new Callback<CreateNewRequestResponse>() {
           @Override public void onResponse(Call<CreateNewRequestResponse> call,
               Response<CreateNewRequestResponse> response) {
             switch (response.code()) {
               case 200:
                 waitingDialog.dismiss();
 
-                subCategoriesList = response.body().getData().getBody().getData();
-                String[] finalCategoryNames = new String[subCategoriesList.size()];
-
-                for (int i = 0; i < subCategoriesList.size(); i++) {
-                  finalCategoryNames[i] = subCategoriesList.get(i).getName();
-                }
-
-                subcategory.setUpDropDown("Subcategory", "Choose a subcategory", finalCategoryNames,
-                    new CustomPicker.OnDropDownClickListener() {
-                      @Override public void onClick(int index, String selected) {
-
-                      }
-                    });
+                //
+                //subCategoriesList = response.body().getData().getBody().getData();
+                //String[] finalCategoryNames = new String[subCategoriesList.size()];
+                //
+                //for (int i = 0; i < subCategoriesList.size(); i++) {
+                //  finalCategoryNames[i] = subCategoriesList.get(i).getName();
+                //}
+                //
+                //subcategory.setUpDropDown("Subcategory", "Choose a subcategory", finalCategoryNames,
+                //    new CustomPicker.OnDropDownClickListener() {
+                //      @Override public void onClick(int index, String selected) {
+                //
+                //      }
+                //    });
             }
           }
 
@@ -332,20 +335,23 @@ public class SubmitReimbursementActivity extends BaseActivity {
   private HashMap<String, RequestBody> constructSelectedImagesForRequest() {
     HashMap<String, RequestBody> imageParts = new HashMap<>();
 
-    RequestBody file;
-    File imageFile;
-
-    for (int i = 0; i < picturePaths.size(); i++) {
-      if (picturePaths.get(i) != null) {
-        imageFile = new File(picturePaths.get(i));
-        file = RequestBody.create(MediaType.parse("image/jpeg"), imageFile);
-        imageParts.put("attachements[" + 0 + "]\"; filename=\"" + picturePaths.get(i), file);
+    for (int i = 0; i < imagePaths.size(); i++) {
+      if (imagePaths.get(i) != null) {
+        imageParts.put("attachements[" + 0 + "]\"; filename=\"" + imagePaths.get(i), toRequestBody(
+            Base64.encodeToString(turnImageToByteArray(imagePaths.get(i)), Base64.DEFAULT)));
       }
     }
 
     return imageParts;
   }
 
+  private byte[] turnImageToByteArray(String imagePath) {
+    Bitmap bm = BitmapFactory.decodeFile(imagePath);
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    bm.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+
+    return baos.toByteArray();
+  }
 
   private void getSubCategories() {
     final ProgressDialog waitingDialog = new ProgressDialog(this);

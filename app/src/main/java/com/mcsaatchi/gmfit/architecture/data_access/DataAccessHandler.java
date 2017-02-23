@@ -316,8 +316,9 @@ public class DataAccessHandler {
 
   public void createNewRequest(RequestBody contractNo, RequestBody categ, RequestBody subCategId,
       RequestBody requestTypeId, RequestBody claimedAmount, RequestBody currencyCode,
-      Map<String, RequestBody> imageFiles, final Callback<CreateNewRequestResponse> callback) {
+      RequestBody serviceDate, RequestBody providerCode, RequestBody remarks,
+      Map<String, RequestBody> attachments, final Callback<CreateNewRequestResponse> callback) {
     apiCallsHandler.createNewRequest(contractNo, categ, subCategId, requestTypeId, claimedAmount,
-        currencyCode, imageFiles, callback);
+        currencyCode, serviceDate, providerCode, remarks, attachments, callback);
   }
 }

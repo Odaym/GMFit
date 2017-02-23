@@ -177,6 +177,7 @@ public interface GMFitService {
       @Part("contractNo") RequestBody contractNo, @Part("categ") RequestBody categ,
       @Part("subCategId") RequestBody subCategId, @Part("requestTypeId") RequestBody requestTypeId,
       @Part("claimedAmount") RequestBody claimedAmount,
-      @Part("currencyCode") RequestBody currencyCode,
+      @Part("currencyCode") RequestBody currencyCode, @Part("serviceDate") RequestBody serviceDate,
+      @Part("providerCode") RequestBody providerCode, @Part("remarks") RequestBody remarks,
       @PartMap() Map<String, RequestBody> attachements);
 }

@@ -937,10 +937,11 @@ public class ApiCallsHandler {
 
   void createNewRequest(RequestBody contractNo, RequestBody categ, RequestBody subCategId,
       RequestBody requestTypeId, RequestBody claimedAmount, RequestBody currencyCode,
-      Map<String, RequestBody> imageFiles, final Callback<CreateNewRequestResponse> callback) {
+      RequestBody serviceDate, RequestBody providerCode, RequestBody remarks,
+      Map<String, RequestBody> attachments, final Callback<CreateNewRequestResponse> callback) {
     Call<CreateNewRequestResponse> apiCall = restClient.getGMFitService()
         .createNewRequest(contractNo, categ, subCategId, requestTypeId, claimedAmount, currencyCode,
-            imageFiles);
+            serviceDate, providerCode, remarks, attachments);
 
     apiCall.enqueue(new Callback<CreateNewRequestResponse>() {
       @Override public void onResponse(Call<CreateNewRequestResponse> call,
