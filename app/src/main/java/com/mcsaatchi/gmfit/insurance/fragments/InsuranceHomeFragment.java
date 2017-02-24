@@ -91,7 +91,7 @@ public class InsuranceHomeFragment extends Fragment {
         insuranceContracts.add(contract);
       }
 
-      if (insuranceContracts.size() > 1 && prefs.getString(
+      if (insuranceContracts.size() > 1 || prefs.getString(
           Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, "").isEmpty()) {
         contractSelectorBTN.performClick();
       }
