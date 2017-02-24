@@ -374,6 +374,7 @@
   <string name="request_deletion_button_text">Request Deletion</string>
   <string name="choose_contract_dialog_title">Select Contract</string>
   <string name="submit_new_reimbursement">Submitting new reimbursement</string>
+  <string name="snapshot_activity_title">Snapshot</string>
 
   <!-- COVERAGE DESCRIPTION -->
   <string name="coverage_description_activity_title">Coverage Description</string>

@@ -283,6 +283,10 @@
         android:screenOrientation="portrait"
         android:theme="@style/No_Action_Bar_Theme"/>
 
+    <activity
+        android:name=".insurance.activities.snapshot.SnapshotActivity"
+        android:screenOrientation="portrait"
+        android:theme="@style/No_Action_Bar_Theme"/>
 
     <service android:name=".fitness.pedometer.SensorListener"/>
 
@@ -308,7 +312,7 @@
 
     <meta-data
         android:name="com.google.android.geo.API_KEY"
-        android:value="AIzaSyClLfg5jnBIui1fjBgywGvNNJxPvjtMzVg"/>
+        android:value="AIzaSyBzptbw8-xsnunOTUpQfAM7xe5YyGk87i4	"/>
 
   </application>
 

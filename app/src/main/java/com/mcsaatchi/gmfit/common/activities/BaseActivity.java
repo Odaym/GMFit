@@ -67,7 +67,6 @@ public class BaseActivity extends AppCompatActivity {
 
   public void setupToolbar(String activityName, Toolbar toolbar, String toolbarTitle,
       boolean backEnabled) {
-    Timber.d("Firebase event logged");
 
     Bundle params = new Bundle();
     params.putString("activity_name", activityName);

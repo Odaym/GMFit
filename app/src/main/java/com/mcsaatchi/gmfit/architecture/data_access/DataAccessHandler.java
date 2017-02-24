@@ -7,6 +7,8 @@ import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponse;
 import com.mcsaatchi.gmfit.architecture.rest.CardDetailsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ChartMetricBreakdownResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ChartsBySectionResponse;
+import com.mcsaatchi.gmfit.architecture.rest.ClaimsListDetailsResponse;
+import com.mcsaatchi.gmfit.architecture.rest.ClaimsListResponse;
 import com.mcsaatchi.gmfit.architecture.rest.CoverageDescriptionResponse;
 import com.mcsaatchi.gmfit.architecture.rest.CreateNewRequestResponse;
 import com.mcsaatchi.gmfit.architecture.rest.DefaultGetResponse;
@@ -23,6 +25,7 @@ import com.mcsaatchi.gmfit.architecture.rest.RecentMealsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.SearchMealItemResponse;
 import com.mcsaatchi.gmfit.architecture.rest.SearchMedicinesResponse;
 import com.mcsaatchi.gmfit.architecture.rest.SlugBreakdownResponse;
+import com.mcsaatchi.gmfit.architecture.rest.SnapshotResponse;
 import com.mcsaatchi.gmfit.architecture.rest.SubCategoriesResponse;
 import com.mcsaatchi.gmfit.architecture.rest.TakenMedicalTestsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.UiResponse;
@@ -320,5 +323,20 @@ public class DataAccessHandler {
       Map<String, RequestBody> attachments, final Callback<CreateNewRequestResponse> callback) {
     apiCallsHandler.createNewRequest(contractNo, categ, subCategId, requestTypeId, claimedAmount,
         currencyCode, serviceDate, providerCode, remarks, attachments, callback);
+  }
+
+  public void getClaimsList(String contractNo, String requestType,
+      final Callback<ClaimsListResponse> callback) {
+    apiCallsHandler.getClaimslist(contractNo, requestType, callback);
+  }
+
+  public void getClaimslistDetails(String contractNo, String requestType, String claimId,
+      final Callback<ClaimsListDetailsResponse> callback) {
+    apiCallsHandler.getClaimslistDetails(contractNo, requestType, claimId, callback);
+  }
+
+  public void getSnapshot(String contractNo, String startDate, String endDate,
+      final Callback<SnapshotResponse> callback) {
+    apiCallsHandler.getSnapshot(contractNo, startDate, endDate, callback);
   }
 }

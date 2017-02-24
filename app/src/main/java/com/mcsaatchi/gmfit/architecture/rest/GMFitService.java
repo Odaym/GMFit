@@ -180,4 +180,13 @@ public interface GMFitService {
       @Part("currencyCode") RequestBody currencyCode, @Part("serviceDate") RequestBody serviceDate,
       @Part("providerCode") RequestBody providerCode, @Part("remarks") RequestBody remarks,
       @PartMap() Map<String, RequestBody> attachements);
+
+  @POST("insurance/claims/list") Call<ClaimsListResponse> getClaimsList(
+      @Body ApiCallsHandler.ClaimsListRequest claimsListRequest);
+
+  @POST("insurance/claims/list") Call<ClaimsListDetailsResponse> getClaimsListDetails(
+      @Body ApiCallsHandler.ClaimsListDetailsRequest claimsListDetailsRequest);
+
+  @POST("insurance/snapshot/pdf") Call<SnapshotResponse> getSnapshot(
+      @Body ApiCallsHandler.SnapShotRequest snapShotRequest);
 }

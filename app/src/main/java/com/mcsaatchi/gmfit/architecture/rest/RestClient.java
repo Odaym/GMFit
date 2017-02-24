@@ -4,10 +4,12 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import com.mcsaatchi.gmfit.architecture.GMFitApplication;
 import com.mcsaatchi.gmfit.common.Constants;
+import com.readystatesoftware.chuck.ChuckInterceptor;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -33,7 +35,9 @@ public class RestClient {
     loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
     OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-    //httpClient.addInterceptor(new ChuckInterceptor(context));
+    httpClient.readTimeout(15, TimeUnit.SECONDS);
+    httpClient.writeTimeout(15, TimeUnit.SECONDS);
+    httpClient.addInterceptor(new ChuckInterceptor(context));
     httpClient.addInterceptor(loggingInterceptor);
     httpClient.addInterceptor(new Interceptor() {
       @Override public Response intercept(Interceptor.Chain chain) throws IOException {

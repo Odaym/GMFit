@@ -84,6 +84,10 @@ public class SubmitReimbursementActivity extends BaseActivity {
   private List<SubCategoriesResponseDatum> subCategoriesList;
   private ImageView currentImageView;
 
+  public static RequestBody toRequestBody(String value) {
+    return RequestBody.create(MediaType.parse("text/plain"), value);
+  }
+
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
@@ -98,12 +102,11 @@ public class SubmitReimbursementActivity extends BaseActivity {
         final String[] items = new String[] { "LBP", "USD" };
 
         AlertDialog.Builder builder = new AlertDialog.Builder(SubmitReimbursementActivity.this);
-        builder.setTitle("Pick currency")
-            .setItems(items, new DialogInterface.OnClickListener() {
-              @Override public void onClick(DialogInterface dialogInterface, int i) {
-                currencyLabel.setText(items[i]);
-              }
-            });
+        builder.setTitle("Pick currency").setItems(items, new DialogInterface.OnClickListener() {
+          @Override public void onClick(DialogInterface dialogInterface, int i) {
+            currencyLabel.setText(items[i]);
+          }
+        });
         builder.create();
         builder.show();
       }
@@ -308,11 +311,7 @@ public class SubmitReimbursementActivity extends BaseActivity {
     return new File(imagePath);
   }
 
-  public static RequestBody toRequestBody(String value) {
-    return RequestBody.create(MediaType.parse("text/plain"), value);
-  }
-
-  private void submitReimbursement(HashMap<String, RequestBody> attachments) {
+  private void submitReimbursement(HashMap<String, RequestBody> attachements) {
     final ProgressDialog waitingDialog = new ProgressDialog(this);
     waitingDialog.setTitle(getResources().getString(R.string.submit_new_reimbursement));
     waitingDialog.setMessage(getResources().getString(R.string.please_wait_dialog_message));
@@ -320,9 +319,9 @@ public class SubmitReimbursementActivity extends BaseActivity {
 
     dataAccessHandler.createNewRequest(
         toRequestBody(prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, "")),
-        toRequestBody(categoryValue), toRequestBody("2"), toRequestBody("1"), toRequestBody("10"),
+        toRequestBody(categoryValue), toRequestBody("2"), toRequestBody("2"), toRequestBody("10"),
         toRequestBody("2"), toRequestBody("2016-10-10T16:27:32+02:00"), toRequestBody("D"),
-        toRequestBody("Remarks"), attachments, new Callback<CreateNewRequestResponse>() {
+        toRequestBody("Remarks"), attachements, new Callback<CreateNewRequestResponse>() {
           @Override public void onResponse(Call<CreateNewRequestResponse> call,
               Response<CreateNewRequestResponse> response) {
             switch (response.code()) {
@@ -361,12 +360,12 @@ public class SubmitReimbursementActivity extends BaseActivity {
 
     for (int i = 0; i < imagePaths.size(); i++) {
       if (imagePaths.get(i) != null) {
-        imageParts.put("attachements[" + i + "][content]", toRequestBody(
-            Base64.encodeToString(turnImageToByteArray(imagePaths.get(i)), Base64.DEFAULT)));
+        imageParts.put("attachements[" + i + "][content]",
+            RequestBody.create(MediaType.parse("text/plain"),
+                Base64.encodeToString(turnImageToByteArray(imagePaths.get(i)), Base64.NO_WRAP)));
+        imageParts.put("attachements[" + i + "][id]", toRequestBody(String.valueOf(i + 1)));
+        imageParts.put("attachements[" + i + "][name]", toRequestBody("name.jpg"));
         imageParts.put("attachements[" + i + "][documType]", toRequestBody("2"));
-        imageParts.put("attachements[" + i + "][name]", toRequestBody(imagePaths.get(i)));
-        imageParts.put("attachements[" + i + "][id]",
-            toRequestBody(String.valueOf(imagePaths.get(i).getBytes().length)));
       }
     }
 
@@ -376,7 +375,7 @@ public class SubmitReimbursementActivity extends BaseActivity {
   private byte[] turnImageToByteArray(String imagePath) {
     Bitmap bm = BitmapFactory.decodeFile(imagePath);
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    bm.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+    bm.compress(Bitmap.CompressFormat.JPEG, 50, baos);
 
     return baos.toByteArray();
   }

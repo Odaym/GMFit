@@ -6,15 +6,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.insurance.models.ReimbursementModel;
+import com.mcsaatchi.gmfit.architecture.rest.ClaimsListResponseDatum;
 import java.util.ArrayList;
 import java.util.List;
 
 public class StatusAdapter extends RecyclerView.Adapter<StatusAdapter.ViewHolder> {
-  private List<ReimbursementModel> reimbursements = new ArrayList<>();
+  private List<ClaimsListResponseDatum> reimbursements = new ArrayList<>();
   private StatusAdapter.OnClickListener onClickListener;
 
-  public StatusAdapter(List<ReimbursementModel> reimbursements,
+  public StatusAdapter(List<ClaimsListResponseDatum> reimbursements,
       StatusAdapter.OnClickListener onClickListener) {
     this.reimbursements = reimbursements;
     this.onClickListener = onClickListener;
@@ -28,7 +28,7 @@ public class StatusAdapter extends RecyclerView.Adapter<StatusAdapter.ViewHolder
   }
 
   @Override public void onBindViewHolder(ViewHolder holder, int position) {
-    ReimbursementModel reimbursement = reimbursements.get(position);
+    ClaimsListResponseDatum reimbursement = reimbursements.get(position);
     holder.populate(reimbursement);
     holder.addListener(reimbursement, position, onClickListener);
   }
@@ -38,7 +38,7 @@ public class StatusAdapter extends RecyclerView.Adapter<StatusAdapter.ViewHolder
   }
 
   public interface OnClickListener {
-    void onClick(ReimbursementModel reimbursementModel, int index);
+    void onClick(ClaimsListResponseDatum reimbursementModel, int index);
   }
 
   public class ViewHolder extends RecyclerView.ViewHolder {
@@ -57,17 +57,17 @@ public class StatusAdapter extends RecyclerView.Adapter<StatusAdapter.ViewHolder
       container = v.findViewById(R.id.container);
     }
 
-    void populate(ReimbursementModel reimbursement) {
+    void populate(ClaimsListResponseDatum reimbursement) {
       idTv.setText("Reimbursement #" + reimbursement.getId());
       categoryTv.setText(reimbursement.getCategory());
-      subCategoryTv.setText(reimbursement.getSubCategory());
-      typeTv.setText(reimbursement.getType());
-      serviceDateTv.setText(reimbursement.getServiceDate());
-      amountTv.setText(reimbursement.getAmount());
+      subCategoryTv.setText(reimbursement.getSubcategory());
+      //typeTv.setText(reimbursement.get());
+      serviceDateTv.setText(reimbursement.getDate());
+      amountTv.setText(String.valueOf(reimbursement.getAmount()));
       statusTv.setText(reimbursement.getStatus());
     }
 
-    void addListener(final ReimbursementModel reimbursement, final int position,
+    void addListener(final ClaimsListResponseDatum reimbursement, final int position,
         final OnClickListener onClickListener) {
       container.setOnClickListener(new View.OnClickListener() {
         @Override public void onClick(View view) {

@@ -7,6 +7,8 @@ import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponse;
 import com.mcsaatchi.gmfit.architecture.rest.CardDetailsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ChartMetricBreakdownResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ChartsBySectionResponse;
+import com.mcsaatchi.gmfit.architecture.rest.ClaimsListDetailsResponse;
+import com.mcsaatchi.gmfit.architecture.rest.ClaimsListResponse;
 import com.mcsaatchi.gmfit.architecture.rest.CoverageDescriptionResponse;
 import com.mcsaatchi.gmfit.architecture.rest.CreateNewRequestResponse;
 import com.mcsaatchi.gmfit.architecture.rest.DefaultGetResponse;
@@ -24,6 +26,7 @@ import com.mcsaatchi.gmfit.architecture.rest.RestClient;
 import com.mcsaatchi.gmfit.architecture.rest.SearchMealItemResponse;
 import com.mcsaatchi.gmfit.architecture.rest.SearchMedicinesResponse;
 import com.mcsaatchi.gmfit.architecture.rest.SlugBreakdownResponse;
+import com.mcsaatchi.gmfit.architecture.rest.SnapshotResponse;
 import com.mcsaatchi.gmfit.architecture.rest.SubCategoriesResponse;
 import com.mcsaatchi.gmfit.architecture.rest.TakenMedicalTestsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.UiResponse;
@@ -954,6 +957,54 @@ public class ApiCallsHandler {
     });
   }
 
+  void getClaimslist(String contractNo, String requestType,
+      final Callback<ClaimsListResponse> callback) {
+    Call<ClaimsListResponse> apiCall =
+        restClient.getGMFitService().getClaimsList(new ClaimsListRequest(contractNo, requestType));
+
+    apiCall.enqueue(new Callback<ClaimsListResponse>() {
+      @Override
+      public void onResponse(Call<ClaimsListResponse> call, Response<ClaimsListResponse> response) {
+        callback.onResponse(call, response);
+      }
+
+      @Override public void onFailure(Call<ClaimsListResponse> call, Throwable t) {
+      }
+    });
+  }
+
+  void getClaimslistDetails(String contractNo, String requestType, String claimId,
+      final Callback<ClaimsListDetailsResponse> callback) {
+    Call<ClaimsListDetailsResponse> apiCall = restClient.getGMFitService()
+        .getClaimsListDetails(new ClaimsListDetailsRequest(contractNo, requestType, claimId));
+
+    apiCall.enqueue(new Callback<ClaimsListDetailsResponse>() {
+      @Override public void onResponse(Call<ClaimsListDetailsResponse> call,
+          Response<ClaimsListDetailsResponse> response) {
+        callback.onResponse(call, response);
+      }
+
+      @Override public void onFailure(Call<ClaimsListDetailsResponse> call, Throwable t) {
+      }
+    });
+  }
+
+  void getSnapshot(String contractNo, String startDate, String endDate,
+      final Callback<SnapshotResponse> callback) {
+    Call<SnapshotResponse> apiCall = restClient.getGMFitService()
+        .getSnapshot(new SnapShotRequest(contractNo, startDate, endDate));
+
+    apiCall.enqueue(new Callback<SnapshotResponse>() {
+      @Override public void onResponse(Call<SnapshotResponse> call,
+          Response<SnapshotResponse> response) {
+        callback.onResponse(call, response);
+      }
+
+      @Override public void onFailure(Call<SnapshotResponse> call, Throwable t) {
+      }
+    });
+  }
+
   public class UpdateMetricsRequest {
     final String[] slug;
     final Number[] value;
@@ -1252,22 +1303,37 @@ public class ApiCallsHandler {
     }
   }
 
-  public class CreateNewRequestRequest {
+  public class ClaimsListRequest {
     String contractNo;
-    String providerTypesCode;
-    int searchCtry;
-    double longitude;
-    double latitude;
-    int fetchClosest;
+    String requestType;
 
-    public CreateNewRequestRequest(String contractNo, String providerTypesCode, int searchCtry,
-        double longitude, double latitude, int fetchClosest) {
+    public ClaimsListRequest(String contractNo, String requestType) {
       this.contractNo = contractNo;
-      this.providerTypesCode = providerTypesCode;
-      this.searchCtry = searchCtry;
-      this.longitude = longitude;
-      this.latitude = latitude;
-      this.fetchClosest = fetchClosest;
+      this.requestType = requestType;
+    }
+  }
+
+  public class ClaimsListDetailsRequest {
+    String contractNo;
+    String requestType;
+    String claimId;
+
+    public ClaimsListDetailsRequest(String contractNo, String requestType, String claimId) {
+      this.contractNo = contractNo;
+      this.requestType = requestType;
+      this.claimId = claimId;
+    }
+  }
+
+  public class SnapShotRequest {
+    String contractNo;
+    String startDate;
+    String endDate;
+
+    public SnapShotRequest(String contractNo, String startDate, String endDate) {
+      this.contractNo = contractNo;
+      this.startDate = startDate;
+      this.endDate = endDate;
     }
   }
 }
