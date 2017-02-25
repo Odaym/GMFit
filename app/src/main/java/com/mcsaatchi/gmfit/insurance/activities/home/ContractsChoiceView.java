@@ -36,7 +36,7 @@ public class ContractsChoiceView extends LinearLayout {
 
     LayoutInflater inflater =
         (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-    View v = inflater.inflate(R.layout.view_contracts_choice, this, true);
+    View v = inflater.inflate(R.layout.view_contracts_choice, this, false);
 
     ButterKnife.bind(this, v);
 
