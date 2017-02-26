@@ -52,9 +52,7 @@ public class InsuranceHomeFragment extends Fragment {
   @Inject DataAccessHandler dataAccessHandler;
   @Inject PermissionsChecker permChecker;
   @Inject SharedPreferences prefs;
-  private List<InsuranceContract> insuranceContracts = new ArrayList<>();
 
-  private InsuranceLoginResponseInnerData insuranceUserData;
   private ViewGroup parentFragmentView;
   private ImageView contractSelectorBTN;
   private String cardNumber;
@@ -70,17 +68,20 @@ public class InsuranceHomeFragment extends Fragment {
 
     parentFragmentView = ((ViewGroup) getParentFragment().getView());
 
-    setupContractSelectorButton();
+    List<InsuranceContract> insuranceContracts = new ArrayList<>();
 
     if (getArguments() != null) {
-      insuranceUserData = (InsuranceLoginResponseInnerData) getArguments().get(
-          Constants.BUNDLE_INSURANCE_USER_OBJECT);
+      InsuranceLoginResponseInnerData insuranceUserData =
+          (InsuranceLoginResponseInnerData) getArguments().get(
+              Constants.BUNDLE_INSURANCE_USER_OBJECT);
       cardNumber = getArguments().getString("CARD_NUMBER");
 
       cardNumberTV.setText("Card Number: " + cardNumber);
 
       cardOwnerTV.setText(insuranceUserData.getUsername());
       bankNameTV.setText(insuranceUserData.getContracts().get(0).getCompany());
+
+      Timber.d("Contracts size : " + insuranceUserData.getContracts().size());
 
       for (int i = 0; i < insuranceUserData.getContracts().size(); i++) {
         InsuranceContract contract = new InsuranceContract();
@@ -91,10 +92,7 @@ public class InsuranceHomeFragment extends Fragment {
         insuranceContracts.add(contract);
       }
 
-      if (insuranceContracts.size() > 0 || prefs.getString(
-          Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, "").isEmpty()) {
-        contractSelectorBTN.performClick();
-      }
+      setupContractSelectorButton(insuranceContracts);
 
       setupInsurancePathsGrid(new ArrayList<InsuranceOperationWidget>() {{
         add(new InsuranceOperationWidget(R.drawable.ic_insurance_operations_submit,
@@ -187,7 +185,7 @@ public class InsuranceHomeFragment extends Fragment {
         });
   }
 
-  private void setupContractSelectorButton() {
+  private void setupContractSelectorButton(List<InsuranceContract> insuranceContracts) {
     if (parentFragmentView != null) {
       final ContractsChoiceView contractsChoiceView =
           new ContractsChoiceView(getActivity().getApplication(), insuranceContracts);

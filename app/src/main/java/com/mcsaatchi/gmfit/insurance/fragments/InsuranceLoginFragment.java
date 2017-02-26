@@ -51,8 +51,8 @@ public class InsuranceLoginFragment extends Fragment {
 
     ButterKnife.bind(this, fragmentView);
 
-    memberIdET.setText("91032215");
-    passwordET.setText("1985");
+    memberIdET.setText("91071403");
+    passwordET.setText("1982");
 
     allFields.add(memberIdET);
     allFields.add(passwordET);

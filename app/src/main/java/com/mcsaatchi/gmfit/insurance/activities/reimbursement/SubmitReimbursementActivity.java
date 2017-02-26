@@ -43,6 +43,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import okhttp3.MediaType;
@@ -139,8 +140,6 @@ public class SubmitReimbursementActivity extends BaseActivity {
     categoryToggle.setUp("Category", "Out", "In", new CustomToggle.OnToggleListener() {
       @Override public void selected(String option) {
         categoryValue = option;
-
-        Timber.d("category selected : " + categoryValue);
       }
     });
 
@@ -319,7 +318,7 @@ public class SubmitReimbursementActivity extends BaseActivity {
 
     dataAccessHandler.createNewRequest(
         toRequestBody(prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, "")),
-        toRequestBody(categoryValue), toRequestBody("2"), toRequestBody("2"), toRequestBody("10"),
+        toRequestBody(categoryValue), toRequestBody("2"), toRequestBody("1"), toRequestBody("10"),
         toRequestBody("2"), toRequestBody("2016-10-10T16:27:32+02:00"), toRequestBody("D"),
         toRequestBody("Remarks"), attachements, new Callback<CreateNewRequestResponse>() {
           @Override public void onResponse(Call<CreateNewRequestResponse> call,
@@ -356,16 +355,15 @@ public class SubmitReimbursementActivity extends BaseActivity {
   }
 
   private HashMap<String, RequestBody> constructSelectedImagesForRequest() {
-    HashMap<String, RequestBody> imageParts = new HashMap<>();
+    LinkedHashMap<String, RequestBody> imageParts = new LinkedHashMap<>();
 
     for (int i = 0; i < imagePaths.size(); i++) {
       if (imagePaths.get(i) != null) {
-        imageParts.put("attachements[" + i + "][content]",
-            RequestBody.create(MediaType.parse("text/plain"),
-                Base64.encodeToString(turnImageToByteArray(imagePaths.get(i)), Base64.NO_WRAP)));
-        imageParts.put("attachements[" + i + "][id]", toRequestBody(String.valueOf(i + 1)));
-        imageParts.put("attachements[" + i + "][name]", toRequestBody("name.jpg"));
+        imageParts.put("attachements[" + i + "][content]", toRequestBody(
+            Base64.encodeToString(turnImageToByteArray(imagePaths.get(i)), Base64.NO_WRAP)));
         imageParts.put("attachements[" + i + "][documType]", toRequestBody("2"));
+        imageParts.put("attachements[" + i + "][name]", toRequestBody(imagePaths.get(i)));
+        imageParts.put("attachements[" + i + "][id]", toRequestBody(String.valueOf(i + 1)));
       }
     }
 
@@ -375,7 +373,7 @@ public class SubmitReimbursementActivity extends BaseActivity {
   private byte[] turnImageToByteArray(String imagePath) {
     Bitmap bm = BitmapFactory.decodeFile(imagePath);
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    bm.compress(Bitmap.CompressFormat.JPEG, 50, baos);
+    bm.compress(Bitmap.CompressFormat.JPEG, 100, baos);
 
     return baos.toByteArray();
   }
