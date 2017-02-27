@@ -14,6 +14,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -191,6 +192,7 @@ public class InsuranceHomeFragment extends Fragment {
           new ContractsChoiceView(getActivity().getApplication(), insuranceContracts);
 
       final Dialog contractChooserDialog = new Dialog(getActivity());
+      contractChooserDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
       contractChooserDialog.setContentView(contractsChoiceView);
 
       contractChooserDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
@@ -216,6 +218,11 @@ public class InsuranceHomeFragment extends Fragment {
           contractChooserDialog.show();
         }
       });
+
+      if (prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, "").isEmpty()) {
+        contractSelectorBTN.setImageResource(R.drawable.ic_contract_chooser_active);
+        contractChooserDialog.show();
+      }
     }
   }
 }

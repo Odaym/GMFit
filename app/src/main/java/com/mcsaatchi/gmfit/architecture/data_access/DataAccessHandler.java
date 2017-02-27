@@ -290,10 +290,9 @@ public class DataAccessHandler {
     apiCallsHandler.insuranceUserLogin(indNbr, country, language, password, callback);
   }
 
-  public void getCoverageDescription(String indNbr, String contractNo, String country,
-      String language, String password, Callback<CoverageDescriptionResponse> callback) {
-    apiCallsHandler.getCoverageDescription(indNbr, contractNo, country, language, password,
-        callback);
+  public void getCoverageDescription(String contractNo, String indNbr,
+      Callback<CoverageDescriptionResponse> callback) {
+    apiCallsHandler.getCoverageDescription(contractNo, indNbr, callback);
   }
 
   public void updateInsurancePassword(String contractNo, String oldPassword, String newPassword,

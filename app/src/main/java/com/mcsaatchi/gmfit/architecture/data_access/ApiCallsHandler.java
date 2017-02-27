@@ -854,11 +854,10 @@ public class ApiCallsHandler {
     });
   }
 
-  void getCoverageDescription(String indNbr, String contractNo, String country, String language,
-      String password, final Callback<CoverageDescriptionResponse> callback) {
+  void getCoverageDescription(String contractNo, String indNbr,
+      final Callback<CoverageDescriptionResponse> callback) {
     Call<CoverageDescriptionResponse> apiCall = restClient.getGMFitService()
-        .getCoverageDescription(
-            new DefaultBodyForInsuranceRequests(indNbr, contractNo, country, language, password));
+        .getCoverageDescription(new CoverageDescriptionRequest(contractNo, indNbr));
 
     apiCall.enqueue(new Callback<CoverageDescriptionResponse>() {
       @Override public void onResponse(Call<CoverageDescriptionResponse> call,
@@ -995,8 +994,8 @@ public class ApiCallsHandler {
         .getSnapshot(new SnapShotRequest(contractNo, startDate, endDate));
 
     apiCall.enqueue(new Callback<SnapshotResponse>() {
-      @Override public void onResponse(Call<SnapshotResponse> call,
-          Response<SnapshotResponse> response) {
+      @Override
+      public void onResponse(Call<SnapshotResponse> call, Response<SnapshotResponse> response) {
         callback.onResponse(call, response);
       }
 
@@ -1300,6 +1299,16 @@ public class ApiCallsHandler {
       this.longitude = longitude;
       this.latitude = latitude;
       this.fetchClosest = fetchClosest;
+    }
+  }
+
+  public class CoverageDescriptionRequest {
+    String contractNo;
+    String indNbr;
+
+    public CoverageDescriptionRequest(String contractNo, String indNbr) {
+      this.contractNo = contractNo;
+      this.indNbr = indNbr;
     }
   }
 

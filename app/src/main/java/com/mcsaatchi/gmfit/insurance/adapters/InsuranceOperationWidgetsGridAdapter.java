@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
@@ -16,6 +17,7 @@ import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.GMFitApplication;
 import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.architecture.rest.CoverageDescriptionResponse;
+import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.insurance.activities.approval_request.ApprovalRequestsStatusListActivity;
 import com.mcsaatchi.gmfit.insurance.activities.approval_request.SubmitApprovalRequestsActivity;
 import com.mcsaatchi.gmfit.insurance.activities.chronic.ChronicStatusListActivity;
@@ -47,6 +49,7 @@ public class InsuranceOperationWidgetsGridAdapter
   private static final int INQUIRY_REQUESTS_ITEM = 3;
 
   @Inject DataAccessHandler dataAccessHandler;
+  @Inject SharedPreferences prefs;
 
   private ArrayList<InsuranceOperationWidget> widgetsMap;
   private FragmentActivity fragmentActivity;
@@ -96,8 +99,11 @@ public class InsuranceOperationWidgetsGridAdapter
           }
         });
 
-    dataAccessHandler.getCoverageDescription("2012250", "1892870", "422", "2", "walid123",
+    dataAccessHandler.getCoverageDescription(
+        prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""),
+        prefs.getString(Constants.EXTRAS_INSURANCE_USER_USERNAME, ""),
         new Callback<CoverageDescriptionResponse>() {
+
           @Override public void onResponse(Call<CoverageDescriptionResponse> call,
               Response<CoverageDescriptionResponse> response) {
 
@@ -195,7 +201,8 @@ public class InsuranceOperationWidgetsGridAdapter
                 case CHRONIC_ITEM:
                   switch (request_purpose) {
                     case SUBMIT_ITEM:
-                      intent = new Intent(fragmentActivity, SubmitChronicPrescriptionActivity.class);
+                      intent =
+                          new Intent(fragmentActivity, SubmitChronicPrescriptionActivity.class);
                       fragmentActivity.startActivity(intent);
                       break;
                     case TRACK_ITEM:
