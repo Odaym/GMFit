@@ -190,9 +190,7 @@ public class SubmitReimbursementActivity extends BaseActivity {
         if (photoFile.getTotalSpace() > 0) {
           Picasso.with(this)
               .load(new File(photoFile.getAbsolutePath()))
-              .resize(getResources().getDimensionPixelSize(R.dimen.attached_images_dimens),
-                  getResources().getDimensionPixelSize(R.dimen.attached_images_dimens))
-              .centerInside()
+              .fit()
               .into(currentImageView);
 
           imagePaths.add(photoFile.getAbsolutePath());
@@ -208,9 +206,7 @@ public class SubmitReimbursementActivity extends BaseActivity {
 
           Picasso.with(this)
               .load(new File(selectedImagePath))
-              .resize(getResources().getDimensionPixelSize(R.dimen.attached_images_dimens),
-                  getResources().getDimensionPixelSize(R.dimen.attached_images_dimens))
-              .centerInside()
+              .fit()
               .into(currentImageView);
 
           imagePaths.add(selectedImagePath);
