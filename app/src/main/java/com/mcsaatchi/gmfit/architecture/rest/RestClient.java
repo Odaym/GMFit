@@ -34,8 +34,8 @@ public class RestClient {
     loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
     OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-    httpClient.readTimeout(30, TimeUnit.SECONDS);
-    httpClient.writeTimeout(30, TimeUnit.SECONDS);
+    httpClient.readTimeout(45, TimeUnit.SECONDS);
+    httpClient.writeTimeout(45, TimeUnit.SECONDS);
     //httpClient.addInterceptor(new ChuckInterceptor(context));
     httpClient.addInterceptor(loggingInterceptor);
     httpClient.addInterceptor(new Interceptor() {
