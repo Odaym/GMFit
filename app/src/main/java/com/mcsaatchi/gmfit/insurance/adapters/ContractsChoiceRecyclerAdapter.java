@@ -1,6 +1,6 @@
 package com.mcsaatchi.gmfit.insurance.adapters;
 
-import android.content.Context;
+import android.app.Dialog;
 import android.content.SharedPreferences;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,8 +13,8 @@ import com.mcsaatchi.gmfit.architecture.GMFitApplication;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.insurance.models.InsuranceContract;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Objects;
 import javax.inject.Inject;
 
@@ -22,14 +22,15 @@ public class ContractsChoiceRecyclerAdapter
     extends RecyclerView.Adapter<ContractsChoiceRecyclerAdapter.RecyclerViewHolder> {
 
   @Inject SharedPreferences prefs;
-  private ArrayList<InsuranceContract> contracts;
-  private Context context;
+  private List<InsuranceContract> contracts;
+  private Dialog dialogView;
 
-  public ContractsChoiceRecyclerAdapter(Context context, ArrayList<InsuranceContract> contracts) {
+  public ContractsChoiceRecyclerAdapter(GMFitApplication appObject, Dialog dialogView,
+      List<InsuranceContract> contracts) {
+    this.dialogView = dialogView;
     this.contracts = contracts;
-    this.context = context;
 
-    ((GMFitApplication) context).getAppComponent().inject(this);
+    appObject.getAppComponent().inject(this);
   }
 
   @Override public int getItemCount() {
@@ -106,6 +107,8 @@ public class ContractsChoiceRecyclerAdapter
       contractCheckedLayout.setVisibility(View.VISIBLE);
 
       notifyDataSetChanged();
+
+      dialogView.dismiss();
     }
   }
 }

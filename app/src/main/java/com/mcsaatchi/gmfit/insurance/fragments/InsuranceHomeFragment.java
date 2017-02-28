@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -81,8 +83,6 @@ public class InsuranceHomeFragment extends Fragment {
 
       cardOwnerTV.setText(insuranceUserData.getUsername());
       bankNameTV.setText(insuranceUserData.getContracts().get(0).getCompany());
-
-      Timber.d("Contracts size : " + insuranceUserData.getContracts().size());
 
       for (int i = 0; i < insuranceUserData.getContracts().size(); i++) {
         InsuranceContract contract = new InsuranceContract();
@@ -186,20 +186,26 @@ public class InsuranceHomeFragment extends Fragment {
         });
   }
 
-  private void setupContractSelectorButton(List<InsuranceContract> insuranceContracts) {
+  private void setupContractSelectorButton(final List<InsuranceContract> insuranceContracts) {
     if (parentFragmentView != null) {
       final ContractsChoiceView contractsChoiceView =
-          new ContractsChoiceView(getActivity().getApplication(), insuranceContracts);
+          new ContractsChoiceView((GMFitApplication) getActivity().getApplication(), getActivity(),
+              insuranceContracts);
+
+      Button logoutContractButton =
+          (Button) contractsChoiceView.findViewById(R.id.logoutContractBTN);
 
       final Dialog contractChooserDialog = new Dialog(getActivity());
       contractChooserDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
       contractChooserDialog.setContentView(contractsChoiceView);
 
-      contractChooserDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-        @Override public void onCancel(DialogInterface dialogInterface) {
+      contractChooserDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+        @Override public void onDismiss(DialogInterface dialogInterface) {
           contractSelectorBTN.setImageResource(R.drawable.ic_contract_chooser);
         }
       });
+
+      contractsChoiceView.setParentDialog(contractChooserDialog);
 
       WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
       lp.copyFrom(contractChooserDialog.getWindow().getAttributes());
@@ -223,6 +229,26 @@ public class InsuranceHomeFragment extends Fragment {
         contractSelectorBTN.setImageResource(R.drawable.ic_contract_chooser_active);
         contractChooserDialog.show();
       }
+
+      logoutContractButton.setOnClickListener(new View.OnClickListener() {
+        @Override public void onClick(View view) {
+          for (InsuranceContract contract : insuranceContracts) {
+            if (contract.isSelected()) {
+              prefs.edit().putString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, "").apply();
+              prefs.edit().putString(Constants.EXTRAS_INSURANCE_USER_USERNAME, "").apply();
+              prefs.edit().putString(Constants.EXTRAS_INSURANCE_USER_PASSWORD, "").apply();
+
+              getFragmentManager().beginTransaction()
+                  .hide(InsuranceHomeFragment.this)
+                  .replace(R.id.root_frame, new InsuranceLoginFragment())
+                  .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                  .commitAllowingStateLoss();
+
+              contractChooserDialog.dismiss();
+            }
+          }
+        }
+      });
     }
   }
 }

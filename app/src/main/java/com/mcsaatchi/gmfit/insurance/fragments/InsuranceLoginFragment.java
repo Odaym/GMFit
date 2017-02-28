@@ -124,7 +124,6 @@ public class InsuranceLoginFragment extends Fragment {
                   getFragmentManager().beginTransaction()
                       .replace(R.id.root_frame, insuranceHomeFragment)
                       .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                      .addToBackStack(null)
                       .commitAllowingStateLoss();
                 }
 
@@ -165,7 +164,6 @@ public class InsuranceLoginFragment extends Fragment {
           getFragmentManager().beginTransaction()
               .replace(R.id.root_frame, insuranceHomeFragment)
               .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-              .addToBackStack(null)
               .commitAllowingStateLoss();
         }
 

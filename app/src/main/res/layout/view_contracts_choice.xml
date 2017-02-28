@@ -32,14 +32,14 @@
       >
 
     <Button
-        android:id="@+id/updateContractBTN"
+        android:id="@+id/logoutContractBTN"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/default_margin_1"
         android:layout_marginEnd="@dimen/default_margin_2"
         android:layout_marginStart="@dimen/default_margin_2"
         android:background="@color/buttons_blue"
-        android:text="@string/update_button_label"
+        android:text="@string/log_out_button"
         android:textAllCaps="false"
         android:textColor="@color/white"
         />

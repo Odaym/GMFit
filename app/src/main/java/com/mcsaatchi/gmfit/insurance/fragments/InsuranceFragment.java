@@ -111,7 +111,6 @@ public class InsuranceFragment extends Fragment {
                 getChildFragmentManager().beginTransaction()
                     .replace(R.id.root_frame, insuranceHomeFragment)
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
-                    .addToBackStack(null)
                     .commitAllowingStateLoss();
 
                 break;

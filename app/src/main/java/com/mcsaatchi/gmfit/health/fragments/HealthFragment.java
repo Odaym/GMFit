@@ -100,7 +100,10 @@ public class HealthFragment extends Fragment {
 
     ButterKnife.bind(this, fragmentView);
 
-    EventBusSingleton.getInstance().register(this);
+    try {
+      EventBusSingleton.getInstance().register(this);
+    } catch (IllegalArgumentException ignored) {
+    }
 
     setHasOptionsMenu(true);
 
