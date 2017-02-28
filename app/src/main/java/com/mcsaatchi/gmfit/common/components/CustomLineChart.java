@@ -61,7 +61,8 @@ public class CustomLineChart extends LineChart {
 
       xVals.add(date.getDayOfMonth() + " " + date.monthOfYear().getAsText().substring(0, 3));
 
-      entries.add(new Entry(Float.parseFloat(String.valueOf(weights.get(i).getWeight())), i));
+      entries.add(
+          new Entry(Float.parseFloat(String.format("%.1f", weights.get(i).getWeight())), i));
     }
 
     LineDataSet dataset = new LineDataSet(entries, null);
