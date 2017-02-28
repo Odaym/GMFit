@@ -204,10 +204,7 @@ public class SubmitReimbursementActivity extends BaseActivity {
           Uri selectedImageUri = data.getData();
           String selectedImagePath = getPhotoPathFromGallery(selectedImageUri);
 
-          Picasso.with(this)
-              .load(new File(selectedImagePath))
-              .fit()
-              .into(currentImageView);
+          Picasso.with(this).load(new File(selectedImagePath)).fit().into(currentImageView);
 
           imagePaths.add(selectedImagePath);
         }
@@ -309,7 +306,8 @@ public class SubmitReimbursementActivity extends BaseActivity {
   private void submitReimbursement(HashMap<String, RequestBody> attachements) {
     final ProgressDialog waitingDialog = new ProgressDialog(this);
     waitingDialog.setTitle(getResources().getString(R.string.submit_new_reimbursement));
-    waitingDialog.setMessage(getResources().getString(R.string.please_wait_dialog_message));
+    waitingDialog.setMessage(
+        getResources().getString(R.string.uploading_attachments_dialog_message));
     waitingDialog.show();
 
     dataAccessHandler.createNewRequest(

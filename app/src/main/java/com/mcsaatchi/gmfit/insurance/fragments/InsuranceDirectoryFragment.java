@@ -252,6 +252,7 @@ public class InsuranceDirectoryFragment extends Fragment implements OnMapReadyCa
   }
 
   private void addMarkersToMap(List<GetNearbyClinicsResponseDatum> validClinics) {
+    map.getUiSettings().setMyLocationButtonEnabled(true);
     map.addMarker(
         new MarkerOptions().position(new LatLng(userLatLong[0], userLatLong[1])).title("You"));
 

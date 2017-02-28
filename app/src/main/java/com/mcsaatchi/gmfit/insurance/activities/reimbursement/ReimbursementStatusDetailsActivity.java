@@ -5,16 +5,10 @@ import android.support.v7.widget.Toolbar;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.rest.ClaimsListDetailsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ClaimsListResponseDatum;
-import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.insurance.widget.CustomAttachmentPicker;
 import com.mcsaatchi.gmfit.insurance.widget.ItemLabel;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import timber.log.Timber;
 
 public class ReimbursementStatusDetailsActivity extends BaseActivity {
 
@@ -51,31 +45,12 @@ public class ReimbursementStatusDetailsActivity extends BaseActivity {
         setupToolbar(getClass().getSimpleName(), toolbar,
             "Reimbursement #" + reimbursementModel.getId(), true);
 
-        amount.setLabel("Amount", reimbursementModel.getClaim());
+        amount.setLabel("Amount", String.valueOf(reimbursementModel.getAmount()));
         serviceDate.setLabel("Service Date", reimbursementModel.getDate());
         subCategory.setLabel("Sub Category", reimbursementModel.getSubcategory());
         category.setLabel("Category", reimbursementModel.getCategory());
         status.setLabel("Status", reimbursementModel.getStatus());
-
-        getReimbursementClaimDetails();
       }
     }
-  }
-
-  private void getReimbursementClaimDetails() {
-    dataAccessHandler.getClaimslistDetails(
-        prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""), "1",
-        String.valueOf(reimbursementModel.getId()), new Callback<ClaimsListDetailsResponse  >() {
-          @Override public void onResponse(Call<ClaimsListDetailsResponse> call,
-              Response<ClaimsListDetailsResponse> response) {
-            switch (response.code()) {
-              case 200:
-            }
-          }
-
-          @Override public void onFailure(Call<ClaimsListDetailsResponse> call, Throwable t) {
-            Timber.d("Call failed with error : %s", t.getMessage());
-          }
-        });
   }
 }
