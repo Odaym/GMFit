@@ -289,7 +289,7 @@ public class FitnessFragment extends Fragment {
 
             ArrayList<FitnessWidget> newWidgetsMap = new ArrayList<>();
 
-            for (int i = 0; i < widgetsFromResponse.size(); i++) {
+            for (int i = 0; i < 2; i++) {
               FitnessWidget widget = new FitnessWidget();
 
               if (!widgetsFromResponse.get(i).getName().equals("Steps Count")) {
