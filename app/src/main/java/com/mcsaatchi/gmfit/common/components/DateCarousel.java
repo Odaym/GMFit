@@ -103,7 +103,7 @@ public class DateCarousel extends HorizontalScrollView {
                     + "/"
                     + dt.year().getAsText());
 
-            String finalDesiredDate = Helpers.prepareDateForAPIRequest(formattedDate.toLocalDate());
+            String finalDesiredDate = Helpers.formatDateToDefault(formattedDate.toLocalDate());
 
             String todaysDateFormatted =
                 dt.getYear() + "-" + dt.getMonthOfYear() + "-" + dt.getDayOfMonth();

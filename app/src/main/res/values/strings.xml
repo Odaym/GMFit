@@ -373,8 +373,9 @@
   <string name="request_deletion_hint">To request the deletion of this item, please enter your password and attach the doctor\'s confirmation below.</string>
   <string name="request_deletion_button_text">Request Deletion</string>
   <string name="choose_contract_dialog_title">Select Contract</string>
-  <string name="submit_new_reimbursement">Submitting new reimbursement</string>
-  <string name="uploading_attachments_dialog_message">Uploading attachments...</string>
+  <string name="submit_new_reimbursement">Submitting New Reimbursement</string>
+  <string name="submit_new_approval_request">Submitting New Approval Request</string>
+  <string name="uploading_attachments_dialog_message">Uploading attachments…</string>
   <string name="snapshot_activity_title">Snapshot</string>
 
   <!-- COVERAGE DESCRIPTION -->

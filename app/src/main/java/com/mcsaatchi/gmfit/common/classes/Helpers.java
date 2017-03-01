@@ -18,6 +18,7 @@ import com.mcsaatchi.gmfit.common.Constants;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -84,7 +85,7 @@ public class Helpers {
         Calendar.DAY_OF_MONTH);
   }
 
-  public static String prepareDateForAPIRequest(LocalDate dt) {
+  public static String formatDateToDefault(LocalDate dt) {
     DateTimeFormatter formatter = DateTimeFormat.forPattern("yyyy-MM-dd");
     DateTime formattedDate = formatter.parseDateTime(dt.toString());
 
@@ -93,6 +94,20 @@ public class Helpers {
         + formattedDate.getMonthOfYear()
         + "-"
         + formattedDate.getDayOfMonth();
+  }
+
+  public static String formatInsuranceDate(LocalDate dt) {
+    SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
+    Date date = null;
+    try {
+      date = fmt.parse(dt.toString());
+    } catch (ParseException e) {
+      e.printStackTrace();
+    }
+
+    SimpleDateFormat fmtOut = new SimpleDateFormat("MMM dd, yyyy");
+
+    return fmtOut.format(date);
   }
 
   public static String prepareDateWithTimeForAPIRequest(LocalDateTime dt) {

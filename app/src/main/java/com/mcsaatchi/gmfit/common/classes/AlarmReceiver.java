@@ -42,7 +42,7 @@ public class AlarmReceiver extends WakefulBroadcastReceiver {
           Intent openMealEntryPickerIntent = new Intent(context, AddNewMealItemActivity.class);
           openMealEntryPickerIntent.putExtra(Constants.EXTRAS_MAIN_MEAL_NAME, mealType);
           openMealEntryPickerIntent.putExtra(Constants.EXTRAS_DATE_TO_ADD_MEAL_ON,
-              Helpers.prepareDateForAPIRequest(new LocalDate()));
+              Helpers.formatDateToDefault(new LocalDate()));
           openMealEntryPickerIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
           PendingIntent pendingIntent =

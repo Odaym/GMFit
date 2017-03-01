@@ -15,7 +15,6 @@ import com.mcsaatchi.gmfit.architecture.rest.ClaimsListResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ClaimsListResponseDatum;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
-import com.mcsaatchi.gmfit.insurance.activities.reimbursement.ReimbursementStatusDetailsActivity;
 import com.mcsaatchi.gmfit.insurance.adapters.StatusAdapter;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -45,8 +44,8 @@ public class ApprovalRequestsStatusListActivity extends BaseActivity {
 
     final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
     alertDialog.setTitle(R.string.loading_data_dialog_title);
-    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE,
-        getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
+    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getResources().getString(R.string.ok),
+        new DialogInterface.OnClickListener() {
           public void onClick(DialogInterface dialog, int which) {
             dialog.dismiss();
 
@@ -67,9 +66,10 @@ public class ApprovalRequestsStatusListActivity extends BaseActivity {
                       @Override
                       public void onClick(ClaimsListResponseDatum reimbursementModel, int index) {
                         Intent intent = new Intent(ApprovalRequestsStatusListActivity.this,
-                            ReimbursementStatusDetailsActivity.class);
-                        intent.putExtra(ReimbursementStatusDetailsActivity.REIMBURSEMENT_MODEL_KEY,
-                            reimbursementModel);
+                            ApprovalRequestStatusDetailsActivity.class);
+                        intent.putExtra(
+                            ApprovalRequestStatusDetailsActivity.APPROVAL_REQUEST_CLAIM_ID,
+                            reimbursementModel.getId());
                         startActivity(intent);
                       }
                     });
@@ -78,10 +78,6 @@ public class ApprovalRequestsStatusListActivity extends BaseActivity {
                     new LinearLayoutManager(ApprovalRequestsStatusListActivity.this));
                 recyclerView.setHasFixedSize(true);
                 recyclerView.setAdapter(statusAdapter);
-              case 449:
-                alertDialog.setMessage("error: An error has occurred. Please contact your system administrator.");
-                alertDialog.show();
-                break;
             }
           }
 

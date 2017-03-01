@@ -7,15 +7,15 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ClaimsListResponseDatum implements Parcelable{
-  public static final Creator<ClaimsListResponseDatum> CREATOR =
-      new Creator<ClaimsListResponseDatum>() {
-        @Override public ClaimsListResponseDatum createFromParcel(Parcel source) {
-          return new ClaimsListResponseDatum(source);
+public class ClaimListDetailsResponseDatum implements Parcelable {
+  public static final Creator<ClaimListDetailsResponseDatum> CREATOR =
+      new Creator<ClaimListDetailsResponseDatum>() {
+        @Override public ClaimListDetailsResponseDatum createFromParcel(Parcel source) {
+          return new ClaimListDetailsResponseDatum(source);
         }
 
-        @Override public ClaimsListResponseDatum[] newArray(int size) {
-          return new ClaimsListResponseDatum[size];
+        @Override public ClaimListDetailsResponseDatum[] newArray(int size) {
+          return new ClaimListDetailsResponseDatum[size];
         }
       };
   @SerializedName("id") @Expose private Integer id;
@@ -32,10 +32,10 @@ public class ClaimsListResponseDatum implements Parcelable{
   @SerializedName("images") @Expose private List<ClaimListDetailsResponseImage> images = null;
   @SerializedName("conversation") @Expose private List<String> conversation = null;
 
-  public ClaimsListResponseDatum() {
+  public ClaimListDetailsResponseDatum() {
   }
 
-  protected ClaimsListResponseDatum(Parcel in) {
+  protected ClaimListDetailsResponseDatum(Parcel in) {
     this.id = (Integer) in.readValue(Integer.class.getClassLoader());
     this.claim = in.readString();
     this.status = in.readString();
@@ -116,7 +116,7 @@ public class ClaimsListResponseDatum implements Parcelable{
     this.currency = currency;
   }
 
-  public Object getProvider() {
+  public String getProvider() {
     return provider;
   }
 
@@ -124,7 +124,7 @@ public class ClaimsListResponseDatum implements Parcelable{
     this.provider = provider;
   }
 
-  public Object getReasonOfRejection() {
+  public String getReasonOfRejection() {
     return reasonOfRejection;
   }
 

@@ -2,17 +2,16 @@ package com.mcsaatchi.gmfit.architecture.rest;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import java.util.List;
 
 public class SnapshotResponseBody {
 
-  @SerializedName("error") @Expose private List<String> error = null;
+  @SerializedName("snapshot_pdf") @Expose private String snapshotPdf;
 
-  public List<String> getError() {
-    return error;
+  public String getSnapshotPdf() {
+    return snapshotPdf;
   }
 
-  public void setError(List<String> error) {
-    this.error = error;
+  public void setSnapshotPdf(String snapshotPdf) {
+    this.snapshotPdf = snapshotPdf;
   }
 }

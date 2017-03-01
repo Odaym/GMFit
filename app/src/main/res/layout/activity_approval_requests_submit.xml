@@ -64,6 +64,7 @@
           />
 
       <EditText
+          android:id="@+id/remarksET"
           android:layout_width="match_parent"
           android:layout_height="120dp"
           android:background="@color/much_lighter_gray"

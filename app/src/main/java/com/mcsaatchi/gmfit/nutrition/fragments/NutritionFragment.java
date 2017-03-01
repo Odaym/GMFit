@@ -193,7 +193,7 @@ public class NutritionFragment extends Fragment {
 
     hookupMealSectionRowsClickListeners();
 
-    finalDesiredDate = Helpers.prepareDateForAPIRequest(new LocalDate());
+    finalDesiredDate = Helpers.formatDateToDefault(new LocalDate());
 
     getUserGoalMetrics(finalDesiredDate, "nutrition");
 
@@ -352,7 +352,7 @@ public class NutritionFragment extends Fragment {
               intent.putExtra(Constants.EXTRAS_MEAL_OBJECT_DETAILS, item);
               intent.putExtra(Constants.EXTRAS_MEAL_ITEM_PURPOSE_ADDING_TO_DATE, true);
               intent.putExtra(Constants.EXTRAS_DATE_TO_ADD_MEAL_ON,
-                  Helpers.prepareDateForAPIRequest(new LocalDate()));
+                  Helpers.formatDateToDefault(new LocalDate()));
               startActivity(intent);
             } else {
               Toast.makeText(parentActivity, getString(R.string.scanned_meal_not_found),

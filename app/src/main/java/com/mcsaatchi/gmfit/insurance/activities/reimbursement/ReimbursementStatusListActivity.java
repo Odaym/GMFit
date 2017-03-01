@@ -67,8 +67,8 @@ public class ReimbursementStatusListActivity extends BaseActivity {
                       public void onClick(ClaimsListResponseDatum reimbursementModel, int index) {
                         Intent intent = new Intent(ReimbursementStatusListActivity.this,
                             ReimbursementStatusDetailsActivity.class);
-                        intent.putExtra(ReimbursementStatusDetailsActivity.REIMBURSEMENT_MODEL_KEY,
-                            reimbursementModel);
+                        intent.putExtra(ReimbursementStatusDetailsActivity.REIMBURSEMENT_REQUEST_ID,
+                            reimbursementModel.getId());
                         startActivity(intent);
                       }
                     });

@@ -22,15 +22,14 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.rest.CreateNewRequestResponse;
-import com.mcsaatchi.gmfit.architecture.rest.SubCategoriesResponseDatum;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
+import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.insurance.widget.CustomAttachmentPicker;
 import com.mcsaatchi.gmfit.insurance.widget.CustomPicker;
 import com.mcsaatchi.gmfit.insurance.widget.CustomToggle;
@@ -44,10 +43,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Locale;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
+import org.joda.time.LocalDate;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -72,6 +71,7 @@ public class SubmitReimbursementActivity extends BaseActivity {
   @Bind(R.id.currencyLayout) LinearLayout currencyLayout;
   @Bind(R.id.currencyLabel) TextView currencyLabel;
   @Bind(R.id.amountClaimedET) EditText amountClaimedET;
+  @Bind(R.id.remarksET) EditText remarksET;
 
   private ArrayList<String> imagePaths = new ArrayList<>();
 
@@ -82,7 +82,6 @@ public class SubmitReimbursementActivity extends BaseActivity {
 
   private File photoFile;
   private Uri photoFileUri;
-  private List<SubCategoriesResponseDatum> subCategoriesList;
   private ImageView currentImageView;
 
   public static RequestBody toRequestBody(String value) {
@@ -159,27 +158,16 @@ public class SubmitReimbursementActivity extends BaseActivity {
   }
 
   @OnClick(R.id.submitReimbursementBTN) public void handleSubmitReimbursement() {
+    final ProgressDialog waitingDialog = new ProgressDialog(this);
+    waitingDialog.setTitle(getResources().getString(R.string.submit_new_reimbursement));
+    waitingDialog.setCancelable(false);
+    waitingDialog.setMessage(
+        getResources().getString(R.string.uploading_attachments_dialog_message));
+    waitingDialog.show();
+
     HashMap<String, RequestBody> attachments = constructSelectedImagesForRequest();
 
-    submitReimbursement(attachments);
-  }
-
-  private void hookupImagesPickerImages(CustomAttachmentPicker imagePicker) {
-    LinearLayout parentLayout = (LinearLayout) imagePicker.getChildAt(0);
-    final LinearLayout innerLayoutWithPickers = (LinearLayout) parentLayout.getChildAt(1);
-
-    for (int i = 0; i < innerLayoutWithPickers.getChildCount(); i++) {
-      if (innerLayoutWithPickers.getChildAt(i) instanceof ImageView) {
-        final int finalI = i;
-        innerLayoutWithPickers.getChildAt(i).setOnClickListener(new View.OnClickListener() {
-          @Override public void onClick(View view) {
-            ImageView imageView = (ImageView) innerLayoutWithPickers.findViewById(
-                innerLayoutWithPickers.getChildAt(finalI).getId());
-            showImagePickerDialog(imageView);
-          }
-        });
-      }
-    }
+    submitReimbursement(attachments, waitingDialog);
   }
 
   @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -208,6 +196,24 @@ public class SubmitReimbursementActivity extends BaseActivity {
 
           imagePaths.add(selectedImagePath);
         }
+    }
+  }
+
+  private void hookupImagesPickerImages(CustomAttachmentPicker imagePicker) {
+    LinearLayout parentLayout = (LinearLayout) imagePicker.getChildAt(0);
+    final LinearLayout innerLayoutWithPickers = (LinearLayout) parentLayout.getChildAt(1);
+
+    for (int i = 0; i < innerLayoutWithPickers.getChildCount(); i++) {
+      if (innerLayoutWithPickers.getChildAt(i) instanceof ImageView) {
+        final int finalI = i;
+        innerLayoutWithPickers.getChildAt(i).setOnClickListener(new View.OnClickListener() {
+          @Override public void onClick(View view) {
+            ImageView imageView = (ImageView) innerLayoutWithPickers.findViewById(
+                innerLayoutWithPickers.getChildAt(finalI).getId());
+            showImagePickerDialog(imageView);
+          }
+        });
+      }
     }
   }
 
@@ -263,6 +269,10 @@ public class SubmitReimbursementActivity extends BaseActivity {
     builderSingle.show();
   }
 
+  private File createImageFile(String imagePath) throws IOException {
+    return new File(imagePath);
+  }
+
   private String getPhotoPathFromGallery(Uri uri) {
     if (uri == null) {
       // TODO perform some logging or show user feedback
@@ -299,55 +309,6 @@ public class SubmitReimbursementActivity extends BaseActivity {
     return mediaStorageDir.getPath() + File.separator + imageFileName;
   }
 
-  private File createImageFile(String imagePath) throws IOException {
-    return new File(imagePath);
-  }
-
-  private void submitReimbursement(HashMap<String, RequestBody> attachements) {
-    final ProgressDialog waitingDialog = new ProgressDialog(this);
-    waitingDialog.setTitle(getResources().getString(R.string.submit_new_reimbursement));
-    waitingDialog.setMessage(
-        getResources().getString(R.string.uploading_attachments_dialog_message));
-    waitingDialog.show();
-
-    dataAccessHandler.createNewRequest(
-        toRequestBody(prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, "")),
-        toRequestBody(categoryValue), toRequestBody("2"), toRequestBody("1"), toRequestBody("10"),
-        toRequestBody("2"), toRequestBody("2016-10-10T16:27:32+02:00"), toRequestBody("D"),
-        toRequestBody("Remarks"), attachements, new Callback<CreateNewRequestResponse>() {
-          @Override public void onResponse(Call<CreateNewRequestResponse> call,
-              Response<CreateNewRequestResponse> response) {
-            switch (response.code()) {
-              case 200:
-                waitingDialog.dismiss();
-
-                Toast.makeText(SubmitReimbursementActivity.this,
-                    "Reimbursement request submitted successfully.", Toast.LENGTH_SHORT).show();
-
-                finish();
-
-                //subCategoriesList = response.body().getData().getBody().getData();
-                //String[] finalCategoryNames = new String[subCategoriesList.size()];
-                //
-                //for (int i = 0; i < subCategoriesList.size(); i++) {
-                //  finalCategoryNames[i] = subCategoriesList.get(i).getName();
-                //}
-                //
-                //subcategory.setUpDropDown("Subcategory", "Choose a subcategory", finalCategoryNames,
-                //    new CustomPicker.OnDropDownClickListener() {
-                //      @Override public void onClick(int index, String selected) {
-                //
-                //      }
-                //    });
-            }
-          }
-
-          @Override public void onFailure(Call<CreateNewRequestResponse> call, Throwable t) {
-            Timber.d("Call failed with error : %s", t.getMessage());
-          }
-        });
-  }
-
   private HashMap<String, RequestBody> constructSelectedImagesForRequest() {
     LinkedHashMap<String, RequestBody> imageParts = new LinkedHashMap<>();
 
@@ -372,6 +333,35 @@ public class SubmitReimbursementActivity extends BaseActivity {
     return baos.toByteArray();
   }
 
+  private void submitReimbursement(HashMap<String, RequestBody> attachements,
+      final ProgressDialog waitingDialog) {
+    dataAccessHandler.createNewRequest(
+        toRequestBody(prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, "")),
+        toRequestBody(categoryValue), toRequestBody("2"), toRequestBody("1"),
+        toRequestBody(amountValue), toRequestBody("2"),
+        toRequestBody(Helpers.formatInsuranceDate(new LocalDate()) + "T16:27:32+02:00"),
+        toRequestBody("D"), toRequestBody(remarksET.getText().toString()), attachements,
+        new Callback<CreateNewRequestResponse>() {
+          @Override public void onResponse(Call<CreateNewRequestResponse> call,
+              Response<CreateNewRequestResponse> response) {
+            switch (response.code()) {
+              case 200:
+                waitingDialog.dismiss();
+
+                Intent intent = new Intent(SubmitReimbursementActivity.this,
+                    ReimbursementStatusDetailsActivity.class);
+                intent.putExtra(ReimbursementStatusDetailsActivity.REIMBURSEMENT_REQUEST_ID,
+                    response.body().getData().getBody().getData().getRequestId());
+
+                startActivity(intent);
+            }
+          }
+
+          @Override public void onFailure(Call<CreateNewRequestResponse> call, Throwable t) {
+            Timber.d("Call failed with error : %s", t.getMessage());
+          }
+        });
+  }
   //private void getSubCategories() {
   //  final ProgressDialog waitingDialog = new ProgressDialog(this);
   //  waitingDialog.setTitle(getResources().getString(R.string.loading_data_dialog_title));

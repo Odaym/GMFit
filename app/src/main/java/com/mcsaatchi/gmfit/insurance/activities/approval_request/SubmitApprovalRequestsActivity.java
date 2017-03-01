@@ -5,6 +5,8 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -12,17 +14,19 @@ import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.rest.SubCategoriesResponse;
+import com.mcsaatchi.gmfit.architecture.rest.CreateNewRequestResponse;
 import com.mcsaatchi.gmfit.architecture.rest.SubCategoriesResponseDatum;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
@@ -30,12 +34,19 @@ import com.mcsaatchi.gmfit.insurance.widget.CustomAttachmentPicker;
 import com.mcsaatchi.gmfit.insurance.widget.CustomPicker;
 import com.mcsaatchi.gmfit.insurance.widget.CustomToggle;
 import com.squareup.picasso.Picasso;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -57,10 +68,23 @@ public class SubmitApprovalRequestsActivity extends BaseActivity {
   @Bind(R.id.identityCardImagesPicker) CustomAttachmentPicker identityCardImagesPicker;
   @Bind(R.id.passportImagesPicker) CustomAttachmentPicker passportImagesPicker;
   @Bind(R.id.testResultsImagesPicker) CustomAttachmentPicker testResultsImagesPicker;
+  @Bind(R.id.otherDocumentsImagesPicker) CustomAttachmentPicker otherDocumentsImagesPicker;
+  @Bind(R.id.remarksET) EditText remarksET;
+
+  private ArrayList<String> imagePaths = new ArrayList<>();
+
   private File photoFile;
   private Uri photoFileUri;
   private ImageView currentImageView;
   private List<SubCategoriesResponseDatum> subCategoriesList;
+
+  private String categoryValue = "Out";
+  private String serviceDateValue;
+  private String subCategoryId;
+
+  public static RequestBody toRequestBody(String value) {
+    return RequestBody.create(MediaType.parse("text/plain"), value);
+  }
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -71,28 +95,35 @@ public class SubmitApprovalRequestsActivity extends BaseActivity {
 
     setupToolbar(getClass().getSimpleName(), toolbar, "Submit Approval Request", true);
 
-    getSubCategories();
-
     serviceDate.setUpDatePicker("Service Date", "Choose a date",
         new CustomPicker.OnDatePickerClickListener() {
           @Override public void dateSet(int year, int month, int dayOfMonth) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(Calendar.YEAR, year);
+            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            calendar.set(Calendar.MONTH, month);
 
+            Date d = new Date(calendar.getTimeInMillis());
+
+            SimpleDateFormat dateFormatter = new SimpleDateFormat("dd MMM, yyyy");
+            serviceDateValue = dateFormatter.format(d);
+            serviceDate.setSelectedItem(serviceDateValue);
           }
         });
 
     categoryToggle.setUp("Category", "Out", "In", new CustomToggle.OnToggleListener() {
       @Override public void selected(String option) {
-
+        categoryValue = option;
       }
     });
 
-    submitApprovalRequestBTN.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View view) {
-        Toast.makeText(SubmitApprovalRequestsActivity.this, "Submitted successfully",
-            Toast.LENGTH_SHORT).show();
-        finish();
-      }
-    });
+    subcategory.setUpDropDown("Subcategory", "Choose a subcategory",
+        new String[] { "Dental PCC", "Ambulatory", "Doctors Visit", "PCP", "Dental" },
+        new CustomPicker.OnDropDownClickListener() {
+          @Override public void onClick(int index, String selected) {
+            categoryValue = selected;
+          }
+        });
 
     if (permChecker.lacksPermissions(Manifest.permission.CAMERA,
         Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
@@ -106,6 +137,49 @@ public class SubmitApprovalRequestsActivity extends BaseActivity {
     hookupImagesPickerImages(identityCardImagesPicker);
     hookupImagesPickerImages(passportImagesPicker);
     hookupImagesPickerImages(testResultsImagesPicker);
+    hookupImagesPickerImages(otherDocumentsImagesPicker);
+  }
+
+  @OnClick(R.id.submitApprovalRequestBTN) public void handleSubmitApprovalRequest() {
+    final ProgressDialog waitingDialog = new ProgressDialog(this);
+    waitingDialog.setTitle(getResources().getString(R.string.submit_new_approval_request));
+    waitingDialog.setCancelable(false);
+    waitingDialog.setMessage(
+        getResources().getString(R.string.uploading_attachments_dialog_message));
+    waitingDialog.show();
+
+    HashMap<String, RequestBody> attachments = constructSelectedImagesForRequest();
+
+    submitApprovalRequest(attachments, waitingDialog);
+  }
+
+  @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+
+    switch (requestCode) {
+      case CAPTURE_NEW_PICTURE_REQUEST_CODE:
+        if (photoFile.getTotalSpace() > 0) {
+          Picasso.with(this)
+              .load(new File(photoFile.getAbsolutePath()))
+              .fit()
+              .into(currentImageView);
+
+          imagePaths.add(photoFile.getAbsolutePath());
+        } else {
+          Timber.d("No picture was taken, photoFile size : %d", photoFile.getTotalSpace());
+        }
+
+        break;
+      case REQUEST_PICK_IMAGE_GALLERY:
+        if (data != null) {
+          Uri selectedImageUri = data.getData();
+          String selectedImagePath = getPhotoPathFromGallery(selectedImageUri);
+
+          Picasso.with(this).load(new File(selectedImagePath)).fit().into(currentImageView);
+
+          imagePaths.add(selectedImagePath);
+        }
+    }
   }
 
   private void hookupImagesPickerImages(CustomAttachmentPicker imagePicker) {
@@ -123,38 +197,6 @@ public class SubmitApprovalRequestsActivity extends BaseActivity {
           }
         });
       }
-    }
-  }
-
-  @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
-    super.onActivityResult(requestCode, resultCode, data);
-
-    switch (requestCode) {
-      case CAPTURE_NEW_PICTURE_REQUEST_CODE:
-        if (photoFile.getTotalSpace() > 0) {
-          Picasso.with(this)
-              .load(new File(photoFile.getAbsolutePath()))
-              .resize(getResources().getDimensionPixelSize(R.dimen.attached_images_dimens),
-                  getResources().getDimensionPixelSize(R.dimen.attached_images_dimens))
-              .centerInside()
-              .into(currentImageView);
-        } else {
-          Timber.d("No picture was taken, photoFile size : %d", photoFile.getTotalSpace());
-        }
-
-        break;
-      case REQUEST_PICK_IMAGE_GALLERY:
-        if (data != null) {
-          Uri selectedImageUri = data.getData();
-          String selectedImagePath = getPhotoPathFromGallery(selectedImageUri);
-
-          Picasso.with(this)
-              .load(new File(selectedImagePath))
-              .resize(getResources().getDimensionPixelSize(R.dimen.attached_images_dimens),
-                  getResources().getDimensionPixelSize(R.dimen.attached_images_dimens))
-              .centerInside()
-              .into(currentImageView);
-        }
     }
   }
 
@@ -250,38 +292,59 @@ public class SubmitApprovalRequestsActivity extends BaseActivity {
     return new File(imagePath);
   }
 
-  private void getSubCategories() {
-    final ProgressDialog waitingDialog = new ProgressDialog(this);
-    waitingDialog.setTitle(getResources().getString(R.string.loading_data_dialog_title));
-    waitingDialog.setMessage(getResources().getString(R.string.please_wait_dialog_message));
-    waitingDialog.show();
+  private HashMap<String, RequestBody> constructSelectedImagesForRequest() {
+    LinkedHashMap<String, RequestBody> imageParts = new LinkedHashMap<>();
 
-    dataAccessHandler.getSubCategories(
-        prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""),
-        new Callback<SubCategoriesResponse>() {
-          @Override public void onResponse(Call<SubCategoriesResponse> call,
-              Response<SubCategoriesResponse> response) {
+    for (int i = 0; i < imagePaths.size(); i++) {
+      if (imagePaths.get(i) != null) {
+        imageParts.put("attachements[" + i + "][content]", toRequestBody(
+            Base64.encodeToString(turnImageToByteArray(imagePaths.get(i)), Base64.NO_WRAP)));
+        imageParts.put("attachements[" + i + "][documType]", toRequestBody("2"));
+        imageParts.put("attachements[" + i + "][name]", toRequestBody(imagePaths.get(i)));
+        imageParts.put("attachements[" + i + "][id]", toRequestBody(String.valueOf(i + 1)));
+      }
+    }
+
+    return imageParts;
+  }
+
+  private byte[] turnImageToByteArray(String imagePath) {
+    Bitmap bm = BitmapFactory.decodeFile(imagePath);
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    bm.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+
+    return baos.toByteArray();
+  }
+
+  private void submitApprovalRequest(HashMap<String, RequestBody> attachements,
+      final ProgressDialog waitingDialog) {
+    dataAccessHandler.createNewRequest(
+        toRequestBody(prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, "")),
+        toRequestBody(categoryValue), toRequestBody("2"), toRequestBody("2"), toRequestBody("10"),
+        toRequestBody("2"),
+        //toRequestBody(Helpers.formatDateToDefault(new LocalDate()) + "T16:27:32+02:00"),
+        toRequestBody("2016-10-10T16:27:32+02:00"),
+        toRequestBody("D"), toRequestBody(remarksET.getText().toString()), attachements,
+        new Callback<CreateNewRequestResponse>() {
+          @Override public void onResponse(Call<CreateNewRequestResponse> call,
+              Response<CreateNewRequestResponse> response) {
             switch (response.code()) {
               case 200:
                 waitingDialog.dismiss();
 
-                subCategoriesList = response.body().getData().getBody().getData();
-                String[] finalCategoryNames = new String[subCategoriesList.size()];
+                Intent intent = new Intent(SubmitApprovalRequestsActivity.this,
+                    ApprovalRequestStatusDetailsActivity.class);
+                intent.putExtra(ApprovalRequestStatusDetailsActivity.APPROVAL_REQUEST_CLAIM_ID,
+                    response.body().getData().getBody().getData().getRequestId());
 
-                for (int i = 0; i < subCategoriesList.size(); i++) {
-                  finalCategoryNames[i] = subCategoriesList.get(i).getName();
-                }
-
-                subcategory.setUpDropDown("Subcategory", "Choose a subcategory", finalCategoryNames,
-                    new CustomPicker.OnDropDownClickListener() {
-                      @Override public void onClick(int index, String selected) {
-
-                      }
-                    });
+                startActivity(intent);
+              case 449:
+                waitingDialog.dismiss();
+                break;
             }
           }
 
-          @Override public void onFailure(Call<SubCategoriesResponse> call, Throwable t) {
+          @Override public void onFailure(Call<CreateNewRequestResponse> call, Throwable t) {
             Timber.d("Call failed with error : %s", t.getMessage());
           }
         });

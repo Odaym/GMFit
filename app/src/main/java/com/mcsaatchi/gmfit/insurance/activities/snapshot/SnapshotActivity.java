@@ -7,7 +7,9 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.DatePicker;
 import android.widget.TextView;
 import butterknife.Bind;
@@ -16,9 +18,11 @@ import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.rest.SnapshotResponse;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
+import com.mcsaatchi.gmfit.common.classes.Helpers;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import org.joda.time.LocalDate;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -40,6 +44,8 @@ public class SnapshotActivity extends BaseActivity {
     setupToolbar(getClass().getSimpleName(), toolbar, getString(R.string.snapshot_activity_title),
         true);
 
+    startDateTV.setText(Helpers.formatInsuranceDate(new LocalDate()));
+
     startDateTV.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View view) {
         final Calendar c = Calendar.getInstance();
@@ -57,15 +63,19 @@ public class SnapshotActivity extends BaseActivity {
 
                 Date d = new Date(calendar.getTimeInMillis());
 
-                SimpleDateFormat dateFormatter = new SimpleDateFormat("dd MMM, yyyy");
+                SimpleDateFormat dateFormatter = new SimpleDateFormat("MMM dd, yyyy");
                 String serviceDateValue = dateFormatter.format(d);
                 startDateTV.setText(serviceDateValue);
+
+                getSnapshot(startDateTV.getText().toString(), endDateTV.getText().toString());
               }
             }, year, month, day);
 
         datePickerDialog.show();
       }
     });
+
+    endDateTV.setText(Helpers.formatInsuranceDate(new LocalDate()));
 
     endDateTV.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View view) {
@@ -84,9 +94,11 @@ public class SnapshotActivity extends BaseActivity {
 
                 Date d = new Date(calendar.getTimeInMillis());
 
-                SimpleDateFormat dateFormatter = new SimpleDateFormat("dd MMM, yyyy");
+                SimpleDateFormat dateFormatter = new SimpleDateFormat("MMM dd, yyyy");
                 String serviceDateValue = dateFormatter.format(d);
                 endDateTV.setText(serviceDateValue);
+
+                getSnapshot(startDateTV.getText().toString(), endDateTV.getText().toString());
               }
             }, year, month, day);
 
@@ -94,50 +106,40 @@ public class SnapshotActivity extends BaseActivity {
       }
     });
 
-    getSnapshot();
+    getSnapshot(startDateTV.getText().toString(), endDateTV.getText().toString());
   }
 
-  private void getSnapshot() {
+  private void getSnapshot(String startDate, String endDate) {
     final ProgressDialog waitingDialog = new ProgressDialog(this);
     waitingDialog.setTitle(getString(R.string.loading_data_dialog_title));
     waitingDialog.setMessage(getString(R.string.please_wait_dialog_message));
     waitingDialog.show();
 
     dataAccessHandler.getSnapshot(prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""),
-        "2017-20-10", "2016-20-20", new Callback<SnapshotResponse>() {
+        startDate, endDate, new Callback<SnapshotResponse>() {
           @Override
           public void onResponse(Call<SnapshotResponse> call, Response<SnapshotResponse> response) {
             switch (response.code()) {
               case 200:
-                //String pdfUrl = getIntent().getExtras().getString("PDF");
-                //
-                //WebSettings settings = webView.getSettings();
-                //settings.setLoadWithOverviewMode(true);
-                //settings.setBuiltInZoomControls(true);
-                //settings.setUseWideViewPort(true);
-                //settings.setJavaScriptEnabled(true);
-                //settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
-                //
-                //webView.setVerticalScrollBarEnabled(false);
-                //webView.setHorizontalScrollBarEnabled(false);
-                //webView.setWebViewClient(new WebViewClient());
-                //webView.setInitialScale(1);
-                //
-                //webView.loadUrl("https://docs.google.com/gview?embedded=true&url=" + pdfUrl);
 
-              case 449:
                 waitingDialog.dismiss();
-                final AlertDialog alertDialog =
-                    new AlertDialog.Builder(SnapshotActivity.this).create();
 
-                alertDialog.setMessage("java.lang.NullPointerException returned from server");
-                alertDialog.show();
-                //String errorMessage = "";
-                //
-                //errorMessage += response.body().getData().toString();
-                //
-                //alertDialog.setMessage(errorMessage);
-                //alertDialog.show();
+                WebSettings settings = webView.getSettings();
+                settings.setLoadWithOverviewMode(true);
+                settings.setBuiltInZoomControls(true);
+                settings.setUseWideViewPort(true);
+                settings.setJavaScriptEnabled(true);
+                settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
+
+                webView.setVerticalScrollBarEnabled(false);
+                webView.setHorizontalScrollBarEnabled(false);
+                webView.setWebViewClient(new WebViewClient());
+                webView.setInitialScale(1);
+
+                webView.loadUrl("https://docs.google.com/gview?embedded=true&url=" + response.body()
+                    .getData()
+                    .getBody()
+                    .getSnapshotPdf());
 
                 break;
             }

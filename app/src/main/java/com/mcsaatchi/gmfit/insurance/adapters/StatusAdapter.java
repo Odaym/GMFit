@@ -7,8 +7,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.rest.ClaimsListResponseDatum;
+import com.mcsaatchi.gmfit.common.classes.Helpers;
 import java.util.ArrayList;
 import java.util.List;
+import org.joda.time.LocalDate;
 
 public class StatusAdapter extends RecyclerView.Adapter<StatusAdapter.ViewHolder> {
   private List<ClaimsListResponseDatum> reimbursements = new ArrayList<>();
@@ -58,11 +60,13 @@ public class StatusAdapter extends RecyclerView.Adapter<StatusAdapter.ViewHolder
     }
 
     void populate(ClaimsListResponseDatum reimbursement) {
-      idTv.setText("Reimbursement #" + reimbursement.getId());
+      idTv.setText("#" + reimbursement.getId());
       categoryTv.setText(reimbursement.getCategory());
       subCategoryTv.setText(reimbursement.getSubcategory());
-      //typeTv.setText(reimbursement.get());
-      serviceDateTv.setText(reimbursement.getDate());
+      if (reimbursement.getDate() != null) {
+        serviceDateTv.setText(
+            Helpers.formatInsuranceDate(new LocalDate(reimbursement.getDate().split(" ")[0])));
+      }
       amountTv.setText(String.valueOf(reimbursement.getAmount()));
       statusTv.setText(reimbursement.getStatus());
     }

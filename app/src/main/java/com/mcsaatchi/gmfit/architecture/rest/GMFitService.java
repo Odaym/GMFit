@@ -184,7 +184,7 @@ public interface GMFitService {
   @POST("insurance/claims/list") Call<ClaimsListResponse> getClaimsList(
       @Body ApiCallsHandler.ClaimsListRequest claimsListRequest);
 
-  @POST("insurance/claims/list") Call<ClaimsListDetailsResponse> getClaimsListDetails(
+  @POST("insurance/claims/list") Call<ClaimListDetailsResponse> getClaimsListDetails(
       @Body ApiCallsHandler.ClaimsListDetailsRequest claimsListDetailsRequest);
 
   @POST("insurance/snapshot/pdf") Call<SnapshotResponse> getSnapshot(

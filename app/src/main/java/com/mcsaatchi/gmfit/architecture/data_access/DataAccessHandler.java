@@ -7,7 +7,7 @@ import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponse;
 import com.mcsaatchi.gmfit.architecture.rest.CardDetailsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ChartMetricBreakdownResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ChartsBySectionResponse;
-import com.mcsaatchi.gmfit.architecture.rest.ClaimsListDetailsResponse;
+import com.mcsaatchi.gmfit.architecture.rest.ClaimListDetailsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ClaimsListResponse;
 import com.mcsaatchi.gmfit.architecture.rest.CoverageDescriptionResponse;
 import com.mcsaatchi.gmfit.architecture.rest.CreateNewRequestResponse;
@@ -319,9 +319,9 @@ public class DataAccessHandler {
   public void createNewRequest(RequestBody contractNo, RequestBody categ, RequestBody subCategId,
       RequestBody requestTypeId, RequestBody claimedAmount, RequestBody currencyCode,
       RequestBody serviceDate, RequestBody providerCode, RequestBody remarks,
-      Map<String, RequestBody> attachments, final Callback<CreateNewRequestResponse> callback) {
+      Map<String, RequestBody> attachements, final Callback<CreateNewRequestResponse> callback) {
     apiCallsHandler.createNewRequest(contractNo, categ, subCategId, requestTypeId, claimedAmount,
-        currencyCode, serviceDate, providerCode, remarks, attachments, callback);
+        currencyCode, serviceDate, providerCode, remarks, attachements, callback);
   }
 
   public void getClaimsList(String contractNo, String requestType,
@@ -330,7 +330,7 @@ public class DataAccessHandler {
   }
 
   public void getClaimslistDetails(String contractNo, String requestType, String claimId,
-      final Callback<ClaimsListDetailsResponse> callback) {
+      final Callback<ClaimListDetailsResponse> callback) {
     apiCallsHandler.getClaimslistDetails(contractNo, requestType, claimId, callback);
   }
 

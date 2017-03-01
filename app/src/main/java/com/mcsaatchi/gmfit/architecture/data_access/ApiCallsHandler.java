@@ -7,7 +7,7 @@ import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponse;
 import com.mcsaatchi.gmfit.architecture.rest.CardDetailsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ChartMetricBreakdownResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ChartsBySectionResponse;
-import com.mcsaatchi.gmfit.architecture.rest.ClaimsListDetailsResponse;
+import com.mcsaatchi.gmfit.architecture.rest.ClaimListDetailsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ClaimsListResponse;
 import com.mcsaatchi.gmfit.architecture.rest.CoverageDescriptionResponse;
 import com.mcsaatchi.gmfit.architecture.rest.CreateNewRequestResponse;
@@ -940,10 +940,10 @@ public class ApiCallsHandler {
   void createNewRequest(RequestBody contractNo, RequestBody categ, RequestBody subCategId,
       RequestBody requestTypeId, RequestBody claimedAmount, RequestBody currencyCode,
       RequestBody serviceDate, RequestBody providerCode, RequestBody remarks,
-      Map<String, RequestBody> attachments, final Callback<CreateNewRequestResponse> callback) {
+      Map<String, RequestBody> attachements, final Callback<CreateNewRequestResponse> callback) {
     Call<CreateNewRequestResponse> apiCall = restClient.getGMFitService()
         .createNewRequest(contractNo, categ, subCategId, requestTypeId, claimedAmount, currencyCode,
-            serviceDate, providerCode, remarks, attachments);
+            serviceDate, providerCode, remarks, attachements);
 
     apiCall.enqueue(new Callback<CreateNewRequestResponse>() {
       @Override public void onResponse(Call<CreateNewRequestResponse> call,
@@ -973,17 +973,17 @@ public class ApiCallsHandler {
   }
 
   void getClaimslistDetails(String contractNo, String requestType, String claimId,
-      final Callback<ClaimsListDetailsResponse> callback) {
-    Call<ClaimsListDetailsResponse> apiCall = restClient.getGMFitService()
+      final Callback<ClaimListDetailsResponse> callback) {
+    Call<ClaimListDetailsResponse> apiCall = restClient.getGMFitService()
         .getClaimsListDetails(new ClaimsListDetailsRequest(contractNo, requestType, claimId));
 
-    apiCall.enqueue(new Callback<ClaimsListDetailsResponse>() {
-      @Override public void onResponse(Call<ClaimsListDetailsResponse> call,
-          Response<ClaimsListDetailsResponse> response) {
+    apiCall.enqueue(new Callback<ClaimListDetailsResponse>() {
+      @Override public void onResponse(Call<ClaimListDetailsResponse> call,
+          Response<ClaimListDetailsResponse> response) {
         callback.onResponse(call, response);
       }
 
-      @Override public void onFailure(Call<ClaimsListDetailsResponse> call, Throwable t) {
+      @Override public void onFailure(Call<ClaimListDetailsResponse> call, Throwable t) {
       }
     });
   }
