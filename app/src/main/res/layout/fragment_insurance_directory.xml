@@ -177,15 +177,22 @@
         </LinearLayout>
       </LinearLayout>
 
-      <ImageView
+      <LinearLayout
+          android:id="@+id/myLocationLayout"
           android:layout_width="@dimen/index_bottom_bar_my_location_button_width"
           android:layout_height="match_parent"
           android:layout_gravity="end"
           android:layout_marginEnd="@dimen/default_margin_2"
           android:background="@color/white"
-          android:scaleType="fitCenter"
-          android:src="@drawable/index_bottom_bar_my_location"
-          />
+          android:gravity="center"
+          >
+
+        <ImageButton
+            android:layout_width="@dimen/index_bottom_bar_my_location_image_dimens"
+            android:layout_height="@dimen/index_bottom_bar_my_location_image_dimens"
+            android:src="@drawable/index_bottom_bar_my_location"
+            />
+      </LinearLayout>
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView

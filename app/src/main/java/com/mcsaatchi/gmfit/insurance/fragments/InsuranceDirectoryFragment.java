@@ -25,6 +25,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -143,6 +144,10 @@ public class InsuranceDirectoryFragment extends Fragment implements OnMapReadyCa
         }
       }
     }
+  }
+
+  @OnClick(R.id.myLocationLayout) public void handleMyLocationPressed() {
+    zoomAnimateCamera();
   }
 
   private void getNearbyClinics() {
