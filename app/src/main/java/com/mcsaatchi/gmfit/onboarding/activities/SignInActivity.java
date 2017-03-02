@@ -172,11 +172,11 @@ public class SignInActivity extends BaseActivity {
             break;
           case 449:
             alertDialog.setMessage(
-                getResources().getString(R.string.error_response_from_server_incorrect));
+                getResources().getString(R.string.server_error_got_returned));
             alertDialog.show();
             break;
           case 500:
-            alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
+            alertDialog.setMessage(getString(R.string.server_error_got_returned));
             alertDialog.show();
             break;
         }
@@ -185,7 +185,7 @@ public class SignInActivity extends BaseActivity {
       @Override public void onFailure(Call<AuthenticationResponse> call, Throwable t) {
         Timber.d("Call failed with error : %s", t.getMessage());
         alertDialog.setMessage(
-            getResources().getString(R.string.error_response_from_server_incorrect));
+            getResources().getString(R.string.server_error_got_returned));
         alertDialog.show();
       }
     });

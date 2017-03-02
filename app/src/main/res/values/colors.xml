@@ -50,4 +50,9 @@
 
   <color name="medication_list_item_name_gray">#B2B3B9</color>
   <color name="medication_list_delete_action_layout_red">#FE0000</color>
+
+  <color name="status_rejected">#FF0000</color>
+  <color name="status_submitted">#ECA806</color>
+  <color name="status_approved">#26CE61</color>
+
 </resources>

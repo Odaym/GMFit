@@ -322,7 +322,6 @@ public class SubmitApprovalRequestsActivity extends BaseActivity {
         toRequestBody(prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, "")),
         toRequestBody(categoryValue), toRequestBody("2"), toRequestBody("2"), toRequestBody("10"),
         toRequestBody("2"),
-        //toRequestBody(Helpers.formatDateToDefault(new LocalDate()) + "T16:27:32+02:00"),
         toRequestBody("2016-10-10T16:27:32+02:00"),
         toRequestBody("D"), toRequestBody(remarksET.getText().toString()), attachements,
         new Callback<CreateNewRequestResponse>() {
@@ -338,6 +337,7 @@ public class SubmitApprovalRequestsActivity extends BaseActivity {
                     response.body().getData().getBody().getData().getRequestId());
 
                 startActivity(intent);
+                break;
               case 449:
                 waitingDialog.dismiss();
                 break;

@@ -247,7 +247,7 @@ public class AddNewMealItemActivity extends BaseActivity {
                                 final AlertDialog alertDialog =
                                     new AlertDialog.Builder(AddNewMealItemActivity.this).create();
                                 alertDialog.setMessage(
-                                    getString(R.string.error_response_from_server_incorrect));
+                                    getString(R.string.server_error_got_returned));
                                 alertDialog.show();
                               }
                             });
@@ -314,7 +314,7 @@ public class AddNewMealItemActivity extends BaseActivity {
         Timber.d("Call failed with error : %s", t.getMessage());
         final AlertDialog alertDialog =
             new AlertDialog.Builder(AddNewMealItemActivity.this).create();
-        alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
+        alertDialog.setMessage(getString(R.string.server_error_got_returned));
         alertDialog.show();
       }
     });
@@ -377,7 +377,7 @@ public class AddNewMealItemActivity extends BaseActivity {
           @Override public void onFailure(Call<RecentMealsResponse> call, Throwable t) {
             Timber.d("Call failed with error : %s", t.getMessage());
             alertDialog.setMessage(
-                getResources().getString(R.string.error_response_from_server_incorrect));
+                getResources().getString(R.string.server_error_got_returned));
             alertDialog.show();
           }
         });

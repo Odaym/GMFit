@@ -55,7 +55,7 @@ public class CustomLineChart extends LineChart {
     ArrayList<String> xVals = new ArrayList<>();
 
     for (int i = 0; i < weights.size(); i++) {
-      DateTimeFormatter formatter = DateTimeFormat.forPattern("YYYY-mm-dd HH:mm:ss");
+      DateTimeFormatter formatter = DateTimeFormat.forPattern("YYYY-MM-dd HH:mm:ss");
 
       DateTime date = formatter.parseDateTime(weights.get(i).getDate());
 

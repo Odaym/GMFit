@@ -140,7 +140,7 @@ public class InsuranceLoginFragment extends Fragment {
           @Override public void onFailure(Call<InsuranceLoginResponse> call, Throwable t) {
             Timber.d("Call failed with error : %s", t.getMessage());
             final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
-            alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
+            alertDialog.setMessage(getString(R.string.server_error_got_returned));
             alertDialog.show();
           }
         });

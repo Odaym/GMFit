@@ -166,7 +166,7 @@ public class SearchMedicationsActivity extends BaseActivity {
             Timber.d("Call failed with error : %s", t.getMessage());
             final AlertDialog alertDialog =
                 new AlertDialog.Builder(SearchMedicationsActivity.this).create();
-            alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
+            alertDialog.setMessage(getString(R.string.server_error_got_returned));
             alertDialog.show();
           }
         });
@@ -217,7 +217,7 @@ public class SearchMedicationsActivity extends BaseActivity {
             Timber.d("Call failed with error : %s", t.getMessage());
             final AlertDialog alertDialog =
                 new AlertDialog.Builder(SearchMedicationsActivity.this).create();
-            alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
+            alertDialog.setMessage(getString(R.string.server_error_got_returned));
             alertDialog.show();
           }
         });

@@ -44,8 +44,8 @@ public class ReimbursementStatusListActivity extends BaseActivity {
 
     final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
     alertDialog.setTitle(R.string.loading_data_dialog_title);
-    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE,
-        getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
+    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getResources().getString(R.string.ok),
+        new DialogInterface.OnClickListener() {
           public void onClick(DialogInterface dialog, int which) {
             dialog.dismiss();
 
@@ -77,6 +77,12 @@ public class ReimbursementStatusListActivity extends BaseActivity {
                     new LinearLayoutManager(ReimbursementStatusListActivity.this));
                 recyclerView.setHasFixedSize(true);
                 recyclerView.setAdapter(statusAdapter);
+                break;
+              case 449:
+                alertDialog.setMessage(
+                    getResources().getString(R.string.server_error_got_returned));
+                alertDialog.show();
+                break;
             }
           }
 

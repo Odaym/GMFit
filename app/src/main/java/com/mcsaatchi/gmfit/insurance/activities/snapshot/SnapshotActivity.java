@@ -2,6 +2,7 @@ package com.mcsaatchi.gmfit.insurance.activities.snapshot;
 
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
@@ -115,6 +116,17 @@ public class SnapshotActivity extends BaseActivity {
     waitingDialog.setMessage(getString(R.string.please_wait_dialog_message));
     waitingDialog.show();
 
+    final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+    alertDialog.setTitle(R.string.loading_data_dialog_title);
+    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getResources().getString(R.string.ok),
+        new DialogInterface.OnClickListener() {
+          public void onClick(DialogInterface dialog, int which) {
+            dialog.dismiss();
+
+            if (waitingDialog.isShowing()) waitingDialog.dismiss();
+          }
+        });
+
     dataAccessHandler.getSnapshot(prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""),
         startDate, endDate, new Callback<SnapshotResponse>() {
           @Override
@@ -142,13 +154,18 @@ public class SnapshotActivity extends BaseActivity {
                     .getSnapshotPdf());
 
                 break;
+              case 449:
+                alertDialog.setMessage(
+                    getResources().getString(R.string.server_error_got_returned));
+                alertDialog.show();
+                break;
             }
           }
 
           @Override public void onFailure(Call<SnapshotResponse> call, Throwable t) {
             Timber.d("Call failed with error : %s", t.getMessage());
             final AlertDialog alertDialog = new AlertDialog.Builder(SnapshotActivity.this).create();
-            alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
+            alertDialog.setMessage(getString(R.string.server_error_got_returned));
             alertDialog.show();
           }
         });

@@ -110,6 +110,7 @@ public class ChronicStatusListActivity extends BaseActivity {
                 //recyclerView.setHasFixedSize(true);
                 //recyclerView.setAdapter(statusAdapter);
 
+                break;
               case 449:
                 alertDialog.setMessage("error: An error has occurred. Please contact your system administrator.");
                 alertDialog.show();

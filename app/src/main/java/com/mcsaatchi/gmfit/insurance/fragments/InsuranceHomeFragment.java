@@ -175,12 +175,18 @@ public class InsuranceHomeFragment extends Fragment {
                     response.body().getData().getBody().getData().replace("\\", ""));
 
                 startActivity(intent);
+                break;
+              case 449:
+                alertDialog.setMessage(
+                    getResources().getString(R.string.server_error_got_returned));
+                alertDialog.show();
+                break;
             }
           }
 
           @Override public void onFailure(Call<CardDetailsResponse> call, Throwable t) {
             Timber.d("Call failed with error : %s", t.getMessage());
-            alertDialog.setMessage(getString(R.string.error_response_from_server_incorrect));
+            alertDialog.setMessage(getString(R.string.server_error_got_returned));
             alertDialog.show();
           }
         });

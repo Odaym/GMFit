@@ -30,8 +30,7 @@
 
   <string name="no_internet_conection_dialog_title">Failed to connect</string>
   <string name="no_internet_connection_dialog_message">Please check your Internet connection and try again.</string>
-  <string name="error_response_from_server_incorrect">Something went wrong while trying to communicate with the server, please try again later
-        .
+  <string name="server_error_got_returned">The server returned an error, please try again later.
     </string>
 
   <!-- MAIN ACTIVITY -->

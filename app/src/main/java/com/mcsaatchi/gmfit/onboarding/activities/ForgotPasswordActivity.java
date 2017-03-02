@@ -83,7 +83,7 @@ public class ForgotPasswordActivity extends BaseActivity {
           case 404:
             alertDialog.setTitle(getString(R.string.error_occurred_dialog_title));
             alertDialog.setMessage(
-                getResources().getString(R.string.error_response_from_server_incorrect));
+                getResources().getString(R.string.server_error_got_returned));
             alertDialog.show();
             break;
         }
@@ -92,7 +92,7 @@ public class ForgotPasswordActivity extends BaseActivity {
       @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
         Timber.d("Call failed with error : %s", t.getMessage());
         alertDialog.setMessage(
-            getResources().getString(R.string.error_response_from_server_incorrect));
+            getResources().getString(R.string.server_error_got_returned));
         alertDialog.show();
       }
     });

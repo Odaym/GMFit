@@ -147,7 +147,7 @@ public class SpecifyMealAmountActivity extends BaseActivity {
           @Override public void onFailure(Call<MealMetricsResponse> call, Throwable t) {
             Timber.d("Call failed with error : %s", t.getMessage());
             alertDialog.setMessage(
-                getResources().getString(R.string.error_response_from_server_incorrect));
+                getResources().getString(R.string.server_error_got_returned));
             alertDialog.show();
           }
         });
@@ -241,7 +241,7 @@ public class SpecifyMealAmountActivity extends BaseActivity {
             final AlertDialog alertDialog =
                 new AlertDialog.Builder(SpecifyMealAmountActivity.this).create();
             alertDialog.setMessage(
-                getResources().getString(R.string.error_response_from_server_incorrect));
+                getResources().getString(R.string.server_error_got_returned));
             alertDialog.show();
           }
         });
@@ -274,7 +274,7 @@ public class SpecifyMealAmountActivity extends BaseActivity {
             final AlertDialog alertDialog =
                 new AlertDialog.Builder(SpecifyMealAmountActivity.this).create();
             alertDialog.setMessage(
-                getResources().getString(R.string.error_response_from_server_incorrect));
+                getResources().getString(R.string.server_error_got_returned));
             alertDialog.show();
           }
         });
@@ -306,7 +306,7 @@ public class SpecifyMealAmountActivity extends BaseActivity {
             final AlertDialog alertDialog =
                 new AlertDialog.Builder(SpecifyMealAmountActivity.this).create();
             alertDialog.setMessage(
-                getResources().getString(R.string.error_response_from_server_incorrect));
+                getResources().getString(R.string.server_error_got_returned));
             alertDialog.show();
           }
         });

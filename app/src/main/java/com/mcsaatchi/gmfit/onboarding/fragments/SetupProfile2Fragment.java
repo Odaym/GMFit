@@ -100,7 +100,7 @@ public class SetupProfile2Fragment extends Fragment {
       @Override public void onFailure(Call<UserGoalsResponse> call, Throwable t) {
         Timber.d("Call failed with error : %s", t.getMessage());
         alertDialog.setMessage(
-            getActivity().getResources().getString(R.string.error_response_from_server_incorrect));
+            getActivity().getResources().getString(R.string.server_error_got_returned));
         alertDialog.show();
       }
     });

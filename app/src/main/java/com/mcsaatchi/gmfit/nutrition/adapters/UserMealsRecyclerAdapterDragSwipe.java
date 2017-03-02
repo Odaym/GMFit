@@ -103,7 +103,7 @@ public class UserMealsRecyclerAdapterDragSwipe
         Timber.d("Call failed with error : %s", t.getMessage());
         final AlertDialog alertDialog = new AlertDialog.Builder(context).create();
         alertDialog.setMessage(
-            context.getResources().getString(R.string.error_response_from_server_incorrect));
+            context.getResources().getString(R.string.server_error_got_returned));
         alertDialog.show();
       }
     });

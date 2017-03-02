@@ -277,7 +277,7 @@ public class SetupProfile4Fragment extends Fragment
           @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
             Timber.d("Call failed with error : %s", t.getMessage());
             alertDialog.setMessage(getActivity().getResources()
-                .getString(R.string.error_response_from_server_incorrect));
+                .getString(R.string.server_error_got_returned));
             alertDialog.show();
           }
         });
@@ -311,7 +311,7 @@ public class SetupProfile4Fragment extends Fragment
             Timber.d("Call failed with error : %s", t.getMessage());
             final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
             alertDialog.setMessage(getActivity().getResources()
-                .getString(R.string.error_response_from_server_incorrect));
+                .getString(R.string.server_error_got_returned));
             alertDialog.show();
           }
         });

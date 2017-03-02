@@ -116,13 +116,18 @@ public class InsuranceOperationWidgetsGridAdapter
                     response.body().getData().getBody().getData().replace("\\", ""));
 
                 fragmentActivity.startActivity(intent);
+                break;
+              case 449:
+                alertDialog.setMessage(
+                    context.getResources().getString(R.string.server_error_got_returned));
+                alertDialog.show();
+                break;
             }
           }
 
           @Override public void onFailure(Call<CoverageDescriptionResponse> call, Throwable t) {
             Timber.d("Call failed with error : %s", t.getMessage());
-            alertDialog.setMessage(
-                context.getString(R.string.error_response_from_server_incorrect));
+            alertDialog.setMessage(context.getString(R.string.server_error_got_returned));
             alertDialog.show();
           }
         });
