@@ -56,7 +56,7 @@
             android:id="@+id/clinicAddressTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/default_margin_2"
+            android:layout_marginTop="@dimen/default_margin_1"
             />
 
         <LinearLayout
@@ -91,7 +91,6 @@
                 android:textColor="@color/insurance_blue"
                 />
           </LinearLayout>
-
 
           <LinearLayout
               android:id="@+id/open247Layout"
