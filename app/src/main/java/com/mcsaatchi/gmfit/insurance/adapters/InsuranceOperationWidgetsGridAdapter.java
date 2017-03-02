@@ -18,6 +18,7 @@ import com.mcsaatchi.gmfit.architecture.GMFitApplication;
 import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.architecture.rest.CoverageDescriptionResponse;
 import com.mcsaatchi.gmfit.common.Constants;
+import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.insurance.activities.approval_request.ApprovalRequestsStatusListActivity;
 import com.mcsaatchi.gmfit.insurance.activities.approval_request.SubmitApprovalRequestsActivity;
 import com.mcsaatchi.gmfit.insurance.activities.chronic.ChronicStatusListActivity;
@@ -118,8 +119,7 @@ public class InsuranceOperationWidgetsGridAdapter
                 fragmentActivity.startActivity(intent);
                 break;
               case 449:
-                alertDialog.setMessage(
-                    context.getResources().getString(R.string.server_error_got_returned));
+                alertDialog.setMessage(Helpers.provideErrorStringFromJSON(response.errorBody()));
                 alertDialog.show();
                 break;
             }

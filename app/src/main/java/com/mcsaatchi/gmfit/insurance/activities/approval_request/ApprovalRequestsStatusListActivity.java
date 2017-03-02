@@ -15,6 +15,7 @@ import com.mcsaatchi.gmfit.architecture.rest.ClaimsListResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ClaimsListResponseDatum;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
+import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.insurance.adapters.StatusAdapter;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -79,6 +80,10 @@ public class ApprovalRequestsStatusListActivity extends BaseActivity {
                     new LinearLayoutManager(ApprovalRequestsStatusListActivity.this));
                 recyclerView.setHasFixedSize(true);
                 recyclerView.setAdapter(statusAdapter);
+              case 449:
+                alertDialog.setMessage(Helpers.provideErrorStringFromJSON(response.errorBody()));
+                alertDialog.show();
+                break;
             }
           }
 

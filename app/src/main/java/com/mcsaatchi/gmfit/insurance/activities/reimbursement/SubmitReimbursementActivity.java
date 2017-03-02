@@ -77,8 +77,8 @@ public class SubmitReimbursementActivity extends BaseActivity {
 
   private String categoryValue = "Out";
   private String serviceDateValue;
-  private String amountValue;
-  private String subCategoryId;
+  private String amountValue = "";
+  private String subCategoryId = "";
 
   private File photoFile;
   private Uri photoFileUri;
@@ -335,6 +335,17 @@ public class SubmitReimbursementActivity extends BaseActivity {
 
   private void submitReimbursement(HashMap<String, RequestBody> attachements,
       final ProgressDialog waitingDialog) {
+    final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+    alertDialog.setTitle(R.string.submit_new_reimbursement);
+    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getResources().getString(R.string.ok),
+        new DialogInterface.OnClickListener() {
+          public void onClick(DialogInterface dialog, int which) {
+            dialog.dismiss();
+
+            if (waitingDialog.isShowing()) waitingDialog.dismiss();
+          }
+        });
+
     dataAccessHandler.createNewRequest(
         toRequestBody(prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, "")),
         toRequestBody(categoryValue), toRequestBody("2"), toRequestBody("1"),
@@ -354,6 +365,11 @@ public class SubmitReimbursementActivity extends BaseActivity {
                     response.body().getData().getBody().getData().getRequestId());
 
                 startActivity(intent);
+                break;
+              case 449:
+                alertDialog.setMessage(Helpers.provideErrorStringFromJSON(response.errorBody()));
+                alertDialog.show();
+                break;
             }
           }
 

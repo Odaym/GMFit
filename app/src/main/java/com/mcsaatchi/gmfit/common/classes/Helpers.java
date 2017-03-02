@@ -15,6 +15,7 @@ import android.view.inputmethod.InputMethodManager;
 import com.andreabaccega.widget.FormEditText;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.common.Constants;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -23,11 +24,15 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import okhttp3.ResponseBody;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class Helpers {
 
@@ -139,6 +144,21 @@ public class Helpers {
     }
 
     return 0;
+  }
+
+  public static String provideErrorStringFromJSON(ResponseBody errorResponseBody) {
+    try {
+      JSONObject mainObject = new JSONObject(errorResponseBody.string());
+      JSONObject dataObject = mainObject.getJSONObject("data");
+      JSONObject bodyObject = dataObject.getJSONObject("body");
+      JSONArray errorObject = bodyObject.getJSONArray("error");
+
+      return errorObject.get(0).toString();
+    } catch (JSONException | IOException e) {
+      e.printStackTrace();
+    }
+
+    return "";
   }
 
   public static Bundle createActivityBundleWithProperties(int activityTitleResourceId,

@@ -15,6 +15,7 @@ import com.mcsaatchi.gmfit.architecture.rest.ClaimsListResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ClaimsListResponseDatum;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
+import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.insurance.adapters.StatusAdapter;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -80,8 +81,7 @@ public class ReimbursementStatusListActivity extends BaseActivity {
                 recyclerView.setAdapter(statusAdapter);
                 break;
               case 449:
-                alertDialog.setMessage(
-                    getResources().getString(R.string.server_error_got_returned));
+                alertDialog.setMessage(Helpers.provideErrorStringFromJSON(response.errorBody()));
                 alertDialog.show();
                 break;
             }

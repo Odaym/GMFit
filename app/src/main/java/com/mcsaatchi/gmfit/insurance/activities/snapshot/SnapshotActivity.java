@@ -155,8 +155,7 @@ public class SnapshotActivity extends BaseActivity {
 
                 break;
               case 449:
-                alertDialog.setMessage(
-                    getResources().getString(R.string.server_error_got_returned));
+                alertDialog.setMessage(Helpers.provideErrorStringFromJSON(response.errorBody()));
                 alertDialog.show();
                 break;
             }

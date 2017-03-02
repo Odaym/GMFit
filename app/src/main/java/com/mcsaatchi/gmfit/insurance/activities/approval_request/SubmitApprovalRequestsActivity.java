@@ -30,6 +30,7 @@ import com.mcsaatchi.gmfit.architecture.rest.CreateNewRequestResponse;
 import com.mcsaatchi.gmfit.architecture.rest.SubCategoriesResponseDatum;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
+import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.insurance.widget.CustomAttachmentPicker;
 import com.mcsaatchi.gmfit.insurance.widget.CustomPicker;
 import com.mcsaatchi.gmfit.insurance.widget.CustomToggle;
@@ -318,6 +319,17 @@ public class SubmitApprovalRequestsActivity extends BaseActivity {
 
   private void submitApprovalRequest(HashMap<String, RequestBody> attachements,
       final ProgressDialog waitingDialog) {
+    final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+    alertDialog.setTitle(R.string.submit_new_approval_request);
+    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getResources().getString(R.string.ok),
+        new DialogInterface.OnClickListener() {
+          public void onClick(DialogInterface dialog, int which) {
+            dialog.dismiss();
+
+            if (waitingDialog.isShowing()) waitingDialog.dismiss();
+          }
+        });
+
     dataAccessHandler.createNewRequest(
         toRequestBody(prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, "")),
         toRequestBody(categoryValue), toRequestBody("2"), toRequestBody("2"), toRequestBody("10"),
@@ -339,7 +351,8 @@ public class SubmitApprovalRequestsActivity extends BaseActivity {
                 startActivity(intent);
                 break;
               case 449:
-                waitingDialog.dismiss();
+                alertDialog.setMessage(Helpers.provideErrorStringFromJSON(response.errorBody()));
+                alertDialog.show();
                 break;
             }
           }
