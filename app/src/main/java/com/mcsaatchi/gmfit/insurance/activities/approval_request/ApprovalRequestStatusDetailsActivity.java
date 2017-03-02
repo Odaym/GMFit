@@ -82,13 +82,14 @@ public class ApprovalRequestStatusDetailsActivity extends BaseActivity {
                 ClaimListDetailsResponseDatum responseDatum =
                     response.body().getData().getBody().getData().get(0);
 
-                setupToolbar(getClass().getSimpleName(), toolbar,
-                    "#" + responseDatum.getId(), true);
+                setupToolbar(getClass().getSimpleName(), toolbar, "#" + responseDatum.getId(),
+                    true);
 
                 serviceDate.setLabel("Service Date", Helpers.formatInsuranceDate(
                     new LocalDate(responseDatum.getDate().split(" ")[0])));
                 subCategory.setLabel("Sub Category", responseDatum.getSubcategory());
                 category.setLabel("Category", responseDatum.getCategory());
+                status.setTextColor(Helpers.determineStatusColor(responseDatum.getStatus()));
                 status.setLabel("Status", responseDatum.getStatus());
 
                 for (int i = 0; i < responseDatum.getImages().size(); i++) {

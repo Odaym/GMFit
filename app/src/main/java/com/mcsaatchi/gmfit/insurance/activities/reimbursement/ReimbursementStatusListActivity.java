@@ -61,7 +61,8 @@ public class ReimbursementStatusListActivity extends BaseActivity {
               case 200:
                 waitingDialog.dismiss();
 
-                statusAdapter = new StatusAdapter(response.body().getData().getBody().getData(),
+                statusAdapter = new StatusAdapter(ReimbursementStatusListActivity.this,
+                    response.body().getData().getBody().getData(),
                     new StatusAdapter.OnClickListener() {
                       @Override
                       public void onClick(ClaimsListResponseDatum reimbursementModel, int index) {

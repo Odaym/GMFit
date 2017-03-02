@@ -28,6 +28,7 @@ import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import timber.log.Timber;
 
 public class Helpers {
 
@@ -129,6 +130,7 @@ public class Helpers {
       case "Processing":
       case "Submited":
       case "Submitted":
+        Timber.d("We are in one of the top 3 : ");
         return R.color.status_submitted;
       case "Rejected":
       case "Pending Deletion":

@@ -1,5 +1,6 @@
 package com.mcsaatchi.gmfit.insurance.adapters;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,11 +14,13 @@ import java.util.List;
 import org.joda.time.LocalDate;
 
 public class StatusAdapter extends RecyclerView.Adapter<StatusAdapter.ViewHolder> {
+  private Context context;
   private List<ClaimsListResponseDatum> reimbursements = new ArrayList<>();
   private StatusAdapter.OnClickListener onClickListener;
 
-  public StatusAdapter(List<ClaimsListResponseDatum> reimbursements,
+  public StatusAdapter(Context context, List<ClaimsListResponseDatum> reimbursements,
       StatusAdapter.OnClickListener onClickListener) {
+    this.context = context;
     this.reimbursements = reimbursements;
     this.onClickListener = onClickListener;
   }
@@ -68,6 +71,9 @@ public class StatusAdapter extends RecyclerView.Adapter<StatusAdapter.ViewHolder
             Helpers.formatInsuranceDate(new LocalDate(reimbursement.getDate().split(" ")[0])));
       }
       amountTv.setText(String.valueOf(reimbursement.getAmount()));
+
+      statusTv.setTextColor(
+          context.getResources().getColor(Helpers.determineStatusColor(reimbursement.getStatus())));
       statusTv.setText(reimbursement.getStatus());
     }
 

@@ -28,8 +28,7 @@
         android:id="@+id/imagePicker1"
         android:layout_width="@dimen/attached_images_dimens"
         android:layout_height="@dimen/attached_images_dimens"
-        android:background="@color/offwhite_background_gray"
-        android:src="@drawable/ic_photo_camera_white_24dp"
+        android:src="@drawable/ic_camera_icon_attachments"
         />
 
     <ImageView
@@ -37,8 +36,7 @@
         android:layout_width="@dimen/attached_images_dimens"
         android:layout_height="@dimen/attached_images_dimens"
         android:layout_marginLeft="8dp"
-        android:background="@color/offwhite_background_gray"
-        android:src="@drawable/ic_photo_camera_white_24dp"
+        android:src="@drawable/ic_camera_icon_attachments"
         />
 
     <ImageView
@@ -46,8 +44,7 @@
         android:layout_width="@dimen/attached_images_dimens"
         android:layout_height="@dimen/attached_images_dimens"
         android:layout_marginLeft="8dp"
-        android:background="@color/offwhite_background_gray"
-        android:src="@drawable/ic_photo_camera_white_24dp"
+        android:src="@drawable/ic_camera_icon_attachments"
         />
 
     <ImageView
@@ -55,8 +52,7 @@
         android:layout_width="@dimen/attached_images_dimens"
         android:layout_height="@dimen/attached_images_dimens"
         android:layout_marginLeft="8dp"
-        android:background="@color/offwhite_background_gray"
-        android:src="@drawable/ic_photo_camera_white_24dp"
+        android:src="@drawable/ic_camera_icon_attachments"
         />
 
     <ImageView
@@ -64,8 +60,7 @@
         android:layout_width="@dimen/attached_images_dimens"
         android:layout_height="@dimen/attached_images_dimens"
         android:layout_marginLeft="8dp"
-        android:background="@color/offwhite_background_gray"
-        android:src="@drawable/ic_photo_camera_white_24dp"
+        android:src="@drawable/ic_camera_icon_attachments"
         />
   </LinearLayout>
 

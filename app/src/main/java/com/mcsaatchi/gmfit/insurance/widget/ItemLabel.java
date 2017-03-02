@@ -25,4 +25,8 @@ public class ItemLabel extends LinearLayout {
     itemNameTv.setText(name);
     itemInfoTv.setText(info);
   }
+
+  public void setTextColor(int color) {
+    itemInfoTv.setTextColor(getResources().getColor(color));
+  }
 }
