@@ -21,19 +21,28 @@ import android.widget.LinearLayout;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.mcsaatchi.gmfit.R;
+import com.mcsaatchi.gmfit.architecture.rest.CreateNewRequestResponse;
 import com.mcsaatchi.gmfit.architecture.rest.SubCategoriesResponse;
 import com.mcsaatchi.gmfit.architecture.rest.SubCategoriesResponseDatum;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
+import com.mcsaatchi.gmfit.common.classes.Helpers;
+import com.mcsaatchi.gmfit.insurance.activities.reimbursement.ReimbursementStatusDetailsActivity;
+import com.mcsaatchi.gmfit.insurance.activities.reimbursement.SubmitReimbursementActivity;
 import com.mcsaatchi.gmfit.insurance.widget.CustomAttachmentPicker;
 import com.mcsaatchi.gmfit.insurance.widget.CustomPicker;
+import com.mcsaatchi.gmfit.insurance.widget.CustomToggle;
 import com.squareup.picasso.Picasso;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -46,14 +55,25 @@ public class SubmitInquiryActivity extends BaseActivity {
 
   private static final int REQUEST_CAPTURE_PERMISSIONS = 123;
   @Bind(R.id.toolbar) Toolbar toolbar;
-  @Bind(R.id.categoryPicker) CustomPicker categoryPicker;
+  @Bind(R.id.categoryToggle) CustomToggle categoryToggle;
   @Bind(R.id.subCategoryPicker) CustomPicker subCategoryPicker;
-  @Bind(R.id.areaPicker) CustomPicker areaPicker;
+  @Bind(R.id.areaToggle) CustomToggle areaToggle;
   @Bind(R.id.medicalReportImagesPicker) CustomAttachmentPicker medicalReportImagesPicker;
   private File photoFile;
   private Uri photoFileUri;
+
   private ImageView currentImageView;
+
+  private ArrayList<String> imagePaths = new ArrayList<>();
   private List<SubCategoriesResponseDatum> subCategoriesList;
+
+  private String subCategoryId = "";
+  private String category = "";
+  private String area = "";
+
+  public static RequestBody toRequestBody(String value) {
+    return RequestBody.create(MediaType.parse("text/plain"), value);
+  }
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -64,19 +84,17 @@ public class SubmitInquiryActivity extends BaseActivity {
 
     getSubCategories();
 
-    categoryPicker.setUpDropDown("Category", "Choose a category",
-        new String[] { "item 1", "item 2", "item 3" }, new CustomPicker.OnDropDownClickListener() {
-          @Override public void onClick(int index, String selected) {
+    categoryToggle.setUp("Category", "Out", "In", new CustomToggle.OnToggleListener() {
+      @Override public void selected(String option) {
+        category = option;
+      }
+    });
 
-          }
-        });
-
-    areaPicker.setUpDropDown("Area", "Choose an area",
-        new String[] { "item 1", "item 2", "item 3" }, new CustomPicker.OnDropDownClickListener() {
-          @Override public void onClick(int index, String selected) {
-
-          }
-        });
+    areaToggle.setUp("Area", "Local", "CrossBorder", new CustomToggle.OnToggleListener() {
+      @Override public void selected(String option) {
+        area = option;
+      }
+    });
 
     if (permChecker.lacksPermissions(Manifest.permission.CAMERA,
         Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
@@ -114,10 +132,10 @@ public class SubmitInquiryActivity extends BaseActivity {
         if (photoFile.getTotalSpace() > 0) {
           Picasso.with(this)
               .load(new File(photoFile.getAbsolutePath()))
-              .resize(getResources().getDimensionPixelSize(R.dimen.attached_images_dimens),
-                  getResources().getDimensionPixelSize(R.dimen.attached_images_dimens))
-              .centerInside()
+              .fit()
               .into(currentImageView);
+
+          imagePaths.add(photoFile.getAbsolutePath());
         } else {
           Timber.d("No picture was taken, photoFile size : %d", photoFile.getTotalSpace());
         }
@@ -128,12 +146,9 @@ public class SubmitInquiryActivity extends BaseActivity {
           Uri selectedImageUri = data.getData();
           String selectedImagePath = getPhotoPathFromGallery(selectedImageUri);
 
-          Picasso.with(this)
-              .load(new File(selectedImagePath))
-              .resize(getResources().getDimensionPixelSize(R.dimen.attached_images_dimens),
-                  getResources().getDimensionPixelSize(R.dimen.attached_images_dimens))
-              .centerInside()
-              .into(currentImageView);
+          Picasso.with(this).load(new File(selectedImagePath)).fit().into(currentImageView);
+
+          imagePaths.add(selectedImagePath);
         }
     }
   }
@@ -230,6 +245,49 @@ public class SubmitInquiryActivity extends BaseActivity {
     return new File(imagePath);
   }
 
+  private void createNewChronicTreatmentRequest(HashMap<String, RequestBody> attachements,
+      final ProgressDialog waitingDialog) {
+    final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+    alertDialog.setTitle(R.string.submit_new_reimbursement);
+    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getResources().getString(R.string.ok),
+        new DialogInterface.OnClickListener() {
+          public void onClick(DialogInterface dialog, int which) {
+            dialog.dismiss();
+
+            if (waitingDialog.isShowing()) waitingDialog.dismiss();
+          }
+        });
+
+    dataAccessHandler.createNewChronicTreatment(
+        toRequestBody(prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, "")),
+        toRequestBody(category), toRequestBody(title), toRequestBody(area), attachements,
+        new Callback<CreateNewRequestResponse>() {
+          @Override public void onResponse(Call<CreateNewRequestResponse> call,
+              Response<CreateNewRequestResponse> response) {
+            switch (response.code()) {
+              case 200:
+                waitingDialog.dismiss();
+
+                Intent intent = new Intent(SubmitReimbursementActivity.this,
+                    ReimbursementStatusDetailsActivity.class);
+                intent.putExtra(ReimbursementStatusDetailsActivity.REIMBURSEMENT_REQUEST_ID,
+                    response.body().getData().getBody().getData().getRequestId());
+
+                startActivity(intent);
+                break;
+              case 449:
+                alertDialog.setMessage(Helpers.provideErrorStringFromJSON(response.errorBody()));
+                alertDialog.show();
+                break;
+            }
+          }
+
+          @Override public void onFailure(Call<CreateNewRequestResponse> call, Throwable t) {
+            Timber.d("Call failed with error : %s", t.getMessage());
+          }
+        });
+  }
+
   private void getSubCategories() {
     final ProgressDialog waitingDialog = new ProgressDialog(this);
     waitingDialog.setTitle(getResources().getString(R.string.loading_data_dialog_title));
@@ -246,16 +304,24 @@ public class SubmitInquiryActivity extends BaseActivity {
                 waitingDialog.dismiss();
 
                 subCategoriesList = response.body().getData().getBody().getData();
-                String[] finalCategoryNames = new String[subCategoriesList.size()];
+                ArrayList<String> finalCategoryNames = new ArrayList<>();
 
                 for (int i = 0; i < subCategoriesList.size(); i++) {
-                  finalCategoryNames[i] = subCategoriesList.get(i).getName();
+                  if (subCategoriesList.get(i).getName() != null) {
+                    finalCategoryNames.add(subCategoriesList.get(i).getName());
+                  }
                 }
 
                 subCategoryPicker.setUpDropDown("Subcategory", "Choose a subcategory",
-                    finalCategoryNames, new CustomPicker.OnDropDownClickListener() {
+                    finalCategoryNames.toArray(new String[finalCategoryNames.size()]),
+                    new CustomPicker.OnDropDownClickListener() {
                       @Override public void onClick(int index, String selected) {
-
+                        for (SubCategoriesResponseDatum subCategoriesResponseDatum : subCategoriesList) {
+                          if (subCategoriesResponseDatum.getName() != null
+                              && subCategoriesResponseDatum.getName().equals(selected)) {
+                            subCategoryId = subCategoriesResponseDatum.getId();
+                          }
+                        }
                       }
                     });
             }

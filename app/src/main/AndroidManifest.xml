@@ -249,7 +249,8 @@
     <activity
         android:name=".insurance.activities.chronic.SubmitChronicPrescriptionActivity"
         android:screenOrientation="portrait"
-        android:theme="@style/No_Action_Bar_Theme"/>
+        android:theme="@style/No_Action_Bar_Theme"
+        android:windowSoftInputMode="adjustPan|stateHidden"/>
 
     <activity
         android:name=".insurance.activities.inquiry.InquiryEmptyActivity"
@@ -312,7 +313,7 @@
 
     <meta-data
         android:name="com.google.android.geo.API_KEY"
-        android:value="AIzaSyAAkrJDVmU6AGHfDNEm18jjuQqGHNOPalI"/>
+        android:value="AIzaSyClLfg5jnBIui1fjBgywGvNNJxPvjtMzVg	"/>
 
   </application>
 

@@ -27,6 +27,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.rest.CreateNewRequestResponse;
+import com.mcsaatchi.gmfit.architecture.rest.SubCategoriesResponse;
+import com.mcsaatchi.gmfit.architecture.rest.SubCategoriesResponseDatum;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
@@ -43,6 +45,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Locale;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
@@ -59,7 +62,7 @@ public class SubmitReimbursementActivity extends BaseActivity {
 
   private static final int REQUEST_CAPTURE_PERMISSIONS = 123;
   @Bind(R.id.toolbar) Toolbar toolbar;
-  @Bind(R.id.reimbursementSubcategory) CustomPicker subcategory;
+  @Bind(R.id.reimbursementSubcategory) CustomPicker subcategoryPicker;
   @Bind(R.id.reimbursementServiceDate) CustomPicker serviceDate;
   @Bind(R.id.categoryInOutToggle) CustomToggle categoryToggle;
   @Bind(R.id.medicalReportImagesPicker) CustomAttachmentPicker medicalReportImagesPicker;
@@ -74,11 +77,13 @@ public class SubmitReimbursementActivity extends BaseActivity {
   @Bind(R.id.remarksET) EditText remarksET;
 
   private ArrayList<String> imagePaths = new ArrayList<>();
+  private List<SubCategoriesResponseDatum> subCategoriesList;
 
-  private String categoryValue = "Out";
-  private String serviceDateValue;
+  private String categoryValue = "";
+  private String serviceDateValue = "";
   private String amountValue = "";
   private String subCategoryId = "";
+  private String requestTypeId = "1";
 
   private File photoFile;
   private Uri photoFileUri;
@@ -97,6 +102,8 @@ public class SubmitReimbursementActivity extends BaseActivity {
 
     setupToolbar(getClass().getSimpleName(), toolbar, "Submit Reimbursement", true);
 
+    getSubCategories();
+
     currencyLayout.setOnClickListener(new View.OnClickListener() {
       @Override public void onClick(View view) {
         final String[] items = new String[] { "LBP", "USD" };
@@ -111,14 +118,6 @@ public class SubmitReimbursementActivity extends BaseActivity {
         builder.show();
       }
     });
-
-    subcategory.setUpDropDown("Subcategory", "Choose a subcategory",
-        new String[] { "Dental PCC", "Ambulatory", "Doctors Visit", "PCP", "Dental" },
-        new CustomPicker.OnDropDownClickListener() {
-          @Override public void onClick(int index, String selected) {
-
-          }
-        });
 
     serviceDate.setUpDatePicker("Service Date", "Choose a date",
         new CustomPicker.OnDatePickerClickListener() {
@@ -163,11 +162,15 @@ public class SubmitReimbursementActivity extends BaseActivity {
     waitingDialog.setCancelable(false);
     waitingDialog.setMessage(
         getResources().getString(R.string.uploading_attachments_dialog_message));
+    waitingDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+      @Override public void onShow(DialogInterface dialogInterface) {
+        HashMap<String, RequestBody> attachments = constructSelectedImagesForRequest();
+
+        submitReimbursement(attachments, waitingDialog);
+      }
+    });
+
     waitingDialog.show();
-
-    HashMap<String, RequestBody> attachments = constructSelectedImagesForRequest();
-
-    submitReimbursement(attachments, waitingDialog);
   }
 
   @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -348,7 +351,7 @@ public class SubmitReimbursementActivity extends BaseActivity {
 
     dataAccessHandler.createNewRequest(
         toRequestBody(prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, "")),
-        toRequestBody(categoryValue), toRequestBody("2"), toRequestBody("1"),
+        toRequestBody(categoryValue), toRequestBody(subCategoryId), toRequestBody(requestTypeId),
         toRequestBody(amountValue), toRequestBody("2"),
         toRequestBody(Helpers.formatInsuranceDate(new LocalDate()) + "T16:27:32+02:00"),
         toRequestBody("D"), toRequestBody(remarksET.getText().toString()), attachements,
@@ -378,35 +381,49 @@ public class SubmitReimbursementActivity extends BaseActivity {
           }
         });
   }
-  //private void getSubCategories() {
-  //  final ProgressDialog waitingDialog = new ProgressDialog(this);
-  //  waitingDialog.setTitle(getResources().getString(R.string.loading_data_dialog_title));
-  //  waitingDialog.setMessage(getResources().getString(R.string.please_wait_dialog_message));
-  //  waitingDialog.show();
-  //
-  //  dataAccessHandler.getSubCategories(
-  //      prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""),
-  //      new Callback<SubCategoriesResponse>() {
-  //        @Override public void onResponse(Call<SubCategoriesResponse> call,
-  //            Response<SubCategoriesResponse> response) {
-  //          switch (response.code()) {
-  //            case 200:
-  //              waitingDialog.dismiss();
-  //
-  //              subCategoriesList = response.body().getData().getBody().getData();
-  //              String[] finalCategoryNames = new String[subCategoriesList.size()];
-  //
-  //              for (int i = 0; i < subCategoriesList.size(); i++) {
-  //                finalCategoryNames[i] = subCategoriesList.get(i).getName();
-  //              }
-  //
-  //
-  //          }
-  //        }
-  //
-  //        @Override public void onFailure(Call<SubCategoriesResponse> call, Throwable t) {
-  //          Timber.d("Call failed with error : %s", t.getMessage());
-  //        }
-  //      });
-  //}
+
+  private void getSubCategories() {
+    final ProgressDialog waitingDialog = new ProgressDialog(this);
+    waitingDialog.setTitle(getResources().getString(R.string.loading_data_dialog_title));
+    waitingDialog.setMessage(getResources().getString(R.string.please_wait_dialog_message));
+    waitingDialog.show();
+
+    dataAccessHandler.getSubCategories(
+        prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""),
+        new Callback<SubCategoriesResponse>() {
+          @Override public void onResponse(Call<SubCategoriesResponse> call,
+              Response<SubCategoriesResponse> response) {
+            switch (response.code()) {
+              case 200:
+                waitingDialog.dismiss();
+
+                subCategoriesList = response.body().getData().getBody().getData();
+                ArrayList<String> finalCategoryNames = new ArrayList<>();
+
+                for (int i = 0; i < subCategoriesList.size(); i++) {
+                  if (subCategoriesList.get(i).getName() != null) {
+                    finalCategoryNames.add(subCategoriesList.get(i).getName());
+                  }
+                }
+
+                subcategoryPicker.setUpDropDown("Subcategory", "Choose a subcategory",
+                    finalCategoryNames.toArray(new String[finalCategoryNames.size()]),
+                    new CustomPicker.OnDropDownClickListener() {
+                      @Override public void onClick(int index, String selected) {
+                        for (SubCategoriesResponseDatum subCategoriesResponseDatum : subCategoriesList) {
+                          if (subCategoriesResponseDatum.getName() != null
+                              && subCategoriesResponseDatum.getName().equals(selected)) {
+                            subCategoryId = subCategoriesResponseDatum.getId();
+                          }
+                        }
+                      }
+                    });
+            }
+          }
+
+          @Override public void onFailure(Call<SubCategoriesResponse> call, Throwable t) {
+            Timber.d("Call failed with error : %s", t.getMessage());
+          }
+        });
+  }
 }

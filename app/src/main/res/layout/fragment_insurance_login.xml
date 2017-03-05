@@ -63,7 +63,7 @@
           android:layout_height="match_parent"
           android:background="@android:color/transparent"
           android:hint="@string/enter_member_id_hint"
-          android:inputType="text"
+          android:inputType="number"
           android:longClickable="false"
           android:maxLines="1"
           android:paddingBottom="@dimen/default_margin_1"

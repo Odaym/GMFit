@@ -956,6 +956,23 @@ public class ApiCallsHandler {
     });
   }
 
+  void createNewChronicTreatment(RequestBody contractNo, RequestBody category, RequestBody title,
+      RequestBody area, Map<String, RequestBody> attachements,
+      final Callback<CreateNewRequestResponse> callback) {
+    Call<CreateNewRequestResponse> apiCall = restClient.getGMFitService()
+        .createNewChronicTreatment(contractNo, category, title, area, attachements);
+
+    apiCall.enqueue(new Callback<CreateNewRequestResponse>() {
+      @Override public void onResponse(Call<CreateNewRequestResponse> call,
+          Response<CreateNewRequestResponse> response) {
+        callback.onResponse(call, response);
+      }
+
+      @Override public void onFailure(Call<CreateNewRequestResponse> call, Throwable t) {
+      }
+    });
+  }
+
   void getClaimslist(String contractNo, String requestType,
       final Callback<ClaimsListResponse> callback) {
     Call<ClaimsListResponse> apiCall =

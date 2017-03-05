@@ -142,12 +142,11 @@
           custom:header_text="@string/request_details_label"
           />
 
-      <com.mcsaatchi.gmfit.insurance.widget.CustomPicker
-          android:id="@+id/categoryPicker"
+      <com.mcsaatchi.gmfit.insurance.widget.CustomToggle
+          android:id="@+id/categoryToggle"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           />
-
 
       <com.mcsaatchi.gmfit.insurance.widget.CustomPicker
           android:id="@+id/subCategoryPicker"
@@ -156,8 +155,8 @@
           />
 
 
-      <com.mcsaatchi.gmfit.insurance.widget.CustomPicker
-          android:id="@+id/areaPicker"
+      <com.mcsaatchi.gmfit.insurance.widget.CustomToggle
+          android:id="@+id/areaToggle"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           />

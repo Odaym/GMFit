@@ -181,6 +181,13 @@ public interface GMFitService {
       @Part("providerCode") RequestBody providerCode, @Part("remarks") RequestBody remarks,
       @PartMap() Map<String, RequestBody> attachements);
 
+  @Multipart @POST("insurance/crm/request/create")
+  Call<CreateNewRequestResponse> createNewChronicTreatment(
+      @Part("contractNo") RequestBody contractNo, @Part("category") RequestBody category,
+      @Part("title") RequestBody title, @Part("area") RequestBody area,
+      @PartMap() Map<String, RequestBody> attachements);
+
+  ///insurance/crm/request/create
   @POST("insurance/claims/list") Call<ClaimsListResponse> getClaimsList(
       @Body ApiCallsHandler.ClaimsListRequest claimsListRequest);
 

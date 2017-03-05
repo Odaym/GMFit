@@ -1,9 +1,12 @@
 package com.mcsaatchi.gmfit.insurance.activities.chronic;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -11,6 +14,7 @@ import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -18,15 +22,28 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import com.mcsaatchi.gmfit.R;
+import com.mcsaatchi.gmfit.architecture.rest.CreateNewRequestResponse;
+import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
+import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.insurance.widget.CustomAttachmentPicker;
 import com.squareup.picasso.Picasso;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Locale;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import timber.log.Timber;
 
 import static com.mcsaatchi.gmfit.insurance.widget.CustomAttachmentPicker.CAPTURE_NEW_PICTURE_REQUEST_CODE;
@@ -40,10 +57,15 @@ public class SubmitChronicPrescriptionActivity extends BaseActivity {
   private Uri photoFileUri;
   private ImageView currentImageView;
 
+  private ArrayList<String> imagePaths = new ArrayList<>();
+
   @Bind(R.id.toolbar) Toolbar toolbar;
   @Bind(R.id.medicalReportImagesPicker) CustomAttachmentPicker medicalReportImagesPicker;
-  @Bind(R.id.invoiceImagesPicker) CustomAttachmentPicker invoiceImagesPicker;
-  @Bind(R.id.identityCardImagesPicker) CustomAttachmentPicker identityCardImagesPicker;
+  @Bind(R.id.prescriptionImagesPicker) CustomAttachmentPicker prescriptionImagesPicker;
+
+  public static RequestBody toRequestBody(String value) {
+    return RequestBody.create(MediaType.parse("text/plain"), value);
+  }
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -59,8 +81,7 @@ public class SubmitChronicPrescriptionActivity extends BaseActivity {
     }
 
     hookupImagesPickerImages(medicalReportImagesPicker);
-    hookupImagesPickerImages(invoiceImagesPicker);
-    hookupImagesPickerImages(identityCardImagesPicker);
+    hookupImagesPickerImages(prescriptionImagesPicker);
   }
 
   private void hookupImagesPickerImages(CustomAttachmentPicker imagePicker) {
@@ -89,10 +110,10 @@ public class SubmitChronicPrescriptionActivity extends BaseActivity {
         if (photoFile.getTotalSpace() > 0) {
           Picasso.with(this)
               .load(new File(photoFile.getAbsolutePath()))
-              .resize(getResources().getDimensionPixelSize(R.dimen.attached_images_dimens),
-                  getResources().getDimensionPixelSize(R.dimen.attached_images_dimens))
-              .centerInside()
+              .fit()
               .into(currentImageView);
+
+          imagePaths.add(photoFile.getAbsolutePath());
         } else {
           Timber.d("No picture was taken, photoFile size : %d", photoFile.getTotalSpace());
         }
@@ -103,14 +124,29 @@ public class SubmitChronicPrescriptionActivity extends BaseActivity {
           Uri selectedImageUri = data.getData();
           String selectedImagePath = getPhotoPathFromGallery(selectedImageUri);
 
-          Picasso.with(this)
-              .load(new File(selectedImagePath))
-              .resize(getResources().getDimensionPixelSize(R.dimen.attached_images_dimens),
-                  getResources().getDimensionPixelSize(R.dimen.attached_images_dimens))
-              .centerInside()
-              .into(currentImageView);
+          Picasso.with(this).load(new File(selectedImagePath)).fit().into(currentImageView);
+
+          imagePaths.add(selectedImagePath);
         }
     }
+  }
+
+  @OnClick(R.id.submitChronicTreatmentBTN) public void handleSubmitChronicTreatment() {
+    final ProgressDialog waitingDialog = new ProgressDialog(this);
+    waitingDialog.setTitle(
+        getResources().getString(R.string.submit_new_chronic_treatment_dialog_title));
+    waitingDialog.setCancelable(false);
+    waitingDialog.setMessage(
+        getResources().getString(R.string.uploading_attachments_dialog_message));
+    waitingDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+      @Override public void onShow(DialogInterface dialogInterface) {
+        HashMap<String, RequestBody> attachments = constructSelectedImagesForRequest();
+
+        submitNewChronicTreatment(attachments, waitingDialog);
+      }
+    });
+
+    waitingDialog.show();
   }
 
   private void showImagePickerDialog(ImageView view) {
@@ -165,6 +201,10 @@ public class SubmitChronicPrescriptionActivity extends BaseActivity {
     builderSingle.show();
   }
 
+  private File createImageFile(String imagePath) throws IOException {
+    return new File(imagePath);
+  }
+
   private String getPhotoPathFromGallery(Uri uri) {
     if (uri == null) {
       // TODO perform some logging or show user feedback
@@ -201,7 +241,70 @@ public class SubmitChronicPrescriptionActivity extends BaseActivity {
     return mediaStorageDir.getPath() + File.separator + imageFileName;
   }
 
-  private File createImageFile(String imagePath) throws IOException {
-    return new File(imagePath);
+  private HashMap<String, RequestBody> constructSelectedImagesForRequest() {
+    LinkedHashMap<String, RequestBody> imageParts = new LinkedHashMap<>();
+
+    for (int i = 0; i < imagePaths.size(); i++) {
+      if (imagePaths.get(i) != null) {
+        imageParts.put("attachements[" + i + "][content]", toRequestBody(
+            Base64.encodeToString(turnImageToByteArray(imagePaths.get(i)), Base64.NO_WRAP)));
+        imageParts.put("attachements[" + i + "][documType]", toRequestBody("2"));
+        imageParts.put("attachements[" + i + "][name]", toRequestBody(imagePaths.get(i)));
+        imageParts.put("attachements[" + i + "][id]", toRequestBody(String.valueOf(i + 1)));
+      }
+    }
+
+    return imageParts;
+  }
+
+  private byte[] turnImageToByteArray(String imagePath) {
+    Bitmap bm = BitmapFactory.decodeFile(imagePath);
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    bm.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+
+    return baos.toByteArray();
+  }
+
+  private void submitNewChronicTreatment(HashMap<String, RequestBody> attachements,
+      final ProgressDialog waitingDialog) {
+    final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+    alertDialog.setTitle(R.string.submit_new_chronic_treatment_dialog_title);
+    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getResources().getString(R.string.ok),
+        new DialogInterface.OnClickListener() {
+          public void onClick(DialogInterface dialog, int which) {
+            dialog.dismiss();
+
+            if (waitingDialog.isShowing()) waitingDialog.dismiss();
+          }
+        });
+
+    dataAccessHandler.createNewRequest(
+        toRequestBody(prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, "")), null,
+        toRequestBody("2"), toRequestBody("3"), null, null, null, null, null, attachements,
+        new Callback<CreateNewRequestResponse>() {
+          @Override public void onResponse(Call<CreateNewRequestResponse> call,
+              Response<CreateNewRequestResponse> response) {
+            switch (response.code()) {
+              case 200:
+                waitingDialog.dismiss();
+
+                Intent intent = new Intent(SubmitChronicPrescriptionActivity.this,
+                    ChronicStatusListActivity.class);
+                //intent.putExtra(ReimbursementStatusDetailsActivity.REIMBURSEMENT_REQUEST_ID,
+                //    response.body().getData().getBody().getData().getRequestId());
+
+                startActivity(intent);
+                break;
+              case 449:
+                alertDialog.setMessage(Helpers.provideErrorStringFromJSON(response.errorBody()));
+                alertDialog.show();
+                break;
+            }
+          }
+
+          @Override public void onFailure(Call<CreateNewRequestResponse> call, Throwable t) {
+            Timber.d("Call failed with error : %s", t.getMessage());
+          }
+        });
   }
 }

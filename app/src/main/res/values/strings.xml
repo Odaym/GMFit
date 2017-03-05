@@ -348,6 +348,7 @@
   <string name="you_did_not_submit_any_reimbursement_yet">You did not submit any reimbursement yet.</string>
   <string name="add_your_remarks_here">Add your remarks here</string>
   <string name="fill_in_the_required_fields_below">Fill in the required fields below</string>
+  <string name="chronic_prescription_provider_name_hint">Please fill in the provider name (optional)</string>
   <string name="attach_all_the_required_documents_below">Attach all the required documents below</string>
   <string name="active_treatments">Active Treatments</string>
   <string name="inactive_treatments">Inactive Treatments</string>
@@ -359,6 +360,7 @@
   <string name="end_date_input_label">End Date</string>
   <string name="your_info_section_title">Your Info</string>
   <string name="full_name_label">Full Name</string>
+  <string name="provider_name_label">Provider Name</string>
   <string name="card_number_label">Card Number</string>
   <string name="risk_carrier_label">Risk Carrier</string>
   <string name="request_details_label">Request Details</string>
@@ -376,6 +378,7 @@
   <string name="submit_new_approval_request">Submitting New Approval Request</string>
   <string name="uploading_attachments_dialog_message">Uploading attachments…</string>
   <string name="snapshot_activity_title">Snapshot</string>
+  <string name="submit_new_chronic_treatment_dialog_title">Submitting Chronic Treatment</string>
 
   <!-- COVERAGE DESCRIPTION -->
   <string name="coverage_description_activity_title">Coverage Description</string>

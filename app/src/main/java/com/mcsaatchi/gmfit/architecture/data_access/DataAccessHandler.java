@@ -324,6 +324,13 @@ public class DataAccessHandler {
         currencyCode, serviceDate, providerCode, remarks, attachements, callback);
   }
 
+  public void createNewChronicTreatment(RequestBody contractNo, RequestBody category,
+      RequestBody title, RequestBody area, Map<String, RequestBody> attachements,
+      final Callback<CreateNewRequestResponse> callback) {
+    apiCallsHandler.createNewChronicTreatment(contractNo, category, title, area, attachements,
+        callback);
+  }
+
   public void getClaimsList(String contractNo, String requestType,
       final Callback<ClaimsListResponse> callback) {
     apiCallsHandler.getClaimslist(contractNo, requestType, callback);

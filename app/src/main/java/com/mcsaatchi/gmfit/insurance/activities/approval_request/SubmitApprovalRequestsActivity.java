@@ -147,11 +147,15 @@ public class SubmitApprovalRequestsActivity extends BaseActivity {
     waitingDialog.setCancelable(false);
     waitingDialog.setMessage(
         getResources().getString(R.string.uploading_attachments_dialog_message));
+    waitingDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+      @Override public void onShow(DialogInterface dialogInterface) {
+        HashMap<String, RequestBody> attachments = constructSelectedImagesForRequest();
+
+        submitApprovalRequest(attachments, waitingDialog);
+      }
+    });
+
     waitingDialog.show();
-
-    HashMap<String, RequestBody> attachments = constructSelectedImagesForRequest();
-
-    submitApprovalRequest(attachments, waitingDialog);
   }
 
   @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -333,9 +337,8 @@ public class SubmitApprovalRequestsActivity extends BaseActivity {
     dataAccessHandler.createNewRequest(
         toRequestBody(prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, "")),
         toRequestBody(categoryValue), toRequestBody("2"), toRequestBody("2"), toRequestBody("10"),
-        toRequestBody("2"),
-        toRequestBody("2016-10-10T16:27:32+02:00"),
-        toRequestBody("D"), toRequestBody(remarksET.getText().toString()), attachements,
+        toRequestBody("2"), toRequestBody("2016-10-10T16:27:32+02:00"), toRequestBody("D"),
+        toRequestBody(remarksET.getText().toString()), attachements,
         new Callback<CreateNewRequestResponse>() {
           @Override public void onResponse(Call<CreateNewRequestResponse> call,
               Response<CreateNewRequestResponse> response) {

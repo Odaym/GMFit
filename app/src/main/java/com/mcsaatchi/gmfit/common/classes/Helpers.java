@@ -147,15 +147,17 @@ public class Helpers {
   }
 
   public static String provideErrorStringFromJSON(ResponseBody errorResponseBody) {
-    try {
-      JSONObject mainObject = new JSONObject(errorResponseBody.string());
-      JSONObject dataObject = mainObject.getJSONObject("data");
-      JSONObject bodyObject = dataObject.getJSONObject("body");
-      JSONArray errorObject = bodyObject.getJSONArray("error");
+    if (errorResponseBody != null) {
+      try {
+        JSONObject mainObject = new JSONObject(errorResponseBody.string());
+        JSONObject dataObject = mainObject.getJSONObject("data");
+        JSONObject bodyObject = dataObject.getJSONObject("body");
+        JSONArray errorObject = bodyObject.getJSONArray("error");
 
-      return errorObject.get(0).toString();
-    } catch (JSONException | IOException e) {
-      e.printStackTrace();
+        return errorObject.get(0).toString();
+      } catch (JSONException | IOException e) {
+        e.printStackTrace();
+      }
     }
 
     return "";
