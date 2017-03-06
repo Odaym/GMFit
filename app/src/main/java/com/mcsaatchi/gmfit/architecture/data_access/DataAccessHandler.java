@@ -4,6 +4,7 @@ import android.content.Context;
 import com.mcsaatchi.gmfit.architecture.GMFitApplication;
 import com.mcsaatchi.gmfit.architecture.rest.ActivityLevelsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponse;
+import com.mcsaatchi.gmfit.architecture.rest.CRMCategoriesResponse;
 import com.mcsaatchi.gmfit.architecture.rest.CardDetailsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ChartMetricBreakdownResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ChartsBySectionResponse;
@@ -324,11 +325,16 @@ public class DataAccessHandler {
         currencyCode, serviceDate, providerCode, remarks, attachements, callback);
   }
 
-  public void createNewChronicTreatment(RequestBody contractNo, RequestBody category,
-      RequestBody title, RequestBody area, Map<String, RequestBody> attachements,
-      final Callback<CreateNewRequestResponse> callback) {
-    apiCallsHandler.createNewChronicTreatment(contractNo, category, title, area, attachements,
-        callback);
+  public void createNewInquiryComplaint(RequestBody contractNo, RequestBody category,
+      RequestBody subcategory, RequestBody title, RequestBody area,
+      Map<String, RequestBody> attachements, final Callback<CreateNewRequestResponse> callback) {
+    apiCallsHandler.createNewInquiryComplaint(contractNo, category, subcategory, title, area,
+        attachements, callback);
+  }
+
+  public void getCRMCategories(RequestBody contractNo,
+      final Callback<CRMCategoriesResponse> callback) {
+    apiCallsHandler.getCRMCategories(contractNo, callback);
   }
 
   public void getClaimsList(String contractNo, String requestType,

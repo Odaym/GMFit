@@ -348,6 +348,7 @@
   <string name="you_did_not_submit_any_reimbursement_yet">You did not submit any reimbursement yet.</string>
   <string name="add_your_remarks_here">Add your remarks here</string>
   <string name="fill_in_the_required_fields_below">Fill in the required fields below</string>
+  <string name="fill_in_the_required_fields_above">Fill in the required fields above</string>
   <string name="chronic_prescription_provider_name_hint">Please fill in the provider name (optional)</string>
   <string name="attach_all_the_required_documents_below">Attach all the required documents below</string>
   <string name="active_treatments">Active Treatments</string>

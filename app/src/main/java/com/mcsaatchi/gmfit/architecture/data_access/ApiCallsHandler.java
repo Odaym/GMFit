@@ -4,6 +4,7 @@ import android.content.Context;
 import com.mcsaatchi.gmfit.architecture.GMFitApplication;
 import com.mcsaatchi.gmfit.architecture.rest.ActivityLevelsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponse;
+import com.mcsaatchi.gmfit.architecture.rest.CRMCategoriesResponse;
 import com.mcsaatchi.gmfit.architecture.rest.CardDetailsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ChartMetricBreakdownResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ChartsBySectionResponse;
@@ -956,11 +957,11 @@ public class ApiCallsHandler {
     });
   }
 
-  void createNewChronicTreatment(RequestBody contractNo, RequestBody category, RequestBody title,
-      RequestBody area, Map<String, RequestBody> attachements,
-      final Callback<CreateNewRequestResponse> callback) {
+  void createNewInquiryComplaint(RequestBody contractNo, RequestBody category,
+      RequestBody subcategory, RequestBody title, RequestBody area,
+      Map<String, RequestBody> attachements, final Callback<CreateNewRequestResponse> callback) {
     Call<CreateNewRequestResponse> apiCall = restClient.getGMFitService()
-        .createNewChronicTreatment(contractNo, category, title, area, attachements);
+        .createNewInquiryComplaint(contractNo, category, subcategory, title, area, attachements);
 
     apiCall.enqueue(new Callback<CreateNewRequestResponse>() {
       @Override public void onResponse(Call<CreateNewRequestResponse> call,
@@ -1001,6 +1002,20 @@ public class ApiCallsHandler {
       }
 
       @Override public void onFailure(Call<ClaimListDetailsResponse> call, Throwable t) {
+      }
+    });
+  }
+
+  void getCRMCategories(RequestBody contractNo, final Callback<CRMCategoriesResponse> callback) {
+    Call<CRMCategoriesResponse> apiCall = restClient.getGMFitService().getCRMCategories(contractNo);
+
+    apiCall.enqueue(new Callback<CRMCategoriesResponse>() {
+      @Override public void onResponse(Call<CRMCategoriesResponse> call,
+          Response<CRMCategoriesResponse> response) {
+        callback.onResponse(call, response);
+      }
+
+      @Override public void onFailure(Call<CRMCategoriesResponse> call, Throwable t) {
       }
     });
   }

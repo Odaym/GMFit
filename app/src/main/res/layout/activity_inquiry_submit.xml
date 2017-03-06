@@ -142,8 +142,8 @@
           custom:header_text="@string/request_details_label"
           />
 
-      <com.mcsaatchi.gmfit.insurance.widget.CustomToggle
-          android:id="@+id/categoryToggle"
+      <com.mcsaatchi.gmfit.insurance.widget.CustomPicker
+          android:id="@+id/categoryPicker"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           />
@@ -168,13 +168,14 @@
           custom:header_text="@string/title_and_description_label"
           />
 
-      <EditText
-          android:id="@+id/requestDetailsET"
+      <com.andreabaccega.widget.FormEditText
+          android:id="@+id/requestTitleTV"
           android:layout_width="match_parent"
           android:layout_height="200dp"
           android:background="@color/white"
           android:gravity="top"
           android:hint="Request Title"
+          android:paddingEnd="@dimen/default_margin_2"
           android:paddingStart="@dimen/default_margin_2"
           android:paddingTop="@dimen/default_margin_2"
           android:textSize="15sp"
