@@ -10,6 +10,7 @@ import com.mcsaatchi.gmfit.architecture.rest.ChartMetricBreakdownResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ChartsBySectionResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ClaimListDetailsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ClaimsListResponse;
+import com.mcsaatchi.gmfit.architecture.rest.CountriesListResponse;
 import com.mcsaatchi.gmfit.architecture.rest.CoverageDescriptionResponse;
 import com.mcsaatchi.gmfit.architecture.rest.CreateNewRequestResponse;
 import com.mcsaatchi.gmfit.architecture.rest.DefaultGetResponse;
@@ -970,6 +971,20 @@ public class ApiCallsHandler {
       }
 
       @Override public void onFailure(Call<CreateNewRequestResponse> call, Throwable t) {
+      }
+    });
+  }
+
+  void getCountriesList(RequestBody contractNo, final Callback<CountriesListResponse> callback) {
+    Call<CountriesListResponse> apiCall = restClient.getGMFitService().getCountriesList(contractNo);
+
+    apiCall.enqueue(new Callback<CountriesListResponse>() {
+      @Override public void onResponse(Call<CountriesListResponse> call,
+          Response<CountriesListResponse> response) {
+        callback.onResponse(call, response);
+      }
+
+      @Override public void onFailure(Call<CountriesListResponse> call, Throwable t) {
       }
     });
   }

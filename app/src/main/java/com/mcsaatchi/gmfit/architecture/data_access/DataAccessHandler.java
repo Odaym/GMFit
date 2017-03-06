@@ -10,6 +10,7 @@ import com.mcsaatchi.gmfit.architecture.rest.ChartMetricBreakdownResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ChartsBySectionResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ClaimListDetailsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ClaimsListResponse;
+import com.mcsaatchi.gmfit.architecture.rest.CountriesListResponse;
 import com.mcsaatchi.gmfit.architecture.rest.CoverageDescriptionResponse;
 import com.mcsaatchi.gmfit.architecture.rest.CreateNewRequestResponse;
 import com.mcsaatchi.gmfit.architecture.rest.DefaultGetResponse;
@@ -330,6 +331,11 @@ public class DataAccessHandler {
       Map<String, RequestBody> attachements, final Callback<CreateNewRequestResponse> callback) {
     apiCallsHandler.createNewInquiryComplaint(contractNo, category, subcategory, title, area,
         attachements, callback);
+  }
+
+  public void getCountriesList(RequestBody contractNo,
+      final Callback<CountriesListResponse> callback) {
+    apiCallsHandler.getCountriesList(contractNo, callback);
   }
 
   public void getCRMCategories(RequestBody contractNo,
