@@ -123,50 +123,46 @@ public class MealRemindersActivity extends BaseActivity {
       enableRemindersSwitch.setChecked(false);
     }
 
-    enableRemindersSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-      @Override public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
-        if (checked) {
-          triggerAlarmsState(true);
+    enableRemindersSwitch.setOnCheckedChangeListener((compoundButton, checked) -> {
+      if (checked) {
+        triggerAlarmsState(true);
 
-          setupMealRemindersAlarm(MealRemindersActivity.this, prefs, "Breakfast", Integer.parseInt(
-              reverseTimeFormatter.print(getLocalTimeFormatted(breakfastAlarmTime)).split(":")[0]),
-              Integer.parseInt(reverseTimeFormatter.print(getLocalTimeFormatted(breakfastAlarmTime))
-                  .split(":")[1]), breakfastAlarmTime);
+        setupMealRemindersAlarm(MealRemindersActivity.this, prefs, "Breakfast", Integer.parseInt(
+            reverseTimeFormatter.print(getLocalTimeFormatted(breakfastAlarmTime)).split(":")[0]),
+            Integer.parseInt(reverseTimeFormatter.print(getLocalTimeFormatted(breakfastAlarmTime))
+                .split(":")[1]), breakfastAlarmTime);
 
-          setupMealRemindersAlarm(MealRemindersActivity.this, prefs, "Lunch", Integer.parseInt(
-              reverseTimeFormatter.print(getLocalTimeFormatted(lunchAlarmTime)).split(":")[0]),
-              Integer.parseInt(
-                  reverseTimeFormatter.print(getLocalTimeFormatted(lunchAlarmTime)).split(":")[1]),
-              lunchAlarmTime);
+        setupMealRemindersAlarm(MealRemindersActivity.this, prefs, "Lunch", Integer.parseInt(
+            reverseTimeFormatter.print(getLocalTimeFormatted(lunchAlarmTime)).split(":")[0]),
+            Integer.parseInt(
+                reverseTimeFormatter.print(getLocalTimeFormatted(lunchAlarmTime)).split(":")[1]),
+            lunchAlarmTime);
 
-          setupMealRemindersAlarm(MealRemindersActivity.this, prefs, "Dinner", Integer.parseInt(
-              reverseTimeFormatter.print(getLocalTimeFormatted(dinnerAlarmTime)).split(":")[0]),
-              Integer.parseInt(
-                  reverseTimeFormatter.print(getLocalTimeFormatted(dinnerAlarmTime)).split(":")[1]),
-              dinnerAlarmTime);
-        } else {
-          triggerAlarmsState(false);
-          cancelAllPendingAlarms();
-        }
-
-        EventBusSingleton.getInstance().post(new RemindersStatusChangedEvent(areAlarmsEnabled));
+        setupMealRemindersAlarm(MealRemindersActivity.this, prefs, "Dinner", Integer.parseInt(
+            reverseTimeFormatter.print(getLocalTimeFormatted(dinnerAlarmTime)).split(":")[0]),
+            Integer.parseInt(
+                reverseTimeFormatter.print(getLocalTimeFormatted(dinnerAlarmTime)).split(":")[1]),
+            dinnerAlarmTime);
+      } else {
+        triggerAlarmsState(false);
+        cancelAllPendingAlarms();
       }
+
+      EventBusSingleton.getInstance().post(new RemindersStatusChangedEvent(areAlarmsEnabled));
     });
 
     /**
      * BREAKFAST TIMER
      */
-    breakfastReminderLayout.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View view) {
+    breakfastReminderLayout.setOnClickListener(view -> {
 
-        breakfastAlarmTime = prefs.getString(Constants.BREAKFAST_REMINDER_ALARM_TIME, "08:00 PM");
+      breakfastAlarmTime = prefs.getString(Constants.BREAKFAST_REMINDER_ALARM_TIME, "08:00 PM");
 
-        timeForDisplay = getLocalTimeFormatted(breakfastAlarmTime);
+      timeForDisplay = getLocalTimeFormatted(breakfastAlarmTime);
 
-        TimePickerDialog timePicker =
-            new TimePickerDialog(MealRemindersActivity.this, new TimePickerDialog.OnTimeSetListener() {
-              @Override
-              public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+      TimePickerDialog timePicker =
+          new TimePickerDialog(MealRemindersActivity.this,
+              (timePicker13, selectedHour, selectedMinute) -> {
                 timeChosen = LocalTime.parse(selectedHour + ":" + selectedMinute,
                     DateTimeFormat.forPattern("HH:mm"));
 
@@ -174,28 +170,24 @@ public class MealRemindersActivity extends BaseActivity {
 
                 setupMealRemindersAlarm(MealRemindersActivity.this, prefs, "Breakfast", selectedHour,
                     selectedMinute, timeFormatter.print(timeChosen));
-              }
-            }, Integer.parseInt(reverseTimeFormatter.print(timeForDisplay).split(":")[0]),
-                Integer.parseInt(reverseTimeFormatter.print(timeForDisplay).split(":")[1]), false);
+              }, Integer.parseInt(reverseTimeFormatter.print(timeForDisplay).split(":")[0]),
+              Integer.parseInt(reverseTimeFormatter.print(timeForDisplay).split(":")[1]), false);
 
-        timePicker.show();
-      }
+      timePicker.show();
     });
 
     /**
      * LUNCH TIMER
      */
-    lunchReminderLayout.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View view) {
+    lunchReminderLayout.setOnClickListener(view -> {
 
-        lunchAlarmTime = prefs.getString(Constants.LUNCH_REMINDER_ALARM_TIME, "02:45 PM");
+      lunchAlarmTime = prefs.getString(Constants.LUNCH_REMINDER_ALARM_TIME, "02:45 PM");
 
-        timeForDisplay = getLocalTimeFormatted(lunchAlarmTime);
+      timeForDisplay = getLocalTimeFormatted(lunchAlarmTime);
 
-        TimePickerDialog timePicker =
-            new TimePickerDialog(MealRemindersActivity.this, new TimePickerDialog.OnTimeSetListener() {
-              @Override
-              public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+      TimePickerDialog timePicker =
+          new TimePickerDialog(MealRemindersActivity.this,
+              (timePicker12, selectedHour, selectedMinute) -> {
                 timeChosen = LocalTime.parse(selectedHour + ":" + selectedMinute,
                     DateTimeFormat.forPattern("HH:mm"));
 
@@ -203,28 +195,24 @@ public class MealRemindersActivity extends BaseActivity {
 
                 setupMealRemindersAlarm(MealRemindersActivity.this, prefs, "Lunch", selectedHour,
                     selectedMinute, timeFormatter.print(timeChosen));
-              }
-            }, Integer.parseInt(reverseTimeFormatter.print(timeForDisplay).split(":")[0]),
-                Integer.parseInt(reverseTimeFormatter.print(timeForDisplay).split(":")[1]), false);
+              }, Integer.parseInt(reverseTimeFormatter.print(timeForDisplay).split(":")[0]),
+              Integer.parseInt(reverseTimeFormatter.print(timeForDisplay).split(":")[1]), false);
 
-        timePicker.show();
-      }
+      timePicker.show();
     });
 
     /**
      * DINNER TIMER
      */
-    dinnerReminderLayout.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View view) {
+    dinnerReminderLayout.setOnClickListener(view -> {
 
-        dinnerAlarmTime = prefs.getString(Constants.DINNER_REMINDER_ALARM_TIME, "08:00 PM");
+      dinnerAlarmTime = prefs.getString(Constants.DINNER_REMINDER_ALARM_TIME, "08:00 PM");
 
-        timeForDisplay = getLocalTimeFormatted(dinnerAlarmTime);
+      timeForDisplay = getLocalTimeFormatted(dinnerAlarmTime);
 
-        TimePickerDialog timePicker =
-            new TimePickerDialog(MealRemindersActivity.this, new TimePickerDialog.OnTimeSetListener() {
-              @Override
-              public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+      TimePickerDialog timePicker =
+          new TimePickerDialog(MealRemindersActivity.this,
+              (timePicker1, selectedHour, selectedMinute) -> {
                 timeChosen = LocalTime.parse(selectedHour + ":" + selectedMinute,
                     DateTimeFormat.forPattern("HH:mm"));
 
@@ -232,12 +220,10 @@ public class MealRemindersActivity extends BaseActivity {
 
                 setupMealRemindersAlarm(MealRemindersActivity.this, prefs, "Dinner", selectedHour,
                     selectedMinute, timeFormatter.print(timeChosen));
-              }
-            }, Integer.parseInt(reverseTimeFormatter.print(timeForDisplay).split(":")[0]),
-                Integer.parseInt(reverseTimeFormatter.print(timeForDisplay).split(":")[1]), false);
+              }, Integer.parseInt(reverseTimeFormatter.print(timeForDisplay).split(":")[0]),
+              Integer.parseInt(reverseTimeFormatter.print(timeForDisplay).split(":")[1]), false);
 
-        timePicker.show();
-      }
+      timePicker.show();
     });
   }
 

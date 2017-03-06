@@ -47,20 +47,18 @@ public class SnapshotActivity extends BaseActivity {
 
     startDateTV.setText(Helpers.formatInsuranceDate(new LocalDate()));
 
-    startDateTV.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View view) {
-        final Calendar c = Calendar.getInstance();
-        int day = c.get(Calendar.DAY_OF_MONTH);
-        int month = c.get(Calendar.MONTH);
-        int year = c.get(Calendar.YEAR);
-        DatePickerDialog datePickerDialog =
-            new DatePickerDialog(SnapshotActivity.this, new DatePickerDialog.OnDateSetListener() {
-              @Override
-              public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
+    startDateTV.setOnClickListener(view -> {
+      final Calendar c = Calendar.getInstance();
+      int day = c.get(Calendar.DAY_OF_MONTH);
+      int month = c.get(Calendar.MONTH);
+      int year = c.get(Calendar.YEAR);
+      DatePickerDialog datePickerDialog =
+          new DatePickerDialog(SnapshotActivity.this,
+              (datePicker, year12, month12, dayOfMonth) -> {
                 Calendar calendar = Calendar.getInstance();
-                calendar.set(Calendar.YEAR, year);
+                calendar.set(Calendar.YEAR, year12);
                 calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                calendar.set(Calendar.MONTH, month);
+                calendar.set(Calendar.MONTH, month12);
 
                 Date d = new Date(calendar.getTimeInMillis());
 
@@ -69,42 +67,35 @@ public class SnapshotActivity extends BaseActivity {
                 startDateTV.setText(serviceDateValue);
 
                 getSnapshot(startDateTV.getText().toString(), endDateTV.getText().toString());
-              }
-            }, year, month, day);
+              }, year, month, day);
 
-        datePickerDialog.show();
-      }
+      datePickerDialog.show();
     });
 
     endDateTV.setText(Helpers.formatInsuranceDate(new LocalDate()));
 
-    endDateTV.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View view) {
-        final Calendar c = Calendar.getInstance();
-        int day = c.get(Calendar.DAY_OF_MONTH);
-        int month = c.get(Calendar.MONTH);
-        int year = c.get(Calendar.YEAR);
-        DatePickerDialog datePickerDialog =
-            new DatePickerDialog(SnapshotActivity.this, new DatePickerDialog.OnDateSetListener() {
-              @Override
-              public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
-                Calendar calendar = Calendar.getInstance();
-                calendar.set(Calendar.YEAR, year);
-                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                calendar.set(Calendar.MONTH, month);
+    endDateTV.setOnClickListener(view -> {
+      final Calendar c = Calendar.getInstance();
+      int day = c.get(Calendar.DAY_OF_MONTH);
+      int month = c.get(Calendar.MONTH);
+      int year = c.get(Calendar.YEAR);
+      DatePickerDialog datePickerDialog =
+          new DatePickerDialog(SnapshotActivity.this, (datePicker, year1, month1, dayOfMonth) -> {
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(Calendar.YEAR, year1);
+            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            calendar.set(Calendar.MONTH, month1);
 
-                Date d = new Date(calendar.getTimeInMillis());
+            Date d = new Date(calendar.getTimeInMillis());
 
-                SimpleDateFormat dateFormatter = new SimpleDateFormat("MMM dd, yyyy");
-                String serviceDateValue = dateFormatter.format(d);
-                endDateTV.setText(serviceDateValue);
+            SimpleDateFormat dateFormatter = new SimpleDateFormat("MMM dd, yyyy");
+            String serviceDateValue = dateFormatter.format(d);
+            endDateTV.setText(serviceDateValue);
 
-                getSnapshot(startDateTV.getText().toString(), endDateTV.getText().toString());
-              }
-            }, year, month, day);
+            getSnapshot(startDateTV.getText().toString(), endDateTV.getText().toString());
+          }, year, month, day);
 
-        datePickerDialog.show();
-      }
+      datePickerDialog.show();
     });
 
     getSnapshot(startDateTV.getText().toString(), endDateTV.getText().toString());
@@ -119,12 +110,10 @@ public class SnapshotActivity extends BaseActivity {
     final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
     alertDialog.setTitle(R.string.loading_data_dialog_title);
     alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getResources().getString(R.string.ok),
-        new DialogInterface.OnClickListener() {
-          public void onClick(DialogInterface dialog, int which) {
-            dialog.dismiss();
+        (dialog, which) -> {
+          dialog.dismiss();
 
-            if (waitingDialog.isShowing()) waitingDialog.dismiss();
-          }
+          if (waitingDialog.isShowing()) waitingDialog.dismiss();
         });
 
     dataAccessHandler.getSnapshot(prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""),

@@ -259,11 +259,7 @@ public final class BarcodeCaptureActivity extends BaseActivity {
         "Permission not granted: results len = " + grantResults.length + " Result code = " + (
             grantResults.length > 0 ? grantResults[0] : "(empty)"));
 
-    DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
-      public void onClick(DialogInterface dialog, int id) {
-        finish();
-      }
-    };
+    DialogInterface.OnClickListener listener = (dialog, id) -> finish();
 
     AlertDialog.Builder builder = new AlertDialog.Builder(this);
     builder.setTitle("Multitracker sample")

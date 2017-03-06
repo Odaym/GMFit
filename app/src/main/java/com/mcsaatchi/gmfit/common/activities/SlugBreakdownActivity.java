@@ -99,17 +99,13 @@ public class SlugBreakdownActivity extends BaseActivity {
       case R.id.deleteChartBTN:
         new AlertDialog.Builder(this).setTitle(R.string.delete_chart_dialog_title)
             .setMessage(R.string.delete_chart_dialog_message)
-            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-              public void onClick(DialogInterface dialog, int which) {
+            .setPositiveButton(android.R.string.yes, (dialog, which) -> {
 
-                EventBusSingleton.getInstance().post(new DataChartDeletedEvent(chartObject));
+              EventBusSingleton.getInstance().post(new DataChartDeletedEvent(chartObject));
 
-                finish();
-              }
+              finish();
             })
-            .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-              public void onClick(DialogInterface dialog, int which) {
-              }
+            .setNegativeButton(android.R.string.no, (dialog, which) -> {
             })
             .show();
 

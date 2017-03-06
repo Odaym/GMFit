@@ -95,14 +95,11 @@ public class SpecifyMealAmountActivity extends BaseActivity {
 
     final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
     alertDialog.setTitle(R.string.fetching_meal_info_dialog_title);
-    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
-        new DialogInterface.OnClickListener() {
-          public void onClick(DialogInterface dialog, int which) {
-            dialog.dismiss();
+    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok), (dialog, which) -> {
+      dialog.dismiss();
 
-            if (waitingDialog.isShowing()) waitingDialog.dismiss();
-          }
-        });
+      if (waitingDialog.isShowing()) waitingDialog.dismiss();
+    });
 
     dataAccessHandler.getMealMetrics(Constants.BASE_URL_ADDRESS + "meals/" + meal_id,
         new Callback<MealMetricsResponse>() {
@@ -160,45 +157,41 @@ public class SpecifyMealAmountActivity extends BaseActivity {
 
     nutritionFactsList.setAdapter(nutritionFactsListAdapter);
 
-    addToDiaryBTN.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View view) {
-        if (Helpers.validateFields(allFields)) {
+    addToDiaryBTN.setOnClickListener(view -> {
+      if (Helpers.validateFields(allFields)) {
 
-          final ProgressDialog waitingDialog = new ProgressDialog(SpecifyMealAmountActivity.this);
-          waitingDialog.setTitle(getString(R.string.adding_new_meal_dialog_title));
-          waitingDialog.setMessage(getString(R.string.please_wait_dialog_message));
-          waitingDialog.show();
+        final ProgressDialog waitingDialog = new ProgressDialog(SpecifyMealAmountActivity.this);
+        waitingDialog.setTitle(getString(R.string.adding_new_meal_dialog_title));
+        waitingDialog.setMessage(getString(R.string.please_wait_dialog_message));
+        waitingDialog.show();
 
-          final AlertDialog alertDialog =
-              new AlertDialog.Builder(SpecifyMealAmountActivity.this).create();
-          alertDialog.setTitle(R.string.adding_new_meal_dialog_title);
-          alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
-              new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                  dialog.dismiss();
+        final AlertDialog alertDialog =
+            new AlertDialog.Builder(SpecifyMealAmountActivity.this).create();
+        alertDialog.setTitle(R.string.adding_new_meal_dialog_title);
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
+            (dialog, which) -> {
+              dialog.dismiss();
 
-                  if (waitingDialog.isShowing()) waitingDialog.dismiss();
-                }
-              });
+              if (waitingDialog.isShowing()) waitingDialog.dismiss();
+            });
 
-          if (purposeIsToAddMealToDate) {
-            Log.d("TAG", "purpose add meal on specific date");
-            if (purposeIsEditMeal) {
-              updateUserMealOnCertainDate(waitingDialog, caloriesForThisMeal);
-              Log.d("TAG", "onClick: Editing");
-            } else {
-              Log.d("TAG", "onClick: Storing new");
-              storeMealOnCertainDate(waitingDialog, caloriesForThisMeal, chosenDate);
-            }
+        if (purposeIsToAddMealToDate) {
+          Log.d("TAG", "purpose add meal on specific date");
+          if (purposeIsEditMeal) {
+            updateUserMealOnCertainDate(waitingDialog, caloriesForThisMeal);
+            Log.d("TAG", "onClick: Editing");
           } else {
-            Log.d("TAG", "purpose edit meal existing for TODAY");
-            if (purposeIsEditMeal) {
-              Log.d("TAG", "Editing");
-              updateUserMeal(waitingDialog, caloriesForThisMeal);
-            } else {
-              Log.d("TAG", "Storing new");
-              storeMealOnCertainDate(waitingDialog, caloriesForThisMeal, chosenDate);
-            }
+            Log.d("TAG", "onClick: Storing new");
+            storeMealOnCertainDate(waitingDialog, caloriesForThisMeal, chosenDate);
+          }
+        } else {
+          Log.d("TAG", "purpose edit meal existing for TODAY");
+          if (purposeIsEditMeal) {
+            Log.d("TAG", "Editing");
+            updateUserMeal(waitingDialog, caloriesForThisMeal);
+          } else {
+            Log.d("TAG", "Storing new");
+            storeMealOnCertainDate(waitingDialog, caloriesForThisMeal, chosenDate);
           }
         }
       }

@@ -63,15 +63,13 @@ public class ChronicStatusAdapter extends RecyclerView.Adapter {
     public void bind(TreatmentsModel treatment) {
       SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
 
-      deleteLayout.setOnClickListener(new View.OnClickListener() {
-        @Override public void onClick(View v) {
-          Intent intent = new Intent(context, RequestChronicDeletionActivity.class);
-          intent.putExtra("CHRONIC_OBJECT", treatmentsList.get(getAdapterPosition()));
-          context.startActivity(intent);
+      deleteLayout.setOnClickListener(v -> {
+        Intent intent = new Intent(context, RequestChronicDeletionActivity.class);
+        intent.putExtra("CHRONIC_OBJECT", treatmentsList.get(getAdapterPosition()));
+        context.startActivity(intent);
 
-          //treatmentsList.remove(getAdapterPosition());
-          //notifyItemRemoved(getAdapterPosition());
-        }
+        //treatmentsList.remove(getAdapterPosition());
+        //notifyItemRemoved(getAdapterPosition());
       });
 
       treatmentNameTV.setText(WordUtils.capitalizeFully(treatment.getName()));
@@ -95,14 +93,12 @@ public class ChronicStatusAdapter extends RecyclerView.Adapter {
         treatmentDescriptionTV.setText("Start and end dates not available yet");
       }
 
-      parentLayout.setOnClickListener(new View.OnClickListener() {
-        @Override public void onClick(View view) {
-          Intent intent = new Intent(context, ChornicPrescriptionStatusDetailsActivity.class);
-          intent.putExtra("CHRONIC_OBJECT", treatmentsList.get(getAdapterPosition()));
-          //intent.putExtra(Constants.EXTRAS_PURPOSE_EDIT_MEDICATION_REMINDER, true);
-          //intent.putExtra(Constants.EXTRAS_MEDICATION_REMINDER_ITEM, medicationItem);
-          context.startActivity(intent);
-        }
+      parentLayout.setOnClickListener(view -> {
+        Intent intent = new Intent(context, ChornicPrescriptionStatusDetailsActivity.class);
+        intent.putExtra("CHRONIC_OBJECT", treatmentsList.get(getAdapterPosition()));
+        //intent.putExtra(Constants.EXTRAS_PURPOSE_EDIT_MEDICATION_REMINDER, true);
+        //intent.putExtra(Constants.EXTRAS_MEDICATION_REMINDER_ITEM, medicationItem);
+        context.startActivity(intent);
       });
     }
   }

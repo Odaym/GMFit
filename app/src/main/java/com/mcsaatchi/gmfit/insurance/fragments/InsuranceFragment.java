@@ -84,14 +84,11 @@ public class InsuranceFragment extends Fragment {
 
     final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
     alertDialog.setTitle(R.string.signing_in_dialog_title);
-    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
-        new DialogInterface.OnClickListener() {
-          public void onClick(DialogInterface dialog, int which) {
-            dialog.dismiss();
+    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok), (dialog, which) -> {
+      dialog.dismiss();
 
-            if (waitingDialog.isShowing()) waitingDialog.dismiss();
-          }
-        });
+      if (waitingDialog.isShowing()) waitingDialog.dismiss();
+    });
 
     dataAccessHandler.insuranceUserLogin(username, "422", "2", password,
         new Callback<InsuranceLoginResponse>() {

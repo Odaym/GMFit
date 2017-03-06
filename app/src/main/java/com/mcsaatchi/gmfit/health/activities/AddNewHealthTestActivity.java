@@ -238,58 +238,52 @@ public class AddNewHealthTestActivity extends BaseActivity
       final int finalMonth = month;
       final int finalDay = day;
 
-      dateTakenTV.setOnClickListener(new View.OnClickListener() {
-        @Override public void onClick(View view) {
-          CalendarDatePickerDialogFragment cdp =
-              new CalendarDatePickerDialogFragment().setOnDateSetListener(
-                  AddNewHealthTestActivity.this)
-                  .setFirstDayOfWeek(Calendar.MONDAY)
-                  .setDoneText(getString(R.string.accept_ok))
-                  .setCancelText(getString(R.string.decline_cancel))
-                  .setPreselectedDate(finalYear, finalMonth - 1, finalDay)
-                  .setThemeLight();
-          cdp.show(getSupportFragmentManager(), ACTIVITY_TAG_TIME_PICKER);
-        }
-      });
-
-      for (int i = 0; i < deleteButtonElements.size(); i++) {
-        final int finalI = i;
-        deleteButtonElements.get(i).setOnClickListener(new View.OnClickListener() {
-          @Override public void onClick(View view) {
-            imageViewElements.get(finalI).setBackgroundResource(0);
-
-            addPictureElements.get(finalI).setVisibility(View.VISIBLE);
-
-            deleteButtonElements.get(finalI).setVisibility(View.GONE);
-
-            picturePaths.set(finalI, null);
-
-            if (existingMedicaltest != null && !existingMedicaltest.getImages().isEmpty()) {
-              try {
-                deletedImages.add(existingMedicaltest.getImages().get(finalI).getId());
-              } catch (IndexOutOfBoundsException e) {
-
-              }
-            }
-          }
-        });
-      }
-    }
-
-    dateTakenTV.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View view) {
+      dateTakenTV.setOnClickListener(view -> {
         CalendarDatePickerDialogFragment cdp =
             new CalendarDatePickerDialogFragment().setOnDateSetListener(
                 AddNewHealthTestActivity.this)
                 .setFirstDayOfWeek(Calendar.MONDAY)
                 .setDoneText(getString(R.string.accept_ok))
                 .setCancelText(getString(R.string.decline_cancel))
-                .setPreselectedDate(Calendar.getInstance().get(Calendar.YEAR),
-                    Calendar.getInstance().get(Calendar.MONTH),
-                    Calendar.getInstance().get(Calendar.DAY_OF_MONTH))
+                .setPreselectedDate(finalYear, finalMonth - 1, finalDay)
                 .setThemeLight();
         cdp.show(getSupportFragmentManager(), ACTIVITY_TAG_TIME_PICKER);
+      });
+
+      for (int i = 0; i < deleteButtonElements.size(); i++) {
+        final int finalI = i;
+        deleteButtonElements.get(i).setOnClickListener(view -> {
+          imageViewElements.get(finalI).setBackgroundResource(0);
+
+          addPictureElements.get(finalI).setVisibility(View.VISIBLE);
+
+          deleteButtonElements.get(finalI).setVisibility(View.GONE);
+
+          picturePaths.set(finalI, null);
+
+          if (existingMedicaltest != null && !existingMedicaltest.getImages().isEmpty()) {
+            try {
+              deletedImages.add(existingMedicaltest.getImages().get(finalI).getId());
+            } catch (IndexOutOfBoundsException e) {
+
+            }
+          }
+        });
       }
+    }
+
+    dateTakenTV.setOnClickListener(view -> {
+      CalendarDatePickerDialogFragment cdp =
+          new CalendarDatePickerDialogFragment().setOnDateSetListener(
+              AddNewHealthTestActivity.this)
+              .setFirstDayOfWeek(Calendar.MONDAY)
+              .setDoneText(getString(R.string.accept_ok))
+              .setCancelText(getString(R.string.decline_cancel))
+              .setPreselectedDate(Calendar.getInstance().get(Calendar.YEAR),
+                  Calendar.getInstance().get(Calendar.MONTH),
+                  Calendar.getInstance().get(Calendar.DAY_OF_MONTH))
+              .setThemeLight();
+      cdp.show(getSupportFragmentManager(), ACTIVITY_TAG_TIME_PICKER);
     });
   }
 
@@ -468,29 +462,23 @@ public class AddNewHealthTestActivity extends BaseActivity
     arrayAdapter.add(getResources().getString(R.string.choose_picture_from_gallery));
     arrayAdapter.add(getResources().getString(R.string.take_new_picture));
 
-    builderSingle.setNegativeButton(R.string.decline_cancel, new DialogInterface.OnClickListener() {
-      @Override public void onClick(DialogInterface dialog, int which) {
-        dialog.dismiss();
-      }
-    });
+    builderSingle.setNegativeButton(R.string.decline_cancel, (dialog, which) -> dialog.dismiss());
 
-    builderSingle.setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
-      @Override public void onClick(DialogInterface dialog, int which) {
-        String strName = arrayAdapter.getItem(which);
-        if (strName != null) {
-          switch (strName) {
-            /**
-             * Can't case by String ID because it has to be constant, bleh
-             */
-            case "Choose from gallery":
-              Intent galleryIntent = new Intent(Intent.ACTION_PICK,
-                  android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-              startActivityForResult(galleryIntent, REQUEST_PICK_IMAGE_GALLERY);
-              break;
-            case "Take a new picture":
-              openTakePictureIntent();
-              break;
-          }
+    builderSingle.setAdapter(arrayAdapter, (dialog, which) -> {
+      String strName = arrayAdapter.getItem(which);
+      if (strName != null) {
+        switch (strName) {
+          /**
+           * Can't case by String ID because it has to be constant, bleh
+           */
+          case "Choose from gallery":
+            Intent galleryIntent = new Intent(Intent.ACTION_PICK,
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            startActivityForResult(galleryIntent, REQUEST_PICK_IMAGE_GALLERY);
+            break;
+          case "Take a new picture":
+            openTakePictureIntent();
+            break;
         }
       }
     });

@@ -70,19 +70,17 @@ public class SlugBreakdownFragmentDaily extends Fragment {
     slugBreakdownListView.setAdapter(slugBreakdownListAdapter);
 
     if (typeOfFragmentToCustomizeFor.equals(Constants.EXTRAS_NUTRITION_FRAGMENT)) {
-      slugBreakdownListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-        @Override public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-          //                    Log.d("TAG", "onItemClick: Item selected date : " + ((TextView) view.findViewById(R.id.slugDateTV)).getText().toString());
-          //
-          //                    DateTime entryDate = new DateTime(slugBreakdownListAdapter.getItem(i).getDate());
-          //
-          //                    Log.d("TAG", "onItemClick: " + (entryDate.getDayOfMonth() + " " + entryDate.monthOfYear().getAsText() + ", " + entryDate.getYear()));
+      slugBreakdownListView.setOnItemClickListener((adapterView, view, i, l) -> {
+        //                    Log.d("TAG", "onItemClick: Item selected date : " + ((TextView) view.findViewById(R.id.slugDateTV)).getText().toString());
+        //
+        //                    DateTime entryDate = new DateTime(slugBreakdownListAdapter.getItem(i).getDate());
+        //
+        //                    Log.d("TAG", "onItemClick: " + (entryDate.getDayOfMonth() + " " + entryDate.monthOfYear().getAsText() + ", " + entryDate.getYear()));
 
-          Intent intent = new Intent(getActivity(), AddNewMealOnDateActivity.class);
-          intent.putExtra(Constants.EXTRAS_DATE_TO_ADD_MEAL_ON,
-              slugBreakdownListAdapter.getItem(i).getDate());
-          startActivity(intent);
-        }
+        Intent intent = new Intent(getActivity(), AddNewMealOnDateActivity.class);
+        intent.putExtra(Constants.EXTRAS_DATE_TO_ADD_MEAL_ON,
+            slugBreakdownListAdapter.getItem(i).getDate());
+        startActivity(intent);
       });
     }
   }

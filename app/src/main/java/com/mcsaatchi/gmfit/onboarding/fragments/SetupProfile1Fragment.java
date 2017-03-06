@@ -50,31 +50,24 @@ public class SetupProfile1Fragment extends Fragment {
         .putString(Constants.EXTRAS_USER_PROFILE_NATIONALITY, chooseCountryBTN.getText().toString())
         .apply();
 
-    metricRdBTN.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-      @Override public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
-        if (checked) {
-          prefs.edit()
-              .putString(Constants.EXTRAS_USER_PROFILE_MEASUREMENT_SYSTEM, "metric")
-              .apply();
-        }
+    metricRdBTN.setOnCheckedChangeListener((compoundButton, checked) -> {
+      if (checked) {
+        prefs.edit()
+            .putString(Constants.EXTRAS_USER_PROFILE_MEASUREMENT_SYSTEM, "metric")
+            .apply();
       }
     });
 
-    chooseCountryBTN.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View view) {
-        picker.show(getActivity().getSupportFragmentManager(), "COUNTRY_PICKER");
-        picker.setListener(new CountryPickerListener() {
-          @Override public void onSelectCountry(String name, String code, String dialCode,
-              int flagDrawableResID) {
-            chooseCountryBTN.setText(name);
-            countryFlagIV.setImageResource(flagDrawableResID);
+    chooseCountryBTN.setOnClickListener(view -> {
+      picker.show(getActivity().getSupportFragmentManager(), "COUNTRY_PICKER");
+      picker.setListener((name, code, dialCode, flagDrawableResID) -> {
+        chooseCountryBTN.setText(name);
+        countryFlagIV.setImageResource(flagDrawableResID);
 
-            prefs.edit().putString(Constants.EXTRAS_USER_PROFILE_NATIONALITY, name).apply();
+        prefs.edit().putString(Constants.EXTRAS_USER_PROFILE_NATIONALITY, name).apply();
 
-            picker.dismiss();
-          }
-        });
-      }
+        picker.dismiss();
+      });
     });
 
     return fragmentView;

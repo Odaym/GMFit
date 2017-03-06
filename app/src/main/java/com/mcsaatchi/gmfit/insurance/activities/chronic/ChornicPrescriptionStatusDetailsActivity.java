@@ -45,37 +45,23 @@ public class ChornicPrescriptionStatusDetailsActivity extends BaseActivity {
     updateLabel(startDateTV);
     updateLabel(endDateTV);
 
-    startDateTV.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View view) {
+    startDateTV.setOnClickListener(view -> new DatePickerDialog(ChornicPrescriptionStatusDetailsActivity.this,
+        (datePicker, year, month, day) -> {
+          calendar.set(Calendar.YEAR, year);
+          calendar.set(Calendar.MONTH, month);
+          calendar.set(Calendar.DAY_OF_MONTH, day);
+          updateLabel(startDateTV);
+        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+        calendar.get(Calendar.DAY_OF_MONTH)).show());
 
-        new DatePickerDialog(ChornicPrescriptionStatusDetailsActivity.this,
-            new DatePickerDialog.OnDateSetListener() {
-              @Override public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                calendar.set(Calendar.YEAR, year);
-                calendar.set(Calendar.MONTH, month);
-                calendar.set(Calendar.DAY_OF_MONTH, day);
-                updateLabel(startDateTV);
-              }
-            }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
-            calendar.get(Calendar.DAY_OF_MONTH)).show();
-      }
-    });
-
-    endDateTV.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View view) {
-
-        new DatePickerDialog(ChornicPrescriptionStatusDetailsActivity.this,
-            new DatePickerDialog.OnDateSetListener() {
-              @Override public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                calendar.set(Calendar.YEAR, year);
-                calendar.set(Calendar.MONTH, month);
-                calendar.set(Calendar.DAY_OF_MONTH, day);
-                updateLabel(endDateTV);
-              }
-            }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
-            calendar.get(Calendar.DAY_OF_MONTH)).show();
-      }
-    });
+    endDateTV.setOnClickListener(view -> new DatePickerDialog(ChornicPrescriptionStatusDetailsActivity.this,
+        (datePicker, year, month, day) -> {
+          calendar.set(Calendar.YEAR, year);
+          calendar.set(Calendar.MONTH, month);
+          calendar.set(Calendar.DAY_OF_MONTH, day);
+          updateLabel(endDateTV);
+        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+        calendar.get(Calendar.DAY_OF_MONTH)).show());
 
     if (getIntent().getExtras() != null) {
       treatmentsModel = (TreatmentsModel) getIntent().getExtras().get("CHRONIC_OBJECT");

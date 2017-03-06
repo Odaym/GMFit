@@ -79,32 +79,27 @@ public class MedicationRemindersRecyclerAdapter extends RecyclerView.Adapter {
       reminderValueTV.setText(formatFinalTime(alarmTimeForMedication.get(Calendar.HOUR_OF_DAY),
           alarmTimeForMedication.get(Calendar.MINUTE)));
 
-      clickableLayout.setOnClickListener(new View.OnClickListener() {
-        @Override public void onClick(View v) {
+      clickableLayout.setOnClickListener(v -> {
 
-          LocalDateTime timeForClockDisplay =
-              timeFormatter.parseLocalDateTime(reminderValueTV.getText().toString());
+        LocalDateTime timeForClockDisplay =
+            timeFormatter.parseLocalDateTime(reminderValueTV.getText().toString());
 
-          TimePickerDialog timePicker =
-              new TimePickerDialog(context, new TimePickerDialog.OnTimeSetListener() {
-                @Override
-                public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
+        TimePickerDialog timePicker =
+            new TimePickerDialog(context, (timePicker1, selectedHour, selectedMinute) -> {
 
-                  LocalTime timeChosen = LocalTime.parse(selectedHour + ":" + selectedMinute,
-                      DateTimeFormat.forPattern("HH:mm"));
+              LocalTime timeChosen = LocalTime.parse(selectedHour + ":" + selectedMinute,
+                  DateTimeFormat.forPattern("HH:mm"));
 
-                  reminderValueTV.setText(timeFormatter.print(timeChosen));
+              reminderValueTV.setText(timeFormatter.print(timeChosen));
 
-                  medReminder.setMinute(selectedMinute);
-                  medReminder.setHour(selectedHour);
+              medReminder.setMinute(selectedMinute);
+              medReminder.setHour(selectedHour);
 
-                  notifyDataSetChanged();
-                }
-              }, Integer.parseInt(timeForClockDisplay.hourOfDay().getAsText()),
-                  Integer.parseInt(timeForClockDisplay.minuteOfHour().getAsText()), false);
+              notifyDataSetChanged();
+            }, Integer.parseInt(timeForClockDisplay.hourOfDay().getAsText()),
+                Integer.parseInt(timeForClockDisplay.minuteOfHour().getAsText()), false);
 
-          timePicker.show();
-        }
+        timePicker.show();
       });
     }
   }

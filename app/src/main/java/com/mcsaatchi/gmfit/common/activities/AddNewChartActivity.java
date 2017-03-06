@@ -61,14 +61,11 @@ public class AddNewChartActivity extends BaseActivity {
 
     alertDialog = new AlertDialog.Builder(this).create();
     alertDialog.setTitle(R.string.fetching_chart_data_dialog_title);
-    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
-        new DialogInterface.OnClickListener() {
-          public void onClick(DialogInterface dialog, int which) {
-            dialog.dismiss();
+    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok), (dialog, which) -> {
+      dialog.dismiss();
 
-            if (waitingDialog.isShowing()) waitingDialog.dismiss();
-          }
-        });
+      if (waitingDialog.isShowing()) waitingDialog.dismiss();
+    });
 
     if (extras != null) {
       String CALL_PURPOSE = extras.getString(Constants.EXTRAS_ADD_CHART_WHAT_TYPE);
@@ -121,32 +118,29 @@ public class AddNewChartActivity extends BaseActivity {
             chartsList.setAdapter(
                 new DataChartsListingAdapter(chartItemsMap, AddNewChartActivity.this));
 
-            chartsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-              @Override
-              public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+            chartsList.setOnItemClickListener((adapterView, view, position, l) -> {
 
-                DataChart dataChart = chartItemsMap.get(position);
+              DataChart dataChart = chartItemsMap.get(position);
 
-                boolean chartExists = false;
+              boolean chartExists = false;
 
-                for (int i = 0; i < chartsMap.size(); i++) {
-                  if (dataChart.getName().equals(chartsMap.get(i).getName())) {
-                    chartExists = true;
-                  }
+              for (int i = 0; i < chartsMap.size(); i++) {
+                if (dataChart.getName().equals(chartsMap.get(i).getName())) {
+                  chartExists = true;
                 }
+              }
 
-                if (chartExists) {
-                  Toast.makeText(AddNewChartActivity.this, R.string.duplicate_chart_error,
-                      Toast.LENGTH_SHORT).show();
-                } else {
-                  addMetricChart(dataChart.getChart_id());
+              if (chartExists) {
+                Toast.makeText(AddNewChartActivity.this, R.string.duplicate_chart_error,
+                    Toast.LENGTH_SHORT).show();
+              } else {
+                addMetricChart(dataChart.getChart_id());
 
-                  Intent intent = new Intent();
-                  intent.putExtra(Constants.EXTRAS_CHART_OBJECT, dataChart);
-                  setResult(requestCodeToSendBack, intent);
+                Intent intent = new Intent();
+                intent.putExtra(Constants.EXTRAS_CHART_OBJECT, dataChart);
+                setResult(requestCodeToSendBack, intent);
 
-                  finish();
-                }
+                finish();
               }
             });
 

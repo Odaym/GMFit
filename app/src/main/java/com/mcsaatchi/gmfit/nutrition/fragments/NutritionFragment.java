@@ -203,14 +203,12 @@ public class NutritionFragment extends Fragment {
 
     setupDateCarousel();
 
-    addNewChartBTN.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        Intent intent = new Intent(getActivity(), AddNewChartActivity.class);
-        intent.putExtra(Constants.EXTRAS_ADD_CHART_WHAT_TYPE,
-            Constants.EXTRAS_ADD_NUTRIITION_CHART);
-        intent.putParcelableArrayListExtra(Constants.BUNDLE_NUTRITION_CHARTS_MAP, finalCharts);
-        startActivityForResult(intent, ADD_NEW_NUTRITION_CHART_REQUEST);
-      }
+    addNewChartBTN.setOnClickListener(v -> {
+      Intent intent = new Intent(getActivity(), AddNewChartActivity.class);
+      intent.putExtra(Constants.EXTRAS_ADD_CHART_WHAT_TYPE,
+          Constants.EXTRAS_ADD_NUTRIITION_CHART);
+      intent.putParcelableArrayListExtra(Constants.BUNDLE_NUTRITION_CHARTS_MAP, finalCharts);
+      startActivityForResult(intent, ADD_NEW_NUTRITION_CHART_REQUEST);
     });
 
     return fragmentView;
@@ -248,11 +246,9 @@ public class NutritionFragment extends Fragment {
         getUserAddedMeals(finalDesiredDate);
         getUiForSection("nutrition", finalDesiredDate);
 
-        dateCarouselLayout.post(new Runnable() {
-          @Override public void run() {
-            dateCarouselLayout.setSmoothScrollingEnabled(true);
-            dateCarouselLayout.fullScroll(HorizontalScrollView.FOCUS_RIGHT);
-          }
+        dateCarouselLayout.post(() -> {
+          dateCarouselLayout.setSmoothScrollingEnabled(true);
+          dateCarouselLayout.fullScroll(HorizontalScrollView.FOCUS_RIGHT);
         });
 
         break;
@@ -295,21 +291,17 @@ public class NutritionFragment extends Fragment {
   }
 
   private void setupDateCarousel() {
-    dateCarouselLayout.addClickListener(new DateCarousel.CarouselClickListener() {
-      @Override public void handleClick(String todayDate, String finalDate) {
-        showProgressBarsForLoading();
+    dateCarouselLayout.addClickListener((todayDate, finalDate) -> {
+      showProgressBarsForLoading();
 
-        getUserGoalMetrics(finalDate, "nutrition");
-        getUserAddedMeals(finalDate);
-        getUiForSection("nutrition", finalDate);
-      }
+      getUserGoalMetrics(finalDate, "nutrition");
+      getUserAddedMeals(finalDate);
+      getUiForSection("nutrition", finalDate);
     });
 
-    dateCarouselLayout.post(new Runnable() {
-      @Override public void run() {
-        dateCarouselLayout.setSmoothScrollingEnabled(true);
-        dateCarouselLayout.fullScroll(HorizontalScrollView.FOCUS_RIGHT);
-      }
+    dateCarouselLayout.post(() -> {
+      dateCarouselLayout.setSmoothScrollingEnabled(true);
+      dateCarouselLayout.fullScroll(HorizontalScrollView.FOCUS_RIGHT);
     });
   }
 
@@ -321,14 +313,11 @@ public class NutritionFragment extends Fragment {
 
     final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
     alertDialog.setTitle(R.string.searching_for_barcode_meal);
-    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
-        new DialogInterface.OnClickListener() {
-          public void onClick(DialogInterface dialog, int which) {
-            dialog.dismiss();
+    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok), (dialog, which) -> {
+      dialog.dismiss();
 
-            if (waitingDialog.isShowing()) waitingDialog.dismiss();
-          }
-        });
+      if (waitingDialog.isShowing()) waitingDialog.dismiss();
+    });
 
     dataAccessHandler.searchForMealBarcode(barcode, new Callback<SearchMealItemResponse>() {
       @Override public void onResponse(Call<SearchMealItemResponse> call,
@@ -473,14 +462,12 @@ public class NutritionFragment extends Fragment {
             }
 
             if (isAdded()) {
-              getActivity().runOnUiThread(new Runnable() {
-                @Override public void run() {
-                  setupWidgetViews(finalWidgets);
+              getActivity().runOnUiThread(() -> {
+                setupWidgetViews(finalWidgets);
 
-                  setupChartViews(finalCharts);
+                setupChartViews(finalCharts);
 
-                  hideProgressBarsForLoading();
-                }
+                hideProgressBarsForLoading();
               });
             }
 
@@ -659,49 +646,21 @@ public class NutritionFragment extends Fragment {
   }
 
   private void hookupMealSectionRowsClickListeners() {
-    addNewEntryBTN_BREAKFAST.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View view) {
-        openMealEntryPickerActivity(chartTitleTV_BREAKFAST.getText().toString());
-      }
-    });
-    scanEntryBTN_BREAKFAST.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View view) {
-        handleScanMealEntry("Breakfast");
-      }
-    });
+    addNewEntryBTN_BREAKFAST.setOnClickListener(
+        view -> openMealEntryPickerActivity(chartTitleTV_BREAKFAST.getText().toString()));
+    scanEntryBTN_BREAKFAST.setOnClickListener(view -> handleScanMealEntry("Breakfast"));
 
-    addNewEntryBTN_LUNCH.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View view) {
-        openMealEntryPickerActivity(chartTitleTV_LUNCH.getText().toString());
-      }
-    });
-    scanEntryBTN_LUNCH.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View view) {
-        handleScanMealEntry("Lunch");
-      }
-    });
+    addNewEntryBTN_LUNCH.setOnClickListener(
+        view -> openMealEntryPickerActivity(chartTitleTV_LUNCH.getText().toString()));
+    scanEntryBTN_LUNCH.setOnClickListener(view -> handleScanMealEntry("Lunch"));
 
-    addNewEntryBTN_DINNER.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View view) {
-        openMealEntryPickerActivity(chartTitleTV_DINNER.getText().toString());
-      }
-    });
-    scanEntryBTN_DINNER.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View view) {
-        handleScanMealEntry("Dinner");
-      }
-    });
+    addNewEntryBTN_DINNER.setOnClickListener(
+        view -> openMealEntryPickerActivity(chartTitleTV_DINNER.getText().toString()));
+    scanEntryBTN_DINNER.setOnClickListener(view -> handleScanMealEntry("Dinner"));
 
-    addNewEntryBTN_SNACKS.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View view) {
-        openMealEntryPickerActivity(chartTitleTV_SNACKS.getText().toString());
-      }
-    });
-    scanEntryBTN_SNACKS.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View view) {
-        handleScanMealEntry("Snack");
-      }
-    });
+    addNewEntryBTN_SNACKS.setOnClickListener(
+        view -> openMealEntryPickerActivity(chartTitleTV_SNACKS.getText().toString()));
+    scanEntryBTN_SNACKS.setOnClickListener(view -> handleScanMealEntry("Snack"));
   }
 
   private void setupWidgetViews(ArrayList<NutritionWidget> widgetsFromResponse) {
@@ -933,12 +892,10 @@ public class NutritionFragment extends Fragment {
     final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
     alertDialog.setTitle(R.string.grabbing_breakdown_data_dialog_title);
     alertDialog.setButton(AlertDialog.BUTTON_POSITIVE,
-        getActivity().getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
-          public void onClick(DialogInterface dialog, int which) {
-            dialog.dismiss();
+        getActivity().getResources().getString(R.string.ok), (dialog, which) -> {
+          dialog.dismiss();
 
-            if (waitingDialog.isShowing()) waitingDialog.dismiss();
-          }
+          if (waitingDialog.isShowing()) waitingDialog.dismiss();
         });
 
     dataAccessHandler.getSlugBreakdownForChart(chartObject.getType(),
@@ -998,11 +955,8 @@ public class NutritionFragment extends Fragment {
                   /**
                    * Open the breakdown for the chart
                    */
-                  customBarChart.addClickListener(new CustomBarChart.CustomBarChartClickListener() {
-                    @Override public void handleClick(DataChart chartObject) {
-                      getSlugBreakdownForChart(chartObject);
-                    }
-                  });
+                  customBarChart.addClickListener(
+                      chartObject1 -> getSlugBreakdownForChart(chartObject1));
 
                   customBarChart.setBarChartDataAndDates(cards_container, newChartData,
                       Constants.EXTRAS_NUTRITION_FRAGMENT);
@@ -1031,12 +985,10 @@ public class NutritionFragment extends Fragment {
     final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
     alertDialog.setTitle(R.string.deleting_chart_dialog_title);
     alertDialog.setButton(AlertDialog.BUTTON_POSITIVE,
-        getActivity().getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
-          public void onClick(DialogInterface dialog, int which) {
-            dialog.dismiss();
+        getActivity().getResources().getString(R.string.ok), (dialog, which) -> {
+          dialog.dismiss();
 
-            if (waitingDialog.isShowing()) waitingDialog.dismiss();
-          }
+          if (waitingDialog.isShowing()) waitingDialog.dismiss();
         });
 
     dataAccessHandler.deleteUserChart(String.valueOf(chartObject.getChart_id()),

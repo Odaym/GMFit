@@ -99,16 +99,10 @@ public class SubmitInquiryActivity extends BaseActivity {
     allFields.add(requestTitleTV);
 
     subCategoryPicker.setUpDropDown("Subcategory", "Choose a subcategory",
-        new String[] { "No category loaded" }, new CustomPicker.OnDropDownClickListener() {
-          @Override public void onClick(int index, String selected) {
-          }
+        new String[] { "No category loaded" }, (index, selected) -> {
         });
 
-    areaToggle.setUp("Area", "Local", "Cross Border", new CustomToggle.OnToggleListener() {
-      @Override public void selected(String option) {
-        area = option;
-      }
-    });
+    areaToggle.setUp("Area", "Local", "Cross Border", option -> area = option);
 
     if (permChecker.lacksPermissions(Manifest.permission.CAMERA,
         Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
@@ -157,12 +151,10 @@ public class SubmitInquiryActivity extends BaseActivity {
       waitingDialog.setCancelable(false);
       waitingDialog.setMessage(
           getResources().getString(R.string.uploading_attachments_dialog_message));
-      waitingDialog.setOnShowListener(new DialogInterface.OnShowListener() {
-        @Override public void onShow(DialogInterface dialogInterface) {
-          HashMap<String, RequestBody> attachments = constructSelectedImagesForRequest();
+      waitingDialog.setOnShowListener(dialogInterface -> {
+        HashMap<String, RequestBody> attachments = constructSelectedImagesForRequest();
 
-          submitInquiryComplaint(attachments, waitingDialog);
-        }
+        submitInquiryComplaint(attachments, waitingDialog);
       });
 
       waitingDialog.show();
@@ -176,12 +168,10 @@ public class SubmitInquiryActivity extends BaseActivity {
     for (int i = 0; i < innerLayoutWithPickers.getChildCount(); i++) {
       if (innerLayoutWithPickers.getChildAt(i) instanceof ImageView) {
         final int finalI = i;
-        innerLayoutWithPickers.getChildAt(i).setOnClickListener(new View.OnClickListener() {
-          @Override public void onClick(View view) {
-            ImageView imageView = (ImageView) innerLayoutWithPickers.findViewById(
-                innerLayoutWithPickers.getChildAt(finalI).getId());
-            showImagePickerDialog(imageView);
-          }
+        innerLayoutWithPickers.getChildAt(i).setOnClickListener(view -> {
+          ImageView imageView = (ImageView) innerLayoutWithPickers.findViewById(
+              innerLayoutWithPickers.getChildAt(finalI).getId());
+          showImagePickerDialog(imageView);
         });
       }
     }
@@ -198,41 +188,35 @@ public class SubmitInquiryActivity extends BaseActivity {
     arrayAdapter.add(getResources().getString(R.string.choose_picture_from_gallery));
     arrayAdapter.add(getResources().getString(R.string.take_new_picture));
 
-    builderSingle.setNegativeButton(R.string.decline_cancel, new DialogInterface.OnClickListener() {
-      @Override public void onClick(DialogInterface dialog, int which) {
-        dialog.dismiss();
-      }
-    });
+    builderSingle.setNegativeButton(R.string.decline_cancel, (dialog, which) -> dialog.dismiss());
 
-    builderSingle.setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
-      @Override public void onClick(DialogInterface dialog, int which) {
-        String strName = arrayAdapter.getItem(which);
-        if (strName != null) {
-          switch (strName) {
-            case "Choose from gallery":
-              Intent galleryIntent = new Intent(Intent.ACTION_PICK,
-                  android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-              startActivityForResult(galleryIntent, REQUEST_PICK_IMAGE_GALLERY);
-              break;
-            case "Take a new picture":
-              Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-              if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-                photoFile = null;
-                try {
-                  photoFile = createImageFile(constructImageFilename());
-                  photoFileUri = Uri.fromFile(photoFile);
-                } catch (IOException ex) {
-                  ex.printStackTrace();
-                }
-
-                if (photoFile != null) {
-                  takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoFileUri);
-                  startActivityForResult(takePictureIntent, CAPTURE_NEW_PICTURE_REQUEST_CODE);
-                }
+    builderSingle.setAdapter(arrayAdapter, (dialog, which) -> {
+      String strName = arrayAdapter.getItem(which);
+      if (strName != null) {
+        switch (strName) {
+          case "Choose from gallery":
+            Intent galleryIntent = new Intent(Intent.ACTION_PICK,
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            startActivityForResult(galleryIntent, REQUEST_PICK_IMAGE_GALLERY);
+            break;
+          case "Take a new picture":
+            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+              photoFile = null;
+              try {
+                photoFile = createImageFile(constructImageFilename());
+                photoFileUri = Uri.fromFile(photoFile);
+              } catch (IOException ex) {
+                ex.printStackTrace();
               }
 
-              break;
-          }
+              if (photoFile != null) {
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoFileUri);
+                startActivityForResult(takePictureIntent, CAPTURE_NEW_PICTURE_REQUEST_CODE);
+              }
+            }
+
+            break;
         }
       }
     });
@@ -308,12 +292,10 @@ public class SubmitInquiryActivity extends BaseActivity {
     final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
     alertDialog.setTitle(R.string.submit_new_chronic_treatment_dialog_title);
     alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getResources().getString(R.string.ok),
-        new DialogInterface.OnClickListener() {
-          public void onClick(DialogInterface dialog, int which) {
-            dialog.dismiss();
+        (dialog, which) -> {
+          dialog.dismiss();
 
-            if (waitingDialog.isShowing()) waitingDialog.dismiss();
-          }
+          if (waitingDialog.isShowing()) waitingDialog.dismiss();
         });
 
     dataAccessHandler.createNewInquiryComplaint(
@@ -373,40 +355,36 @@ public class SubmitInquiryActivity extends BaseActivity {
 
                 categoryPicker.setUpDropDown("Category", "Choose a category",
                     finalCategoryNames.toArray(new String[finalCategoryNames.size()]),
-                    new CustomPicker.OnDropDownClickListener() {
-                      @Override public void onClick(int index, String selected) {
-                        for (final CRMCategoriesResponseDatum categoriesResponseDatum : categoriesList) {
-                          if (categoriesResponseDatum.getName() != null
-                              && categoriesResponseDatum.getName().equals(selected)) {
-                            category = categoriesResponseDatum.getId();
+                    (index, selected) -> {
+                      for (final CRMCategoriesResponseDatum categoriesResponseDatum : categoriesList) {
+                        if (categoriesResponseDatum.getName() != null
+                            && categoriesResponseDatum.getName().equals(selected)) {
+                          category = categoriesResponseDatum.getId();
 
-                            List<String> subCategoryNames = new ArrayList<>();
+                          List<String> subCategoryNames = new ArrayList<>();
 
-                            for (int i = 0; i < categoriesResponseDatum.getSubs().size(); i++) {
-                              if (categoriesResponseDatum.getSubs().get(i).getName() != null) {
-                                subCategoryNames.add(
-                                    categoriesResponseDatum.getSubs().get(i).getName());
-                              }
+                          for (int i = 0; i < categoriesResponseDatum.getSubs().size(); i++) {
+                            if (categoriesResponseDatum.getSubs().get(i).getName() != null) {
+                              subCategoryNames.add(
+                                  categoriesResponseDatum.getSubs().get(i).getName());
                             }
-
-                            subCategoryPicker.setUpDropDown("SubCategory", "Choose a subcategory",
-                                subCategoryNames.toArray(new String[subCategoryNames.size()]),
-                                new CustomPicker.OnDropDownClickListener() {
-                                  @Override public void onClick(int index, String selected) {
-                                    for (int i = 0; i < categoriesResponseDatum.getSubs().size();
-                                        i++) {
-                                      if (categoriesResponseDatum.getSubs().get(i).getName() != null
-                                          && categoriesResponseDatum.getSubs()
-                                          .get(i)
-                                          .getName()
-                                          .equals(selected)) {
-                                        subcategory =
-                                            categoriesResponseDatum.getSubs().get(i).getId();
-                                      }
-                                    }
-                                  }
-                                });
                           }
+
+                          subCategoryPicker.setUpDropDown("SubCategory", "Choose a subcategory",
+                              subCategoryNames.toArray(new String[subCategoryNames.size()]),
+                              (index1, selected1) -> {
+                                for (int i = 0; i < categoriesResponseDatum.getSubs().size();
+                                    i++) {
+                                  if (categoriesResponseDatum.getSubs().get(i).getName() != null
+                                      && categoriesResponseDatum.getSubs()
+                                      .get(i)
+                                      .getName()
+                                      .equals(selected1)) {
+                                    subcategory =
+                                        categoriesResponseDatum.getSubs().get(i).getId();
+                                  }
+                                }
+                              });
                         }
                       }
                     });

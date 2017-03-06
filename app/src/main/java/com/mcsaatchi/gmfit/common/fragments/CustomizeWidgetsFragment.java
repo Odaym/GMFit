@@ -85,60 +85,54 @@ public class CustomizeWidgetsFragment extends Fragment {
   /**
    * DRAGGERS
    */
-  private DragSortListView.DragListener onDragFitnessItems = new DragSortListView.DragListener() {
-    @Override public void drag(int from, int to) {
-      if (to < itemsMapFitness.size() && from < itemsMapFitness.size()) {
+  private DragSortListView.DragListener onDragFitnessItems = (from, to) -> {
+    if (to < itemsMapFitness.size() && from < itemsMapFitness.size()) {
 
-        FitnessWidget tempItem = itemsMapFitness.get(from);
+      FitnessWidget tempItem = itemsMapFitness.get(from);
 
-        int toPosition = itemsMapFitness.get(to).getPosition();
+      int toPosition = itemsMapFitness.get(to).getPosition();
 
-        tempItem.setPosition(toPosition);
+      tempItem.setPosition(toPosition);
 
-        itemsMapFitness.set(from, itemsMapFitness.get(to));
+      itemsMapFitness.set(from, itemsMapFitness.get(to));
 
-        itemsMapFitness.get(to).setPosition(from);
+      itemsMapFitness.get(to).setPosition(from);
 
-        itemsMapFitness.set(to, tempItem);
-      }
+      itemsMapFitness.set(to, tempItem);
     }
   };
 
-  private DragSortListView.DragListener onDragNutritionItems = new DragSortListView.DragListener() {
-    @Override public void drag(int from, int to) {
-      if (to < itemsMapNutrition.size() && from < itemsMapNutrition.size()) {
+  private DragSortListView.DragListener onDragNutritionItems = (from, to) -> {
+    if (to < itemsMapNutrition.size() && from < itemsMapNutrition.size()) {
 
-        NutritionWidget tempItem = itemsMapNutrition.get(from);
+      NutritionWidget tempItem = itemsMapNutrition.get(from);
 
-        int toPosition = itemsMapNutrition.get(to).getPosition();
+      int toPosition = itemsMapNutrition.get(to).getPosition();
 
-        tempItem.setPosition(toPosition);
+      tempItem.setPosition(toPosition);
 
-        itemsMapNutrition.set(from, itemsMapNutrition.get(to));
+      itemsMapNutrition.set(from, itemsMapNutrition.get(to));
 
-        itemsMapNutrition.get(to).setPosition(from);
+      itemsMapNutrition.get(to).setPosition(from);
 
-        itemsMapNutrition.set(to, tempItem);
-      }
+      itemsMapNutrition.set(to, tempItem);
     }
   };
 
-  private DragSortListView.DragListener onDragHealthItems = new DragSortListView.DragListener() {
-    @Override public void drag(int from, int to) {
-      if (to < itemsMapHealth.size() && from < itemsMapHealth.size()) {
+  private DragSortListView.DragListener onDragHealthItems = (from, to) -> {
+    if (to < itemsMapHealth.size() && from < itemsMapHealth.size()) {
 
-        HealthWidget tempItem = itemsMapHealth.get(from);
+      HealthWidget tempItem = itemsMapHealth.get(from);
 
-        int toPosition = itemsMapHealth.get(to).getPosition();
+      int toPosition = itemsMapHealth.get(to).getPosition();
 
-        tempItem.setPosition(toPosition);
+      tempItem.setPosition(toPosition);
 
-        itemsMapHealth.set(from, itemsMapHealth.get(to));
+      itemsMapHealth.set(from, itemsMapHealth.get(to));
 
-        itemsMapHealth.get(to).setPosition(from);
+      itemsMapHealth.get(to).setPosition(from);
 
-        itemsMapHealth.set(to, tempItem);
-      }
+      itemsMapHealth.set(to, tempItem);
     }
   };
 

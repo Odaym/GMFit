@@ -79,13 +79,11 @@ public class ChronicInactiveStatusAdapter extends RecyclerView.Adapter {
         treatmentDescriptionTV.setText("Start and end dates not available yet");
       }
 
-      parentLayout.setOnClickListener(new View.OnClickListener() {
-        @Override public void onClick(View view) {
-          //Intent intent = new Intent(context, AddExistingMedicationActivity.class);
-          //intent.putExtra(Constants.EXTRAS_PURPOSE_EDIT_MEDICATION_REMINDER, true);
-          //intent.putExtra(Constants.EXTRAS_MEDICATION_REMINDER_ITEM, medicationItem);
-          //context.startActivity(intent);
-        }
+      parentLayout.setOnClickListener(view -> {
+        //Intent intent = new Intent(context, AddExistingMedicationActivity.class);
+        //intent.putExtra(Constants.EXTRAS_PURPOSE_EDIT_MEDICATION_REMINDER, true);
+        //intent.putExtra(Constants.EXTRAS_MEDICATION_REMINDER_ITEM, medicationItem);
+        //context.startActivity(intent);
       });
     }
   }

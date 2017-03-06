@@ -49,13 +49,11 @@ public class SearchMedicationsRecyclerAdapter extends RecyclerView.Adapter {
 
     public ViewHolder(View itemView) {
       super(itemView);
-      itemView.setOnClickListener(new View.OnClickListener() {
-        @Override public void onClick(View view) {
-          Intent intent = new Intent(context, AddExistingMedicationActivity.class);
-          intent.putExtra(Constants.EXTRAS_MEDICATION_REMINDER_ITEM,
-              medicationsList.get(getAdapterPosition()));
-          context.startActivity(intent);
-        }
+      itemView.setOnClickListener(view -> {
+        Intent intent = new Intent(context, AddExistingMedicationActivity.class);
+        intent.putExtra(Constants.EXTRAS_MEDICATION_REMINDER_ITEM,
+            medicationsList.get(getAdapterPosition()));
+        context.startActivity(intent);
       });
 
       medicineNameTV = (TextView) itemView.findViewById(R.id.medicineNameTV);

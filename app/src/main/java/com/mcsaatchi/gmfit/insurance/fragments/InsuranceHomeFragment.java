@@ -153,12 +153,10 @@ public class InsuranceHomeFragment extends Fragment {
     final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
     alertDialog.setTitle(R.string.loading_data_dialog_title);
     alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getResources().getString(R.string.ok),
-        new DialogInterface.OnClickListener() {
-          public void onClick(DialogInterface dialog, int which) {
-            dialog.dismiss();
+        (dialog, which) -> {
+          dialog.dismiss();
 
-            if (waitingDialog.isShowing()) waitingDialog.dismiss();
-          }
+          if (waitingDialog.isShowing()) waitingDialog.dismiss();
         });
 
     dataAccessHandler.getCardDetails(
@@ -205,11 +203,8 @@ public class InsuranceHomeFragment extends Fragment {
       contractChooserDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
       contractChooserDialog.setContentView(contractsChoiceView);
 
-      contractChooserDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-        @Override public void onDismiss(DialogInterface dialogInterface) {
-          contractSelectorBTN.setImageResource(R.drawable.ic_contract_chooser);
-        }
-      });
+      contractChooserDialog.setOnDismissListener(
+          dialogInterface -> contractSelectorBTN.setImageResource(R.drawable.ic_contract_chooser));
 
       contractsChoiceView.setParentDialog(contractChooserDialog);
 
@@ -224,11 +219,9 @@ public class InsuranceHomeFragment extends Fragment {
 
       contractSelectorBTN.setVisibility(View.VISIBLE);
 
-      contractSelectorBTN.setOnClickListener(new View.OnClickListener() {
-        @Override public void onClick(final View view) {
-          contractSelectorBTN.setImageResource(R.drawable.ic_contract_chooser_active);
-          contractChooserDialog.show();
-        }
+      contractSelectorBTN.setOnClickListener(view -> {
+        contractSelectorBTN.setImageResource(R.drawable.ic_contract_chooser_active);
+        contractChooserDialog.show();
       });
 
       if (prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, "").isEmpty()) {
@@ -236,22 +229,20 @@ public class InsuranceHomeFragment extends Fragment {
         contractChooserDialog.show();
       }
 
-      logoutContractButton.setOnClickListener(new View.OnClickListener() {
-        @Override public void onClick(View view) {
-          for (InsuranceContract contract : insuranceContracts) {
-            if (contract.isSelected()) {
-              prefs.edit().putString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, "").apply();
-              prefs.edit().putString(Constants.EXTRAS_INSURANCE_USER_USERNAME, "").apply();
-              prefs.edit().putString(Constants.EXTRAS_INSURANCE_USER_PASSWORD, "").apply();
+      logoutContractButton.setOnClickListener(view -> {
+        for (InsuranceContract contract : insuranceContracts) {
+          if (contract.isSelected()) {
+            prefs.edit().putString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, "").apply();
+            prefs.edit().putString(Constants.EXTRAS_INSURANCE_USER_USERNAME, "").apply();
+            prefs.edit().putString(Constants.EXTRAS_INSURANCE_USER_PASSWORD, "").apply();
 
-              getFragmentManager().beginTransaction()
-                  .hide(InsuranceHomeFragment.this)
-                  .replace(R.id.root_frame, new InsuranceLoginFragment())
-                  .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                  .commitAllowingStateLoss();
+            getFragmentManager().beginTransaction()
+                .hide(InsuranceHomeFragment.this)
+                .replace(R.id.root_frame, new InsuranceLoginFragment())
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .commitAllowingStateLoss();
 
-              contractChooserDialog.dismiss();
-            }
+            contractChooserDialog.dismiss();
           }
         }
       });

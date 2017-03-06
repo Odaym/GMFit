@@ -38,36 +38,34 @@ public class RestClient {
     httpClient.writeTimeout(45, TimeUnit.SECONDS);
     //httpClient.addInterceptor(new ChuckInterceptor(context));
     httpClient.addInterceptor(loggingInterceptor);
-    httpClient.addInterceptor(new Interceptor() {
-      @Override public Response intercept(Interceptor.Chain chain) throws IOException {
-        Request original = chain.request();
+    httpClient.addInterceptor(chain -> {
+      Request original = chain.request();
 
-        Request.Builder requestBuilder = null;
-        try {
-          requestBuilder = original.newBuilder()
-              .header("Authorization", prefs.getString(Constants.PREF_USER_ACCESS_TOKEN,
-                  Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS))
-              .header("Date", new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss z", Locale.US).format(
-                  new SimpleDateFormat("yyyy MM dd HH:mm:ss", Locale.US).parse(
-                      dt.getYear()
-                          + " "
-                          + dt.getMonthOfYear()
-                          + " "
-                          + dt.getDayOfMonth()
-                          + " "
-                          + dt.getHourOfDay()
-                          + ":"
-                          + dt.getMinuteOfHour()
-                          + ":"
-                          + dt.getSecondOfMinute())));
-        } catch (ParseException e) {
-          e.printStackTrace();
-        }
-
-        Request request = requestBuilder.build();
-
-        return chain.proceed(request);
+      Request.Builder requestBuilder = null;
+      try {
+        requestBuilder = original.newBuilder()
+            .header("Authorization", prefs.getString(Constants.PREF_USER_ACCESS_TOKEN,
+                Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS))
+            .header("Date", new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss z", Locale.US).format(
+                new SimpleDateFormat("yyyy MM dd HH:mm:ss", Locale.US).parse(
+                    dt.getYear()
+                        + " "
+                        + dt.getMonthOfYear()
+                        + " "
+                        + dt.getDayOfMonth()
+                        + " "
+                        + dt.getHourOfDay()
+                        + ":"
+                        + dt.getMinuteOfHour()
+                        + ":"
+                        + dt.getSecondOfMinute())));
+      } catch (ParseException e) {
+        e.printStackTrace();
       }
+
+      Request request = requestBuilder.build();
+
+      return chain.proceed(request);
     });
 
     Retrofit retrofit = new Retrofit.Builder().baseUrl(Constants.BASE_URL_ADDRESS)

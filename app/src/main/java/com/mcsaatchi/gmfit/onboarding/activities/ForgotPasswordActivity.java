@@ -41,11 +41,9 @@ public class ForgotPasswordActivity extends BaseActivity {
 
     allFields.add(emailET);
 
-    submitForgotPasswordEmailBTN.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        if (Helpers.validateFields(allFields)) {
-          forgotPasswordSendToken(emailET.getText().toString());
-        }
+    submitForgotPasswordEmailBTN.setOnClickListener(v -> {
+      if (Helpers.validateFields(allFields)) {
+        forgotPasswordSendToken(emailET.getText().toString());
       }
     });
   }
@@ -58,14 +56,11 @@ public class ForgotPasswordActivity extends BaseActivity {
 
     final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
     alertDialog.setTitle(R.string.sending_reset_password_dialog_title);
-    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
-        new DialogInterface.OnClickListener() {
-          public void onClick(DialogInterface dialog, int which) {
-            dialog.dismiss();
+    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok), (dialog, which) -> {
+      dialog.dismiss();
 
-            if (waitingDialog.isShowing()) waitingDialog.dismiss();
-          }
-        });
+      if (waitingDialog.isShowing()) waitingDialog.dismiss();
+    });
 
     dataAccessHandler.sendResetPasswordLink(email, new Callback<DefaultGetResponse>() {
       @Override

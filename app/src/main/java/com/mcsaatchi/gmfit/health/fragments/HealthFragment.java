@@ -123,18 +123,14 @@ public class HealthFragment extends Fragment {
 
     setupWeightChart();
 
-    addEntryBTN_MEDICATIONS.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View view) {
-        Intent intent = new Intent(getActivity(), SearchMedicationsActivity.class);
-        startActivity(intent);
-      }
+    addEntryBTN_MEDICATIONS.setOnClickListener(view -> {
+      Intent intent = new Intent(getActivity(), SearchMedicationsActivity.class);
+      startActivity(intent);
     });
 
-    addEntryBTN_MEDICAL_TESTS.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View view) {
-        Intent intent = new Intent(getActivity(), AddNewHealthTestActivity.class);
-        startActivity(intent);
-      }
+    addEntryBTN_MEDICAL_TESTS.setOnClickListener(view -> {
+      Intent intent = new Intent(getActivity(), AddNewHealthTestActivity.class);
+      startActivity(intent);
     });
 
     return fragmentView;
@@ -184,42 +180,33 @@ public class HealthFragment extends Fragment {
                 final TextView updateUserWeightTV =
                     (TextView) customLineChart.getView().findViewById(R.id.updateWeightTV);
 
-                updateUserWeightTV.setOnClickListener(new View.OnClickListener() {
-                  @Override public void onClick(View view) {
-                    final AlertDialog.Builder dialogBuilder =
-                        new AlertDialog.Builder(getActivity());
-                    dialogBuilder.setTitle(R.string.profile_edit_weight_dialog_title);
+                updateUserWeightTV.setOnClickListener(view -> {
+                  final AlertDialog.Builder dialogBuilder =
+                      new AlertDialog.Builder(getActivity());
+                  dialogBuilder.setTitle(R.string.profile_edit_weight_dialog_title);
 
-                    View dialogView = LayoutInflater.from(getActivity())
-                        .inflate(R.layout.profile_edit_weight_dialog, null);
-                    final EditText editWeightET =
-                        (EditText) dialogView.findViewById(R.id.dialogWeightET);
+                  View dialogView = LayoutInflater.from(getActivity())
+                      .inflate(R.layout.profile_edit_weight_dialog, null);
+                  final EditText editWeightET =
+                      (EditText) dialogView.findViewById(R.id.dialogWeightET);
 
-                    editWeightET.setText(
-                        String.valueOf(prefs.getFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, 0)));
-                    editWeightET.setSelection(editWeightET.getText().toString().length());
+                  editWeightET.setText(
+                      String.valueOf(prefs.getFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, 0)));
+                  editWeightET.setSelection(editWeightET.getText().toString().length());
 
-                    dialogBuilder.setView(dialogView);
-                    dialogBuilder.setPositiveButton(R.string.ok,
-                        new DialogInterface.OnClickListener() {
-                          @Override public void onClick(DialogInterface dialogInterface, int i) {
-                            double userWeight =
-                                Double.parseDouble(editWeightET.getText().toString());
+                  dialogBuilder.setView(dialogView);
+                  dialogBuilder.setPositiveButton(R.string.ok, (dialogInterface, i) -> {
+                    double userWeight =
+                        Double.parseDouble(editWeightET.getText().toString());
 
-                            updateUserWeight(editWeightET, userWeight,
-                                Helpers.prepareDateWithTimeForAPIRequest(new LocalDateTime()));
-                          }
-                        });
-                    dialogBuilder.setNegativeButton(R.string.decline_cancel,
-                        new DialogInterface.OnClickListener() {
-                          @Override public void onClick(DialogInterface dialogInterface, int i) {
-                            dialogInterface.dismiss();
-                          }
-                        });
+                    updateUserWeight(editWeightET, userWeight,
+                        Helpers.prepareDateWithTimeForAPIRequest(new LocalDateTime()));
+                  });
+                  dialogBuilder.setNegativeButton(R.string.decline_cancel,
+                      (dialogInterface, i) -> dialogInterface.dismiss());
 
-                    AlertDialog alertDialog = dialogBuilder.create();
-                    alertDialog.show();
-                  }
+                  AlertDialog alertDialog = dialogBuilder.create();
+                  alertDialog.show();
                 });
               }
             }
@@ -244,14 +231,11 @@ public class HealthFragment extends Fragment {
 
     final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
     alertDialog.setTitle(R.string.updating_user_profile_dialog_title);
-    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
-        new DialogInterface.OnClickListener() {
-          public void onClick(DialogInterface dialog, int which) {
-            dialog.dismiss();
+    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok), (dialog, which) -> {
+      dialog.dismiss();
 
-            if (waitingDialog.isShowing()) waitingDialog.dismiss();
-          }
-        });
+      if (waitingDialog.isShowing()) waitingDialog.dismiss();
+    });
 
     dataAccessHandler.updateUserWeight(weight, created_at, new Callback<DefaultGetResponse>() {
       @Override

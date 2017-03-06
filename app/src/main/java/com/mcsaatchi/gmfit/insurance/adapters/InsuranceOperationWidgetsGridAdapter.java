@@ -92,12 +92,10 @@ public class InsuranceOperationWidgetsGridAdapter
     final AlertDialog alertDialog = new AlertDialog.Builder(context).create();
     alertDialog.setTitle(R.string.loading_data_dialog_title);
     alertDialog.setButton(AlertDialog.BUTTON_POSITIVE,
-        context.getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
-          public void onClick(DialogInterface dialog, int which) {
-            dialog.dismiss();
+        context.getResources().getString(R.string.ok), (dialog, which) -> {
+          dialog.dismiss();
 
-            if (waitingDialog.isShowing()) waitingDialog.dismiss();
-          }
+          if (waitingDialog.isShowing()) waitingDialog.dismiss();
         });
 
     dataAccessHandler.getCoverageDescription(
@@ -172,63 +170,61 @@ public class InsuranceOperationWidgetsGridAdapter
     void setDropDownItems(final int request_purpose) {
       final AlertDialog.Builder builder = new AlertDialog.Builder(fragmentActivity);
       builder.setTitle("What would you like to submit?")
-          .setItems(dialogItems, new DialogInterface.OnClickListener() {
-            @Override public void onClick(DialogInterface dialogInterface, int position) {
+          .setItems(dialogItems, (dialogInterface, position) -> {
 
-              Intent intent;
+            Intent intent;
 
-              switch (position) {
-                case REIMBURSEMENT_ITEM:
-                  switch (request_purpose) {
-                    case SUBMIT_ITEM:
-                      intent = new Intent(context, SubmitReimbursementActivity.class);
-                      fragmentActivity.startActivity(intent);
-                      break;
-                    case TRACK_ITEM:
-                      intent = new Intent(fragmentActivity, ReimbursementStatusListActivity.class);
-                      fragmentActivity.startActivity(intent);
-                      break;
-                  }
-                  break;
-                case APPROVAL_REQUEST_ITEM:
-                  switch (request_purpose) {
-                    case SUBMIT_ITEM:
-                      intent = new Intent(fragmentActivity, SubmitApprovalRequestsActivity.class);
-                      fragmentActivity.startActivity(intent);
-                      break;
-                    case TRACK_ITEM:
-                      intent =
-                          new Intent(fragmentActivity, ApprovalRequestsStatusListActivity.class);
-                      fragmentActivity.startActivity(intent);
-                      break;
-                  }
-                  break;
-                case CHRONIC_ITEM:
-                  switch (request_purpose) {
-                    case SUBMIT_ITEM:
-                      intent =
-                          new Intent(fragmentActivity, SubmitChronicPrescriptionActivity.class);
-                      fragmentActivity.startActivity(intent);
-                      break;
-                    case TRACK_ITEM:
-                      intent = new Intent(fragmentActivity, ChronicStatusListActivity.class);
-                      fragmentActivity.startActivity(intent);
-                      break;
-                  }
-                  break;
-                case INQUIRY_REQUESTS_ITEM:
-                  switch (request_purpose) {
-                    case SUBMIT_ITEM:
-                      intent = new Intent(fragmentActivity, SubmitInquiryActivity.class);
-                      fragmentActivity.startActivity(intent);
-                      break;
-                    case TRACK_ITEM:
-                      intent = new Intent(fragmentActivity, InquiryEmptyActivity.class);
-                      fragmentActivity.startActivity(intent);
-                      break;
-                  }
-                  break;
-              }
+            switch (position) {
+              case REIMBURSEMENT_ITEM:
+                switch (request_purpose) {
+                  case SUBMIT_ITEM:
+                    intent = new Intent(context, SubmitReimbursementActivity.class);
+                    fragmentActivity.startActivity(intent);
+                    break;
+                  case TRACK_ITEM:
+                    intent = new Intent(fragmentActivity, ReimbursementStatusListActivity.class);
+                    fragmentActivity.startActivity(intent);
+                    break;
+                }
+                break;
+              case APPROVAL_REQUEST_ITEM:
+                switch (request_purpose) {
+                  case SUBMIT_ITEM:
+                    intent = new Intent(fragmentActivity, SubmitApprovalRequestsActivity.class);
+                    fragmentActivity.startActivity(intent);
+                    break;
+                  case TRACK_ITEM:
+                    intent =
+                        new Intent(fragmentActivity, ApprovalRequestsStatusListActivity.class);
+                    fragmentActivity.startActivity(intent);
+                    break;
+                }
+                break;
+              case CHRONIC_ITEM:
+                switch (request_purpose) {
+                  case SUBMIT_ITEM:
+                    intent =
+                        new Intent(fragmentActivity, SubmitChronicPrescriptionActivity.class);
+                    fragmentActivity.startActivity(intent);
+                    break;
+                  case TRACK_ITEM:
+                    intent = new Intent(fragmentActivity, ChronicStatusListActivity.class);
+                    fragmentActivity.startActivity(intent);
+                    break;
+                }
+                break;
+              case INQUIRY_REQUESTS_ITEM:
+                switch (request_purpose) {
+                  case SUBMIT_ITEM:
+                    intent = new Intent(fragmentActivity, SubmitInquiryActivity.class);
+                    fragmentActivity.startActivity(intent);
+                    break;
+                  case TRACK_ITEM:
+                    intent = new Intent(fragmentActivity, InquiryEmptyActivity.class);
+                    fragmentActivity.startActivity(intent);
+                    break;
+                }
+                break;
             }
           });
       builder.create().show();

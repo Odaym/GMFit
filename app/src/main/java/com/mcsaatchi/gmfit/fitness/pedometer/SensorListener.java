@@ -72,11 +72,7 @@ public class SensorListener extends Service implements SensorEventListener {
     TimerTask doAsynchronousTask = new TimerTask() {
       @Override public void run() {
 
-        handler.post(new Runnable() {
-          @SuppressWarnings("unchecked") public void run() {
-            refreshAccessToken();
-          }
-        });
+        handler.post(() -> refreshAccessToken());
       }
     };
 

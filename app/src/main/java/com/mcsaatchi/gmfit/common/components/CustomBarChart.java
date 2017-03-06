@@ -174,11 +174,7 @@ public class CustomBarChart extends BarChart {
     barChart.invalidate();
 
     for (final CustomBarChartClickListener listener : clickListeners) {
-      barChart.setOnClickListener(new OnClickListener() {
-        @Override public void onClick(View view) {
-          listener.handleClick(chartObject);
-        }
-      });
+      barChart.setOnClickListener(view -> listener.handleClick(chartObject));
     }
 
     barContainer.addView(barChartLayout);

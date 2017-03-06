@@ -202,11 +202,7 @@ public class Helpers {
     alertDialog.setTitle(R.string.no_internet_conection_dialog_title);
     alertDialog.setMessage(context.getString(R.string.no_internet_connection_dialog_message));
     alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, context.getString(R.string.ok),
-        new DialogInterface.OnClickListener() {
-          public void onClick(DialogInterface dialog, int which) {
-            dialog.dismiss();
-          }
-        });
+        (dialog, which) -> dialog.dismiss());
     alertDialog.show();
   }
 

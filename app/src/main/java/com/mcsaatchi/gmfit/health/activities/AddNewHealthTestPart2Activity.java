@@ -118,12 +118,10 @@ public class AddNewHealthTestPart2Activity extends BaseActivity {
         alertDialog = new AlertDialog.Builder(this).create();
         alertDialog.setTitle(R.string.fetching_test_data_dialog_title);
         alertDialog.setButton(android.app.AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
-            new DialogInterface.OnClickListener() {
-              public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
+            (dialog, which) -> {
+              dialog.dismiss();
 
-                if (waitingDialog.isShowing()) waitingDialog.dismiss();
-              }
+              if (waitingDialog.isShowing()) waitingDialog.dismiss();
             });
 
         waitingDialog.setTitle(R.string.creating_new_test_dialog_title);
@@ -164,14 +162,11 @@ public class AddNewHealthTestPart2Activity extends BaseActivity {
 
     final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
     alertDialog.setTitle(R.string.fetching_test_data_dialog_title);
-    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
-        new DialogInterface.OnClickListener() {
-          public void onClick(DialogInterface dialog, int which) {
-            dialog.dismiss();
+    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok), (dialog, which) -> {
+      dialog.dismiss();
 
-            if (waitingDialog.isShowing()) waitingDialog.dismiss();
-          }
-        });
+      if (waitingDialog.isShowing()) waitingDialog.dismiss();
+    });
 
     dataAccessHandler.getTesticularMetrics(new Callback<MedicalTestMetricsResponse>() {
       @Override public void onResponse(Call<MedicalTestMetricsResponse> call,
@@ -223,17 +218,15 @@ public class AddNewHealthTestPart2Activity extends BaseActivity {
           }
         } else {
           searchIconIV.setImageResource(R.drawable.ic_clear_search);
-          searchIconIV.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View view) {
-              searchTestsAutoCompleTV.setText("");
+          searchIconIV.setOnClickListener(view -> {
+            searchTestsAutoCompleTV.setText("");
 
-              /**
-               * Hide keyboard
-               */
-              InputMethodManager imm =
-                  (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-              imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-            }
+            /**
+             * Hide keyboard
+             */
+            InputMethodManager imm =
+                (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
           });
 
           if (metricsFromResponse != null) {
@@ -310,12 +303,10 @@ public class AddNewHealthTestPart2Activity extends BaseActivity {
     final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
     alertDialog.setTitle(R.string.creating_new_test_dialog_title);
     alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getResources().getString(R.string.ok),
-        new DialogInterface.OnClickListener() {
-          public void onClick(DialogInterface dialog, int which) {
-            dialog.dismiss();
+        (dialog, which) -> {
+          dialog.dismiss();
 
-            if (waitingDialog.isShowing()) waitingDialog.dismiss();
-          }
+          if (waitingDialog.isShowing()) waitingDialog.dismiss();
         });
 
     dataAccessHandler.storeNewHealthTest(toRequestBody(testName), toRequestBody(testDateTaken),
@@ -358,12 +349,10 @@ public class AddNewHealthTestPart2Activity extends BaseActivity {
     final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
     alertDialog.setTitle(R.string.editing_existing_test_dialog_title);
     alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getResources().getString(R.string.ok),
-        new DialogInterface.OnClickListener() {
-          public void onClick(DialogInterface dialog, int which) {
-            dialog.dismiss();
+        (dialog, which) -> {
+          dialog.dismiss();
 
-            if (waitingDialog.isShowing()) waitingDialog.dismiss();
-          }
+          if (waitingDialog.isShowing()) waitingDialog.dismiss();
         });
 
     dataAccessHandler.editExistingHealthTest(

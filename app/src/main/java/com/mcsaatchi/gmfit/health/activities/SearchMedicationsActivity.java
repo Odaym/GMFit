@@ -82,24 +82,20 @@ public class SearchMedicationsActivity extends BaseActivity {
           searchResultsHintTV.setText(getString(R.string.search_results_list_label));
           pb_loading_indicator.setVisibility(View.VISIBLE);
 
-          new Handler().postDelayed(new Runnable() {
-            @Override public void run() {
-              searchIconIV.setImageResource(R.drawable.ic_clear_search);
-              searchIconIV.setOnClickListener(new View.OnClickListener() {
-                @Override public void onClick(View view) {
-                  searchMedicationsTV.setText("");
+          new Handler().postDelayed(() -> {
+            searchIconIV.setImageResource(R.drawable.ic_clear_search);
+            searchIconIV.setOnClickListener(view -> {
+              searchMedicationsTV.setText("");
 
-                  /**
-                   * Hide keyboard
-                   */
-                  InputMethodManager imm =
-                      (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                  imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                }
-              });
+              /**
+               * Hide keyboard
+               */
+              InputMethodManager imm =
+                  (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+              imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            });
 
-              searchMedicines(charSequence.toString());
-            }
+            searchMedicines(charSequence.toString());
           }, 500);
         }
       }

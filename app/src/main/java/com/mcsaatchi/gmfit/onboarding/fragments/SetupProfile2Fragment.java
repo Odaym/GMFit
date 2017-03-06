@@ -53,11 +53,7 @@ public class SetupProfile2Fragment extends Fragment {
     final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
     alertDialog.setTitle(R.string.fetching_user_goals);
     alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
-        new DialogInterface.OnClickListener() {
-          public void onClick(DialogInterface dialog, int which) {
-            dialog.dismiss();
-          }
-        });
+        (dialog, which) -> dialog.dismiss());
 
     dataAccessHandler.getUserGoals(new Callback<UserGoalsResponse>() {
       @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP) @Override
@@ -76,18 +72,16 @@ public class SetupProfile2Fragment extends Fragment {
               radioButtonItem.setText(activityLevels.get(i).getName());
               radioButtonItem.setId(activityLevels.get(i).getId());
 
-              radioButtonItem.setOnClickListener(new View.OnClickListener() {
-                @Override public void onClick(View view) {
-                  dataWasSelected = true;
+              radioButtonItem.setOnClickListener(view -> {
+                dataWasSelected = true;
 
-                  prefs.edit()
-                      .putInt(Constants.EXTRAS_USER_PROFILE_GOAL_ID, radioButtonItem.getId())
-                      .apply();
-                  prefs.edit()
-                      .putString(Constants.EXTRAS_USER_PROFILE_GOAL,
-                          radioButtonItem.getText().toString())
-                      .apply();
-                }
+                prefs.edit()
+                    .putInt(Constants.EXTRAS_USER_PROFILE_GOAL_ID, radioButtonItem.getId())
+                    .apply();
+                prefs.edit()
+                    .putString(Constants.EXTRAS_USER_PROFILE_GOAL,
+                        radioButtonItem.getText().toString())
+                    .apply();
               });
 
               goalRadioButtonsGroup.addView(listItemRadioButton);

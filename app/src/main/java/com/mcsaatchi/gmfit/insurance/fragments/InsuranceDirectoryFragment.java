@@ -156,11 +156,7 @@ public class InsuranceDirectoryFragment extends Fragment implements OnMapReadyCa
     final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
     alertDialog.setTitle(R.string.get_nearby_clinics_message);
     alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
-        new DialogInterface.OnClickListener() {
-          public void onClick(DialogInterface dialog, int which) {
-            dialog.dismiss();
-          }
-        });
+        (dialog, which) -> dialog.dismiss());
 
     dataAccessHandler.getNearbyClinics("1892870", "H", 22, 123, 333, 1,
         new Callback<GetNearbyClinicsResponse>() {
@@ -188,12 +184,10 @@ public class InsuranceDirectoryFragment extends Fragment implements OnMapReadyCa
                 clinicAddressRecycler.setAdapter(clinicAddressesRecyclerAdapter);
 
                 mapFragment.getMapAsync(InsuranceDirectoryFragment.this);
-                mapFragment.setListener(new WorkaroundMapFragment.OnTouchListener() {
-                  @Override public void onTouch() {
-                    NestedScrollView myScrollingContent =
-                        ((NestedScrollView) getActivity().findViewById(R.id.myScrollingContent));
-                    myScrollingContent.requestDisallowInterceptTouchEvent(true);
-                  }
+                mapFragment.setListener(() -> {
+                  NestedScrollView myScrollingContent =
+                      ((NestedScrollView) getActivity().findViewById(R.id.myScrollingContent));
+                  myScrollingContent.requestDisallowInterceptTouchEvent(true);
                 });
             }
           }
@@ -212,18 +206,16 @@ public class InsuranceDirectoryFragment extends Fragment implements OnMapReadyCa
 
       switchMapViewBTN.setVisibility(View.VISIBLE);
 
-      switchMapViewBTN.setOnClickListener(new View.OnClickListener() {
-        @Override public void onClick(View view) {
-          if (!listingVisible) {
-            switchMapViewBTN.setImageResource(R.drawable.ic_show_directory_as_map);
-            clinicAddressRecycler.setVisibility(View.VISIBLE);
-          } else {
-            switchMapViewBTN.setImageResource(R.drawable.ic_show_directory_as_listing);
-            clinicAddressRecycler.setVisibility(View.INVISIBLE);
-          }
-
-          listingVisible = !listingVisible;
+      switchMapViewBTN.setOnClickListener(view -> {
+        if (!listingVisible) {
+          switchMapViewBTN.setImageResource(R.drawable.ic_show_directory_as_map);
+          clinicAddressRecycler.setVisibility(View.VISIBLE);
+        } else {
+          switchMapViewBTN.setImageResource(R.drawable.ic_show_directory_as_listing);
+          clinicAddressRecycler.setVisibility(View.INVISIBLE);
         }
+
+        listingVisible = !listingVisible;
       });
     }
   }

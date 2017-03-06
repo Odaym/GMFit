@@ -159,441 +159,376 @@ public class MainProfileFragment extends Fragment {
     /**
      * PROFILE IMAGE EDITOR
      */
-    userProfileIV.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View view) {
-        String[] neededPermissions = new String[] {
-            Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE
-        };
+    userProfileIV.setOnClickListener(view -> {
+      String[] neededPermissions = new String[] {
+          Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE
+      };
 
-        boolean hasCameraPermission =
-            (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA)
-                == PackageManager.PERMISSION_GRANTED);
+      boolean hasCameraPermission =
+          (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA)
+              == PackageManager.PERMISSION_GRANTED);
 
-        boolean hasWriteStoragePermission = (ContextCompat.checkSelfPermission(getActivity(),
-            Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED);
+      boolean hasWriteStoragePermission = (ContextCompat.checkSelfPermission(getActivity(),
+          Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED);
 
-        if (!hasCameraPermission || !hasWriteStoragePermission) {
-          requestPermissions(neededPermissions, ASK_CAMERA_AND_STORAGE_PERMISSION);
-        } else {
-          showImagePickerDialog();
-        }
+      if (!hasCameraPermission || !hasWriteStoragePermission) {
+        requestPermissions(neededPermissions, ASK_CAMERA_AND_STORAGE_PERMISSION);
+      } else {
+        showImagePickerDialog();
       }
     });
 
     /**
      * WEIGHT EDITOR
      */
-    weightLayout.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View view) {
-        final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
-        dialogBuilder.setTitle(R.string.profile_edit_weight_dialog_title);
+    weightLayout.setOnClickListener(view -> {
+      final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
+      dialogBuilder.setTitle(R.string.profile_edit_weight_dialog_title);
 
-        View dialogView =
-            LayoutInflater.from(getActivity()).inflate(R.layout.profile_edit_weight_dialog, null);
-        final EditText editWeightET = (EditText) dialogView.findViewById(R.id.dialogWeightET);
+      View dialogView =
+          LayoutInflater.from(getActivity()).inflate(R.layout.profile_edit_weight_dialog, null);
+      final EditText editWeightET = (EditText) dialogView.findViewById(R.id.dialogWeightET);
 
-        editWeightET.setText(
-            String.valueOf(prefs.getFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, 0)));
-        editWeightET.setSelection(editWeightET.getText().toString().length());
+      editWeightET.setText(
+          String.valueOf(prefs.getFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, 0)));
+      editWeightET.setSelection(editWeightET.getText().toString().length());
 
-        dialogBuilder.setView(dialogView);
-        dialogBuilder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-          @Override public void onClick(DialogInterface dialogInterface, int i) {
-            newUserWeight = Double.parseDouble(editWeightET.getText().toString());
-            weightEntryValueTV.setText(
-                String.valueOf(String.format(Locale.getDefault(), "%.1f", newUserWeight)));
+      dialogBuilder.setView(dialogView);
+      dialogBuilder.setPositiveButton(R.string.ok, (dialogInterface, i) -> {
+        newUserWeight = Double.parseDouble(editWeightET.getText().toString());
+        weightEntryValueTV.setText(
+            String.valueOf(String.format(Locale.getDefault(), "%.1f", newUserWeight)));
 
-            prefs.edit()
-                .putFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, (float) newUserWeight)
-                .apply();
+        prefs.edit()
+            .putFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, (float) newUserWeight)
+            .apply();
 
-            updateUserProfile();
-          }
-        });
-        dialogBuilder.setNegativeButton(R.string.decline_cancel,
-            new DialogInterface.OnClickListener() {
-              @Override public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-              }
-            });
+        updateUserProfile();
+      });
+      dialogBuilder.setNegativeButton(R.string.decline_cancel,
+          (dialogInterface, i) -> dialogInterface.dismiss());
 
-        AlertDialog alertDialog = dialogBuilder.create();
-        alertDialog.show();
-      }
+      AlertDialog alertDialog = dialogBuilder.create();
+      alertDialog.show();
     });
 
     /**
      * USER GOALS EDITOR
      */
-    goalsLayout.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View view) {
-        final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
-        dialogBuilder.setTitle(R.string.profile_edit_goal_dialog_title);
+    goalsLayout.setOnClickListener(view -> {
+      final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
+      dialogBuilder.setTitle(R.string.profile_edit_goal_dialog_title);
 
-        View dialogView =
-            LayoutInflater.from(getActivity()).inflate(R.layout.profile_edit_goal_dialog, null);
+      View dialogView =
+          LayoutInflater.from(getActivity()).inflate(R.layout.profile_edit_goal_dialog, null);
 
-        final RadioGroup goalRadioButtonsGroup =
-            (RadioGroup) dialogView.findViewById(R.id.goalRadioButtonsGroup);
+      final RadioGroup goalRadioButtonsGroup =
+          (RadioGroup) dialogView.findViewById(R.id.goalRadioButtonsGroup);
 
-        for (int i = 0; i < userGoals.size(); i++) {
-          View listItemRadioButton =
-              getActivity().getLayoutInflater().inflate(R.layout.list_item_edit_goal_dialog, null);
+      for (int i = 0; i < userGoals.size(); i++) {
+        View listItemRadioButton =
+            getActivity().getLayoutInflater().inflate(R.layout.list_item_edit_goal_dialog, null);
 
-          final RadioButton radioButtonItem =
-              (RadioButton) listItemRadioButton.findViewById(R.id.editGoalRadioBTN);
-          radioButtonItem.setText(userGoals.get(i).getName());
-          radioButtonItem.setId(Integer.parseInt(userGoals.get(i).getId()));
+        final RadioButton radioButtonItem =
+            (RadioButton) listItemRadioButton.findViewById(R.id.editGoalRadioBTN);
+        radioButtonItem.setText(userGoals.get(i).getName());
+        radioButtonItem.setId(Integer.parseInt(userGoals.get(i).getId()));
 
-          if (radioButtonItem.getText()
-              .toString()
-              .equals(prefs.getString(Constants.EXTRAS_USER_PROFILE_GOAL, ""))) {
-            radioButtonItem.setChecked(true);
-          }
-
-          goalRadioButtonsGroup.addView(listItemRadioButton);
+        if (radioButtonItem.getText()
+            .toString()
+            .equals(prefs.getString(Constants.EXTRAS_USER_PROFILE_GOAL, ""))) {
+          radioButtonItem.setChecked(true);
         }
 
-        dialogBuilder.setView(dialogView);
-        dialogBuilder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-          @Override public void onClick(DialogInterface dialogInterface, int i) {
-            RadioButton selectedRadioButton = (RadioButton) goalRadioButtonsGroup.findViewById(
-                goalRadioButtonsGroup.getCheckedRadioButtonId());
-
-            int newUserGoalId = selectedRadioButton.getId();
-            String newUserGoalText = selectedRadioButton.getText().toString();
-
-            goalsEntryValueTV.setText(newUserGoalText);
-
-            prefs.edit().putInt(Constants.EXTRAS_USER_PROFILE_GOAL_ID, newUserGoalId).apply();
-            prefs.edit().putString(Constants.EXTRAS_USER_PROFILE_GOAL, newUserGoalText).apply();
-
-            updateUserProfile();
-          }
-        });
-        dialogBuilder.setNegativeButton(R.string.decline_cancel,
-            new DialogInterface.OnClickListener() {
-              @Override public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-              }
-            });
-
-        AlertDialog alertDialog = dialogBuilder.create();
-        alertDialog.show();
+        goalRadioButtonsGroup.addView(listItemRadioButton);
       }
+
+      dialogBuilder.setView(dialogView);
+      dialogBuilder.setPositiveButton(R.string.ok, (dialogInterface, i) -> {
+        RadioButton selectedRadioButton = (RadioButton) goalRadioButtonsGroup.findViewById(
+            goalRadioButtonsGroup.getCheckedRadioButtonId());
+
+        int newUserGoalId = selectedRadioButton.getId();
+        String newUserGoalText = selectedRadioButton.getText().toString();
+
+        goalsEntryValueTV.setText(newUserGoalText);
+
+        prefs.edit().putInt(Constants.EXTRAS_USER_PROFILE_GOAL_ID, newUserGoalId).apply();
+        prefs.edit().putString(Constants.EXTRAS_USER_PROFILE_GOAL, newUserGoalText).apply();
+
+        updateUserProfile();
+      });
+      dialogBuilder.setNegativeButton(R.string.decline_cancel,
+          (dialogInterface, i) -> dialogInterface.dismiss());
+
+      AlertDialog alertDialog = dialogBuilder.create();
+      alertDialog.show();
     });
 
     /**
      * ACTIVITY LEVELS EDITOR
      */
-    activityLevelsEntryValueTV.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View view) {
-        final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
-        dialogBuilder.setTitle(R.string.profile_edit_activity_levels_dialog_title);
+    activityLevelsEntryValueTV.setOnClickListener(view -> {
+      final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
+      dialogBuilder.setTitle(R.string.profile_edit_activity_levels_dialog_title);
 
-        View dialogView = LayoutInflater.from(getActivity())
-            .inflate(R.layout.profile_edit_radio_options_layout, null);
+      View dialogView = LayoutInflater.from(getActivity())
+          .inflate(R.layout.profile_edit_radio_options_layout, null);
 
-        final RadioGroupPlus activityLevelRadioGRP =
-            (RadioGroupPlus) dialogView.findViewById(R.id.collectionsRadioGroup);
+      final RadioGroupPlus activityLevelRadioGRP =
+          (RadioGroupPlus) dialogView.findViewById(R.id.collectionsRadioGroup);
 
-        for (int i = 0; i < userActivityLevels.size(); i++) {
-          View listItemRadioButton = getActivity().getLayoutInflater()
-              .inflate(R.layout.list_item_edit_radio_options_dialog, null);
+      for (int i = 0; i < userActivityLevels.size(); i++) {
+        View listItemRadioButton = getActivity().getLayoutInflater()
+            .inflate(R.layout.list_item_edit_radio_options_dialog, null);
 
-          final RadioButton radioButtonItem =
-              (RadioButton) listItemRadioButton.findViewById(R.id.editRadioOptionsRadioBTN);
-          radioButtonItem.setText(userActivityLevels.get(i).getName());
-          radioButtonItem.setId(Integer.parseInt(userActivityLevels.get(i).getId()));
+        final RadioButton radioButtonItem =
+            (RadioButton) listItemRadioButton.findViewById(R.id.editRadioOptionsRadioBTN);
+        radioButtonItem.setText(userActivityLevels.get(i).getName());
+        radioButtonItem.setId(Integer.parseInt(userActivityLevels.get(i).getId()));
 
-          if (radioButtonItem.getText()
-              .toString()
-              .equals(prefs.getString(Constants.EXTRAS_USER_PROFILE_ACTIVITY_LEVEL, ""))) {
-            radioButtonItem.setChecked(true);
-          }
-
-          activityLevelRadioGRP.addView(listItemRadioButton);
+        if (radioButtonItem.getText()
+            .toString()
+            .equals(prefs.getString(Constants.EXTRAS_USER_PROFILE_ACTIVITY_LEVEL, ""))) {
+          radioButtonItem.setChecked(true);
         }
 
-        dialogBuilder.setView(dialogView);
-        dialogBuilder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-          @Override public void onClick(DialogInterface dialogInterface, int position) {
-            RadioButton selectedRadioButton = (RadioButton) activityLevelRadioGRP.findViewById(
-                activityLevelRadioGRP.getCheckedRadioButtonId());
-
-            if (selectedRadioButton != null) {
-              activityLevelsEntryValueTV.setText(selectedRadioButton.getText().toString());
-
-              prefs.edit()
-                  .putString(Constants.EXTRAS_USER_PROFILE_ACTIVITY_LEVEL,
-                      selectedRadioButton.getText().toString())
-                  .apply();
-              prefs.edit()
-                  .putInt(Constants.EXTRAS_USER_PROFILE_ACTIVITY_LEVEL_ID,
-                      selectedRadioButton.getId())
-                  .apply();
-
-              updateUserProfile();
-            } else {
-              Log.d("TAG", "onClick: Selected Radio Button was null!");
-            }
-          }
-        });
-
-        dialogBuilder.setNegativeButton(R.string.decline_cancel,
-            new DialogInterface.OnClickListener() {
-              @Override public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-              }
-            });
-
-        AlertDialog alertDialog = dialogBuilder.create();
-        alertDialog.show();
+        activityLevelRadioGRP.addView(listItemRadioButton);
       }
+
+      dialogBuilder.setView(dialogView);
+      dialogBuilder.setPositiveButton(R.string.ok, (dialogInterface, position) -> {
+        RadioButton selectedRadioButton = (RadioButton) activityLevelRadioGRP.findViewById(
+            activityLevelRadioGRP.getCheckedRadioButtonId());
+
+        if (selectedRadioButton != null) {
+          activityLevelsEntryValueTV.setText(selectedRadioButton.getText().toString());
+
+          prefs.edit()
+              .putString(Constants.EXTRAS_USER_PROFILE_ACTIVITY_LEVEL,
+                  selectedRadioButton.getText().toString())
+              .apply();
+          prefs.edit()
+              .putInt(Constants.EXTRAS_USER_PROFILE_ACTIVITY_LEVEL_ID,
+                  selectedRadioButton.getId())
+              .apply();
+
+          updateUserProfile();
+        } else {
+          Log.d("TAG", "onClick: Selected Radio Button was null!");
+        }
+      });
+
+      dialogBuilder.setNegativeButton(R.string.decline_cancel,
+          (dialogInterface, i) -> dialogInterface.dismiss());
+
+      AlertDialog alertDialog = dialogBuilder.create();
+      alertDialog.show();
     });
 
     /**
      * MEDICAL CONDITIONS EDITOR
      */
-    medicalConditionsLayout.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View view) {
-        final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
-        dialogBuilder.setTitle(R.string.profile_edit_medical_conditions_dialog_title);
+    medicalConditionsLayout.setOnClickListener(view -> {
+      final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
+      dialogBuilder.setTitle(R.string.profile_edit_medical_conditions_dialog_title);
 
-        View dialogView = LayoutInflater.from(getActivity())
-            .inflate(R.layout.profile_edit_radio_options_layout, null);
+      View dialogView = LayoutInflater.from(getActivity())
+          .inflate(R.layout.profile_edit_radio_options_layout, null);
 
-        final RadioGroupPlus medicalRdGroup =
-            (RadioGroupPlus) dialogView.findViewById(R.id.collectionsRadioGroup);
+      final RadioGroupPlus medicalRdGroup =
+          (RadioGroupPlus) dialogView.findViewById(R.id.collectionsRadioGroup);
 
-        for (int i = 0; i < userMedicalConditions.size(); i++) {
-          View listItemRadioButton = getActivity().getLayoutInflater()
-              .inflate(R.layout.list_item_edit_radio_options_dialog, null);
+      for (int i = 0; i < userMedicalConditions.size(); i++) {
+        View listItemRadioButton = getActivity().getLayoutInflater()
+            .inflate(R.layout.list_item_edit_radio_options_dialog, null);
 
-          final RadioButton radioButtonItem =
-              (RadioButton) listItemRadioButton.findViewById(R.id.editRadioOptionsRadioBTN);
-          radioButtonItem.setText(userMedicalConditions.get(i).getName());
-          radioButtonItem.setId(Integer.parseInt(userMedicalConditions.get(i).getId()));
+        final RadioButton radioButtonItem =
+            (RadioButton) listItemRadioButton.findViewById(R.id.editRadioOptionsRadioBTN);
+        radioButtonItem.setText(userMedicalConditions.get(i).getName());
+        radioButtonItem.setId(Integer.parseInt(userMedicalConditions.get(i).getId()));
 
-          if (radioButtonItem.getText()
-              .toString()
-              .equals(prefs.getString(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION, ""))) {
-            radioButtonItem.setChecked(true);
-          }
-
-          medicalRdGroup.addView(listItemRadioButton);
+        if (radioButtonItem.getText()
+            .toString()
+            .equals(prefs.getString(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION, ""))) {
+          radioButtonItem.setChecked(true);
         }
 
-        dialogBuilder.setView(dialogView);
-        dialogBuilder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-          @Override public void onClick(DialogInterface dialogInterface, int position) {
-            RadioButton selectedRadioButton =
-                (RadioButton) medicalRdGroup.findViewById(medicalRdGroup.getCheckedRadioButtonId());
-
-            if (selectedRadioButton != null) {
-              medicalConditionsValueTV.setText(selectedRadioButton.getText().toString());
-
-              prefs.edit()
-                  .putString(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION,
-                      selectedRadioButton.getText().toString())
-                  .apply();
-              prefs.edit()
-                  .putInt(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION_ID,
-                      selectedRadioButton.getId())
-                  .apply();
-
-              updateUserProfile();
-            } else {
-              Log.d("TAG", "onClick: Selected Radio Button was null!");
-            }
-          }
-        });
-
-        dialogBuilder.setNegativeButton(R.string.decline_cancel,
-            new DialogInterface.OnClickListener() {
-              @Override public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-              }
-            });
-
-        AlertDialog alertDialog = dialogBuilder.create();
-        alertDialog.show();
+        medicalRdGroup.addView(listItemRadioButton);
       }
+
+      dialogBuilder.setView(dialogView);
+      dialogBuilder.setPositiveButton(R.string.ok, (dialogInterface, position) -> {
+        RadioButton selectedRadioButton =
+            (RadioButton) medicalRdGroup.findViewById(medicalRdGroup.getCheckedRadioButtonId());
+
+        if (selectedRadioButton != null) {
+          medicalConditionsValueTV.setText(selectedRadioButton.getText().toString());
+
+          prefs.edit()
+              .putString(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION,
+                  selectedRadioButton.getText().toString())
+              .apply();
+          prefs.edit()
+              .putInt(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION_ID,
+                  selectedRadioButton.getId())
+              .apply();
+
+          updateUserProfile();
+        } else {
+          Log.d("TAG", "onClick: Selected Radio Button was null!");
+        }
+      });
+
+      dialogBuilder.setNegativeButton(R.string.decline_cancel,
+          (dialogInterface, i) -> dialogInterface.dismiss());
+
+      AlertDialog alertDialog = dialogBuilder.create();
+      alertDialog.show();
     });
 
     /**
      * METRIC SYSTEM EDITOR
      */
-    metricLayout.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View view) {
-        final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
-        dialogBuilder.setTitle(R.string.profile_edit_measurement_unit_dialog_title);
+    metricLayout.setOnClickListener(view -> {
+      final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
+      dialogBuilder.setTitle(R.string.profile_edit_measurement_unit_dialog_title);
 
-        View dialogView = LayoutInflater.from(getActivity())
-            .inflate(R.layout.profile_edit_measurement_unit_layout, null);
+      View dialogView = LayoutInflater.from(getActivity())
+          .inflate(R.layout.profile_edit_measurement_unit_layout, null);
 
-        final RadioGroupPlus metricRadioGroup =
-            (RadioGroupPlus) dialogView.findViewById(R.id.measuremeantUnitRdGroup);
+      final RadioGroupPlus metricRadioGroup =
+          (RadioGroupPlus) dialogView.findViewById(R.id.measuremeantUnitRdGroup);
 
-        for (int i = 0; i < userMetricSystems.size(); i++) {
-          View listItemRadioButton = getActivity().getLayoutInflater()
-              .inflate(R.layout.list_item_edit_metric_system_dialog, null);
+      for (int i = 0; i < userMetricSystems.size(); i++) {
+        View listItemRadioButton = getActivity().getLayoutInflater()
+            .inflate(R.layout.list_item_edit_metric_system_dialog, null);
 
-          final RadioButton radioButtonItem =
-              (RadioButton) listItemRadioButton.findViewById(R.id.editMetricSystemRadioBTN);
-          radioButtonItem.setText(userMetricSystems.get(i).toString());
-          radioButtonItem.setId(userMetricSystems.indexOf(radioButtonItem.getText().toString()));
+        final RadioButton radioButtonItem =
+            (RadioButton) listItemRadioButton.findViewById(R.id.editMetricSystemRadioBTN);
+        radioButtonItem.setText(userMetricSystems.get(i).toString());
+        radioButtonItem.setId(userMetricSystems.indexOf(radioButtonItem.getText().toString()));
 
-          if (radioButtonItem.getText()
-              .toString()
-              .equalsIgnoreCase(
-                  prefs.getString(Constants.EXTRAS_USER_PROFILE_MEASUREMENT_SYSTEM, ""))) {
-            radioButtonItem.setChecked(true);
-          }
-
-          metricRadioGroup.addView(listItemRadioButton);
+        if (radioButtonItem.getText()
+            .toString()
+            .equalsIgnoreCase(
+                prefs.getString(Constants.EXTRAS_USER_PROFILE_MEASUREMENT_SYSTEM, ""))) {
+          radioButtonItem.setChecked(true);
         }
 
-        dialogBuilder.setView(dialogView);
-        dialogBuilder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-          @Override public void onClick(DialogInterface dialogInterface, int position) {
-            RadioButton selectedRadioButton = (RadioButton) metricRadioGroup.findViewById(
-                metricRadioGroup.getCheckedRadioButtonId());
-
-            metricSystemValueTV.setText(selectedRadioButton.getText().toString());
-
-            prefs.edit()
-                .putString(Constants.EXTRAS_USER_PROFILE_MEASUREMENT_SYSTEM,
-                    selectedRadioButton.getText().toString())
-                .apply();
-
-            updateUserProfile();
-          }
-        });
-        dialogBuilder.setNegativeButton(R.string.decline_cancel,
-            new DialogInterface.OnClickListener() {
-              @Override public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-              }
-            });
-
-        AlertDialog alertDialog = dialogBuilder.create();
-        alertDialog.show();
+        metricRadioGroup.addView(listItemRadioButton);
       }
+
+      dialogBuilder.setView(dialogView);
+      dialogBuilder.setPositiveButton(R.string.ok, (dialogInterface, position) -> {
+        RadioButton selectedRadioButton = (RadioButton) metricRadioGroup.findViewById(
+            metricRadioGroup.getCheckedRadioButtonId());
+
+        metricSystemValueTV.setText(selectedRadioButton.getText().toString());
+
+        prefs.edit()
+            .putString(Constants.EXTRAS_USER_PROFILE_MEASUREMENT_SYSTEM,
+                selectedRadioButton.getText().toString())
+            .apply();
+
+        updateUserProfile();
+      });
+      dialogBuilder.setNegativeButton(R.string.decline_cancel,
+          (dialogInterface, i) -> dialogInterface.dismiss());
+
+      AlertDialog alertDialog = dialogBuilder.create();
+      alertDialog.show();
     });
 
     /**
      * LOGOUT FROM THE APP
      */
-    logoutBTN.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View view) {
-        if (Helpers.isInternetAvailable(getActivity())) {
-          signOutUser();
-        } else {
-          Helpers.showNoInternetDialog(getActivity());
-        }
+    logoutBTN.setOnClickListener(view -> {
+      if (Helpers.isInternetAvailable(getActivity())) {
+        signOutUser();
+      } else {
+        Helpers.showNoInternetDialog(getActivity());
       }
     });
 
     /**
      * COUNTRY OF ORIGIN EDITOR
      */
-    countryLayout.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View view) {
-        final CountryPicker picker =
-            CountryPicker.newInstance(getString(R.string.choose_country_hint));
+    countryLayout.setOnClickListener(view -> {
+      final CountryPicker picker =
+          CountryPicker.newInstance(getString(R.string.choose_country_hint));
 
-        picker.show(getActivity().getSupportFragmentManager(), "COUNTRY_PICKER");
-        picker.setListener(new CountryPickerListener() {
-          @Override public void onSelectCountry(String countryName, String code, String dialCode,
-              int flagDrawableResID) {
-            countryValueTV.setText(countryName);
+      picker.show(getActivity().getSupportFragmentManager(), "COUNTRY_PICKER");
+      picker.setListener((countryName, code, dialCode, flagDrawableResID) -> {
+        countryValueTV.setText(countryName);
 
-            prefs.edit().putString(Constants.EXTRAS_USER_PROFILE_NATIONALITY, countryName).apply();
+        prefs.edit().putString(Constants.EXTRAS_USER_PROFILE_NATIONALITY, countryName).apply();
 
-            picker.dismiss();
+        picker.dismiss();
 
-            updateUserProfile();
-          }
-        });
-      }
+        updateUserProfile();
+      });
     });
 
     /**
      * SHOW EMERGENCY PROFILE
      */
-    shareEmergencyProfileBTN.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View view) {
-        if (Helpers.isInternetAvailable(getActivity())) {
+    shareEmergencyProfileBTN.setOnClickListener(view -> {
+      if (Helpers.isInternetAvailable(getActivity())) {
 
-          boolean hasPermission = (ContextCompat.checkSelfPermission(getActivity(),
-              Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED);
-          if (!hasPermission) {
-            requestPermissions(new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE },
-                REQUEST_WRITE_STORAGE);
-          } else {
-            requestEmergencyProfile();
-          }
+        boolean hasPermission = (ContextCompat.checkSelfPermission(getActivity(),
+            Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED);
+        if (!hasPermission) {
+          requestPermissions(new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE },
+              REQUEST_WRITE_STORAGE);
         } else {
-          Helpers.showNoInternetDialog(getActivity());
+          requestEmergencyProfile();
         }
+      } else {
+        Helpers.showNoInternetDialog(getActivity());
       }
     });
 
     /**
      * TERMS AND CONDITIONS
      */
-    termsConditionsLayout.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View view) {
-        getMetaTexts("terms");
-      }
-    });
+    termsConditionsLayout.setOnClickListener(view -> getMetaTexts("terms"));
 
     /**
      * PRIVACY POLICY
      */
-    privacyLayout.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View view) {
-        getMetaTexts("privacy");
-      }
-    });
+    privacyLayout.setOnClickListener(view -> getMetaTexts("privacy"));
 
     /**
      * CONTACT US
      */
-    contactUsLayout.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View view) {
-        Intent intent = new Intent(getActivity(), ContactUsActivity.class);
-        startActivity(intent);
-      }
+    contactUsLayout.setOnClickListener(view -> {
+      Intent intent = new Intent(getActivity(), ContactUsActivity.class);
+      startActivity(intent);
     });
 
     /**
      * SET APP REMINDERS
      */
-    appRemindersLayout.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View view) {
-        Intent intent = new Intent(getActivity(), MealRemindersActivity.class);
-        startActivity(intent);
-      }
+    appRemindersLayout.setOnClickListener(view -> {
+      Intent intent = new Intent(getActivity(), MealRemindersActivity.class);
+      startActivity(intent);
     });
 
     /**
      * SHARE THE APP
      */
-    shareAppLayout.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View view) {
-        try {
-          Intent i = new Intent(Intent.ACTION_SEND);
-          i.setType("text/plain");
-          i.putExtra(Intent.EXTRA_SUBJECT, "GMFit");
-          String sAux = "\nCheck out GlobeMed's new application!\n\n";
-          sAux = sAux + "https://play.google.com/store/apps/details?id=Orion.Soft \n\n";
-          i.putExtra(Intent.EXTRA_TEXT, sAux);
-          startActivity(Intent.createChooser(i, "Choose sharing method"));
-        } catch (Exception e) {
-          //e.toString();
-        }
+    shareAppLayout.setOnClickListener(view -> {
+      try {
+        Intent i = new Intent(Intent.ACTION_SEND);
+        i.setType("text/plain");
+        i.putExtra(Intent.EXTRA_SUBJECT, "GMFit");
+        String sAux = "\nCheck out GlobeMed's new application!\n\n";
+        sAux = sAux + "https://play.google.com/store/apps/details?id=Orion.Soft \n\n";
+        i.putExtra(Intent.EXTRA_TEXT, sAux);
+        startActivity(Intent.createChooser(i, "Choose sharing method"));
+      } catch (Exception e) {
+        //e.toString();
       }
     });
 
@@ -607,11 +542,9 @@ public class MainProfileFragment extends Fragment {
     /**
      * CHANGE PASSWORD LAYOUT
      */
-    changePasswordLayout.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View view) {
-        Intent intent = new Intent(getActivity(), ChangePasswordActivity.class);
-        startActivity(intent);
-      }
+    changePasswordLayout.setOnClickListener(view -> {
+      Intent intent = new Intent(getActivity(), ChangePasswordActivity.class);
+      startActivity(intent);
     });
 
     return fragmentView;
@@ -749,26 +682,20 @@ public class MainProfileFragment extends Fragment {
     arrayAdapter.add(getResources().getString(R.string.choose_picture_from_gallery));
     arrayAdapter.add(getResources().getString(R.string.take_new_picture));
 
-    builderSingle.setNegativeButton(R.string.decline_cancel, new DialogInterface.OnClickListener() {
-      @Override public void onClick(DialogInterface dialog, int which) {
-        dialog.dismiss();
-      }
-    });
+    builderSingle.setNegativeButton(R.string.decline_cancel, (dialog, which) -> dialog.dismiss());
 
-    builderSingle.setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
-      @Override public void onClick(DialogInterface dialog, int which) {
-        String strName = arrayAdapter.getItem(which);
-        if (strName != null) {
-          switch (strName) {
-            case "Choose from gallery":
-              Intent galleryIntent = new Intent(Intent.ACTION_PICK,
-                  android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-              startActivityForResult(galleryIntent, REQUEST_PICK_IMAGE_GALLERY);
-              break;
-            case "Take a new picture":
-              openTakePictureIntent();
-              break;
-          }
+    builderSingle.setAdapter(arrayAdapter, (dialog, which) -> {
+      String strName = arrayAdapter.getItem(which);
+      if (strName != null) {
+        switch (strName) {
+          case "Choose from gallery":
+            Intent galleryIntent = new Intent(Intent.ACTION_PICK,
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            startActivityForResult(galleryIntent, REQUEST_PICK_IMAGE_GALLERY);
+            break;
+          case "Take a new picture":
+            openTakePictureIntent();
+            break;
         }
       }
     });
@@ -807,12 +734,10 @@ public class MainProfileFragment extends Fragment {
     final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
     alertDialog.setTitle(R.string.loading_data_dialog_title);
     alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getResources().getString(R.string.ok),
-        new DialogInterface.OnClickListener() {
-          public void onClick(DialogInterface dialog, int which) {
-            dialog.dismiss();
+        (dialog, which) -> {
+          dialog.dismiss();
 
-            if (waitingDialog.isShowing()) waitingDialog.dismiss();
-          }
+          if (waitingDialog.isShowing()) waitingDialog.dismiss();
         });
 
     dataAccessHandler.getMetaTexts(section, new Callback<MetaTextsResponse>() {
@@ -1037,14 +962,11 @@ public class MainProfileFragment extends Fragment {
 
     final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
     alertDialog.setTitle(R.string.updating_user_profile_dialog_title);
-    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
-        new DialogInterface.OnClickListener() {
-          public void onClick(DialogInterface dialog, int which) {
-            dialog.dismiss();
+    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok), (dialog, which) -> {
+      dialog.dismiss();
 
-            if (waitingDialog.isShowing()) waitingDialog.dismiss();
-          }
-        });
+      if (waitingDialog.isShowing()) waitingDialog.dismiss();
+    });
 
     dataAccessHandler.updateUserProfile(dateOfBirth, bloodType, nationality, medicalCondition,
         measurementSystem.toLowerCase(), userGoalId, activityLevelId, gender, height, weight, "1",
@@ -1121,14 +1043,11 @@ public class MainProfileFragment extends Fragment {
 
     final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
     alertDialog.setTitle(R.string.signing_out_dialog_title);
-    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
-        new DialogInterface.OnClickListener() {
-          public void onClick(DialogInterface dialog, int which) {
-            dialog.dismiss();
+    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok), (dialog, which) -> {
+      dialog.dismiss();
 
-            if (waitingDialog.isShowing()) waitingDialog.dismiss();
-          }
-        });
+      if (waitingDialog.isShowing()) waitingDialog.dismiss();
+    });
 
     dataAccessHandler.signOutUser(new Callback<DefaultGetResponse>() {
       @Override

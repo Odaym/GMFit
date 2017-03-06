@@ -74,18 +74,14 @@ public class LoginActivity extends BaseActivity {
 
     EventBusSingleton.getInstance().register(this);
 
-    signInBTN.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View view) {
-        Intent intent = new Intent(LoginActivity.this, SignInActivity.class);
-        startActivity(intent);
-      }
+    signInBTN.setOnClickListener(view -> {
+      Intent intent = new Intent(LoginActivity.this, SignInActivity.class);
+      startActivity(intent);
     });
 
-    signUpBTN.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
-        startActivity(intent);
-      }
+    signUpBTN.setOnClickListener(v -> {
+      Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
+      startActivity(intent);
     });
 
     initializeFacebookLogin();
@@ -143,29 +139,27 @@ public class LoginActivity extends BaseActivity {
             .apply();
 
         GraphRequest request =
-            GraphRequest.newMeRequest(accessToken, new GraphRequest.GraphJSONObjectCallback() {
-              @Override public void onCompleted(JSONObject object, GraphResponse response) {
-                try {
+            GraphRequest.newMeRequest(accessToken, (object, response) -> {
+              try {
 
-                  String userID = (String) object.get("id");
-                  String userName = (String) object.get("name");
-                  String userEmail = (String) object.get("email");
+                String userID = (String) object.get("id");
+                String userName = (String) object.get("name");
+                String userEmail = (String) object.get("email");
 
-                  SharedPreferences.Editor prefsEditor = prefs.edit();
+                SharedPreferences.Editor prefsEditor = prefs.edit();
 
-                  prefsEditor.putBoolean(Constants.EXTRAS_USER_LOGGED_IN, true);
+                prefsEditor.putBoolean(Constants.EXTRAS_USER_LOGGED_IN, true);
 
-                  prefsEditor.putString(Constants.EXTRAS_USER_FULL_NAME, userName);
-                  prefsEditor.putString(Constants.EXTRAS_USER_DISPLAY_PHOTO,
-                      "https://graph.facebook.com/" + userID + "/picture?type=large");
-                  prefsEditor.putString(Constants.EXTRAS_USER_EMAIL, userEmail);
+                prefsEditor.putString(Constants.EXTRAS_USER_FULL_NAME, userName);
+                prefsEditor.putString(Constants.EXTRAS_USER_DISPLAY_PHOTO,
+                    "https://graph.facebook.com/" + userID + "/picture?type=large");
+                prefsEditor.putString(Constants.EXTRAS_USER_EMAIL, userEmail);
 
-                  prefsEditor.apply();
+                prefsEditor.apply();
 
-                  registerUserWithFacebook(accessToken.getToken());
-                } catch (JSONException e) {
-                  e.printStackTrace();
-                }
+                registerUserWithFacebook(accessToken.getToken());
+              } catch (JSONException e) {
+                e.printStackTrace();
               }
             });
 
@@ -193,14 +187,11 @@ public class LoginActivity extends BaseActivity {
 
     final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
     alertDialog.setTitle(R.string.signing_in_dialog_title);
-    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
-        new DialogInterface.OnClickListener() {
-          public void onClick(DialogInterface dialog, int which) {
-            dialog.dismiss();
+    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok), (dialog, which) -> {
+      dialog.dismiss();
 
-            if (waitingDialog.isShowing()) waitingDialog.dismiss();
-          }
-        });
+      if (waitingDialog.isShowing()) waitingDialog.dismiss();
+    });
 
     dataAccessHandler.handleFacebookProcess(accessToken, new Callback<AuthenticationResponse>() {
       @Override public void onResponse(Call<AuthenticationResponse> call,

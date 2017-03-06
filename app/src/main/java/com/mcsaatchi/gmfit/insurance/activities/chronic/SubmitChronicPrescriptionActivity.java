@@ -88,12 +88,10 @@ public class SubmitChronicPrescriptionActivity extends BaseActivity {
     for (int i = 0; i < innerLayoutWithPickers.getChildCount(); i++) {
       if (innerLayoutWithPickers.getChildAt(i) instanceof ImageView) {
         final int finalI = i;
-        innerLayoutWithPickers.getChildAt(i).setOnClickListener(new View.OnClickListener() {
-          @Override public void onClick(View view) {
-            ImageView imageView = (ImageView) innerLayoutWithPickers.findViewById(
-                innerLayoutWithPickers.getChildAt(finalI).getId());
-            showImagePickerDialog(imageView);
-          }
+        innerLayoutWithPickers.getChildAt(i).setOnClickListener(view -> {
+          ImageView imageView = (ImageView) innerLayoutWithPickers.findViewById(
+              innerLayoutWithPickers.getChildAt(finalI).getId());
+          showImagePickerDialog(imageView);
         });
       }
     }
@@ -134,12 +132,10 @@ public class SubmitChronicPrescriptionActivity extends BaseActivity {
         getResources().getString(R.string.submit_new_chronic_treatment_dialog_title));
     waitingDialog.setMessage(
         getResources().getString(R.string.uploading_attachments_dialog_message));
-    waitingDialog.setOnShowListener(new DialogInterface.OnShowListener() {
-      @Override public void onShow(DialogInterface dialogInterface) {
-        HashMap<String, RequestBody> attachments = constructSelectedImagesForRequest();
+    waitingDialog.setOnShowListener(dialogInterface -> {
+      HashMap<String, RequestBody> attachments = constructSelectedImagesForRequest();
 
-        submitNewChronicTreatment(attachments, waitingDialog);
-      }
+      submitNewChronicTreatment(attachments, waitingDialog);
     });
 
     waitingDialog.show();
@@ -156,41 +152,35 @@ public class SubmitChronicPrescriptionActivity extends BaseActivity {
     arrayAdapter.add(getResources().getString(R.string.choose_picture_from_gallery));
     arrayAdapter.add(getResources().getString(R.string.take_new_picture));
 
-    builderSingle.setNegativeButton(R.string.decline_cancel, new DialogInterface.OnClickListener() {
-      @Override public void onClick(DialogInterface dialog, int which) {
-        dialog.dismiss();
-      }
-    });
+    builderSingle.setNegativeButton(R.string.decline_cancel, (dialog, which) -> dialog.dismiss());
 
-    builderSingle.setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
-      @Override public void onClick(DialogInterface dialog, int which) {
-        String strName = arrayAdapter.getItem(which);
-        if (strName != null) {
-          switch (strName) {
-            case "Choose from gallery":
-              Intent galleryIntent = new Intent(Intent.ACTION_PICK,
-                  android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-              startActivityForResult(galleryIntent, REQUEST_PICK_IMAGE_GALLERY);
-              break;
-            case "Take a new picture":
-              Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-              if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-                photoFile = null;
-                try {
-                  photoFile = createImageFile(constructImageFilename());
-                  photoFileUri = Uri.fromFile(photoFile);
-                } catch (IOException ex) {
-                  ex.printStackTrace();
-                }
-
-                if (photoFile != null) {
-                  takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoFileUri);
-                  startActivityForResult(takePictureIntent, CAPTURE_NEW_PICTURE_REQUEST_CODE);
-                }
+    builderSingle.setAdapter(arrayAdapter, (dialog, which) -> {
+      String strName = arrayAdapter.getItem(which);
+      if (strName != null) {
+        switch (strName) {
+          case "Choose from gallery":
+            Intent galleryIntent = new Intent(Intent.ACTION_PICK,
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            startActivityForResult(galleryIntent, REQUEST_PICK_IMAGE_GALLERY);
+            break;
+          case "Take a new picture":
+            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+              photoFile = null;
+              try {
+                photoFile = createImageFile(constructImageFilename());
+                photoFileUri = Uri.fromFile(photoFile);
+              } catch (IOException ex) {
+                ex.printStackTrace();
               }
 
-              break;
-          }
+              if (photoFile != null) {
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoFileUri);
+                startActivityForResult(takePictureIntent, CAPTURE_NEW_PICTURE_REQUEST_CODE);
+              }
+            }
+
+            break;
         }
       }
     });
@@ -266,12 +256,10 @@ public class SubmitChronicPrescriptionActivity extends BaseActivity {
     final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
     alertDialog.setTitle(R.string.submit_new_chronic_treatment_dialog_title);
     alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getResources().getString(R.string.ok),
-        new DialogInterface.OnClickListener() {
-          public void onClick(DialogInterface dialog, int which) {
-            dialog.dismiss();
+        (dialog, which) -> {
+          dialog.dismiss();
 
-            if (waitingDialog.isShowing()) waitingDialog.dismiss();
-          }
+          if (waitingDialog.isShowing()) waitingDialog.dismiss();
         });
 
     dataAccessHandler.createNewRequest(

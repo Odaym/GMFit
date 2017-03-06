@@ -89,21 +89,18 @@ public class AddNewMealItemActivity extends BaseActivity {
 
     loadRecentMealsFromServer(mealType);
 
-    mealItemsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-      @Override
-      public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-        if (((MealItem) adapterView.getItemAtPosition(position)).getSectionType()
-            == ITEM_VIEWTYPE) {
-          Intent intent = new Intent(AddNewMealItemActivity.this, SpecifyMealAmountActivity.class);
+    mealItemsList.setOnItemClickListener((adapterView, view, position, l) -> {
+      if (((MealItem) adapterView.getItemAtPosition(position)).getSectionType()
+          == ITEM_VIEWTYPE) {
+        Intent intent = new Intent(AddNewMealItemActivity.this, SpecifyMealAmountActivity.class);
 
-          if (purposeIsToAddMealToDate) {
-            intent.putExtra(Constants.EXTRAS_MEAL_ITEM_PURPOSE_ADDING_TO_DATE, true);
-          }
-
-          intent.putExtra(Constants.EXTRAS_DATE_TO_ADD_MEAL_ON, chosenDate);
-          intent.putExtra(Constants.EXTRAS_MEAL_OBJECT_DETAILS, mealItems.get(position));
-          startActivityForResult(intent, MEAL_AMOUNT_SPECIFIED);
+        if (purposeIsToAddMealToDate) {
+          intent.putExtra(Constants.EXTRAS_MEAL_ITEM_PURPOSE_ADDING_TO_DATE, true);
         }
+
+        intent.putExtra(Constants.EXTRAS_DATE_TO_ADD_MEAL_ON, chosenDate);
+        intent.putExtra(Constants.EXTRAS_MEAL_OBJECT_DETAILS, mealItems.get(position));
+        startActivityForResult(intent, MEAL_AMOUNT_SPECIFIED);
       }
     });
 
@@ -147,124 +144,115 @@ public class AddNewMealItemActivity extends BaseActivity {
 
           pb_loading_indicator.setVisibility(View.VISIBLE);
 
-          new Handler().postDelayed(new Runnable() {
-            @Override public void run() {
-              searchIconIV.setImageResource(R.drawable.ic_clear_search);
-              searchIconIV.setOnClickListener(new View.OnClickListener() {
-                @Override public void onClick(View view) {
-                  searchMealsAutoCompleTV.setText("");
+          new Handler().postDelayed(() -> {
+            searchIconIV.setImageResource(R.drawable.ic_clear_search);
+            searchIconIV.setOnClickListener(view -> {
+              searchMealsAutoCompleTV.setText("");
 
-                  /**
-                   * Hide keyboard
-                   */
-                  InputMethodManager imm =
-                      (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                  imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                }
-              });
+              /**
+               * Hide keyboard
+               */
+              InputMethodManager imm =
+                  (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+              imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            });
 
-              findMeals(charSequence.toString(), new Callback<SearchMealItemResponse>() {
-                @Override public void onResponse(Call<SearchMealItemResponse> call,
-                    Response<SearchMealItemResponse> response) {
+            findMeals(charSequence.toString(), new Callback<SearchMealItemResponse>() {
+              @Override public void onResponse(Call<SearchMealItemResponse> call,
+                  Response<SearchMealItemResponse> response) {
 
-                  final List<MealItem> mealsReturned = new ArrayList<>();
+                final List<MealItem> mealsReturned = new ArrayList<>();
 
-                  List<SearchMealItemResponseDatum> mealsResponse =
-                      response.body().getData().getBody().getData();
+                List<SearchMealItemResponseDatum> mealsResponse =
+                    response.body().getData().getBody().getData();
 
-                  for (int i = 0; i < mealsResponse.size(); i++) {
-                    MealItem mealItem = new MealItem();
+                for (int i3 = 0; i3 < mealsResponse.size(); i3++) {
+                  MealItem mealItem = new MealItem();
 
-                    mealItem.setName(mealsResponse.get(i).getName());
-                    mealItem.setMeasurementUnit(mealsResponse.get(i).getMeasurementUnit());
-                    mealItem.setMeal_id(mealsResponse.get(i).getId());
-                    if (mealType.equals("Snacks")) {
-                      mealItem.setType("Snack");
-                    } else {
-                      mealItem.setType(mealType);
-                    }
-                    mealItem.setSectionType(ITEM_VIEWTYPE);
-
-                    mealsReturned.add(mealItem);
-                  }
-
-                  mealItems.clear();
-
-                  mealItems = mealsReturned;
-
-                  if (mealItems.isEmpty()) {
-                    searchResultsListLayout.setVisibility(View.GONE);
-                    requestMealLayout.setVisibility(View.VISIBLE);
-                    mealNotFoundTitleTV.setText("\"" + charSequence.toString() + "\"");
-
-                    requestMealBTN.setText(
-                        getResources().getString(R.string.request_new_meal_button));
-                    requestMealBTN.setAlpha(1);
-                    requestMealBTN.setEnabled(true);
-
-                    requestMealBTN.setOnClickListener(new View.OnClickListener() {
-                      @Override public void onClick(View view) {
-                        final ProgressDialog waitingDialog =
-                            new ProgressDialog(AddNewMealItemActivity.this);
-                        waitingDialog.setTitle(
-                            getResources().getString(R.string.requesting_meal_item_dialog_title));
-                        waitingDialog.setMessage(
-                            getResources().getString(R.string.please_wait_dialog_message));
-                        waitingDialog.show();
-
-                        final AlertDialog alertDialog =
-                            new AlertDialog.Builder(AddNewMealItemActivity.this).create();
-                        alertDialog.setTitle(R.string.requesting_meal_item_dialog_title);
-                        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE,
-                            getResources().getString(R.string.ok),
-                            new DialogInterface.OnClickListener() {
-                              public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-
-                                if (waitingDialog.isShowing()) waitingDialog.dismiss();
-                              }
-                            });
-
-                        dataAccessHandler.requestNewMeal(charSequence.toString(),
-                            new Callback<DefaultGetResponse>() {
-                              @Override public void onResponse(Call<DefaultGetResponse> call,
-                                  Response<DefaultGetResponse> response) {
-                                switch (response.code()) {
-                                  case 200:
-                                    waitingDialog.dismiss();
-
-                                    requestMealBTN.setText(getResources().getString(
-                                        R.string.request_new_meal_sent_thanks));
-                                    requestMealBTN.setAlpha(0.5f);
-                                    requestMealBTN.setEnabled(false);
-                                    break;
-                                }
-                              }
-
-                              @Override
-                              public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
-                                Timber.d("Call failed with error : %s", t.getMessage());
-                                final AlertDialog alertDialog =
-                                    new AlertDialog.Builder(AddNewMealItemActivity.this).create();
-                                alertDialog.setMessage(
-                                    getString(R.string.server_error_got_returned));
-                                alertDialog.show();
-                              }
-                            });
-                      }
-                    });
+                  mealItem.setName(mealsResponse.get(i3).getName());
+                  mealItem.setMeasurementUnit(mealsResponse.get(i3).getMeasurementUnit());
+                  mealItem.setMeal_id(mealsResponse.get(i3).getId());
+                  if (mealType.equals("Snacks")) {
+                    mealItem.setType("Snack");
                   } else {
-                    initMealsList(mealsReturned);
+                    mealItem.setType(mealType);
                   }
+                  mealItem.setSectionType(ITEM_VIEWTYPE);
 
-                  searchResultsHintTV.setVisibility(View.VISIBLE);
-                  pb_loading_indicator.setVisibility(View.INVISIBLE);
+                  mealsReturned.add(mealItem);
                 }
 
-                @Override public void onFailure(Call<SearchMealItemResponse> call, Throwable t) {
+                mealItems.clear();
+
+                mealItems = mealsReturned;
+
+                if (mealItems.isEmpty()) {
+                  searchResultsListLayout.setVisibility(View.GONE);
+                  requestMealLayout.setVisibility(View.VISIBLE);
+                  mealNotFoundTitleTV.setText("\"" + charSequence.toString() + "\"");
+
+                  requestMealBTN.setText(
+                      getResources().getString(R.string.request_new_meal_button));
+                  requestMealBTN.setAlpha(1);
+                  requestMealBTN.setEnabled(true);
+
+                  requestMealBTN.setOnClickListener(view -> {
+                    final ProgressDialog waitingDialog =
+                        new ProgressDialog(AddNewMealItemActivity.this);
+                    waitingDialog.setTitle(
+                        getResources().getString(R.string.requesting_meal_item_dialog_title));
+                    waitingDialog.setMessage(
+                        getResources().getString(R.string.please_wait_dialog_message));
+                    waitingDialog.show();
+
+                    final AlertDialog alertDialog =
+                        new AlertDialog.Builder(AddNewMealItemActivity.this).create();
+                    alertDialog.setTitle(R.string.requesting_meal_item_dialog_title);
+                    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE,
+                        getResources().getString(R.string.ok), (dialog, which) -> {
+                          dialog.dismiss();
+
+                          if (waitingDialog.isShowing()) waitingDialog.dismiss();
+                        });
+
+                    dataAccessHandler.requestNewMeal(charSequence.toString(),
+                        new Callback<DefaultGetResponse>() {
+                          @Override public void onResponse(Call<DefaultGetResponse> call1,
+                              Response<DefaultGetResponse> response1) {
+                            switch (response1.code()) {
+                              case 200:
+                                waitingDialog.dismiss();
+
+                                requestMealBTN.setText(getResources().getString(
+                                    R.string.request_new_meal_sent_thanks));
+                                requestMealBTN.setAlpha(0.5f);
+                                requestMealBTN.setEnabled(false);
+                                break;
+                            }
+                          }
+
+                          @Override
+                          public void onFailure(Call<DefaultGetResponse> call1, Throwable t) {
+                            Timber.d("Call failed with error : %s", t.getMessage());
+                            final AlertDialog alertDialog =
+                                new AlertDialog.Builder(AddNewMealItemActivity.this).create();
+                            alertDialog.setMessage(
+                                getString(R.string.server_error_got_returned));
+                            alertDialog.show();
+                          }
+                        });
+                  });
+                } else {
+                  initMealsList(mealsReturned);
                 }
-              });
-            }
+
+                searchResultsHintTV.setVisibility(View.VISIBLE);
+                pb_loading_indicator.setVisibility(View.INVISIBLE);
+              }
+
+              @Override public void onFailure(Call<SearchMealItemResponse> call, Throwable t) {
+              }
+            });
           }, 500);
         }
       }
@@ -334,12 +322,10 @@ public class AddNewMealItemActivity extends BaseActivity {
     final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
     alertDialog.setTitle(R.string.fetching_available_meals_dialog_title);
     alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getResources().getString(R.string.ok),
-        new DialogInterface.OnClickListener() {
-          public void onClick(DialogInterface dialog, int which) {
-            dialog.dismiss();
+        (dialog, which) -> {
+          dialog.dismiss();
 
-            if (waitingDialog.isShowing()) waitingDialog.dismiss();
-          }
+          if (waitingDialog.isShowing()) waitingDialog.dismiss();
         });
 
     dataAccessHandler.getRecentMeals(

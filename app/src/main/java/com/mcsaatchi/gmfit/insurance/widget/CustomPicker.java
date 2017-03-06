@@ -60,11 +60,8 @@ public class CustomPicker extends LinearLayout implements View.OnClickListener {
     int day = c.get(Calendar.DAY_OF_MONTH);
     int month = c.get(Calendar.MONTH);
     int year = c.get(Calendar.YEAR);
-    datePickerDialog = new DatePickerDialog(context, new DatePickerDialog.OnDateSetListener() {
-      @Override public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
-        datePickerClickListener.dateSet(year, month, dayOfMonth);
-      }
-    }, year, month, day);
+    datePickerDialog = new DatePickerDialog(context,
+        (datePicker, year1, month1, dayOfMonth) -> datePickerClickListener.dateSet(year1, month1, dayOfMonth), year, month, day);
   }
 
   private void setItemName(String itemName) {
@@ -78,11 +75,9 @@ public class CustomPicker extends LinearLayout implements View.OnClickListener {
   private void setDropDownItems(String itemName, final String[] items,
       final OnDropDownClickListener onDropDownClickListener) {
     builder = new AlertDialog.Builder(context);
-    builder.setTitle("Pick " + itemName).setItems(items, new DialogInterface.OnClickListener() {
-      @Override public void onClick(DialogInterface dialogInterface, int i) {
-        setSelectedItem(items[i]);
-        onDropDownClickListener.onClick(i, items[i]);
-      }
+    builder.setTitle("Pick " + itemName).setItems(items, (dialogInterface, i) -> {
+      setSelectedItem(items[i]);
+      onDropDownClickListener.onClick(i, items[i]);
     });
     builder.create();
   }

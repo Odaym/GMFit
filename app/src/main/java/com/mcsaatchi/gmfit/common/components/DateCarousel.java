@@ -90,31 +90,29 @@ public class DateCarousel extends HorizontalScrollView {
       if (i < daysExtraToShow) {
         fadeOutView(itemDateCarouselLayout);
       } else if (i >= daysExtraToShow) {
-        itemDateCarouselLayout.setOnClickListener(new View.OnClickListener() {
-          @Override public void onClick(View view) {
-            focusOnView(dateCarouselContainer, view);
+        itemDateCarouselLayout.setOnClickListener(view -> {
+          focusOnView(dateCarouselContainer, view);
 
-            DateTimeFormatter formatterForDisplay = DateTimeFormat.forPattern("dd/MMM/yyyy");
+          DateTimeFormatter formatterForDisplay = DateTimeFormat.forPattern("dd/MMM/yyyy");
 
-            DateTime formattedDate = formatterForDisplay.parseDateTime(
-                dayOfMonthTV.getText().toString()
-                    + "/"
-                    + monthOfYearTV.getText().toString()
-                    + "/"
-                    + dt.year().getAsText());
+          DateTime formattedDate = formatterForDisplay.parseDateTime(
+              dayOfMonthTV.getText().toString()
+                  + "/"
+                  + monthOfYearTV.getText().toString()
+                  + "/"
+                  + dt.year().getAsText());
 
-            String finalDesiredDate = Helpers.formatDateToDefault(formattedDate.toLocalDate());
+          String finalDesiredDate = Helpers.formatDateToDefault(formattedDate.toLocalDate());
 
-            String todaysDateFormatted =
-                dt.getYear() + "-" + dt.getMonthOfYear() + "-" + dt.getDayOfMonth();
-            //
-            //String finalDesiredDate =
-            //    formattedDate.getYear() + "-" + formattedDate.getMonthOfYear() + "-" + formattedDate
-            //        .getDayOfMonth();
+          String todaysDateFormatted =
+              dt.getYear() + "-" + dt.getMonthOfYear() + "-" + dt.getDayOfMonth();
+          //
+          //String finalDesiredDate =
+          //    formattedDate.getYear() + "-" + formattedDate.getMonthOfYear() + "-" + formattedDate
+          //        .getDayOfMonth();
 
-            for (CarouselClickListener listener : clickListeners) {
-              listener.handleClick(todaysDateFormatted, finalDesiredDate);
-            }
+          for (CarouselClickListener listener : clickListeners) {
+            listener.handleClick(todaysDateFormatted, finalDesiredDate);
           }
         });
       }

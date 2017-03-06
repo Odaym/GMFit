@@ -100,11 +100,7 @@ public class DragSortListView extends ListView {
   private float mDragUpScrollHeight;
   private float mDragDownScrollHeight;
   private float mMaxScrollSpeed = 0.5f;
-  private DragScrollProfile mScrollProfile = new DragScrollProfile() {
-    @Override public float getSpeed(float w, long t) {
-      return mMaxScrollSpeed * w;
-    }
-  };
+  private DragScrollProfile mScrollProfile = (w, t) -> mMaxScrollSpeed * w;
   private int mX;
   private int mY;
   private int mLastX;

@@ -43,20 +43,14 @@ public class FitnessWidgetsRecyclerAdapter
         holder.metricTV.setText(String.valueOf(this.widgetsMap.get(position).getValue()));
         holder.measurementUnitTV.setText(this.widgetsMap.get(position).getMeasurementUnit());
 
-        holder.moreInfoIV.setOnClickListener(new View.OnClickListener() {
-          @Override public void onClick(View view) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(context);
-            builder.setMessage(R.string.active_calories_calculation_hint_message);
-            builder.setCancelable(true);
-            builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-              public void onClick(DialogInterface dialog, int id) {
-                dialog.cancel();
-              }
-            });
+        holder.moreInfoIV.setOnClickListener(view -> {
+          AlertDialog.Builder builder = new AlertDialog.Builder(context);
+          builder.setMessage(R.string.active_calories_calculation_hint_message);
+          builder.setCancelable(true);
+          builder.setPositiveButton(android.R.string.ok, (dialog, id) -> dialog.cancel());
 
-            AlertDialog alert1 = builder.create();
-            alert1.show();
-          }
+          AlertDialog alert1 = builder.create();
+          alert1.show();
         });
         break;
       case "Distance Traveled":

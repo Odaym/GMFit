@@ -52,11 +52,7 @@ public class SetupProfileActivity extends BaseActivity {
     viewPager.setAdapter(setupProfileAdapter);
     viewPager.setOffscreenPageLimit(3);
 
-    viewPager.setOnTouchListener(new View.OnTouchListener() {
-      @Override public boolean onTouch(View view, MotionEvent motionEvent) {
-        return true;
-      }
-    });
+    viewPager.setOnTouchListener((view, motionEvent) -> true);
 
     viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
       @Override
@@ -90,72 +86,70 @@ public class SetupProfileActivity extends BaseActivity {
       }
     });
 
-    nextPageBTN.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
+    nextPageBTN.setOnClickListener(v -> {
 
-        switch (viewPager.getCurrentItem()) {
-          case 1:
-            if (setupProfileAdapter.getRegisteredFragment(viewPager.getCurrentItem()) != null) {
-              /**
-               * If no data was selected
-               */
-              if (!((SetupProfile2Fragment) setupProfileAdapter.getRegisteredFragment(
-                  viewPager.getCurrentItem())).wasDataSelected()) {
+      switch (viewPager.getCurrentItem()) {
+        case 1:
+          if (setupProfileAdapter.getRegisteredFragment(viewPager.getCurrentItem()) != null) {
+            /**
+             * If no data was selected
+             */
+            if (!((SetupProfile2Fragment) setupProfileAdapter.getRegisteredFragment(
+                viewPager.getCurrentItem())).wasDataSelected()) {
 
-                Toast.makeText(SetupProfileActivity.this, "Please make a choice to proceed",
-                    Toast.LENGTH_SHORT).show();
-              } else {
-                viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
-              }
+              Toast.makeText(SetupProfileActivity.this, "Please make a choice to proceed",
+                  Toast.LENGTH_SHORT).show();
+            } else {
+              viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
             }
-            break;
-          case 2:
-            if (setupProfileAdapter.getRegisteredFragment(viewPager.getCurrentItem()) != null) {
-              /**
-               * If no data was selected
-               */
-              if (!((SetupProfile3Fragment) setupProfileAdapter.getRegisteredFragment(
-                  viewPager.getCurrentItem())).wasDataSelected()) {
+          }
+          break;
+        case 2:
+          if (setupProfileAdapter.getRegisteredFragment(viewPager.getCurrentItem()) != null) {
+            /**
+             * If no data was selected
+             */
+            if (!((SetupProfile3Fragment) setupProfileAdapter.getRegisteredFragment(
+                viewPager.getCurrentItem())).wasDataSelected()) {
 
-                Toast.makeText(SetupProfileActivity.this, "Please make a choice to proceed",
-                    Toast.LENGTH_SHORT).show();
-              } else {
-                viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
-              }
+              Toast.makeText(SetupProfileActivity.this, "Please make a choice to proceed",
+                  Toast.LENGTH_SHORT).show();
+            } else {
+              viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
             }
-            break;
-          case 3:
-            if (setupProfileAdapter.getRegisteredFragment(viewPager.getCurrentItem()) != null) {
+          }
+          break;
+        case 3:
+          if (setupProfileAdapter.getRegisteredFragment(viewPager.getCurrentItem()) != null) {
+            /**
+             * If no data was selected
+             */
+            if (((SetupProfile4Fragment) setupProfileAdapter.getRegisteredFragment(
+                viewPager.getCurrentItem())).getFinalHeight() == 0
+                || ((SetupProfile4Fragment) setupProfileAdapter.getRegisteredFragment(
+                viewPager.getCurrentItem())).getFinalWeight() == 0) {
+
+              Toast.makeText(SetupProfileActivity.this,
+                  "Please fill in your Height and Weight to proceed", Toast.LENGTH_SHORT).show();
+            } else {
+              viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
+
               /**
-               * If no data was selected
+               * Time for submission
                */
-              if (((SetupProfile4Fragment) setupProfileAdapter.getRegisteredFragment(
-                  viewPager.getCurrentItem())).getFinalHeight() == 0
-                  || ((SetupProfile4Fragment) setupProfileAdapter.getRegisteredFragment(
-                  viewPager.getCurrentItem())).getFinalWeight() == 0) {
-
-                Toast.makeText(SetupProfileActivity.this,
-                    "Please fill in your Height and Weight to proceed", Toast.LENGTH_SHORT).show();
-              } else {
-                viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
-
-                /**
-                 * Time for submission
-                 */
-                if (nextPageBTN.getText().toString().equals(getString(R.string.finish_setup))) {
-                  if (Helpers.isInternetAvailable(SetupProfileActivity.this)) {
-                    EventBusSingleton.getInstance().post(new UserFinalizedSetupProfileEvent());
-                  } else {
-                    Helpers.showNoInternetDialog(SetupProfileActivity.this);
-                  }
+              if (nextPageBTN.getText().toString().equals(getString(R.string.finish_setup))) {
+                if (Helpers.isInternetAvailable(SetupProfileActivity.this)) {
+                  EventBusSingleton.getInstance().post(new UserFinalizedSetupProfileEvent());
+                } else {
+                  Helpers.showNoInternetDialog(SetupProfileActivity.this);
                 }
               }
             }
+          }
 
-            break;
-          default:
-            viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
-        }
+          break;
+        default:
+          viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
       }
     });
   }

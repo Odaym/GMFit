@@ -112,17 +112,15 @@ public class SetupProfile4Fragment extends Fragment
     allFields.add(weightET);
     allFields.add(heightET);
 
-    dateOfBirthTV.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        CalendarDatePickerDialogFragment cdp =
-            new CalendarDatePickerDialogFragment().setOnDateSetListener(SetupProfile4Fragment.this)
-                .setFirstDayOfWeek(Calendar.MONDAY)
-                .setDoneText(getString(R.string.accept_ok))
-                .setCancelText(getString(R.string.decline_cancel))
-                .setPreselectedDate(2000, 0, 1)
-                .setThemeLight();
-        cdp.show(getActivity().getSupportFragmentManager(), FRAG_TAG_DATE_PICKER);
-      }
+    dateOfBirthTV.setOnClickListener(v -> {
+      CalendarDatePickerDialogFragment cdp =
+          new CalendarDatePickerDialogFragment().setOnDateSetListener(SetupProfile4Fragment.this)
+              .setFirstDayOfWeek(Calendar.MONDAY)
+              .setDoneText(getString(R.string.accept_ok))
+              .setCancelText(getString(R.string.decline_cancel))
+              .setPreselectedDate(2000, 0, 1)
+              .setThemeLight();
+      cdp.show(getActivity().getSupportFragmentManager(), FRAG_TAG_DATE_PICKER);
     });
 
     weightET.addTextChangedListener(new TextWatcher() {
@@ -249,14 +247,11 @@ public class SetupProfile4Fragment extends Fragment
 
     final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
     alertDialog.setTitle(R.string.signing_up_dialog_title);
-    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
-        new DialogInterface.OnClickListener() {
-          public void onClick(DialogInterface dialog, int which) {
-            dialog.dismiss();
+    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok), (dialog, which) -> {
+      dialog.dismiss();
 
-            if (waitingDialog.isShowing()) waitingDialog.dismiss();
-          }
-        });
+      if (waitingDialog.isShowing()) waitingDialog.dismiss();
+    });
 
     dataAccessHandler.updateUserProfile(finalDateOfBirth, bloodType, nationality, medical_condition,
         measurementSystem, goalId, activityLevelId, finalGender, height, weight, "1",
@@ -333,13 +328,10 @@ public class SetupProfile4Fragment extends Fragment
       }
     });
 
-    spinner.setOnTouchListener(new View.OnTouchListener() {
+    spinner.setOnTouchListener((v, event) -> {
+      inputMethodManager.hideSoftInputFromWindow(weightET.getWindowToken(), 0);
 
-      @Override public boolean onTouch(View v, MotionEvent event) {
-        inputMethodManager.hideSoftInputFromWindow(weightET.getWindowToken(), 0);
-
-        return false;
-      }
+      return false;
     });
   }
 
@@ -359,13 +351,10 @@ public class SetupProfile4Fragment extends Fragment
       }
     });
 
-    spinner.setOnTouchListener(new View.OnTouchListener() {
+    spinner.setOnTouchListener((v, event) -> {
+      inputMethodManager.hideSoftInputFromWindow(weightET.getWindowToken(), 0);
 
-      @Override public boolean onTouch(View v, MotionEvent event) {
-        inputMethodManager.hideSoftInputFromWindow(weightET.getWindowToken(), 0);
-
-        return false;
-      }
+      return false;
     });
   }
 

@@ -65,41 +65,34 @@ public class SignInActivity extends BaseActivity {
     passwordET.setTypeface(Typeface.DEFAULT);
     emailET.setSelection(emailET.getText().length());
 
-    signInBTN.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        if (Helpers.validateFields(allFields)) {
-          if (Helpers.isInternetAvailable(SignInActivity.this)) {
-            signInUser(emailET.getText().toString(), passwordET.getText().toString());
-          } else {
-            Helpers.showNoInternetDialog(SignInActivity.this);
-          }
+    signInBTN.setOnClickListener(v -> {
+      if (Helpers.validateFields(allFields)) {
+        if (Helpers.isInternetAvailable(SignInActivity.this)) {
+          signInUser(emailET.getText().toString(), passwordET.getText().toString());
         } else {
-          showPasswordTV.setVisibility(View.GONE);
+          Helpers.showNoInternetDialog(SignInActivity.this);
         }
+      } else {
+        showPasswordTV.setVisibility(View.GONE);
       }
     });
 
     forgotPasswordTV.setText(Html.fromHtml(getString(R.string.forgot_password_button)));
-    forgotPasswordTV.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View view) {
-        startActivity(new Intent(SignInActivity.this, ForgotPasswordActivity.class));
+    forgotPasswordTV.setOnClickListener(
+        view -> startActivity(new Intent(SignInActivity.this, ForgotPasswordActivity.class)));
+
+    showPasswordTV.setOnClickListener(view -> {
+      if (passwordShowing) {
+        passwordET.setTransformationMethod(new PasswordTransformationMethod());
+        showPasswordTV.setText(R.string.show_password);
+      } else {
+        passwordET.setTransformationMethod(null);
+        showPasswordTV.setText(R.string.hide_password);
       }
-    });
 
-    showPasswordTV.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View view) {
-        if (passwordShowing) {
-          passwordET.setTransformationMethod(new PasswordTransformationMethod());
-          showPasswordTV.setText(R.string.show_password);
-        } else {
-          passwordET.setTransformationMethod(null);
-          showPasswordTV.setText(R.string.hide_password);
-        }
+      passwordET.setSelection(passwordET.getText().length());
 
-        passwordET.setSelection(passwordET.getText().length());
-
-        passwordShowing = !passwordShowing;
-      }
+      passwordShowing = !passwordShowing;
     });
 
     passwordET.addTextChangedListener(new TextWatcher() {
@@ -125,14 +118,11 @@ public class SignInActivity extends BaseActivity {
 
     final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
     alertDialog.setTitle(R.string.signing_in_dialog_title);
-    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
-        new DialogInterface.OnClickListener() {
-          public void onClick(DialogInterface dialog, int which) {
-            dialog.dismiss();
+    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok), (dialog, which) -> {
+      dialog.dismiss();
 
-            if (waitingDialog.isShowing()) waitingDialog.dismiss();
-          }
-        });
+      if (waitingDialog.isShowing()) waitingDialog.dismiss();
+    });
 
     dataAccessHandler.signInUser(email, password, new Callback<AuthenticationResponse>() {
       @Override public void onResponse(Call<AuthenticationResponse> call,

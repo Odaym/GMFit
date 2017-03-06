@@ -50,12 +50,9 @@ public class SplashActivity extends AppCompatActivity {
     if (!prefs.getBoolean(Constants.EXTRAS_USER_LOGGED_IN, false)) {
       Timber.d("User not logged in");
 
-      new Handler().postDelayed(new Runnable() {
-
-        @Override public void run() {
-          intent = new Intent(SplashActivity.this, LoginActivity.class);
-          startActivity(intent);
-        }
+      new Handler().postDelayed(() -> {
+        intent = new Intent(SplashActivity.this, LoginActivity.class);
+        startActivity(intent);
       }, SPLASH_TIME_OUT);
 
       /**
@@ -73,11 +70,7 @@ public class SplashActivity extends AppCompatActivity {
         }
       } else {
         Helpers.showNoInternetDialog(SplashActivity.this);
-        new Handler().postDelayed(new Runnable() {
-          @Override public void run() {
-            finish();
-          }
-        }, NO_INTERNET_DIALOG_TIMEOUT);
+        new Handler().postDelayed(() -> finish(), NO_INTERNET_DIALOG_TIMEOUT);
       }
     }
   }
@@ -118,11 +111,7 @@ public class SplashActivity extends AppCompatActivity {
     final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
     alertDialog.setTitle(R.string.signing_in_dialog_title);
     alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
-        new DialogInterface.OnClickListener() {
-          public void onClick(DialogInterface dialog, int which) {
-            dialog.dismiss();
-          }
-        });
+        (dialog, which) -> dialog.dismiss());
 
     dataAccessHandler.handleFacebookProcess(accessToken, new Callback<AuthenticationResponse>() {
       @Override public void onResponse(Call<AuthenticationResponse> call,

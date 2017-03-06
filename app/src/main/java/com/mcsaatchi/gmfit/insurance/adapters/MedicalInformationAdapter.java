@@ -68,11 +68,7 @@ public class MedicalInformationAdapter
 
     void addListener(final MedicalInformationModel medicine, final int position,
         final MedicalInformationAdapter.OnClickListener onClickListener) {
-      container.setOnClickListener(new View.OnClickListener() {
-        @Override public void onClick(View view) {
-          onClickListener.onClick(medicine, position);
-        }
-      });
+      container.setOnClickListener(view -> onClickListener.onClick(medicine, position));
     }
   }
 }

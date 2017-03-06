@@ -68,14 +68,12 @@ public class MedicationsRecyclerAdapter extends RecyclerView.Adapter {
     }
 
     public void bind(final Medication medicationItem) {
-      deleteLayout.setOnClickListener(new View.OnClickListener() {
-        @Override public void onClick(View v) {
-          medicationDAO.delete(medicationsList.get(getAdapterPosition()));
-          medicationsList.remove(getAdapterPosition());
-          notifyItemRemoved(getAdapterPosition());
+      deleteLayout.setOnClickListener(v -> {
+        medicationDAO.delete(medicationsList.get(getAdapterPosition()));
+        medicationsList.remove(getAdapterPosition());
+        notifyItemRemoved(getAdapterPosition());
 
-          EventBusSingleton.getInstance().post(new MedicationItemCreatedEvent());
-        }
+        EventBusSingleton.getInstance().post(new MedicationItemCreatedEvent());
       });
 
       //deactivate_layout.setOnClickListener(new View.OnClickListener() {
@@ -92,13 +90,11 @@ public class MedicationsRecyclerAdapter extends RecyclerView.Adapter {
           + " - "
           + medicationItem.getFrequency());
 
-      parentLayout.setOnClickListener(new View.OnClickListener() {
-        @Override public void onClick(View view) {
-          Intent intent = new Intent(context, AddExistingMedicationActivity.class);
-          intent.putExtra(Constants.EXTRAS_PURPOSE_EDIT_MEDICATION_REMINDER, true);
-          intent.putExtra(Constants.EXTRAS_MEDICATION_REMINDER_ITEM, medicationItem);
-          context.startActivity(intent);
-        }
+      parentLayout.setOnClickListener(view -> {
+        Intent intent = new Intent(context, AddExistingMedicationActivity.class);
+        intent.putExtra(Constants.EXTRAS_PURPOSE_EDIT_MEDICATION_REMINDER, true);
+        intent.putExtra(Constants.EXTRAS_MEDICATION_REMINDER_ITEM, medicationItem);
+        context.startActivity(intent);
       });
     }
   }

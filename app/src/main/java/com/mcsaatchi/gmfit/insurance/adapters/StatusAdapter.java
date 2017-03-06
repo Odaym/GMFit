@@ -79,11 +79,7 @@ public class StatusAdapter extends RecyclerView.Adapter<StatusAdapter.ViewHolder
 
     void addListener(final ClaimsListResponseDatum reimbursement, final int position,
         final OnClickListener onClickListener) {
-      container.setOnClickListener(new View.OnClickListener() {
-        @Override public void onClick(View view) {
-          onClickListener.onClick(reimbursement, position);
-        }
-      });
+      container.setOnClickListener(view -> onClickListener.onClick(reimbursement, position));
     }
   }
 }

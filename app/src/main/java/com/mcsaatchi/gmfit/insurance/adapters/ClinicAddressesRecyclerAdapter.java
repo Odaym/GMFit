@@ -81,12 +81,10 @@ public class ClinicAddressesRecyclerAdapter extends RecyclerView.Adapter {
         }
       }
 
-      parentLayout.setOnClickListener(new View.OnClickListener() {
-        @Override public void onClick(View view) {
-          Intent intent = new Intent(context, ClinicDetailsActivity.class);
-          intent.putExtra("CLINIC_OBJECT", clinicsList.get(getAdapterPosition()));
-          context.startActivity(intent);
-        }
+      parentLayout.setOnClickListener(view -> {
+        Intent intent = new Intent(context, ClinicDetailsActivity.class);
+        intent.putExtra("CLINIC_OBJECT", clinicsList.get(getAdapterPosition()));
+        context.startActivity(intent);
       });
     }
   }

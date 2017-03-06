@@ -56,32 +56,28 @@ public class CachingRestClient {
   }
 
   private static Interceptor provideCacheInterceptor() {
-    return new Interceptor() {
-      @Override public Response intercept(Chain chain) throws IOException {
-        Response response = chain.proceed(chain.request());
+    return chain -> {
+      Response response = chain.proceed(chain.request());
 
-        // re-write response header to force use of cache
-        CacheControl cacheControl = new CacheControl.Builder().maxAge(1, TimeUnit.MINUTES).build();
+      // re-write response header to force use of cache
+      CacheControl cacheControl = new CacheControl.Builder().maxAge(1, TimeUnit.MINUTES).build();
 
-        return response.newBuilder().header(CACHE_CONTROL, cacheControl.toString()).build();
-      }
+      return response.newBuilder().header(CACHE_CONTROL, cacheControl.toString()).build();
     };
   }
 
   private static Interceptor provideOfflineCacheInterceptor() {
-    return new Interceptor() {
-      @Override public Response intercept(Chain chain) throws IOException {
-        Request request = chain.request();
+    return chain -> {
+      Request request = chain.request();
 
-        if (!GMFitApplication.hasNetwork()) {
-          CacheControl cacheControl =
-              new CacheControl.Builder().maxStale(1, TimeUnit.MINUTES).build();
+      if (!GMFitApplication.hasNetwork()) {
+        CacheControl cacheControl =
+            new CacheControl.Builder().maxStale(1, TimeUnit.MINUTES).build();
 
-          request = request.newBuilder().cacheControl(cacheControl).build();
-        }
-
-        return chain.proceed(request);
+        request = request.newBuilder().cacheControl(cacheControl).build();
       }
+
+      return chain.proceed(request);
     };
   }
 

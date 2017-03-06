@@ -135,24 +135,22 @@ public class AddExistingMedicationActivity extends BaseActivity {
       yourNotesET.setText(medicationItem.getRemarks());
     }
 
-    enableRemindersSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-      @Override public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
-        int frequencyNumber = Integer.parseInt(frequencyET.getText().toString());
+    enableRemindersSwitch.setOnCheckedChangeListener((compoundButton, checked) -> {
+      int frequencyNumber = Integer.parseInt(frequencyET.getText().toString());
 
-        if (checked) {
-          if (medicationItem != null
-              && medicationItem.getMedicationReminders() != null
-              && frequencyNumber == 0) {
-            medicationDAO.refresh(medicationItem);
-            setupRemindersRecyclerView(new ArrayList<>(medicationItem.getMedicationReminders()));
-          } else {
-            prepareRemindersRecyclerView(Integer.parseInt(frequencyET.getText().toString()));
-          }
-
-          remindersRecyclerView.setVisibility(View.VISIBLE);
+      if (checked) {
+        if (medicationItem != null
+            && medicationItem.getMedicationReminders() != null
+            && frequencyNumber == 0) {
+          medicationDAO.refresh(medicationItem);
+          setupRemindersRecyclerView(new ArrayList<>(medicationItem.getMedicationReminders()));
         } else {
-          remindersRecyclerView.setVisibility(View.GONE);
+          prepareRemindersRecyclerView(Integer.parseInt(frequencyET.getText().toString()));
         }
+
+        remindersRecyclerView.setVisibility(View.VISIBLE);
+      } else {
+        remindersRecyclerView.setVisibility(View.GONE);
       }
     });
 
@@ -182,17 +180,11 @@ public class AddExistingMedicationActivity extends BaseActivity {
     arrayAdapter.add(getString(R.string.frequency_type_monthly));
     arrayAdapter.add(getString(R.string.frequency_type_when_needed));
 
-    builderSingle.setNegativeButton(R.string.decline_cancel, new DialogInterface.OnClickListener() {
-      @Override public void onClick(DialogInterface dialog, int which) {
-        dialog.dismiss();
-      }
-    });
+    builderSingle.setNegativeButton(R.string.decline_cancel, (dialog, which) -> dialog.dismiss());
 
-    builderSingle.setAdapter(arrayAdapter, new DialogInterface.OnClickListener() {
-      @Override public void onClick(DialogInterface dialog, int which) {
-        String strName = arrayAdapter.getItem(which);
-        timesPerDayMeasurementTV.setText(strName);
-      }
+    builderSingle.setAdapter(arrayAdapter, (dialog, which) -> {
+      String strName = arrayAdapter.getItem(which);
+      timesPerDayMeasurementTV.setText(strName);
     });
 
     builderSingle.show();

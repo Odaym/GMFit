@@ -42,13 +42,11 @@ public class ResetPasswordActivity extends BaseActivity {
     allFields.add(passwordET);
     allFields.add(verifyCodeET);
 
-    submitResetPasswordBTN.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View view) {
-        if (Helpers.isInternetAvailable(ResetPasswordActivity.this)) {
-          if (Helpers.validateFields(allFields)) {
-            finalizeResetPassword(verifyCodeET.getText().toString(),
-                passwordET.getText().toString());
-          }
+    submitResetPasswordBTN.setOnClickListener(view -> {
+      if (Helpers.isInternetAvailable(ResetPasswordActivity.this)) {
+        if (Helpers.validateFields(allFields)) {
+          finalizeResetPassword(verifyCodeET.getText().toString(),
+              passwordET.getText().toString());
         }
       }
     });
@@ -62,14 +60,11 @@ public class ResetPasswordActivity extends BaseActivity {
 
     final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
     alertDialog.setTitle(R.string.resetting_password_dialog_title);
-    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
-        new DialogInterface.OnClickListener() {
-          public void onClick(DialogInterface dialog, int which) {
-            dialog.dismiss();
+    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok), (dialog, which) -> {
+      dialog.dismiss();
 
-            if (waitingDialog.isShowing()) waitingDialog.dismiss();
-          }
-        });
+      if (waitingDialog.isShowing()) waitingDialog.dismiss();
+    });
 
     dataAccessHandler.finalizeResetPassword(token, newPassword, new Callback<DefaultGetResponse>() {
       @Override

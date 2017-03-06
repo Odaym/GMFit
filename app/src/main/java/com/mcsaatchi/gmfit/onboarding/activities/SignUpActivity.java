@@ -64,38 +64,31 @@ public class SignUpActivity extends BaseActivity {
 
     passwordET.setTypeface(Typeface.DEFAULT);
 
-    createAccountBTN.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        if (Helpers.validateFields(allFields)) {
-          registerUser(firstNameET.getText().toString() + " " + lastNameET.getText().toString(),
-              emailET.getText().toString(), passwordET.getText().toString());
-        } else {
-          showPasswordTV.setVisibility(View.GONE);
-        }
+    createAccountBTN.setOnClickListener(v -> {
+      if (Helpers.validateFields(allFields)) {
+        registerUser(firstNameET.getText().toString() + " " + lastNameET.getText().toString(),
+            emailET.getText().toString(), passwordET.getText().toString());
+      } else {
+        showPasswordTV.setVisibility(View.GONE);
       }
     });
 
     creatingAccountTOSTV.setText(Html.fromHtml(getString(R.string.creating_account_TOS)));
-    creatingAccountTOSTV.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View view) {
-        startActivity(new Intent(SignUpActivity.this, TOSActivity.class));
+    creatingAccountTOSTV.setOnClickListener(
+        view -> startActivity(new Intent(SignUpActivity.this, TOSActivity.class)));
+
+    showPasswordTV.setOnClickListener(view -> {
+      if (passwordShowing) {
+        passwordET.setTransformationMethod(new PasswordTransformationMethod());
+        showPasswordTV.setText(R.string.show_password);
+      } else {
+        passwordET.setTransformationMethod(null);
+        showPasswordTV.setText(R.string.hide_password);
       }
-    });
 
-    showPasswordTV.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View view) {
-        if (passwordShowing) {
-          passwordET.setTransformationMethod(new PasswordTransformationMethod());
-          showPasswordTV.setText(R.string.show_password);
-        } else {
-          passwordET.setTransformationMethod(null);
-          showPasswordTV.setText(R.string.hide_password);
-        }
+      passwordET.setSelection(passwordET.getText().length());
 
-        passwordET.setSelection(passwordET.getText().length());
-
-        passwordShowing = !passwordShowing;
-      }
+      passwordShowing = !passwordShowing;
     });
 
     passwordET.addTextChangedListener(new TextWatcher() {
@@ -121,14 +114,11 @@ public class SignUpActivity extends BaseActivity {
 
     final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
     alertDialog.setTitle(R.string.signing_up_dialog_title);
-    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
-        new DialogInterface.OnClickListener() {
-          public void onClick(DialogInterface dialog, int which) {
-            dialog.dismiss();
+    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok), (dialog, which) -> {
+      dialog.dismiss();
 
-            if (waitingDialog.isShowing()) waitingDialog.dismiss();
-          }
-        });
+      if (waitingDialog.isShowing()) waitingDialog.dismiss();
+    });
 
     dataAccessHandler.registerUser(full_name, email, password,
         new Callback<AuthenticationResponse>() {

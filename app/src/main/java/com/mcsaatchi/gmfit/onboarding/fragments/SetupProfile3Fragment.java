@@ -52,11 +52,7 @@ public class SetupProfile3Fragment extends Fragment {
     final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
     alertDialog.setTitle(R.string.fetching_activity_levels_dialog_title);
     alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
-        new DialogInterface.OnClickListener() {
-          public void onClick(DialogInterface dialog, int which) {
-            dialog.dismiss();
-          }
-        });
+        (dialog, which) -> dialog.dismiss());
 
     dataAccessHandler.getActivityLevels(new Callback<ActivityLevelsResponse>() {
       @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP) @Override
@@ -80,19 +76,17 @@ public class SetupProfile3Fragment extends Fragment {
                   (TextView) listItemRadioButton.findViewById(R.id.radioButtonHintTV);
               radioButtonHintTV.setText(activityLevels.get(i).getDescription());
 
-              radioButtonItem.setOnClickListener(new View.OnClickListener() {
-                @Override public void onClick(View view) {
-                  dataWasSelected = true;
+              radioButtonItem.setOnClickListener(view -> {
+                dataWasSelected = true;
 
-                  prefs.edit()
-                      .putInt(Constants.EXTRAS_USER_PROFILE_ACTIVITY_LEVEL_ID,
-                          radioButtonItem.getId())
-                      .apply();
-                  prefs.edit()
-                      .putString(Constants.EXTRAS_USER_PROFILE_ACTIVITY_LEVEL,
-                          radioButtonItem.getText().toString())
-                      .apply();
-                }
+                prefs.edit()
+                    .putInt(Constants.EXTRAS_USER_PROFILE_ACTIVITY_LEVEL_ID,
+                        radioButtonItem.getId())
+                    .apply();
+                prefs.edit()
+                    .putString(Constants.EXTRAS_USER_PROFILE_ACTIVITY_LEVEL,
+                        radioButtonItem.getText().toString())
+                    .apply();
               });
 
               activityLevelsRadioButtonsGroup.addView(listItemRadioButton);

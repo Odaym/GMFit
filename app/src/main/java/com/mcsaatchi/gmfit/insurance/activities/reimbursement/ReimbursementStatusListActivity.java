@@ -46,12 +46,10 @@ public class ReimbursementStatusListActivity extends BaseActivity {
     final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
     alertDialog.setTitle(R.string.loading_data_dialog_title);
     alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getResources().getString(R.string.ok),
-        new DialogInterface.OnClickListener() {
-          public void onClick(DialogInterface dialog, int which) {
-            dialog.dismiss();
+        (dialog, which) -> {
+          dialog.dismiss();
 
-            if (waitingDialog.isShowing()) waitingDialog.dismiss();
-          }
+          if (waitingDialog.isShowing()) waitingDialog.dismiss();
         });
 
     dataAccessHandler.getClaimsList(prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""),
@@ -61,16 +59,12 @@ public class ReimbursementStatusListActivity extends BaseActivity {
             switch (response.code()) {
               case 200:
                 statusAdapter = new StatusAdapter(ReimbursementStatusListActivity.this,
-                    response.body().getData().getBody().getData(),
-                    new StatusAdapter.OnClickListener() {
-                      @Override
-                      public void onClick(ClaimsListResponseDatum reimbursementModel, int index) {
-                        Intent intent = new Intent(ReimbursementStatusListActivity.this,
-                            ReimbursementStatusDetailsActivity.class);
-                        intent.putExtra(ReimbursementStatusDetailsActivity.REIMBURSEMENT_REQUEST_ID,
-                            reimbursementModel.getId());
-                        startActivity(intent);
-                      }
+                    response.body().getData().getBody().getData(), (reimbursementModel, index) -> {
+                      Intent intent = new Intent(ReimbursementStatusListActivity.this,
+                          ReimbursementStatusDetailsActivity.class);
+                      intent.putExtra(ReimbursementStatusDetailsActivity.REIMBURSEMENT_REQUEST_ID,
+                          reimbursementModel.getId());
+                      startActivity(intent);
                     });
 
                 recyclerView.setLayoutManager(

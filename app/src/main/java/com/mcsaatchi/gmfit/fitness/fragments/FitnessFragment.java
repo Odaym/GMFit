@@ -145,35 +145,29 @@ public class FitnessFragment extends Fragment {
 
     setupChartViews(chartsMap, todayDate);
 
-    dateCarouselLayout.addClickListener(new DateCarousel.CarouselClickListener() {
-      @Override public void handleClick(String todayDate, String finalDate) {
-        DateTime finalTodayDateTime = new DateTime(todayDate);
-        DateTime finalDesiredDateTime = new DateTime(finalDate);
+    dateCarouselLayout.addClickListener((todayDate1, finalDate) -> {
+      DateTime finalTodayDateTime = new DateTime(todayDate1);
+      DateTime finalDesiredDateTime = new DateTime(finalDate);
 
-        getUserGoalMetrics(finalDate, "fitness", !finalTodayDateTime.isEqual(finalDesiredDateTime));
+      getUserGoalMetrics(finalDate, "fitness", !finalTodayDateTime.isEqual(finalDesiredDateTime));
 
-        getWidgetsWithDate(finalDate);
-        setupChartViews(chartsMap, finalDate);
-      }
+      getWidgetsWithDate(finalDate);
+      setupChartViews(chartsMap, finalDate);
     });
 
-    dateCarouselLayout.post(new Runnable() {
-      @Override public void run() {
-        dateCarouselLayout.setSmoothScrollingEnabled(true);
-        dateCarouselLayout.fullScroll(HorizontalScrollView.FOCUS_RIGHT);
-      }
+    dateCarouselLayout.post(() -> {
+      dateCarouselLayout.setSmoothScrollingEnabled(true);
+      dateCarouselLayout.fullScroll(HorizontalScrollView.FOCUS_RIGHT);
     });
 
     Timber.d("onCreateView: Device info : %s %s (%s) - %s", Build.MANUFACTURER, Build.MODEL,
         Build.DEVICE, Build.VERSION.RELEASE);
 
-    addNewChartBTN.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View v) {
-        Intent intent = new Intent(getActivity(), AddNewChartActivity.class);
-        intent.putExtra(Constants.EXTRAS_ADD_CHART_WHAT_TYPE, Constants.EXTRAS_ADD_FITNESS_CHART);
-        intent.putExtra(Constants.BUNDLE_FITNESS_CHARTS_MAP, chartsMap);
-        startActivityForResult(intent, ADD_NEW_FITNESS_CHART_REQUEST_CODE);
-      }
+    addNewChartBTN.setOnClickListener(v -> {
+      Intent intent = new Intent(getActivity(), AddNewChartActivity.class);
+      intent.putExtra(Constants.EXTRAS_ADD_CHART_WHAT_TYPE, Constants.EXTRAS_ADD_FITNESS_CHART);
+      intent.putExtra(Constants.BUNDLE_FITNESS_CHARTS_MAP, chartsMap);
+      startActivityForResult(intent, ADD_NEW_FITNESS_CHART_REQUEST_CODE);
     });
 
     return fragmentView;
@@ -221,11 +215,9 @@ public class FitnessFragment extends Fragment {
         getWidgetsWithDate(todayDate);
         setupChartViews(chartsMap, todayDate);
 
-        dateCarouselLayout.post(new Runnable() {
-          @Override public void run() {
-            dateCarouselLayout.setSmoothScrollingEnabled(true);
-            dateCarouselLayout.fullScroll(HorizontalScrollView.FOCUS_RIGHT);
-          }
+        dateCarouselLayout.post(() -> {
+          dateCarouselLayout.setSmoothScrollingEnabled(true);
+          dateCarouselLayout.fullScroll(HorizontalScrollView.FOCUS_RIGHT);
         });
 
         break;
@@ -261,11 +253,8 @@ public class FitnessFragment extends Fragment {
                 /**
                  * Open the breakdown for the chart
                  */
-                customBarChart.addClickListener(new CustomBarChart.CustomBarChartClickListener() {
-                  @Override public void handleClick(DataChart chartObject) {
-                    getSlugBreakdownForChart(chartObject);
-                  }
-                });
+                customBarChart.addClickListener(
+                    chartObject1 -> getSlugBreakdownForChart(chartObject1));
 
                 customBarChart.setBarChartDataAndDates(cards_container, newChartData,
                     Constants.EXTRAS_FITNESS_FRAGMENT);
@@ -410,12 +399,10 @@ public class FitnessFragment extends Fragment {
     final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
     alertDialog.setTitle(R.string.grabbing_breakdown_data_dialog_title);
     alertDialog.setButton(AlertDialog.BUTTON_POSITIVE,
-        getActivity().getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
-          public void onClick(DialogInterface dialog, int which) {
-            dialog.dismiss();
+        getActivity().getResources().getString(R.string.ok), (dialog, which) -> {
+          dialog.dismiss();
 
-            if (waitingDialog.isShowing()) waitingDialog.dismiss();
-          }
+          if (waitingDialog.isShowing()) waitingDialog.dismiss();
         });
 
     dataAccessHandler.getSlugBreakdownForChart(chartObject.getType(),
@@ -575,12 +562,10 @@ public class FitnessFragment extends Fragment {
     final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
     alertDialog.setTitle(R.string.deleting_chart_dialog_title);
     alertDialog.setButton(AlertDialog.BUTTON_POSITIVE,
-        getActivity().getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
-          public void onClick(DialogInterface dialog, int which) {
-            dialog.dismiss();
+        getActivity().getResources().getString(R.string.ok), (dialog, which) -> {
+          dialog.dismiss();
 
-            if (waitingDialog.isShowing()) waitingDialog.dismiss();
-          }
+          if (waitingDialog.isShowing()) waitingDialog.dismiss();
         });
 
     dataAccessHandler.deleteUserChart(String.valueOf(chartObject.getChart_id()),

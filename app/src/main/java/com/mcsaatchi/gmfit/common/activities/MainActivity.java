@@ -103,58 +103,56 @@ public class MainActivity extends BaseActivity {
         .setPadding(0, 0, 0,
             getResources().getDimensionPixelSize(R.dimen.bottom_bar_navigation_bottom_padding));
 
-    bottomBar.setOnTabSelectListener(new OnTabSelectListener() {
-      @Override public void onTabSelected(@IdRes int tabId) {
+    bottomBar.setOnTabSelectListener(tabId -> {
 
-        myScrollingContent.fullScroll(View.FOCUS_UP);
+      myScrollingContent.fullScroll(View.FOCUS_UP);
 
-        switch (tabId) {
-          case R.id.item_one:
-            Bundle bundle = new Bundle();
-            bundle.putParcelableArrayList(Constants.BUNDLE_FITNESS_CHARTS_MAP, finalChartsMap);
+      switch (tabId) {
+        case R.id.item_one:
+          Bundle bundle = new Bundle();
+          bundle.putParcelableArrayList(Constants.BUNDLE_FITNESS_CHARTS_MAP, finalChartsMap);
 
-            try {
-              fitnessFragment.setArguments(bundle);
-            } catch (IllegalStateException e) {
-              Log.d("TAG", "onMenuTabSelected: Fragment already active!");
-            }
+          try {
+            fitnessFragment.setArguments(bundle);
+          } catch (IllegalStateException e) {
+            Log.d("TAG", "onMenuTabSelected: Fragment already active!");
+          }
 
-            getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, fitnessFragment)
-                .commit();
-            mainContentLayout.setBackground(
-                getResources().getDrawable(R.drawable.fitness_background));
-            break;
-          case R.id.item_two:
-            getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, nutritionFragment)
-                .commit();
-            mainContentLayout.setBackground(
-                getResources().getDrawable(R.drawable.nutrition_background));
-            break;
-          case R.id.item_three:
-            getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, healthFragment)
-                .commit();
-            mainContentLayout.setBackground(
-                getResources().getDrawable(R.drawable.health_background));
-            break;
-          case R.id.item_four:
-            myScrollingContent.setClickable(false);
-            getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, new InsuranceFragment())
-                .commit();
-            mainContentLayout.setBackground(
-                getResources().getDrawable(R.drawable.insurance_background));
-            break;
-          case R.id.item_five:
-            getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, mainProfileFragment)
-                .commit();
-            mainContentLayout.setBackground(
-                getResources().getDrawable(R.drawable.general_background));
-            break;
-        }
+          getSupportFragmentManager().beginTransaction()
+              .replace(R.id.fragment_container, fitnessFragment)
+              .commit();
+          mainContentLayout.setBackground(
+              getResources().getDrawable(R.drawable.fitness_background));
+          break;
+        case R.id.item_two:
+          getSupportFragmentManager().beginTransaction()
+              .replace(R.id.fragment_container, nutritionFragment)
+              .commit();
+          mainContentLayout.setBackground(
+              getResources().getDrawable(R.drawable.nutrition_background));
+          break;
+        case R.id.item_three:
+          getSupportFragmentManager().beginTransaction()
+              .replace(R.id.fragment_container, healthFragment)
+              .commit();
+          mainContentLayout.setBackground(
+              getResources().getDrawable(R.drawable.health_background));
+          break;
+        case R.id.item_four:
+          myScrollingContent.setClickable(false);
+          getSupportFragmentManager().beginTransaction()
+              .replace(R.id.fragment_container, new InsuranceFragment())
+              .commit();
+          mainContentLayout.setBackground(
+              getResources().getDrawable(R.drawable.insurance_background));
+          break;
+        case R.id.item_five:
+          getSupportFragmentManager().beginTransaction()
+              .replace(R.id.fragment_container, mainProfileFragment)
+              .commit();
+          mainContentLayout.setBackground(
+              getResources().getDrawable(R.drawable.general_background));
+          break;
       }
     });
   }

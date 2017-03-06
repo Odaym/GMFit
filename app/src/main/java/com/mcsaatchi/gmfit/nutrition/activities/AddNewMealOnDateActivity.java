@@ -116,49 +116,21 @@ public class AddNewMealOnDateActivity extends BaseActivity {
   }
 
   private void hookupMealSectionRowsClickListeners() {
-    addNewEntryBTN_BREAKFAST.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View view) {
-        openMealEntryPickerActivity(chartTitleTV_BREAKFAST.getText().toString());
-      }
-    });
-    scanEntryBTN_BREAKFAST.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View view) {
-        handleScanMealEntry();
-      }
-    });
+    addNewEntryBTN_BREAKFAST.setOnClickListener(
+        view -> openMealEntryPickerActivity(chartTitleTV_BREAKFAST.getText().toString()));
+    scanEntryBTN_BREAKFAST.setOnClickListener(view -> handleScanMealEntry());
 
-    addNewEntryBTN_LUNCH.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View view) {
-        openMealEntryPickerActivity(chartTitleTV_LUNCH.getText().toString());
-      }
-    });
-    scanEntryBTN_LUNCH.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View view) {
-        handleScanMealEntry();
-      }
-    });
+    addNewEntryBTN_LUNCH.setOnClickListener(
+        view -> openMealEntryPickerActivity(chartTitleTV_LUNCH.getText().toString()));
+    scanEntryBTN_LUNCH.setOnClickListener(view -> handleScanMealEntry());
 
-    addNewEntryBTN_DINNER.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View view) {
-        openMealEntryPickerActivity(chartTitleTV_DINNER.getText().toString());
-      }
-    });
-    scanEntryBTN_DINNER.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View view) {
-        handleScanMealEntry();
-      }
-    });
+    addNewEntryBTN_DINNER.setOnClickListener(
+        view -> openMealEntryPickerActivity(chartTitleTV_DINNER.getText().toString()));
+    scanEntryBTN_DINNER.setOnClickListener(view -> handleScanMealEntry());
 
-    addNewEntryBTN_SNACKS.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View view) {
-        openMealEntryPickerActivity(chartTitleTV_SNACKS.getText().toString());
-      }
-    });
-    scanEntryBTN_SNACKS.setOnClickListener(new View.OnClickListener() {
-      @Override public void onClick(View view) {
-        handleScanMealEntry();
-      }
-    });
+    addNewEntryBTN_SNACKS.setOnClickListener(
+        view -> openMealEntryPickerActivity(chartTitleTV_SNACKS.getText().toString()));
+    scanEntryBTN_SNACKS.setOnClickListener(view -> handleScanMealEntry());
   }
 
   private void getUserAddedMealsOnDate(String chosenDate) {
