@@ -25,7 +25,6 @@ import com.mcsaatchi.gmfit.architecture.rest.InsuranceLoginResponseInnerData;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.insurance.activities.home.UpdatePasswordActivity;
-import com.mcsaatchi.gmfit.insurance.widget.CustomPicker;
 import java.util.ArrayList;
 import javax.inject.Inject;
 import okhttp3.MediaType;
@@ -40,7 +39,6 @@ public class InsuranceLoginFragment extends Fragment {
   @Bind(R.id.memberImageIV) ImageView memberImageIV;
   @Bind(R.id.memberIdET) FormEditText memberIdET;
   @Bind(R.id.passwordET) FormEditText passwordET;
-  @Bind(R.id.countryPicker) CustomPicker countryPicker;
 
   @Inject DataAccessHandler dataAccessHandler;
   @Inject SharedPreferences prefs;
@@ -65,8 +63,6 @@ public class InsuranceLoginFragment extends Fragment {
 
     allFields.add(memberIdET);
     allFields.add(passwordET);
-
-    countryPicker.setBackgroundForElements(getResources().getColor(R.color.faded_blue));
 
     getCountriesList();
 
