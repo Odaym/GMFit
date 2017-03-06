@@ -169,8 +169,6 @@ public class InsuranceHomeFragment extends Fragment {
 
             switch (response.code()) {
               case 200:
-                waitingDialog.dismiss();
-
                 Intent intent = new Intent(getActivity(), CardDetailsActivity.class);
                 intent.putExtra("PDF",
                     response.body().getData().getBody().getData().replace("\\", ""));
@@ -182,6 +180,8 @@ public class InsuranceHomeFragment extends Fragment {
                 alertDialog.show();
                 break;
             }
+
+            waitingDialog.dismiss();
           }
 
           @Override public void onFailure(Call<CardDetailsResponse> call, Throwable t) {

@@ -19,13 +19,17 @@ import com.andreabaccega.widget.FormEditText;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.GMFitApplication;
 import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
+import com.mcsaatchi.gmfit.architecture.rest.CountriesListResponse;
 import com.mcsaatchi.gmfit.architecture.rest.InsuranceLoginResponse;
 import com.mcsaatchi.gmfit.architecture.rest.InsuranceLoginResponseInnerData;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.insurance.activities.home.UpdatePasswordActivity;
+import com.mcsaatchi.gmfit.insurance.widget.CustomPicker;
 import java.util.ArrayList;
 import javax.inject.Inject;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -36,11 +40,16 @@ public class InsuranceLoginFragment extends Fragment {
   @Bind(R.id.memberImageIV) ImageView memberImageIV;
   @Bind(R.id.memberIdET) FormEditText memberIdET;
   @Bind(R.id.passwordET) FormEditText passwordET;
+  @Bind(R.id.countryPicker) CustomPicker countryPicker;
 
   @Inject DataAccessHandler dataAccessHandler;
   @Inject SharedPreferences prefs;
 
   private ArrayList<FormEditText> allFields = new ArrayList<>();
+
+  public static RequestBody toRequestBody(String value) {
+    return RequestBody.create(MediaType.parse("text/plain"), value);
+  }
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
@@ -56,6 +65,10 @@ public class InsuranceLoginFragment extends Fragment {
 
     allFields.add(memberIdET);
     allFields.add(passwordET);
+
+    countryPicker.setBackgroundForElements(getResources().getColor(R.color.faded_blue));
+
+    getCountriesList();
 
     return fragmentView;
   }
@@ -89,8 +102,6 @@ public class InsuranceLoginFragment extends Fragment {
               Response<InsuranceLoginResponse> response) {
             switch (response.code()) {
               case 200:
-                waitingDialog.dismiss();
-
                 prefs.edit()
                     .putString(Constants.EXTRAS_INSURANCE_USER_PASSWORD,
                         passwordET.getText().toString())
@@ -129,12 +140,12 @@ public class InsuranceLoginFragment extends Fragment {
 
                 break;
               case 449:
-                waitingDialog.dismiss();
-
                 alertDialog.setMessage(getString(R.string.login_failed_wrong_credentials));
                 alertDialog.show();
                 break;
             }
+
+            waitingDialog.dismiss();
           }
 
           @Override public void onFailure(Call<InsuranceLoginResponse> call, Throwable t) {
@@ -169,5 +180,32 @@ public class InsuranceLoginFragment extends Fragment {
 
         break;
     }
+  }
+
+  private void getCountriesList() {
+    final ProgressDialog waitingDialog = new ProgressDialog(getActivity());
+    waitingDialog.setTitle(getResources().getString(R.string.loading_data_dialog_title));
+    waitingDialog.setMessage(getResources().getString(R.string.please_wait_dialog_message));
+    waitingDialog.show();
+
+    dataAccessHandler.getCountriesList(
+        toRequestBody(prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, "")),
+        new Callback<CountriesListResponse>() {
+          @Override public void onResponse(Call<CountriesListResponse> call,
+              Response<CountriesListResponse> response) {
+            switch (response.code()) {
+              case 200:
+                waitingDialog.dismiss();
+
+
+
+                //Timber.d(response.body().getData().getBody().getData().get);
+            }
+          }
+
+          @Override public void onFailure(Call<CountriesListResponse> call, Throwable t) {
+            Timber.d("Call failed with error : %s", t.getMessage());
+          }
+        });
   }
 }

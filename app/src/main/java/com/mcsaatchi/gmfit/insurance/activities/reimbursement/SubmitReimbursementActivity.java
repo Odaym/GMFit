@@ -49,7 +49,6 @@ import java.util.List;
 import java.util.Locale;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
-import org.joda.time.LocalDate;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -352,16 +351,14 @@ public class SubmitReimbursementActivity extends BaseActivity {
     dataAccessHandler.createNewRequest(
         toRequestBody(prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, "")),
         toRequestBody(categoryValue), toRequestBody(subCategoryId), toRequestBody(requestTypeId),
-        toRequestBody(amountValue), toRequestBody("2"),
-        toRequestBody(Helpers.formatInsuranceDate(new LocalDate()) + "T16:27:32+02:00"),
+        toRequestBody(amountValue), toRequestBody("2"), toRequestBody(
+            Helpers.getFormatServiceDate() + "T" + Helpers.getFormatServiceTime() + "+02:00"),
         toRequestBody("D"), toRequestBody(remarksET.getText().toString()), attachements,
         new Callback<CreateNewRequestResponse>() {
           @Override public void onResponse(Call<CreateNewRequestResponse> call,
               Response<CreateNewRequestResponse> response) {
             switch (response.code()) {
               case 200:
-                waitingDialog.dismiss();
-
                 Intent intent = new Intent(SubmitReimbursementActivity.this,
                     ReimbursementStatusDetailsActivity.class);
                 intent.putExtra(ReimbursementStatusDetailsActivity.REIMBURSEMENT_REQUEST_ID,
@@ -374,6 +371,8 @@ public class SubmitReimbursementActivity extends BaseActivity {
                 alertDialog.show();
                 break;
             }
+
+            waitingDialog.dismiss();
           }
 
           @Override public void onFailure(Call<CreateNewRequestResponse> call, Throwable t) {

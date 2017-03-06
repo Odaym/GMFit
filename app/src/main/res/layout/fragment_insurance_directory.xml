@@ -187,7 +187,7 @@
           android:gravity="center"
           >
 
-        <ImageButton
+        <ImageView
             android:layout_width="@dimen/index_bottom_bar_my_location_image_dimens"
             android:layout_height="@dimen/index_bottom_bar_my_location_image_dimens"
             android:src="@drawable/index_bottom_bar_my_location"

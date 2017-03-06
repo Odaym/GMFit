@@ -133,9 +133,6 @@ public class SnapshotActivity extends BaseActivity {
           public void onResponse(Call<SnapshotResponse> call, Response<SnapshotResponse> response) {
             switch (response.code()) {
               case 200:
-
-                waitingDialog.dismiss();
-
                 WebSettings settings = webView.getSettings();
                 settings.setLoadWithOverviewMode(true);
                 settings.setBuiltInZoomControls(true);
@@ -159,6 +156,8 @@ public class SnapshotActivity extends BaseActivity {
                 alertDialog.show();
                 break;
             }
+
+            waitingDialog.dismiss();
           }
 
           @Override public void onFailure(Call<SnapshotResponse> call, Throwable t) {

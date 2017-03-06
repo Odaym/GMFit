@@ -325,8 +325,6 @@ public class SubmitInquiryActivity extends BaseActivity {
               Response<CreateNewRequestResponse> response) {
             switch (response.code()) {
               case 200:
-                waitingDialog.dismiss();
-
                 //Intent intent = new Intent(SubmitInquiryActivity.this,
                 //    ReimbursementStatusDetailsActivity.class);
                 //intent.putExtra(ReimbursementStatusDetailsActivity.REIMBURSEMENT_REQUEST_ID,
@@ -339,6 +337,8 @@ public class SubmitInquiryActivity extends BaseActivity {
                 alertDialog.show();
                 break;
             }
+
+            waitingDialog.dismiss();
           }
 
           @Override public void onFailure(Call<CreateNewRequestResponse> call, Throwable t) {

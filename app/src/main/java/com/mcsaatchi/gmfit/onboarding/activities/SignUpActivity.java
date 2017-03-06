@@ -158,6 +158,7 @@ public class SignUpActivity extends BaseActivity {
 
                 break;
               case 449:
+                waitingDialog.dismiss();
                 alertDialog.setMessage(getString(R.string.email_already_taken_api_response));
                 alertDialog.show();
                 break;

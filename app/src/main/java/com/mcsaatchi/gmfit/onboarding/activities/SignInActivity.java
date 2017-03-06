@@ -137,6 +137,7 @@ public class SignInActivity extends BaseActivity {
     dataAccessHandler.signInUser(email, password, new Callback<AuthenticationResponse>() {
       @Override public void onResponse(Call<AuthenticationResponse> call,
           Response<AuthenticationResponse> response) {
+
         switch (response.code()) {
           case 200:
             AuthenticationResponseInnerBody responseBody = response.body().getData().getBody();
@@ -153,15 +154,11 @@ public class SignInActivity extends BaseActivity {
 
             break;
           case 401:
-            waitingDialog.dismiss();
-
             alertDialog.setTitle(getString(R.string.error_occurred_dialog_title));
             alertDialog.setMessage(getString(R.string.login_failed_wrong_credentials));
             alertDialog.show();
             break;
           case 403:
-            waitingDialog.dismiss();
-
             EventBusSingleton.getInstance().post(new SignedInSuccessfullyEvent());
 
             Intent userNotVerifiedIntent =
@@ -180,6 +177,8 @@ public class SignInActivity extends BaseActivity {
             alertDialog.show();
             break;
         }
+
+        waitingDialog.dismiss();
       }
 
       @Override public void onFailure(Call<AuthenticationResponse> call, Throwable t) {

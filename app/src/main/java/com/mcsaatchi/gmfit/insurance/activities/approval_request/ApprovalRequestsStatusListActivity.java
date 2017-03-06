@@ -60,8 +60,6 @@ public class ApprovalRequestsStatusListActivity extends BaseActivity {
               Response<ClaimsListResponse> response) {
             switch (response.code()) {
               case 200:
-                waitingDialog.dismiss();
-
                 statusAdapter = new StatusAdapter(ApprovalRequestsStatusListActivity.this,
                     response.body().getData().getBody().getData(),
                     new StatusAdapter.OnClickListener() {
@@ -85,6 +83,8 @@ public class ApprovalRequestsStatusListActivity extends BaseActivity {
                 alertDialog.show();
                 break;
             }
+
+            waitingDialog.dismiss();
           }
 
           @Override public void onFailure(Call<ClaimsListResponse> call, Throwable t) {

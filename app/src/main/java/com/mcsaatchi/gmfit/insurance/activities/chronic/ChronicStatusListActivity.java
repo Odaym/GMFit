@@ -86,13 +86,11 @@ public class ChronicStatusListActivity extends BaseActivity {
         });
 
     dataAccessHandler.getClaimsList(prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""),
-        "2", new Callback<ClaimsListResponse>() {
+        "3", new Callback<ClaimsListResponse>() {
           @Override public void onResponse(Call<ClaimsListResponse> call,
               Response<ClaimsListResponse> response) {
             switch (response.code()) {
               case 200:
-                waitingDialog.dismiss();
-
                 //statusAdapter = new StatusAdapter(response.body().getData().getBody().getData(),
                 //    new StatusAdapter.OnClickListener() {
                 //      @Override
@@ -116,6 +114,8 @@ public class ChronicStatusListActivity extends BaseActivity {
                 alertDialog.show();
                 break;
             }
+
+            waitingDialog.dismiss();
           }
 
           @Override public void onFailure(Call<ClaimsListResponse> call, Throwable t) {

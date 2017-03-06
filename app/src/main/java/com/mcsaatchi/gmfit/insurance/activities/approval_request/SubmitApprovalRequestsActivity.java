@@ -337,15 +337,14 @@ public class SubmitApprovalRequestsActivity extends BaseActivity {
     dataAccessHandler.createNewRequest(
         toRequestBody(prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, "")),
         toRequestBody(categoryValue), toRequestBody("2"), toRequestBody("2"), toRequestBody("10"),
-        toRequestBody("2"), toRequestBody("2016-10-10T16:27:32+02:00"), toRequestBody("D"),
-        toRequestBody(remarksET.getText().toString()), attachements,
+        toRequestBody("2"), toRequestBody(
+            Helpers.getFormatServiceDate() + "T" + Helpers.getFormatServiceTime() + "+02:00"),
+        toRequestBody("D"), toRequestBody(remarksET.getText().toString()), attachements,
         new Callback<CreateNewRequestResponse>() {
           @Override public void onResponse(Call<CreateNewRequestResponse> call,
               Response<CreateNewRequestResponse> response) {
             switch (response.code()) {
               case 200:
-                waitingDialog.dismiss();
-
                 Intent intent = new Intent(SubmitApprovalRequestsActivity.this,
                     ApprovalRequestStatusDetailsActivity.class);
                 intent.putExtra(ApprovalRequestStatusDetailsActivity.APPROVAL_REQUEST_CLAIM_ID,
@@ -358,6 +357,8 @@ public class SubmitApprovalRequestsActivity extends BaseActivity {
                 alertDialog.show();
                 break;
             }
+
+            waitingDialog.dismiss();
           }
 
           @Override public void onFailure(Call<CreateNewRequestResponse> call, Throwable t) {

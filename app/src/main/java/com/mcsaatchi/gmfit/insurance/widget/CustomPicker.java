@@ -103,6 +103,11 @@ public class CustomPicker extends LinearLayout implements View.OnClickListener {
     }
   }
 
+  public void setBackgroundForElements(int backgroundColor){
+    itemNameTv.setBackgroundColor(backgroundColor);
+    itemSelectedTv.setBackgroundColor(backgroundColor);
+  }
+
   enum CustomPickerType {
     DropDownPicker, DatePicker, NonSelected
   }

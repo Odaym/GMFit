@@ -146,6 +146,20 @@ public class Helpers {
     return 0;
   }
 
+  public static String getFormatServiceDate() {
+    Calendar cal = Calendar.getInstance();
+
+    return cal.get(Calendar.YEAR) + "-" + cal.get(Calendar.MONTH) + "-" + cal.get(
+        Calendar.DAY_OF_MONTH);
+  }
+
+  public static String getFormatServiceTime() {
+    Calendar cal = Calendar.getInstance();
+
+    return cal.get(Calendar.HOUR_OF_DAY) + ":" + cal.get(Calendar.MINUTE) + ":" + cal.get(
+        Calendar.SECOND);
+  }
+
   public static String provideErrorStringFromJSON(ResponseBody errorResponseBody) {
     if (errorResponseBody != null) {
       try {

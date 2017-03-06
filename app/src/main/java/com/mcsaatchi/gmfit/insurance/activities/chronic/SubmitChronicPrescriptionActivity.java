@@ -52,16 +52,13 @@ import static com.mcsaatchi.gmfit.insurance.widget.CustomAttachmentPicker.REQUES
 public class SubmitChronicPrescriptionActivity extends BaseActivity {
 
   private static final int REQUEST_CAPTURE_PERMISSIONS = 123;
-
-  private File photoFile;
-  private Uri photoFileUri;
-  private ImageView currentImageView;
-
-  private ArrayList<String> imagePaths = new ArrayList<>();
-
   @Bind(R.id.toolbar) Toolbar toolbar;
   @Bind(R.id.medicalReportImagesPicker) CustomAttachmentPicker medicalReportImagesPicker;
   @Bind(R.id.prescriptionImagesPicker) CustomAttachmentPicker prescriptionImagesPicker;
+  private File photoFile;
+  private Uri photoFileUri;
+  private ImageView currentImageView;
+  private ArrayList<String> imagePaths = new ArrayList<>();
 
   public static RequestBody toRequestBody(String value) {
     return RequestBody.create(MediaType.parse("text/plain"), value);
@@ -135,7 +132,6 @@ public class SubmitChronicPrescriptionActivity extends BaseActivity {
     final ProgressDialog waitingDialog = new ProgressDialog(this);
     waitingDialog.setTitle(
         getResources().getString(R.string.submit_new_chronic_treatment_dialog_title));
-    waitingDialog.setCancelable(false);
     waitingDialog.setMessage(
         getResources().getString(R.string.uploading_attachments_dialog_message));
     waitingDialog.setOnShowListener(new DialogInterface.OnShowListener() {
@@ -286,20 +282,22 @@ public class SubmitChronicPrescriptionActivity extends BaseActivity {
               Response<CreateNewRequestResponse> response) {
             switch (response.code()) {
               case 200:
-                waitingDialog.dismiss();
-
                 Intent intent = new Intent(SubmitChronicPrescriptionActivity.this,
                     ChronicStatusListActivity.class);
                 //intent.putExtra(ReimbursementStatusDetailsActivity.REIMBURSEMENT_REQUEST_ID,
                 //    response.body().getData().getBody().getData().getRequestId());
 
                 startActivity(intent);
+
+                finish();
                 break;
               case 449:
                 alertDialog.setMessage(Helpers.provideErrorStringFromJSON(response.errorBody()));
                 alertDialog.show();
                 break;
             }
+
+            waitingDialog.dismiss();
           }
 
           @Override public void onFailure(Call<CreateNewRequestResponse> call, Throwable t) {

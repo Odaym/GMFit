@@ -110,8 +110,6 @@ public class InsuranceOperationWidgetsGridAdapter
 
             switch (response.code()) {
               case 200:
-                waitingDialog.dismiss();
-
                 Intent intent = new Intent(context, CoverageDescriptionActivity.class);
                 intent.putExtra("PDF",
                     response.body().getData().getBody().getData().replace("\\", ""));
@@ -123,6 +121,8 @@ public class InsuranceOperationWidgetsGridAdapter
                 alertDialog.show();
                 break;
             }
+
+            waitingDialog.dismiss();
           }
 
           @Override public void onFailure(Call<CoverageDescriptionResponse> call, Throwable t) {
