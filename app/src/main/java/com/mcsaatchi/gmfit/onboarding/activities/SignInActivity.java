@@ -1,7 +1,6 @@
 package com.mcsaatchi.gmfit.onboarding.activities;
 
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -158,8 +157,7 @@ public class SignInActivity extends BaseActivity {
             finish();
             break;
           case 449:
-            alertDialog.setMessage(
-                getResources().getString(R.string.server_error_got_returned));
+            alertDialog.setMessage(getResources().getString(R.string.server_error_got_returned));
             alertDialog.show();
             break;
           case 500:
@@ -173,8 +171,7 @@ public class SignInActivity extends BaseActivity {
 
       @Override public void onFailure(Call<AuthenticationResponse> call, Throwable t) {
         Timber.d("Call failed with error : %s", t.getMessage());
-        alertDialog.setMessage(
-            getResources().getString(R.string.server_error_got_returned));
+        alertDialog.setMessage(getResources().getString(R.string.server_error_got_returned));
         alertDialog.show();
       }
     });

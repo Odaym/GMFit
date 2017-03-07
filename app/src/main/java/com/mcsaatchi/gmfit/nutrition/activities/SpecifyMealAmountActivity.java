@@ -2,13 +2,11 @@ package com.mcsaatchi.gmfit.nutrition.activities;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ListView;
@@ -143,8 +141,7 @@ public class SpecifyMealAmountActivity extends BaseActivity {
 
           @Override public void onFailure(Call<MealMetricsResponse> call, Throwable t) {
             Timber.d("Call failed with error : %s", t.getMessage());
-            alertDialog.setMessage(
-                getResources().getString(R.string.server_error_got_returned));
+            alertDialog.setMessage(getResources().getString(R.string.server_error_got_returned));
             alertDialog.show();
           }
         });
@@ -233,8 +230,7 @@ public class SpecifyMealAmountActivity extends BaseActivity {
             Timber.d("Call failed with error : %s", t.getMessage());
             final AlertDialog alertDialog =
                 new AlertDialog.Builder(SpecifyMealAmountActivity.this).create();
-            alertDialog.setMessage(
-                getResources().getString(R.string.server_error_got_returned));
+            alertDialog.setMessage(getResources().getString(R.string.server_error_got_returned));
             alertDialog.show();
           }
         });
@@ -266,8 +262,7 @@ public class SpecifyMealAmountActivity extends BaseActivity {
             Timber.d("Call failed with error : %s", t.getMessage());
             final AlertDialog alertDialog =
                 new AlertDialog.Builder(SpecifyMealAmountActivity.this).create();
-            alertDialog.setMessage(
-                getResources().getString(R.string.server_error_got_returned));
+            alertDialog.setMessage(getResources().getString(R.string.server_error_got_returned));
             alertDialog.show();
           }
         });
@@ -298,8 +293,7 @@ public class SpecifyMealAmountActivity extends BaseActivity {
             Timber.d("Call failed with error : %s", t.getMessage());
             final AlertDialog alertDialog =
                 new AlertDialog.Builder(SpecifyMealAmountActivity.this).create();
-            alertDialog.setMessage(
-                getResources().getString(R.string.server_error_got_returned));
+            alertDialog.setMessage(getResources().getString(R.string.server_error_got_returned));
             alertDialog.show();
           }
         });

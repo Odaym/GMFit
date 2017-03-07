@@ -10,6 +10,15 @@ import java.io.Serializable;
 @DatabaseTable(tableName = "MedicationReminder") public class MedicationReminder
     implements Parcelable, Serializable {
 
+  public static final Creator<MedicationReminder> CREATOR = new Creator<MedicationReminder>() {
+    @Override public MedicationReminder createFromParcel(Parcel source) {
+      return new MedicationReminder(source);
+    }
+
+    @Override public MedicationReminder[] newArray(int size) {
+      return new MedicationReminder[size];
+    }
+  };
   @DatabaseField(generatedId = true) private int id;
   @DatabaseField(dataType = DataType.SERIALIZABLE, foreign = true) private Medication medication;
   @DatabaseField(dataType = DataType.SERIALIZABLE) private int[] days_of_week;
@@ -19,6 +28,16 @@ import java.io.Serializable;
   @DatabaseField private long actualAlarmTime;
 
   public MedicationReminder() {
+  }
+
+  protected MedicationReminder(Parcel in) {
+    this.id = in.readInt();
+    this.medication = (Medication) in.readSerializable();
+    this.days_of_week = in.createIntArray();
+    this.hour = in.readInt();
+    this.minute = in.readInt();
+    this.enabled = in.readByte() != 0;
+    this.actualAlarmTime = in.readLong();
   }
 
   public int getId() {
@@ -49,6 +68,10 @@ import java.io.Serializable;
     return days_of_week;
   }
 
+  public void setDays_of_week(int[] days_of_week) {
+    this.days_of_week = days_of_week;
+  }
+
   public long getActualAlarmTime() {
     return actualAlarmTime;
   }
@@ -73,10 +96,6 @@ import java.io.Serializable;
     this.minute = minute;
   }
 
-  public void setDays_of_week(int[] days_of_week) {
-    this.days_of_week = days_of_week;
-  }
-
   @Override public int describeContents() {
     return 0;
   }
@@ -90,24 +109,4 @@ import java.io.Serializable;
     dest.writeByte(this.enabled ? (byte) 1 : (byte) 0);
     dest.writeLong(this.actualAlarmTime);
   }
-
-  protected MedicationReminder(Parcel in) {
-    this.id = in.readInt();
-    this.medication = (Medication) in.readSerializable();
-    this.days_of_week = in.createIntArray();
-    this.hour = in.readInt();
-    this.minute = in.readInt();
-    this.enabled = in.readByte() != 0;
-    this.actualAlarmTime = in.readLong();
-  }
-
-  public static final Creator<MedicationReminder> CREATOR = new Creator<MedicationReminder>() {
-    @Override public MedicationReminder createFromParcel(Parcel source) {
-      return new MedicationReminder(source);
-    }
-
-    @Override public MedicationReminder[] newArray(int size) {
-      return new MedicationReminder[size];
-    }
-  };
 }

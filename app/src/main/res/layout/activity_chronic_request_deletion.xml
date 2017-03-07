@@ -62,7 +62,7 @@
         android:hint="@string/enter_your_password_hint"
         android:inputType="textPassword"
         android:paddingStart="@dimen/default_margin_2"
-        android:textColor="@color/black_alpha_50"
+        android:textColor="@color/white"
         android:textColorHint="@color/edittext_hint_color_white"
         android:textSize="15sp"
         android:typeface="normal"
@@ -77,13 +77,14 @@
       >
 
     <com.mcsaatchi.gmfit.insurance.widget.CustomAttachmentPicker
+        android:id="@+id/doctorConfirmationImagePicker"
         android:layout_width="match_parent"
         android:layout_height="@dimen/doctor_confirmation_picker_height"
         custom:header_text="Doctor\'s Confirmation"
         />
 
     <Button
-        android:id="@+id/submitApprovalRequestBTN"
+        android:id="@+id/submitDeletionRequestBTN"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/default_margin_2"

@@ -1,14 +1,11 @@
 package com.mcsaatchi.gmfit.common.activities;
 
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -150,8 +147,7 @@ public class AddNewChartActivity extends BaseActivity {
 
       @Override public void onFailure(Call<ChartsBySectionResponse> call, Throwable t) {
         Timber.d("Call failed with error : %s", t.getMessage());
-        alertDialog.setMessage(
-            getResources().getString(R.string.server_error_got_returned));
+        alertDialog.setMessage(getResources().getString(R.string.server_error_got_returned));
         alertDialog.show();
       }
     });
@@ -170,8 +166,7 @@ public class AddNewChartActivity extends BaseActivity {
 
       @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
         Timber.d("Call failed with error : %s", t.getMessage());
-        alertDialog.setMessage(
-            getResources().getString(R.string.server_error_got_returned));
+        alertDialog.setMessage(getResources().getString(R.string.server_error_got_returned));
         alertDialog.show();
       }
     });

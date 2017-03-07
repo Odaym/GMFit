@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ClaimsListResponseDatum implements Parcelable{
+public class ClaimsListResponseDatum implements Parcelable {
   public static final Creator<ClaimsListResponseDatum> CREATOR =
       new Creator<ClaimsListResponseDatum>() {
         @Override public ClaimsListResponseDatum createFromParcel(Parcel source) {

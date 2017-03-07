@@ -63,7 +63,6 @@
             android:background="@color/much_lighter_gray"
             android:gravity="center_vertical"
             android:paddingStart="@dimen/default_margin_2"
-            android:textColor="@color/black_alpha_50"
             />
       </LinearLayout>
 

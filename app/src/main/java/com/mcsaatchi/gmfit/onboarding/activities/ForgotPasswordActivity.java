@@ -1,12 +1,10 @@
 package com.mcsaatchi.gmfit.onboarding.activities;
 
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.widget.Button;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -77,8 +75,7 @@ public class ForgotPasswordActivity extends BaseActivity {
             break;
           case 404:
             alertDialog.setTitle(getString(R.string.error_occurred_dialog_title));
-            alertDialog.setMessage(
-                getResources().getString(R.string.server_error_got_returned));
+            alertDialog.setMessage(getResources().getString(R.string.server_error_got_returned));
             alertDialog.show();
             break;
         }
@@ -86,8 +83,7 @@ public class ForgotPasswordActivity extends BaseActivity {
 
       @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
         Timber.d("Call failed with error : %s", t.getMessage());
-        alertDialog.setMessage(
-            getResources().getString(R.string.server_error_got_returned));
+        alertDialog.setMessage(getResources().getString(R.string.server_error_got_returned));
         alertDialog.show();
       }
     });

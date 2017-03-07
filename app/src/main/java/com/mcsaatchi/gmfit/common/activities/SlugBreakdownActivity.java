@@ -1,6 +1,5 @@
 package com.mcsaatchi.gmfit.common.activities;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;

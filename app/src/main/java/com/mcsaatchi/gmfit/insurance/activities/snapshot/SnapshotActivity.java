@@ -2,16 +2,13 @@ package com.mcsaatchi.gmfit.insurance.activities.snapshot;
 
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.DatePicker;
 import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -53,21 +50,20 @@ public class SnapshotActivity extends BaseActivity {
       int month = c.get(Calendar.MONTH);
       int year = c.get(Calendar.YEAR);
       DatePickerDialog datePickerDialog =
-          new DatePickerDialog(SnapshotActivity.this,
-              (datePicker, year12, month12, dayOfMonth) -> {
-                Calendar calendar = Calendar.getInstance();
-                calendar.set(Calendar.YEAR, year12);
-                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-                calendar.set(Calendar.MONTH, month12);
+          new DatePickerDialog(SnapshotActivity.this, (datePicker, year12, month12, dayOfMonth) -> {
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(Calendar.YEAR, year12);
+            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+            calendar.set(Calendar.MONTH, month12);
 
-                Date d = new Date(calendar.getTimeInMillis());
+            Date d = new Date(calendar.getTimeInMillis());
 
-                SimpleDateFormat dateFormatter = new SimpleDateFormat("MMM dd, yyyy");
-                String serviceDateValue = dateFormatter.format(d);
-                startDateTV.setText(serviceDateValue);
+            SimpleDateFormat dateFormatter = new SimpleDateFormat("MMM dd, yyyy");
+            String serviceDateValue = dateFormatter.format(d);
+            startDateTV.setText(serviceDateValue);
 
-                getSnapshot(startDateTV.getText().toString(), endDateTV.getText().toString());
-              }, year, month, day);
+            getSnapshot(startDateTV.getText().toString(), endDateTV.getText().toString());
+          }, year, month, day);
 
       datePickerDialog.show();
     });

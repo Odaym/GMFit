@@ -2,7 +2,6 @@ package com.mcsaatchi.gmfit.insurance.activities.reimbursement;
 
 import android.Manifest;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -16,7 +15,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
 import android.util.Log;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -107,8 +105,8 @@ public class SubmitReimbursementActivity extends BaseActivity {
       final String[] items = new String[] { "LBP", "USD" };
 
       AlertDialog.Builder builder = new AlertDialog.Builder(SubmitReimbursementActivity.this);
-      builder.setTitle("Pick currency").setItems(items,
-          (dialogInterface, i) -> currencyLabel.setText(items[i]));
+      builder.setTitle("Pick currency")
+          .setItems(items, (dialogInterface, i) -> currencyLabel.setText(items[i]));
       builder.create();
       builder.show();
     });
@@ -221,8 +219,8 @@ public class SubmitReimbursementActivity extends BaseActivity {
       if (strName != null) {
         switch (strName) {
           case "Choose from gallery":
-            Intent galleryIntent = new Intent(Intent.ACTION_PICK,
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            Intent galleryIntent =
+                new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             startActivityForResult(galleryIntent, REQUEST_PICK_IMAGE_GALLERY);
             break;
           case "Take a new picture":

@@ -2,7 +2,6 @@ package com.mcsaatchi.gmfit.insurance.activities.chronic;
 
 import android.Manifest;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -16,7 +15,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
 import android.util.Log;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -159,8 +157,8 @@ public class SubmitChronicPrescriptionActivity extends BaseActivity {
       if (strName != null) {
         switch (strName) {
           case "Choose from gallery":
-            Intent galleryIntent = new Intent(Intent.ACTION_PICK,
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            Intent galleryIntent =
+                new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             startActivityForResult(galleryIntent, REQUEST_PICK_IMAGE_GALLERY);
             break;
           case "Take a new picture":

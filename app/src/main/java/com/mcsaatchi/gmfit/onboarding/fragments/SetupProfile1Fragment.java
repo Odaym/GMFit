@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import butterknife.Bind;
@@ -16,7 +15,6 @@ import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.GMFitApplication;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mukesh.countrypicker.fragments.CountryPicker;
-import com.mukesh.countrypicker.interfaces.CountryPickerListener;
 import com.mukesh.countrypicker.models.Country;
 import javax.inject.Inject;
 
@@ -52,9 +50,7 @@ public class SetupProfile1Fragment extends Fragment {
 
     metricRdBTN.setOnCheckedChangeListener((compoundButton, checked) -> {
       if (checked) {
-        prefs.edit()
-            .putString(Constants.EXTRAS_USER_PROFILE_MEASUREMENT_SYSTEM, "metric")
-            .apply();
+        prefs.edit().putString(Constants.EXTRAS_USER_PROFILE_MEASUREMENT_SYSTEM, "metric").apply();
       }
     });
 

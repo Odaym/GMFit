@@ -1,7 +1,6 @@
 package com.mcsaatchi.gmfit.health.activities;
 
 import android.Manifest;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -274,8 +273,7 @@ public class AddNewHealthTestActivity extends BaseActivity
 
     dateTakenTV.setOnClickListener(view -> {
       CalendarDatePickerDialogFragment cdp =
-          new CalendarDatePickerDialogFragment().setOnDateSetListener(
-              AddNewHealthTestActivity.this)
+          new CalendarDatePickerDialogFragment().setOnDateSetListener(AddNewHealthTestActivity.this)
               .setFirstDayOfWeek(Calendar.MONDAY)
               .setDoneText(getString(R.string.accept_ok))
               .setCancelText(getString(R.string.decline_cancel))
@@ -472,8 +470,8 @@ public class AddNewHealthTestActivity extends BaseActivity
            * Can't case by String ID because it has to be constant, bleh
            */
           case "Choose from gallery":
-            Intent galleryIntent = new Intent(Intent.ACTION_PICK,
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            Intent galleryIntent =
+                new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             startActivityForResult(galleryIntent, REQUEST_PICK_IMAGE_GALLERY);
             break;
           case "Take a new picture":

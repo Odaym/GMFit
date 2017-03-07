@@ -2,7 +2,6 @@ package com.mcsaatchi.gmfit.insurance.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,12 +9,11 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.mcsaatchi.gmfit.R;
+import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.insurance.activities.chronic.ChornicPrescriptionStatusDetailsActivity;
 import com.mcsaatchi.gmfit.insurance.activities.chronic.RequestChronicDeletionActivity;
 import com.mcsaatchi.gmfit.insurance.models.TreatmentsModel;
-import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.Locale;
 import org.apache.commons.lang3.text.WordUtils;
 
 public class ChronicStatusAdapter extends RecyclerView.Adapter {
@@ -61,34 +59,22 @@ public class ChronicStatusAdapter extends RecyclerView.Adapter {
     }
 
     public void bind(TreatmentsModel treatment) {
-      SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-
       deleteLayout.setOnClickListener(v -> {
         Intent intent = new Intent(context, RequestChronicDeletionActivity.class);
         intent.putExtra("CHRONIC_OBJECT", treatmentsList.get(getAdapterPosition()));
         context.startActivity(intent);
 
-        //treatmentsList.remove(getAdapterPosition());
-        //notifyItemRemoved(getAdapterPosition());
+        treatmentsList.remove(getAdapterPosition());
+        notifyItemRemoved(getAdapterPosition());
       });
 
       treatmentNameTV.setText(WordUtils.capitalizeFully(treatment.getName()));
+      treatmentStatusTV.setTextColor(Helpers.determineStatusColor(treatment.getStatus()));
       treatmentStatusTV.setText(treatment.getStatus());
-
-      switch (treatment.getStatus()) {
-        case "Partially Approved":
-        case "Approved":
-          treatmentStatusTV.setTextColor(Color.GREEN);
-          break;
-        case "Processing":
-          treatmentStatusTV.setTextColor(context.getColor(R.color.nutrition_meal_bars_orange));
-          break;
-      }
 
       if (treatment.getFromDate() != null && treatment.getToDate() != null) {
         treatmentDescriptionTV.setText(
-            dateFormat.format(treatment.getFromDate().getTime()) + " - " + dateFormat.format(
-                treatment.getToDate().getTime()));
+            treatment.getFromDate().split("T")[0] + " - " + treatment.getToDate().split("T")[0]);
       } else {
         treatmentDescriptionTV.setText("Start and end dates not available yet");
       }

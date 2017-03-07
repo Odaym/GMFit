@@ -73,8 +73,8 @@ public class ChronicInactiveStatusAdapter extends RecyclerView.Adapter {
 
       if (treatment.getFromDate() != null && treatment.getToDate() != null) {
         treatmentDescriptionTV.setText(
-            dateFormat.format(treatment.getFromDate().getTime()) + " - " + dateFormat.format(
-                treatment.getToDate().getTime()));
+            dateFormat.format(treatment.getFromDate()) + " - " + dateFormat.format(
+                treatment.getToDate()));
       } else {
         treatmentDescriptionTV.setText("Start and end dates not available yet");
       }

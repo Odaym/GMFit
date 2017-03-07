@@ -12,8 +12,6 @@ import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.GMFitApplication;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.insurance.models.InsuranceContract;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
 import javax.inject.Inject;
@@ -66,9 +64,8 @@ public class ContractsChoiceRecyclerAdapter
     holder.contractInsuranceCompanyTV.setText(contracts.get(position).getInsuranceCompany());
 
     if (contracts.get(position).getExpiryDate() != null) {
-      Calendar expiryCal = contracts.get(position).getExpiryDate();
-      holder.contractExpiryDateTV.setText(
-          "Expiry date: " + new SimpleDateFormat("dd MMMM yyyy").format(expiryCal.getTime()));
+      String expiryCal = contracts.get(position).getExpiryDate();
+      holder.contractExpiryDateTV.setText("Expiry date: " + expiryCal.replace("\\", ""));
     }
   }
 
@@ -103,6 +100,14 @@ public class ContractsChoiceRecyclerAdapter
       prefs.edit()
           .putString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER,
               contracts.get(getAdapterPosition()).getNumber())
+          .apply();
+      prefs.edit()
+          .putString(Constants.EXTRAS_INSURANCE_COMPANY_NAME,
+              contracts.get(getAdapterPosition()).getInsuranceCompany())
+          .apply();
+      prefs.edit()
+          .putString(Constants.EXTRAS_INSURANCE_FULL_NAME,
+              contracts.get(getAdapterPosition()).getFullName())
           .apply();
       contractCheckedLayout.setVisibility(View.VISIBLE);
 

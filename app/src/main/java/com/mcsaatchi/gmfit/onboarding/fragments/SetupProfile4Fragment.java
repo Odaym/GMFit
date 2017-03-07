@@ -2,7 +2,6 @@ package com.mcsaatchi.gmfit.onboarding.fragments;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -11,7 +10,6 @@ import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -271,8 +269,8 @@ public class SetupProfile4Fragment extends Fragment
 
           @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
             Timber.d("Call failed with error : %s", t.getMessage());
-            alertDialog.setMessage(getActivity().getResources()
-                .getString(R.string.server_error_got_returned));
+            alertDialog.setMessage(
+                getActivity().getResources().getString(R.string.server_error_got_returned));
             alertDialog.show();
           }
         });
@@ -305,8 +303,8 @@ public class SetupProfile4Fragment extends Fragment
           @Override public void onFailure(Call<UiResponse> call, Throwable t) {
             Timber.d("Call failed with error : %s", t.getMessage());
             final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
-            alertDialog.setMessage(getActivity().getResources()
-                .getString(R.string.server_error_got_returned));
+            alertDialog.setMessage(
+                getActivity().getResources().getString(R.string.server_error_got_returned));
             alertDialog.show();
           }
         });

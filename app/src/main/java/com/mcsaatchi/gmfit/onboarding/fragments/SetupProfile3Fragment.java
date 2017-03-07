@@ -1,6 +1,5 @@
 package com.mcsaatchi.gmfit.onboarding.fragments;
 
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;

@@ -4,16 +4,13 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import com.mcsaatchi.gmfit.architecture.GMFitApplication;
 import com.mcsaatchi.gmfit.common.Constants;
-import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
-import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
 import org.joda.time.DateTime;
 import retrofit2.Retrofit;
@@ -47,18 +44,17 @@ public class RestClient {
             .header("Authorization", prefs.getString(Constants.PREF_USER_ACCESS_TOKEN,
                 Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS))
             .header("Date", new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss z", Locale.US).format(
-                new SimpleDateFormat("yyyy MM dd HH:mm:ss", Locale.US).parse(
-                    dt.getYear()
-                        + " "
-                        + dt.getMonthOfYear()
-                        + " "
-                        + dt.getDayOfMonth()
-                        + " "
-                        + dt.getHourOfDay()
-                        + ":"
-                        + dt.getMinuteOfHour()
-                        + ":"
-                        + dt.getSecondOfMinute())));
+                new SimpleDateFormat("yyyy MM dd HH:mm:ss", Locale.US).parse(dt.getYear()
+                    + " "
+                    + dt.getMonthOfYear()
+                    + " "
+                    + dt.getDayOfMonth()
+                    + " "
+                    + dt.getHourOfDay()
+                    + ":"
+                    + dt.getMinuteOfHour()
+                    + ":"
+                    + dt.getSecondOfMinute())));
       } catch (ParseException e) {
         e.printStackTrace();
       }

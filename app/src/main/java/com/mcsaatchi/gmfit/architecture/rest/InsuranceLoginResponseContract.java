@@ -20,6 +20,7 @@ public class InsuranceLoginResponseContract implements Parcelable {
   @SerializedName("company") @Expose private String company;
   @SerializedName("username") @Expose private String username;
   @SerializedName("holdername") @Expose private String holdername;
+  @SerializedName("contract_expiry") @Expose private String contract_expiry;
 
   public InsuranceLoginResponseContract() {
   }
@@ -29,6 +30,7 @@ public class InsuranceLoginResponseContract implements Parcelable {
     this.company = in.readString();
     this.username = in.readString();
     this.holdername = in.readString();
+    this.contract_expiry = in.readString();
   }
 
   public Integer getNumber() {
@@ -63,6 +65,10 @@ public class InsuranceLoginResponseContract implements Parcelable {
     this.holdername = holdername;
   }
 
+  public String getContract_expiry() {
+    return contract_expiry;
+  }
+
   @Override public int describeContents() {
     return 0;
   }
@@ -72,5 +78,6 @@ public class InsuranceLoginResponseContract implements Parcelable {
     dest.writeString(this.company);
     dest.writeString(this.username);
     dest.writeString(this.holdername);
+    dest.writeString(this.contract_expiry);
   }
 }

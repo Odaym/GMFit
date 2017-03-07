@@ -6,6 +6,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ReimbursementModel implements Parcelable {
+  public static final Creator<ReimbursementModel> CREATOR = new Creator<ReimbursementModel>() {
+    @Override public ReimbursementModel createFromParcel(Parcel source) {
+      return new ReimbursementModel(source);
+    }
+
+    @Override public ReimbursementModel[] newArray(int size) {
+      return new ReimbursementModel[size];
+    }
+  };
   private String id;
   private String category;
   private String subCategory;
@@ -25,6 +34,18 @@ public class ReimbursementModel implements Parcelable {
     this.amount = amount;
     this.status = status;
     this.type = type;
+  }
+
+  protected ReimbursementModel(Parcel in) {
+    this.id = in.readString();
+    this.category = in.readString();
+    this.subCategory = in.readString();
+    this.serviceDate = in.readString();
+    this.amount = in.readString();
+    this.status = in.readString();
+    this.type = in.readString();
+    this.medicines = new ArrayList<MedicalInformationModel>();
+    in.readList(this.medicines, MedicalInformationModel.class.getClassLoader());
   }
 
   public String getId() {
@@ -105,26 +126,4 @@ public class ReimbursementModel implements Parcelable {
     dest.writeString(this.type);
     dest.writeList(this.medicines);
   }
-
-  protected ReimbursementModel(Parcel in) {
-    this.id = in.readString();
-    this.category = in.readString();
-    this.subCategory = in.readString();
-    this.serviceDate = in.readString();
-    this.amount = in.readString();
-    this.status = in.readString();
-    this.type = in.readString();
-    this.medicines = new ArrayList<MedicalInformationModel>();
-    in.readList(this.medicines, MedicalInformationModel.class.getClassLoader());
-  }
-
-  public static final Creator<ReimbursementModel> CREATOR = new Creator<ReimbursementModel>() {
-    @Override public ReimbursementModel createFromParcel(Parcel source) {
-      return new ReimbursementModel(source);
-    }
-
-    @Override public ReimbursementModel[] newArray(int size) {
-      return new ReimbursementModel[size];
-    }
-  };
 }

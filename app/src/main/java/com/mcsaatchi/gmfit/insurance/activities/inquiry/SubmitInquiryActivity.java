@@ -2,7 +2,6 @@ package com.mcsaatchi.gmfit.insurance.activities.inquiry;
 
 import android.Manifest;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -17,7 +16,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
 import android.util.Log;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -97,6 +95,10 @@ public class SubmitInquiryActivity extends BaseActivity {
     getCRMCategories();
 
     allFields.add(requestTitleTV);
+
+    cardNumberET.setText(prefs.getString(Constants.EXTRAS_INSURANCE_USER_USERNAME, ""));
+    fullNameET.setText(prefs.getString(Constants.EXTRAS_INSURANCE_FULL_NAME, ""));
+    riskCarrierET.setText(prefs.getString(Constants.EXTRAS_INSURANCE_COMPANY_NAME, ""));
 
     subCategoryPicker.setUpDropDown("Subcategory", "Choose a subcategory",
         new String[] { "No category loaded" }, (index, selected) -> {
@@ -195,8 +197,8 @@ public class SubmitInquiryActivity extends BaseActivity {
       if (strName != null) {
         switch (strName) {
           case "Choose from gallery":
-            Intent galleryIntent = new Intent(Intent.ACTION_PICK,
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            Intent galleryIntent =
+                new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             startActivityForResult(galleryIntent, REQUEST_PICK_IMAGE_GALLERY);
             break;
           case "Take a new picture":
@@ -307,6 +309,9 @@ public class SubmitInquiryActivity extends BaseActivity {
               Response<CreateNewRequestResponse> response) {
             switch (response.code()) {
               case 200:
+                alertDialog.setMessage(getString(R.string.submission_successful_dialog_title));
+                alertDialog.show();
+
                 //Intent intent = new Intent(SubmitInquiryActivity.this,
                 //    ReimbursementStatusDetailsActivity.class);
                 //intent.putExtra(ReimbursementStatusDetailsActivity.REIMBURSEMENT_REQUEST_ID,
@@ -373,15 +378,13 @@ public class SubmitInquiryActivity extends BaseActivity {
                           subCategoryPicker.setUpDropDown("SubCategory", "Choose a subcategory",
                               subCategoryNames.toArray(new String[subCategoryNames.size()]),
                               (index1, selected1) -> {
-                                for (int i = 0; i < categoriesResponseDatum.getSubs().size();
-                                    i++) {
+                                for (int i = 0; i < categoriesResponseDatum.getSubs().size(); i++) {
                                   if (categoriesResponseDatum.getSubs().get(i).getName() != null
                                       && categoriesResponseDatum.getSubs()
                                       .get(i)
                                       .getName()
                                       .equals(selected1)) {
-                                    subcategory =
-                                        categoriesResponseDatum.getSubs().get(i).getId();
+                                    subcategory = categoriesResponseDatum.getSubs().get(i).getId();
                                   }
                                 }
                               });

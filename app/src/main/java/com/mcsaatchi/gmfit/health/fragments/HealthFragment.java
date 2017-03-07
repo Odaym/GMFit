@@ -2,7 +2,6 @@ package com.mcsaatchi.gmfit.health.fragments;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -181,8 +180,7 @@ public class HealthFragment extends Fragment {
                     (TextView) customLineChart.getView().findViewById(R.id.updateWeightTV);
 
                 updateUserWeightTV.setOnClickListener(view -> {
-                  final AlertDialog.Builder dialogBuilder =
-                      new AlertDialog.Builder(getActivity());
+                  final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
                   dialogBuilder.setTitle(R.string.profile_edit_weight_dialog_title);
 
                   View dialogView = LayoutInflater.from(getActivity())
@@ -196,8 +194,7 @@ public class HealthFragment extends Fragment {
 
                   dialogBuilder.setView(dialogView);
                   dialogBuilder.setPositiveButton(R.string.ok, (dialogInterface, i) -> {
-                    double userWeight =
-                        Double.parseDouble(editWeightET.getText().toString());
+                    double userWeight = Double.parseDouble(editWeightET.getText().toString());
 
                     updateUserWeight(editWeightET, userWeight,
                         Helpers.prepareDateWithTimeForAPIRequest(new LocalDateTime()));

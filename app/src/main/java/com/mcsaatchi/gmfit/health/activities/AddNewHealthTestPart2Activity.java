@@ -2,7 +2,6 @@ package com.mcsaatchi.gmfit.health.activities;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
@@ -14,7 +13,6 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -189,8 +187,7 @@ public class AddNewHealthTestPart2Activity extends BaseActivity {
 
       @Override public void onFailure(Call<MedicalTestMetricsResponse> call, Throwable t) {
         Timber.d("Call failed with error : %s", t.getMessage());
-        alertDialog.setMessage(
-            getResources().getString(R.string.server_error_got_returned));
+        alertDialog.setMessage(getResources().getString(R.string.server_error_got_returned));
         alertDialog.show();
       }
     });
@@ -332,8 +329,7 @@ public class AddNewHealthTestPart2Activity extends BaseActivity {
 
           @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
             Timber.d("Call failed with error : %s", t.getMessage());
-            alertDialog.setMessage(
-                getResources().getString(R.string.server_error_got_returned));
+            alertDialog.setMessage(getResources().getString(R.string.server_error_got_returned));
             alertDialog.show();
           }
         });
@@ -380,8 +376,7 @@ public class AddNewHealthTestPart2Activity extends BaseActivity {
 
           @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
             Timber.d("Call failed with error : %s", t.getMessage());
-            alertDialog.setMessage(
-                getResources().getString(R.string.server_error_got_returned));
+            alertDialog.setMessage(getResources().getString(R.string.server_error_got_returned));
             alertDialog.show();
           }
         });

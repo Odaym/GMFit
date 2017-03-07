@@ -1,7 +1,6 @@
 package com.mcsaatchi.gmfit.onboarding.activities;
 
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -10,7 +9,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
-import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import butterknife.Bind;
@@ -22,7 +20,6 @@ import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.mcsaatchi.gmfit.R;
@@ -45,7 +42,6 @@ import io.fabric.sdk.android.Fabric;
 import java.util.ArrayList;
 import java.util.List;
 import org.json.JSONException;
-import org.json.JSONObject;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -138,30 +134,29 @@ public class LoginActivity extends BaseActivity {
             .putString(Constants.EXTRAS_USER_FACEBOOK_TOKEN, accessToken.getToken())
             .apply();
 
-        GraphRequest request =
-            GraphRequest.newMeRequest(accessToken, (object, response) -> {
-              try {
+        GraphRequest request = GraphRequest.newMeRequest(accessToken, (object, response) -> {
+          try {
 
-                String userID = (String) object.get("id");
-                String userName = (String) object.get("name");
-                String userEmail = (String) object.get("email");
+            String userID = (String) object.get("id");
+            String userName = (String) object.get("name");
+            String userEmail = (String) object.get("email");
 
-                SharedPreferences.Editor prefsEditor = prefs.edit();
+            SharedPreferences.Editor prefsEditor = prefs.edit();
 
-                prefsEditor.putBoolean(Constants.EXTRAS_USER_LOGGED_IN, true);
+            prefsEditor.putBoolean(Constants.EXTRAS_USER_LOGGED_IN, true);
 
-                prefsEditor.putString(Constants.EXTRAS_USER_FULL_NAME, userName);
-                prefsEditor.putString(Constants.EXTRAS_USER_DISPLAY_PHOTO,
-                    "https://graph.facebook.com/" + userID + "/picture?type=large");
-                prefsEditor.putString(Constants.EXTRAS_USER_EMAIL, userEmail);
+            prefsEditor.putString(Constants.EXTRAS_USER_FULL_NAME, userName);
+            prefsEditor.putString(Constants.EXTRAS_USER_DISPLAY_PHOTO,
+                "https://graph.facebook.com/" + userID + "/picture?type=large");
+            prefsEditor.putString(Constants.EXTRAS_USER_EMAIL, userEmail);
 
-                prefsEditor.apply();
+            prefsEditor.apply();
 
-                registerUserWithFacebook(accessToken.getToken());
-              } catch (JSONException e) {
-                e.printStackTrace();
-              }
-            });
+            registerUserWithFacebook(accessToken.getToken());
+          } catch (JSONException e) {
+            e.printStackTrace();
+          }
+        });
 
         Bundle parameters = new Bundle();
         parameters.putString("fields", "id,name,email,link,birthday,picture");
@@ -240,8 +235,7 @@ public class LoginActivity extends BaseActivity {
 
       @Override public void onFailure(Call<AuthenticationResponse> call, Throwable t) {
         Timber.d("Call failed with error : %s", t.getMessage());
-        alertDialog.setMessage(
-            getResources().getString(R.string.server_error_got_returned));
+        alertDialog.setMessage(getResources().getString(R.string.server_error_got_returned));
         alertDialog.show();
       }
     });

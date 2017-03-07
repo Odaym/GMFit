@@ -8,6 +8,7 @@ import com.mcsaatchi.gmfit.architecture.rest.CRMCategoriesResponse;
 import com.mcsaatchi.gmfit.architecture.rest.CardDetailsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ChartMetricBreakdownResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ChartsBySectionResponse;
+import com.mcsaatchi.gmfit.architecture.rest.ChronicTreatmentListResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ClaimListDetailsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ClaimsListResponse;
 import com.mcsaatchi.gmfit.architecture.rest.CountriesListResponse;
@@ -351,6 +352,11 @@ public class DataAccessHandler {
   public void getClaimslistDetails(String contractNo, String requestType, String claimId,
       final Callback<ClaimListDetailsResponse> callback) {
     apiCallsHandler.getClaimslistDetails(contractNo, requestType, claimId, callback);
+  }
+
+  public void getChronicTreatmentsList(String contractNo, String requestType,
+      final Callback<ChronicTreatmentListResponse> callback) {
+    apiCallsHandler.getChronicTreatmentsList(contractNo, requestType, callback);
   }
 
   public void getSnapshot(String contractNo, String startDate, String endDate,

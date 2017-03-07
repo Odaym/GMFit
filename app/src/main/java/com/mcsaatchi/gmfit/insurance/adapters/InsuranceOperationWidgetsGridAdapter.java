@@ -2,7 +2,6 @@ package com.mcsaatchi.gmfit.insurance.adapters;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v4.app.FragmentActivity;
@@ -194,8 +193,7 @@ public class InsuranceOperationWidgetsGridAdapter
                     fragmentActivity.startActivity(intent);
                     break;
                   case TRACK_ITEM:
-                    intent =
-                        new Intent(fragmentActivity, ApprovalRequestsStatusListActivity.class);
+                    intent = new Intent(fragmentActivity, ApprovalRequestsStatusListActivity.class);
                     fragmentActivity.startActivity(intent);
                     break;
                 }
@@ -203,8 +201,7 @@ public class InsuranceOperationWidgetsGridAdapter
               case CHRONIC_ITEM:
                 switch (request_purpose) {
                   case SUBMIT_ITEM:
-                    intent =
-                        new Intent(fragmentActivity, SubmitChronicPrescriptionActivity.class);
+                    intent = new Intent(fragmentActivity, SubmitChronicPrescriptionActivity.class);
                     fragmentActivity.startActivity(intent);
                     break;
                   case TRACK_ITEM:

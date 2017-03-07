@@ -2,13 +2,11 @@ package com.mcsaatchi.gmfit.insurance.widget;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.mcsaatchi.gmfit.R;
@@ -61,7 +59,8 @@ public class CustomPicker extends LinearLayout implements View.OnClickListener {
     int month = c.get(Calendar.MONTH);
     int year = c.get(Calendar.YEAR);
     datePickerDialog = new DatePickerDialog(context,
-        (datePicker, year1, month1, dayOfMonth) -> datePickerClickListener.dateSet(year1, month1, dayOfMonth), year, month, day);
+        (datePicker, year1, month1, dayOfMonth) -> datePickerClickListener.dateSet(year1, month1,
+            dayOfMonth), year, month, day);
   }
 
   private void setItemName(String itemName) {
@@ -98,7 +97,7 @@ public class CustomPicker extends LinearLayout implements View.OnClickListener {
     }
   }
 
-  public void setBackgroundForElements(int backgroundColor){
+  public void setBackgroundForElements(int backgroundColor) {
     itemNameTv.setBackgroundColor(backgroundColor);
     itemSelectedTv.setBackgroundColor(backgroundColor);
   }

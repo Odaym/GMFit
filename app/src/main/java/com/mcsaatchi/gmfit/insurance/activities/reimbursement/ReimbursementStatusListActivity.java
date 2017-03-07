@@ -1,7 +1,6 @@
 package com.mcsaatchi.gmfit.insurance.activities.reimbursement;
 
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -12,7 +11,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.rest.ClaimsListResponse;
-import com.mcsaatchi.gmfit.architecture.rest.ClaimsListResponseDatum;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
@@ -60,12 +58,12 @@ public class ReimbursementStatusListActivity extends BaseActivity {
               case 200:
                 statusAdapter = new StatusAdapter(ReimbursementStatusListActivity.this,
                     response.body().getData().getBody().getData(), (reimbursementModel, index) -> {
-                      Intent intent = new Intent(ReimbursementStatusListActivity.this,
-                          ReimbursementStatusDetailsActivity.class);
-                      intent.putExtra(ReimbursementStatusDetailsActivity.REIMBURSEMENT_REQUEST_ID,
-                          reimbursementModel.getId());
-                      startActivity(intent);
-                    });
+                  Intent intent = new Intent(ReimbursementStatusListActivity.this,
+                      ReimbursementStatusDetailsActivity.class);
+                  intent.putExtra(ReimbursementStatusDetailsActivity.REIMBURSEMENT_REQUEST_ID,
+                      reimbursementModel.getId());
+                  startActivity(intent);
+                });
 
                 recyclerView.setLayoutManager(
                     new LinearLayoutManager(ReimbursementStatusListActivity.this));

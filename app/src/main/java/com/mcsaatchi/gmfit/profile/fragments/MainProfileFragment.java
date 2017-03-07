@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -59,7 +58,6 @@ import com.mcsaatchi.gmfit.profile.activities.ContactUsActivity;
 import com.mcsaatchi.gmfit.profile.activities.MealRemindersActivity;
 import com.mcsaatchi.gmfit.profile.activities.MetaTextsActivity;
 import com.mukesh.countrypicker.fragments.CountryPicker;
-import com.mukesh.countrypicker.interfaces.CountryPickerListener;
 import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
 import java.io.File;
@@ -189,8 +187,7 @@ public class MainProfileFragment extends Fragment {
           LayoutInflater.from(getActivity()).inflate(R.layout.profile_edit_weight_dialog, null);
       final EditText editWeightET = (EditText) dialogView.findViewById(R.id.dialogWeightET);
 
-      editWeightET.setText(
-          String.valueOf(prefs.getFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, 0)));
+      editWeightET.setText(String.valueOf(prefs.getFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, 0)));
       editWeightET.setSelection(editWeightET.getText().toString().length());
 
       dialogBuilder.setView(dialogView);
@@ -199,9 +196,7 @@ public class MainProfileFragment extends Fragment {
         weightEntryValueTV.setText(
             String.valueOf(String.format(Locale.getDefault(), "%.1f", newUserWeight)));
 
-        prefs.edit()
-            .putFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, (float) newUserWeight)
-            .apply();
+        prefs.edit().putFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, (float) newUserWeight).apply();
 
         updateUserProfile();
       });
@@ -309,8 +304,7 @@ public class MainProfileFragment extends Fragment {
                   selectedRadioButton.getText().toString())
               .apply();
           prefs.edit()
-              .putInt(Constants.EXTRAS_USER_PROFILE_ACTIVITY_LEVEL_ID,
-                  selectedRadioButton.getId())
+              .putInt(Constants.EXTRAS_USER_PROFILE_ACTIVITY_LEVEL_ID, selectedRadioButton.getId())
               .apply();
 
           updateUserProfile();
@@ -421,8 +415,8 @@ public class MainProfileFragment extends Fragment {
 
       dialogBuilder.setView(dialogView);
       dialogBuilder.setPositiveButton(R.string.ok, (dialogInterface, position) -> {
-        RadioButton selectedRadioButton = (RadioButton) metricRadioGroup.findViewById(
-            metricRadioGroup.getCheckedRadioButtonId());
+        RadioButton selectedRadioButton =
+            (RadioButton) metricRadioGroup.findViewById(metricRadioGroup.getCheckedRadioButtonId());
 
         metricSystemValueTV.setText(selectedRadioButton.getText().toString());
 
@@ -689,8 +683,8 @@ public class MainProfileFragment extends Fragment {
       if (strName != null) {
         switch (strName) {
           case "Choose from gallery":
-            Intent galleryIntent = new Intent(Intent.ACTION_PICK,
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            Intent galleryIntent =
+                new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
             startActivityForResult(galleryIntent, REQUEST_PICK_IMAGE_GALLERY);
             break;
           case "Take a new picture":

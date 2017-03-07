@@ -6,13 +6,13 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
-import android.widget.DatePicker;
 import android.widget.TextView;
+import android.widget.Toast;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
+import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.common.classes.SimpleDividerItemDecoration;
 import com.mcsaatchi.gmfit.insurance.adapters.MedicalInformationAdapter;
 import com.mcsaatchi.gmfit.insurance.models.MedicalInformationModel;
@@ -45,28 +45,31 @@ public class ChornicPrescriptionStatusDetailsActivity extends BaseActivity {
     updateLabel(startDateTV);
     updateLabel(endDateTV);
 
-    startDateTV.setOnClickListener(view -> new DatePickerDialog(ChornicPrescriptionStatusDetailsActivity.this,
-        (datePicker, year, month, day) -> {
-          calendar.set(Calendar.YEAR, year);
-          calendar.set(Calendar.MONTH, month);
-          calendar.set(Calendar.DAY_OF_MONTH, day);
-          updateLabel(startDateTV);
-        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
-        calendar.get(Calendar.DAY_OF_MONTH)).show());
+    startDateTV.setOnClickListener(
+        view -> new DatePickerDialog(ChornicPrescriptionStatusDetailsActivity.this,
+            (datePicker, year, month, day) -> {
+              calendar.set(Calendar.YEAR, year);
+              calendar.set(Calendar.MONTH, month);
+              calendar.set(Calendar.DAY_OF_MONTH, day);
+              updateLabel(startDateTV);
+            }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+            calendar.get(Calendar.DAY_OF_MONTH)).show());
 
-    endDateTV.setOnClickListener(view -> new DatePickerDialog(ChornicPrescriptionStatusDetailsActivity.this,
-        (datePicker, year, month, day) -> {
-          calendar.set(Calendar.YEAR, year);
-          calendar.set(Calendar.MONTH, month);
-          calendar.set(Calendar.DAY_OF_MONTH, day);
-          updateLabel(endDateTV);
-        }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
-        calendar.get(Calendar.DAY_OF_MONTH)).show());
+    endDateTV.setOnClickListener(
+        view -> new DatePickerDialog(ChornicPrescriptionStatusDetailsActivity.this,
+            (datePicker, year, month, day) -> {
+              calendar.set(Calendar.YEAR, year);
+              calendar.set(Calendar.MONTH, month);
+              calendar.set(Calendar.DAY_OF_MONTH, day);
+              updateLabel(endDateTV);
+            }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+            calendar.get(Calendar.DAY_OF_MONTH)).show());
 
     if (getIntent().getExtras() != null) {
       treatmentsModel = (TreatmentsModel) getIntent().getExtras().get("CHRONIC_OBJECT");
       setupToolbar(getClass().getSimpleName(), toolbar, treatmentsModel.getName(), true);
       statusValueTV.setText(treatmentsModel.getStatus());
+      statusValueTV.setTextColor(Helpers.determineStatusColor(treatmentsModel.getStatus()));
     } else {
       setupToolbar(getClass().getSimpleName(), toolbar,
           getResources().getString(R.string.treatment_status_section_title), true);
@@ -78,7 +81,10 @@ public class ChornicPrescriptionStatusDetailsActivity extends BaseActivity {
     medicines.add(new MedicalInformationModel("Panadol Extra Tab 500mg", "Approved", "2 tablets",
         "3 times daily", "15 days"));
 
-    adapter = new MedicalInformationAdapter(medicines, null);
+    adapter = new MedicalInformationAdapter(medicines,
+        (medicalInformationModel, index) -> Toast.makeText(
+            ChornicPrescriptionStatusDetailsActivity.this, "Medical Information list item!",
+            Toast.LENGTH_SHORT).show());
     medicalRemindersRecyclerView.setLayoutManager(new LinearLayoutManager(this));
     medicalRemindersRecyclerView.setNestedScrollingEnabled(false);
     medicalRemindersRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(this));

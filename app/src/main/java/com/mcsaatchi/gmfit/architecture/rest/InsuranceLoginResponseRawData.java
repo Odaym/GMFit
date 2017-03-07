@@ -5,7 +5,7 @@ import android.os.Parcelable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class InsuranceLoginResponseRawData implements Parcelable{
+public class InsuranceLoginResponseRawData implements Parcelable {
   public static final Creator<InsuranceLoginResponseRawData> CREATOR =
       new Creator<InsuranceLoginResponseRawData>() {
         @Override public InsuranceLoginResponseRawData createFromParcel(Parcel source) {

@@ -2,7 +2,6 @@ package com.mcsaatchi.gmfit.nutrition.activities;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,7 +13,6 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -90,8 +88,7 @@ public class AddNewMealItemActivity extends BaseActivity {
     loadRecentMealsFromServer(mealType);
 
     mealItemsList.setOnItemClickListener((adapterView, view, position, l) -> {
-      if (((MealItem) adapterView.getItemAtPosition(position)).getSectionType()
-          == ITEM_VIEWTYPE) {
+      if (((MealItem) adapterView.getItemAtPosition(position)).getSectionType() == ITEM_VIEWTYPE) {
         Intent intent = new Intent(AddNewMealItemActivity.this, SpecifyMealAmountActivity.class);
 
         if (purposeIsToAddMealToDate) {
@@ -236,8 +233,7 @@ public class AddNewMealItemActivity extends BaseActivity {
                             Timber.d("Call failed with error : %s", t.getMessage());
                             final AlertDialog alertDialog =
                                 new AlertDialog.Builder(AddNewMealItemActivity.this).create();
-                            alertDialog.setMessage(
-                                getString(R.string.server_error_got_returned));
+                            alertDialog.setMessage(getString(R.string.server_error_got_returned));
                             alertDialog.show();
                           }
                         });
@@ -362,8 +358,7 @@ public class AddNewMealItemActivity extends BaseActivity {
 
           @Override public void onFailure(Call<RecentMealsResponse> call, Throwable t) {
             Timber.d("Call failed with error : %s", t.getMessage());
-            alertDialog.setMessage(
-                getResources().getString(R.string.server_error_got_returned));
+            alertDialog.setMessage(getResources().getString(R.string.server_error_got_returned));
             alertDialog.show();
           }
         });

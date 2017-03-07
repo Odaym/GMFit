@@ -8,6 +8,7 @@ import com.mcsaatchi.gmfit.architecture.rest.CRMCategoriesResponse;
 import com.mcsaatchi.gmfit.architecture.rest.CardDetailsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ChartMetricBreakdownResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ChartsBySectionResponse;
+import com.mcsaatchi.gmfit.architecture.rest.ChronicTreatmentListResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ClaimListDetailsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ClaimsListResponse;
 import com.mcsaatchi.gmfit.architecture.rest.CountriesListResponse;
@@ -1021,6 +1022,22 @@ public class ApiCallsHandler {
     });
   }
 
+  void getChronicTreatmentsList(String contractNo, String requestType,
+      final Callback<ChronicTreatmentListResponse> callback) {
+    Call<ChronicTreatmentListResponse> apiCall = restClient.getGMFitService()
+        .getChronicTreatmentsList(new ChronicListDetailsRequest(contractNo, requestType));
+
+    apiCall.enqueue(new Callback<ChronicTreatmentListResponse>() {
+      @Override public void onResponse(Call<ChronicTreatmentListResponse> call,
+          Response<ChronicTreatmentListResponse> response) {
+        callback.onResponse(call, response);
+      }
+
+      @Override public void onFailure(Call<ChronicTreatmentListResponse> call, Throwable t) {
+      }
+    });
+  }
+
   void getCRMCategories(RequestBody contractNo, final Callback<CRMCategoriesResponse> callback) {
     Call<CRMCategoriesResponse> apiCall = restClient.getGMFitService().getCRMCategories(contractNo);
 
@@ -1378,6 +1395,16 @@ public class ApiCallsHandler {
       this.contractNo = contractNo;
       this.requestType = requestType;
       this.claimId = claimId;
+    }
+  }
+
+  public class ChronicListDetailsRequest {
+    String contractNo;
+    String requestType;
+
+    public ChronicListDetailsRequest(String contractNo, String requestType) {
+      this.contractNo = contractNo;
+      this.requestType = requestType;
     }
   }
 

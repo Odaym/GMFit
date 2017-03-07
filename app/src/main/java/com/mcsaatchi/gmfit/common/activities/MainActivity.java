@@ -2,7 +2,6 @@ package com.mcsaatchi.gmfit.common.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.IdRes;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -22,7 +21,6 @@ import com.mcsaatchi.gmfit.insurance.fragments.InsuranceFragment;
 import com.mcsaatchi.gmfit.nutrition.fragments.NutritionFragment;
 import com.mcsaatchi.gmfit.profile.fragments.MainProfileFragment;
 import com.roughike.bottombar.BottomBar;
-import com.roughike.bottombar.OnTabSelectListener;
 import java.util.ArrayList;
 import timber.log.Timber;
 
@@ -135,8 +133,7 @@ public class MainActivity extends BaseActivity {
           getSupportFragmentManager().beginTransaction()
               .replace(R.id.fragment_container, healthFragment)
               .commit();
-          mainContentLayout.setBackground(
-              getResources().getDrawable(R.drawable.health_background));
+          mainContentLayout.setBackground(getResources().getDrawable(R.drawable.health_background));
           break;
         case R.id.item_four:
           myScrollingContent.setClickable(false);

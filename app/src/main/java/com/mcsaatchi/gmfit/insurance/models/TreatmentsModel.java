@@ -2,7 +2,6 @@ package com.mcsaatchi.gmfit.insurance.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import java.util.Calendar;
 
 public class TreatmentsModel implements Parcelable {
   public static final Creator<TreatmentsModel> CREATOR = new Creator<TreatmentsModel>() {
@@ -16,22 +15,22 @@ public class TreatmentsModel implements Parcelable {
   };
   private int id;
   private String name;
-  private Calendar fromDate;
-  private Calendar toDate;
+  private String startDate;
+  private String endDate;
   private String status;
 
-  public TreatmentsModel(String name, Calendar fromDate, Calendar toDate, String status) {
+  public TreatmentsModel(String name, String startDate, String endDate, String status) {
     this.name = name;
-    this.fromDate = fromDate;
-    this.toDate = toDate;
+    this.startDate = startDate;
+    this.endDate = endDate;
     this.status = status;
   }
 
   protected TreatmentsModel(Parcel in) {
     this.id = in.readInt();
     this.name = in.readString();
-    this.fromDate = (Calendar) in.readSerializable();
-    this.toDate = (Calendar) in.readSerializable();
+    this.startDate = in.readString();
+    this.endDate = in.readString();
     this.status = in.readString();
   }
 
@@ -51,20 +50,20 @@ public class TreatmentsModel implements Parcelable {
     this.name = name;
   }
 
-  public Calendar getFromDate() {
-    return fromDate;
+  public String getFromDate() {
+    return startDate;
   }
 
-  public void setFromDate(Calendar fromDate) {
-    this.fromDate = fromDate;
+  public void setFromDate(String startDate) {
+    this.startDate = startDate;
   }
 
-  public Calendar getToDate() {
-    return toDate;
+  public String getToDate() {
+    return endDate;
   }
 
-  public void setToDate(Calendar toDate) {
-    this.toDate = toDate;
+  public void setToDate(String endDate) {
+    this.endDate = endDate;
   }
 
   public String getStatus() {
@@ -82,8 +81,8 @@ public class TreatmentsModel implements Parcelable {
   @Override public void writeToParcel(Parcel dest, int flags) {
     dest.writeInt(this.id);
     dest.writeString(this.name);
-    dest.writeSerializable(this.fromDate);
-    dest.writeSerializable(this.toDate);
+    dest.writeString(this.startDate);
+    dest.writeString(this.endDate);
     dest.writeString(this.status);
   }
 }

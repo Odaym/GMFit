@@ -1,7 +1,6 @@
 package com.mcsaatchi.gmfit.insurance.fragments;
 
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -176,10 +175,10 @@ public class InsuranceLoginFragment extends Fragment {
   }
 
   private void getCountriesList() {
-    final ProgressDialog waitingDialog = new ProgressDialog(getActivity());
-    waitingDialog.setTitle(getResources().getString(R.string.loading_data_dialog_title));
-    waitingDialog.setMessage(getResources().getString(R.string.please_wait_dialog_message));
-    waitingDialog.show();
+    //final ProgressDialog waitingDialog = new ProgressDialog(getActivity());
+    //waitingDialog.setTitle(getResources().getString(R.string.loading_data_dialog_title));
+    //waitingDialog.setMessage(getResources().getString(R.string.please_wait_dialog_message));
+    //waitingDialog.show();
 
     dataAccessHandler.getCountriesList(
         toRequestBody(prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, "")),
@@ -188,10 +187,7 @@ public class InsuranceLoginFragment extends Fragment {
               Response<CountriesListResponse> response) {
             switch (response.code()) {
               case 200:
-                waitingDialog.dismiss();
-
-
-
+                //waitingDialog.dismiss();
                 //Timber.d(response.body().getData().getBody().getData().get);
             }
           }

@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.TimePicker;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.health.models.MedicationReminder;
 import java.text.ParseException;
@@ -58,6 +57,22 @@ public class MedicationRemindersRecyclerAdapter extends RecyclerView.Adapter {
     return medicationReminderTimes.get(position);
   }
 
+  private String formatFinalTime(int hour, int minute) {
+    String finalTime = "";
+
+    try {
+      final SimpleDateFormat sdf = new SimpleDateFormat("H:mm");
+      final Date dateObj;
+
+      dateObj = sdf.parse(hour + ":" + minute);
+      finalTime = new SimpleDateFormat("hh:mm  a").format(dateObj);
+    } catch (ParseException e) {
+      e.printStackTrace();
+    }
+
+    return finalTime;
+  }
+
   private class ViewHolder extends RecyclerView.ViewHolder {
     private LinearLayout clickableLayout;
     private TextView reminderValueTV, reminderLabelTV;
@@ -102,21 +117,5 @@ public class MedicationRemindersRecyclerAdapter extends RecyclerView.Adapter {
         timePicker.show();
       });
     }
-  }
-
-  private String formatFinalTime(int hour, int minute) {
-    String finalTime = "";
-
-    try {
-      final SimpleDateFormat sdf = new SimpleDateFormat("H:mm");
-      final Date dateObj;
-
-      dateObj = sdf.parse(hour + ":" + minute);
-      finalTime = new SimpleDateFormat("hh:mm  a").format(dateObj);
-    } catch (ParseException e) {
-      e.printStackTrace();
-    }
-
-    return finalTime;
   }
 }

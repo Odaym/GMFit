@@ -27,7 +27,7 @@
   <ScrollView
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-        android:background="@color/offwhite_background_gray"
+      android:background="@color/offwhite_background_gray"
       >
 
     <LinearLayout
@@ -44,20 +44,6 @@
 
       <android.support.v7.widget.RecyclerView
           android:id="@+id/activeTreatmentsRecyclerView"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:nestedScrollingEnabled="false"
-          />
-
-      <com.mcsaatchi.gmfit.insurance.widget.ItemHeader
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_marginTop="@dimen/default_margin_2"
-          custom:header_text="@string/inactive_treatments"
-          />
-
-      <android.support.v7.widget.RecyclerView
-          android:id="@+id/inactiveTreatmentsRecyclerView"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:nestedScrollingEnabled="false"

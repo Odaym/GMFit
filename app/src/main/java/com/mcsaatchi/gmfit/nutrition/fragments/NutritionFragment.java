@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -205,8 +204,7 @@ public class NutritionFragment extends Fragment {
 
     addNewChartBTN.setOnClickListener(v -> {
       Intent intent = new Intent(getActivity(), AddNewChartActivity.class);
-      intent.putExtra(Constants.EXTRAS_ADD_CHART_WHAT_TYPE,
-          Constants.EXTRAS_ADD_NUTRIITION_CHART);
+      intent.putExtra(Constants.EXTRAS_ADD_CHART_WHAT_TYPE, Constants.EXTRAS_ADD_NUTRIITION_CHART);
       intent.putParcelableArrayListExtra(Constants.BUNDLE_NUTRITION_CHARTS_MAP, finalCharts);
       startActivityForResult(intent, ADD_NEW_NUTRITION_CHART_REQUEST);
     });

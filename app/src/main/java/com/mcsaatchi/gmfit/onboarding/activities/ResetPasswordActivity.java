@@ -1,11 +1,9 @@
 package com.mcsaatchi.gmfit.onboarding.activities;
 
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.widget.Button;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -45,8 +43,7 @@ public class ResetPasswordActivity extends BaseActivity {
     submitResetPasswordBTN.setOnClickListener(view -> {
       if (Helpers.isInternetAvailable(ResetPasswordActivity.this)) {
         if (Helpers.validateFields(allFields)) {
-          finalizeResetPassword(verifyCodeET.getText().toString(),
-              passwordET.getText().toString());
+          finalizeResetPassword(verifyCodeET.getText().toString(), passwordET.getText().toString());
         }
       }
     });
@@ -81,8 +78,7 @@ public class ResetPasswordActivity extends BaseActivity {
 
       @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
         Timber.d("Call failed with error : %s", t.getMessage());
-        alertDialog.setMessage(
-            getResources().getString(R.string.server_error_got_returned));
+        alertDialog.setMessage(getResources().getString(R.string.server_error_got_returned));
         alertDialog.show();
       }
     });

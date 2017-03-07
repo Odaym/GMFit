@@ -2,7 +2,6 @@ package com.mcsaatchi.gmfit.insurance.models;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import java.util.Calendar;
 
 public class InsuranceContract implements Parcelable {
   public static final Creator<InsuranceContract> CREATOR = new Creator<InsuranceContract>() {
@@ -15,22 +14,32 @@ public class InsuranceContract implements Parcelable {
     }
   };
   private String title;
+  private String fullName;
   private String number;
   private String insuranceCompany;
   private String holdername;
-  private Calendar expiryDate;
+  private String expiryDate;
   private boolean selected;
 
   public InsuranceContract() {
   }
 
   protected InsuranceContract(Parcel in) {
+    this.fullName = in.readString();
     this.title = in.readString();
     this.number = in.readString();
     this.insuranceCompany = in.readString();
     this.holdername = in.readString();
-    this.expiryDate = (Calendar) in.readSerializable();
+    this.expiryDate = in.readString();
     this.selected = in.readByte() != 0;
+  }
+
+  public String getFullName() {
+    return fullName;
+  }
+
+  public void setFullName(String fullName) {
+    this.fullName = fullName;
   }
 
   public String getTitle() {
@@ -57,11 +66,11 @@ public class InsuranceContract implements Parcelable {
     this.insuranceCompany = insuranceCompany;
   }
 
-  public Calendar getExpiryDate() {
+  public String getExpiryDate() {
     return expiryDate;
   }
 
-  public void setExpiryDate(Calendar expiryDate) {
+  public void setExpiryDate(String expiryDate) {
     this.expiryDate = expiryDate;
   }
 
@@ -86,11 +95,12 @@ public class InsuranceContract implements Parcelable {
   }
 
   @Override public void writeToParcel(Parcel dest, int flags) {
+    dest.writeString(this.fullName);
     dest.writeString(this.title);
     dest.writeString(this.number);
     dest.writeString(this.insuranceCompany);
     dest.writeString(this.holdername);
-    dest.writeSerializable(this.expiryDate);
+    dest.writeString(this.expiryDate);
     dest.writeByte(this.selected ? (byte) 1 : (byte) 0);
   }
 }
