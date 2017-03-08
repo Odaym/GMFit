@@ -142,18 +142,29 @@ public class SubmitReimbursementActivity extends BaseActivity {
   }
 
   @OnClick(R.id.submitReimbursementBTN) public void handleSubmitReimbursement() {
-    final ProgressDialog waitingDialog = new ProgressDialog(this);
-    waitingDialog.setTitle(getResources().getString(R.string.submit_new_reimbursement));
-    waitingDialog.setCancelable(false);
-    waitingDialog.setMessage(
-        getResources().getString(R.string.uploading_attachments_dialog_message));
-    waitingDialog.setOnShowListener(dialogInterface -> {
-      HashMap<String, RequestBody> attachments = constructSelectedImagesForRequest();
+    if (imagePaths.isEmpty()) {
+      final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+      alertDialog.setTitle(R.string.required_fields_dialog_title);
+      alertDialog.setMessage(getString(R.string.attachments_required_to_submit));
+      alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getResources().getString(R.string.ok),
+          (dialog, which) -> {
+            dialog.dismiss();
+          });
+      alertDialog.show();
+    } else {
+      final ProgressDialog waitingDialog = new ProgressDialog(this);
+      waitingDialog.setTitle(getResources().getString(R.string.submit_new_reimbursement));
+      waitingDialog.setCancelable(false);
+      waitingDialog.setMessage(
+          getResources().getString(R.string.uploading_attachments_dialog_message));
+      waitingDialog.setOnShowListener(dialogInterface -> {
+        HashMap<String, RequestBody> attachments = constructSelectedImagesForRequest();
 
-      submitReimbursement(attachments, waitingDialog);
-    });
+        submitReimbursement(attachments, waitingDialog);
+      });
 
-    waitingDialog.show();
+      waitingDialog.show();
+    }
   }
 
   @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {

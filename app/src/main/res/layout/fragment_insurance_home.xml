@@ -73,7 +73,7 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/insurancePathsGridView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/insurance_home_gridview_height"
         android:layout_below="@+id/cardDetailsLayout"
         android:layout_gravity="center"
         android:background="@color/white"

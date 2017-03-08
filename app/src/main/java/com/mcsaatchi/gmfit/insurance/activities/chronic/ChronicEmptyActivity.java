@@ -9,7 +9,7 @@ import butterknife.OnClick;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 
-public class ChronicPrescriptionEmptyActivity extends BaseActivity {
+public class ChronicEmptyActivity extends BaseActivity {
   @Bind(R.id.toolbar) Toolbar toolbar;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
@@ -20,6 +20,6 @@ public class ChronicPrescriptionEmptyActivity extends BaseActivity {
   }
 
   @OnClick(R.id.submitChronicTreatmentBTN) public void submitChronicTreatment() {
-    startActivity(new Intent(this, SubmitChronicPrescriptionActivity.class));
+    startActivity(new Intent(this, SubmitChronicActivity.class));
   }
 }

@@ -231,7 +231,7 @@
         android:theme="@style/No_Action_Bar_Theme"/>
 
     <activity
-        android:name=".insurance.activities.chronic.ChronicPrescriptionEmptyActivity"
+        android:name=".insurance.activities.chronic.ChronicEmptyActivity"
         android:screenOrientation="portrait"
         android:theme="@style/No_Action_Bar_Theme"/>
 
@@ -241,13 +241,13 @@
         android:theme="@style/No_Action_Bar_Theme"/>
 
     <activity
-        android:name=".insurance.activities.chronic.ChornicPrescriptionStatusDetailsActivity"
+        android:name=".insurance.activities.chronic.ChronicStatusDetailsActivity"
         android:exported="true"
         android:screenOrientation="portrait"
         android:theme="@style/No_Action_Bar_Theme"/>
 
     <activity
-        android:name=".insurance.activities.chronic.SubmitChronicPrescriptionActivity"
+        android:name=".insurance.activities.chronic.SubmitChronicActivity"
         android:screenOrientation="portrait"
         android:theme="@style/No_Action_Bar_Theme"
         android:windowSoftInputMode="adjustPan|stateHidden"/>
@@ -314,7 +314,7 @@
 
     <meta-data
         android:name="com.google.android.geo.API_KEY"
-        android:value="AIzaSyDzwRq628GqkaxN3cZQoTuAergqlZJms6k"/>
+        android:value="AIzaSyBzptbw8-xsnunOTUpQfAM7xe5YyGk87i4	"/>
 
   </application>
 

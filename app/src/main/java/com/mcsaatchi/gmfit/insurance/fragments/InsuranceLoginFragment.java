@@ -63,7 +63,7 @@ public class InsuranceLoginFragment extends Fragment {
     allFields.add(memberIdET);
     allFields.add(passwordET);
 
-    getCountriesList();
+    //getCountriesList();
 
     return fragmentView;
   }

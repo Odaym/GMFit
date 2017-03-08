@@ -6,16 +6,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.insurance.models.MedicalInformationModel;
+import com.mcsaatchi.gmfit.architecture.rest.ChronicTreatmentDetailsResponseMedicationItem;
+import com.mcsaatchi.gmfit.common.classes.Helpers;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MedicalInformationAdapter
     extends RecyclerView.Adapter<MedicalInformationAdapter.ViewHolder> {
-  private List<MedicalInformationModel> medicines = new ArrayList<>();
+  private List<ChronicTreatmentDetailsResponseMedicationItem> medicines = new ArrayList<>();
   private MedicalInformationAdapter.OnClickListener onClickListener;
 
-  public MedicalInformationAdapter(List<MedicalInformationModel> medicines,
+  public MedicalInformationAdapter(List<ChronicTreatmentDetailsResponseMedicationItem> medicines,
       MedicalInformationAdapter.OnClickListener onClickListener) {
     this.medicines = medicines;
     this.onClickListener = onClickListener;
@@ -31,7 +32,7 @@ public class MedicalInformationAdapter
 
   @Override
   public void onBindViewHolder(MedicalInformationAdapter.ViewHolder holder, int position) {
-    MedicalInformationModel medicine = medicines.get(position);
+    ChronicTreatmentDetailsResponseMedicationItem medicine = medicines.get(position);
     holder.populate(medicine);
     holder.addListener(medicine, position, onClickListener);
   }
@@ -41,7 +42,7 @@ public class MedicalInformationAdapter
   }
 
   public interface OnClickListener {
-    void onClick(MedicalInformationModel medicalInformationModel, int index);
+    void onClick(ChronicTreatmentDetailsResponseMedicationItem medicalInformationModel, int index);
   }
 
   public class ViewHolder extends RecyclerView.ViewHolder {
@@ -58,16 +59,16 @@ public class MedicalInformationAdapter
       container = v.findViewById(R.id.container);
     }
 
-    void populate(MedicalInformationModel medicine) {
-      medicineNameTv.setText(medicine.getMedicineName());
-      tabletCountTv.setText(medicine.getTabletCount());
+    void populate(ChronicTreatmentDetailsResponseMedicationItem medicine) {
+      medicineNameTv.setText(medicine.getItemDesc());
+      tabletCountTv.setText(medicine.getItemDosage());
+      statusTv.setTextColor(Helpers.determineStatusColor(medicine.getStatus()));
       statusTv.setText(medicine.getStatus());
-      frequencyTv.setText(medicine.getFrequency());
-      durationTv.setText(medicine.getDuration());
+      frequencyTv.setText(medicine.getPosology());
     }
 
-    void addListener(final MedicalInformationModel medicine, final int position,
-        final MedicalInformationAdapter.OnClickListener onClickListener) {
+    void addListener(final ChronicTreatmentDetailsResponseMedicationItem medicine,
+        final int position, final MedicalInformationAdapter.OnClickListener onClickListener) {
       container.setOnClickListener(view -> onClickListener.onClick(medicine, position));
     }
   }

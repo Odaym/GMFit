@@ -21,7 +21,7 @@ import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.insurance.activities.approval_request.ApprovalRequestsStatusListActivity;
 import com.mcsaatchi.gmfit.insurance.activities.approval_request.SubmitApprovalRequestsActivity;
 import com.mcsaatchi.gmfit.insurance.activities.chronic.ChronicStatusListActivity;
-import com.mcsaatchi.gmfit.insurance.activities.chronic.SubmitChronicPrescriptionActivity;
+import com.mcsaatchi.gmfit.insurance.activities.chronic.SubmitChronicActivity;
 import com.mcsaatchi.gmfit.insurance.activities.home.CoverageDescriptionActivity;
 import com.mcsaatchi.gmfit.insurance.activities.inquiry.InquiryEmptyActivity;
 import com.mcsaatchi.gmfit.insurance.activities.inquiry.SubmitInquiryActivity;
@@ -201,7 +201,7 @@ public class InsuranceOperationWidgetsGridAdapter
               case CHRONIC_ITEM:
                 switch (request_purpose) {
                   case SUBMIT_ITEM:
-                    intent = new Intent(fragmentActivity, SubmitChronicPrescriptionActivity.class);
+                    intent = new Intent(fragmentActivity, SubmitChronicActivity.class);
                     fragmentActivity.startActivity(intent);
                     break;
                   case TRACK_ITEM:

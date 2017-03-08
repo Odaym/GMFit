@@ -9,7 +9,7 @@
     android:background="@drawable/insurance_background"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
-    tools:context="com.mcsaatchi.gmfit.insurance.activities.chronic.SubmitChronicPrescriptionActivity"
+    tools:context="com.mcsaatchi.gmfit.insurance.activities.chronic.SubmitChronicActivity"
     >
 
   <FrameLayout

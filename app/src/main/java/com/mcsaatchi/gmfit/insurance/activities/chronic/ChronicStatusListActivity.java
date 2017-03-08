@@ -14,10 +14,9 @@ import com.mcsaatchi.gmfit.architecture.rest.ChronicTreatmentListInnerData;
 import com.mcsaatchi.gmfit.architecture.rest.ChronicTreatmentListResponse;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
+import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.common.classes.SimpleDividerItemDecoration;
 import com.mcsaatchi.gmfit.insurance.adapters.ChronicStatusAdapter;
-import com.mcsaatchi.gmfit.insurance.models.TreatmentsModel;
-import java.util.ArrayList;
 import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -27,8 +26,6 @@ import timber.log.Timber;
 public class ChronicStatusListActivity extends BaseActivity {
   @Bind(R.id.activeTreatmentsRecyclerView) RecyclerView activeTreatmentsRecyclerView;
   @Bind(R.id.toolbar) Toolbar toolbar;
-
-  private ChronicStatusAdapter chronicStatusAdapter;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -43,8 +40,8 @@ public class ChronicStatusListActivity extends BaseActivity {
     getChronicTreatmentsList();
   }
 
-  private void setupActiveTreatmentsList(ArrayList<TreatmentsModel> activeTreatments) {
-    chronicStatusAdapter = new ChronicStatusAdapter(this, activeTreatments);
+  private void setupActiveTreatmentsList(List<ChronicTreatmentListInnerData> activeTreatments) {
+    ChronicStatusAdapter chronicStatusAdapter = new ChronicStatusAdapter(this, activeTreatments);
     activeTreatmentsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
     activeTreatmentsRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(this));
     activeTreatmentsRecyclerView.setHasFixedSize(true);
@@ -75,25 +72,11 @@ public class ChronicStatusListActivity extends BaseActivity {
               case 200:
                 waitingDialog.dismiss();
 
-                ArrayList<TreatmentsModel> activeTreatments = new ArrayList<>();
-
-                List<ChronicTreatmentListInnerData> chronicTreatmentListInnerData =
-                    response.body().getData().getBody().getData();
-
-                for (int i = 0; i < chronicTreatmentListInnerData.size(); i++) {
-                  activeTreatments.add(
-                      new TreatmentsModel(chronicTreatmentListInnerData.get(i).getName(),
-                          chronicTreatmentListInnerData.get(i).getStartDate(),
-                          chronicTreatmentListInnerData.get(i).getEndDate(),
-                          chronicTreatmentListInnerData.get(i).getStatus()));
-                }
-
-                setupActiveTreatmentsList(activeTreatments);
+                setupActiveTreatmentsList(response.body().getData().getBody().getData());
 
                 break;
               case 449:
-                alertDialog.setMessage(
-                    "error: An error has occurred. Please contact your system administrator.");
+                alertDialog.setMessage(Helpers.provideErrorStringFromJSON(response.errorBody()));
                 alertDialog.show();
                 break;
             }

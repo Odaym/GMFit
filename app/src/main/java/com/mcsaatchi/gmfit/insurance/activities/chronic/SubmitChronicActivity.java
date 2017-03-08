@@ -47,7 +47,7 @@ import timber.log.Timber;
 import static com.mcsaatchi.gmfit.insurance.widget.CustomAttachmentPicker.CAPTURE_NEW_PICTURE_REQUEST_CODE;
 import static com.mcsaatchi.gmfit.insurance.widget.CustomAttachmentPicker.REQUEST_PICK_IMAGE_GALLERY;
 
-public class SubmitChronicPrescriptionActivity extends BaseActivity {
+public class SubmitChronicActivity extends BaseActivity {
 
   private static final int REQUEST_CAPTURE_PERMISSIONS = 123;
   @Bind(R.id.toolbar) Toolbar toolbar;
@@ -268,7 +268,7 @@ public class SubmitChronicPrescriptionActivity extends BaseActivity {
               Response<CreateNewRequestResponse> response) {
             switch (response.code()) {
               case 200:
-                Intent intent = new Intent(SubmitChronicPrescriptionActivity.this,
+                Intent intent = new Intent(SubmitChronicActivity.this,
                     ChronicStatusListActivity.class);
                 //intent.putExtra(ReimbursementStatusDetailsActivity.REIMBURSEMENT_REQUEST_ID,
                 //    response.body().getData().getBody().getData().getRequestId());
