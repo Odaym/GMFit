@@ -8,6 +8,7 @@ import com.mcsaatchi.gmfit.architecture.rest.CRMCategoriesResponse;
 import com.mcsaatchi.gmfit.architecture.rest.CardDetailsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ChartMetricBreakdownResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ChartsBySectionResponse;
+import com.mcsaatchi.gmfit.architecture.rest.ChronicTreatmentDetailsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ChronicTreatmentListResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ClaimListDetailsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ClaimsListResponse;
@@ -1025,7 +1026,7 @@ public class ApiCallsHandler {
   void getChronicTreatmentsList(String contractNo, String requestType,
       final Callback<ChronicTreatmentListResponse> callback) {
     Call<ChronicTreatmentListResponse> apiCall = restClient.getGMFitService()
-        .getChronicTreatmentsList(new ChronicListDetailsRequest(contractNo, requestType));
+        .getChronicTreatmentsList(new ClaimsListRequest(contractNo, requestType));
 
     apiCall.enqueue(new Callback<ChronicTreatmentListResponse>() {
       @Override public void onResponse(Call<ChronicTreatmentListResponse> call,
@@ -1034,6 +1035,22 @@ public class ApiCallsHandler {
       }
 
       @Override public void onFailure(Call<ChronicTreatmentListResponse> call, Throwable t) {
+      }
+    });
+  }
+
+  void getChronicTreatmentDetails(String contractNo, String requestType, String claimId,
+      final Callback<ChronicTreatmentDetailsResponse> callback) {
+    Call<ChronicTreatmentDetailsResponse> apiCall = restClient.getGMFitService()
+        .getChronicTreatmentDetails(new ClaimsListDetailsRequest(contractNo, requestType, claimId));
+
+    apiCall.enqueue(new Callback<ChronicTreatmentDetailsResponse>() {
+      @Override public void onResponse(Call<ChronicTreatmentDetailsResponse> call,
+          Response<ChronicTreatmentDetailsResponse> response) {
+        callback.onResponse(call, response);
+      }
+
+      @Override public void onFailure(Call<ChronicTreatmentDetailsResponse> call, Throwable t) {
       }
     });
   }
@@ -1395,16 +1412,6 @@ public class ApiCallsHandler {
       this.contractNo = contractNo;
       this.requestType = requestType;
       this.claimId = claimId;
-    }
-  }
-
-  public class ChronicListDetailsRequest {
-    String contractNo;
-    String requestType;
-
-    public ChronicListDetailsRequest(String contractNo, String requestType) {
-      this.contractNo = contractNo;
-      this.requestType = requestType;
     }
   }
 
