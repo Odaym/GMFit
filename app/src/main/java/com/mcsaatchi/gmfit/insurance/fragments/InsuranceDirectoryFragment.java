@@ -78,6 +78,9 @@ public class InsuranceDirectoryFragment extends Fragment implements OnMapReadyCa
     lm = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
 
     mapFragment = ((WorkaroundMapFragment) getChildFragmentManager().findFragmentById(R.id.map));
+    mapFragment.setListener(() -> {
+
+    });
 
     setupSwitchMapViewButton();
 
@@ -133,7 +136,8 @@ public class InsuranceDirectoryFragment extends Fragment implements OnMapReadyCa
 
     switch (requestCode) {
       case PERMISSION_LOCATION_REQUEST_CODE: {
-        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(getActivity(),
+            Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
           Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
           userLatLong[0] = location.getLatitude();
