@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/infowindow_box"
+    android:gravity="center_vertical"
+    android:orientation="vertical"
+    android:paddingEnd="@dimen/default_margin_1"
+    android:paddingStart="@dimen/default_margin_1"
+    >
+
+  <TextView
+      android:id="@+id/markerTitleTV"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:paddingBottom="@dimen/default_margin_1"
+      android:paddingTop="@dimen/default_margin_1"
+      android:textColor="@color/buttons_text_color"
+      />
+
+  <LinearLayout
+      android:id="@+id/linearLayout"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_below="@+id/markerTitleTV"
+      android:orientation="horizontal"
+      >
+
+    <LinearLayout
+        android:id="@+id/withinNetworkLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:visibility="visible"
+        >
+
+      <ImageView
+          android:layout_width="@dimen/clinic_address_status_icon_dimens"
+          android:layout_height="@dimen/clinic_address_status_icon_dimens"
+          android:layout_marginEnd="@dimen/default_margin_0"
+          android:src="@drawable/ic_directory_within_network"
+          />
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginEnd="@dimen/default_margin_1"
+          android:text="@string/within_network_icon_hint"
+          android:textColor="@color/insurance_blue"
+          />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/open247Layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:visibility="visible"
+        >
+
+      <ImageView
+          android:layout_width="@dimen/clinic_address_status_icon_dimens"
+          android:layout_height="@dimen/clinic_address_status_icon_dimens"
+          android:layout_marginEnd="@dimen/default_margin_0"
+          android:src="@drawable/ic_directory_247"
+          />
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginEnd="@dimen/default_margin_1"
+          android:text="@string/open_247_icon_hint"
+          android:textColor="@android:color/holo_blue_dark"
+          />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/onlineNowLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:visibility="visible"
+        >
+
+      <ImageView
+          android:layout_width="@dimen/clinic_address_status_icon_dimens"
+          android:layout_height="@dimen/clinic_address_status_icon_dimens"
+          android:layout_marginEnd="@dimen/default_margin_0"
+          android:src="@drawable/ic_directory_online"
+          />
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@string/online_right_now_icon_hint"
+          android:textColor="@color/health_green"
+          />
+    </LinearLayout>
+  </LinearLayout>
+
+  <LinearLayout
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_centerVertical="true"
+      android:layout_marginStart="@dimen/default_margin_2"
+      android:layout_toEndOf="@+id/linearLayout"
+      >
+
+    <ImageView
+        android:layout_width="@dimen/map_info_window_right_arrow_dimens"
+        android:layout_height="@dimen/map_info_window_right_arrow_dimens"
+        android:src="@drawable/ic_right_arrow_blue"
+        />
+  </LinearLayout>
+</RelativeLayout>

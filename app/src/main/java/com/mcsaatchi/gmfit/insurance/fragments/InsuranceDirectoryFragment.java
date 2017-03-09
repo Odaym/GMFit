@@ -2,6 +2,7 @@ package com.mcsaatchi.gmfit.insurance.fragments;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
@@ -24,11 +25,11 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.mcsaatchi.gmfit.R;
@@ -36,6 +37,7 @@ import com.mcsaatchi.gmfit.architecture.GMFitApplication;
 import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.architecture.rest.GetNearbyClinicsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.GetNearbyClinicsResponseDatum;
+import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.classes.SimpleDividerItemDecoration;
 import com.mcsaatchi.gmfit.insurance.adapters.ClinicAddressesRecyclerAdapter;
 import java.util.ArrayList;
@@ -53,6 +55,8 @@ public class InsuranceDirectoryFragment extends Fragment implements OnMapReadyCa
   @Bind(R.id.loadingMapProgress) ProgressBar loadingMapProgress;
 
   @Inject DataAccessHandler dataAccessHandler;
+  @Inject SharedPreferences prefs;
+
   private boolean listingVisible = false;
   private List<GetNearbyClinicsResponseDatum> clinicsWithLocation = new ArrayList<>();
   private LocationManager lm;
@@ -149,10 +153,6 @@ public class InsuranceDirectoryFragment extends Fragment implements OnMapReadyCa
     }
   }
 
-  @OnClick(R.id.myLocationLayout) public void handleMyLocationPressed() {
-    zoomAnimateCamera();
-  }
-
   private void getNearbyClinics() {
     loadingMapProgress.setVisibility(View.VISIBLE);
 
@@ -161,8 +161,9 @@ public class InsuranceDirectoryFragment extends Fragment implements OnMapReadyCa
     alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
         (dialog, which) -> dialog.dismiss());
 
-    dataAccessHandler.getNearbyClinics("1892870", "H", 22, 123, 333, 1,
-        new Callback<GetNearbyClinicsResponse>() {
+    dataAccessHandler.getNearbyClinics(
+        prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""), "H", 22, userLatLong[1],
+        userLatLong[0], 1, new Callback<GetNearbyClinicsResponse>() {
           @Override public void onResponse(Call<GetNearbyClinicsResponse> call,
               Response<GetNearbyClinicsResponse> response) {
             switch (response.code()) {
@@ -253,15 +254,20 @@ public class InsuranceDirectoryFragment extends Fragment implements OnMapReadyCa
 
   private void addMarkersToMap(List<GetNearbyClinicsResponseDatum> validClinics) {
     map.getUiSettings().setMyLocationButtonEnabled(true);
-    map.addMarker(
-        new MarkerOptions().position(new LatLng(userLatLong[0], userLatLong[1])).title("You"));
+
+    map.addMarker(new MarkerOptions().position(new LatLng(userLatLong[0], userLatLong[1]))
+        .title("You")
+        .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_custom_map_marker)));
 
     for (int i = 0; i < validClinics.size(); i++) {
       map.addMarker(new MarkerOptions().position(
           new LatLng(Double.parseDouble(validClinics.get(i).getLatitude()),
               Double.parseDouble(validClinics.get(i).getLongitude())))
-          .title(validClinics.get(i).getName()));
+          .title(validClinics.get(i).getName())
+          .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_custom_map_marker)));
+      map.setInfoWindowAdapter(new CustomInfoWindowAdapter(getActivity()));
     }
+
 
     zoomAnimateCamera();
   }

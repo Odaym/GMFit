@@ -143,6 +143,7 @@
   <dimen name="insurance_login_screen_icon">110dp</dimen>
   <dimen name="attached_images_dimens">55dp</dimen>
   <dimen name="map_dimensions_box_clinic_details">150dp</dimen>
+  <dimen name="map_info_window_right_arrow_dimens">20dp</dimen>
 
   <!-- PILL REMINDER SECTION -->
   <dimen name="medications_list_row_item_height">100dp</dimen>
