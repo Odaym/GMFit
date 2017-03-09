@@ -60,11 +60,17 @@ public class ClinicDetailsActivity extends BaseActivity implements OnMapReadyCal
         mobileTV.setText("+961 70 770 441");
         emailAddressTV.setText(clinicObject.getName().split(" ")[0] + "_clinic@gmail.com");
 
-        if (clinicObject.getOnline() != null) onlineNowLayout.setVisibility(View.VISIBLE);
+        if (clinicObject.getOnline() != null && clinicObject.getOnline()) {
+          onlineNowLayout.setVisibility(View.VISIBLE);
+        }
 
-        if (clinicObject.getPartOfNetwork()) withinNetworkLayout.setVisibility(View.VISIBLE);
+        if (clinicObject.getPartOfNetwork() != null && clinicObject.getPartOfNetwork()) {
+          withinNetworkLayout.setVisibility(View.VISIBLE);
+        }
 
-        if (clinicObject.getTwentyfourseven()) open247Layout.setVisibility(View.VISIBLE);
+        if (clinicObject.getTwentyfourseven() != null && clinicObject.getTwentyfourseven()) {
+          open247Layout.setVisibility(View.VISIBLE);
+        }
 
         clinicNameOnMapTV.setText(clinicObject.getName());
         clinicAddressTV.setText(clinicObject.getAddress());

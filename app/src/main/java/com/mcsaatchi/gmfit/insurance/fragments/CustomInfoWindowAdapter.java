@@ -44,34 +44,31 @@ public class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
 
     Timber.d(marker.getTitle() + " has snippet : " + marker.getSnippet());
 
-    //switch (marker.getSnippet()) {
-    //  case "":
-    //    open247Layout.setVisibility(View.INVISIBLE);
-    //    onlineNowLayout.setVisibility(View.INVISIBLE);
-    //    withinNetworkLayout.setVisibility(View.INVISIBLE);
-    //    break;
-    //  case "N":
-    //    open247Layout.setVisibility(View.INVISIBLE);
-    //    onlineNowLayout.setVisibility(View.INVISIBLE);
-    //    break;
-    //  case "O":
-    //    open247Layout.setVisibility(View.INVISIBLE);
-    //    withinNetworkLayout.setVisibility(View.INVISIBLE);
-    //    break;
-    //  case "247":
-    //    onlineNowLayout.setVisibility(View.INVISIBLE);
-    //    withinNetworkLayout.setVisibility(View.INVISIBLE);
-    //    break;
-    //  case "NO":
-    //    open247Layout.setVisibility(View.INVISIBLE);
-    //    break;
-    //  case "O247":
-    //    withinNetworkLayout.setVisibility(View.INVISIBLE);
-    //    break;
-    //  case "N247":
-    //    onlineNowLayout.setVisibility(View.INVISIBLE);
-    //    break;
-    //}
+    switch (marker.getSnippet()) {
+      case "":
+        return null;
+      case "N":
+        open247Layout.setVisibility(View.INVISIBLE);
+        onlineNowLayout.setVisibility(View.INVISIBLE);
+        break;
+      case "O":
+        open247Layout.setVisibility(View.INVISIBLE);
+        withinNetworkLayout.setVisibility(View.INVISIBLE);
+        break;
+      case "247":
+        onlineNowLayout.setVisibility(View.INVISIBLE);
+        withinNetworkLayout.setVisibility(View.INVISIBLE);
+        break;
+      case "NO":
+        open247Layout.setVisibility(View.INVISIBLE);
+        break;
+      case "O247":
+        withinNetworkLayout.setVisibility(View.INVISIBLE);
+        break;
+      case "N247":
+        onlineNowLayout.setVisibility(View.INVISIBLE);
+        break;
+    }
 
     return infoView;
   }

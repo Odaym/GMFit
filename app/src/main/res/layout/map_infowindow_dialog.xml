@@ -5,6 +5,7 @@
     android:background="@drawable/infowindow_box"
     android:gravity="center_vertical"
     android:orientation="vertical"
+    android:paddingBottom="@dimen/default_margin_3"
     android:paddingEnd="@dimen/default_margin_1"
     android:paddingStart="@dimen/default_margin_1"
     >
@@ -102,7 +103,7 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_centerVertical="true"
-      android:layout_marginStart="@dimen/default_margin_2"
+      android:layout_marginStart="@dimen/default_margin_3"
       android:layout_toEndOf="@+id/linearLayout"
       >
 
