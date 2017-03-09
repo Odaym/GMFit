@@ -388,6 +388,9 @@
   <!-- COVERAGE DESCRIPTION -->
   <string name="coverage_description_activity_title">Coverage Description</string>
 
+  <!-- POLICY LIMITATION -->
+  <string name="policy_limitation_activity_title">Policy Limitation</string>
+
   <!-- INSURANCE UPDATE PASSWORD ACTIVITY -->
   <string name="insurance_update_password_activity_title">Update Password</string>
   <string name="update_your_password_label">Please update your password</string>

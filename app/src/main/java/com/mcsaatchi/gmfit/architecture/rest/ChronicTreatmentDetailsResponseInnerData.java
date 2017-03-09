@@ -11,8 +11,8 @@ public class ChronicTreatmentDetailsResponseInnerData {
   @SerializedName("requestNbr") @Expose private String requestNbr;
   @SerializedName("startDate") @Expose private String startDate;
   @SerializedName("status") @Expose private String status;
-  @SerializedName("items_list") @Expose
-  private List<ChronicTreatmentDetailsResponseMedicationItem> itemsList = null;
+  @SerializedName("items_list") @Expose private List<ChronicTreatmentDetailsResponseMedicationItem>
+      itemsList = null;
 
   public String getEndDate() {
     return endDate;

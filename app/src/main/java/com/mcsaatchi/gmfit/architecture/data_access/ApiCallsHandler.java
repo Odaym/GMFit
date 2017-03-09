@@ -1385,11 +1385,11 @@ public class ApiCallsHandler {
 
   public class CoverageDescriptionRequest {
     String contractNo;
-    String indNbr;
+    String identifyReport;
 
-    public CoverageDescriptionRequest(String contractNo, String indNbr) {
+    public CoverageDescriptionRequest(String contractNo, String identifyReport) {
       this.contractNo = contractNo;
-      this.indNbr = indNbr;
+      this.identifyReport = identifyReport;
     }
   }
 

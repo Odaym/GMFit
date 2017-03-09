@@ -23,6 +23,7 @@ import com.mcsaatchi.gmfit.insurance.activities.approval_request.SubmitApprovalR
 import com.mcsaatchi.gmfit.insurance.activities.chronic.ChronicStatusListActivity;
 import com.mcsaatchi.gmfit.insurance.activities.chronic.SubmitChronicActivity;
 import com.mcsaatchi.gmfit.insurance.activities.home.CoverageDescriptionActivity;
+import com.mcsaatchi.gmfit.insurance.activities.home.PolicyLimitationActivity;
 import com.mcsaatchi.gmfit.insurance.activities.inquiry.InquiryEmptyActivity;
 import com.mcsaatchi.gmfit.insurance.activities.inquiry.SubmitInquiryActivity;
 import com.mcsaatchi.gmfit.insurance.activities.reimbursement.ReimbursementStatusListActivity;
@@ -43,6 +44,7 @@ public class InsuranceOperationWidgetsGridAdapter
   private static final int MEMBER_GUIDE_ITEM = 2;
   private static final int COVERAGE_ITEM = 3;
   private static final int SNAPSHOT_ITEM = 4;
+  private static final int POLICY_LIMITATION_ITEM = 5;
   private static final int REIMBURSEMENT_ITEM = 0;
   private static final int APPROVAL_REQUEST_ITEM = 1;
   private static final int CHRONIC_ITEM = 2;
@@ -82,6 +84,53 @@ public class InsuranceOperationWidgetsGridAdapter
     return widgetsMap.size();
   }
 
+  private void getPolicyLimitation() {
+    final ProgressDialog waitingDialog = new ProgressDialog(fragmentActivity);
+    waitingDialog.setTitle(context.getResources().getString(R.string.loading_data_dialog_title));
+    waitingDialog.setMessage(context.getResources().getString(R.string.please_wait_dialog_message));
+    waitingDialog.show();
+
+    final AlertDialog alertDialog = new AlertDialog.Builder(context).create();
+    alertDialog.setTitle(R.string.loading_data_dialog_title);
+    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE,
+        context.getResources().getString(R.string.ok), (dialog, which) -> {
+          dialog.dismiss();
+
+          if (waitingDialog.isShowing()) waitingDialog.dismiss();
+        });
+
+    dataAccessHandler.getCoverageDescription(
+        prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""), "0",
+        new Callback<CoverageDescriptionResponse>() {
+
+          @Override public void onResponse(Call<CoverageDescriptionResponse> call,
+              Response<CoverageDescriptionResponse> response) {
+
+            switch (response.code()) {
+              case 200:
+                Intent intent = new Intent(context, PolicyLimitationActivity.class);
+                intent.putExtra("PDF",
+                    response.body().getData().getBody().getData().replace("\\", ""));
+
+                fragmentActivity.startActivity(intent);
+                break;
+              case 449:
+                alertDialog.setMessage(Helpers.provideErrorStringFromJSON(response.errorBody()));
+                alertDialog.show();
+                break;
+            }
+
+            waitingDialog.dismiss();
+          }
+
+          @Override public void onFailure(Call<CoverageDescriptionResponse> call, Throwable t) {
+            Timber.d("Call failed with error : %s", t.getMessage());
+            alertDialog.setMessage(context.getString(R.string.server_error_got_returned));
+            alertDialog.show();
+          }
+        });
+  }
+
   private void getCoverageDescription() {
     final ProgressDialog waitingDialog = new ProgressDialog(fragmentActivity);
     waitingDialog.setTitle(context.getResources().getString(R.string.loading_data_dialog_title));
@@ -98,8 +147,7 @@ public class InsuranceOperationWidgetsGridAdapter
         });
 
     dataAccessHandler.getCoverageDescription(
-        prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""),
-        prefs.getString(Constants.EXTRAS_INSURANCE_USER_USERNAME, ""),
+        prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""), "1",
         new Callback<CoverageDescriptionResponse>() {
 
           @Override public void onResponse(Call<CoverageDescriptionResponse> call,
@@ -162,6 +210,9 @@ public class InsuranceOperationWidgetsGridAdapter
         case SNAPSHOT_ITEM:
           intent = new Intent(fragmentActivity, SnapshotActivity.class);
           fragmentActivity.startActivity(intent);
+          break;
+        case POLICY_LIMITATION_ITEM:
+          getPolicyLimitation();
           break;
       }
     }
