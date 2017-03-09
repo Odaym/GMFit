@@ -257,17 +257,34 @@ public class InsuranceDirectoryFragment extends Fragment implements OnMapReadyCa
 
     map.addMarker(new MarkerOptions().position(new LatLng(userLatLong[0], userLatLong[1]))
         .title("You")
+        .snippet("")
         .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_custom_map_marker)));
 
     for (int i = 0; i < validClinics.size(); i++) {
+      String snippet = "";
+
+      if (validClinics.get(i).getPartOfNetwork() != null && validClinics.get(i)
+          .getPartOfNetwork()) {
+        snippet += "N";
+      }
+
+      if (validClinics.get(i).getOnline() != null && validClinics.get(i).getOnline()) {
+        snippet += "O";
+      }
+
+      if (validClinics.get(i).getTwentyfourseven() != null && validClinics.get(i)
+          .getTwentyfourseven()) {
+        snippet += "247";
+      }
+
       map.addMarker(new MarkerOptions().position(
           new LatLng(Double.parseDouble(validClinics.get(i).getLatitude()),
               Double.parseDouble(validClinics.get(i).getLongitude())))
           .title(validClinics.get(i).getName())
+          .snippet(snippet)
           .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_custom_map_marker)));
       map.setInfoWindowAdapter(new CustomInfoWindowAdapter(getActivity()));
     }
-
 
     zoomAnimateCamera();
   }
