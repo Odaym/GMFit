@@ -335,9 +335,8 @@ public class DataAccessHandler {
         attachements, callback);
   }
 
-  public void getCountriesList(RequestBody contractNo,
-      final Callback<CountriesListResponse> callback) {
-    apiCallsHandler.getCountriesList(contractNo, callback);
+  public void getCountriesList(final Callback<CountriesListResponse> callback) {
+    apiCallsHandler.getCountriesList(callback);
   }
 
   public void getCRMCategories(RequestBody contractNo,

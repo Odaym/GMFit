@@ -19,12 +19,15 @@ import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.GMFitApplication;
 import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.architecture.rest.CountriesListResponse;
+import com.mcsaatchi.gmfit.architecture.rest.CountriesListResponseDatum;
 import com.mcsaatchi.gmfit.architecture.rest.InsuranceLoginResponse;
 import com.mcsaatchi.gmfit.architecture.rest.InsuranceLoginResponseInnerData;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.insurance.activities.home.UpdatePasswordActivity;
+import com.mcsaatchi.gmfit.insurance.widget.CustomCountryPicker;
 import java.util.ArrayList;
+import java.util.List;
 import javax.inject.Inject;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
@@ -38,6 +41,7 @@ public class InsuranceLoginFragment extends Fragment {
   @Bind(R.id.memberImageIV) ImageView memberImageIV;
   @Bind(R.id.memberIdET) FormEditText memberIdET;
   @Bind(R.id.passwordET) FormEditText passwordET;
+  @Bind(R.id.countryPicker) CustomCountryPicker countryPicker;
 
   @Inject DataAccessHandler dataAccessHandler;
   @Inject SharedPreferences prefs;
@@ -63,7 +67,7 @@ public class InsuranceLoginFragment extends Fragment {
     allFields.add(memberIdET);
     allFields.add(passwordET);
 
-    //getCountriesList();
+    getCountriesList();
 
     return fragmentView;
   }
@@ -180,21 +184,50 @@ public class InsuranceLoginFragment extends Fragment {
     //waitingDialog.setMessage(getResources().getString(R.string.please_wait_dialog_message));
     //waitingDialog.show();
 
-    dataAccessHandler.getCountriesList(
-        toRequestBody(prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, "")),
-        new Callback<CountriesListResponse>() {
-          @Override public void onResponse(Call<CountriesListResponse> call,
-              Response<CountriesListResponse> response) {
-            switch (response.code()) {
-              case 200:
-                //waitingDialog.dismiss();
-                //Timber.d(response.body().getData().getBody().getData().get);
-            }
-          }
+    dataAccessHandler.getCountriesList(new Callback<CountriesListResponse>() {
+      @Override public void onResponse(Call<CountriesListResponse> call,
+          Response<CountriesListResponse> response) {
+        switch (response.code()) {
+          case 200:
+            ArrayList<String> countries = new ArrayList<>();
+            List<CountriesListResponseDatum> countriesResponse =
+                response.body().getData().getBody().getData();
 
-          @Override public void onFailure(Call<CountriesListResponse> call, Throwable t) {
-            Timber.d("Call failed with error : %s", t.getMessage());
-          }
-        });
+            for (int i = 0; i < countriesResponse.size(); i++) {
+              if (countriesResponse.get(i) != null) {
+                countries.add(countriesResponse.get(i).getLabel());
+              }
+            }
+
+            if (!countries.isEmpty()) {
+              countryPicker.setUpDropDown("Choose a country", "",
+                  countries.toArray(new String[countries.size()]), (index, selected) -> {
+                    for (int i = 0; i < countriesResponse.size(); i++) {
+                      if (countriesResponse.get(i).getLabel().equals(selected)) {
+                        prefs.edit()
+                            .putString(Constants.EXTRAS_INSURANCE_COUNTRY_NAME,
+                                countriesResponse.get(i).getLabel())
+                            .apply();
+                        prefs.edit()
+                            .putString(Constants.EXTRAS_INSURANCE_COUNTRY_CRM_CODE,
+                                countriesResponse.get(i).getCrmCode())
+                            .apply();
+                        prefs.edit()
+                            .putString(Constants.EXTRAS_INSURANCE_COUNTRY_ISO_CODE,
+                                countriesResponse.get(i).getIsoCode())
+                            .apply();
+                      }
+                    }
+                  });
+            }
+
+            break;
+        }
+      }
+
+      @Override public void onFailure(Call<CountriesListResponse> call, Throwable t) {
+        Timber.d("Call failed with error : %s", t.getMessage());
+      }
+    });
   }
 }

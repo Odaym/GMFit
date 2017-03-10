@@ -1,6 +1,5 @@
 package com.mcsaatchi.gmfit.insurance.widget;
 
-import android.app.DatePickerDialog;
 import android.content.Context;
 import android.support.v7.app.AlertDialog;
 import android.util.AttributeSet;
@@ -10,27 +9,24 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.mcsaatchi.gmfit.R;
-import java.util.Calendar;
 
-import static com.mcsaatchi.gmfit.insurance.widget.CustomPicker.CustomPickerType.DatePicker;
-import static com.mcsaatchi.gmfit.insurance.widget.CustomPicker.CustomPickerType.NonSelected;
+import static com.mcsaatchi.gmfit.insurance.widget.CustomCountryPicker.CustomPickerType.NonSelected;
 
-public class CustomPicker extends LinearLayout implements View.OnClickListener {
-  private static final String TAG = CustomPicker.class.getSimpleName();
+public class CustomCountryPicker extends LinearLayout implements View.OnClickListener {
+  private static final String TAG = CustomCountryPicker.class.getSimpleName();
   private TextView itemNameTv;
   private TextView itemSelectedTv;
   private Context context;
   private AlertDialog.Builder builder;
-  private DatePickerDialog datePickerDialog;
   private CustomPickerType customPickerType;
 
-  public CustomPicker(Context context, AttributeSet attributeSet) {
+  public CustomCountryPicker(Context context, AttributeSet attributeSet) {
     super(context, attributeSet);
     this.context = context;
     customPickerType = NonSelected;
     LayoutInflater mInflater =
         (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-    View v = mInflater.inflate(R.layout.custom_picker, this, true);
+    View v = mInflater.inflate(R.layout.insurance_login_country_picker, this, true);
     itemNameTv = (TextView) v.findViewById(R.id.item_name);
     itemSelectedTv = (TextView) v.findViewById(R.id.item_selected);
     View touchableContainer = v.findViewById(R.id.touchableContainer);
@@ -45,24 +41,6 @@ public class CustomPicker extends LinearLayout implements View.OnClickListener {
     setDropDownItems(itemName, items, onDropDownClickListener);
   }
 
-  public void setUpDatePicker(String itemName, String selected,
-      OnDatePickerClickListener onDatePickerClickListener) {
-    customPickerType = DatePicker;
-    setItemName(itemName);
-    setSelectedItem(selected);
-    setDatePicker(onDatePickerClickListener);
-  }
-
-  private void setDatePicker(final OnDatePickerClickListener datePickerClickListener) {
-    final Calendar c = Calendar.getInstance();
-    int day = c.get(Calendar.DAY_OF_MONTH);
-    int month = c.get(Calendar.MONTH);
-    int year = c.get(Calendar.YEAR);
-    datePickerDialog = new DatePickerDialog(context,
-        (datePicker, year1, month1, dayOfMonth) -> datePickerClickListener.dateSet(year1, month1,
-            dayOfMonth), year, month, day);
-  }
-
   private void setItemName(String itemName) {
     itemNameTv.setText(itemName);
   }
@@ -74,7 +52,7 @@ public class CustomPicker extends LinearLayout implements View.OnClickListener {
   private void setDropDownItems(String itemName, final String[] items,
       final OnDropDownClickListener onDropDownClickListener) {
     builder = new AlertDialog.Builder(context);
-    builder.setTitle("Pick " + itemName).setItems(items, (dialogInterface, i) -> {
+    builder.setTitle(itemName).setItems(items, (dialogInterface, i) -> {
       setSelectedItem(items[i]);
       onDropDownClickListener.onClick(i, items[i]);
     });
@@ -85,9 +63,6 @@ public class CustomPicker extends LinearLayout implements View.OnClickListener {
     switch (view.getId()) {
       case R.id.touchableContainer:
         switch (customPickerType) {
-          case DatePicker:
-            datePickerDialog.show();
-            break;
           case DropDownPicker:
             builder.show();
             break;
@@ -98,14 +73,11 @@ public class CustomPicker extends LinearLayout implements View.OnClickListener {
   }
 
   enum CustomPickerType {
-    DropDownPicker, DatePicker, NonSelected
+    DropDownPicker, NonSelected
   }
 
   public interface OnDropDownClickListener {
     void onClick(int index, String selected);
   }
 
-  public interface OnDatePickerClickListener {
-    void dateSet(int year, int month, int dayOfMonth);
-  }
 }

@@ -58,7 +58,6 @@
         app:bb_showShadow="true"
         app:bb_tabXmlResource="@xml/bottom_bar_navigation_tabs"
         />
-    <!--app:layout_anchorGravity="center_vertical"-->
 
   </android.support.design.widget.CoordinatorLayout>
 </LinearLayout>

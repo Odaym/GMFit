@@ -69,7 +69,8 @@ public class ChronicStatusAdapter extends RecyclerView.Adapter {
       });
 
       treatmentNameTV.setText(WordUtils.capitalizeFully(chronicTreatment.getName()));
-      treatmentStatusTV.setTextColor(Helpers.determineStatusColor(chronicTreatment.getStatus()));
+      treatmentStatusTV.setTextColor(context.getResources()
+          .getColor(Helpers.determineStatusColor(chronicTreatment.getStatus())));
       treatmentStatusTV.setText(chronicTreatment.getStatus());
 
       if (chronicTreatment.getStartDate() != null && chronicTreatment.getEndDate() != null) {

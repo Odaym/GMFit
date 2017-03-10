@@ -23,6 +23,10 @@ public class Constants {
   public static final String EXTRAS_INSURANCE_CONTRACT_NUMBER = "insurance_contract_number";
   public static final String EXTRAS_INSURANCE_COMPANY_NAME = "insurance_company_name";
   public static final String EXTRAS_INSURANCE_FULL_NAME = "insurance_full_name";
+  public static final String EXTRAS_INSURANCE_COUNTRY_NAME = "insurance_country_name";
+  public static final String EXTRAS_INSURANCE_COUNTRY_ISO_CODE = "insurance_country_iso_code";
+  public static final String EXTRAS_INSURANCE_COUNTRY_CRM_CODE = "insurance_country_crm_code";
+
 
   public static final String EXTRAS_FIRST_APP_LAUNCH = "first_app_launch";
 

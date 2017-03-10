@@ -26,6 +26,7 @@ import com.mcsaatchi.gmfit.architecture.rest.MostPopularMedicationsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.MostPopularMedicationsResponseDatum;
 import com.mcsaatchi.gmfit.architecture.rest.SearchMedicinesResponse;
 import com.mcsaatchi.gmfit.architecture.rest.SearchMedicinesResponseDatum;
+import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.common.classes.SimpleDividerItemDecoration;
 import com.mcsaatchi.gmfit.health.adapters.SearchMedicationsRecyclerAdapter;
@@ -112,7 +113,8 @@ public class SearchMedicationsActivity extends BaseActivity {
   }
 
   private void searchMedicines(String key) {
-    dataAccessHandler.searchMedicines("2012250", "1892870", "422", "2", "2013", key,
+    dataAccessHandler.searchMedicines(prefs.getString(Constants.EXTRAS_INSURANCE_USER_USERNAME, ""),
+        prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""), "422", "2", "2013", key,
         new Callback<SearchMedicinesResponse>() {
           @Override public void onResponse(Call<SearchMedicinesResponse> call,
               Response<SearchMedicinesResponse> response) {
@@ -169,7 +171,9 @@ public class SearchMedicationsActivity extends BaseActivity {
   }
 
   private void getMostPopularMedications() {
-    dataAccessHandler.getMostPopularMedications("2012250", "1892870", "422", "2", "2013",
+    dataAccessHandler.getMostPopularMedications(
+        prefs.getString(Constants.EXTRAS_INSURANCE_USER_USERNAME, ""),
+        prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""), "422", "2", "2013",
         new Callback<MostPopularMedicationsResponse>() {
           @Override public void onResponse(Call<MostPopularMedicationsResponse> call,
               Response<MostPopularMedicationsResponse> response) {

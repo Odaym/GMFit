@@ -46,7 +46,8 @@ public class ChronicStatusDetailsActivity extends BaseActivity {
           (ChronicTreatmentListInnerData) getIntent().getExtras().get("CHRONIC_OBJECT");
       setupToolbar(getClass().getSimpleName(), toolbar, chronicTreatment.getName(), true);
 
-      statusValueTV.setTextColor(Helpers.determineStatusColor(chronicTreatment.getStatus()));
+      statusValueTV.setTextColor(
+          getResources().getColor(Helpers.determineStatusColor(chronicTreatment.getStatus())));
       statusValueTV.setText(chronicTreatment.getStatus());
 
       if (chronicTreatment.getStartDate() != null && chronicTreatment.getEndDate() != null) {

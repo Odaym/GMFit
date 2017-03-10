@@ -10,7 +10,6 @@ import butterknife.ButterKnife;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Marker;
 import com.mcsaatchi.gmfit.R;
-import timber.log.Timber;
 
 public class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
 
@@ -41,8 +40,6 @@ public class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
     ButterKnife.bind(this, infoView);
 
     markerTitleTV.setText(marker.getTitle());
-
-    Timber.d(marker.getTitle() + " has snippet : " + marker.getSnippet());
 
     switch (marker.getSnippet()) {
       case "":

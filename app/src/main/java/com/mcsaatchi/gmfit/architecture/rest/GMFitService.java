@@ -190,8 +190,7 @@ public interface GMFitService {
   @Multipart @POST("insurance/crm/categories") Call<CRMCategoriesResponse> getCRMCategories(
       @Part("contractNo") RequestBody contractNo);
 
-  @Multipart @POST("insurance/countries-list") Call<CountriesListResponse> getCountriesList(
-      @Part("contractNo") RequestBody contractNo);
+  @POST("insurance/countries") Call<CountriesListResponse> getCountriesList();
 
   @POST("insurance/claims/list") Call<ClaimsListResponse> getClaimsList(
       @Body ApiCallsHandler.ClaimsListRequest claimsListRequest);

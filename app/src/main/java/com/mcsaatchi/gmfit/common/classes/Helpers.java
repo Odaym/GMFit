@@ -132,6 +132,7 @@ public class Helpers {
     switch (status) {
       case "Processing":
       case "Submited":
+      case "Dispensed":
       case "Submitted":
         return R.color.status_submitted;
       case "Rejected":

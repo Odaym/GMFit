@@ -384,6 +384,7 @@
   <string name="submission_successful_dialog_title">Submission completed successfully.</string>
   <string name="required_fields_dialog_title">Required Fields</string>
   <string name="attachments_required_to_submit">Kindly upload some attachments some images to proceed.</string>
+  <string name="choose_a_country_hint">Choose a country</string>
 
   <!-- COVERAGE DESCRIPTION -->
   <string name="coverage_description_activity_title">Coverage Description</string>

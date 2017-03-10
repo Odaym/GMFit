@@ -360,34 +360,38 @@ public class SubmitInquiryActivity extends BaseActivity {
 
                 categoryPicker.setUpDropDown("Category", "Choose a category",
                     finalCategoryNames.toArray(new String[finalCategoryNames.size()]),
-                    (index, selected) -> {
-                      for (final CRMCategoriesResponseDatum categoriesResponseDatum : categoriesList) {
-                        if (categoriesResponseDatum.getName() != null
-                            && categoriesResponseDatum.getName().equals(selected)) {
-                          category = categoriesResponseDatum.getId();
+                    new CustomPicker.OnDropDownClickListener() {
+                      @Override public void onClick(int index, String selected) {
+                        for (final CRMCategoriesResponseDatum categoriesResponseDatum : categoriesList) {
+                          if (categoriesResponseDatum.getName() != null
+                              && categoriesResponseDatum.getName().equals(selected)) {
+                            category = categoriesResponseDatum.getId();
 
-                          List<String> subCategoryNames = new ArrayList<>();
+                            List<String> subCategoryNames = new ArrayList<>();
 
-                          for (int i = 0; i < categoriesResponseDatum.getSubs().size(); i++) {
-                            if (categoriesResponseDatum.getSubs().get(i).getName() != null) {
-                              subCategoryNames.add(
-                                  categoriesResponseDatum.getSubs().get(i).getName());
+                            for (int i = 0; i < categoriesResponseDatum.getSubs().size(); i++) {
+                              if (categoriesResponseDatum.getSubs().get(i).getName() != null) {
+                                subCategoryNames.add(
+                                    categoriesResponseDatum.getSubs().get(i).getName());
+                              }
                             }
-                          }
 
-                          subCategoryPicker.setUpDropDown("SubCategory", "Choose a subcategory",
-                              subCategoryNames.toArray(new String[subCategoryNames.size()]),
-                              (index1, selected1) -> {
-                                for (int i = 0; i < categoriesResponseDatum.getSubs().size(); i++) {
-                                  if (categoriesResponseDatum.getSubs().get(i).getName() != null
-                                      && categoriesResponseDatum.getSubs()
-                                      .get(i)
-                                      .getName()
-                                      .equals(selected1)) {
-                                    subcategory = categoriesResponseDatum.getSubs().get(i).getId();
+                            subCategoryPicker.setUpDropDown("SubCategory", "Choose a subcategory",
+                                subCategoryNames.toArray(new String[subCategoryNames.size()]),
+                                (index1, selected1) -> {
+                                  for (int i = 0; i < categoriesResponseDatum.getSubs().size();
+                                      i++) {
+                                    if (categoriesResponseDatum.getSubs().get(i).getName() != null
+                                        && categoriesResponseDatum.getSubs()
+                                        .get(i)
+                                        .getName()
+                                        .equals(selected1)) {
+                                      subcategory =
+                                          categoriesResponseDatum.getSubs().get(i).getId();
+                                    }
                                   }
-                                }
-                              });
+                                });
+                          }
                         }
                       }
                     });

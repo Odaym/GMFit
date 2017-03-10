@@ -977,8 +977,8 @@ public class ApiCallsHandler {
     });
   }
 
-  void getCountriesList(RequestBody contractNo, final Callback<CountriesListResponse> callback) {
-    Call<CountriesListResponse> apiCall = restClient.getGMFitService().getCountriesList(contractNo);
+  void getCountriesList(final Callback<CountriesListResponse> callback) {
+    Call<CountriesListResponse> apiCall = restClient.getGMFitService().getCountriesList();
 
     apiCall.enqueue(new Callback<CountriesListResponse>() {
       @Override public void onResponse(Call<CountriesListResponse> call,
