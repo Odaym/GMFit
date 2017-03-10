@@ -31,8 +31,8 @@ import com.mcsaatchi.gmfit.architecture.rest.CardDetailsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.InsuranceLoginResponseInnerData;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
-import com.mcsaatchi.gmfit.insurance.activities.home.CardDetailsActivity;
 import com.mcsaatchi.gmfit.insurance.activities.home.ContractsChoiceView;
+import com.mcsaatchi.gmfit.insurance.activities.home.PDFViewerActivity;
 import com.mcsaatchi.gmfit.insurance.adapters.InsuranceOperationWidgetsGridAdapter;
 import com.mcsaatchi.gmfit.insurance.models.InsuranceContract;
 import com.mcsaatchi.gmfit.insurance.models.InsuranceOperationWidget;
@@ -170,7 +170,8 @@ public class InsuranceHomeFragment extends Fragment {
 
             switch (response.code()) {
               case 200:
-                Intent intent = new Intent(getActivity(), CardDetailsActivity.class);
+                Intent intent = new Intent(getActivity(), PDFViewerActivity.class);
+                intent.putExtra("TITLE", "Card Details");
                 intent.putExtra("PDF",
                     response.body().getData().getBody().getData().replace("\\", ""));
 

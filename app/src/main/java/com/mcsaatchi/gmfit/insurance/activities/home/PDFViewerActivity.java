@@ -11,24 +11,25 @@ import butterknife.ButterKnife;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 
-public class PolicyLimitationActivity extends BaseActivity {
+public class PDFViewerActivity extends BaseActivity {
   @Bind(R.id.webView) WebView webView;
   @Bind(R.id.toolbar) Toolbar toolbar;
 
   private String pdfUrl;
+  private String activityTitle;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    setContentView(R.layout.activity_policy_limitation);
+    setContentView(R.layout.activity_pdf_viewer);
 
     ButterKnife.bind(this);
 
-    setupToolbar(getClass().getSimpleName(), toolbar,
-        getString(R.string.policy_limitation_activity_title), true);
-
     if (getIntent().getExtras() != null) {
       pdfUrl = getIntent().getExtras().getString("PDF");
+      activityTitle = getIntent().getExtras().getString("TITLE");
+
+      setupToolbar(getClass().getSimpleName(), toolbar, activityTitle, true);
 
       WebSettings settings = webView.getSettings();
       settings.setLoadWithOverviewMode(true);

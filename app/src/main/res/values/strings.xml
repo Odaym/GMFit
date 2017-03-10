@@ -386,6 +386,9 @@
   <string name="attachments_required_to_submit">Kindly upload some attachments some images to proceed.</string>
   <string name="choose_a_country_hint">Choose a country</string>
 
+  <!-- MEMBER'S GUIDE-->
+  <string name="members_guide_activity_title">Member\'s Guide</string>
+
   <!-- COVERAGE DESCRIPTION -->
   <string name="coverage_description_activity_title">Coverage Description</string>
 

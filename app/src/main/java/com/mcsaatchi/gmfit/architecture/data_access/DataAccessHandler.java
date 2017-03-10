@@ -13,7 +13,7 @@ import com.mcsaatchi.gmfit.architecture.rest.ChronicTreatmentListResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ClaimListDetailsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ClaimsListResponse;
 import com.mcsaatchi.gmfit.architecture.rest.CountriesListResponse;
-import com.mcsaatchi.gmfit.architecture.rest.CoverageDescriptionResponse;
+import com.mcsaatchi.gmfit.architecture.rest.CertainPDFResponse;
 import com.mcsaatchi.gmfit.architecture.rest.CreateNewRequestResponse;
 import com.mcsaatchi.gmfit.architecture.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.architecture.rest.EmergencyProfileResponse;
@@ -295,8 +295,13 @@ public class DataAccessHandler {
   }
 
   public void getCoverageDescription(String contractNo, String indNbr,
-      Callback<CoverageDescriptionResponse> callback) {
+      Callback<CertainPDFResponse> callback) {
     apiCallsHandler.getCoverageDescription(contractNo, indNbr, callback);
+  }
+
+  public void getMembersGuide(String contractNo, String indNbr,
+      Callback<CertainPDFResponse> callback) {
+    apiCallsHandler.getMembersGuide(contractNo, indNbr, callback);
   }
 
   public void updateInsurancePassword(String contractNo, String oldPassword, String newPassword,

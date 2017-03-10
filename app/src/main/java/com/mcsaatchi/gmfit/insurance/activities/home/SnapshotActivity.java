@@ -1,4 +1,4 @@
-package com.mcsaatchi.gmfit.insurance.activities.snapshot;
+package com.mcsaatchi.gmfit.insurance.activities.home;
 
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;

@@ -13,7 +13,7 @@ import com.mcsaatchi.gmfit.architecture.rest.ChronicTreatmentListResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ClaimListDetailsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ClaimsListResponse;
 import com.mcsaatchi.gmfit.architecture.rest.CountriesListResponse;
-import com.mcsaatchi.gmfit.architecture.rest.CoverageDescriptionResponse;
+import com.mcsaatchi.gmfit.architecture.rest.CertainPDFResponse;
 import com.mcsaatchi.gmfit.architecture.rest.CreateNewRequestResponse;
 import com.mcsaatchi.gmfit.architecture.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.architecture.rest.EmergencyProfileResponse;
@@ -859,17 +859,33 @@ public class ApiCallsHandler {
   }
 
   void getCoverageDescription(String contractNo, String indNbr,
-      final Callback<CoverageDescriptionResponse> callback) {
-    Call<CoverageDescriptionResponse> apiCall = restClient.getGMFitService()
+      final Callback<CertainPDFResponse> callback) {
+    Call<CertainPDFResponse> apiCall = restClient.getGMFitService()
         .getCoverageDescription(new CoverageDescriptionRequest(contractNo, indNbr));
 
-    apiCall.enqueue(new Callback<CoverageDescriptionResponse>() {
-      @Override public void onResponse(Call<CoverageDescriptionResponse> call,
-          Response<CoverageDescriptionResponse> response) {
+    apiCall.enqueue(new Callback<CertainPDFResponse>() {
+      @Override public void onResponse(Call<CertainPDFResponse> call,
+          Response<CertainPDFResponse> response) {
         callback.onResponse(call, response);
       }
 
-      @Override public void onFailure(Call<CoverageDescriptionResponse> call, Throwable t) {
+      @Override public void onFailure(Call<CertainPDFResponse> call, Throwable t) {
+      }
+    });
+  }
+
+  void getMembersGuide(String contractNo, String indNbr,
+      final Callback<CertainPDFResponse> callback) {
+    Call<CertainPDFResponse> apiCall = restClient.getGMFitService()
+        .getMembersGuide(new CoverageDescriptionRequest(contractNo, indNbr));
+
+    apiCall.enqueue(new Callback<CertainPDFResponse>() {
+      @Override public void onResponse(Call<CertainPDFResponse> call,
+          Response<CertainPDFResponse> response) {
+        callback.onResponse(call, response);
+      }
+
+      @Override public void onFailure(Call<CertainPDFResponse> call, Throwable t) {
       }
     });
   }

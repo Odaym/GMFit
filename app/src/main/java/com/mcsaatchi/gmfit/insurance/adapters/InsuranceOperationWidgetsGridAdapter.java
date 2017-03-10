@@ -15,20 +15,19 @@ import android.widget.TextView;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.GMFitApplication;
 import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
-import com.mcsaatchi.gmfit.architecture.rest.CoverageDescriptionResponse;
+import com.mcsaatchi.gmfit.architecture.rest.CertainPDFResponse;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.insurance.activities.approval_request.ApprovalRequestsStatusListActivity;
 import com.mcsaatchi.gmfit.insurance.activities.approval_request.SubmitApprovalRequestsActivity;
 import com.mcsaatchi.gmfit.insurance.activities.chronic.ChronicStatusListActivity;
 import com.mcsaatchi.gmfit.insurance.activities.chronic.SubmitChronicActivity;
-import com.mcsaatchi.gmfit.insurance.activities.home.CoverageDescriptionActivity;
-import com.mcsaatchi.gmfit.insurance.activities.home.PolicyLimitationActivity;
+import com.mcsaatchi.gmfit.insurance.activities.home.PDFViewerActivity;
+import com.mcsaatchi.gmfit.insurance.activities.home.SnapshotActivity;
 import com.mcsaatchi.gmfit.insurance.activities.inquiry.InquiryEmptyActivity;
 import com.mcsaatchi.gmfit.insurance.activities.inquiry.SubmitInquiryActivity;
 import com.mcsaatchi.gmfit.insurance.activities.reimbursement.ReimbursementStatusListActivity;
 import com.mcsaatchi.gmfit.insurance.activities.reimbursement.SubmitReimbursementActivity;
-import com.mcsaatchi.gmfit.insurance.activities.snapshot.SnapshotActivity;
 import com.mcsaatchi.gmfit.insurance.models.InsuranceOperationWidget;
 import java.util.ArrayList;
 import javax.inject.Inject;
@@ -101,16 +100,24 @@ public class InsuranceOperationWidgetsGridAdapter
 
     dataAccessHandler.getCoverageDescription(
         prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""), "0",
-        new Callback<CoverageDescriptionResponse>() {
+        new Callback<CertainPDFResponse>() {
 
-          @Override public void onResponse(Call<CoverageDescriptionResponse> call,
-              Response<CoverageDescriptionResponse> response) {
+          @Override public void onResponse(Call<CertainPDFResponse> call,
+              Response<CertainPDFResponse> response) {
 
             switch (response.code()) {
               case 200:
-                Intent intent = new Intent(context, PolicyLimitationActivity.class);
-                intent.putExtra("PDF",
-                    response.body().getData().getBody().getData().replace("\\", ""));
+                Intent intent = new Intent(context, PDFViewerActivity.class);
+                intent.putExtra("TITLE",
+                    context.getResources().getString(R.string.policy_limitation_activity_title));
+                if (response.body().getData().getBody().getData() != null && response.body()
+                    .getData()
+                    .getBody()
+                    .getData()
+                    .contains("\\")) {
+                  intent.putExtra("PDF",
+                      response.body().getData().getBody().getData().replace("\\", ""));
+                }
 
                 fragmentActivity.startActivity(intent);
                 break;
@@ -123,7 +130,7 @@ public class InsuranceOperationWidgetsGridAdapter
             waitingDialog.dismiss();
           }
 
-          @Override public void onFailure(Call<CoverageDescriptionResponse> call, Throwable t) {
+          @Override public void onFailure(Call<CertainPDFResponse> call, Throwable t) {
             Timber.d("Call failed with error : %s", t.getMessage());
             alertDialog.setMessage(context.getString(R.string.server_error_got_returned));
             alertDialog.show();
@@ -148,16 +155,24 @@ public class InsuranceOperationWidgetsGridAdapter
 
     dataAccessHandler.getCoverageDescription(
         prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""), "1",
-        new Callback<CoverageDescriptionResponse>() {
+        new Callback<CertainPDFResponse>() {
 
-          @Override public void onResponse(Call<CoverageDescriptionResponse> call,
-              Response<CoverageDescriptionResponse> response) {
+          @Override public void onResponse(Call<CertainPDFResponse> call,
+              Response<CertainPDFResponse> response) {
 
             switch (response.code()) {
               case 200:
-                Intent intent = new Intent(context, CoverageDescriptionActivity.class);
-                intent.putExtra("PDF",
-                    response.body().getData().getBody().getData().replace("\\", ""));
+                Intent intent = new Intent(context, PDFViewerActivity.class);
+                intent.putExtra("TITLE",
+                    context.getResources().getString(R.string.coverage_description_activity_title));
+                if (response.body().getData().getBody().getData() != null && response.body()
+                    .getData()
+                    .getBody()
+                    .getData()
+                    .contains("\\")) {
+                  intent.putExtra("PDF",
+                      response.body().getData().getBody().getData().replace("\\", ""));
+                }
 
                 fragmentActivity.startActivity(intent);
                 break;
@@ -170,7 +185,62 @@ public class InsuranceOperationWidgetsGridAdapter
             waitingDialog.dismiss();
           }
 
-          @Override public void onFailure(Call<CoverageDescriptionResponse> call, Throwable t) {
+          @Override public void onFailure(Call<CertainPDFResponse> call, Throwable t) {
+            Timber.d("Call failed with error : %s", t.getMessage());
+            alertDialog.setMessage(context.getString(R.string.server_error_got_returned));
+            alertDialog.show();
+          }
+        });
+  }
+
+  private void getMembersGuide() {
+    final ProgressDialog waitingDialog = new ProgressDialog(fragmentActivity);
+    waitingDialog.setTitle(context.getResources().getString(R.string.loading_data_dialog_title));
+    waitingDialog.setMessage(context.getResources().getString(R.string.please_wait_dialog_message));
+    waitingDialog.show();
+
+    final AlertDialog alertDialog = new AlertDialog.Builder(context).create();
+    alertDialog.setTitle(R.string.loading_data_dialog_title);
+    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE,
+        context.getResources().getString(R.string.ok), (dialog, which) -> {
+          dialog.dismiss();
+
+          if (waitingDialog.isShowing()) waitingDialog.dismiss();
+        });
+
+    dataAccessHandler.getMembersGuide(
+        prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""), "0",
+        new Callback<CertainPDFResponse>() {
+
+          @Override public void onResponse(Call<CertainPDFResponse> call,
+              Response<CertainPDFResponse> response) {
+
+            switch (response.code()) {
+              case 200:
+                Intent intent = new Intent(context, PDFViewerActivity.class);
+                intent.putExtra("TITLE",
+                    context.getResources().getString(R.string.members_guide_activity_title));
+                if (response.body().getData().getBody().getData() != null && response.body()
+                    .getData()
+                    .getBody()
+                    .getData()
+                    .contains("\\")) {
+                  intent.putExtra("PDF",
+                      response.body().getData().getBody().getData().replace("\\", ""));
+                }
+
+                fragmentActivity.startActivity(intent);
+                break;
+              case 449:
+                alertDialog.setMessage(Helpers.provideErrorStringFromJSON(response.errorBody()));
+                alertDialog.show();
+                break;
+            }
+
+            waitingDialog.dismiss();
+          }
+
+          @Override public void onFailure(Call<CertainPDFResponse> call, Throwable t) {
             Timber.d("Call failed with error : %s", t.getMessage());
             alertDialog.setMessage(context.getString(R.string.server_error_got_returned));
             alertDialog.show();
@@ -203,6 +273,7 @@ public class InsuranceOperationWidgetsGridAdapter
           setDropDownItems(TRACK_ITEM);
           break;
         case MEMBER_GUIDE_ITEM:
+          getMembersGuide();
           break;
         case COVERAGE_ITEM:
           getCoverageDescription();
