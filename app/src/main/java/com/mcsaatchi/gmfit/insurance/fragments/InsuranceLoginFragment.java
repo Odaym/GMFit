@@ -29,8 +29,6 @@ import com.mcsaatchi.gmfit.insurance.widget.CustomCountryPicker;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
-import okhttp3.MediaType;
-import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -47,10 +45,6 @@ public class InsuranceLoginFragment extends Fragment {
   @Inject SharedPreferences prefs;
 
   private ArrayList<FormEditText> allFields = new ArrayList<>();
-
-  public static RequestBody toRequestBody(String value) {
-    return RequestBody.create(MediaType.parse("text/plain"), value);
-  }
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {

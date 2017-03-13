@@ -24,7 +24,7 @@ import com.mcsaatchi.gmfit.insurance.activities.chronic.ChronicStatusListActivit
 import com.mcsaatchi.gmfit.insurance.activities.chronic.SubmitChronicActivity;
 import com.mcsaatchi.gmfit.insurance.activities.home.PDFViewerActivity;
 import com.mcsaatchi.gmfit.insurance.activities.home.SnapshotActivity;
-import com.mcsaatchi.gmfit.insurance.activities.inquiry.InquiryEmptyActivity;
+import com.mcsaatchi.gmfit.insurance.activities.inquiry.InquiryStatusListActivity;
 import com.mcsaatchi.gmfit.insurance.activities.inquiry.SubmitInquiryActivity;
 import com.mcsaatchi.gmfit.insurance.activities.reimbursement.ReimbursementStatusListActivity;
 import com.mcsaatchi.gmfit.insurance.activities.reimbursement.SubmitReimbursementActivity;
@@ -110,14 +110,8 @@ public class InsuranceOperationWidgetsGridAdapter
                 Intent intent = new Intent(context, PDFViewerActivity.class);
                 intent.putExtra("TITLE",
                     context.getResources().getString(R.string.policy_limitation_activity_title));
-                if (response.body().getData().getBody().getData() != null && response.body()
-                    .getData()
-                    .getBody()
-                    .getData()
-                    .contains("\\")) {
                   intent.putExtra("PDF",
                       response.body().getData().getBody().getData().replace("\\", ""));
-                }
 
                 fragmentActivity.startActivity(intent);
                 break;
@@ -165,14 +159,8 @@ public class InsuranceOperationWidgetsGridAdapter
                 Intent intent = new Intent(context, PDFViewerActivity.class);
                 intent.putExtra("TITLE",
                     context.getResources().getString(R.string.coverage_description_activity_title));
-                if (response.body().getData().getBody().getData() != null && response.body()
-                    .getData()
-                    .getBody()
-                    .getData()
-                    .contains("\\")) {
                   intent.putExtra("PDF",
                       response.body().getData().getBody().getData().replace("\\", ""));
-                }
 
                 fragmentActivity.startActivity(intent);
                 break;
@@ -220,14 +208,8 @@ public class InsuranceOperationWidgetsGridAdapter
                 Intent intent = new Intent(context, PDFViewerActivity.class);
                 intent.putExtra("TITLE",
                     context.getResources().getString(R.string.members_guide_activity_title));
-                if (response.body().getData().getBody().getData() != null && response.body()
-                    .getData()
-                    .getBody()
-                    .getData()
-                    .contains("\\")) {
                   intent.putExtra("PDF",
                       response.body().getData().getBody().getData().replace("\\", ""));
-                }
 
                 fragmentActivity.startActivity(intent);
                 break;
@@ -339,7 +321,7 @@ public class InsuranceOperationWidgetsGridAdapter
                     fragmentActivity.startActivity(intent);
                     break;
                   case TRACK_ITEM:
-                    intent = new Intent(fragmentActivity, InquiryEmptyActivity.class);
+                    intent = new Intent(fragmentActivity, InquiryStatusListActivity.class);
                     fragmentActivity.startActivity(intent);
                     break;
                 }

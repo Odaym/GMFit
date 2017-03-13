@@ -5,7 +5,7 @@ import com.mcsaatchi.gmfit.architecture.GMFitApplication;
 import com.mcsaatchi.gmfit.architecture.rest.ActivityLevelsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponse;
 import com.mcsaatchi.gmfit.architecture.rest.CRMCategoriesResponse;
-import com.mcsaatchi.gmfit.architecture.rest.CardDetailsResponse;
+import com.mcsaatchi.gmfit.architecture.rest.CertainPDFResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ChartMetricBreakdownResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ChartsBySectionResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ChronicTreatmentDetailsResponse;
@@ -13,11 +13,11 @@ import com.mcsaatchi.gmfit.architecture.rest.ChronicTreatmentListResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ClaimListDetailsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ClaimsListResponse;
 import com.mcsaatchi.gmfit.architecture.rest.CountriesListResponse;
-import com.mcsaatchi.gmfit.architecture.rest.CertainPDFResponse;
 import com.mcsaatchi.gmfit.architecture.rest.CreateNewRequestResponse;
 import com.mcsaatchi.gmfit.architecture.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.architecture.rest.EmergencyProfileResponse;
 import com.mcsaatchi.gmfit.architecture.rest.GetNearbyClinicsResponse;
+import com.mcsaatchi.gmfit.architecture.rest.InquiriesListResponse;
 import com.mcsaatchi.gmfit.architecture.rest.InsuranceLoginResponse;
 import com.mcsaatchi.gmfit.architecture.rest.MealMetricsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.MedicalConditionsResponse;
@@ -30,7 +30,6 @@ import com.mcsaatchi.gmfit.architecture.rest.RestClient;
 import com.mcsaatchi.gmfit.architecture.rest.SearchMealItemResponse;
 import com.mcsaatchi.gmfit.architecture.rest.SearchMedicinesResponse;
 import com.mcsaatchi.gmfit.architecture.rest.SlugBreakdownResponse;
-import com.mcsaatchi.gmfit.architecture.rest.SnapshotResponse;
 import com.mcsaatchi.gmfit.architecture.rest.SubCategoriesResponse;
 import com.mcsaatchi.gmfit.architecture.rest.TakenMedicalTestsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.UiResponse;
@@ -864,8 +863,8 @@ public class ApiCallsHandler {
         .getCoverageDescription(new CoverageDescriptionRequest(contractNo, indNbr));
 
     apiCall.enqueue(new Callback<CertainPDFResponse>() {
-      @Override public void onResponse(Call<CertainPDFResponse> call,
-          Response<CertainPDFResponse> response) {
+      @Override
+      public void onResponse(Call<CertainPDFResponse> call, Response<CertainPDFResponse> response) {
         callback.onResponse(call, response);
       }
 
@@ -880,8 +879,8 @@ public class ApiCallsHandler {
         .getMembersGuide(new CoverageDescriptionRequest(contractNo, indNbr));
 
     apiCall.enqueue(new Callback<CertainPDFResponse>() {
-      @Override public void onResponse(Call<CertainPDFResponse> call,
-          Response<CertainPDFResponse> response) {
+      @Override
+      public void onResponse(Call<CertainPDFResponse> call, Response<CertainPDFResponse> response) {
         callback.onResponse(call, response);
       }
 
@@ -908,17 +907,17 @@ public class ApiCallsHandler {
     });
   }
 
-  void getCardDetails(String contractNo, final Callback<CardDetailsResponse> callback) {
-    Call<CardDetailsResponse> apiCall =
+  void getCardDetails(String contractNo, final Callback<CertainPDFResponse> callback) {
+    Call<CertainPDFResponse> apiCall =
         restClient.getGMFitService().getCardDetails(new SimpleInsuranceRequest(contractNo));
 
-    apiCall.enqueue(new Callback<CardDetailsResponse>() {
-      @Override public void onResponse(Call<CardDetailsResponse> call,
-          Response<CardDetailsResponse> response) {
+    apiCall.enqueue(new Callback<CertainPDFResponse>() {
+      @Override public void onResponse(Call<CertainPDFResponse> call,
+          Response<CertainPDFResponse> response) {
         callback.onResponse(call, response);
       }
 
-      @Override public void onFailure(Call<CardDetailsResponse> call, Throwable t) {
+      @Override public void onFailure(Call<CertainPDFResponse> call, Throwable t) {
       }
     });
   }
@@ -1086,17 +1085,32 @@ public class ApiCallsHandler {
   }
 
   void getSnapshot(String contractNo, String startDate, String endDate,
-      final Callback<SnapshotResponse> callback) {
-    Call<SnapshotResponse> apiCall = restClient.getGMFitService()
+      final Callback<CertainPDFResponse> callback) {
+    Call<CertainPDFResponse> apiCall = restClient.getGMFitService()
         .getSnapshot(new SnapShotRequest(contractNo, startDate, endDate));
 
-    apiCall.enqueue(new Callback<SnapshotResponse>() {
+    apiCall.enqueue(new Callback<CertainPDFResponse>() {
       @Override
-      public void onResponse(Call<SnapshotResponse> call, Response<SnapshotResponse> response) {
+      public void onResponse(Call<CertainPDFResponse> call, Response<CertainPDFResponse> response) {
         callback.onResponse(call, response);
       }
 
-      @Override public void onFailure(Call<SnapshotResponse> call, Throwable t) {
+      @Override public void onFailure(Call<CertainPDFResponse> call, Throwable t) {
+      }
+    });
+  }
+
+  void getInquiriesList(String incidentId, final Callback<InquiriesListResponse> callback) {
+    Call<InquiriesListResponse> apiCall =
+        restClient.getGMFitService().getInquiriesList(new InquiriesListRequest(incidentId));
+
+    apiCall.enqueue(new Callback<InquiriesListResponse>() {
+      @Override public void onResponse(Call<InquiriesListResponse> call,
+          Response<InquiriesListResponse> response) {
+        callback.onResponse(call, response);
+      }
+
+      @Override public void onFailure(Call<InquiriesListResponse> call, Throwable t) {
       }
     });
   }
@@ -1440,6 +1454,14 @@ public class ApiCallsHandler {
       this.contractNo = contractNo;
       this.startDate = startDate;
       this.endDate = endDate;
+    }
+  }
+
+  public class InquiriesListRequest {
+    private String incidentId;
+
+    public InquiriesListRequest(String incidentId) {
+      this.incidentId = incidentId;
     }
   }
 }

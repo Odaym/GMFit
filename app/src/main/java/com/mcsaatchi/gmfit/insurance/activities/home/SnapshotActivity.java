@@ -13,7 +13,7 @@ import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.rest.SnapshotResponse;
+import com.mcsaatchi.gmfit.architecture.rest.CertainPDFResponse;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
@@ -113,9 +113,9 @@ public class SnapshotActivity extends BaseActivity {
         });
 
     dataAccessHandler.getSnapshot(prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""),
-        startDate, endDate, new Callback<SnapshotResponse>() {
-          @Override
-          public void onResponse(Call<SnapshotResponse> call, Response<SnapshotResponse> response) {
+        startDate, endDate, new Callback<CertainPDFResponse>() {
+          @Override public void onResponse(Call<CertainPDFResponse> call,
+              Response<CertainPDFResponse> response) {
             switch (response.code()) {
               case 200:
                 WebSettings settings = webView.getSettings();
@@ -133,7 +133,7 @@ public class SnapshotActivity extends BaseActivity {
                 webView.loadUrl("https://docs.google.com/gview?embedded=true&url=" + response.body()
                     .getData()
                     .getBody()
-                    .getSnapshotPdf());
+                    .getData());
 
                 break;
               case 449:
@@ -145,7 +145,7 @@ public class SnapshotActivity extends BaseActivity {
             waitingDialog.dismiss();
           }
 
-          @Override public void onFailure(Call<SnapshotResponse> call, Throwable t) {
+          @Override public void onFailure(Call<CertainPDFResponse> call, Throwable t) {
             Timber.d("Call failed with error : %s", t.getMessage());
             final AlertDialog alertDialog = new AlertDialog.Builder(SnapshotActivity.this).create();
             alertDialog.setMessage(getString(R.string.server_error_got_returned));

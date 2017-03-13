@@ -265,6 +265,11 @@
         android:windowSoftInputMode="stateHidden"/>
 
     <activity
+        android:name=".insurance.activities.inquiry.InquiryStatusListActivity"
+        android:screenOrientation="portrait"
+        android:theme="@style/No_Action_Bar_Theme"/>
+
+    <activity
         android:name=".insurance.activities.chronic.RequestChronicDeletionActivity"
         android:screenOrientation="portrait"
         android:theme="@style/No_Action_Bar_Theme"

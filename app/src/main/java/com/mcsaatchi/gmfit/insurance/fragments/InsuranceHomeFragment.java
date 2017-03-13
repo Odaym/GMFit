@@ -27,7 +27,7 @@ import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.GMFitApplication;
 import com.mcsaatchi.gmfit.architecture.PermissionsChecker;
 import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
-import com.mcsaatchi.gmfit.architecture.rest.CardDetailsResponse;
+import com.mcsaatchi.gmfit.architecture.rest.CertainPDFResponse;
 import com.mcsaatchi.gmfit.architecture.rest.InsuranceLoginResponseInnerData;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
@@ -164,9 +164,9 @@ public class InsuranceHomeFragment extends Fragment {
 
     dataAccessHandler.getCardDetails(
         prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""),
-        new Callback<CardDetailsResponse>() {
-          @Override public void onResponse(Call<CardDetailsResponse> call,
-              Response<CardDetailsResponse> response) {
+        new Callback<CertainPDFResponse>() {
+          @Override public void onResponse(Call<CertainPDFResponse> call,
+              Response<CertainPDFResponse> response) {
 
             switch (response.code()) {
               case 200:
@@ -186,7 +186,7 @@ public class InsuranceHomeFragment extends Fragment {
             waitingDialog.dismiss();
           }
 
-          @Override public void onFailure(Call<CardDetailsResponse> call, Throwable t) {
+          @Override public void onFailure(Call<CertainPDFResponse> call, Throwable t) {
             Timber.d("Call failed with error : %s", t.getMessage());
             alertDialog.setMessage(getString(R.string.server_error_got_returned));
             alertDialog.show();

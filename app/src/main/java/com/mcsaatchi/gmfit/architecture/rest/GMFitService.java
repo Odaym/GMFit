@@ -149,7 +149,7 @@ public interface GMFitService {
    * INSURANCE API's
    */
   //HOME SCREEN
-  @POST("insurance/insurance-card-details") Call<CardDetailsResponse> getCardDetails(
+  @POST("insurance/insurance-card-details") Call<CertainPDFResponse> getCardDetails(
       @Body ApiCallsHandler.SimpleInsuranceRequest simpleInsuranceRequest);
 
   @POST("insurance/login") Call<InsuranceLoginResponse> insuranceUserLogin(
@@ -167,7 +167,7 @@ public interface GMFitService {
   @POST("insurance/network/advanced-search") Call<GetNearbyClinicsResponse> getNearbyClinics(
       @Body ApiCallsHandler.NearbyClinicsRequest simpleInsuranceRequest);
 
-  @POST("insurance/snapshot/pdf") Call<SnapshotResponse> getSnapshot(
+  @POST("insurance/snapshot/pdf") Call<CertainPDFResponse> getSnapshot(
       @Body ApiCallsHandler.SnapShotRequest snapShotRequest);
 
   @POST("insurance/countries") Call<CountriesListResponse> getCountriesList();
@@ -214,5 +214,8 @@ public interface GMFitService {
 
   @POST("insurance/claims/list") Call<ChronicTreatmentListResponse> getChronicTreatmentsList(
       @Body ApiCallsHandler.ClaimsListRequest chronicListDetailsRequest);
+
+  @POST("insurance/crm/request/get") Call<InquiriesListResponse> getInquiriesList(
+      @Body ApiCallsHandler.InquiriesListRequest inquiriesListRequest);
   // SUBMISSIONS AND LISTINGS
 }

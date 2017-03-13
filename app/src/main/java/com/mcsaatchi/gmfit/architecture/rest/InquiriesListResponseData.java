@@ -3,9 +3,9 @@ package com.mcsaatchi.gmfit.architecture.rest;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class SnapshotResponseData {
+public class InquiriesListResponseData {
   @SerializedName("message") @Expose private String message;
-  @SerializedName("body") @Expose private SnapshotResponseBody body;
+  @SerializedName("body") @Expose private InquiriesListResponseBody body;
   @SerializedName("code") @Expose private Integer code;
 
   public String getMessage() {
@@ -16,11 +16,11 @@ public class SnapshotResponseData {
     this.message = message;
   }
 
-  public SnapshotResponseBody getBody() {
+  public InquiriesListResponseBody getBody() {
     return body;
   }
 
-  public void setBody(SnapshotResponseBody body) {
+  public void setBody(InquiriesListResponseBody body) {
     this.body = body;
   }
 

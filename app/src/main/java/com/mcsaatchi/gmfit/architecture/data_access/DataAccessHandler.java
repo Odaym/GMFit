@@ -5,7 +5,7 @@ import com.mcsaatchi.gmfit.architecture.GMFitApplication;
 import com.mcsaatchi.gmfit.architecture.rest.ActivityLevelsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponse;
 import com.mcsaatchi.gmfit.architecture.rest.CRMCategoriesResponse;
-import com.mcsaatchi.gmfit.architecture.rest.CardDetailsResponse;
+import com.mcsaatchi.gmfit.architecture.rest.CertainPDFResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ChartMetricBreakdownResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ChartsBySectionResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ChronicTreatmentDetailsResponse;
@@ -13,11 +13,11 @@ import com.mcsaatchi.gmfit.architecture.rest.ChronicTreatmentListResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ClaimListDetailsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ClaimsListResponse;
 import com.mcsaatchi.gmfit.architecture.rest.CountriesListResponse;
-import com.mcsaatchi.gmfit.architecture.rest.CertainPDFResponse;
 import com.mcsaatchi.gmfit.architecture.rest.CreateNewRequestResponse;
 import com.mcsaatchi.gmfit.architecture.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.architecture.rest.EmergencyProfileResponse;
 import com.mcsaatchi.gmfit.architecture.rest.GetNearbyClinicsResponse;
+import com.mcsaatchi.gmfit.architecture.rest.InquiriesListResponse;
 import com.mcsaatchi.gmfit.architecture.rest.InsuranceLoginResponse;
 import com.mcsaatchi.gmfit.architecture.rest.MealMetricsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.MedicalConditionsResponse;
@@ -29,7 +29,6 @@ import com.mcsaatchi.gmfit.architecture.rest.RecentMealsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.SearchMealItemResponse;
 import com.mcsaatchi.gmfit.architecture.rest.SearchMedicinesResponse;
 import com.mcsaatchi.gmfit.architecture.rest.SlugBreakdownResponse;
-import com.mcsaatchi.gmfit.architecture.rest.SnapshotResponse;
 import com.mcsaatchi.gmfit.architecture.rest.SubCategoriesResponse;
 import com.mcsaatchi.gmfit.architecture.rest.TakenMedicalTestsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.UiResponse;
@@ -310,7 +309,7 @@ public class DataAccessHandler {
         mobileNumber, callback);
   }
 
-  public void getCardDetails(String contractNo, Callback<CardDetailsResponse> callback) {
+  public void getCardDetails(String contractNo, Callback<CertainPDFResponse> callback) {
     apiCallsHandler.getCardDetails(contractNo, callback);
   }
 
@@ -370,7 +369,11 @@ public class DataAccessHandler {
   }
 
   public void getSnapshot(String contractNo, String startDate, String endDate,
-      final Callback<SnapshotResponse> callback) {
+      final Callback<CertainPDFResponse> callback) {
     apiCallsHandler.getSnapshot(contractNo, startDate, endDate, callback);
+  }
+
+  public void getInquiriesList(String incidentId, final Callback<InquiriesListResponse> callback) {
+    apiCallsHandler.getInquiriesList(incidentId, callback);
   }
 }

@@ -4,13 +4,13 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class CertainPDFResponseBody {
-  @SerializedName("data") @Expose private String data;
+  @SerializedName("pdf") @Expose private String pdf;
 
   public String getData() {
-    return data;
+    return pdf;
   }
 
-  public void setData(String data) {
-    this.data = data;
+  public void setData(String pdf) {
+    this.pdf = pdf;
   }
 }
