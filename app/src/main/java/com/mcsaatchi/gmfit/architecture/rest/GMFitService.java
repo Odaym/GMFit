@@ -198,7 +198,8 @@ public interface GMFitService {
   Call<CreateNewRequestResponse> createNewInquiryComplaint(
       @Part("contractNo") RequestBody contractNo, @Part("category") RequestBody category,
       @Part("subcategory") RequestBody subcategory, @Part("title") RequestBody title,
-      @Part("area") RequestBody area, @PartMap() Map<String, RequestBody> attachements);
+      @Part("area") RequestBody area, @Part("crm_country") RequestBody crm_country,
+      @PartMap() Map<String, RequestBody> attachements);
 
   @Multipart @POST("insurance/crm/categories") Call<CRMCategoriesResponse> getCRMCategories(
       @Part("contractNo") RequestBody contractNo);

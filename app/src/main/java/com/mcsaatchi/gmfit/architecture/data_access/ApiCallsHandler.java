@@ -912,8 +912,8 @@ public class ApiCallsHandler {
         restClient.getGMFitService().getCardDetails(new SimpleInsuranceRequest(contractNo));
 
     apiCall.enqueue(new Callback<CertainPDFResponse>() {
-      @Override public void onResponse(Call<CertainPDFResponse> call,
-          Response<CertainPDFResponse> response) {
+      @Override
+      public void onResponse(Call<CertainPDFResponse> call, Response<CertainPDFResponse> response) {
         callback.onResponse(call, response);
       }
 
@@ -976,10 +976,11 @@ public class ApiCallsHandler {
   }
 
   void createNewInquiryComplaint(RequestBody contractNo, RequestBody category,
-      RequestBody subcategory, RequestBody title, RequestBody area,
+      RequestBody subcategory, RequestBody title, RequestBody area, RequestBody crm_country,
       Map<String, RequestBody> attachements, final Callback<CreateNewRequestResponse> callback) {
     Call<CreateNewRequestResponse> apiCall = restClient.getGMFitService()
-        .createNewInquiryComplaint(contractNo, category, subcategory, title, area, attachements);
+        .createNewInquiryComplaint(contractNo, category, subcategory, title, area, crm_country,
+            attachements);
 
     apiCall.enqueue(new Callback<CreateNewRequestResponse>() {
       @Override public void onResponse(Call<CreateNewRequestResponse> call,
@@ -1100,9 +1101,10 @@ public class ApiCallsHandler {
     });
   }
 
-  void getInquiriesList(String incidentId, final Callback<InquiriesListResponse> callback) {
-    Call<InquiriesListResponse> apiCall =
-        restClient.getGMFitService().getInquiriesList(new InquiriesListRequest(incidentId));
+  void getInquiriesList(String incidentId, String crm_country,
+      final Callback<InquiriesListResponse> callback) {
+    Call<InquiriesListResponse> apiCall = restClient.getGMFitService()
+        .getInquiriesList(new InquiriesListRequest(incidentId, crm_country));
 
     apiCall.enqueue(new Callback<InquiriesListResponse>() {
       @Override public void onResponse(Call<InquiriesListResponse> call,
@@ -1459,9 +1461,11 @@ public class ApiCallsHandler {
 
   public class InquiriesListRequest {
     private String incidentId;
+    private String crm_country;
 
-    public InquiriesListRequest(String incidentId) {
+    public InquiriesListRequest(String incidentId, String crm_country) {
       this.incidentId = incidentId;
+      this.crm_country = crm_country;
     }
   }
 }

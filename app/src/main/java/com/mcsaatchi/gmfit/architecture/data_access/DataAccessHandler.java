@@ -333,10 +333,10 @@ public class DataAccessHandler {
   }
 
   public void createNewInquiryComplaint(RequestBody contractNo, RequestBody category,
-      RequestBody subcategory, RequestBody title, RequestBody area,
+      RequestBody subcategory, RequestBody title, RequestBody area, RequestBody crm_country,
       Map<String, RequestBody> attachements, final Callback<CreateNewRequestResponse> callback) {
     apiCallsHandler.createNewInquiryComplaint(contractNo, category, subcategory, title, area,
-        attachements, callback);
+        crm_country, attachements, callback);
   }
 
   public void getCountriesList(final Callback<CountriesListResponse> callback) {
@@ -373,7 +373,8 @@ public class DataAccessHandler {
     apiCallsHandler.getSnapshot(contractNo, startDate, endDate, callback);
   }
 
-  public void getInquiriesList(String incidentId, final Callback<InquiriesListResponse> callback) {
-    apiCallsHandler.getInquiriesList(incidentId, callback);
+  public void getInquiriesList(String incidentId, String crm_country,
+      final Callback<InquiriesListResponse> callback) {
+    apiCallsHandler.getInquiriesList(incidentId, crm_country, callback);
   }
 }

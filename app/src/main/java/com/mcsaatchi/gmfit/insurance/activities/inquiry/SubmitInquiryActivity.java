@@ -304,6 +304,7 @@ public class SubmitInquiryActivity extends BaseActivity {
         toRequestBody(prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, "")),
         toRequestBody(category), toRequestBody(subcategory),
         toRequestBody(requestTitleTV.getText().toString()), toRequestBody(area.toLowerCase()),
+        toRequestBody(prefs.getString(Constants.EXTRAS_INSURANCE_COUNTRY_CRM_CODE, "")),
         attachements, new Callback<CreateNewRequestResponse>() {
           @Override public void onResponse(Call<CreateNewRequestResponse> call,
               Response<CreateNewRequestResponse> response) {
