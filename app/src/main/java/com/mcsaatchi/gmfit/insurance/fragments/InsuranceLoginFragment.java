@@ -44,6 +44,8 @@ public class InsuranceLoginFragment extends Fragment {
   @Inject DataAccessHandler dataAccessHandler;
   @Inject SharedPreferences prefs;
 
+  private boolean chosenCountry = false;
+
   private ArrayList<FormEditText> allFields = new ArrayList<>();
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -68,7 +70,18 @@ public class InsuranceLoginFragment extends Fragment {
 
   @OnClick(R.id.loginBTN) public void handleUserLogin() {
     if (Helpers.validateFields(allFields)) {
-      insuranceUserLogin();
+      if (chosenCountry) {
+        insuranceUserLogin();
+      } else {
+        final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+        alertDialog.setTitle(R.string.country_choice_dialog_title);
+        alertDialog.setMessage(getResources().getString(R.string.no_country_chosen_dialog_message));
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
+            (dialog, which) -> {
+              dialog.dismiss();
+            });
+        alertDialog.show();
+      }
     }
   }
 
@@ -197,23 +210,12 @@ public class InsuranceLoginFragment extends Fragment {
             if (!countries.isEmpty()) {
               countryPicker.setUpDropDown("Choose a country", "",
                   countries.toArray(new String[countries.size()]), (index, selected) -> {
-                    for (int i = 0; i < countriesResponse.size(); i++) {
-                      if (countriesResponse.get(i).getLabel().equals(selected)) {
-                        prefs.edit()
-                            .putString(Constants.EXTRAS_INSURANCE_COUNTRY_NAME,
-                                countriesResponse.get(i).getLabel())
-                            .apply();
-                        prefs.edit()
-                            .putString(Constants.EXTRAS_INSURANCE_COUNTRY_CRM_CODE,
-                                countriesResponse.get(i).getCrmCode())
-                            .apply();
-                        prefs.edit()
-                            .putString(Constants.EXTRAS_INSURANCE_COUNTRY_ISO_CODE,
-                                countriesResponse.get(i).getIsoCode())
-                            .apply();
-                      }
-                    }
+                    chosenCountry = true;
+
+                    saveChosenCountry(countriesResponse, selected);
                   });
+
+              countryPicker.setSelectedItem(countries.get(0));
             }
 
             break;
@@ -224,5 +226,24 @@ public class InsuranceLoginFragment extends Fragment {
         Timber.d("Call failed with error : %s", t.getMessage());
       }
     });
+  }
+
+  private void saveChosenCountry(List<CountriesListResponseDatum> countriesResponse,
+      String selectedCountryName) {
+    for (int i = 0; i < countriesResponse.size(); i++) {
+      if (countriesResponse.get(i).getLabel().equals(selectedCountryName)) {
+        prefs.edit()
+            .putString(Constants.EXTRAS_INSURANCE_COUNTRY_NAME, countriesResponse.get(i).getLabel())
+            .apply();
+        prefs.edit()
+            .putString(Constants.EXTRAS_INSURANCE_COUNTRY_CRM_CODE,
+                countriesResponse.get(i).getCrmCode())
+            .apply();
+        prefs.edit()
+            .putString(Constants.EXTRAS_INSURANCE_COUNTRY_ISO_CODE,
+                countriesResponse.get(i).getIsoCode())
+            .apply();
+      }
+    }
   }
 }
