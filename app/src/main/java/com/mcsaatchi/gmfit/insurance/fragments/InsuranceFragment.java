@@ -89,7 +89,8 @@ public class InsuranceFragment extends Fragment {
       if (waitingDialog.isShowing()) waitingDialog.dismiss();
     });
 
-    dataAccessHandler.insuranceUserLogin(username, "422", "2", password,
+    dataAccessHandler.insuranceUserLogin(username,
+        prefs.getString(Constants.EXTRAS_INSURANCE_COUNTRY_ISO_CODE, ""), "2", password,
         new Callback<InsuranceLoginResponse>() {
           @Override public void onResponse(Call<InsuranceLoginResponse> call,
               Response<InsuranceLoginResponse> response) {

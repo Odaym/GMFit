@@ -148,15 +148,9 @@ public interface GMFitService {
   /**
    * INSURANCE API's
    */
+  //HOME SCREEN
   @POST("insurance/insurance-card-details") Call<CardDetailsResponse> getCardDetails(
       @Body ApiCallsHandler.SimpleInsuranceRequest simpleInsuranceRequest);
-
-  @POST("insurance/medecines/most-popular")
-  Call<MostPopularMedicationsResponse> getMostPopularMedications(
-      @Body ApiCallsHandler.DefaultBodyForInsuranceRequests mostPopularMedicationsRequest);
-
-  @POST("insurance/medecines/search") Call<SearchMedicinesResponse> searchMedicines(
-      @Body ApiCallsHandler.SearchMedicinesRequest searchMedicinesRequest);
 
   @POST("insurance/login") Call<InsuranceLoginResponse> insuranceUserLogin(
       @Body ApiCallsHandler.InsuranceLoginRequest insuranceUserLoginRequest);
@@ -170,11 +164,27 @@ public interface GMFitService {
   @POST("insurance/update-info") Call<UpdateInsurancePasswordResponse> updateInsurancePassword(
       @Body ApiCallsHandler.UpdateInsurancePasswordRequest updateInsurancePasswordRequest);
 
-  @POST("insurance/sub-categories") Call<SubCategoriesResponse> getSubCategories(
-      @Body ApiCallsHandler.SimpleInsuranceRequest simpleInsuranceRequest);
-
   @POST("insurance/network/advanced-search") Call<GetNearbyClinicsResponse> getNearbyClinics(
       @Body ApiCallsHandler.NearbyClinicsRequest simpleInsuranceRequest);
+
+  @POST("insurance/snapshot/pdf") Call<SnapshotResponse> getSnapshot(
+      @Body ApiCallsHandler.SnapShotRequest snapShotRequest);
+
+  @POST("insurance/countries") Call<CountriesListResponse> getCountriesList();
+  //HOME SCREEN
+
+  // MEDICINES
+  @POST("insurance/medecines/most-popular")
+  Call<MostPopularMedicationsResponse> getMostPopularMedications(
+      @Body ApiCallsHandler.DefaultBodyForInsuranceRequests mostPopularMedicationsRequest);
+
+  @POST("insurance/medecines/search") Call<SearchMedicinesResponse> searchMedicines(
+      @Body ApiCallsHandler.SearchMedicinesRequest searchMedicinesRequest);
+  // MEDICINES
+
+  // SUBMISSIONS AND LISTINGS
+  @POST("insurance/sub-categories") Call<SubCategoriesResponse> getSubCategories(
+      @Body ApiCallsHandler.SimpleInsuranceRequest simpleInsuranceRequest);
 
   @Multipart @POST("insurance/request/create") Call<CreateNewRequestResponse> createNewRequest(
       @Part("contractNo") RequestBody contractNo, @Part("categ") RequestBody categ,
@@ -193,8 +203,6 @@ public interface GMFitService {
   @Multipart @POST("insurance/crm/categories") Call<CRMCategoriesResponse> getCRMCategories(
       @Part("contractNo") RequestBody contractNo);
 
-  @POST("insurance/countries") Call<CountriesListResponse> getCountriesList();
-
   @POST("insurance/claims/list") Call<ClaimsListResponse> getClaimsList(
       @Body ApiCallsHandler.ClaimsListRequest claimsListRequest);
 
@@ -206,7 +214,5 @@ public interface GMFitService {
 
   @POST("insurance/claims/list") Call<ChronicTreatmentListResponse> getChronicTreatmentsList(
       @Body ApiCallsHandler.ClaimsListRequest chronicListDetailsRequest);
-
-  @POST("insurance/snapshot/pdf") Call<SnapshotResponse> getSnapshot(
-      @Body ApiCallsHandler.SnapShotRequest snapShotRequest);
+  // SUBMISSIONS AND LISTINGS
 }

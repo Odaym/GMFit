@@ -15,6 +15,7 @@ import com.mcsaatchi.gmfit.insurance.activities.chronic.ChronicStatusDetailsActi
 import com.mcsaatchi.gmfit.insurance.activities.chronic.RequestChronicDeletionActivity;
 import java.util.List;
 import org.apache.commons.lang3.text.WordUtils;
+import timber.log.Timber;
 
 public class ChronicStatusAdapter extends RecyclerView.Adapter {
   private List<ChronicTreatmentListInnerData> treatmentsList;
@@ -67,6 +68,8 @@ public class ChronicStatusAdapter extends RecyclerView.Adapter {
         treatmentsList.remove(getAdapterPosition());
         notifyItemRemoved(getAdapterPosition());
       });
+
+      Timber.d("Chronic item : " + chronicTreatment.getRequestNbr());
 
       treatmentNameTV.setText(WordUtils.capitalizeFully(chronicTreatment.getName()));
       treatmentStatusTV.setTextColor(context.getResources()

@@ -114,7 +114,8 @@ public class SearchMedicationsActivity extends BaseActivity {
 
   private void searchMedicines(String key) {
     dataAccessHandler.searchMedicines(prefs.getString(Constants.EXTRAS_INSURANCE_USER_USERNAME, ""),
-        prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""), "422", "2", "2013", key,
+        prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""),
+        prefs.getString(Constants.EXTRAS_INSURANCE_COUNTRY_ISO_CODE, ""), "2", "2013", key,
         new Callback<SearchMedicinesResponse>() {
           @Override public void onResponse(Call<SearchMedicinesResponse> call,
               Response<SearchMedicinesResponse> response) {
@@ -173,7 +174,8 @@ public class SearchMedicationsActivity extends BaseActivity {
   private void getMostPopularMedications() {
     dataAccessHandler.getMostPopularMedications(
         prefs.getString(Constants.EXTRAS_INSURANCE_USER_USERNAME, ""),
-        prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""), "422", "2", "2013",
+        prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""),
+        prefs.getString(Constants.EXTRAS_INSURANCE_COUNTRY_ISO_CODE, ""), "2", "2013",
         new Callback<MostPopularMedicationsResponse>() {
           @Override public void onResponse(Call<MostPopularMedicationsResponse> call,
               Response<MostPopularMedicationsResponse> response) {
