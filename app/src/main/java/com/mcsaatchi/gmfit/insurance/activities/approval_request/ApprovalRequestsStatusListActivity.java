@@ -69,6 +69,7 @@ public class ApprovalRequestsStatusListActivity extends BaseActivity {
                     new LinearLayoutManager(ApprovalRequestsStatusListActivity.this));
                 recyclerView.setHasFixedSize(true);
                 recyclerView.setAdapter(statusAdapter);
+                break;
               case 449:
                 alertDialog.setMessage(Helpers.provideErrorStringFromJSON(response.errorBody()));
                 alertDialog.show();

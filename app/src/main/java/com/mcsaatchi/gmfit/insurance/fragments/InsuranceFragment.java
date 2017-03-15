@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -37,6 +38,8 @@ public class InsuranceFragment extends Fragment {
   @Bind(R.id.tabs) TabLayout tabs;
   @Bind(R.id.fragment_container) FrameLayout fragment_container;
   @Bind(R.id.parentLayoutToCustomize) LinearLayout parentLayoutToCustomize;
+  @Bind(R.id.contractChooserBTN) ImageView contractChooserBTN;
+  @Bind(R.id.switchMapViewBTN) ImageView switchMapViewBTN;
 
   @Inject DataAccessHandler dataAccessHandler;
   @Inject SharedPreferences prefs;
@@ -132,8 +135,10 @@ public class InsuranceFragment extends Fragment {
 
     @Override public Fragment getItem(int position) {
       if (position == 0) {
+        switchMapViewBTN.setVisibility(View.GONE);
         return new InsuranceRootFragment();
       } else {
+        switchMapViewBTN.setVisibility(View.VISIBLE);
         return new InsuranceDirectoryFragment();
       }
     }

@@ -86,8 +86,7 @@ public class ApprovalRequestStatusDetailsActivity extends BaseActivity {
                     new LocalDate(responseDatum.getDate().split(" ")[0])));
                 subCategory.setLabel("Sub Category", responseDatum.getSubcategory());
                 category.setLabel("Category", responseDatum.getCategory());
-                status.setTextColor(getResources().getColor(
-                    Helpers.determineStatusColor(responseDatum.getStatus())));
+                status.setTextColor(Helpers.determineStatusColor(responseDatum.getStatus()));
                 status.setLabel("Status", responseDatum.getStatus());
 
                 for (int i = 0; i < responseDatum.getImages().size(); i++) {

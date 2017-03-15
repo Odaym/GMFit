@@ -21,7 +21,7 @@
         android:layout_marginBottom="@dimen/default_margin_1"
         android:layout_marginStart="@dimen/default_margin_1"
         android:layout_weight="1"
-        android:src="@drawable/ic_contract_chooser"
+        android:src="@drawable/ic_contract_chooser_active"
         android:visibility="gone"
         />
 
@@ -33,6 +33,7 @@
         android:layout_weight="10"
         app:tabIndicatorColor="@color/white"
         app:tabSelectedTextColor="@color/white"
+        app:tabTextAppearance="@style/TabTextAppearance"
         app:tabTextColor="@color/white"
         />
 

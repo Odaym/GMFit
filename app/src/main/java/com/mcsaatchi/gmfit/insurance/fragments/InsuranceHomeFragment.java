@@ -208,9 +208,6 @@ public class InsuranceHomeFragment extends Fragment {
       contractChooserDialog.setContentView(contractsChoiceView);
       contractChooserDialog.setCancelable(false);
 
-      contractChooserDialog.setOnDismissListener(
-          dialogInterface -> contractSelectorBTN.setImageResource(R.drawable.ic_contract_chooser));
-
       contractsChoiceView.setParentDialog(contractChooserDialog);
 
       WindowManager.LayoutParams lp = new WindowManager.LayoutParams();

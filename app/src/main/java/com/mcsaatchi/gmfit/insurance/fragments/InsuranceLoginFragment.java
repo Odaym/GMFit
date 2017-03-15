@@ -215,7 +215,7 @@ public class InsuranceLoginFragment extends Fragment {
                     saveChosenCountry(countriesResponse, selected);
                   });
 
-              countryPicker.setSelectedItem(countries.get(0));
+              countryPicker.setSelectedItem("");
             }
 
             break;

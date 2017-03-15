@@ -129,19 +129,21 @@ public class Helpers {
   }
 
   public static int determineStatusColor(String status) {
-    switch (status) {
-      case "Processing":
-      case "Submited":
-      case "Dispensed":
-      case "Submitted":
-        return R.color.status_submitted;
-      case "Rejected":
-      case "Pending Deletion":
-        return R.color.status_rejected;
-      case "Accepted":
-      case "Approved":
-      case "Partially Approved":
-        return R.color.status_approved;
+    if (status != null) {
+      switch (status) {
+        case "Processing":
+        case "Submited":
+        case "Dispensed":
+        case "Submitted":
+          return R.color.status_submitted;
+        case "Rejected":
+        case "Pending Deletion":
+          return R.color.status_rejected;
+        case "Accepted":
+        case "Approved":
+        case "Partially Approved":
+          return R.color.status_approved;
+      }
     }
 
     return 0;

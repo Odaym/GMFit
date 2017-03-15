@@ -208,8 +208,6 @@ public class InsuranceDirectoryFragment extends Fragment implements OnMapReadyCa
     if (parentFragmentView != null) {
       switchMapViewBTN = (ImageView) parentFragmentView.findViewById(R.id.switchMapViewBTN);
 
-      switchMapViewBTN.setVisibility(View.VISIBLE);
-
       switchMapViewBTN.setOnClickListener(view -> {
         if (!listingVisible) {
           switchMapViewBTN.setImageResource(R.drawable.ic_show_directory_as_map);
