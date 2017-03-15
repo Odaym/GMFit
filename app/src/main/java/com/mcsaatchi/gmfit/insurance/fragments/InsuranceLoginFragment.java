@@ -57,8 +57,8 @@ public class InsuranceLoginFragment extends Fragment {
 
     ButterKnife.bind(this, fragmentView);
 
-    memberIdET.setText("91071403");
-    passwordET.setText("1982");
+    memberIdET.setText("2012250");
+    passwordET.setText("odayoday");
 
     allFields.add(memberIdET);
     allFields.add(passwordET);
@@ -89,6 +89,7 @@ public class InsuranceLoginFragment extends Fragment {
     final ProgressDialog waitingDialog = new ProgressDialog(getActivity());
     waitingDialog.setTitle(getString(R.string.signing_in_dialog_title));
     waitingDialog.setMessage(getString(R.string.please_wait_dialog_message));
+    waitingDialog.setCancelable(false);
     waitingDialog.show();
 
     final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
@@ -144,7 +145,7 @@ public class InsuranceLoginFragment extends Fragment {
 
                 break;
               case 449:
-                alertDialog.setMessage(getString(R.string.login_failed_wrong_credentials));
+                alertDialog.setMessage(Helpers.provideErrorStringFromJSON(response.errorBody()));
                 alertDialog.show();
                 break;
             }

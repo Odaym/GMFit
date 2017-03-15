@@ -4,15 +4,20 @@ import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.rest.InquiriesListResponse;
+import com.mcsaatchi.gmfit.architecture.rest.InquiriesListResponseInnerData;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
+import com.mcsaatchi.gmfit.insurance.adapters.InquiryStatusAdapter;
+import java.util.ArrayList;
+import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -21,6 +26,7 @@ import timber.log.Timber;
 public class InquiryStatusListActivity extends BaseActivity {
   @Bind(R.id.inquiriesRecyclerView) RecyclerView inquiriesRecyclerView;
   @Bind(R.id.toolbar) Toolbar toolbar;
+  private InquiryStatusAdapter statusAdapter;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -58,6 +64,19 @@ public class InquiryStatusListActivity extends BaseActivity {
 
             switch (response.code()) {
               case 200:
+
+                List<InquiriesListResponseInnerData> inquiriesList = new ArrayList<>();
+
+                inquiriesList.add(response.body().getData().getBody().getData());
+
+                statusAdapter =
+                    new InquiryStatusAdapter(InquiryStatusListActivity.this, inquiriesList);
+
+                inquiriesRecyclerView.setLayoutManager(
+                    new LinearLayoutManager(InquiryStatusListActivity.this));
+                inquiriesRecyclerView.setHasFixedSize(true);
+                inquiriesRecyclerView.setAdapter(statusAdapter);
+
                 //Intent intent = new Intent(getActivity(), PDFViewerActivity.class);
                 //intent.putExtra("TITLE", "Card Details");
                 //intent.putExtra("PDF",

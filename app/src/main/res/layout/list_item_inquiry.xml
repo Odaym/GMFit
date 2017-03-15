@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/medications_list_row_item_height"
+    android:background="@color/white"
+    android:orientation="vertical"
+    >
+
+  <RelativeLayout
+      android:id="@+id/parentLayout"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_marginStart="@dimen/default_margin_2"
+      android:background="?android:attr/selectableItemBackground"
+      android:clickable="true"
+      android:focusable="true"
+      >
+
+    <TextView
+        android:id="@+id/requestTitleTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/default_margin_1"
+        android:paddingTop="@dimen/default_margin_1"
+        android:textColor="@android:color/black"
+        />
+
+    <LinearLayout
+        android:id="@+id/categoriesLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/requestTitleTV"
+        android:orientation="horizontal"
+        >
+
+      <TextView
+          android:id="@+id/requestCategoryTV"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:paddingBottom="@dimen/default_margin_1"
+          android:textSize="12sp"
+          />
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginEnd="@dimen/default_margin_1"
+          android:layout_marginStart="@dimen/default_margin_1"
+          android:text="-"
+          />
+
+      <TextView
+          android:id="@+id/requestSubCategoryTV"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:textSize="12sp"
+          />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/requestCreatedOnTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/categoriesLayout"
+        android:textSize="12sp"
+        />
+
+    <LinearLayout
+        android:id="@+id/arrowLayout"
+        android:layout_width="@dimen/right_arrow_layout_width"
+        android:layout_height="match_parent"
+        android:layout_alignParentEnd="true"
+        android:layout_gravity="end|center_vertical"
+        android:background="@color/much_lighter_gray"
+        android:gravity="center"
+        >
+
+      <ImageView
+          android:layout_width="@dimen/far_right_arrow_icon_dimens"
+          android:layout_height="@dimen/far_right_arrow_icon_dimens"
+          android:src="@drawable/ic_arrow_right_blue"
+          />
+    </LinearLayout>
+  </RelativeLayout>
+
+  <View
+      android:layout_width="match_parent"
+      android:layout_height="1dp"
+      android:layout_alignParentBottom="true"
+      android:background="@color/offwhite_background_gray"
+      />
+
+</RelativeLayout>

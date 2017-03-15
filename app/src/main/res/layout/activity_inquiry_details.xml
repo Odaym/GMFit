@@ -1,0 +1,353 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/insurance_background"
+    android:orientation="vertical"
+    >
+
+  <FrameLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:fitsSystemWindows="true"
+      >
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
+        custom:theme="@style/TransparentToolbar"
+        />
+  </FrameLayout>
+
+  <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:custom="http://schemas.android.com/apk/res-auto"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:background="@color/offwhite_background_gray"
+      >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+
+      <com.mcsaatchi.gmfit.insurance.widget.ItemHeader
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          custom:header_text="Request Status"
+          />
+
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="@dimen/insurance_input_row_height"
+          >
+
+        <TextView
+            android:layout_width="@dimen/add_medication_fields_width"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:gravity="center_vertical"
+            android:paddingStart="@dimen/default_margin_2"
+            android:text="@string/status_input_label"
+            />
+
+        <TextView
+            android:id="@+id/statusValueTV"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="5"
+            android:background="@color/much_lighter_gray"
+            android:gravity="center_vertical"
+            android:paddingStart="@dimen/default_margin_2"
+            />
+      </LinearLayout>
+
+      <View
+          android:layout_width="match_parent"
+          android:layout_height="1dp"
+          android:background="@color/offwhite_background_gray"
+          />
+
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="@dimen/insurance_input_row_height"
+          >
+
+        <TextView
+            android:layout_width="@dimen/insurance_input_row_width"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:gravity="center_vertical"
+            android:paddingStart="@dimen/default_margin_2"
+            android:text="Submitted On"
+            />
+
+        <TextView
+            android:id="@+id/submittedOnTV"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="5"
+            android:background="@color/much_lighter_gray"
+            android:enabled="false"
+            android:gravity="center_vertical"
+            android:paddingStart="@dimen/default_margin_2"
+            android:textColor="@color/black_alpha_50"
+            />
+      </LinearLayout>
+
+      <View
+          android:layout_width="match_parent"
+          android:layout_height="1dp"
+          android:background="@color/offwhite_background_gray"
+          />
+
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="@dimen/insurance_input_row_height"
+          >
+
+        <TextView
+            android:layout_width="@dimen/insurance_input_row_width"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:gravity="center_vertical"
+            android:paddingStart="@dimen/default_margin_2"
+            android:text="Closed On"
+            />
+
+        <TextView
+            android:id="@+id/closedOnTV"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="5"
+            android:background="@color/much_lighter_gray"
+            android:enabled="false"
+            android:gravity="center_vertical"
+            android:paddingStart="@dimen/default_margin_2"
+            android:textColor="@color/black_alpha_50"
+            />
+      </LinearLayout>
+
+      <View
+          android:layout_width="match_parent"
+          android:layout_height="1dp"
+          android:layout_marginBottom="@dimen/default_margin_2"
+          android:background="@color/offwhite_background_gray"
+          />
+
+      <com.mcsaatchi.gmfit.insurance.widget.ItemHeader
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          custom:header_text="Your Info"
+          />
+
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="@dimen/insurance_input_row_height"
+          >
+
+        <TextView
+            android:layout_width="@dimen/add_medication_fields_width"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:gravity="center_vertical"
+            android:paddingStart="@dimen/default_margin_2"
+            android:text="Full Name"
+            />
+
+        <TextView
+            android:id="@+id/fullNameTV"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="5"
+            android:background="@color/much_lighter_gray"
+            android:enabled="false"
+            android:gravity="center_vertical"
+            android:paddingStart="@dimen/default_margin_2"
+            />
+      </LinearLayout>
+
+      <View
+          android:layout_width="match_parent"
+          android:layout_height="1dp"
+          android:background="@color/offwhite_background_gray"
+          />
+
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="@dimen/insurance_input_row_height"
+          >
+
+        <TextView
+            android:layout_width="@dimen/insurance_input_row_width"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:gravity="center_vertical"
+            android:paddingStart="@dimen/default_margin_2"
+            android:text="Card Number"
+            />
+
+        <TextView
+            android:id="@+id/cardNumberTV"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="5"
+            android:background="@color/much_lighter_gray"
+            android:enabled="false"
+            android:gravity="center_vertical"
+            android:paddingStart="@dimen/default_margin_2"
+            android:textColor="@color/black_alpha_50"
+            />
+      </LinearLayout>
+
+      <View
+          android:layout_width="match_parent"
+          android:layout_height="1dp"
+          android:background="@color/offwhite_background_gray"
+          />
+
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="@dimen/insurance_input_row_height"
+          >
+
+        <TextView
+            android:layout_width="@dimen/insurance_input_row_width"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:gravity="center_vertical"
+            android:paddingStart="@dimen/default_margin_2"
+            android:text="Risk Carrier"
+            />
+
+        <TextView
+            android:id="@+id/riskCarrierTV"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="5"
+            android:background="@color/much_lighter_gray"
+            android:enabled="false"
+            android:gravity="center_vertical"
+            android:paddingStart="@dimen/default_margin_2"
+            android:textColor="@color/black_alpha_50"
+            />
+      </LinearLayout>
+
+      <View
+          android:layout_width="match_parent"
+          android:layout_height="1dp"
+          android:layout_marginBottom="@dimen/default_margin_2"
+          android:background="@color/offwhite_background_gray"
+          />
+
+      <com.mcsaatchi.gmfit.insurance.widget.ItemHeader
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          custom:header_text="Request Details"
+          />
+
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="@dimen/insurance_input_row_height"
+          >
+
+        <TextView
+            android:layout_width="@dimen/add_medication_fields_width"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:gravity="center_vertical"
+            android:paddingStart="@dimen/default_margin_2"
+            android:text="Category"
+            />
+
+        <TextView
+            android:id="@+id/categoryTV"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="5"
+            android:background="@color/much_lighter_gray"
+            android:enabled="false"
+            android:gravity="center_vertical"
+            android:paddingStart="@dimen/default_margin_2"
+            android:textColor="@color/black"
+            />
+      </LinearLayout>
+
+      <View
+          android:layout_width="match_parent"
+          android:layout_height="1dp"
+          android:background="@color/offwhite_background_gray"
+          />
+
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="@dimen/insurance_input_row_height"
+          >
+
+        <TextView
+            android:layout_width="@dimen/add_medication_fields_width"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:gravity="center_vertical"
+            android:paddingStart="@dimen/default_margin_2"
+            android:text="Subcategory"
+            />
+
+        <TextView
+            android:id="@+id/subcategoryTV"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="5"
+            android:background="@color/much_lighter_gray"
+            android:enabled="false"
+            android:gravity="center_vertical"
+            android:paddingStart="@dimen/default_margin_2"
+            android:textColor="@color/black"
+            />
+      </LinearLayout>
+
+      <View
+          android:layout_width="match_parent"
+          android:layout_height="1dp"
+          android:background="@color/offwhite_background_gray"
+          />
+
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="@dimen/insurance_input_row_height"
+          >
+
+        <TextView
+            android:layout_width="@dimen/add_medication_fields_width"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:gravity="center_vertical"
+            android:paddingStart="@dimen/default_margin_2"
+            android:text="Area"
+            />
+
+        <TextView
+            android:id="@+id/areaTV"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="5"
+            android:background="@color/much_lighter_gray"
+            android:enabled="false"
+            android:gravity="center_vertical"
+            android:paddingStart="@dimen/default_margin_2"
+            android:textColor="@color/black"
+            />
+      </LinearLayout>
+
+      <View
+          android:layout_width="match_parent"
+          android:layout_height="1dp"
+          android:background="@color/offwhite_background_gray"
+          />
+
+    </LinearLayout>
+  </ScrollView>
+</LinearLayout>

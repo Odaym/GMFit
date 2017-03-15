@@ -266,6 +266,12 @@
 
     <activity
         android:name=".insurance.activities.inquiry.InquiryStatusListActivity"
+        android:exported="true"
+        android:screenOrientation="portrait"
+        android:theme="@style/No_Action_Bar_Theme"/>
+
+    <activity
+        android:name=".insurance.activities.inquiry.InquiryDetailsActivity"
         android:screenOrientation="portrait"
         android:theme="@style/No_Action_Bar_Theme"/>
 
@@ -314,7 +320,7 @@
 
     <meta-data
         android:name="com.google.android.geo.API_KEY"
-        android:value="AIzaSyDzwRq628GqkaxN3cZQoTuAergqlZJms6k	"/>
+        android:value="AIzaSyBzptbw8-xsnunOTUpQfAM7xe5YyGk87i4	"/>
 
   </application>
 

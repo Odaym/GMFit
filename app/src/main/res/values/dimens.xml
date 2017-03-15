@@ -159,7 +159,7 @@
   <dimen name="no_medications_found_magnifier_dimens">150dp</dimen>
   <dimen name="add_medication_row_height">70dp</dimen>
   <dimen name="reminders_recyclerview_height">200dp</dimen>
-  <dimen name="insurance_home_gridview_height">800dp</dimen>
+  <dimen name="insurance_home_grid_padding_bottom">50dp</dimen>
 
   <!-- INSURANCE DIRECTORY -->
   <dimen name="clinic_address_row_height">70dp</dimen>

@@ -73,13 +73,15 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/insurancePathsGridView"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/insurance_home_gridview_height"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/cardDetailsLayout"
         android:layout_gravity="center"
         android:background="@color/white"
+        android:clipToPadding="false"
+        android:paddingBottom="@dimen/insurance_home_grid_padding_bottom"
         android:paddingStart="@dimen/default_margin_2_5"
         android:paddingTop="@dimen/default_margin_2"
-        android:scrollbars="vertical"
+        android:scrollbars="none"
         />
   </RelativeLayout>
 </RelativeLayout>

@@ -39,6 +39,7 @@ public class ApprovalRequestsStatusListActivity extends BaseActivity {
     final ProgressDialog waitingDialog = new ProgressDialog(this);
     waitingDialog.setTitle(getResources().getString(R.string.loading_data_dialog_title));
     waitingDialog.setMessage(getResources().getString(R.string.please_wait_dialog_message));
+    waitingDialog.setCancelable(false);
     waitingDialog.show();
 
     final AlertDialog alertDialog = new AlertDialog.Builder(this).create();

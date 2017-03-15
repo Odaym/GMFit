@@ -140,6 +140,7 @@ public class Helpers {
         case "Pending Deletion":
           return R.color.status_rejected;
         case "Accepted":
+        case "Active":
         case "Approved":
         case "Partially Approved":
           return R.color.status_approved;

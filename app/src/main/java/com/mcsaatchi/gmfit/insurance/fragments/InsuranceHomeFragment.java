@@ -243,6 +243,8 @@ public class InsuranceHomeFragment extends Fragment {
             .commitAllowingStateLoss();
 
         contractChooserDialog.dismiss();
+
+        contractSelectorBTN.setVisibility(View.GONE);
       });
     }
   }
