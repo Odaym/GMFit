@@ -39,7 +39,8 @@ public class InquiryDetailsActivity extends BaseActivity {
         setupToolbar(getClass().getSimpleName(), toolbar, inquiryItem.getTitle(), true);
 
         if (inquiryItem.getStatus() != null) {
-          statusValueTV.setTextColor(Helpers.determineStatusColor(inquiryItem.getStatus()));
+          statusValueTV.setTextColor(
+              getResources().getColor(Helpers.determineStatusColor(inquiryItem.getStatus())));
           statusValueTV.setText(inquiryItem.getStatus());
         }
 

@@ -32,6 +32,7 @@ import org.joda.time.format.DateTimeFormatter;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import timber.log.Timber;
 
 public class Helpers {
 
@@ -130,6 +131,8 @@ public class Helpers {
 
   public static int determineStatusColor(String status) {
     if (status != null) {
+      Timber.d("Status is : " + status);
+      
       switch (status) {
         case "Processing":
         case "Submited":

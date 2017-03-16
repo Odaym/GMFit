@@ -78,7 +78,6 @@
             android:layout_height="match_parent"
             android:layout_weight="5"
             android:background="@color/much_lighter_gray"
-            android:enabled="false"
             android:gravity="center_vertical"
             android:paddingStart="@dimen/default_margin_2"
             android:textColor="@color/black_alpha_50"
@@ -111,7 +110,6 @@
             android:layout_height="match_parent"
             android:layout_weight="5"
             android:background="@color/much_lighter_gray"
-            android:enabled="false"
             android:gravity="center_vertical"
             android:paddingStart="@dimen/default_margin_2"
             android:textColor="@color/black_alpha_50"
@@ -151,7 +149,6 @@
             android:layout_height="match_parent"
             android:layout_weight="5"
             android:background="@color/much_lighter_gray"
-            android:enabled="false"
             android:gravity="center_vertical"
             android:paddingStart="@dimen/default_margin_2"
             />
@@ -183,7 +180,6 @@
             android:layout_height="match_parent"
             android:layout_weight="5"
             android:background="@color/much_lighter_gray"
-            android:enabled="false"
             android:gravity="center_vertical"
             android:paddingStart="@dimen/default_margin_2"
             android:textColor="@color/black_alpha_50"
@@ -216,7 +212,6 @@
             android:layout_height="match_parent"
             android:layout_weight="5"
             android:background="@color/much_lighter_gray"
-            android:enabled="false"
             android:gravity="center_vertical"
             android:paddingStart="@dimen/default_margin_2"
             android:textColor="@color/black_alpha_50"
@@ -256,7 +251,6 @@
             android:layout_height="match_parent"
             android:layout_weight="5"
             android:background="@color/much_lighter_gray"
-            android:enabled="false"
             android:gravity="center_vertical"
             android:paddingStart="@dimen/default_margin_2"
             />
@@ -288,7 +282,6 @@
             android:layout_height="match_parent"
             android:layout_weight="5"
             android:background="@color/much_lighter_gray"
-            android:enabled="false"
             android:gravity="center_vertical"
             android:paddingStart="@dimen/default_margin_2"
             />
@@ -320,7 +313,6 @@
             android:layout_height="match_parent"
             android:layout_weight="5"
             android:background="@color/much_lighter_gray"
-            android:enabled="false"
             android:gravity="center_vertical"
             android:paddingStart="@dimen/default_margin_2"
             />
