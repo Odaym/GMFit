@@ -220,5 +220,8 @@ public interface GMFitService {
       @Body ApiCallsHandler.InquiriesListRequest inquiriesListRequest);
 
   @POST("insurance/expert-system") Call<CounsellingInformationResponse> getCounsellingInformation();
+
+  @POST("insurance/crm/request/notes") Call<CRMNotesResponse> getCRMIncidentNotes(
+      @Body ApiCallsHandler.CRMNotesRequest crmNotesRequest);
   // SUBMISSIONS AND LISTINGS
 }

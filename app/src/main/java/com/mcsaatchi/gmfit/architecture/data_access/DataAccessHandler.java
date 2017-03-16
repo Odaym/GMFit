@@ -5,6 +5,7 @@ import com.mcsaatchi.gmfit.architecture.GMFitApplication;
 import com.mcsaatchi.gmfit.architecture.rest.ActivityLevelsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponse;
 import com.mcsaatchi.gmfit.architecture.rest.CRMCategoriesResponse;
+import com.mcsaatchi.gmfit.architecture.rest.CRMNotesResponse;
 import com.mcsaatchi.gmfit.architecture.rest.CertainPDFResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ChartMetricBreakdownResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ChartsBySectionResponse;
@@ -381,5 +382,9 @@ public class DataAccessHandler {
 
   public void getCounsellingInformation(final Callback<CounsellingInformationResponse> callback) {
     apiCallsHandler.getCounsellingInformation(callback);
+  }
+
+  public void getCRMIncidentNotes(String incidentId, final Callback<CRMNotesResponse> callback) {
+    apiCallsHandler.getCRMIncidentNotes(incidentId, callback);
   }
 }

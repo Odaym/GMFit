@@ -5,6 +5,7 @@ import com.mcsaatchi.gmfit.architecture.GMFitApplication;
 import com.mcsaatchi.gmfit.architecture.rest.ActivityLevelsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponse;
 import com.mcsaatchi.gmfit.architecture.rest.CRMCategoriesResponse;
+import com.mcsaatchi.gmfit.architecture.rest.CRMNotesResponse;
 import com.mcsaatchi.gmfit.architecture.rest.CertainPDFResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ChartMetricBreakdownResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ChartsBySectionResponse;
@@ -1133,6 +1134,21 @@ public class ApiCallsHandler {
     });
   }
 
+  void getCRMIncidentNotes(String incidentId, final Callback<CRMNotesResponse> callback) {
+    Call<CRMNotesResponse> apiCall =
+        restClient.getGMFitService().getCRMIncidentNotes(new CRMNotesRequest(incidentId));
+
+    apiCall.enqueue(new Callback<CRMNotesResponse>() {
+      @Override
+      public void onResponse(Call<CRMNotesResponse> call, Response<CRMNotesResponse> response) {
+        callback.onResponse(call, response);
+      }
+
+      @Override public void onFailure(Call<CRMNotesResponse> call, Throwable t) {
+      }
+    });
+  }
+
   public class UpdateMetricsRequest {
     final String[] slug;
     final Number[] value;
@@ -1482,6 +1498,14 @@ public class ApiCallsHandler {
     public InquiriesListRequest(String incidentId, String crm_country) {
       this.incidentId = incidentId;
       this.crm_country = crm_country;
+    }
+  }
+
+  public class CRMNotesRequest {
+    private String incidentId;
+
+    public CRMNotesRequest(String incidentId) {
+      this.incidentId = incidentId;
     }
   }
 }

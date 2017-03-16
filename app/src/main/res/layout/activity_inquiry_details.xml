@@ -259,7 +259,6 @@
             android:enabled="false"
             android:gravity="center_vertical"
             android:paddingStart="@dimen/default_margin_2"
-            android:textColor="@color/black"
             />
       </LinearLayout>
 
@@ -292,7 +291,6 @@
             android:enabled="false"
             android:gravity="center_vertical"
             android:paddingStart="@dimen/default_margin_2"
-            android:textColor="@color/black"
             />
       </LinearLayout>
 
@@ -325,7 +323,6 @@
             android:enabled="false"
             android:gravity="center_vertical"
             android:paddingStart="@dimen/default_margin_2"
-            android:textColor="@color/black"
             />
       </LinearLayout>
 
