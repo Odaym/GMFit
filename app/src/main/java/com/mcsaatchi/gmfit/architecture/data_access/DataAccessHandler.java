@@ -12,6 +12,7 @@ import com.mcsaatchi.gmfit.architecture.rest.ChronicTreatmentDetailsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ChronicTreatmentListResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ClaimListDetailsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ClaimsListResponse;
+import com.mcsaatchi.gmfit.architecture.rest.CounsellingInformationResponse;
 import com.mcsaatchi.gmfit.architecture.rest.CountriesListResponse;
 import com.mcsaatchi.gmfit.architecture.rest.CreateNewRequestResponse;
 import com.mcsaatchi.gmfit.architecture.rest.DefaultGetResponse;
@@ -376,5 +377,9 @@ public class DataAccessHandler {
   public void getInquiriesList(String incidentId, String crm_country,
       final Callback<InquiriesListResponse> callback) {
     apiCallsHandler.getInquiriesList(incidentId, crm_country, callback);
+  }
+
+  public void getCounsellingInformation(final Callback<CounsellingInformationResponse> callback) {
+    apiCallsHandler.getCounsellingInformation(callback);
   }
 }

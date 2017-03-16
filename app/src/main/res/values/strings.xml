@@ -233,6 +233,7 @@
   <string name="my_weight_chart_label">My Weight</string>
   <string name="update_weight_label">+ Update</string>
   <string name="search_tests_hint">Find a test from the list below</string>
+  <string name="counselling_information_activity_title">Counselling Information</string>
 
   <!-- PILL REMINDER ACTIVITY -->
   <string name="pill_reminder_activity_title">Pill Reminder</string>

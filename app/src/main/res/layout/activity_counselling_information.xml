@@ -15,18 +15,26 @@
 
     <android.support.v7.widget.Toolbar
         xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:theme="@style/TransparentToolbar"
+        android:theme="@style/TransparentToolbar"
         />
   </FrameLayout>
 
-  <android.support.v7.widget.RecyclerView
-      android:id="@+id/daysRecyclerView"
+  <RelativeLayout
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:background="@color/offwhite_background_gray"
-      />
+      android:background="@color/white"
+      android:paddingEnd="@dimen/default_margin_1"
+      android:paddingStart="@dimen/default_margin_1"
+      android:paddingTop="@dimen/default_margin_1"
+      >
+
+    <TextView
+        android:id="@+id/counsellingInformationTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        />
+  </RelativeLayout>
 </LinearLayout>

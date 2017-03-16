@@ -168,6 +168,11 @@ public class AddExistingMedicationActivity extends BaseActivity {
     });
   }
 
+  @OnClick(R.id.counsellingInformationHintTV) public void handleGetCounsellingInformation() {
+    Intent intent = new Intent(this, CounsellingInformationActivity.class);
+    startActivity(intent);
+  }
+
   @OnClick(R.id.timesPerDayMeasurementTV) void showFrequencyTypeDialog() {
     AlertDialog.Builder builderSingle = new AlertDialog.Builder(AddExistingMedicationActivity.this);
     builderSingle.setTitle("Type of frequency\n");
@@ -225,6 +230,10 @@ public class AddExistingMedicationActivity extends BaseActivity {
       Toast.makeText(this, R.string.fill_in_below_fields_hint, Toast.LENGTH_LONG).show();
     } else {
       if (editPurpose) {
+        Timber.d("Purpose is to edit");
+
+        medicationDAO.refresh(medicationItem);
+
         medicationItem.setName(medicineNameET.getText().toString());
         medicationItem.setRemarks(yourNotesET.getText().toString());
         medicationItem.setUnits(Integer.parseInt(unitsET.getText().toString()));
@@ -250,11 +259,10 @@ public class AddExistingMedicationActivity extends BaseActivity {
         if (enableRemindersSwitch.isChecked() && medicationReminders != null) {
           medicationItem.setRemindersEnabled(true);
           assignForeignCollectionToParentObject(medicationItem);
+          setupMedicationReminders(medicationItem.getMedicationReminders().iterator());
         } else {
           medicationItem.setRemindersEnabled(false);
         }
-
-        setupMedicationReminders(medicationItem.getMedicationReminders().iterator());
 
         medicationDAO.update(medicationItem);
       } else {
@@ -279,11 +287,10 @@ public class AddExistingMedicationActivity extends BaseActivity {
         if (enableRemindersSwitch.isChecked() && medicationReminders != null) {
           medication.setRemindersEnabled(true);
           assignForeignCollectionToParentObject(medication);
+          setupMedicationReminders(medication.getMedicationReminders().iterator());
         } else {
           medication.setRemindersEnabled(false);
         }
-
-        setupMedicationReminders(medication.getMedicationReminders().iterator());
 
         medicationDAO.update(medication);
       }

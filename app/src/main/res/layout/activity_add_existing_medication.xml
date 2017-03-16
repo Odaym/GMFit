@@ -61,6 +61,47 @@
             />
       </LinearLayout>
 
+      <View
+          android:layout_width="match_parent"
+          android:layout_height="1dp"
+          android:background="@color/offwhite_background_gray"
+          />
+
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="@dimen/add_medication_row_height"
+          android:background="@color/white"
+          android:paddingStart="@dimen/default_margin_2"
+          >
+
+        <TextView
+            android:id="@+id/counsellingInformationHintTV"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center_vertical"
+            android:text="@string/counselling_information_label"
+            />
+
+        <LinearLayout
+            android:layout_width="@dimen/right_arrow_layout_width"
+            android:layout_height="match_parent"
+            android:layout_gravity="end"
+            android:background="@color/much_lighter_gray"
+            android:gravity="center"
+            >
+
+          <ImageView
+              android:layout_width="@dimen/far_right_arrow_icon_dimens"
+              android:layout_height="@dimen/far_right_arrow_icon_dimens"
+              android:src="@drawable/ic_right_arrow_green"
+              />
+        </LinearLayout>
+      </LinearLayout>
+
       <LinearLayout
           android:id="@+id/chartTopBarLayout_POSOLOGY"
           android:layout_width="match_parent"
@@ -398,6 +439,9 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
             android:gravity="center_vertical"
             android:text="@string/check_compatibility_label"
             />

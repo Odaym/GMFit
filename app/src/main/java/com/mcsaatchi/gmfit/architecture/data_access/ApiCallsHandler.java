@@ -12,6 +12,7 @@ import com.mcsaatchi.gmfit.architecture.rest.ChronicTreatmentDetailsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ChronicTreatmentListResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ClaimListDetailsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ClaimsListResponse;
+import com.mcsaatchi.gmfit.architecture.rest.CounsellingInformationResponse;
 import com.mcsaatchi.gmfit.architecture.rest.CountriesListResponse;
 import com.mcsaatchi.gmfit.architecture.rest.CreateNewRequestResponse;
 import com.mcsaatchi.gmfit.architecture.rest.DefaultGetResponse;
@@ -1113,6 +1114,21 @@ public class ApiCallsHandler {
       }
 
       @Override public void onFailure(Call<InquiriesListResponse> call, Throwable t) {
+      }
+    });
+  }
+
+  void getCounsellingInformation(final Callback<CounsellingInformationResponse> callback) {
+    Call<CounsellingInformationResponse> apiCall =
+        restClient.getGMFitService().getCounsellingInformation();
+
+    apiCall.enqueue(new Callback<CounsellingInformationResponse>() {
+      @Override public void onResponse(Call<CounsellingInformationResponse> call,
+          Response<CounsellingInformationResponse> response) {
+        callback.onResponse(call, response);
+      }
+
+      @Override public void onFailure(Call<CounsellingInformationResponse> call, Throwable t) {
       }
     });
   }
