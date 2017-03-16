@@ -110,8 +110,8 @@ public class InsuranceOperationWidgetsGridAdapter
                 Intent intent = new Intent(context, PDFViewerActivity.class);
                 intent.putExtra("TITLE",
                     context.getResources().getString(R.string.policy_limitation_activity_title));
-                  intent.putExtra("PDF",
-                      response.body().getData().getBody().getData().replace("\\", ""));
+                intent.putExtra("PDF",
+                    response.body().getData().getBody().getData().replace("\\", ""));
 
                 fragmentActivity.startActivity(intent);
                 break;
@@ -159,8 +159,8 @@ public class InsuranceOperationWidgetsGridAdapter
                 Intent intent = new Intent(context, PDFViewerActivity.class);
                 intent.putExtra("TITLE",
                     context.getResources().getString(R.string.coverage_description_activity_title));
-                  intent.putExtra("PDF",
-                      response.body().getData().getBody().getData().replace("\\", ""));
+                intent.putExtra("PDF",
+                    response.body().getData().getBody().getData().replace("\\", ""));
 
                 fragmentActivity.startActivity(intent);
                 break;
@@ -208,8 +208,8 @@ public class InsuranceOperationWidgetsGridAdapter
                 Intent intent = new Intent(context, PDFViewerActivity.class);
                 intent.putExtra("TITLE",
                     context.getResources().getString(R.string.members_guide_activity_title));
-                  intent.putExtra("PDF",
-                      response.body().getData().getBody().getData().replace("\\", ""));
+                intent.putExtra("PDF",
+                    response.body().getData().getBody().getData().replace("\\", ""));
 
                 fragmentActivity.startActivity(intent);
                 break;

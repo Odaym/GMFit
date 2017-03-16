@@ -72,9 +72,11 @@ public class StatusAdapter extends RecyclerView.Adapter<StatusAdapter.ViewHolder
       }
       amountTv.setText(String.valueOf(reimbursement.getAmount()));
 
-      statusTv.setTextColor(
-          context.getResources().getColor(Helpers.determineStatusColor(reimbursement.getStatus())));
-      statusTv.setText(reimbursement.getStatus());
+      if (reimbursement.getStatus() != null) {
+        statusTv.setTextColor(context.getResources()
+            .getColor(Helpers.determineStatusColor(reimbursement.getStatus())));
+        statusTv.setText(reimbursement.getStatus());
+      }
     }
 
     void addListener(final ClaimsListResponseDatum reimbursement, final int position,

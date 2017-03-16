@@ -8,21 +8,7 @@
     android:orientation="vertical"
     >
 
-  <FrameLayout
-      xmlns:android="http://schemas.android.com/apk/res/android"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      >
-
-    <android.support.v7.widget.Toolbar
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:theme="@style/TransparentToolbar"
-        />
-
-  </FrameLayout>
+  <include layout="@layout/app_toolbar"/>
 
   <TextView
       android:layout_width="match_parent"

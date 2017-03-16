@@ -79,5 +79,4 @@ public class CustomCountryPicker extends LinearLayout implements View.OnClickLis
   public interface OnDropDownClickListener {
     void onClick(int index, String selected);
   }
-
 }

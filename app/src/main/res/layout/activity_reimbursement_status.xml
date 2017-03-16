@@ -11,21 +11,7 @@
     tools:context="com.mcsaatchi.gmfit.insurance.activities.reimbursement.ReimbursementStatusDetailsActivity"
     >
 
-  <FrameLayout
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:fitsSystemWindows="true"
-      >
-
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fitsSystemWindows="true"
-        custom:theme="@style/TransparentToolbar"
-        />
-
-  </FrameLayout>
+  <include layout="@layout/app_toolbar"/>
 
   <android.support.v4.widget.NestedScrollView
       android:layout_width="match_parent"

@@ -6,21 +6,7 @@
     android:orientation="vertical"
     >
 
-  <FrameLayout
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:fitsSystemWindows="true"
-      >
-
-    <android.support.v7.widget.Toolbar
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/TransparentToolbar"
-        />
-
-  </FrameLayout>
+  <include layout="@layout/app_toolbar"/>
 
   <WebView
       android:id="@+id/metaTextsWebView"

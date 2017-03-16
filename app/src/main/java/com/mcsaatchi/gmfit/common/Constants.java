@@ -27,7 +27,6 @@ public class Constants {
   public static final String EXTRAS_INSURANCE_COUNTRY_ISO_CODE = "insurance_country_iso_code";
   public static final String EXTRAS_INSURANCE_COUNTRY_CRM_CODE = "insurance_country_crm_code";
 
-
   public static final String EXTRAS_FIRST_APP_LAUNCH = "first_app_launch";
 
   public static final int WAIT_TIME_BEFORE_CHECKING_METRICS_SERVICE = 90000;
