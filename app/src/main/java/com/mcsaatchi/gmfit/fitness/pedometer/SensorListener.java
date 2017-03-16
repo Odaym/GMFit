@@ -208,14 +208,13 @@ public class SensorListener extends Service implements SensorEventListener {
               Response<DefaultGetResponse> response) {
             switch (response.code()) {
               case 200:
-
                 Calendar c = Calendar.getInstance();
                 int hour = c.get(Calendar.HOUR_OF_DAY);
                 int minute = c.get(Calendar.MINUTE);
                 int second = c.get(Calendar.SECOND);
 
-                //If current time is between 12AM and 12:02AM, clear metrics
-                if (hour * 3600 + minute * 60 + second < 120) {
+                //If current time is between 12AM and 12:05AM, clear metrics
+                if (hour * 3600 + minute * 60 + second < 600) {
                   Timber.d("Time is between, wiping metrics");
                   wipeOutFitnessMetricsAtMidnight();
                   sendOutEventBusEvents();
