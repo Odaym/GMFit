@@ -13,6 +13,7 @@
       />
 
   <ScrollView
+      android:id="@+id/mainScrollView"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:layout_below="@+id/toolbarFrameLayout"
@@ -46,11 +47,22 @@
 
     <EditText
         android:id="@+id/yourReplyET"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="@dimen/login_button_height"
+        android:layout_weight="1"
         android:background="@color/white"
         android:hint="@string/write_reply_hint"
         android:paddingStart="@dimen/default_margin_1"
         />
+
+    <ImageButton
+        android:id="@+id/sendMessageIV"
+        android:layout_width="@dimen/attached_images_dimens"
+        android:layout_height="@dimen/attached_images_dimens"
+        android:layout_gravity="end"
+        android:background="@color/white"
+        android:src="@android:drawable/ic_menu_send"
+        />
+
   </LinearLayout>
 </RelativeLayout>

@@ -3,6 +3,7 @@ package com.mcsaatchi.gmfit.architecture.data_access;
 import android.content.Context;
 import com.mcsaatchi.gmfit.architecture.GMFitApplication;
 import com.mcsaatchi.gmfit.architecture.rest.ActivityLevelsResponse;
+import com.mcsaatchi.gmfit.architecture.rest.AddCRMNoteResponse;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponse;
 import com.mcsaatchi.gmfit.architecture.rest.CRMCategoriesResponse;
 import com.mcsaatchi.gmfit.architecture.rest.CRMNotesResponse;
@@ -1149,6 +1150,23 @@ public class ApiCallsHandler {
     });
   }
 
+  void addCRMNote(String incidentId, String subject, String noteText, String mimeType,
+      String fileName, String documentBody, final Callback<AddCRMNoteResponse> callback) {
+    Call<AddCRMNoteResponse> apiCall = restClient.getGMFitService()
+        .addCRMNote(
+            new AddCRMNoteRequest(incidentId, subject, noteText, mimeType, fileName, documentBody));
+
+    apiCall.enqueue(new Callback<AddCRMNoteResponse>() {
+      @Override
+      public void onResponse(Call<AddCRMNoteResponse> call, Response<AddCRMNoteResponse> response) {
+        callback.onResponse(call, response);
+      }
+
+      @Override public void onFailure(Call<AddCRMNoteResponse> call, Throwable t) {
+      }
+    });
+  }
+
   public class UpdateMetricsRequest {
     final String[] slug;
     final Number[] value;
@@ -1506,6 +1524,25 @@ public class ApiCallsHandler {
 
     public CRMNotesRequest(String incidentId) {
       this.incidentId = incidentId;
+    }
+  }
+
+  public class AddCRMNoteRequest {
+    String incidentId;
+    String subject;
+    String noteText;
+    String mimeType;
+    String fileName;
+    String documentBody;
+
+    public AddCRMNoteRequest(String incidentId, String subject, String noteText, String mimeType,
+        String fileName, String documentBody) {
+      this.incidentId = incidentId;
+      this.subject = subject;
+      this.noteText = noteText;
+      this.mimeType = mimeType;
+      this.fileName = fileName;
+      this.documentBody = documentBody;
     }
   }
 }

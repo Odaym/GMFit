@@ -319,6 +319,7 @@
   <string name="user_profile_save_changes">Save</string>
   <string name="updating_user_profile_dialog_title">Updating your profile</string>
   <string name="loading_data_dialog_title">Loading data</string>
+  <string name="submitting_data_dialog_title">Submitting your data</string>
   <string name="enable_reminders_switch_hint">Enable Reminders</string>
   <string name="food_logging_section_title">Food Logging</string>
   <string name="choose_picture_from_gallery">Choose from gallery</string>

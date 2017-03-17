@@ -15,6 +15,8 @@
       android:name="android.hardware.sensor.stepcounter"
       android:required="true"/>
 
+  <uses-feature android:name="android.hardware.location.gps"/>
+
   <application
       android:name=".architecture.GMFitApplication"
       android:allowBackup="true"

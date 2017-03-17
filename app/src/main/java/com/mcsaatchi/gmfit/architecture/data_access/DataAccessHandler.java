@@ -3,6 +3,7 @@ package com.mcsaatchi.gmfit.architecture.data_access;
 import android.content.Context;
 import com.mcsaatchi.gmfit.architecture.GMFitApplication;
 import com.mcsaatchi.gmfit.architecture.rest.ActivityLevelsResponse;
+import com.mcsaatchi.gmfit.architecture.rest.AddCRMNoteResponse;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponse;
 import com.mcsaatchi.gmfit.architecture.rest.CRMCategoriesResponse;
 import com.mcsaatchi.gmfit.architecture.rest.CRMNotesResponse;
@@ -386,5 +387,11 @@ public class DataAccessHandler {
 
   public void getCRMIncidentNotes(String incidentId, final Callback<CRMNotesResponse> callback) {
     apiCallsHandler.getCRMIncidentNotes(incidentId, callback);
+  }
+
+  public void addCRMNote(String incidentId, String subject, String noteText, String mimeType,
+      String fileName, String documentBody, final Callback<AddCRMNoteResponse> callback) {
+    apiCallsHandler.addCRMNote(incidentId, subject, noteText, mimeType, fileName, documentBody,
+        callback);
   }
 }

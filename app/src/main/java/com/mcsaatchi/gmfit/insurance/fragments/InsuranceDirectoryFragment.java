@@ -143,7 +143,7 @@ public class InsuranceDirectoryFragment extends Fragment implements OnMapReadyCa
         if (ActivityCompat.checkSelfPermission(getActivity(),
             Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
-          Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+          Location location = lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
           userLatLong[0] = location.getLatitude();
           userLatLong[1] = location.getLongitude();
 
@@ -290,11 +290,12 @@ public class InsuranceDirectoryFragment extends Fragment implements OnMapReadyCa
   private void getUserLocation() {
     if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
         != PackageManager.PERMISSION_GRANTED) {
+      Timber.d("Do we have permission?");
       requestPermissions(new String[] {
           Manifest.permission.ACCESS_FINE_LOCATION
       }, PERMISSION_LOCATION_REQUEST_CODE);
     } else {
-      Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+      Location location = lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
       userLatLong[0] = location.getLatitude();
       userLatLong[1] = location.getLongitude();
 

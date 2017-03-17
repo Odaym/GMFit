@@ -223,5 +223,8 @@ public interface GMFitService {
 
   @POST("insurance/crm/request/notes") Call<CRMNotesResponse> getCRMIncidentNotes(
       @Body ApiCallsHandler.CRMNotesRequest crmNotesRequest);
+
+  @POST("insurance/crm/request/notes/add") Call<AddCRMNoteResponse> addCRMNote(
+      @Body ApiCallsHandler.AddCRMNoteRequest crmNotesRequest);
   // SUBMISSIONS AND LISTINGS
 }
