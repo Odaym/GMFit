@@ -1,6 +1,5 @@
 package com.mcsaatchi.gmfit.insurance.activities.home;
 
-import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -17,9 +16,6 @@ import com.mcsaatchi.gmfit.architecture.rest.CertainPDFResponse;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import org.joda.time.LocalDate;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -29,8 +25,7 @@ import timber.log.Timber;
 public class SnapshotActivity extends BaseActivity {
   @Bind(R.id.toolbar) Toolbar toolbar;
   @Bind(R.id.webView) WebView webView;
-  @Bind(R.id.startDateTV) TextView startDateTV;
-  @Bind(R.id.endDateTV) TextView endDateTV;
+  @Bind(R.id.selectPeriodTV) TextView selectPeriodTV;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -42,62 +37,23 @@ public class SnapshotActivity extends BaseActivity {
     setupToolbar(getClass().getSimpleName(), toolbar, getString(R.string.snapshot_activity_title),
         true);
 
-    startDateTV.setText(Helpers.formatInsuranceDate(new LocalDate()));
+    selectPeriodTV.setText(Helpers.formatInsuranceDate(new LocalDate()));
 
-    startDateTV.setOnClickListener(view -> {
-      final Calendar c = Calendar.getInstance();
-      int day = c.get(Calendar.DAY_OF_MONTH);
-      int month = c.get(Calendar.MONTH);
-      int year = c.get(Calendar.YEAR);
-      DatePickerDialog datePickerDialog =
-          new DatePickerDialog(SnapshotActivity.this, (datePicker, year12, month12, dayOfMonth) -> {
-            Calendar calendar = Calendar.getInstance();
-            calendar.set(Calendar.YEAR, year12);
-            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-            calendar.set(Calendar.MONTH, month12);
+    selectPeriodTV.setOnClickListener(view -> {
+      final String[] items =
+          new String[] { "1 month", "3 months", "6 months", "12 months", "24 months" };
 
-            Date d = new Date(calendar.getTimeInMillis());
-
-            SimpleDateFormat dateFormatter = new SimpleDateFormat("MMM dd, yyyy");
-            String serviceDateValue = dateFormatter.format(d);
-            startDateTV.setText(serviceDateValue);
-
-            getSnapshot(startDateTV.getText().toString(), endDateTV.getText().toString());
-          }, year, month, day);
-
-      datePickerDialog.show();
+      AlertDialog.Builder builder = new AlertDialog.Builder(SnapshotActivity.this);
+      builder.setTitle("Pick currency")
+          .setItems(items, (dialogInterface, i) -> selectPeriodTV.setText(items[i]));
+      builder.create();
+      builder.show();
     });
 
-    endDateTV.setText(Helpers.formatInsuranceDate(new LocalDate()));
-
-    endDateTV.setOnClickListener(view -> {
-      final Calendar c = Calendar.getInstance();
-      int day = c.get(Calendar.DAY_OF_MONTH);
-      int month = c.get(Calendar.MONTH);
-      int year = c.get(Calendar.YEAR);
-      DatePickerDialog datePickerDialog =
-          new DatePickerDialog(SnapshotActivity.this, (datePicker, year1, month1, dayOfMonth) -> {
-            Calendar calendar = Calendar.getInstance();
-            calendar.set(Calendar.YEAR, year1);
-            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-            calendar.set(Calendar.MONTH, month1);
-
-            Date d = new Date(calendar.getTimeInMillis());
-
-            SimpleDateFormat dateFormatter = new SimpleDateFormat("MMM dd, yyyy");
-            String serviceDateValue = dateFormatter.format(d);
-            endDateTV.setText(serviceDateValue);
-
-            getSnapshot(startDateTV.getText().toString(), endDateTV.getText().toString());
-          }, year, month, day);
-
-      datePickerDialog.show();
-    });
-
-    getSnapshot(startDateTV.getText().toString(), endDateTV.getText().toString());
+    getSnapshot(selectPeriodTV.getText().toString());
   }
 
-  private void getSnapshot(String startDate, String endDate) {
+  private void getSnapshot(String periodSelected) {
     final ProgressDialog waitingDialog = new ProgressDialog(this);
     waitingDialog.setTitle(getString(R.string.loading_data_dialog_title));
     waitingDialog.setMessage(getString(R.string.please_wait_dialog_message));
@@ -113,7 +69,7 @@ public class SnapshotActivity extends BaseActivity {
         });
 
     dataAccessHandler.getSnapshot(prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""),
-        startDate, endDate, new Callback<CertainPDFResponse>() {
+        periodSelected, new Callback<CertainPDFResponse>() {
           @Override public void onResponse(Call<CertainPDFResponse> call,
               Response<CertainPDFResponse> response) {
             switch (response.code()) {

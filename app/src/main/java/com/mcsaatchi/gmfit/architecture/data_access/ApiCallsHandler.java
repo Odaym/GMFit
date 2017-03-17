@@ -1088,10 +1088,9 @@ public class ApiCallsHandler {
     });
   }
 
-  void getSnapshot(String contractNo, String startDate, String endDate,
-      final Callback<CertainPDFResponse> callback) {
-    Call<CertainPDFResponse> apiCall = restClient.getGMFitService()
-        .getSnapshot(new SnapShotRequest(contractNo, startDate, endDate));
+  void getSnapshot(String contractNo, String period, final Callback<CertainPDFResponse> callback) {
+    Call<CertainPDFResponse> apiCall =
+        restClient.getGMFitService().getSnapshot(new SnapShotRequest(contractNo, period));
 
     apiCall.enqueue(new Callback<CertainPDFResponse>() {
       @Override
@@ -1499,13 +1498,11 @@ public class ApiCallsHandler {
 
   public class SnapShotRequest {
     String contractNo;
-    String startDate;
-    String endDate;
+    String period;
 
-    public SnapShotRequest(String contractNo, String startDate, String endDate) {
+    public SnapShotRequest(String contractNo, String period) {
       this.contractNo = contractNo;
-      this.startDate = startDate;
-      this.endDate = endDate;
+      this.period = period;
     }
   }
 

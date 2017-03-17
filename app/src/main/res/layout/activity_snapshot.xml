@@ -28,7 +28,7 @@
           android:background="@color/insurance_transparent_white"
           android:gravity="center_vertical|start"
           android:paddingStart="@dimen/default_margin_2"
-          android:text="@string/start_date_input_label"
+          android:text="@string/select_period_hint"
           android:textAppearance="?android:textAppearanceSmall"
           android:textColor="@android:color/white"
           />
@@ -45,59 +45,7 @@
           >
 
         <TextView
-            android:id="@+id/startDateTV"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/insurance_more_transparent_white"
-            android:gravity="center_vertical"
-            android:paddingEnd="@dimen/default_margin_1"
-            android:paddingStart="@dimen/default_margin_1"
-            android:textColor="@color/white"
-            />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="@dimen/default_margin_2"
-            android:src="@drawable/ic_keyboard_arrow_down_white_24dp"
-            />
-      </RelativeLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/radiobutton_row_height"
-        android:layout_marginBottom="@dimen/default_margin_0"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        >
-
-      <TextView
-          android:layout_width="@dimen/text_input_label_width"
-          android:layout_height="match_parent"
-          android:background="@color/insurance_transparent_white"
-          android:gravity="center_vertical|start"
-          android:paddingStart="@dimen/default_margin_2"
-          android:text="@string/end_date_input_label"
-          android:textAppearance="?android:textAppearanceSmall"
-          android:textColor="@android:color/white"
-          />
-
-      <View
-          android:layout_width="1dp"
-          android:layout_height="match_parent"
-          android:background="@color/separator_gray"
-          />
-
-      <RelativeLayout
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          >
-
-        <TextView
-            android:id="@+id/endDateTV"
+            android:id="@+id/selectPeriodTV"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/insurance_more_transparent_white"

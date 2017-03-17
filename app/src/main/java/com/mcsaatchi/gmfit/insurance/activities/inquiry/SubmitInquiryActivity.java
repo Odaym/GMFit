@@ -148,8 +148,7 @@ public class SubmitInquiryActivity extends BaseActivity {
   @OnClick(R.id.submitInquiryBTN) public void handleSubmitInquiry() {
     if (Helpers.validateFields(allFields)) {
       final ProgressDialog waitingDialog = new ProgressDialog(this);
-      waitingDialog.setTitle(
-          getResources().getString(R.string.submit_new_chronic_treatment_dialog_title));
+      waitingDialog.setTitle(getResources().getString(R.string.submit_new_inquiry));
       waitingDialog.setCancelable(false);
       waitingDialog.setMessage(
           getResources().getString(R.string.uploading_attachments_dialog_message));
@@ -292,7 +291,7 @@ public class SubmitInquiryActivity extends BaseActivity {
   private void submitInquiryComplaint(HashMap<String, RequestBody> attachements,
       final ProgressDialog waitingDialog) {
     final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-    alertDialog.setTitle(R.string.submit_new_chronic_treatment_dialog_title);
+    alertDialog.setTitle(R.string.submit_new_inquiry);
     alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getResources().getString(R.string.ok),
         (dialog, which) -> {
           dialog.dismiss();

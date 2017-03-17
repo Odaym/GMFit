@@ -371,9 +371,9 @@ public class DataAccessHandler {
     apiCallsHandler.getChronicTreatmentsList(contractNo, requestType, callback);
   }
 
-  public void getSnapshot(String contractNo, String startDate, String endDate,
+  public void getSnapshot(String contractNo, String period,
       final Callback<CertainPDFResponse> callback) {
-    apiCallsHandler.getSnapshot(contractNo, startDate, endDate, callback);
+    apiCallsHandler.getSnapshot(contractNo, period, callback);
   }
 
   public void getInquiriesList(String incidentId, String crm_country,

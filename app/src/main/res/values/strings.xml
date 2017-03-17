@@ -344,7 +344,7 @@
   <string name="widget_submit">Submit</string>
   <string name="widget_track">Track</string>
   <string name="widget_members_guide">Member\'s\nGuide</string>
-  <string name="widget_insurance_policy">Insurance\nPolicy</string>
+  <string name="widget_policy_limtation">Policy\nLimitation</string>
   <string name="widget_coverage_description">Coverage\nDescription</string>
   <string name="card_details_activity_title">Card Details</string>
   <string name="widget_snapshot">Snapshot</string>
@@ -363,6 +363,7 @@
   <string name="treatment_status_section_title">Treatment Status</string>
   <string name="status_input_label">Status</string>
   <string name="start_date_input_label">Start Date</string>
+  <string name="select_period_hint">Select Period</string>
   <string name="end_date_input_label">End Date</string>
   <string name="your_info_section_title">Your Info</string>
   <string name="full_name_label">Full Name</string>
@@ -384,7 +385,8 @@
   <string name="submit_new_approval_request">Submitting New Approval Request</string>
   <string name="uploading_attachments_dialog_message">Uploading attachments…</string>
   <string name="snapshot_activity_title">Snapshot</string>
-  <string name="submit_new_chronic_treatment_dialog_title">Submitting Chronic Treatment</string>
+  <string name="submit_new_chronic_treatment_dialog_title">Submitting New Chronic Treatment</string>
+  <string name="submit_new_inquiry">Submitting New Inquiry</string>
   <string name="submission_successful_dialog_title">Submission completed successfully.</string>
   <string name="required_fields_dialog_title">Required Fields</string>
   <string name="inquiry_complaint_activity_title">Complaint/Inquiry Status</string>

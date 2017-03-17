@@ -109,7 +109,7 @@ public class InsuranceHomeFragment extends Fragment {
         add(new InsuranceOperationWidget(R.drawable.ic_insurance_operation_snapshot,
             getString(R.string.widget_snapshot)));
         add(new InsuranceOperationWidget(R.drawable.ic_insurance_operation_policy,
-            getString(R.string.widget_insurance_policy)));
+            getString(R.string.widget_policy_limtation)));
       }});
     }
 
