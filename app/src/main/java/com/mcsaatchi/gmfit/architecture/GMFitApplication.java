@@ -10,6 +10,8 @@ import com.mcsaatchi.gmfit.BuildConfig;
 import com.mcsaatchi.gmfit.architecture.dagger.AppComponent;
 import com.mcsaatchi.gmfit.architecture.dagger.AppModule;
 import com.mcsaatchi.gmfit.architecture.dagger.DaggerAppComponent;
+import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
+import com.mcsaatchi.gmfit.architecture.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.architecture.timber.TimberReleaseTree;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
@@ -17,12 +19,16 @@ import com.onesignal.OneSignal;
 import io.fabric.sdk.android.Fabric;
 import javax.inject.Inject;
 import net.danlew.android.joda.JodaTimeAndroid;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import timber.log.Timber;
 
 public class GMFitApplication extends Application {
 
   private static GMFitApplication instance;
   @Inject SharedPreferences prefs;
+  @Inject DataAccessHandler dataAccessHandler;
   private AppComponent component;
 
   public static boolean hasNetwork() {
@@ -36,9 +42,13 @@ public class GMFitApplication extends Application {
   @Override public void onCreate() {
     super.onCreate();
 
+    initDagger();
+
     OneSignal.startInit(this).init();
 
-    initDagger();
+    OneSignal.idsAvailable((userId, registrationId) -> {
+      updateOneSignalToken(userId);
+    });
 
     JodaTimeAndroid.init(this);
 
@@ -85,5 +95,21 @@ public class GMFitApplication extends Application {
     } else {
       Timber.d("App has run before");
     }
+  }
+
+  private void updateOneSignalToken(String userOneSignalId) {
+    dataAccessHandler.updateOneSignalToken(userOneSignalId, new Callback<DefaultGetResponse>() {
+      @Override
+      public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
+        switch (response.code()) {
+          case 200:
+            break;
+        }
+      }
+
+      @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+        Timber.d("Call failed with error : %s", t.getMessage());
+      }
+    });
   }
 }

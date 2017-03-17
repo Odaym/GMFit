@@ -32,6 +32,9 @@ public interface GMFitService {
   @POST("user/update-profile") Call<DefaultGetResponse> updateUserWeight(
       @Body ApiCallsHandler.UpdateUserWeightRequest updateUserWeightRequest);
 
+  @POST("user/update-profile") Call<DefaultGetResponse> updateOneSignalToken(
+      @Body ApiCallsHandler.UpdateOneSignalRequest updateOneSignalRequest);
+
   @Multipart @POST("user/profile/picture") Call<DefaultGetResponse> updateUserPicture(
       @PartMap() Map<String, RequestBody> profilePicture);
 

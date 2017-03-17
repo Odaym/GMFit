@@ -108,6 +108,10 @@ public class DataAccessHandler {
     apiCallsHandler.updateUserWeight(weight, created_at, callback);
   }
 
+  public void updateOneSignalToken(String onesignal_id, Callback<DefaultGetResponse> callback) {
+    apiCallsHandler.updateOneSignalToken(onesignal_id, callback);
+  }
+
   public void updateUserPicture(Map<String, RequestBody> profilePicture,
       Callback<DefaultGetResponse> callback) {
     apiCallsHandler.updateUserPicture(profilePicture, callback);

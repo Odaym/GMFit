@@ -207,6 +207,21 @@ public class ApiCallsHandler {
     });
   }
 
+  void updateOneSignalToken(String onesignal_id, final Callback<DefaultGetResponse> callback) {
+    Call<DefaultGetResponse> apiCall = restClient.getGMFitService()
+        .updateOneSignalToken(new UpdateOneSignalRequest(onesignal_id));
+
+    apiCall.enqueue(new Callback<DefaultGetResponse>() {
+      @Override
+      public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
+        callback.onResponse(call, response);
+      }
+
+      @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+      }
+    });
+  }
+
   /**
    * Non-Caching
    */
@@ -1425,6 +1440,14 @@ public class ApiCallsHandler {
       this.language = language;
       this.password = password;
       this.key = key;
+    }
+  }
+
+  public class UpdateOneSignalRequest {
+    private String onesignal_id;
+
+    public UpdateOneSignalRequest(String onesignal_id) {
+      this.onesignal_id = onesignal_id;
     }
   }
 
