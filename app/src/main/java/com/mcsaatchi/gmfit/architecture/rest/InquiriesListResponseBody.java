@@ -2,15 +2,16 @@ package com.mcsaatchi.gmfit.architecture.rest;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import java.util.ArrayList;
 
 public class InquiriesListResponseBody {
-  @SerializedName("data") @Expose private InquiriesListResponseInnerData data;
+  @SerializedName("data") @Expose private ArrayList<InquiriesListResponseInnerData> data;
 
-  public InquiriesListResponseInnerData getData() {
+  public ArrayList<InquiriesListResponseInnerData> getData() {
     return data;
   }
 
-  public void setData(InquiriesListResponseInnerData data) {
+  public void setData(ArrayList<InquiriesListResponseInnerData> data) {
     this.data = data;
   }
 }

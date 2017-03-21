@@ -45,7 +45,6 @@ import com.mcsaatchi.gmfit.architecture.rest.WidgetsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.WidgetsResponseDatum;
 import com.mcsaatchi.gmfit.architecture.touch_helpers.SimpleSwipeItemTouchHelperCallback;
 import com.mcsaatchi.gmfit.common.Constants;
-import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.common.activities.CustomizeWidgetsAndChartsActivity;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.common.classes.SimpleDividerItemDecoration;
@@ -71,9 +70,6 @@ import timber.log.Timber;
 
 public class HealthFragment extends Fragment {
 
-  @Inject DataAccessHandler dataAccessHandler;
-  @Inject SharedPreferences prefs;
-
   @Bind(R.id.metricCounterTV) TextView metricCounterTV;
   @Bind(R.id.widgetsGridView) RecyclerView widgetsGridView;
   @Bind(R.id.addEntryBTN_MEDICAL_TESTS) TextView addEntryBTN_MEDICAL_TESTS;
@@ -85,11 +81,10 @@ public class HealthFragment extends Fragment {
   @Bind(R.id.medicationsEmptyLayout) LinearLayout medicationsEmptyLayout;
   @Bind(R.id.medicalTestsEmptyLayout) LinearLayout medicalTestsEmptyLayout;
   @Bind(R.id.lineChartContainer) LinearLayout lineChartContainer;
-
+  @Inject DataAccessHandler dataAccessHandler;
+  @Inject RuntimeExceptionDao<Medication, Integer> medicationDAO;
+  @Inject SharedPreferences prefs;
   private CustomLineChart customLineChart;
-
-  private RuntimeExceptionDao<Medication, Integer> medicationDAO;
-
   private ArrayList<HealthWidget> healthWidgetsMap = new ArrayList<>();
 
   @Override public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -109,8 +104,6 @@ public class HealthFragment extends Fragment {
     ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.health_tab_title);
 
     ((GMFitApplication) getActivity().getApplication()).getAppComponent().inject(this);
-
-    medicationDAO = ((BaseActivity) getActivity()).dbHelper.getMedicationDAO();
 
     setupMedicationRemindersList(medicationDAO.queryForAll());
 

@@ -14,7 +14,6 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -89,17 +88,10 @@ import timber.log.Timber;
 public class NutritionFragment extends Fragment {
 
   public static final int ADD_NEW_NUTRITION_CHART_REQUEST = 2;
-  private static final String TAG = "NutritionFragment";
-  private static final int ITEM_VIEWTYPE = 2;
   private static final int BARCODE_CAPTURE_RC = 773;
-  @Inject DataAccessHandler dataAccessHandler;
-  @Inject SharedPreferences prefs;
-  @Inject LocalDate dt;
-
   @Bind(R.id.widgetsGridView) RecyclerView widgetsGridView;
   @Bind(R.id.metricCounterTV) FontTextView metricCounterTV;
   @Bind(R.id.metricProgressBar) ProgressBar metricProgressBar;
-
   /**
    * CHARTS
    */
@@ -139,7 +131,6 @@ public class NutritionFragment extends Fragment {
   @Bind(R.id.loadingMetricProgressBar) ProgressBar loadingMetricProgressBar;
   @Bind(R.id.loadingWidgetsProgressBar) ProgressBar loadingWidgetsProgressBar;
   @Bind(R.id.dateCarouselLayout) DateCarousel dateCarouselLayout;
-
   @Bind(R.id.goalTV) FontTextView goalTV;
   @Bind(R.id.remainingTV) FontTextView remainingTV;
   @Bind(R.id.todayTV) FontTextView todayTV;
@@ -150,23 +141,19 @@ public class NutritionFragment extends Fragment {
   @Bind(R.id.lunchMealsEmptyLayout) LinearLayout lunchMealsEmptyLayout;
   @Bind(R.id.dinnerMealsEmptyLayout) LinearLayout dinnerMealsEmptyLayout;
   @Bind(R.id.snackMealsEmptyLayout) LinearLayout snackMealsEmptyLayout;
-
+  @Inject DataAccessHandler dataAccessHandler;
+  @Inject SharedPreferences prefs;
+  @Inject LocalDate dt;
   private String finalDesiredDate;
   private UserMealsRecyclerAdapterDragSwipe userMealsRecyclerAdapter;
   private ArrayList<MealItem> finalBreakfastMeals = new ArrayList<>();
   private ArrayList<MealItem> finalLunchMeals = new ArrayList<>();
   private ArrayList<MealItem> finalDinnerMeals = new ArrayList<>();
   private ArrayList<MealItem> finalSnackMeals = new ArrayList<>();
-
   private ArrayList<NutritionWidget> widgetsMap;
   private ArrayList<NutritionWidget> finalWidgets;
   private ArrayList<DataChart> finalCharts;
-
   private ArrayList<NutritionWidget> allWidgets;
-
-  /**
-   * TOP LAYOUT WITH WIDGETS
-   */
   private Activity parentActivity;
 
   @Override public void onAttach(Context context) {
@@ -491,7 +478,7 @@ public class NutritionFragment extends Fragment {
               Response<DefaultGetResponse> response) {
             switch (response.code()) {
               case 200:
-                Log.d(TAG, "onResponse: User's widgets updated successfully");
+                Timber.d("onResponse: User's widgets updated successfully");
                 break;
             }
           }
@@ -509,7 +496,7 @@ public class NutritionFragment extends Fragment {
               Response<DefaultGetResponse> response) {
             switch (response.code()) {
               case 200:
-                Log.d(TAG, "onResponse: User's charts updated successfully");
+                Timber.d("onResponse: User's charts updated successfully");
                 break;
             }
           }

@@ -69,6 +69,7 @@ dependencies {
   }
 
   annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
+  provided 'javax.annotation:jsr250-api:1.0'
 
   compile "com.google.android.gms:play-services-location:$playServicesVersion"
   compile "com.google.android.gms:play-services-vision:$playServicesVersion"

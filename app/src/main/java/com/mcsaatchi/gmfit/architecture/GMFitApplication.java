@@ -9,7 +9,9 @@ import com.crashlytics.android.Crashlytics;
 import com.mcsaatchi.gmfit.BuildConfig;
 import com.mcsaatchi.gmfit.architecture.dagger.AppComponent;
 import com.mcsaatchi.gmfit.architecture.dagger.AppModule;
+import com.mcsaatchi.gmfit.architecture.dagger.DBModule;
 import com.mcsaatchi.gmfit.architecture.dagger.DaggerAppComponent;
+import com.mcsaatchi.gmfit.architecture.dagger.NetworkModule;
 import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.architecture.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.architecture.timber.TimberReleaseTree;
@@ -26,35 +28,39 @@ import timber.log.Timber;
 
 public class GMFitApplication extends Application {
 
-  private static GMFitApplication instance;
+  private static GMFitApplication applicationInstance;
   @Inject SharedPreferences prefs;
   @Inject DataAccessHandler dataAccessHandler;
   private AppComponent component;
 
   public static boolean hasNetwork() {
-    return instance.checkIfHasNetwork();
+    return applicationInstance.checkIfHasNetwork();
   }
 
   public static GMFitApplication getInstance() {
-    return instance;
+    return applicationInstance;
   }
 
   @Override public void onCreate() {
     super.onCreate();
 
-    initDagger();
+    component = DaggerAppComponent.builder()
+        .appModule(new AppModule(this))
+        .dBModule(new DBModule())
+        .networkModule(new NetworkModule())
+        .build();
+
+    component.inject(this);
 
     OneSignal.startInit(this).init();
 
-    OneSignal.idsAvailable((userId, registrationId) -> {
-      updateOneSignalToken(userId);
-    });
+    OneSignal.idsAvailable((userId, registrationId) -> updateOneSignalToken(userId));
 
     JodaTimeAndroid.init(this);
 
     prefs = getSharedPreferences(Constants.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
 
-    instance = this;
+    applicationInstance = this;
 
     if (BuildConfig.DEBUG) {
       Timber.plant(new Timber.DebugTree() {
@@ -68,12 +74,6 @@ public class GMFitApplication extends Application {
     }
 
     addMealAlarms();
-  }
-
-  private void initDagger() {
-    component = DaggerAppComponent.builder().appModule(new AppModule(this)).build();
-
-    component.inject(this);
   }
 
   public AppComponent getAppComponent() {

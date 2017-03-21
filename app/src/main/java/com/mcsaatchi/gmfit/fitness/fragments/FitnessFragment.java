@@ -27,7 +27,6 @@ import android.widget.Toast;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
-import com.j256.ormlite.stmt.QueryBuilder;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.GMFitApplication;
 import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
@@ -48,7 +47,6 @@ import com.mcsaatchi.gmfit.architecture.rest.WidgetsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.WidgetsResponseDatum;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.AddNewChartActivity;
-import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.common.activities.CustomizeWidgetsAndChartsActivity;
 import com.mcsaatchi.gmfit.common.activities.SlugBreakdownActivity;
 import com.mcsaatchi.gmfit.common.classes.FontTextView;
@@ -74,7 +72,6 @@ import timber.log.Timber;
 public class FitnessFragment extends Fragment {
 
   private static final int ADD_NEW_FITNESS_CHART_REQUEST_CODE = 1;
-
   @Bind(R.id.dateCarouselLayout) DateCarousel dateCarouselLayout;
   @Bind(R.id.widgetsGridView) RecyclerView widgetsGridView;
   @Bind(R.id.cards_container) LinearLayout cards_container;
@@ -86,23 +83,17 @@ public class FitnessFragment extends Fragment {
   @Bind(R.id.todayTV) FontTextView todayTV;
   @Bind(R.id.metricProgressBar) ProgressBar metricProgressBar;
   @Bind(R.id.loadingMetricProgressBar) ProgressBar loadingMetricProgressBar;
-
   @Inject SharedPreferences prefs;
   @Inject LocalDate dt;
   @Inject DataAccessHandler dataAccessHandler;
-  private String todayDate;
-
+  @Inject RuntimeExceptionDao<FitnessWidget, Integer> fitnessWidgetsDAO;
   private FitnessWidgetsRecyclerAdapter widgetsGridAdapter;
   private ArrayList<FitnessWidget> widgetsMap;
   private ArrayList<DataChart> chartsMap;
-  private RuntimeExceptionDao<FitnessWidget, Integer> fitnessWidgetsDAO;
-  private QueryBuilder<FitnessWidget, Integer> fitnessQB;
+  private String todayDate;
 
   @RequiresApi(api = Build.VERSION_CODES.KITKAT) @Override public void onAttach(Context context) {
     super.onAttach(context);
-
-    fitnessWidgetsDAO = ((BaseActivity) getActivity()).dbHelper.getFitnessWidgetsDAO();
-    fitnessQB = fitnessWidgetsDAO.queryBuilder();
 
     EventBusSingleton.getInstance().register(this);
 
@@ -122,7 +113,7 @@ public class FitnessFragment extends Fragment {
     }
 
     try {
-      widgetsMap = (ArrayList<FitnessWidget>) fitnessQB.orderBy("position", true).query();
+      widgetsMap = (ArrayList<FitnessWidget>) fitnessWidgetsDAO.queryBuilder().orderBy("position", true).query();
     } catch (SQLException e) {
       e.printStackTrace();
     }

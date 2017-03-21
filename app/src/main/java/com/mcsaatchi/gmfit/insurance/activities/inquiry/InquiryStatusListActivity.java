@@ -16,7 +16,6 @@ import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.insurance.adapters.InquiryStatusAdapter;
-import java.util.ArrayList;
 import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -65,9 +64,8 @@ public class InquiryStatusListActivity extends BaseActivity {
             switch (response.code()) {
               case 200:
 
-                List<InquiriesListResponseInnerData> inquiriesList = new ArrayList<>();
-
-                inquiriesList.add(response.body().getData().getBody().getData());
+                List<InquiriesListResponseInnerData> inquiriesList =
+                    response.body().getData().getBody().getData();
 
                 statusAdapter =
                     new InquiryStatusAdapter(InquiryStatusListActivity.this, inquiriesList);

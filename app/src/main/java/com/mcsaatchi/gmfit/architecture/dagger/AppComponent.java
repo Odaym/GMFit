@@ -27,45 +27,38 @@ import com.mcsaatchi.gmfit.profile.fragments.MainProfileFragment;
 import dagger.Component;
 import javax.inject.Singleton;
 
-@Singleton @Component(modules = { AppModule.class }) public interface AppComponent {
+@Singleton @Component(modules = { AppModule.class, NetworkModule.class, DBModule.class })
+public interface AppComponent {
 
-  void inject(GMFitApplication application);
+  void inject(RestClient restClient);
 
   void inject(BaseActivity base_activity);
 
-  void inject(SplashActivity splash_activity);
-
-  void inject(ApiCallsHandler apiCallsHandler);
-
-  void inject(DataAccessHandler dataAccessHandler);
-
-  void inject(FitnessFragment fitness_fragment);
-
-  void inject(NutritionFragment nutrition_fragment);
-
-  void inject(HealthFragment health_fragment);
-
-  void inject(InsuranceFragment insuranceFragment);
-
-  void inject(InsuranceHomeFragment insuranceHomeFragment);
-
-  void inject(ContractsChoiceView contractsChoiceView);
-
-  void inject(ContractsChoiceRecyclerAdapter contractsChoiceRecyclerAdapter);
-
-  void inject(InsuranceDirectoryFragment insuranceDirectoryFragment);
-
-  void inject(UserMealsRecyclerAdapterDragSwipe userMealsRecyclerAdapterDragSwipe);
-
-  void inject(UserTestsRecyclerAdapter userTestsRecyclerAdapter);
-
-  void inject(InsuranceOperationWidgetsGridAdapter insuranceOperationWidgetsGridAdapter);
-
-  void inject(MainProfileFragment mainProfileFragment);
+  void inject(GMFitApplication application);
 
   void inject(SensorListener sensorListener);
 
-  void inject(RestClient restClient);
+  void inject(SplashActivity splash_activity);
+
+  void inject(HealthFragment health_fragment);
+
+  void inject(ApiCallsHandler apiCallsHandler);
+
+  void inject(FitnessFragment fitness_fragment);
+
+  void inject(InsuranceFragment insuranceFragment);
+
+  void inject(DataAccessHandler dataAccessHaFndler);
+
+  void inject(NutritionFragment nutrition_fragment);
+
+  void inject(MainProfileFragment mainProfileFragment);
+
+  void inject(ContractsChoiceView contractsChoiceView);
+
+  void inject(InsuranceHomeFragment insuranceHomeFragment);
+
+  void inject(InsuranceLoginFragment insuranceLoginFragment);
 
   void inject(SetupProfile1Fragment setup_profile_1_fragment);
 
@@ -75,5 +68,13 @@ import javax.inject.Singleton;
 
   void inject(SetupProfile4Fragment setup_profile_4_fragment);
 
-  void inject(InsuranceLoginFragment insuranceLoginFragment);
+  void inject(UserTestsRecyclerAdapter userTestsRecyclerAdapter);
+
+  void inject(InsuranceDirectoryFragment insuranceDirectoryFragment);
+
+  void inject(ContractsChoiceRecyclerAdapter contractsChoiceRecyclerAdapter);
+
+  void inject(UserMealsRecyclerAdapterDragSwipe userMealsRecyclerAdapterDragSwipe);
+
+  void inject(InsuranceOperationWidgetsGridAdapter insuranceOperationWidgetsGridAdapter);
 }
