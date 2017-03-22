@@ -33,36 +33,53 @@
 
   <LinearLayout
       android:layout_width="match_parent"
-      android:layout_height="@dimen/login_button_height"
+      android:layout_height="wrap_content"
       android:layout_alignParentBottom="true"
-      android:orientation="horizontal"
+      android:orientation="vertical"
       >
 
     <ImageView
-        android:id="@+id/attachImageIV"
-        android:layout_width="@dimen/attached_images_dimens"
-        android:layout_height="@dimen/attached_images_dimens"
-        android:src="@drawable/ic_camera_icon_attachments"
+        android:id="@+id/imagePlaceHolderIV"
+        android:layout_width="@dimen/image_placeholder_dimens"
+        android:layout_height="@dimen/image_placeholder_dimens"
+        android:visibility="gone"
         />
 
-    <EditText
-        android:id="@+id/yourReplyET"
-        android:layout_width="0dp"
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="@dimen/login_button_height"
-        android:layout_weight="1"
-        android:background="@color/white"
-        android:hint="@string/write_reply_hint"
-        android:paddingStart="@dimen/default_margin_1"
-        />
+        android:orientation="horizontal"
+        >
 
-    <ImageButton
-        android:id="@+id/sendMessageIV"
-        android:layout_width="@dimen/attached_images_dimens"
-        android:layout_height="@dimen/attached_images_dimens"
-        android:layout_gravity="end"
-        android:background="@color/white"
-        android:src="@android:drawable/ic_menu_send"
-        />
+      <ImageView
+          android:id="@+id/attachImageIV"
+          android:layout_width="@dimen/attached_images_dimens"
+          android:layout_height="@dimen/attached_images_dimens"
+          android:src="@drawable/ic_camera_icon_attachments"
+          />
 
+      <com.andreabaccega.widget.FormEditText
+          xmlns:validator="http://schemas.android.com/apk/res-auto"
+          android:id="@+id/yourReplyET"
+          android:layout_width="0dp"
+          android:layout_height="@dimen/login_button_height"
+          android:layout_weight="1"
+          android:background="@color/white"
+          android:hint="@string/write_reply_hint"
+          android:paddingStart="@dimen/default_margin_1"
+          validator:emptyErrorString="@string/field_empty_error_message"
+          />
+
+      <ImageButton
+          android:id="@+id/sendMessageIV"
+          android:layout_width="@dimen/attached_images_dimens"
+          android:layout_height="@dimen/attached_images_dimens"
+          android:layout_gravity="end"
+          android:background="@color/white"
+          android:src="@android:drawable/ic_menu_send"
+          />
+
+    </LinearLayout>
   </LinearLayout>
 </RelativeLayout>

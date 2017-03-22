@@ -323,6 +323,7 @@
   <string name="enable_reminders_switch_hint">Enable Reminders</string>
   <string name="food_logging_section_title">Food Logging</string>
   <string name="choose_picture_from_gallery">Choose from gallery</string>
+  <string name="remove_picture_chosen">Remove picture</string>
   <string name="take_new_picture">Take a new picture</string>
   <string name="change_password_entry">Change password</string>
   <string name="old_password_hint">Old password</string>

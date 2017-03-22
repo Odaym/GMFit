@@ -24,6 +24,7 @@ import com.mcsaatchi.gmfit.architecture.GMFitApplication;
 import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.architecture.rest.InsuranceLoginResponse;
 import com.mcsaatchi.gmfit.common.Constants;
+import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.common.classes.NonSwipeableViewPager;
 import java.util.ArrayList;
 import java.util.List;
@@ -113,6 +114,10 @@ public class InsuranceFragment extends Fragment {
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
                     .commitAllowingStateLoss();
 
+                break;
+              case 449:
+                alertDialog.setMessage(Helpers.provideErrorStringFromJSON(response.errorBody()));
+                alertDialog.show();
                 break;
             }
           }

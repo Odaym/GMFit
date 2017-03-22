@@ -22,7 +22,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -30,6 +29,7 @@ import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import com.andreabaccega.widget.FormEditText;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.rest.AddCRMNoteResponse;
 import com.mcsaatchi.gmfit.architecture.rest.CRMNotesResponse;
@@ -37,10 +37,12 @@ import com.mcsaatchi.gmfit.architecture.rest.CRMNotesResponseNoteAttribute;
 import com.mcsaatchi.gmfit.architecture.rest.InquiriesListResponseInnerData;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
+import com.squareup.picasso.Picasso;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -59,10 +61,14 @@ public class InquiryDetailsNotesActivity extends BaseActivity {
   @Bind(R.id.mainNotesLayout) LinearLayout mainNotesLayout;
   @Bind(R.id.mainScrollView) ScrollView mainScrollView;
   @Bind(R.id.attachImageIV) ImageView attachImageIV;
-  @Bind(R.id.yourReplyET) EditText yourReplyET;
+  @Bind(R.id.imagePlaceHolderIV) ImageView imagePlaceHolderIV;
+  @Bind(R.id.yourReplyET) FormEditText yourReplyET;
 
   private String imageAttachment = null;
   private String mimeType = null;
+  private String documentBody = null;
+
+  private ArrayList<FormEditText> allFields = new ArrayList<>();
 
   private File photoFile;
   private Uri photoFileUri;
@@ -74,6 +80,8 @@ public class InquiryDetailsNotesActivity extends BaseActivity {
     setContentView(R.layout.activity_inquiry_details_notes);
 
     ButterKnife.bind(this);
+
+    allFields.add(yourReplyET);
 
     if (getIntent().getExtras() != null) {
       inquiryItem = getIntent().getExtras().getParcelable("INQUIRY_OBJECT");
@@ -87,8 +95,14 @@ public class InquiryDetailsNotesActivity extends BaseActivity {
   }
 
   @OnClick(R.id.sendMessageIV) public void handleSendMessage() {
-    addCRMNote(inquiryItem.getIncidentId(), null, yourReplyET.getText().toString(), null, null,
-        null);
+    if (Helpers.validateFields(allFields)) {
+      if (imageAttachment != null) {
+        documentBody = Base64.encodeToString(turnImageToByteArray(imageAttachment), Base64.NO_WRAP);
+      }
+
+      addCRMNote(inquiryItem.getIncidentId(), null, yourReplyET.getText().toString(), "image/jpeg",
+          imageAttachment, documentBody);
+    }
   }
 
   @OnClick(R.id.attachImageIV) public void handleAttachImage() {
@@ -131,21 +145,30 @@ public class InquiryDetailsNotesActivity extends BaseActivity {
           Timber.d("No picture was taken, photoFile size : %d", photoFile.getTotalSpace());
         }
 
+        imagePlaceHolderIV.setVisibility(View.VISIBLE);
+
+        Picasso.with(this)
+            .load(new File(photoFile.getAbsolutePath()))
+            .fit()
+            .into(imagePlaceHolderIV);
+
         break;
       case REQUEST_PICK_IMAGE_GALLERY:
         if (data != null) {
           Uri selectedImageUri = data.getData();
           String selectedImagePath = getPhotoPathFromGallery(selectedImageUri);
 
+          imagePlaceHolderIV.setVisibility(View.VISIBLE);
+
           imageAttachment = selectedImagePath;
+
+          Picasso.with(this).load(new File(selectedImagePath)).fit().into(imagePlaceHolderIV);
         }
     }
+  }
 
-    if (imageAttachment != null) {
-      addCRMNote(inquiryItem.getIncidentId(), null, yourReplyET.getText().toString(), "image/jpeg",
-          imageAttachment,
-          Base64.encodeToString(turnImageToByteArray(imageAttachment), Base64.NO_WRAP));
-    }
+  @OnClick(R.id.imagePlaceHolderIV) public void handlePlaceHolderClicked() {
+    showImagePickerDialog();
   }
 
   private void showImagePickerDialog() {
@@ -156,6 +179,7 @@ public class InquiryDetailsNotesActivity extends BaseActivity {
         new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);
     arrayAdapter.add(getResources().getString(R.string.choose_picture_from_gallery));
     arrayAdapter.add(getResources().getString(R.string.take_new_picture));
+    arrayAdapter.add(getResources().getString(R.string.remove_picture_chosen));
 
     builderSingle.setNegativeButton(R.string.decline_cancel, (dialog, which) -> dialog.dismiss());
 
@@ -184,7 +208,11 @@ public class InquiryDetailsNotesActivity extends BaseActivity {
                 startActivityForResult(takePictureIntent, CAPTURE_NEW_PICTURE_REQUEST_CODE);
               }
             }
-
+            break;
+          case "Remove picture":
+            imageAttachment = null;
+            imagePlaceHolderIV.setImageResource(0);
+            imagePlaceHolderIV.setVisibility(View.GONE);
             break;
         }
       }
@@ -256,7 +284,6 @@ public class InquiryDetailsNotesActivity extends BaseActivity {
         });
 
     dataAccessHandler.getCRMIncidentNotes(incidentId, new Callback<CRMNotesResponse>() {
-
       @Override
       public void onResponse(Call<CRMNotesResponse> call, Response<CRMNotesResponse> response) {
 
