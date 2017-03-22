@@ -210,9 +210,7 @@ public class InquiryDetailsNotesActivity extends BaseActivity {
             }
             break;
           case "Remove picture":
-            imageAttachment = null;
-            imagePlaceHolderIV.setImageResource(0);
-            imagePlaceHolderIV.setVisibility(View.GONE);
+            hideImagePlaceHolder();
             break;
         }
       }
@@ -222,13 +220,13 @@ public class InquiryDetailsNotesActivity extends BaseActivity {
 
   private void addCRMNote(String incidentId, String subject, String noteText, String mimeType,
       String fileName, String documentBody) {
+    final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+    alertDialog.setTitle(R.string.submitting_data_dialog_title);
+
     final ProgressDialog waitingDialog = new ProgressDialog(this);
     waitingDialog.setTitle(getResources().getString(R.string.submitting_data_dialog_title));
     waitingDialog.setMessage(getResources().getString(R.string.please_wait_dialog_message));
-    waitingDialog.show();
 
-    final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-    alertDialog.setTitle(R.string.submitting_data_dialog_title);
     alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getResources().getString(R.string.ok),
         (dialog, which) -> {
           dialog.dismiss();
@@ -236,36 +234,42 @@ public class InquiryDetailsNotesActivity extends BaseActivity {
           if (waitingDialog.isShowing()) waitingDialog.dismiss();
         });
 
-    dataAccessHandler.addCRMNote(incidentId, subject, noteText, mimeType, fileName, documentBody,
-        new Callback<AddCRMNoteResponse>() {
+    waitingDialog.setOnShowListener(
+        dialogInterface -> dataAccessHandler.addCRMNote(incidentId, subject, noteText, mimeType,
+            fileName, documentBody, new Callback<AddCRMNoteResponse>() {
 
-          @Override public void onResponse(Call<AddCRMNoteResponse> call,
-              Response<AddCRMNoteResponse> response) {
+              @Override public void onResponse(Call<AddCRMNoteResponse> call,
+                  Response<AddCRMNoteResponse> response) {
 
-            switch (response.code()) {
-              case 200:
-                mainNotesLayout.removeAllViews();
+                switch (response.code()) {
+                  case 200:
+                    mainNotesLayout.removeAllViews();
 
-                getCRMIncidentNotes(inquiryItem.getIncidentId());
+                    getCRMIncidentNotes(inquiryItem.getIncidentId());
 
-                yourReplyET.setText("");
+                    yourReplyET.setText("");
 
-                break;
-              case 449:
-                alertDialog.setMessage(Helpers.provideErrorStringFromJSON(response.errorBody()));
+                    hideImagePlaceHolder();
+
+                    break;
+                  case 449:
+                    alertDialog.setMessage(
+                        Helpers.provideErrorStringFromJSON(response.errorBody()));
+                    alertDialog.show();
+                    break;
+                }
+
+                waitingDialog.dismiss();
+              }
+
+              @Override public void onFailure(Call<AddCRMNoteResponse> call, Throwable t) {
+                Timber.d("Call failed with error : %s", t.getMessage());
+                alertDialog.setMessage(getString(R.string.server_error_got_returned));
                 alertDialog.show();
-                break;
-            }
+              }
+            }));
 
-            waitingDialog.dismiss();
-          }
-
-          @Override public void onFailure(Call<AddCRMNoteResponse> call, Throwable t) {
-            Timber.d("Call failed with error : %s", t.getMessage());
-            alertDialog.setMessage(getString(R.string.server_error_got_returned));
-            alertDialog.show();
-          }
-        });
+    waitingDialog.show();
   }
 
   private void getCRMIncidentNotes(String incidentId) {
@@ -399,5 +403,11 @@ public class InquiryDetailsNotesActivity extends BaseActivity {
   private Bitmap turnBase64ToImage(String base64String) {
     byte[] decodedString = Base64.decode(base64String, Base64.DEFAULT);
     return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+  }
+
+  private void hideImagePlaceHolder() {
+    imageAttachment = null;
+    imagePlaceHolderIV.setImageResource(0);
+    imagePlaceHolderIV.setVisibility(View.GONE);
   }
 }
