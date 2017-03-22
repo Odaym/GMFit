@@ -8,6 +8,7 @@
     >
 
   <LinearLayout
+      android:id="@+id/tabsParentLayout"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:orientation="horizontal"
@@ -15,22 +16,21 @@
 
     <ImageView
         android:id="@+id/contractChooserBTN"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
+        android:layout_width="@dimen/insurance_tab_icons_dimens"
+        android:layout_height="@dimen/insurance_tab_icons_dimens"
         android:layout_gravity="bottom"
         android:layout_marginBottom="@dimen/default_margin_1"
         android:layout_marginStart="@dimen/default_margin_1"
-        android:layout_weight="1"
         android:src="@drawable/ic_contract_chooser_active"
-        android:visibility="gone"
+        android:visibility="invisible"
         />
 
     <android.support.design.widget.TabLayout
         android:id="@+id/tabs"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="top"
-        android:layout_weight="10"
+        android:layout_weight="1"
         app:tabIndicatorColor="@color/white"
         app:tabSelectedTextColor="@color/white"
         app:tabTextAppearance="@style/TabTextAppearance"
@@ -39,14 +39,13 @@
 
     <ImageView
         android:id="@+id/switchMapViewBTN"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
+        android:layout_width="@dimen/insurance_tab_icons_dimens"
+        android:layout_height="@dimen/insurance_tab_icons_dimens"
         android:layout_gravity="bottom"
         android:layout_marginBottom="@dimen/default_margin_1"
         android:layout_marginEnd="@dimen/default_margin_1"
-        android:layout_weight="1"
         android:src="@drawable/ic_show_directory_as_listing"
-        android:visibility="gone"
+        android:visibility="invisible"
         />
   </LinearLayout>
 

@@ -57,7 +57,7 @@ public class InsuranceHomeFragment extends Fragment {
   @Inject SharedPreferences prefs;
 
   private ViewGroup parentFragmentView;
-  private ImageView contractSelectorBTN;
+  private ImageView contractChooserBTN;
   private String cardNumber;
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -217,17 +217,15 @@ public class InsuranceHomeFragment extends Fragment {
 
       contractChooserDialog.getWindow().setAttributes(lp);
 
-      contractSelectorBTN = (ImageView) parentFragmentView.findViewById(R.id.contractChooserBTN);
+      contractChooserBTN = (ImageView) parentFragmentView.findViewById(R.id.contractChooserBTN);
 
-      contractSelectorBTN.setVisibility(View.VISIBLE);
+      contractChooserBTN.setVisibility(View.VISIBLE);
 
-      contractSelectorBTN.setOnClickListener(view -> {
-        contractSelectorBTN.setImageResource(R.drawable.ic_contract_chooser_active);
+      contractChooserBTN.setOnClickListener(view -> {
         contractChooserDialog.show();
       });
 
       if (prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, "").isEmpty()) {
-        contractSelectorBTN.setImageResource(R.drawable.ic_contract_chooser_active);
         contractChooserDialog.show();
       }
 
@@ -244,7 +242,7 @@ public class InsuranceHomeFragment extends Fragment {
 
         contractChooserDialog.dismiss();
 
-        contractSelectorBTN.setVisibility(View.GONE);
+        contractChooserBTN.setVisibility(View.GONE);
       });
     }
   }

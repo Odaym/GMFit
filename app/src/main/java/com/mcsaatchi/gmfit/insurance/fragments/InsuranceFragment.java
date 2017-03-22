@@ -135,10 +135,8 @@ public class InsuranceFragment extends Fragment {
 
     @Override public Fragment getItem(int position) {
       if (position == 0) {
-        switchMapViewBTN.setVisibility(View.GONE);
         return new InsuranceRootFragment();
       } else {
-        switchMapViewBTN.setVisibility(View.VISIBLE);
         return new InsuranceDirectoryFragment();
       }
     }

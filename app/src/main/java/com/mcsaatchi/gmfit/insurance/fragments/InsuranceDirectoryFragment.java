@@ -62,10 +62,11 @@ public class InsuranceDirectoryFragment extends Fragment implements OnMapReadyCa
   private LocationManager lm;
   private double[] userLatLong = new double[2];
 
-  private WorkaroundMapFragment mapFragment;
-  private ImageView switchMapViewBTN;
   private GoogleMap map;
+  private ImageView switchMapViewBTN;
   private ViewGroup parentFragmentView;
+  private ImageView contractChooserBTN;
+  private WorkaroundMapFragment mapFragment;
 
   @Nullable @Override
   public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -78,6 +79,8 @@ public class InsuranceDirectoryFragment extends Fragment implements OnMapReadyCa
     ((GMFitApplication) getActivity().getApplication()).getAppComponent().inject(this);
 
     parentFragmentView = ((ViewGroup) getParentFragment().getView());
+
+    contractChooserBTN = (ImageView) parentFragmentView.findViewById(R.id.contractChooserBTN);
 
     lm = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
 
@@ -124,7 +127,16 @@ public class InsuranceDirectoryFragment extends Fragment implements OnMapReadyCa
   @Override public void setUserVisibleHint(boolean isVisibleToUser) {
     super.setUserVisibleHint(isVisibleToUser);
     if (isVisibleToUser) {
+      contractChooserBTN.setVisibility(View.INVISIBLE);
+      switchMapViewBTN.setVisibility(View.VISIBLE);
       getUserLocation();
+    } else {
+      if (contractChooserBTN != null && switchMapViewBTN != null) {
+        if (!prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, "").isEmpty()) {
+          contractChooserBTN.setVisibility(View.VISIBLE);
+        }
+        switchMapViewBTN.setVisibility(View.INVISIBLE);
+      }
     }
   }
 

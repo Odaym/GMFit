@@ -77,9 +77,7 @@ public class InsuranceLoginFragment extends Fragment {
         alertDialog.setTitle(R.string.country_choice_dialog_title);
         alertDialog.setMessage(getResources().getString(R.string.no_country_chosen_dialog_message));
         alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
-            (dialog, which) -> {
-              dialog.dismiss();
-            });
+            (dialog, which) -> dialog.dismiss());
         alertDialog.show();
       }
     }
@@ -188,11 +186,6 @@ public class InsuranceLoginFragment extends Fragment {
   }
 
   private void getCountriesList() {
-    //final ProgressDialog waitingDialog = new ProgressDialog(getActivity());
-    //waitingDialog.setTitle(getResources().getString(R.string.loading_data_dialog_title));
-    //waitingDialog.setMessage(getResources().getString(R.string.please_wait_dialog_message));
-    //waitingDialog.show();
-
     dataAccessHandler.getCountriesList(new Callback<CountriesListResponse>() {
       @Override public void onResponse(Call<CountriesListResponse> call,
           Response<CountriesListResponse> response) {

@@ -20,20 +20,10 @@
         android:paddingTop="@dimen/default_margin_2"
         >
 
-      <ImageView
-          android:id="@+id/cardImageIV"
-          android:layout_width="@dimen/home_card_image_width"
-          android:layout_height="match_parent"
-          android:layout_marginEnd="@dimen/default_margin_2"
-          android:layout_marginStart="@dimen/default_margin_1"
-          android:layout_weight="1"
-          android:src="@drawable/insurance_card_overlay_sample"
-          />
-
       <LinearLayout
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:layout_weight="1.5"
+          android:layout_marginStart="@dimen/default_margin_2"
           android:orientation="vertical"
           >
 
