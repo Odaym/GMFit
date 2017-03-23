@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -26,9 +27,7 @@ import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
 import com.mcsaatchi.gmfit.architecture.otto.SignedInSuccessfullyEvent;
 import com.mcsaatchi.gmfit.architecture.otto.SignedUpSuccessfullyEvent;
-import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponse;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponseChart;
-import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponseInnerBody;
 import com.mcsaatchi.gmfit.architecture.rest.UiResponse;
 import com.mcsaatchi.gmfit.architecture.rest.UserProfileResponse;
 import com.mcsaatchi.gmfit.common.Constants;
@@ -37,6 +36,7 @@ import com.mcsaatchi.gmfit.common.activities.MainActivity;
 import com.mcsaatchi.gmfit.common.classes.DefaultIndicatorController;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.onboarding.fragments.IntroSliderFragment;
+import com.mcsaatchi.gmfit.onboarding.presenters.LoginActivityPresenter;
 import com.squareup.otto.Subscribe;
 import io.fabric.sdk.android.Fabric;
 import java.util.ArrayList;
@@ -47,13 +47,15 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import timber.log.Timber;
 
-public class LoginActivity extends BaseActivity {
+public class LoginActivity extends BaseActivity
+    implements LoginActivityPresenter.LoginActivityView {
 
   @Bind(R.id.viewpager) ViewPager viewPager;
   @Bind(R.id.loginFacebookBTN) LoginButton loginFacebookBTN;
   @Bind(R.id.signUpBTN) Button signUpBTN;
   @Bind(R.id.signInBTN) Button signInBTN;
 
+  private LoginActivityPresenter presenter;
   private DefaultIndicatorController indicatorController;
   private CallbackManager callbackManager;
 
@@ -70,15 +72,7 @@ public class LoginActivity extends BaseActivity {
 
     EventBusSingleton.getInstance().register(this);
 
-    signInBTN.setOnClickListener(view -> {
-      Intent intent = new Intent(LoginActivity.this, SignInActivity.class);
-      startActivity(intent);
-    });
-
-    signUpBTN.setOnClickListener(v -> {
-      Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
-      startActivity(intent);
-    });
+    presenter = new LoginActivityPresenter(this, dataAccessHandler);
 
     initializeFacebookLogin();
 
@@ -89,6 +83,16 @@ public class LoginActivity extends BaseActivity {
     super.onDestroy();
 
     EventBusSingleton.getInstance().unregister(this);
+  }
+
+  @OnClick(R.id.signInBTN) public void handleSignInClicked() {
+    Intent intent = new Intent(LoginActivity.this, SignInActivity.class);
+    startActivity(intent);
+  }
+
+  @OnClick(R.id.signUpBTN) public void handleSignUpClicked() {
+    Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
+    startActivity(intent);
   }
 
   @Subscribe public void handleSuccessfulSignUp(SignedUpSuccessfullyEvent event) {
@@ -120,7 +124,7 @@ public class LoginActivity extends BaseActivity {
     initController();
   }
 
-  private void initializeFacebookLogin() {
+  @Override public void initializeFacebookLogin() {
     loginFacebookBTN.setReadPermissions("email", "public_profile", "user_friends");
     loginFacebookBTN.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
     loginFacebookBTN.setCompoundDrawablePadding(0);
@@ -188,57 +192,7 @@ public class LoginActivity extends BaseActivity {
       if (waitingDialog.isShowing()) waitingDialog.dismiss();
     });
 
-    dataAccessHandler.handleFacebookProcess(accessToken, new Callback<AuthenticationResponse>() {
-      @Override public void onResponse(Call<AuthenticationResponse> call,
-          Response<AuthenticationResponse> response) {
 
-        AuthenticationResponseInnerBody responseBody;
-
-        Intent intent;
-
-        switch (response.code()) {
-          case 200:
-            waitingDialog.dismiss();
-
-            responseBody = response.body().getData().getBody();
-
-            //Refreshes access token
-            prefs.edit()
-                .putString(Constants.PREF_USER_ACCESS_TOKEN, "Bearer " + responseBody.getToken())
-                .apply();
-
-            getOnboardingStatus(waitingDialog);
-
-            break;
-          case 201:
-            waitingDialog.dismiss();
-
-            responseBody = response.body().getData().getBody();
-
-            //Refreshes access token
-            prefs.edit()
-                .putString(Constants.PREF_USER_ACCESS_TOKEN, "Bearer " + responseBody.getToken())
-                .apply();
-
-            intent = new Intent(LoginActivity.this, SetupProfileActivity.class);
-            startActivity(intent);
-
-            finish();
-
-            break;
-          case 401:
-            alertDialog.setMessage(getString(R.string.login_failed_wrong_credentials));
-            alertDialog.show();
-            break;
-        }
-      }
-
-      @Override public void onFailure(Call<AuthenticationResponse> call, Throwable t) {
-        Timber.d("Call failed with error : %s", t.getMessage());
-        alertDialog.setMessage(getResources().getString(R.string.server_error_got_returned));
-        alertDialog.show();
-      }
-    });
   }
 
   @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {

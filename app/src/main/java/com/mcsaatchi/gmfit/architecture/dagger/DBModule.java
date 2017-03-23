@@ -14,7 +14,7 @@ import javax.inject.Singleton;
   public DBModule() {
   }
 
-  @Provides @Singleton DBHelper providesDBHelper(Context app) {
+  @Provides DBHelper providesDBHelper(Context app) {
     return OpenHelperManager.getHelper(app, DBHelper.class);
   }
 
