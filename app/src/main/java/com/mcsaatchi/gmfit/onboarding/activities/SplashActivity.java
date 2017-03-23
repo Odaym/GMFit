@@ -2,6 +2,7 @@ package com.mcsaatchi.gmfit.onboarding.activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AlertDialog;
@@ -11,28 +12,23 @@ import com.mcsaatchi.gmfit.architecture.GMFitApplication;
 import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
 import com.mcsaatchi.gmfit.architecture.otto.SignedUpSuccessfullyEvent;
-import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponse;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponseChart;
-import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponseInnerBody;
-import com.mcsaatchi.gmfit.architecture.rest.UiResponse;
-import com.mcsaatchi.gmfit.architecture.rest.UserProfileResponse;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.MainActivity;
-import com.mcsaatchi.gmfit.common.classes.Helpers;
+import com.mcsaatchi.gmfit.onboarding.presenters.SplashActivityPresenter;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import timber.log.Timber;
 
-public class SplashActivity extends AppCompatActivity {
+public class SplashActivity extends AppCompatActivity
+    implements SplashActivityPresenter.SplashActivityView {
 
   @Inject DataAccessHandler dataAccessHandler;
   @Inject SharedPreferences prefs;
+  @Inject ConnectivityManager connectivityManager;
 
-  private Intent intent;
+  private SplashActivityPresenter presenter;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -40,167 +36,74 @@ public class SplashActivity extends AppCompatActivity {
 
     ((GMFitApplication) getApplication()).getAppComponent().inject(this);
 
-    int SPLASH_TIME_OUT = 1000;
+    presenter = new SplashActivityPresenter(this, dataAccessHandler);
+
+    presenter.login(prefs.getBoolean(Constants.EXTRAS_USER_LOGGED_IN, false),
+        prefs.getString(Constants.EXTRAS_USER_EMAIL, ""),
+        prefs.getString(Constants.EXTRAS_USER_PASSWORD, ""),
+        prefs.getString(Constants.EXTRAS_USER_FACEBOOK_TOKEN, ""));
+  }
+
+  @Override public void showNoInternetDialog() {
     int NO_INTERNET_DIALOG_TIMEOUT = 3000;
 
-    /**
-     * User is not logged in
-     */
-    if (!prefs.getBoolean(Constants.EXTRAS_USER_LOGGED_IN, false)) {
-      Timber.d("User not logged in");
+    AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+    alertDialog.setTitle(R.string.no_internet_conection_dialog_title);
+    alertDialog.setMessage(getString(R.string.no_internet_connection_dialog_message));
+    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
+        (dialog, which) -> dialog.dismiss());
+    alertDialog.show();
 
-      new Handler().postDelayed(() -> {
-        intent = new Intent(SplashActivity.this, LoginActivity.class);
-        startActivity(intent);
-      }, SPLASH_TIME_OUT);
-
-      /**
-       * User is logged in and they did finish setting up their profile
-       */
-    } else if (prefs.getBoolean(Constants.EXTRAS_USER_LOGGED_IN, false)) {
-      if (Helpers.isInternetAvailable(SplashActivity.this)) {
-        if (prefs.getString(Constants.EXTRAS_USER_FACEBOOK_TOKEN, "-1").equals("-1")) {
-          signInUserSilently(prefs.getString(Constants.EXTRAS_USER_EMAIL, ""),
-              prefs.getString(Constants.EXTRAS_USER_PASSWORD, ""));
-          Timber.d("Logging in user normally");
-        } else {
-          loginUserWithFacebook(prefs.getString(Constants.EXTRAS_USER_FACEBOOK_TOKEN, "-1"));
-          Timber.d("Logging in user with Facebook");
-        }
-      } else {
-        Helpers.showNoInternetDialog(SplashActivity.this);
-        new Handler().postDelayed(() -> finish(), NO_INTERNET_DIALOG_TIMEOUT);
-      }
-    }
+    new Handler().postDelayed(this::finish, NO_INTERNET_DIALOG_TIMEOUT);
   }
 
-  private void signInUserSilently(String email, String password) {
-    dataAccessHandler.signInUserSilently(email, password, new Callback<AuthenticationResponse>() {
-      @Override public void onResponse(Call<AuthenticationResponse> call,
-          Response<AuthenticationResponse> response) {
+  @Override public void showLoginActivity() {
+    int SPLASH_TIME_OUT = 1000;
 
-        AuthenticationResponseInnerBody responseBody;
-
-        switch (response.code()) {
-          case 200:
-            responseBody = response.body().getData().getBody();
-
-            //Refreshes access token
-            prefs.edit()
-                .putString(Constants.PREF_USER_ACCESS_TOKEN, "Bearer " + responseBody.getToken())
-                .apply();
-
-            getOnboardingStatus();
-
-            break;
-        }
-      }
-
-      @Override public void onFailure(Call<AuthenticationResponse> call, Throwable t) {
-        Timber.d("Call failed with error : %s", t.getMessage());
-        final AlertDialog alertDialog = new AlertDialog.Builder(SplashActivity.this).create();
-        alertDialog.setMessage(getResources().getString(R.string.server_error_got_returned));
-        alertDialog.show();
-      }
-    });
+    new Handler().postDelayed(() -> {
+      Intent intent = new Intent(this, LoginActivity.class);
+      startActivity(intent);
+    }, SPLASH_TIME_OUT);
   }
 
-  private void loginUserWithFacebook(String accessToken) {
+  @Override public void showMainActivity(List<AuthenticationResponseChart> chartsMap) {
+    Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+    intent.putParcelableArrayListExtra(Constants.BUNDLE_FITNESS_CHARTS_MAP,
+        (ArrayList<AuthenticationResponseChart>) chartsMap);
+    startActivity(intent);
+    finish();
+  }
+
+  @Override public void saveAccessToken(String accessToken) {
+    prefs.edit().putString(Constants.PREF_USER_ACCESS_TOKEN, "Bearer " + accessToken).apply();
+  }
+
+  @Override public void showRequestErrorDialog(String responseMessage) {
+    Timber.d("Call failed with error : %s", responseMessage);
+    final AlertDialog alertDialog = new AlertDialog.Builder(SplashActivity.this).create();
+    alertDialog.setMessage(getResources().getString(R.string.server_error_got_returned));
+    alertDialog.show();
+  }
+
+  @Override public void showWrongCredentialsError() {
     final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
     alertDialog.setTitle(R.string.signing_in_dialog_title);
     alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
         (dialog, which) -> dialog.dismiss());
-
-    dataAccessHandler.handleFacebookProcess(accessToken, new Callback<AuthenticationResponse>() {
-      @Override public void onResponse(Call<AuthenticationResponse> call,
-          Response<AuthenticationResponse> response) {
-
-        AuthenticationResponseInnerBody responseBody;
-
-        switch (response.code()) {
-          case 200:
-
-            responseBody = response.body().getData().getBody();
-
-            //Refreshes access token
-            prefs.edit()
-                .putString(Constants.PREF_USER_ACCESS_TOKEN, "Bearer " + responseBody.getToken())
-                .apply();
-
-            getOnboardingStatus();
-
-            break;
-          case 401:
-            alertDialog.setMessage(getString(R.string.login_failed_wrong_credentials));
-            alertDialog.show();
-            break;
-        }
-      }
-
-      @Override public void onFailure(Call<AuthenticationResponse> call, Throwable t) {
-        Timber.d("Call failed with error : %s", t.getMessage());
-        alertDialog.setMessage(getResources().getString(R.string.server_error_got_returned));
-        alertDialog.show();
-      }
-    });
+    alertDialog.setMessage(getString(R.string.login_failed_wrong_credentials));
+    alertDialog.show();
   }
 
-  public void getOnboardingStatus() {
-    dataAccessHandler.getOnboardingStatus(new Callback<UserProfileResponse>() {
-      @Override public void onResponse(Call<UserProfileResponse> call,
-          Response<UserProfileResponse> response) {
+  @Override public void handleSuccessfulSignUp() {
+    EventBusSingleton.getInstance().post(new SignedUpSuccessfullyEvent());
 
-        Intent intent;
-
-        switch (response.code()) {
-          case 200:
-            String userOnBoard = response.body().getData().getBody().getData().getOnboard();
-
-            if (userOnBoard.equals("1")) {
-              getUiForSection("fitness");
-            } else {
-              EventBusSingleton.getInstance().post(new SignedUpSuccessfullyEvent());
-
-              intent = new Intent(SplashActivity.this, SetupProfileActivity.class);
-              startActivity(intent);
-              finish();
-            }
-
-            break;
-        }
-      }
-
-      @Override public void onFailure(Call<UserProfileResponse> call, Throwable t) {
-        Timber.d("Call failed with error : %s", t.getMessage());
-      }
-    });
+    Intent intent = new Intent(SplashActivity.this, SetupProfileActivity.class);
+    startActivity(intent);
+    finish();
   }
 
-  private void getUiForSection(String section) {
-    dataAccessHandler.getUiForSection(Constants.BASE_URL_ADDRESS + "user/ui?section=" + section,
-        new Callback<UiResponse>() {
-          @Override public void onResponse(Call<UiResponse> call, Response<UiResponse> response) {
-            switch (response.code()) {
-              case 200:
-                EventBusSingleton.getInstance().post(new SignedUpSuccessfullyEvent());
-
-                List<AuthenticationResponseChart> chartsMap =
-                    response.body().getData().getBody().getCharts();
-
-                Intent intent = new Intent(SplashActivity.this, MainActivity.class);
-                intent.putParcelableArrayListExtra(Constants.BUNDLE_FITNESS_CHARTS_MAP,
-                    (ArrayList<AuthenticationResponseChart>) chartsMap);
-                startActivity(intent);
-
-                finish();
-
-                break;
-            }
-          }
-
-          @Override public void onFailure(Call<UiResponse> call, Throwable t) {
-            Timber.d("Call failed with error : %s", t.getMessage());
-          }
-        });
+  @Override public boolean checkInternetAvailable() {
+    return connectivityManager.getActiveNetworkInfo() != null
+        && connectivityManager.getActiveNetworkInfo().isConnectedOrConnecting();
   }
 }

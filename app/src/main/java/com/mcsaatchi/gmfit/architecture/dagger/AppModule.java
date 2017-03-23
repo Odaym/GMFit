@@ -3,6 +3,7 @@ package com.mcsaatchi.gmfit.architecture.dagger;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.net.ConnectivityManager;
 import com.mcsaatchi.gmfit.architecture.GMFitApplication;
 import com.mcsaatchi.gmfit.architecture.PermissionsChecker;
 import com.mcsaatchi.gmfit.common.Constants;
@@ -36,5 +37,9 @@ import org.joda.time.LocalDate;
 
   @Provides LocalDate provideLocalDate() {
     return new LocalDate();
+  }
+
+  @Provides @Singleton ConnectivityManager providesConnectivityManager(Context context) {
+    return (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
   }
 }
