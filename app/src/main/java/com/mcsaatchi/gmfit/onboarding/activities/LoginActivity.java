@@ -28,8 +28,6 @@ import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
 import com.mcsaatchi.gmfit.architecture.otto.SignedInSuccessfullyEvent;
 import com.mcsaatchi.gmfit.architecture.otto.SignedUpSuccessfullyEvent;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponseChart;
-import com.mcsaatchi.gmfit.architecture.rest.UiResponse;
-import com.mcsaatchi.gmfit.architecture.rest.UserProfileResponse;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.common.activities.MainActivity;
@@ -42,22 +40,20 @@ import io.fabric.sdk.android.Fabric;
 import java.util.ArrayList;
 import java.util.List;
 import org.json.JSONException;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import timber.log.Timber;
 
 public class LoginActivity extends BaseActivity
     implements LoginActivityPresenter.LoginActivityView {
 
-  @Bind(R.id.viewpager) ViewPager viewPager;
   @Bind(R.id.loginFacebookBTN) LoginButton loginFacebookBTN;
+  @Bind(R.id.viewpager) ViewPager viewPager;
   @Bind(R.id.signUpBTN) Button signUpBTN;
   @Bind(R.id.signInBTN) Button signInBTN;
 
-  private LoginActivityPresenter presenter;
   private DefaultIndicatorController indicatorController;
+  private LoginActivityPresenter presenter;
   private CallbackManager callbackManager;
+  private AlertDialog alertDialog;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(Helpers.createActivityBundleWithProperties(0, false));
@@ -79,10 +75,9 @@ public class LoginActivity extends BaseActivity
     setupViewPager();
   }
 
-  @Override protected void onDestroy() {
-    super.onDestroy();
-
-    EventBusSingleton.getInstance().unregister(this);
+  @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+    callbackManager.onActivityResult(requestCode, resultCode, data);
   }
 
   @OnClick(R.id.signInBTN) public void handleSignInClicked() {
@@ -103,25 +98,23 @@ public class LoginActivity extends BaseActivity
     finish();
   }
 
-  private void setupViewPager() {
-    viewPager.setAdapter(new IntroAdapter(getSupportFragmentManager()));
+  @Override public void hideWaitingDialog() {
+    alertDialog.dismiss();
+  }
 
-    viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-      @Override
-      public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+  @Override public void openSetupProfileActivity() {
+    Intent intent = new Intent(LoginActivity.this, SetupProfileActivity.class);
+    startActivity(intent);
+    finish();
+  }
 
-      }
+  @Override public void openMainActivity(List<AuthenticationResponseChart> chartsMap) {
+    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+    intent.putParcelableArrayListExtra(Constants.BUNDLE_FITNESS_CHARTS_MAP,
+        (ArrayList<AuthenticationResponseChart>) chartsMap);
+    startActivity(intent);
 
-      @Override public void onPageSelected(int position) {
-        indicatorController.selectPosition(position);
-      }
-
-      @Override public void onPageScrollStateChanged(int state) {
-
-      }
-    });
-
-    initController();
+    finish();
   }
 
   @Override public void initializeFacebookLogin() {
@@ -178,13 +171,19 @@ public class LoginActivity extends BaseActivity
     });
   }
 
+  @Override protected void onDestroy() {
+    super.onDestroy();
+
+    EventBusSingleton.getInstance().unregister(this);
+  }
+
   private void registerUserWithFacebook(String accessToken) {
     final ProgressDialog waitingDialog = new ProgressDialog(this);
     waitingDialog.setTitle(getString(R.string.signing_in_dialog_title));
     waitingDialog.setMessage(getString(R.string.please_wait_dialog_message));
     waitingDialog.show();
 
-    final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+    alertDialog = new AlertDialog.Builder(this).create();
     alertDialog.setTitle(R.string.signing_in_dialog_title);
     alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok), (dialog, which) -> {
       dialog.dismiss();
@@ -192,12 +191,28 @@ public class LoginActivity extends BaseActivity
       if (waitingDialog.isShowing()) waitingDialog.dismiss();
     });
 
-
+    presenter.registerWithFacebook(accessToken);
   }
 
-  @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    super.onActivityResult(requestCode, resultCode, data);
-    callbackManager.onActivityResult(requestCode, resultCode, data);
+  private void setupViewPager() {
+    viewPager.setAdapter(new IntroAdapter(getSupportFragmentManager()));
+
+    viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+      @Override
+      public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+      }
+
+      @Override public void onPageSelected(int position) {
+        indicatorController.selectPosition(position);
+      }
+
+      @Override public void onPageScrollStateChanged(int state) {
+
+      }
+    });
+
+    initController();
   }
 
   private void initController() {
@@ -207,67 +222,6 @@ public class LoginActivity extends BaseActivity
     indicatorContainer.addView(indicatorController.newInstance(this));
 
     indicatorController.initialize(7);
-  }
-
-  public void getOnboardingStatus(final ProgressDialog waitingDialog) {
-    dataAccessHandler.getOnboardingStatus(new Callback<UserProfileResponse>() {
-      @Override public void onResponse(Call<UserProfileResponse> call,
-          Response<UserProfileResponse> response) {
-
-        Intent intent;
-
-        switch (response.code()) {
-          case 200:
-            String userOnBoard = response.body().getData().getBody().getData().getOnboard();
-
-            if (userOnBoard.equals("1")) {
-              getUiForSection(waitingDialog, "fitness");
-            } else {
-              EventBusSingleton.getInstance().post(new SignedUpSuccessfullyEvent());
-
-              intent = new Intent(LoginActivity.this, SetupProfileActivity.class);
-              startActivity(intent);
-              finish();
-            }
-
-            break;
-        }
-      }
-
-      @Override public void onFailure(Call<UserProfileResponse> call, Throwable t) {
-        Timber.d("Call failed with error : %s", t.getMessage());
-      }
-    });
-  }
-
-  private void getUiForSection(final ProgressDialog waitingDialog, String section) {
-    dataAccessHandler.getUiForSection(Constants.BASE_URL_ADDRESS + "user/ui?section=" + section,
-        new Callback<UiResponse>() {
-          @Override public void onResponse(Call<UiResponse> call, Response<UiResponse> response) {
-            switch (response.code()) {
-              case 200:
-                waitingDialog.dismiss();
-
-                EventBusSingleton.getInstance().post(new SignedUpSuccessfullyEvent());
-
-                List<AuthenticationResponseChart> chartsMap =
-                    response.body().getData().getBody().getCharts();
-
-                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                intent.putParcelableArrayListExtra(Constants.BUNDLE_FITNESS_CHARTS_MAP,
-                    (ArrayList<AuthenticationResponseChart>) chartsMap);
-                startActivity(intent);
-
-                finish();
-
-                break;
-            }
-          }
-
-          @Override public void onFailure(Call<UiResponse> call, Throwable t) {
-            Timber.d("Call failed with error : %s", t.getMessage());
-          }
-        });
   }
 
   public class IntroAdapter extends FragmentPagerAdapter {

@@ -9,6 +9,7 @@ import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponseInnerBody;
 import com.mcsaatchi.gmfit.architecture.rest.UiResponse;
 import com.mcsaatchi.gmfit.architecture.rest.UserProfileResponse;
 import com.mcsaatchi.gmfit.common.Constants;
+import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -35,7 +36,7 @@ public class SplashActivityPresenter {
           loginWithFacebook(facebookToken);
         }
       } else {
-        view.showNoInternetDialog();
+        ((BaseActivity) view).showNoInternetDialog();
       }
     }
   }
@@ -51,7 +52,7 @@ public class SplashActivityPresenter {
           case 200:
             responseBody = response.body().getData().getBody();
 
-            view.saveAccessToken(responseBody.getToken());
+            ((BaseActivity) view).saveAccessToken(responseBody.getToken());
 
             getOnboardingStatus();
 
@@ -60,7 +61,7 @@ public class SplashActivityPresenter {
       }
 
       @Override public void onFailure(Call<AuthenticationResponse> call, Throwable t) {
-        view.showRequestErrorDialog(t.getMessage());
+        ((BaseActivity) view).showRequestErrorDialog(t.getMessage());
       }
     });
   }
@@ -74,10 +75,9 @@ public class SplashActivityPresenter {
 
         switch (response.code()) {
           case 200:
-
             responseBody = response.body().getData().getBody();
 
-            view.saveAccessToken(responseBody.getToken());
+            ((BaseActivity) view).saveAccessToken(responseBody.getToken());
 
             getOnboardingStatus();
 
@@ -89,7 +89,7 @@ public class SplashActivityPresenter {
       }
 
       @Override public void onFailure(Call<AuthenticationResponse> call, Throwable t) {
-        view.showRequestErrorDialog(t.getMessage());
+        ((BaseActivity) view).showRequestErrorDialog(t.getMessage());
       }
     });
   }
@@ -114,7 +114,7 @@ public class SplashActivityPresenter {
       }
 
       @Override public void onFailure(Call<UserProfileResponse> call, Throwable t) {
-        view.showRequestErrorDialog(t.getMessage());
+        ((BaseActivity) view).showRequestErrorDialog(t.getMessage());
       }
     });
   }
@@ -143,15 +143,9 @@ public class SplashActivityPresenter {
   }
 
   public interface SplashActivityView {
-    void showNoInternetDialog();
-
     void showLoginActivity();
 
     void showMainActivity(List<AuthenticationResponseChart> chartsMap);
-
-    void saveAccessToken(String accessToken);
-
-    void showRequestErrorDialog(String responseMessage);
 
     void showWrongCredentialsError();
 

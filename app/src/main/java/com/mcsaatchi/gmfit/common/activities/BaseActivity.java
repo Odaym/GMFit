@@ -2,7 +2,9 @@ package com.mcsaatchi.gmfit.common.activities;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
@@ -14,10 +16,13 @@ import com.mcsaatchi.gmfit.architecture.GMFitApplication;
 import com.mcsaatchi.gmfit.architecture.PermissionsChecker;
 import com.mcsaatchi.gmfit.architecture.data_access.DBHelper;
 import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
+import com.mcsaatchi.gmfit.common.Constants;
+import com.mcsaatchi.gmfit.common.presenters.BaseActivityPresenter;
 import javax.inject.Inject;
 import timber.log.Timber;
 
-public class BaseActivity extends AppCompatActivity {
+public class BaseActivity extends AppCompatActivity
+    implements BaseActivityPresenter.BaseActivityView {
   @Inject public SharedPreferences prefs;
   @Inject public DataAccessHandler dataAccessHandler;
   @Inject public DBHelper dbHelper;
@@ -30,7 +35,6 @@ public class BaseActivity extends AppCompatActivity {
 
     ((GMFitApplication) getApplication()).getAppComponent().inject(this);
 
-    Timber.d("Firebase object initialised");
     firebaseAnalytics = FirebaseAnalytics.getInstance(this);
   }
 
@@ -39,7 +43,6 @@ public class BaseActivity extends AppCompatActivity {
   }
 
   @Override public boolean onOptionsItemSelected(MenuItem item) {
-
     switch (item.getItemId()) {
       case android.R.id.home:
         super.onBackPressed();
@@ -86,5 +89,42 @@ public class BaseActivity extends AppCompatActivity {
     }
 
     toolbar.setTitleTextAppearance(this, R.style.Toolbar_TitleTextStyle);
+  }
+
+  @Override public void finishActivity() {
+    finish();
+  }
+
+  @Override public void showNoInternetDialog() {
+    int NO_INTERNET_DIALOG_TIMEOUT = 3000;
+
+    AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+    alertDialog.setTitle(R.string.no_internet_conection_dialog_title);
+    alertDialog.setMessage(getString(R.string.no_internet_connection_dialog_message));
+    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
+        (dialog, which) -> dialog.dismiss());
+    alertDialog.show();
+
+    new Handler().postDelayed(this::finish, NO_INTERNET_DIALOG_TIMEOUT);
+  }
+
+  @Override public void saveAccessToken(String accessToken) {
+    prefs.edit().putString(Constants.PREF_USER_ACCESS_TOKEN, "Bearer " + accessToken).apply();
+  }
+
+  @Override public void showRequestErrorDialog(String responseMessage) {
+    Timber.d("Call failed with error : %s", responseMessage);
+    final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+    alertDialog.setMessage(getResources().getString(R.string.server_error_got_returned));
+    alertDialog.show();
+  }
+
+  @Override public void showWrongCredentialsError() {
+    final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+    alertDialog.setTitle(R.string.signing_in_dialog_title);
+    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
+        (dialog, which) -> dialog.dismiss());
+    alertDialog.setMessage(getString(R.string.login_failed_wrong_credentials));
+    alertDialog.show();
   }
 }
