@@ -1,6 +1,5 @@
 package com.mcsaatchi.gmfit.onboarding.activities;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -11,38 +10,34 @@ import android.text.Html;
 import android.text.TextWatcher;
 import android.text.method.PasswordTransformationMethod;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import com.andreabaccega.widget.FormEditText;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
 import com.mcsaatchi.gmfit.architecture.otto.SignedUpSuccessfullyEvent;
-import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponse;
-import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponseInnerBody;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
+import com.mcsaatchi.gmfit.onboarding.presenters.SignUpActivityPresenter;
 import com.mcsaatchi.gmfit.profile.activities.TOSActivity;
 import java.util.ArrayList;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import timber.log.Timber;
 
-public class SignUpActivity extends BaseActivity {
+public class SignUpActivity extends BaseActivity
+    implements SignUpActivityPresenter.SignUpActivityView {
 
   @Bind(R.id.emailET) FormEditText emailET;
   @Bind(R.id.passwordET) FormEditText passwordET;
   @Bind(R.id.firstNameET) FormEditText firstNameET;
   @Bind(R.id.lastNameET) FormEditText lastNameET;
   @Bind(R.id.showPasswordTV) TextView showPasswordTV;
-  @Bind(R.id.createAccountBTN) Button createAccountBTN;
   @Bind(R.id.creatingAccountTOSTV) TextView creatingAccountTOSTV;
   @Bind(R.id.toolbar) Toolbar toolbar;
 
   private boolean passwordShowing = false;
+  private SignUpActivityPresenter presenter;
 
   private ArrayList<FormEditText> allFields = new ArrayList<>();
 
@@ -52,6 +47,8 @@ public class SignUpActivity extends BaseActivity {
     setContentView(R.layout.activity_sign_up);
 
     ButterKnife.bind(this);
+
+    presenter = new SignUpActivityPresenter(this, dataAccessHandler);
 
     setupToolbar(getClass().getSimpleName(), toolbar,
         getResources().getString(R.string.sign_up_activity_title), true);
@@ -63,32 +60,7 @@ public class SignUpActivity extends BaseActivity {
 
     passwordET.setTypeface(Typeface.DEFAULT);
 
-    createAccountBTN.setOnClickListener(v -> {
-      if (Helpers.validateFields(allFields)) {
-        registerUser(firstNameET.getText().toString() + " " + lastNameET.getText().toString(),
-            emailET.getText().toString(), passwordET.getText().toString());
-      } else {
-        showPasswordTV.setVisibility(View.GONE);
-      }
-    });
-
     creatingAccountTOSTV.setText(Html.fromHtml(getString(R.string.creating_account_TOS)));
-    creatingAccountTOSTV.setOnClickListener(
-        view -> startActivity(new Intent(SignUpActivity.this, TOSActivity.class)));
-
-    showPasswordTV.setOnClickListener(view -> {
-      if (passwordShowing) {
-        passwordET.setTransformationMethod(new PasswordTransformationMethod());
-        showPasswordTV.setText(R.string.show_password);
-      } else {
-        passwordET.setTransformationMethod(null);
-        showPasswordTV.setText(R.string.hide_password);
-      }
-
-      passwordET.setSelection(passwordET.getText().length());
-
-      passwordShowing = !passwordShowing;
-    });
 
     passwordET.addTextChangedListener(new TextWatcher() {
       @Override public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -105,60 +77,56 @@ public class SignUpActivity extends BaseActivity {
     });
   }
 
-  private void registerUser(final String full_name, final String email, final String password) {
-    final ProgressDialog waitingDialog = new ProgressDialog(this);
-    waitingDialog.setTitle(getString(R.string.signing_up_dialog_title));
-    waitingDialog.setMessage(getString(R.string.please_wait_dialog_message));
-    waitingDialog.show();
+  @OnClick(R.id.creatingAccountTOSTV) public void handleShowTermsOfService() {
+    startActivity(new Intent(SignUpActivity.this, TOSActivity.class));
+  }
 
+  @OnClick(R.id.showPasswordTV) public void handleShowPassword() {
+    if (passwordShowing) {
+      passwordET.setTransformationMethod(new PasswordTransformationMethod());
+      showPasswordTV.setText(R.string.show_password);
+    } else {
+      passwordET.setTransformationMethod(null);
+      showPasswordTV.setText(R.string.hide_password);
+    }
+
+    passwordET.setSelection(passwordET.getText().length());
+
+    passwordShowing = !passwordShowing;
+  }
+
+  @OnClick(R.id.createAccountBTN) public void handleCreateAccount() {
+    if (Helpers.validateFields(allFields)) {
+      presenter.signUserUp(firstNameET.getText().toString() + " " + lastNameET.getText().toString(),
+          emailET.getText().toString(), passwordET.getText().toString());
+    } else {
+      showPasswordTV.setVisibility(View.GONE);
+    }
+  }
+
+  @Override public void saveUserSignUpDetails(String accessToken, String full_name, String email,
+      String password) {
+    prefs.edit().putString(Constants.PREF_USER_ACCESS_TOKEN, "Bearer " + accessToken).apply();
+    prefs.edit().putString(Constants.EXTRAS_USER_FULL_NAME, full_name).apply();
+    prefs.edit().putString(Constants.EXTRAS_USER_EMAIL, email).apply();
+    prefs.edit().putString(Constants.EXTRAS_USER_PASSWORD, password).apply();
+  }
+
+  @Override public void openAccountVerificationActivity() {
+    EventBusSingleton.getInstance().post(new SignedUpSuccessfullyEvent());
+
+    Intent intent = new Intent(SignUpActivity.this, AccountVerificationActivity.class);
+    startActivity(intent);
+
+    finish();
+  }
+
+  @Override public void showEmailTakenErrorDialog() {
     final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
     alertDialog.setTitle(R.string.signing_up_dialog_title);
-    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok), (dialog, which) -> {
-      dialog.dismiss();
-
-      if (waitingDialog.isShowing()) waitingDialog.dismiss();
-    });
-
-    dataAccessHandler.registerUser(full_name, email, password,
-        new Callback<AuthenticationResponse>() {
-          @Override public void onResponse(Call<AuthenticationResponse> call,
-              Response<AuthenticationResponse> response) {
-            switch (response.code()) {
-              case 200:
-                waitingDialog.dismiss();
-
-                AuthenticationResponseInnerBody responseBody = response.body().getData().getBody();
-
-                //Refreshes access token
-                prefs.edit()
-                    .putString(Constants.PREF_USER_ACCESS_TOKEN,
-                        "Bearer " + responseBody.getToken())
-                    .apply();
-                prefs.edit().putString(Constants.EXTRAS_USER_FULL_NAME, full_name).apply();
-                prefs.edit().putString(Constants.EXTRAS_USER_EMAIL, email).apply();
-                prefs.edit().putString(Constants.EXTRAS_USER_PASSWORD, password).apply();
-
-                EventBusSingleton.getInstance().post(new SignedUpSuccessfullyEvent());
-
-                Intent intent = new Intent(SignUpActivity.this, AccountVerificationActivity.class);
-                startActivity(intent);
-
-                finish();
-
-                break;
-              case 449:
-                waitingDialog.dismiss();
-                alertDialog.setMessage(getString(R.string.email_already_taken_api_response));
-                alertDialog.show();
-                break;
-            }
-          }
-
-          @Override public void onFailure(Call<AuthenticationResponse> call, Throwable t) {
-            Timber.d("Call failed with error : %s", t.getMessage());
-            alertDialog.setMessage(getResources().getString(R.string.server_error_got_returned));
-            alertDialog.show();
-          }
-        });
+    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
+        (dialog, which) -> dialog.dismiss());
+    alertDialog.setMessage(getString(R.string.email_already_taken_api_response));
+    alertDialog.show();
   }
 }

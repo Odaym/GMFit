@@ -1,14 +1,11 @@
 package com.mcsaatchi.gmfit.onboarding.activities;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AlertDialog;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -43,13 +40,10 @@ public class LoginActivity extends BaseActivity
 
   @Bind(R.id.loginFacebookBTN) LoginButton loginFacebookBTN;
   @Bind(R.id.viewpager) ViewPager viewPager;
-  @Bind(R.id.signUpBTN) Button signUpBTN;
-  @Bind(R.id.signInBTN) Button signInBTN;
 
   private DefaultIndicatorController indicatorController;
   private LoginActivityPresenter presenter;
   private CallbackManager callbackManager;
-  private AlertDialog alertDialog;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(Helpers.createActivityBundleWithProperties(0, false));
@@ -94,10 +88,6 @@ public class LoginActivity extends BaseActivity
     finish();
   }
 
-  @Override public void hideWaitingDialog() {
-    alertDialog.dismiss();
-  }
-
   @Override public void openSetupProfileActivity() {
     Intent intent = new Intent(LoginActivity.this, SetupProfileActivity.class);
     startActivity(intent);
@@ -123,7 +113,6 @@ public class LoginActivity extends BaseActivity
     intent.putParcelableArrayListExtra(Constants.BUNDLE_FITNESS_CHARTS_MAP,
         (ArrayList<AuthenticationResponseChart>) chartsMap);
     startActivity(intent);
-
     finish();
   }
 
@@ -150,21 +139,6 @@ public class LoginActivity extends BaseActivity
     super.onDestroy();
 
     EventBusSingleton.getInstance().unregister(this);
-  }
-
-  @Override public void prepareLoaderForFacebookRegister() {
-    final ProgressDialog waitingDialog = new ProgressDialog(this);
-    waitingDialog.setTitle(getString(R.string.signing_in_dialog_title));
-    waitingDialog.setMessage(getString(R.string.please_wait_dialog_message));
-    waitingDialog.show();
-
-    alertDialog = new AlertDialog.Builder(this).create();
-    alertDialog.setTitle(R.string.signing_in_dialog_title);
-    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok), (dialog, which) -> {
-      dialog.dismiss();
-
-      if (waitingDialog.isShowing()) waitingDialog.dismiss();
-    });
   }
 
   private void setupViewPager() {

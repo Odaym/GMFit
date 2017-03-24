@@ -1,5 +1,6 @@
 package com.mcsaatchi.gmfit.common.activities;
 
+import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
@@ -31,6 +32,8 @@ public class BaseActivity extends AppCompatActivity
   @Inject public PermissionsChecker permChecker;
 
   private FirebaseAnalytics firebaseAnalytics;
+
+  private ProgressDialog waitingDialog;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -133,5 +136,26 @@ public class BaseActivity extends AppCompatActivity
   @Override public boolean checkInternetAvailable() {
     return connectivityManager.getActiveNetworkInfo() != null
         && connectivityManager.getActiveNetworkInfo().isConnectedOrConnecting();
+  }
+
+  @Override public ProgressDialog showWaitingDialog(String dialogTitle) {
+    ProgressDialog waitingDialog = new ProgressDialog(this);
+    waitingDialog.setTitle(dialogTitle);
+    waitingDialog.setMessage(getString(R.string.please_wait_dialog_message));
+    waitingDialog.show();
+
+    return waitingDialog;
+  }
+
+  @Override public void dismissWaitingDialog(ProgressDialog waitingDialog) {
+    waitingDialog.dismiss();
+  }
+
+  @Override public void callShowWaitingDialog(int dialogTitleResource) {
+    waitingDialog = showWaitingDialog(getString(dialogTitleResource));
+  }
+
+  @Override public void callDismissDialog() {
+    dismissWaitingDialog(waitingDialog);
   }
 }

@@ -1,5 +1,6 @@
 package com.mcsaatchi.gmfit.onboarding.presenters;
 
+import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
 import com.mcsaatchi.gmfit.architecture.otto.SignedInSuccessfullyEvent;
@@ -26,7 +27,7 @@ public class SignInActivityPresenter {
   }
 
   public void signIn(String email, String password) {
-    view.prepareLoadersForSignIn();
+    view.callShowWaitingDialog(R.string.signing_in_dialog_title);
 
     dataAccessHandler.signInUser(email, password, new Callback<AuthenticationResponse>() {
       @Override public void onResponse(Call<AuthenticationResponse> call,
@@ -49,7 +50,7 @@ public class SignInActivityPresenter {
             break;
         }
 
-        view.dismissWaitingDialog();
+        view.callDismissDialog();
       }
 
       @Override public void onFailure(Call<AuthenticationResponse> call, Throwable t) {
@@ -89,7 +90,7 @@ public class SignInActivityPresenter {
           @Override public void onResponse(Call<UiResponse> call, Response<UiResponse> response) {
             switch (response.code()) {
               case 200:
-                view.dismissWaitingDialog();
+                view.callDismissDialog();
 
                 EventBusSingleton.getInstance().post(new SignedInSuccessfullyEvent());
 
@@ -109,8 +110,6 @@ public class SignInActivityPresenter {
   }
 
   public interface SignInActivityView extends BaseActivityPresenter.BaseActivityView {
-    void prepareLoadersForSignIn();
-
     void saveUserSignInDetails(String accessToken, String email, String password);
 
     void openAccountVerificationActivity();
@@ -118,7 +117,5 @@ public class SignInActivityPresenter {
     void openSetupProfileActivity();
 
     void openMainActivity(List<AuthenticationResponseChart> chartsMap);
-
-    void dismissWaitingDialog();
   }
 }

@@ -3,6 +3,7 @@ package com.mcsaatchi.gmfit.onboarding.presenters;
 import android.os.Bundle;
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
+import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponse;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponseChart;
@@ -41,7 +42,7 @@ public class LoginActivityPresenter {
 
         view.saveFacebookUserDetails(userID, userName, userEmail);
 
-        view.prepareLoaderForFacebookRegister();
+        view.callShowWaitingDialog(R.string.signing_in_dialog_title);
 
         registerWithFacebook(accessToken.getToken());
       } catch (JSONException e) {
@@ -84,7 +85,7 @@ public class LoginActivityPresenter {
             break;
         }
 
-        view.hideWaitingDialog();
+        view.callDismissDialog();
       }
 
       @Override public void onFailure(Call<AuthenticationResponse> call, Throwable t) {
@@ -125,7 +126,7 @@ public class LoginActivityPresenter {
           @Override public void onResponse(Call<UiResponse> call, Response<UiResponse> response) {
             switch (response.code()) {
               case 200:
-                view.hideWaitingDialog();
+                view.callDismissDialog();
 
                 List<AuthenticationResponseChart> chartsMap =
                     response.body().getData().getBody().getCharts();
@@ -147,15 +148,11 @@ public class LoginActivityPresenter {
   public interface LoginActivityView extends BaseActivityPresenter.BaseActivityView {
     void initializeFacebookLogin();
 
-    void hideWaitingDialog();
-
     void openSetupProfileActivity();
 
     void saveFacebookAccessToken(String accessToken);
 
     void saveFacebookUserDetails(String userID, String userName, String userEmail);
-
-    void prepareLoaderForFacebookRegister();
 
     void openMainActivity(List<AuthenticationResponseChart> chartsMap);
   }

@@ -1,17 +1,14 @@
 package com.mcsaatchi.gmfit.onboarding.activities;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextWatcher;
 import android.text.method.PasswordTransformationMethod;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -35,14 +32,12 @@ public class SignInActivity extends BaseActivity
   @Bind(R.id.toolbar) Toolbar toolbar;
   @Bind(R.id.emailET) FormEditText emailET;
   @Bind(R.id.passwordET) FormEditText passwordET;
-  @Bind(R.id.signInBTN) Button signInBTN;
   @Bind(R.id.forgotPasswordTV) TextView forgotPasswordTV;
   @Bind(R.id.showPasswordTV) TextView showPasswordTV;
 
   private boolean passwordShowing = false;
 
   private SignInActivityPresenter presenter;
-  private ProgressDialog waitingDialog;
 
   private ArrayList<FormEditText> allFields = new ArrayList<>();
 
@@ -111,21 +106,6 @@ public class SignInActivity extends BaseActivity
     }
   }
 
-  @Override public void prepareLoadersForSignIn() {
-    waitingDialog = new ProgressDialog(this);
-    waitingDialog.setTitle(getString(R.string.signing_in_dialog_title));
-    waitingDialog.setMessage(getString(R.string.please_wait_dialog_message));
-    waitingDialog.show();
-
-    final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-    alertDialog.setTitle(R.string.signing_in_dialog_title);
-    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok), (dialog, which) -> {
-      dialog.dismiss();
-
-      if (waitingDialog.isShowing()) waitingDialog.dismiss();
-    });
-  }
-
   @Override public void saveUserSignInDetails(String accessToken, String email, String password) {
     prefs.edit().putString(Constants.PREF_USER_ACCESS_TOKEN, "Bearer " + accessToken).apply();
     prefs.edit().putString(Constants.EXTRAS_USER_EMAIL, email).apply();
@@ -139,7 +119,6 @@ public class SignInActivity extends BaseActivity
     Intent userNotVerifiedIntent =
         new Intent(SignInActivity.this, AccountVerificationActivity.class);
     startActivity(userNotVerifiedIntent);
-
     finish();
   }
 
@@ -156,11 +135,6 @@ public class SignInActivity extends BaseActivity
     intent.putParcelableArrayListExtra(Constants.BUNDLE_FITNESS_CHARTS_MAP,
         (ArrayList<AuthenticationResponseChart>) chartsMap);
     startActivity(intent);
-
     finish();
-  }
-
-  @Override public void dismissWaitingDialog() {
-    waitingDialog.dismiss();
   }
 }
