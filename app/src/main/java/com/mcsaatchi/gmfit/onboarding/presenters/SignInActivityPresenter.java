@@ -48,6 +48,8 @@ public class SignInActivityPresenter {
             view.openAccountVerificationActivity();
             break;
         }
+
+        view.dismissWaitingDialog();
       }
 
       @Override public void onFailure(Call<AuthenticationResponse> call, Throwable t) {
