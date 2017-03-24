@@ -2,7 +2,6 @@ package com.mcsaatchi.gmfit.onboarding.activities;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -20,7 +19,6 @@ import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
-import com.facebook.GraphRequest;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.mcsaatchi.gmfit.R;
@@ -39,8 +37,6 @@ import com.squareup.otto.Subscribe;
 import io.fabric.sdk.android.Fabric;
 import java.util.ArrayList;
 import java.util.List;
-import org.json.JSONException;
-import timber.log.Timber;
 
 public class LoginActivity extends BaseActivity
     implements LoginActivityPresenter.LoginActivityView {
@@ -108,6 +104,20 @@ public class LoginActivity extends BaseActivity
     finish();
   }
 
+  @Override public void saveFacebookAccessToken(String accessToken) {
+    prefs.edit().putString(Constants.EXTRAS_USER_FACEBOOK_TOKEN, accessToken).apply();
+  }
+
+  @Override public void saveFacebookUserDetails(String userID, String userName, String userEmail) {
+    prefs.edit().putBoolean(Constants.EXTRAS_USER_LOGGED_IN, true).apply();
+    prefs.edit().putString(Constants.EXTRAS_USER_FULL_NAME, userName).apply();
+    prefs.edit()
+        .putString(Constants.EXTRAS_USER_DISPLAY_PHOTO,
+            "https://graph.facebook.com/" + userID + "/picture?type=large")
+        .apply();
+    prefs.edit().putString(Constants.EXTRAS_USER_EMAIL, userEmail).apply();
+  }
+
   @Override public void openMainActivity(List<AuthenticationResponseChart> chartsMap) {
     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
     intent.putParcelableArrayListExtra(Constants.BUNDLE_FITNESS_CHARTS_MAP,
@@ -125,48 +135,13 @@ public class LoginActivity extends BaseActivity
       @Override public void onSuccess(LoginResult loginResult) {
         final AccessToken accessToken = loginResult.getAccessToken();
 
-        Timber.d("onSuccess: FACEBOOK ACCESS TOKEN IS : %s", accessToken.getToken());
-
-        prefs.edit()
-            .putString(Constants.EXTRAS_USER_FACEBOOK_TOKEN, accessToken.getToken())
-            .apply();
-
-        GraphRequest request = GraphRequest.newMeRequest(accessToken, (object, response) -> {
-          try {
-
-            String userID = (String) object.get("id");
-            String userName = (String) object.get("name");
-            String userEmail = (String) object.get("email");
-
-            SharedPreferences.Editor prefsEditor = prefs.edit();
-
-            prefsEditor.putBoolean(Constants.EXTRAS_USER_LOGGED_IN, true);
-
-            prefsEditor.putString(Constants.EXTRAS_USER_FULL_NAME, userName);
-            prefsEditor.putString(Constants.EXTRAS_USER_DISPLAY_PHOTO,
-                "https://graph.facebook.com/" + userID + "/picture?type=large");
-            prefsEditor.putString(Constants.EXTRAS_USER_EMAIL, userEmail);
-
-            prefsEditor.apply();
-
-            registerUserWithFacebook(accessToken.getToken());
-          } catch (JSONException e) {
-            e.printStackTrace();
-          }
-        });
-
-        Bundle parameters = new Bundle();
-        parameters.putString("fields", "id,name,email,link,birthday,picture");
-        request.setParameters(parameters);
-        request.executeAsync();
+        presenter.handleFacebookSuccessCallback(accessToken);
       }
 
       @Override public void onCancel() {
-        // App code
       }
 
       @Override public void onError(FacebookException exception) {
-        // App code
       }
     });
   }
@@ -177,7 +152,7 @@ public class LoginActivity extends BaseActivity
     EventBusSingleton.getInstance().unregister(this);
   }
 
-  private void registerUserWithFacebook(String accessToken) {
+  @Override public void prepareLoaderForFacebookRegister() {
     final ProgressDialog waitingDialog = new ProgressDialog(this);
     waitingDialog.setTitle(getString(R.string.signing_in_dialog_title));
     waitingDialog.setMessage(getString(R.string.please_wait_dialog_message));
@@ -190,8 +165,6 @@ public class LoginActivity extends BaseActivity
 
       if (waitingDialog.isShowing()) waitingDialog.dismiss();
     });
-
-    presenter.registerWithFacebook(accessToken);
   }
 
   private void setupViewPager() {
@@ -224,9 +197,9 @@ public class LoginActivity extends BaseActivity
     indicatorController.initialize(7);
   }
 
-  public class IntroAdapter extends FragmentPagerAdapter {
+  private class IntroAdapter extends FragmentPagerAdapter {
 
-    public IntroAdapter(FragmentManager fm) {
+    IntroAdapter(FragmentManager fm) {
       super(fm);
     }
 

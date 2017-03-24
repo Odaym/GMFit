@@ -1,9 +1,8 @@
 package com.mcsaatchi.gmfit.onboarding.presenters;
 
-import android.os.Bundle;
-import com.facebook.AccessToken;
-import com.facebook.GraphRequest;
 import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
+import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
+import com.mcsaatchi.gmfit.architecture.otto.SignedInSuccessfullyEvent;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponse;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponseChart;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponseInnerBody;
@@ -12,79 +11,43 @@ import com.mcsaatchi.gmfit.architecture.rest.UserProfileResponse;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.presenters.BaseActivityPresenter;
 import java.util.List;
-import org.json.JSONException;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import timber.log.Timber;
 
-public class LoginActivityPresenter {
-  private LoginActivityView view;
+public class SignInActivityPresenter {
+  private SignInActivityView view;
   private DataAccessHandler dataAccessHandler;
 
-  public LoginActivityPresenter(LoginActivityView view, DataAccessHandler dataAccessHandler) {
+  public SignInActivityPresenter(SignInActivityView view, DataAccessHandler dataAccessHandler) {
     this.view = view;
     this.dataAccessHandler = dataAccessHandler;
   }
 
-  public void handleFacebookSuccessCallback(AccessToken accessToken) {
-    Timber.d("onSuccess: FACEBOOK ACCESS TOKEN IS : %s", accessToken.getToken());
+  public void signIn(String email, String password) {
+    view.prepareLoadersForSignIn();
 
-    view.saveFacebookAccessToken(accessToken.getToken());
-
-    GraphRequest request = GraphRequest.newMeRequest(accessToken, (object, response) -> {
-      try {
-
-        String userID = (String) object.get("id");
-        String userName = (String) object.get("name");
-        String userEmail = (String) object.get("email");
-
-        view.saveFacebookUserDetails(userID, userName, userEmail);
-
-        view.prepareLoaderForFacebookRegister();
-
-        registerWithFacebook(accessToken.getToken());
-      } catch (JSONException e) {
-        e.printStackTrace();
-      }
-    });
-
-    Bundle parameters = new Bundle();
-    parameters.putString("fields", "id,name,email,link,birthday,picture");
-    request.setParameters(parameters);
-    request.executeAsync();
-  }
-
-  private void registerWithFacebook(String accessToken) {
-    dataAccessHandler.handleFacebookProcess(accessToken, new Callback<AuthenticationResponse>() {
+    dataAccessHandler.signInUser(email, password, new Callback<AuthenticationResponse>() {
       @Override public void onResponse(Call<AuthenticationResponse> call,
           Response<AuthenticationResponse> response) {
 
-        AuthenticationResponseInnerBody responseBody;
-
         switch (response.code()) {
           case 200:
-            responseBody = response.body().getData().getBody();
+            AuthenticationResponseInnerBody responseBody = response.body().getData().getBody();
 
-            view.saveAccessToken(responseBody.getToken());
+            view.saveUserSignInDetails(responseBody.getToken(), email, password);
 
             getOnboardingStatus();
-
-            break;
-          case 201:
-            responseBody = response.body().getData().getBody();
-
-            view.saveAccessToken(responseBody.getToken());
-
-            view.openSetupProfileActivity();
 
             break;
           case 401:
             view.showWrongCredentialsError();
             break;
+          case 403:
+            view.openAccountVerificationActivity();
+            break;
         }
-
-        view.hideWaitingDialog();
       }
 
       @Override public void onFailure(Call<AuthenticationResponse> call, Throwable t) {
@@ -105,7 +68,6 @@ public class LoginActivityPresenter {
             if (userOnBoard.equals("1")) {
               getUiForSection("fitness");
             } else {
-              view.finishActivity();
               view.openSetupProfileActivity();
             }
 
@@ -125,12 +87,12 @@ public class LoginActivityPresenter {
           @Override public void onResponse(Call<UiResponse> call, Response<UiResponse> response) {
             switch (response.code()) {
               case 200:
-                view.hideWaitingDialog();
+                view.dismissWaitingDialog();
+
+                EventBusSingleton.getInstance().post(new SignedInSuccessfullyEvent());
 
                 List<AuthenticationResponseChart> chartsMap =
                     response.body().getData().getBody().getCharts();
-
-                view.finishActivity();
 
                 view.openMainActivity(chartsMap);
 
@@ -144,19 +106,17 @@ public class LoginActivityPresenter {
         });
   }
 
-  public interface LoginActivityView extends BaseActivityPresenter.BaseActivityView {
-    void initializeFacebookLogin();
+  public interface SignInActivityView extends BaseActivityPresenter.BaseActivityView {
+    void prepareLoadersForSignIn();
 
-    void hideWaitingDialog();
+    void saveUserSignInDetails(String accessToken, String email, String password);
+
+    void openAccountVerificationActivity();
 
     void openSetupProfileActivity();
 
-    void saveFacebookAccessToken(String accessToken);
-
-    void saveFacebookUserDetails(String userID, String userName, String userEmail);
-
-    void prepareLoaderForFacebookRegister();
-
     void openMainActivity(List<AuthenticationResponseChart> chartsMap);
+
+    void dismissWaitingDialog();
   }
 }

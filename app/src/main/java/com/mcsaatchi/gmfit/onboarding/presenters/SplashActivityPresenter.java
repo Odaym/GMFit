@@ -9,7 +9,7 @@ import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponseInnerBody;
 import com.mcsaatchi.gmfit.architecture.rest.UiResponse;
 import com.mcsaatchi.gmfit.architecture.rest.UserProfileResponse;
 import com.mcsaatchi.gmfit.common.Constants;
-import com.mcsaatchi.gmfit.common.activities.BaseActivity;
+import com.mcsaatchi.gmfit.common.presenters.BaseActivityPresenter;
 import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -36,7 +36,7 @@ public class SplashActivityPresenter {
           loginWithFacebook(facebookToken);
         }
       } else {
-        ((BaseActivity) view).showNoInternetDialog();
+        view.showNoInternetDialog();
       }
     }
   }
@@ -52,7 +52,7 @@ public class SplashActivityPresenter {
           case 200:
             responseBody = response.body().getData().getBody();
 
-            ((BaseActivity) view).saveAccessToken(responseBody.getToken());
+            view.saveAccessToken(responseBody.getToken());
 
             getOnboardingStatus();
 
@@ -61,7 +61,7 @@ public class SplashActivityPresenter {
       }
 
       @Override public void onFailure(Call<AuthenticationResponse> call, Throwable t) {
-        ((BaseActivity) view).showRequestErrorDialog(t.getMessage());
+        view.showRequestErrorDialog(t.getMessage());
       }
     });
   }
@@ -77,7 +77,7 @@ public class SplashActivityPresenter {
           case 200:
             responseBody = response.body().getData().getBody();
 
-            ((BaseActivity) view).saveAccessToken(responseBody.getToken());
+            view.saveAccessToken(responseBody.getToken());
 
             getOnboardingStatus();
 
@@ -89,7 +89,7 @@ public class SplashActivityPresenter {
       }
 
       @Override public void onFailure(Call<AuthenticationResponse> call, Throwable t) {
-        ((BaseActivity) view).showRequestErrorDialog(t.getMessage());
+        view.showRequestErrorDialog(t.getMessage());
       }
     });
   }
@@ -114,7 +114,7 @@ public class SplashActivityPresenter {
       }
 
       @Override public void onFailure(Call<UserProfileResponse> call, Throwable t) {
-        ((BaseActivity) view).showRequestErrorDialog(t.getMessage());
+        view.showRequestErrorDialog(t.getMessage());
       }
     });
   }
@@ -142,7 +142,7 @@ public class SplashActivityPresenter {
         });
   }
 
-  public interface SplashActivityView {
+  public interface SplashActivityView extends BaseActivityPresenter.BaseActivityView {
     void showLoginActivity();
 
     void showMainActivity(List<AuthenticationResponseChart> chartsMap);
@@ -150,7 +150,5 @@ public class SplashActivityPresenter {
     void showWrongCredentialsError();
 
     void handleSuccessfulSignUp();
-
-    boolean checkInternetAvailable();
   }
 }

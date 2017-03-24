@@ -1,6 +1,7 @@
 package com.mcsaatchi.gmfit.common.activities;
 
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -24,6 +25,7 @@ import timber.log.Timber;
 public class BaseActivity extends AppCompatActivity
     implements BaseActivityPresenter.BaseActivityView {
   @Inject public SharedPreferences prefs;
+  @Inject public ConnectivityManager connectivityManager;
   @Inject public DataAccessHandler dataAccessHandler;
   @Inject public DBHelper dbHelper;
   @Inject public PermissionsChecker permChecker;
@@ -68,29 +70,6 @@ public class BaseActivity extends AppCompatActivity
     }
   }
 
-  public void setupToolbar(String activityName, Toolbar toolbar, String toolbarTitle,
-      boolean backEnabled) {
-
-    Bundle params = new Bundle();
-    params.putString("activity_name", activityName);
-    firebaseAnalytics.logEvent("activity_visited", params);
-
-    if (toolbarTitle == null) {
-      toolbar.setTitle(R.string.app_name);
-    } else {
-      toolbar.setTitle(toolbarTitle);
-    }
-
-    setSupportActionBar(toolbar);
-
-    if (backEnabled) {
-      getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-      toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_arrow_left));
-    }
-
-    toolbar.setTitleTextAppearance(this, R.style.Toolbar_TitleTextStyle);
-  }
-
   @Override public void finishActivity() {
     finish();
   }
@@ -126,5 +105,33 @@ public class BaseActivity extends AppCompatActivity
         (dialog, which) -> dialog.dismiss());
     alertDialog.setMessage(getString(R.string.login_failed_wrong_credentials));
     alertDialog.show();
+  }
+
+  public void setupToolbar(String activityName, Toolbar toolbar, String toolbarTitle,
+      boolean backEnabled) {
+
+    Bundle params = new Bundle();
+    params.putString("activity_name", activityName);
+    firebaseAnalytics.logEvent("activity_visited", params);
+
+    if (toolbarTitle == null) {
+      toolbar.setTitle(R.string.app_name);
+    } else {
+      toolbar.setTitle(toolbarTitle);
+    }
+
+    setSupportActionBar(toolbar);
+
+    if (backEnabled) {
+      getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+      toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_arrow_left));
+    }
+
+    toolbar.setTitleTextAppearance(this, R.style.Toolbar_TitleTextStyle);
+  }
+
+  @Override public boolean checkInternetAvailable() {
+    return connectivityManager.getActiveNetworkInfo() != null
+        && connectivityManager.getActiveNetworkInfo().isConnectedOrConnecting();
   }
 }

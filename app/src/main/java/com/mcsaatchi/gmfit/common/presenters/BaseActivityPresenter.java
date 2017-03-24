@@ -11,5 +11,7 @@ public class BaseActivityPresenter {
     void showRequestErrorDialog(String responseMessage);
 
     void showWrongCredentialsError();
+
+    boolean checkInternetAvailable();
   }
 }
