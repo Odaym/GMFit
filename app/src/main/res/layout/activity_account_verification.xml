@@ -78,7 +78,7 @@
   </LinearLayout>
 
   <Button
-      android:id="@+id/setup_profile_button"
+      android:id="@+id/setupProfileBTN"
       android:layout_width="match_parent"
       android:layout_height="@dimen/default_button_height_1"
       android:layout_alignParentBottom="true"

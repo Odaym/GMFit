@@ -85,6 +85,7 @@
 
     <activity
         android:name=".onboarding.activities.AccountVerificationActivity"
+        android:exported="true"
         android:screenOrientation="portrait"
         android:theme="@style/No_Status_Or_Action_Bar_Theme"
         android:windowSoftInputMode="stateVisible|adjustPan"/>
