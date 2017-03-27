@@ -29,7 +29,6 @@ public class SetupProfileActivity extends BaseActivity {
   @Bind(R.id.viewpager) NonSwipeableViewPager viewPager;
   @Bind(R.id.nextPageBTN) Button nextPageBTN;
   @Bind(R.id.toolbar) Toolbar toolbar;
-  private SetupProfile_Adapter setupProfileAdapter;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -38,7 +37,8 @@ public class SetupProfileActivity extends BaseActivity {
 
     ButterKnife.bind(this);
 
-    setupProfileAdapter = new SetupProfile_Adapter(getSupportFragmentManager());
+    SetupProfile_Adapter setupProfileAdapter =
+        new SetupProfile_Adapter(getSupportFragmentManager());
 
     setupToolbar(getClass().getSimpleName(), toolbar,
         getResources().getString(R.string.setup_profile_step_1_title), true);
@@ -89,9 +89,6 @@ public class SetupProfileActivity extends BaseActivity {
       switch (viewPager.getCurrentItem()) {
         case 1:
           if (setupProfileAdapter.getRegisteredFragment(viewPager.getCurrentItem()) != null) {
-            /**
-             * If no data was selected
-             */
             if (!((SetupProfile2Fragment) setupProfileAdapter.getRegisteredFragment(
                 viewPager.getCurrentItem())).wasDataSelected()) {
 
@@ -104,9 +101,6 @@ public class SetupProfileActivity extends BaseActivity {
           break;
         case 2:
           if (setupProfileAdapter.getRegisteredFragment(viewPager.getCurrentItem()) != null) {
-            /**
-             * If no data was selected
-             */
             if (!((SetupProfile3Fragment) setupProfileAdapter.getRegisteredFragment(
                 viewPager.getCurrentItem())).wasDataSelected()) {
 
@@ -119,9 +113,6 @@ public class SetupProfileActivity extends BaseActivity {
           break;
         case 3:
           if (setupProfileAdapter.getRegisteredFragment(viewPager.getCurrentItem()) != null) {
-            /**
-             * If no data was selected
-             */
             if (((SetupProfile4Fragment) setupProfileAdapter.getRegisteredFragment(
                 viewPager.getCurrentItem())).getFinalHeight() == 0
                 || ((SetupProfile4Fragment) setupProfileAdapter.getRegisteredFragment(
@@ -163,10 +154,10 @@ public class SetupProfileActivity extends BaseActivity {
     return false;
   }
 
-  public class SetupProfile_Adapter extends FragmentPagerAdapter {
+  private class SetupProfile_Adapter extends FragmentPagerAdapter {
     SparseArray<Fragment> registeredFragments = new SparseArray<>();
 
-    public SetupProfile_Adapter(FragmentManager fm) {
+    SetupProfile_Adapter(FragmentManager fm) {
       super(fm);
     }
 
@@ -196,7 +187,7 @@ public class SetupProfileActivity extends BaseActivity {
       super.destroyItem(container, position, object);
     }
 
-    public Fragment getRegisteredFragment(int position) {
+    Fragment getRegisteredFragment(int position) {
       return registeredFragments.get(position);
     }
 
