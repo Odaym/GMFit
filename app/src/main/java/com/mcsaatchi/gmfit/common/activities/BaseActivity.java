@@ -76,40 +76,6 @@ public class BaseActivity extends AppCompatActivity
   @Override public void finishActivity() {
     finish();
   }
-
-  @Override public void showNoInternetDialog() {
-    int NO_INTERNET_DIALOG_TIMEOUT = 3000;
-
-    AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-    alertDialog.setTitle(R.string.no_internet_conection_dialog_title);
-    alertDialog.setMessage(getString(R.string.no_internet_connection_dialog_message));
-    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
-        (dialog, which) -> dialog.dismiss());
-    alertDialog.show();
-
-    new Handler().postDelayed(this::finish, NO_INTERNET_DIALOG_TIMEOUT);
-  }
-
-  @Override public void saveAccessToken(String accessToken) {
-    prefs.edit().putString(Constants.PREF_USER_ACCESS_TOKEN, "Bearer " + accessToken).apply();
-  }
-
-  @Override public void showRequestErrorDialog(String responseMessage) {
-    Timber.d("Call failed with error : %s", responseMessage);
-    final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-    alertDialog.setMessage(getResources().getString(R.string.server_error_got_returned));
-    alertDialog.show();
-  }
-
-  @Override public void showWrongCredentialsError() {
-    final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-    alertDialog.setTitle(R.string.signing_in_dialog_title);
-    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
-        (dialog, which) -> dialog.dismiss());
-    alertDialog.setMessage(getString(R.string.login_failed_wrong_credentials));
-    alertDialog.show();
-  }
-
   public void setupToolbar(String activityName, Toolbar toolbar, String toolbarTitle,
       boolean backEnabled) {
 
@@ -133,12 +99,46 @@ public class BaseActivity extends AppCompatActivity
     toolbar.setTitleTextAppearance(this, R.style.Toolbar_TitleTextStyle);
   }
 
+  @Override public void displayNoInternetDialog() {
+    int NO_INTERNET_DIALOG_TIMEOUT = 3000;
+
+    AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+    alertDialog.setTitle(R.string.no_internet_conection_dialog_title);
+    alertDialog.setMessage(getString(R.string.no_internet_connection_dialog_message));
+    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
+        (dialog, which) -> dialog.dismiss());
+    alertDialog.show();
+
+    new Handler().postDelayed(this::finish, NO_INTERNET_DIALOG_TIMEOUT);
+  }
+
+  @Override public void saveAccessToken(String accessToken) {
+    prefs.edit().putString(Constants.PREF_USER_ACCESS_TOKEN, "Bearer " + accessToken).apply();
+  }
+
+  @Override public void displayRequestErrorDialog(String responseMessage) {
+    Timber.d("Call failed with error : %s", responseMessage);
+    final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+    alertDialog.setMessage(getResources().getString(R.string.server_error_got_returned));
+    alertDialog.show();
+  }
+
+  @Override public void displayWrongCredentialsError() {
+    final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+    alertDialog.setTitle(R.string.signing_in_dialog_title);
+    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
+        (dialog, which) -> dialog.dismiss());
+    alertDialog.setMessage(getString(R.string.login_failed_wrong_credentials));
+    alertDialog.show();
+  }
+
+
   @Override public boolean checkInternetAvailable() {
     return connectivityManager.getActiveNetworkInfo() != null
         && connectivityManager.getActiveNetworkInfo().isConnectedOrConnecting();
   }
 
-  @Override public ProgressDialog showWaitingDialog(String dialogTitle) {
+  @Override public ProgressDialog displayWaitingDialog(String dialogTitle) {
     ProgressDialog waitingDialog = new ProgressDialog(this);
     waitingDialog.setTitle(dialogTitle);
     waitingDialog.setMessage(getString(R.string.please_wait_dialog_message));
@@ -151,11 +151,11 @@ public class BaseActivity extends AppCompatActivity
     waitingDialog.dismiss();
   }
 
-  @Override public void callShowWaitingDialog(int dialogTitleResource) {
-    waitingDialog = showWaitingDialog(getString(dialogTitleResource));
+  @Override public void callDisplayWaitingDialog(int dialogTitleResource) {
+    waitingDialog = displayWaitingDialog(getString(dialogTitleResource));
   }
 
-  @Override public void callDismissDialog() {
+  @Override public void callDismissWaitingDialog() {
     dismissWaitingDialog(waitingDialog);
   }
 }

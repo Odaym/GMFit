@@ -20,7 +20,7 @@ public class ResetPasswordActivityPresenter {
 
   public void resetPassword(String token, String newPassword) {
     if (view.checkInternetAvailable()) {
-      view.callShowWaitingDialog(R.string.resetting_password_dialog_title);
+      view.callDisplayWaitingDialog(R.string.resetting_password_dialog_title);
 
       dataAccessHandler.finalizeResetPassword(token, newPassword,
           new Callback<DefaultGetResponse>() {
@@ -28,7 +28,7 @@ public class ResetPasswordActivityPresenter {
                 Response<DefaultGetResponse> response) {
               switch (response.code()) {
                 case 200:
-                  view.callDismissDialog();
+                  view.callDismissWaitingDialog();
                   view.finishActivity();
 
                   break;
@@ -36,7 +36,7 @@ public class ResetPasswordActivityPresenter {
             }
 
             @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
-              view.showRequestErrorDialog(t.getMessage());
+              view.displayRequestErrorDialog(t.getMessage());
             }
           });
     }

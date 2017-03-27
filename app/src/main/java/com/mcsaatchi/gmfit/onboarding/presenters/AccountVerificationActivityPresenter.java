@@ -18,22 +18,16 @@ public class AccountVerificationActivityPresenter {
     this.dataAccessHandler = dataAccessHandler;
   }
 
-  public interface AccountVerificationActivityView extends BaseActivityPresenter.BaseActivityView {
-    void openSetupProfileActivity();
-
-    void displayWrongCodeDialog();
-  }
-
   public void setupProfile(String verificationCode){
     if (view.checkInternetAvailable()){
       verifyRegistrationCode(verificationCode);
     }else{
-      view.showNoInternetDialog();
+      view.displayNoInternetDialog();
     }
   }
 
   private void verifyRegistrationCode(String verificationCode) {
-    view.callShowWaitingDialog(R.string.verifying_email_dialog_title);
+    view.callDisplayWaitingDialog(R.string.verifying_email_dialog_title);
 
     dataAccessHandler.verifyUser(verificationCode, new Callback<DefaultGetResponse>() {
       @Override
@@ -47,12 +41,18 @@ public class AccountVerificationActivityPresenter {
             break;
         }
 
-        view.callDismissDialog();
+        view.callDismissWaitingDialog();
       }
 
       @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
-        view.showRequestErrorDialog(t.getMessage());
+        view.displayRequestErrorDialog(t.getMessage());
       }
     });
+  }
+
+  public interface AccountVerificationActivityView extends BaseActivityPresenter.BaseActivityView {
+    void openSetupProfileActivity();
+
+    void displayWrongCodeDialog();
   }
 }

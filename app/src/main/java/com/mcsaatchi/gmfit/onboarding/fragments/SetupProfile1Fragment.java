@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.GMFitApplication;
 import com.mcsaatchi.gmfit.common.Constants;
@@ -25,24 +26,24 @@ public class SetupProfile1Fragment extends Fragment {
 
   @Inject SharedPreferences prefs;
 
+  private CountryPicker picker;
+
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
 
     View fragmentView = inflater.inflate(R.layout.fragment_setup_profile_1, container, false);
 
     ButterKnife.bind(this, fragmentView);
+
     ((GMFitApplication) getActivity().getApplication()).getAppComponent().inject(this);
 
-    final CountryPicker picker = CountryPicker.newInstance(getString(R.string.choose_country_hint));
+    picker = CountryPicker.newInstance(getString(R.string.choose_country_hint));
 
     Country userCountry = picker.getUserCountryInfo(getActivity());
 
     countryFlagIV.setImageResource(userCountry.getFlag());
     chooseCountryBTN.setText(userCountry.getName());
 
-    /**
-     * The defaults are set here
-     */
     prefs.edit().putString(Constants.EXTRAS_USER_PROFILE_MEASUREMENT_SYSTEM, "metric").apply();
     prefs.edit()
         .putString(Constants.EXTRAS_USER_PROFILE_NATIONALITY, chooseCountryBTN.getText().toString())
@@ -54,18 +55,18 @@ public class SetupProfile1Fragment extends Fragment {
       }
     });
 
-    chooseCountryBTN.setOnClickListener(view -> {
-      picker.show(getActivity().getSupportFragmentManager(), "COUNTRY_PICKER");
-      picker.setListener((name, code, dialCode, flagDrawableResID) -> {
-        chooseCountryBTN.setText(name);
-        countryFlagIV.setImageResource(flagDrawableResID);
-
-        prefs.edit().putString(Constants.EXTRAS_USER_PROFILE_NATIONALITY, name).apply();
-
-        picker.dismiss();
-      });
-    });
-
     return fragmentView;
+  }
+
+  @OnClick(R.id.chooseCountryBTN) public void handleChooseCountry() {
+    picker.show(getActivity().getSupportFragmentManager(), "COUNTRY_PICKER");
+    picker.setListener((name, code, dialCode, flagDrawableResID) -> {
+      chooseCountryBTN.setText(name);
+      countryFlagIV.setImageResource(flagDrawableResID);
+
+      prefs.edit().putString(Constants.EXTRAS_USER_PROFILE_NATIONALITY, name).apply();
+
+      picker.dismiss();
+    });
   }
 }

@@ -42,7 +42,7 @@ public class LoginActivityPresenter {
 
         view.saveFacebookUserDetails(userID, userName, userEmail);
 
-        view.callShowWaitingDialog(R.string.signing_in_dialog_title);
+        view.callDisplayWaitingDialog(R.string.signing_in_dialog_title);
 
         registerWithFacebook(accessToken.getToken());
       } catch (JSONException e) {
@@ -81,15 +81,15 @@ public class LoginActivityPresenter {
 
             break;
           case 401:
-            view.showWrongCredentialsError();
+            view.displayWrongCredentialsError();
             break;
         }
 
-        view.callDismissDialog();
+        view.callDismissWaitingDialog();
       }
 
       @Override public void onFailure(Call<AuthenticationResponse> call, Throwable t) {
-        view.showRequestErrorDialog(t.getMessage());
+        view.displayRequestErrorDialog(t.getMessage());
       }
     });
   }
@@ -126,7 +126,7 @@ public class LoginActivityPresenter {
           @Override public void onResponse(Call<UiResponse> call, Response<UiResponse> response) {
             switch (response.code()) {
               case 200:
-                view.callDismissDialog();
+                view.callDismissWaitingDialog();
 
                 List<AuthenticationResponseChart> chartsMap =
                     response.body().getData().getBody().getCharts();

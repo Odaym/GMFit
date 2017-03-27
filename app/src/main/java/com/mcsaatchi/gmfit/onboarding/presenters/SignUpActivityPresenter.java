@@ -19,7 +19,7 @@ public class SignUpActivityPresenter {
   }
 
   public void signUserUp(final String full_name, final String email, final String password) {
-    view.callShowWaitingDialog(R.string.signing_up_dialog_title);
+    view.callDisplayWaitingDialog(R.string.signing_up_dialog_title);
 
     dataAccessHandler.registerUser(full_name, email, password,
         new Callback<AuthenticationResponse>() {
@@ -39,11 +39,11 @@ public class SignUpActivityPresenter {
                 break;
             }
 
-            view.callDismissDialog();
+            view.callDismissWaitingDialog();
           }
 
           @Override public void onFailure(Call<AuthenticationResponse> call, Throwable t) {
-            view.showRequestErrorDialog(t.getMessage());
+            view.displayRequestErrorDialog(t.getMessage());
           }
         });
   }

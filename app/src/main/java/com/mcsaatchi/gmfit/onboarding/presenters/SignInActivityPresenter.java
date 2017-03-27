@@ -27,7 +27,7 @@ public class SignInActivityPresenter {
   }
 
   public void signIn(String email, String password) {
-    view.callShowWaitingDialog(R.string.signing_in_dialog_title);
+    view.callDisplayWaitingDialog(R.string.signing_in_dialog_title);
 
     dataAccessHandler.signInUser(email, password, new Callback<AuthenticationResponse>() {
       @Override public void onResponse(Call<AuthenticationResponse> call,
@@ -43,18 +43,18 @@ public class SignInActivityPresenter {
 
             break;
           case 401:
-            view.showWrongCredentialsError();
+            view.displayWrongCredentialsError();
             break;
           case 403:
             view.openAccountVerificationActivity();
             break;
         }
 
-        view.callDismissDialog();
+        view.callDismissWaitingDialog();
       }
 
       @Override public void onFailure(Call<AuthenticationResponse> call, Throwable t) {
-        view.showRequestErrorDialog(t.getMessage());
+        view.displayRequestErrorDialog(t.getMessage());
       }
     });
   }
@@ -90,7 +90,7 @@ public class SignInActivityPresenter {
           @Override public void onResponse(Call<UiResponse> call, Response<UiResponse> response) {
             switch (response.code()) {
               case 200:
-                view.callDismissDialog();
+                view.callDismissWaitingDialog();
 
                 EventBusSingleton.getInstance().post(new SignedInSuccessfullyEvent());
 

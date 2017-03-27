@@ -1,12 +1,9 @@
 package com.mcsaatchi.gmfit.onboarding.fragments;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -18,6 +15,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import com.andreabaccega.widget.FormEditText;
 import com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialogFragment;
 import com.mcsaatchi.gmfit.R;
@@ -26,30 +24,25 @@ import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
 import com.mcsaatchi.gmfit.architecture.otto.UserFinalizedSetupProfileEvent;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponseChart;
-import com.mcsaatchi.gmfit.architecture.rest.DefaultGetResponse;
-import com.mcsaatchi.gmfit.architecture.rest.MedicalConditionsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.MedicalConditionsResponseDatum;
-import com.mcsaatchi.gmfit.architecture.rest.UiResponse;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.MainActivity;
+import com.mcsaatchi.gmfit.common.fragments.BaseFragment;
 import com.mcsaatchi.gmfit.onboarding.adapters.MedicalConditionsSpinnerAdapter;
 import com.mcsaatchi.gmfit.onboarding.adapters.TextualSpinnersAdapter;
+import com.mcsaatchi.gmfit.onboarding.presenters.SetupProfileFragmentsPresenter;
 import com.squareup.otto.Subscribe;
 import java.text.DateFormatSymbols;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import javax.inject.Inject;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import timber.log.Timber;
 
-public class SetupProfile4Fragment extends Fragment
-    implements CalendarDatePickerDialogFragment.OnDateSetListener {
+public class SetupProfile4Fragment extends BaseFragment
+    implements SetupProfileFragmentsPresenter.SetupProfileFragmentsView_4,
+    CalendarDatePickerDialogFragment.OnDateSetListener {
 
   private static final String FRAG_TAG_DATE_PICKER = "fragment_date_picker_name";
-  private static final String TAG = "SetupProfile4Fragment";
 
   @Bind(R.id.dateOfBirthTV) TextView dateOfBirthTV;
   @Bind(R.id.weightET) FormEditText weightET;
@@ -60,6 +53,8 @@ public class SetupProfile4Fragment extends Fragment
 
   @Inject DataAccessHandler dataAccessHandler;
   @Inject SharedPreferences prefs;
+
+  private SetupProfileFragmentsPresenter presenter;
 
   private float finalWeight = 0, finalHeight = 0;
 
@@ -90,7 +85,10 @@ public class SetupProfile4Fragment extends Fragment
     View fragmentView = inflater.inflate(R.layout.fragment_setup_profile_4, container, false);
 
     ButterKnife.bind(this, fragmentView);
+
     ((GMFitApplication) getActivity().getApplication()).getAppComponent().inject(this);
+
+    presenter = new SetupProfileFragmentsPresenter(this, dataAccessHandler);
 
     //When going back and forth within the 3 Setup Profile fragments, don't reregister the Eventbus
     try {
@@ -102,24 +100,13 @@ public class SetupProfile4Fragment extends Fragment
 
     initCustomSpinner(bloodTypeItems, bloodTypeSpinner);
 
-    getAndPopulateMedicalConditions();
+    presenter.getMedicalConditions();
 
     inputMethodManager =
         (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
 
     allFields.add(weightET);
     allFields.add(heightET);
-
-    dateOfBirthTV.setOnClickListener(v -> {
-      CalendarDatePickerDialogFragment cdp =
-          new CalendarDatePickerDialogFragment().setOnDateSetListener(SetupProfile4Fragment.this)
-              .setFirstDayOfWeek(Calendar.MONDAY)
-              .setDoneText(getString(R.string.accept_ok))
-              .setCancelText(getString(R.string.decline_cancel))
-              .setPreselectedDate(2000, 0, 1)
-              .setThemeLight();
-      cdp.show(getActivity().getSupportFragmentManager(), FRAG_TAG_DATE_PICKER);
-    });
 
     weightET.addTextChangedListener(new TextWatcher() {
       @Override public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -154,6 +141,17 @@ public class SetupProfile4Fragment extends Fragment
     });
 
     return fragmentView;
+  }
+
+  @OnClick(R.id.dateOfBirthTV) public void handleChooseDateOfBirth() {
+    CalendarDatePickerDialogFragment cdp =
+        new CalendarDatePickerDialogFragment().setOnDateSetListener(SetupProfile4Fragment.this)
+            .setFirstDayOfWeek(Calendar.MONDAY)
+            .setDoneText(getString(R.string.accept_ok))
+            .setCancelText(getString(R.string.decline_cancel))
+            .setPreselectedDate(2000, 0, 1)
+            .setThemeLight();
+    cdp.show(getActivity().getSupportFragmentManager(), FRAG_TAG_DATE_PICKER);
   }
 
   @Override
@@ -203,111 +201,8 @@ public class SetupProfile4Fragment extends Fragment
             ((MedicalConditionsResponseDatum) medicalConditionsSpinner.getSelectedItem()).getName())
         .apply();
 
-    setupUserProfile(finalDateOfBirth, finalBloodType, nationality, medicalConditionId,
+    presenter.setupUserProfile(finalDateOfBirth, finalBloodType, nationality, medicalConditionId,
         measurementSystem, goalId, activityLevelId, finalGender, finalHeight, finalWeight);
-  }
-
-  private void getAndPopulateMedicalConditions() {
-    dataAccessHandler.getMedicalConditions(new Callback<MedicalConditionsResponse>() {
-      @Override public void onResponse(Call<MedicalConditionsResponse> call,
-          Response<MedicalConditionsResponse> response) {
-        switch (response.code()) {
-          case 200:
-            ArrayList<MedicalConditionsResponseDatum> allMedicalData =
-                (ArrayList<MedicalConditionsResponseDatum>) response.body()
-                    .getData()
-                    .getBody()
-                    .getData();
-
-            initMedicalConditionsSpinner(allMedicalData, medicalConditionsSpinner);
-
-            break;
-          case 401:
-
-            break;
-        }
-      }
-
-      @Override public void onFailure(Call<MedicalConditionsResponse> call, Throwable t) {
-
-      }
-    });
-  }
-
-  private void setupUserProfile(String finalDateOfBirth, String bloodType, String nationality,
-      int medical_condition, String measurementSystem, int goalId, int activityLevelId,
-      int finalGender, double height, double weight) {
-
-    final ProgressDialog waitingDialog = new ProgressDialog(getActivity());
-    waitingDialog.setTitle(getString(R.string.signing_up_dialog_title));
-    waitingDialog.setMessage(getString(R.string.please_wait_dialog_message));
-    waitingDialog.show();
-
-    final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
-    alertDialog.setTitle(R.string.signing_up_dialog_title);
-    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok), (dialog, which) -> {
-      dialog.dismiss();
-
-      if (waitingDialog.isShowing()) waitingDialog.dismiss();
-    });
-
-    dataAccessHandler.updateUserProfile(finalDateOfBirth, bloodType, nationality, medical_condition,
-        measurementSystem, goalId, activityLevelId, finalGender, height, weight, "1",
-        new Callback<DefaultGetResponse>() {
-          @Override public void onResponse(Call<DefaultGetResponse> call,
-              Response<DefaultGetResponse> response) {
-            switch (response.code()) {
-              case 200:
-                getUiForSection(waitingDialog, "fitness");
-                break;
-              case 401:
-                alertDialog.setMessage(getString(R.string.login_failed_wrong_credentials));
-                alertDialog.show();
-                break;
-            }
-          }
-
-          @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
-            Timber.d("Call failed with error : %s", t.getMessage());
-            alertDialog.setMessage(
-                getActivity().getResources().getString(R.string.server_error_got_returned));
-            alertDialog.show();
-          }
-        });
-  }
-
-  private void getUiForSection(final ProgressDialog waitingDialog, String section) {
-    dataAccessHandler.getUiForSection(Constants.BASE_URL_ADDRESS + "user/ui?section=" + section,
-        new Callback<UiResponse>() {
-          @Override public void onResponse(Call<UiResponse> call, Response<UiResponse> response) {
-            switch (response.code()) {
-              case 200:
-                waitingDialog.dismiss();
-
-                prefs.edit().putBoolean(Constants.EXTRAS_USER_LOGGED_IN, true).apply();
-
-                List<AuthenticationResponseChart> chartsMap =
-                    response.body().getData().getBody().getCharts();
-
-                Intent intent = new Intent(getActivity(), MainActivity.class);
-                intent.putParcelableArrayListExtra(Constants.BUNDLE_FITNESS_CHARTS_MAP,
-                    (ArrayList<AuthenticationResponseChart>) chartsMap);
-                startActivity(intent);
-
-                getActivity().finish();
-
-                break;
-            }
-          }
-
-          @Override public void onFailure(Call<UiResponse> call, Throwable t) {
-            Timber.d("Call failed with error : %s", t.getMessage());
-            final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
-            alertDialog.setMessage(
-                getActivity().getResources().getString(R.string.server_error_got_returned));
-            alertDialog.show();
-          }
-        });
   }
 
   private void initCustomSpinner(ArrayList<String> listItems, Spinner spinner) {
@@ -318,29 +213,6 @@ public class SetupProfile4Fragment extends Fragment
       @Override
       public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-        String item = parent.getItemAtPosition(position).toString();
-      }
-
-      @Override public void onNothingSelected(AdapterView<?> parent) {
-
-      }
-    });
-
-    spinner.setOnTouchListener((v, event) -> {
-      inputMethodManager.hideSoftInputFromWindow(weightET.getWindowToken(), 0);
-
-      return false;
-    });
-  }
-
-  private void initMedicalConditionsSpinner(ArrayList<MedicalConditionsResponseDatum> listItems,
-      Spinner spinner) {
-    MedicalConditionsSpinnerAdapter medicalConditionsSpinnerAdapter =
-        new MedicalConditionsSpinnerAdapter(getActivity(), listItems);
-    spinner.setAdapter(medicalConditionsSpinnerAdapter);
-    spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-      @Override
-      public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         String item = parent.getItemAtPosition(position).toString();
       }
 
@@ -367,5 +239,39 @@ public class SetupProfile4Fragment extends Fragment
 
   public float getFinalHeight() {
     return finalHeight;
+  }
+
+  @Override public void populateMedicalConditionsSpinner(
+      ArrayList<MedicalConditionsResponseDatum> allMedicalData) {
+    MedicalConditionsSpinnerAdapter medicalConditionsSpinnerAdapter =
+        new MedicalConditionsSpinnerAdapter(getActivity(), allMedicalData);
+    medicalConditionsSpinner.setAdapter(medicalConditionsSpinnerAdapter);
+    medicalConditionsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+      @Override
+      public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        String item = parent.getItemAtPosition(position).toString();
+      }
+
+      @Override public void onNothingSelected(AdapterView<?> parent) {
+
+      }
+    });
+
+    medicalConditionsSpinner.setOnTouchListener((v, event) -> {
+      inputMethodManager.hideSoftInputFromWindow(weightET.getWindowToken(), 0);
+
+      return false;
+    });
+  }
+
+  @Override public void openMainActivity(List<AuthenticationResponseChart> chartsMap) {
+    prefs.edit().putBoolean(Constants.EXTRAS_USER_LOGGED_IN, true).apply();
+
+    Intent intent = new Intent(getActivity(), MainActivity.class);
+    intent.putParcelableArrayListExtra(Constants.BUNDLE_FITNESS_CHARTS_MAP,
+        (ArrayList<AuthenticationResponseChart>) chartsMap);
+    startActivity(intent);
+
+    getActivity().finish();
   }
 }

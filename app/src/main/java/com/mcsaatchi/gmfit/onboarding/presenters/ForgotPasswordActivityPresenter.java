@@ -12,10 +12,6 @@ public class ForgotPasswordActivityPresenter {
   private ForgotPasswordActivityView view;
   private DataAccessHandler dataAccessHandler;
 
-  public interface ForgotPasswordActivityView extends BaseActivityPresenter.BaseActivityView {
-    void openResetPasswordActivity();
-  }
-
   public ForgotPasswordActivityPresenter(ForgotPasswordActivityView view,
       DataAccessHandler dataAccessHandler) {
     this.view = view;
@@ -23,7 +19,7 @@ public class ForgotPasswordActivityPresenter {
   }
 
   public void handleForgotPassword(String email) {
-    view.callShowWaitingDialog(R.string.sending_reset_password_dialog_title);
+    view.callDisplayWaitingDialog(R.string.sending_reset_password_dialog_title);
 
     dataAccessHandler.sendResetPasswordLink(email, new Callback<DefaultGetResponse>() {
       @Override
@@ -34,12 +30,16 @@ public class ForgotPasswordActivityPresenter {
             break;
         }
 
-        view.callDismissDialog();
+        view.callDismissWaitingDialog();
       }
 
       @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
-        view.showRequestErrorDialog(t.getMessage());
+        view.displayRequestErrorDialog(t.getMessage());
       }
     });
+  }
+
+  public interface ForgotPasswordActivityView extends BaseActivityPresenter.BaseActivityView {
+    void openResetPasswordActivity();
   }
 }

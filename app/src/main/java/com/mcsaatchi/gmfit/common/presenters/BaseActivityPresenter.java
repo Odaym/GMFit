@@ -6,22 +6,22 @@ public class BaseActivityPresenter {
   public interface BaseActivityView {
     void finishActivity();
 
-    void showNoInternetDialog();
-
     void saveAccessToken(String accessToken);
-
-    void showRequestErrorDialog(String responseMessage);
-
-    void showWrongCredentialsError();
 
     boolean checkInternetAvailable();
 
-    ProgressDialog showWaitingDialog(String dialogTitle);
+    void displayNoInternetDialog();
+
+    void displayRequestErrorDialog(String responseMessage);
+
+    void displayWrongCredentialsError();
+
+    ProgressDialog displayWaitingDialog(String dialogTitle);
 
     void dismissWaitingDialog(ProgressDialog waitingDialog);
 
-    void callShowWaitingDialog(int dialogTitleResource);
+    void callDisplayWaitingDialog(int dialogTitleResource);
 
-    void callDismissDialog();
+    void callDismissWaitingDialog();
   }
 }

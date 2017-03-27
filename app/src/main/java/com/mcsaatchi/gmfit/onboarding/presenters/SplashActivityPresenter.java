@@ -36,7 +36,7 @@ public class SplashActivityPresenter {
           loginWithFacebook(facebookToken);
         }
       } else {
-        view.showNoInternetDialog();
+        view.displayNoInternetDialog();
       }
     }
   }
@@ -61,7 +61,7 @@ public class SplashActivityPresenter {
       }
 
       @Override public void onFailure(Call<AuthenticationResponse> call, Throwable t) {
-        view.showRequestErrorDialog(t.getMessage());
+        view.displayRequestErrorDialog(t.getMessage());
       }
     });
   }
@@ -83,13 +83,13 @@ public class SplashActivityPresenter {
 
             break;
           case 401:
-            view.showWrongCredentialsError();
+            view.displayWrongCredentialsError();
             break;
         }
       }
 
       @Override public void onFailure(Call<AuthenticationResponse> call, Throwable t) {
-        view.showRequestErrorDialog(t.getMessage());
+        view.displayRequestErrorDialog(t.getMessage());
       }
     });
   }
@@ -114,7 +114,7 @@ public class SplashActivityPresenter {
       }
 
       @Override public void onFailure(Call<UserProfileResponse> call, Throwable t) {
-        view.showRequestErrorDialog(t.getMessage());
+        view.displayRequestErrorDialog(t.getMessage());
       }
     });
   }
@@ -147,7 +147,7 @@ public class SplashActivityPresenter {
 
     void showMainActivity(List<AuthenticationResponseChart> chartsMap);
 
-    void showWrongCredentialsError();
+    void displayWrongCredentialsError();
 
     void handleSuccessfulSignUp();
   }

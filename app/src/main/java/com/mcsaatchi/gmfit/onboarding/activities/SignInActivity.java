@@ -99,7 +99,7 @@ public class SignInActivity extends BaseActivity
       if (checkInternetAvailable()) {
         presenter.signIn(emailET.getText().toString(), passwordET.getText().toString());
       } else {
-        showNoInternetDialog();
+        displayNoInternetDialog();
       }
     } else {
       showPasswordTV.setVisibility(View.GONE);
