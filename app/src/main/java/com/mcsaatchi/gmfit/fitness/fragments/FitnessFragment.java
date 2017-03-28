@@ -1,14 +1,11 @@
 package com.mcsaatchi.gmfit.fitness.fragments;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,7 +15,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -26,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.GMFitApplication;
@@ -38,12 +35,8 @@ import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
 import com.mcsaatchi.gmfit.architecture.otto.FitnessWidgetsOrderChangedEvent;
 import com.mcsaatchi.gmfit.architecture.otto.StepCounterIncrementedEvent;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponseChartData;
-import com.mcsaatchi.gmfit.architecture.rest.ChartMetricBreakdownResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ChartMetricBreakdownResponseDatum;
-import com.mcsaatchi.gmfit.architecture.rest.DefaultGetResponse;
-import com.mcsaatchi.gmfit.architecture.rest.SlugBreakdownResponse;
-import com.mcsaatchi.gmfit.architecture.rest.UserGoalMetricsResponse;
-import com.mcsaatchi.gmfit.architecture.rest.WidgetsResponse;
+import com.mcsaatchi.gmfit.architecture.rest.SlugBreakdownResponseInnerData;
 import com.mcsaatchi.gmfit.architecture.rest.WidgetsResponseDatum;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.AddNewChartActivity;
@@ -53,29 +46,27 @@ import com.mcsaatchi.gmfit.common.classes.FontTextView;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.common.components.CustomBarChart;
 import com.mcsaatchi.gmfit.common.components.DateCarousel;
+import com.mcsaatchi.gmfit.common.fragments.BaseFragment;
 import com.mcsaatchi.gmfit.common.models.DataChart;
 import com.mcsaatchi.gmfit.fitness.adapters.FitnessWidgetsRecyclerAdapter;
 import com.mcsaatchi.gmfit.fitness.models.FitnessWidget;
+import com.mcsaatchi.gmfit.fitness.presenters.FitnessFragmentPresenter;
 import com.squareup.otto.Subscribe;
-import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import timber.log.Timber;
 
-public class FitnessFragment extends Fragment {
+public class FitnessFragment extends BaseFragment
+    implements FitnessFragmentPresenter.FitnessFragmentView {
 
   private static final int ADD_NEW_FITNESS_CHART_REQUEST_CODE = 1;
   @Bind(R.id.dateCarouselLayout) DateCarousel dateCarouselLayout;
   @Bind(R.id.widgetsGridView) RecyclerView widgetsGridView;
   @Bind(R.id.cards_container) LinearLayout cards_container;
-  @Bind(R.id.addChartBTN) Button addNewChartBTN;
   @Bind(R.id.metricCounterTV) FontTextView metricCounterTV;
   @Bind(R.id.goalTV) FontTextView goalTV;
   @Bind(R.id.goalStatusWordTV) TextView goalStatusWordTV;
@@ -91,6 +82,7 @@ public class FitnessFragment extends Fragment {
   private ArrayList<FitnessWidget> widgetsMap;
   private ArrayList<DataChart> chartsMap;
   private String todayDate;
+  private FitnessFragmentPresenter presenter;
 
   @RequiresApi(api = Build.VERSION_CODES.KITKAT) @Override public void onAttach(Context context) {
     super.onAttach(context);
@@ -101,7 +93,9 @@ public class FitnessFragment extends Fragment {
 
     todayDate = dt.toString();
 
-    getUserGoalMetrics(todayDate, "fitness", false);
+    presenter = new FitnessFragmentPresenter(this, fitnessWidgetsDAO, dataAccessHandler);
+
+    presenter.getUserGoalMetrics(todayDate, "fitness", false);
 
     if (((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
       ((AppCompatActivity) getActivity()).getSupportActionBar()
@@ -112,11 +106,7 @@ public class FitnessFragment extends Fragment {
       chartsMap = getArguments().getParcelableArrayList(Constants.BUNDLE_FITNESS_CHARTS_MAP);
     }
 
-    try {
-      widgetsMap = (ArrayList<FitnessWidget>) fitnessWidgetsDAO.queryBuilder().orderBy("position", true).query();
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
+    widgetsMap = presenter.getWidgetsFromDB();
   }
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -139,9 +129,11 @@ public class FitnessFragment extends Fragment {
       DateTime finalTodayDateTime = new DateTime(todayDate1);
       DateTime finalDesiredDateTime = new DateTime(finalDate);
 
-      getUserGoalMetrics(finalDate, "fitness", !finalTodayDateTime.isEqual(finalDesiredDateTime));
+      presenter.getUserGoalMetrics(finalDate, "fitness",
+          !finalTodayDateTime.isEqual(finalDesiredDateTime));
 
-      getWidgetsWithDate(finalDate);
+      presenter.getWidgetsWithDate(finalDate);
+
       setupChartViews(chartsMap, finalDate);
     });
 
@@ -153,14 +145,14 @@ public class FitnessFragment extends Fragment {
     Timber.d("onCreateView: Device info : %s %s (%s) - %s", Build.MANUFACTURER, Build.MODEL,
         Build.DEVICE, Build.VERSION.RELEASE);
 
-    addNewChartBTN.setOnClickListener(v -> {
-      Intent intent = new Intent(getActivity(), AddNewChartActivity.class);
-      intent.putExtra(Constants.EXTRAS_ADD_CHART_WHAT_TYPE, Constants.EXTRAS_ADD_FITNESS_CHART);
-      intent.putExtra(Constants.BUNDLE_FITNESS_CHARTS_MAP, chartsMap);
-      startActivityForResult(intent, ADD_NEW_FITNESS_CHART_REQUEST_CODE);
-    });
-
     return fragmentView;
+  }
+
+  @OnClick(R.id.addChartBTN) public void handleAddNewChart() {
+    Intent intent = new Intent(getActivity(), AddNewChartActivity.class);
+    intent.putExtra(Constants.EXTRAS_ADD_CHART_WHAT_TYPE, Constants.EXTRAS_ADD_FITNESS_CHART);
+    intent.putExtra(Constants.BUNDLE_FITNESS_CHARTS_MAP, chartsMap);
+    startActivityForResult(intent, ADD_NEW_FITNESS_CHART_REQUEST_CODE);
   }
 
   @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -180,7 +172,6 @@ public class FitnessFragment extends Fragment {
 
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     super.onCreateOptionsMenu(menu, inflater);
-
     inflater.inflate(R.menu.main, menu);
   }
 
@@ -200,9 +191,10 @@ public class FitnessFragment extends Fragment {
         dateCarouselContainer.removeAllViews();
         dateCarouselLayout.setupDateCarousel();
 
-        getUserGoalMetrics(todayDate, "fitness", false);
+        presenter.getUserGoalMetrics(todayDate, "fitness", false);
 
-        getWidgetsWithDate(todayDate);
+        presenter.getWidgetsWithDate(todayDate);
+
         setupChartViews(chartsMap, todayDate);
 
         dateCarouselLayout.post(() -> {
@@ -221,201 +213,134 @@ public class FitnessFragment extends Fragment {
     EventBusSingleton.getInstance().unregister(this);
   }
 
-  private void getPeriodicalChartData(final DataChart chartObject, String desiredDate) {
-    dataAccessHandler.getPeriodicalChartData(dt.minusMonths(1).toString(), desiredDate, "fitness",
-        chartObject.getType(), new Callback<ChartMetricBreakdownResponse>() {
-          @Override public void onResponse(Call<ChartMetricBreakdownResponse> call,
-              Response<ChartMetricBreakdownResponse> response) {
-            if (response.code() == 200) {
-              List<ChartMetricBreakdownResponseDatum> rawChartData =
-                  response.body().getData().getBody().getData();
-
-              List<AuthenticationResponseChartData> newChartData = new ArrayList<>();
-
-              for (ChartMetricBreakdownResponseDatum responseDatum : rawChartData) {
-                newChartData.add(new AuthenticationResponseChartData(responseDatum.getDate(),
-                    responseDatum.getValue()));
-              }
-
-              if (getActivity() != null) {
-                CustomBarChart customBarChart = new CustomBarChart(getActivity(), chartObject);
-
-                /**
-                 * Open the breakdown for the chart
-                 */
-                customBarChart.addClickListener(
-                    chartObject1 -> getSlugBreakdownForChart(chartObject1));
-
-                customBarChart.setBarChartDataAndDates(cards_container, newChartData,
-                    Constants.EXTRAS_FITNESS_FRAGMENT);
-              }
-            }
-          }
-
-          @Override public void onFailure(Call<ChartMetricBreakdownResponse> call, Throwable t) {
-          }
-        });
-  }
-
-  public void getWidgetsWithDate(final String finalDate) {
-    dataAccessHandler.getWidgetsWithDate("fitness", finalDate, new Callback<WidgetsResponse>() {
-      @Override
-      public void onResponse(Call<WidgetsResponse> call, Response<WidgetsResponse> response) {
-        switch (response.code()) {
-          case 200:
-            List<WidgetsResponseDatum> widgetsFromResponse =
-                response.body().getData().getBody().getData();
-
-            ArrayList<FitnessWidget> newWidgetsMap = new ArrayList<>();
-
-            for (int i = 0; i < 2; i++) {
-              FitnessWidget widget = new FitnessWidget();
-
-              if (!widgetsFromResponse.get(i).getName().equals("Steps Count")) {
-                widget.setId(widgetsFromResponse.get(i).getWidgetId());
-                widget.setMeasurementUnit(widgetsFromResponse.get(i).getUnit());
-                widget.setPosition(i);
-                widget.setValue(Float.parseFloat(widgetsFromResponse.get(i).getTotal()));
-                widget.setTitle(widgetsFromResponse.get(i).getName());
-
-                newWidgetsMap.add(widget);
-              }
-            }
-
-            setupWidgetViews(newWidgetsMap);
-
-            break;
-        }
-      }
-
-      @Override public void onFailure(Call<WidgetsResponse> call, Throwable t) {
-      }
-    });
-  }
-
-  public void getUserGoalMetrics(String date, String type, final boolean requestingPreviousData) {
+  @Override public void showMetricsLoadingBar() {
     if (loadingMetricProgressBar != null) {
       loadingMetricProgressBar.setVisibility(View.VISIBLE);
       metricCounterTV.setVisibility(View.INVISIBLE);
     }
+  }
 
-    dataAccessHandler.getUserGoalMetrics(date, type, new Callback<UserGoalMetricsResponse>() {
-      @Override public void onResponse(Call<UserGoalMetricsResponse> call,
-          Response<UserGoalMetricsResponse> response) {
+  @Override public void displayUserGoalMetrics(String maxValue, String currentValue,
+      boolean requestingPreviousData) {
+    int remainingValue = 0;
 
-        switch (response.code()) {
-          case 200:
-            String maxValue =
-                response.body().getData().getBody().getMetrics().getStepsCount().getMaxValue();
+    goalTV.setText(Helpers.getFormattedString(Integer.parseInt(maxValue)));
 
-            String currentValue =
-                response.body().getData().getBody().getMetrics().getStepsCount().getValue();
+    metricProgressBar.setProgress(
+        (int) ((Double.parseDouble(currentValue) * 100) / Double.parseDouble(maxValue)));
 
-            int remainingValue = 0;
+    /**
+     * Requesting today's data
+     */
+    if (!requestingPreviousData) {
+      metricCounterTV.setText(Helpers.getFormattedString(prefs.getInt("steps_taken", 0)));
+      todayTV.setText(Helpers.getFormattedString(prefs.getInt("steps_taken", 0)));
 
-            goalTV.setText(Helpers.getFormattedString(Integer.parseInt(maxValue)));
+      remainingValue = Integer.parseInt(maxValue) - Helpers.getNumberFromFromattedString(
+          metricCounterTV.getText().toString());
+    } else {
+      /**
+       * Requesting data from previous days
+       */
+      metricCounterTV.setText(Helpers.getFormattedString((int) Double.parseDouble(currentValue)));
+      todayTV.setText(Helpers.getFormattedString((int) Double.parseDouble(currentValue)));
 
-            metricProgressBar.setProgress(
-                (int) ((Double.parseDouble(currentValue) * 100) / Double.parseDouble(maxValue)));
+      remainingValue = (int) (Integer.parseInt(maxValue) - Double.parseDouble(currentValue));
+    }
 
-            /**
-             * Requesting today's data
-             */
-            if (!requestingPreviousData) {
-              metricCounterTV.setText(Helpers.getFormattedString(prefs.getInt("steps_taken", 0)));
-              todayTV.setText(Helpers.getFormattedString(prefs.getInt("steps_taken", 0)));
+    if (loadingMetricProgressBar != null) {
+      loadingMetricProgressBar.setVisibility(View.INVISIBLE);
+    }
 
-              remainingValue = Integer.parseInt(maxValue) - Helpers.getNumberFromFromattedString(
-                  metricCounterTV.getText().toString());
-            } else {
-              /**
-               * Requesting data from previous days
-               */
-              metricCounterTV.setText(
-                  Helpers.getFormattedString((int) Double.parseDouble(currentValue)));
-              todayTV.setText(Helpers.getFormattedString((int) Double.parseDouble(currentValue)));
+    metricCounterTV.setVisibility(View.VISIBLE);
 
-              remainingValue =
-                  (int) (Integer.parseInt(maxValue) - Double.parseDouble(currentValue));
-            }
-
-            if (loadingMetricProgressBar != null) {
-              loadingMetricProgressBar.setVisibility(View.INVISIBLE);
-            }
-
-            metricCounterTV.setVisibility(View.VISIBLE);
-
-            if (remainingValue < 0) {
-              goalStatusWordTV.setText(getResources().getString(R.string.goal_exceeded_tv));
-            } else {
-              if (isAdded()) {
-                goalStatusWordTV.setText(getResources().getString(R.string.remaining_title));
-              }
-            }
-
-            remainingTV.setText(Helpers.getFormattedString(Math.abs(remainingValue)));
-
-            break;
-        }
+    if (remainingValue < 0) {
+      goalStatusWordTV.setText(getResources().getString(R.string.goal_exceeded_tv));
+    } else {
+      if (isAdded()) {
+        goalStatusWordTV.setText(getResources().getString(R.string.remaining_title));
       }
+    }
 
-      @Override public void onFailure(Call<UserGoalMetricsResponse> call, Throwable t) {
+    remainingTV.setText(Helpers.getFormattedString(Math.abs(remainingValue)));
+  }
+
+  @Override
+  public void getBreakDownDataForChart(List<ChartMetricBreakdownResponseDatum> rawChartData,
+      DataChart chartObject) {
+    List<AuthenticationResponseChartData> newChartData = new ArrayList<>();
+
+    for (ChartMetricBreakdownResponseDatum responseDatum : rawChartData) {
+      newChartData.add(
+          new AuthenticationResponseChartData(responseDatum.getDate(), responseDatum.getValue()));
+    }
+
+    if (getActivity() != null) {
+      CustomBarChart customBarChart = new CustomBarChart(getActivity(), chartObject);
+
+      /**
+       * Open the breakdown for the chart
+       */
+      customBarChart.addClickListener(
+          chartObjectInner -> presenter.getBreakdownDataForChart(chartObjectInner));
+
+      customBarChart.setBarChartDataAndDates(cards_container, newChartData,
+          Constants.EXTRAS_FITNESS_FRAGMENT);
+    }
+  }
+
+  @Override public void openSlugBreakDownActivity(SlugBreakdownResponseInnerData breakDownData,
+      DataChart chartObject) {
+    Intent intent = new Intent(getActivity(), SlugBreakdownActivity.class);
+    intent.putExtra(Constants.EXTRAS_FRAGMENT_TYPE, Constants.EXTRAS_FITNESS_FRAGMENT);
+    intent.putExtra(Constants.EXTRAS_CHART_OBJECT, chartObject);
+    intent.putExtra(Constants.BUNDLE_SLUG_BREAKDOWN_DATA, breakDownData);
+    getActivity().startActivity(intent);
+  }
+
+  @Override public void callSetupWidgetViews(List<WidgetsResponseDatum> widgetsFromResponse) {
+    ArrayList<FitnessWidget> newWidgetsMap = new ArrayList<>();
+
+    for (int i = 0; i < 2; i++) {
+      FitnessWidget widget = new FitnessWidget();
+
+      if (!widgetsFromResponse.get(i).getName().equals("Steps Count")) {
+        widget.setId(widgetsFromResponse.get(i).getWidgetId());
+        widget.setMeasurementUnit(widgetsFromResponse.get(i).getUnit());
+        widget.setPosition(i);
+        widget.setValue(Float.parseFloat(widgetsFromResponse.get(i).getTotal()));
+        widget.setTitle(widgetsFromResponse.get(i).getName());
+
+        newWidgetsMap.add(widget);
       }
-    });
+    }
+
+    setupWidgetViews(newWidgetsMap);
+  }
+
+  @Override public void callSetupChartViews(DataChart chartObject, String todayDate) {
+    Toast.makeText(getActivity(), "Chart deleted successfully", Toast.LENGTH_SHORT)
+        .show();
+
+    cards_container.removeAllViews();
+
+    for (int i = 0; i < chartsMap.size(); i++) {
+      if (chartsMap.get(i).getName().equals(chartObject.getName())) {
+        chartsMap.remove(i);
+      }
+    }
+
+    setupChartViews(chartsMap, todayDate);
   }
 
   public void addNewBarChart(DataChart chartObject, String desiredDate) {
     switch (chartObject.getType()) {
       case "steps-count":
-        getPeriodicalChartData(chartObject, desiredDate);
-        break;
       case "active-calories":
-        getPeriodicalChartData(chartObject, desiredDate);
-        break;
       case "distance-traveled":
-        getPeriodicalChartData(chartObject, desiredDate);
+        presenter.getPeriodicalChartData(chartObject, desiredDate, dt.minusMonths(1).toString());
         break;
     }
-  }
-
-  private void getSlugBreakdownForChart(final DataChart chartObject) {
-    final ProgressDialog waitingDialog = new ProgressDialog(getActivity());
-    waitingDialog.setTitle(
-        getActivity().getResources().getString(R.string.grabbing_breakdown_data_dialog_title));
-    waitingDialog.setMessage(
-        getActivity().getResources().getString(R.string.please_wait_dialog_message));
-    waitingDialog.show();
-
-    final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
-    alertDialog.setTitle(R.string.grabbing_breakdown_data_dialog_title);
-    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE,
-        getActivity().getResources().getString(R.string.ok), (dialog, which) -> {
-          dialog.dismiss();
-
-          if (waitingDialog.isShowing()) waitingDialog.dismiss();
-        });
-
-    dataAccessHandler.getSlugBreakdownForChart(chartObject.getType(),
-        new Callback<SlugBreakdownResponse>() {
-          @Override public void onResponse(Call<SlugBreakdownResponse> call,
-              Response<SlugBreakdownResponse> response) {
-            switch (response.code()) {
-              case 200:
-                waitingDialog.dismiss();
-
-                Intent intent = new Intent(getActivity(), SlugBreakdownActivity.class);
-                intent.putExtra(Constants.EXTRAS_FRAGMENT_TYPE, Constants.EXTRAS_FITNESS_FRAGMENT);
-                intent.putExtra(Constants.EXTRAS_CHART_OBJECT, chartObject);
-                intent.putExtra(Constants.BUNDLE_SLUG_BREAKDOWN_DATA,
-                    response.body().getData().getBody().getData());
-                getActivity().startActivity(intent);
-                break;
-            }
-          }
-
-          @Override public void onFailure(Call<SlugBreakdownResponse> call, Throwable t) {
-          }
-        });
   }
 
   public void setupChartViews(List<DataChart> dataChartsMap, String desiredDate) {
@@ -450,6 +375,7 @@ public class FitnessFragment extends Fragment {
         }
       }
     }
+
     return metricCountTextView;
   }
 
@@ -459,10 +385,8 @@ public class FitnessFragment extends Fragment {
   }
 
   @Subscribe public void chartDeleted(DataChartDeletedEvent event) {
-
     DataChart chartObject = event.getChartObject();
-
-    deleteUserChart(chartObject);
+    presenter.deleteUserChart(chartObject, todayDate);
   }
 
   @Subscribe public void updateChartsOrder(DataChartsOrderChangedEvent event) {
@@ -482,7 +406,7 @@ public class FitnessFragment extends Fragment {
       chartPositions[i] = allDataCharts.get(i).getPosition();
     }
 
-    updateUserCharts(charts, chartPositions);
+    presenter.updateUserCharts(charts, chartPositions);
   }
 
   @Subscribe public void incrementStepCounter(StepCounterIncrementedEvent event) {
@@ -521,70 +445,5 @@ public class FitnessFragment extends Fragment {
   @Subscribe public void incrementCaloriesCounter(CaloriesCounterIncrementedEvent event) {
     TextView fitnessWidget = findWidgetInGrid("Active Calories");
     fitnessWidget.setText(new DecimalFormat("##.#").format(prefs.getFloat("calories_spent", 0)));
-  }
-
-  private void updateUserCharts(int[] chartIds, int[] chartPositions) {
-    dataAccessHandler.updateUserCharts(chartIds, chartPositions,
-        new Callback<DefaultGetResponse>() {
-          @Override public void onResponse(Call<DefaultGetResponse> call,
-              Response<DefaultGetResponse> response) {
-            switch (response.code()) {
-              case 200:
-                Timber.d("onResponse: User's charts updated successfully");
-                break;
-            }
-          }
-
-          @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
-
-          }
-        });
-  }
-
-  private void deleteUserChart(final DataChart chartObject) {
-    final ProgressDialog waitingDialog = new ProgressDialog(getActivity());
-    waitingDialog.setTitle(
-        getActivity().getResources().getString(R.string.deleting_chart_dialog_title));
-    waitingDialog.setMessage(
-        getActivity().getResources().getString(R.string.please_wait_dialog_message));
-    waitingDialog.show();
-
-    final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
-    alertDialog.setTitle(R.string.deleting_chart_dialog_title);
-    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE,
-        getActivity().getResources().getString(R.string.ok), (dialog, which) -> {
-          dialog.dismiss();
-
-          if (waitingDialog.isShowing()) waitingDialog.dismiss();
-        });
-
-    dataAccessHandler.deleteUserChart(String.valueOf(chartObject.getChart_id()),
-        new Callback<DefaultGetResponse>() {
-          @Override public void onResponse(Call<DefaultGetResponse> call,
-              Response<DefaultGetResponse> response) {
-            switch (response.code()) {
-              case 200:
-                waitingDialog.dismiss();
-
-                Toast.makeText(getActivity(), "Chart deleted successfully", Toast.LENGTH_SHORT)
-                    .show();
-
-                cards_container.removeAllViews();
-
-                for (int i = 0; i < chartsMap.size(); i++) {
-                  if (chartsMap.get(i).getName().equals(chartObject.getName())) {
-                    chartsMap.remove(i);
-                  }
-                }
-
-                setupChartViews(chartsMap, todayDate);
-
-                break;
-            }
-          }
-
-          @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
-          }
-        });
   }
 }
