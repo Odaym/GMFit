@@ -76,7 +76,7 @@ public class SubmitReimbursementActivity extends BaseActivity {
   private ArrayList<String> imagePaths = new ArrayList<>();
   private List<SubCategoriesResponseDatum> subCategoriesList;
 
-  private String categoryValue = "";
+  private String categoryValue = "Out";
   private String serviceDateValue = "";
   private String amountValue = "";
   private String subCategoryId = "";

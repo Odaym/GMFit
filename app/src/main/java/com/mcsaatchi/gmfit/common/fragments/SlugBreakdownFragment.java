@@ -3,7 +3,6 @@ package com.mcsaatchi.gmfit.common.fragments;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +13,8 @@ import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.rest.SlugBreakdownResponseDaily;
+import com.mcsaatchi.gmfit.architecture.rest.SlugBreakdownResponseInnerData;
+import com.mcsaatchi.gmfit.architecture.rest.SlugBreakdownResponsePeriod;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.nutrition.activities.AddNewMealOnDateActivity;
 import java.text.NumberFormat;
@@ -22,12 +22,11 @@ import java.util.ArrayList;
 import java.util.Locale;
 import org.joda.time.DateTime;
 
-public class SlugBreakdownFragmentDaily extends Fragment {
+public class SlugBreakdownFragment extends Fragment {
   @Bind(R.id.slugBreakdownListView) ListView slugBreakdownListView;
   @Bind(R.id.allTimeValueTV) TextView allTimeValueTV;
 
   private String typeOfFragmentToCustomizeFor;
-  private String measurementUnitForMetric;
 
   @Override public void onAttach(Context context) {
     super.onAttach(context);
@@ -43,10 +42,13 @@ public class SlugBreakdownFragmentDaily extends Fragment {
     Bundle fragmentBundle = getArguments();
 
     if (fragmentBundle != null) {
-      ArrayList<Parcelable> slugBreakdownData =
-          fragmentBundle.getParcelableArrayList(Constants.BUNDLE_SLUG_BREAKDOWN_DATA_DAILY);
+      SlugBreakdownResponseInnerData slugBreakdownData =
+          fragmentBundle.getParcelable(Constants.BUNDLE_SLUG_BREAKDOWN_DATA);
 
-      measurementUnitForMetric =
+      String slugBreakDownDataType =
+          fragmentBundle.getString(Constants.BUNDLE_SLUG_BREAKDOWN_DATA_TYPE);
+
+      String measurementUnitForMetric =
           fragmentBundle.getString(Constants.BUNDLE_SLUG_BREAKDOWN_MEASUREMENT_UNIT, "");
       typeOfFragmentToCustomizeFor = fragmentBundle.getString(Constants.EXTRAS_FRAGMENT_TYPE, "");
 
@@ -57,25 +59,36 @@ public class SlugBreakdownFragmentDaily extends Fragment {
           + " "
           + measurementUnitForMetric);
 
-      hookupListWithItems(slugBreakdownData, measurementUnitForMetric);
+      switch (slugBreakDownDataType) {
+        case Constants.BUNDLE_SLUG_BREAKDOWN_DATA_DAILY:
+          hookupListWithItems((ArrayList<SlugBreakdownResponsePeriod>) slugBreakdownData.getDaily(),
+              measurementUnitForMetric);
+          break;
+
+        case Constants.BUNDLE_SLUG_BREAKDOWN_DATA_MONTHLY:
+          hookupListWithItems(
+              (ArrayList<SlugBreakdownResponsePeriod>) slugBreakdownData.getMonthly(),
+              measurementUnitForMetric);
+          break;
+        case Constants.BUNDLE_SLUG_BREAKDOWN_DATA_YEARLY:
+          hookupListWithItems(
+              (ArrayList<SlugBreakdownResponsePeriod>) slugBreakdownData.getYearly(),
+              measurementUnitForMetric);
+          break;
+      }
     }
 
     return fragmentView;
   }
 
-  private void hookupListWithItems(ArrayList<Parcelable> items, String measurementUnitForMetric) {
+  private void hookupListWithItems(ArrayList<SlugBreakdownResponsePeriod> items,
+      String measurementUnitForMetric) {
     final SlugBreakdown_ListAdapter slugBreakdownListAdapter =
         new SlugBreakdown_ListAdapter(getActivity(), items, measurementUnitForMetric);
     slugBreakdownListView.setAdapter(slugBreakdownListAdapter);
 
     if (typeOfFragmentToCustomizeFor.equals(Constants.EXTRAS_NUTRITION_FRAGMENT)) {
       slugBreakdownListView.setOnItemClickListener((adapterView, view, i, l) -> {
-        //                    Log.d("TAG", "onItemClick: Item selected date : " + ((TextView) view.findViewById(R.id.slugDateTV)).getText().toString());
-        //
-        //                    DateTime entryDate = new DateTime(slugBreakdownListAdapter.getItem(i).getDate());
-        //
-        //                    Log.d("TAG", "onItemClick: " + (entryDate.getDayOfMonth() + " " + entryDate.monthOfYear().getAsText() + ", " + entryDate.getYear()));
-
         Intent intent = new Intent(getActivity(), AddNewMealOnDateActivity.class);
         intent.putExtra(Constants.EXTRAS_DATE_TO_ADD_MEAL_ON,
             slugBreakdownListAdapter.getItem(i).getDate());
@@ -84,14 +97,14 @@ public class SlugBreakdownFragmentDaily extends Fragment {
     }
   }
 
-  public class SlugBreakdown_ListAdapter extends BaseAdapter {
+  private class SlugBreakdown_ListAdapter extends BaseAdapter {
 
-    private ArrayList<Parcelable> slugBreakdownData;
+    private ArrayList<SlugBreakdownResponsePeriod> slugBreakdownData;
     private Context context;
     private String measurementUnit;
 
-    public SlugBreakdown_ListAdapter(Context context, ArrayList<Parcelable> slugBreakdownData,
-        String measurementUnit) {
+    SlugBreakdown_ListAdapter(Context context,
+        ArrayList<SlugBreakdownResponsePeriod> slugBreakdownData, String measurementUnit) {
       super();
       this.context = context;
       this.slugBreakdownData = slugBreakdownData;
@@ -102,8 +115,8 @@ public class SlugBreakdownFragmentDaily extends Fragment {
       return slugBreakdownData.size();
     }
 
-    @Override public SlugBreakdownResponseDaily getItem(int index) {
-      return (SlugBreakdownResponseDaily) slugBreakdownData.get(index);
+    @Override public SlugBreakdownResponsePeriod getItem(int index) {
+      return slugBreakdownData.get(index);
     }
 
     @Override public long getItemId(int position) {

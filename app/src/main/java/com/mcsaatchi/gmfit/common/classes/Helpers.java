@@ -101,6 +101,17 @@ public class Helpers {
         + formattedDate.getDayOfMonth();
   }
 
+  public static String formatDateFromPicker(LocalDate dt) {
+    DateTimeFormatter formatter = DateTimeFormat.forPattern("dd MMM, yyyy");
+    DateTime formattedDate = formatter.parseDateTime(dt.toString());
+
+    return formattedDate.getYear()
+        + "-"
+        + formattedDate.getMonthOfYear()
+        + "-"
+        + formattedDate.getDayOfMonth();
+  }
+
   public static String formatInsuranceDate(LocalDate dt) {
     SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");
     Date date = null;

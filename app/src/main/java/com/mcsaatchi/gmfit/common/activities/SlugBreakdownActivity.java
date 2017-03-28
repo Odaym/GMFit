@@ -1,7 +1,6 @@
 package com.mcsaatchi.gmfit.common.activities;
 
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -20,11 +19,8 @@ import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
 import com.mcsaatchi.gmfit.architecture.rest.SlugBreakdownResponseInnerData;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.classes.SlidingTabLayout;
-import com.mcsaatchi.gmfit.common.fragments.SlugBreakdownFragmentDaily;
-import com.mcsaatchi.gmfit.common.fragments.SlugBreakdownFragmentMonthly;
-import com.mcsaatchi.gmfit.common.fragments.SlugBreakdownFragmentYearly;
+import com.mcsaatchi.gmfit.common.fragments.SlugBreakdownFragment;
 import com.mcsaatchi.gmfit.common.models.DataChart;
-import java.util.ArrayList;
 
 public class SlugBreakdownActivity extends BaseActivity {
   private static final int DAY_BREAKDOWN = 0;
@@ -114,13 +110,12 @@ public class SlugBreakdownActivity extends BaseActivity {
     return super.onOptionsItemSelected(item);
   }
 
-  public class SlugBreakdownViewPager_Adapter extends FragmentStatePagerAdapter {
-
-    private String[] tabTitles;
-    private SlugBreakdownResponseInnerData slugBreakdownData;
+  private class SlugBreakdownViewPager_Adapter extends FragmentStatePagerAdapter {
     private String chartType;
+    private String[] tabTitles;
     private String measurementUnit;
     private String typeOfFragmentToCustomizeFor;
+    private SlugBreakdownResponseInnerData slugBreakdownData;
 
     SlugBreakdownViewPager_Adapter(FragmentManager fm, String[] tabTitles,
         SlugBreakdownResponseInnerData slugBreakdownData, String chartType,
@@ -128,9 +123,9 @@ public class SlugBreakdownActivity extends BaseActivity {
       super(fm);
 
       this.tabTitles = tabTitles;
+      this.chartType = chartType;
       this.slugBreakdownData = slugBreakdownData;
       this.typeOfFragmentToCustomizeFor = typeOfFragmentToCustomizeFor;
-      this.chartType = chartType;
 
       switch (this.chartType) {
         case "steps-count":
@@ -148,8 +143,6 @@ public class SlugBreakdownActivity extends BaseActivity {
 
     @Override public Fragment getItem(int position) {
       Bundle fragmentArguments = new Bundle();
-      fragmentArguments.putString(Constants.EXTRAS_FRAGMENT_TYPE, typeOfFragmentToCustomizeFor);
-
       Fragment slugBreakdownFragment;
 
       float slugBreakdownYearlyTotal = 0;
@@ -160,38 +153,30 @@ public class SlugBreakdownActivity extends BaseActivity {
 
       switch (position) {
         case DAY_BREAKDOWN:
-          slugBreakdownFragment = new SlugBreakdownFragmentDaily();
-          fragmentArguments.putFloat(Constants.BUNDLE_SLUG_BREAKDOWN_YEARLY_TOTAL,
-              slugBreakdownYearlyTotal);
-          fragmentArguments.putParcelableArrayList(Constants.BUNDLE_SLUG_BREAKDOWN_DATA_DAILY,
-              (ArrayList<? extends Parcelable>) slugBreakdownData.getDaily());
-          fragmentArguments.putString(Constants.BUNDLE_SLUG_BREAKDOWN_MEASUREMENT_UNIT,
-              measurementUnit);
-          slugBreakdownFragment.setArguments(fragmentArguments);
-          return slugBreakdownFragment;
+          fragmentArguments.putString(Constants.BUNDLE_SLUG_BREAKDOWN_DATA_TYPE,
+              Constants.BUNDLE_SLUG_BREAKDOWN_DATA_DAILY);
+          break;
         case MONTH_BREAKDOWN:
-          slugBreakdownFragment = new SlugBreakdownFragmentMonthly();
-          fragmentArguments.putFloat(Constants.BUNDLE_SLUG_BREAKDOWN_YEARLY_TOTAL,
-              slugBreakdownYearlyTotal);
-          fragmentArguments.putParcelableArrayList(Constants.BUNDLE_SLUG_BREAKDOWN_DATA_MONTHLY,
-              (ArrayList<? extends Parcelable>) slugBreakdownData.getMonthly());
-          fragmentArguments.putString(Constants.BUNDLE_SLUG_BREAKDOWN_MEASUREMENT_UNIT,
-              measurementUnit);
-          slugBreakdownFragment.setArguments(fragmentArguments);
-          return slugBreakdownFragment;
+          fragmentArguments.putString(Constants.BUNDLE_SLUG_BREAKDOWN_DATA_TYPE,
+              Constants.BUNDLE_SLUG_BREAKDOWN_DATA_MONTHLY);
+          break;
         case YEAR_BREAKDOWN:
-          slugBreakdownFragment = new SlugBreakdownFragmentYearly();
-          fragmentArguments.putFloat(Constants.BUNDLE_SLUG_BREAKDOWN_YEARLY_TOTAL,
-              slugBreakdownYearlyTotal);
-          fragmentArguments.putParcelableArrayList(Constants.BUNDLE_SLUG_BREAKDOWN_DATA_YEARLY,
-              (ArrayList<? extends Parcelable>) slugBreakdownData.getYearly());
-          fragmentArguments.putString(Constants.BUNDLE_SLUG_BREAKDOWN_MEASUREMENT_UNIT,
-              measurementUnit);
-          slugBreakdownFragment.setArguments(fragmentArguments);
-          return slugBreakdownFragment;
+          fragmentArguments.putString(Constants.BUNDLE_SLUG_BREAKDOWN_DATA_TYPE,
+              Constants.BUNDLE_SLUG_BREAKDOWN_DATA_YEARLY);
+          break;
       }
 
-      return null;
+      slugBreakdownFragment = new SlugBreakdownFragment();
+      fragmentArguments.putFloat(Constants.BUNDLE_SLUG_BREAKDOWN_YEARLY_TOTAL,
+          slugBreakdownYearlyTotal);
+      fragmentArguments.putParcelable(Constants.BUNDLE_SLUG_BREAKDOWN_DATA,
+          slugBreakdownData);
+      fragmentArguments.putString(Constants.BUNDLE_SLUG_BREAKDOWN_MEASUREMENT_UNIT,
+          measurementUnit);
+      fragmentArguments.putString(Constants.EXTRAS_FRAGMENT_TYPE, typeOfFragmentToCustomizeFor);
+      slugBreakdownFragment.setArguments(fragmentArguments);
+
+      return slugBreakdownFragment;
     }
 
     @Override public CharSequence getPageTitle(int position) {

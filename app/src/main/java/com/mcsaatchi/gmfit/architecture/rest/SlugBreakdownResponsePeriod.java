@@ -5,21 +5,21 @@ import android.os.Parcelable;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class SlugBreakdownResponseDaily implements Parcelable {
-  public static final Creator<SlugBreakdownResponseDaily> CREATOR =
-      new Creator<SlugBreakdownResponseDaily>() {
-        @Override public SlugBreakdownResponseDaily createFromParcel(Parcel in) {
-          return new SlugBreakdownResponseDaily(in);
+public class SlugBreakdownResponsePeriod implements Parcelable {
+  public static final Creator<SlugBreakdownResponsePeriod> CREATOR =
+      new Creator<SlugBreakdownResponsePeriod>() {
+        @Override public SlugBreakdownResponsePeriod createFromParcel(Parcel in) {
+          return new SlugBreakdownResponsePeriod(in);
         }
 
-        @Override public SlugBreakdownResponseDaily[] newArray(int size) {
-          return new SlugBreakdownResponseDaily[size];
+        @Override public SlugBreakdownResponsePeriod[] newArray(int size) {
+          return new SlugBreakdownResponsePeriod[size];
         }
       };
   @SerializedName("date") @Expose private String date;
   @SerializedName("total") @Expose private String total;
 
-  protected SlugBreakdownResponseDaily(Parcel in) {
+  protected SlugBreakdownResponsePeriod(Parcel in) {
     date = in.readString();
     total = in.readString();
   }

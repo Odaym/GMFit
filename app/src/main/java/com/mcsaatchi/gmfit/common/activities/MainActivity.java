@@ -37,7 +37,6 @@ public class MainActivity extends BaseActivity {
   private HealthFragment healthFragment;
   private MainProfileFragment mainProfileFragment;
 
-  private ArrayList<AuthenticationResponseChart> chartsMap;
   private ArrayList<DataChart> finalChartsMap = new ArrayList<>();
 
   @Override protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +57,7 @@ public class MainActivity extends BaseActivity {
             Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS));
 
     if (getIntent().getExtras() != null) {
-      chartsMap =
+      ArrayList<AuthenticationResponseChart> chartsMap =
           getIntent().getExtras().getParcelableArrayList(Constants.BUNDLE_FITNESS_CHARTS_MAP);
 
       if (chartsMap != null) {
