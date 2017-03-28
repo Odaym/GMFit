@@ -9,10 +9,10 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ResetPasswordActivityPresenter {
-  private ResetPasswordActivityView view;
+  private BaseActivityPresenter.BaseActivityView view;
   private DataAccessHandler dataAccessHandler;
 
-  public ResetPasswordActivityPresenter(ResetPasswordActivityView view,
+  public ResetPasswordActivityPresenter(BaseActivityPresenter.BaseActivityView view,
       DataAccessHandler dataAccessHandler) {
     this.view = view;
     this.dataAccessHandler = dataAccessHandler;
@@ -40,8 +40,5 @@ public class ResetPasswordActivityPresenter {
             }
           });
     }
-  }
-
-  public interface ResetPasswordActivityView extends BaseActivityPresenter.BaseActivityView {
   }
 }
