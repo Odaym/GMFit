@@ -143,11 +143,11 @@ public class AddNewMealOnDateActivity extends BaseActivity {
                  */
                 List<UserMealsResponseInner> breakfastMeals =
                     response.body().getData().getBody().getData().getBreakfast();
-                List<UserMealsResponseLunch> lunchMeals =
+                List<UserMealsResponseInner> lunchMeals =
                     response.body().getData().getBody().getData().getLunch();
-                List<UserMealsResponseDinner> dinnerMeals =
+                List<UserMealsResponseInner> dinnerMeals =
                     response.body().getData().getBody().getData().getDinner();
-                List<UserMealsResponseSnack> snackMeals =
+                List<UserMealsResponseInner> snackMeals =
                     response.body().getData().getBody().getData().getSnack();
 
                 finalBreakfastMeals.clear();

@@ -148,13 +148,6 @@ public class FitnessFragment extends BaseFragment
     return fragmentView;
   }
 
-  @OnClick(R.id.addChartBTN) public void handleAddNewChart() {
-    Intent intent = new Intent(getActivity(), AddNewChartActivity.class);
-    intent.putExtra(Constants.EXTRAS_ADD_CHART_WHAT_TYPE, Constants.EXTRAS_ADD_FITNESS_CHART);
-    intent.putExtra(Constants.BUNDLE_FITNESS_CHARTS_MAP, chartsMap);
-    startActivityForResult(intent, ADD_NEW_FITNESS_CHART_REQUEST_CODE);
-  }
-
   @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
 
@@ -333,52 +326,6 @@ public class FitnessFragment extends BaseFragment
     setupChartViews(chartsMap, todayDate);
   }
 
-  public void addNewBarChart(DataChart chartObject, String desiredDate) {
-    switch (chartObject.getType()) {
-      case "steps-count":
-      case "active-calories":
-      case "distance-traveled":
-        presenter.getPeriodicalChartData(chartObject, desiredDate, dt.minusMonths(1).toString());
-        break;
-    }
-  }
-
-  public void setupChartViews(List<DataChart> dataChartsMap, String desiredDate) {
-    cards_container.removeAllViews();
-
-    if (!dataChartsMap.isEmpty()) {
-      for (DataChart chart : dataChartsMap) {
-        addNewBarChart(chart, desiredDate);
-      }
-    }
-  }
-
-  private void setupWidgetViews(ArrayList<FitnessWidget> widgetsMap) {
-    widgetsGridAdapter = new FitnessWidgetsRecyclerAdapter(getActivity(), widgetsMap,
-        R.layout.grid_item_fitness_widgets);
-
-    widgetsGridView.setLayoutManager(new GridLayoutManager(getActivity(), widgetsMap.size()));
-    widgetsGridView.setAdapter(widgetsGridAdapter);
-  }
-
-  private TextView findWidgetInGrid(String widgetName) {
-    RecyclerView.ViewHolder fitnessWidgetViewHolder;
-    TextView metricCountTextView = null;
-
-    for (int i = 0; i < widgetsGridAdapter.getItemCount(); i++) {
-      if (widgetsGridAdapter.getItem(i).getTitle().equals(widgetName)) {
-        fitnessWidgetViewHolder = widgetsGridView.findViewHolderForAdapterPosition(i);
-
-        if (fitnessWidgetViewHolder != null) {
-          metricCountTextView =
-              (TextView) fitnessWidgetViewHolder.itemView.findViewById(R.id.metricTV);
-        }
-      }
-    }
-
-    return metricCountTextView;
-  }
-
   @Subscribe public void updateWidgetsOrder(FitnessWidgetsOrderChangedEvent event) {
     widgetsMap = event.getWidgetsMapFitness();
     setupWidgetViews(widgetsMap);
@@ -445,5 +392,58 @@ public class FitnessFragment extends BaseFragment
   @Subscribe public void incrementCaloriesCounter(CaloriesCounterIncrementedEvent event) {
     TextView fitnessWidget = findWidgetInGrid("Active Calories");
     fitnessWidget.setText(new DecimalFormat("##.#").format(prefs.getFloat("calories_spent", 0)));
+  }
+
+  @OnClick(R.id.addChartBTN) public void handleAddNewChart() {
+    Intent intent = new Intent(getActivity(), AddNewChartActivity.class);
+    intent.putExtra(Constants.EXTRAS_ADD_CHART_WHAT_TYPE, Constants.EXTRAS_ADD_FITNESS_CHART);
+    intent.putExtra(Constants.BUNDLE_FITNESS_CHARTS_MAP, chartsMap);
+    startActivityForResult(intent, ADD_NEW_FITNESS_CHART_REQUEST_CODE);
+  }
+
+  public void addNewBarChart(DataChart chartObject, String desiredDate) {
+    switch (chartObject.getType()) {
+      case "steps-count":
+      case "active-calories":
+      case "distance-traveled":
+        presenter.getPeriodicalChartData(chartObject, desiredDate, dt.minusMonths(1).toString());
+        break;
+    }
+  }
+
+  public void setupChartViews(List<DataChart> dataChartsMap, String desiredDate) {
+    cards_container.removeAllViews();
+
+    if (!dataChartsMap.isEmpty()) {
+      for (DataChart chart : dataChartsMap) {
+        addNewBarChart(chart, desiredDate);
+      }
+    }
+  }
+
+  private void setupWidgetViews(ArrayList<FitnessWidget> widgetsMap) {
+    widgetsGridAdapter = new FitnessWidgetsRecyclerAdapter(getActivity(), widgetsMap,
+        R.layout.grid_item_fitness_widgets);
+
+    widgetsGridView.setLayoutManager(new GridLayoutManager(getActivity(), widgetsMap.size()));
+    widgetsGridView.setAdapter(widgetsGridAdapter);
+  }
+
+  private TextView findWidgetInGrid(String widgetName) {
+    RecyclerView.ViewHolder fitnessWidgetViewHolder;
+    TextView metricCountTextView = null;
+
+    for (int i = 0; i < widgetsGridAdapter.getItemCount(); i++) {
+      if (widgetsGridAdapter.getItem(i).getTitle().equals(widgetName)) {
+        fitnessWidgetViewHolder = widgetsGridView.findViewHolderForAdapterPosition(i);
+
+        if (fitnessWidgetViewHolder != null) {
+          metricCountTextView =
+              (TextView) fitnessWidgetViewHolder.itemView.findViewById(R.id.metricTV);
+        }
+      }
+    }
+
+    return metricCountTextView;
   }
 }

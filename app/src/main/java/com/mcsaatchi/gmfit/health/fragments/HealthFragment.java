@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -26,6 +25,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.GMFitApplication;
@@ -35,20 +35,16 @@ import com.mcsaatchi.gmfit.architecture.otto.HealthWidgetsOrderChangedEvent;
 import com.mcsaatchi.gmfit.architecture.otto.MedicalTestEditCreateEvent;
 import com.mcsaatchi.gmfit.architecture.otto.MedicationItemCreatedEvent;
 import com.mcsaatchi.gmfit.architecture.rest.DefaultGetResponse;
-import com.mcsaatchi.gmfit.architecture.rest.TakenMedicalTestsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.TakenMedicalTestsResponseBody;
-import com.mcsaatchi.gmfit.architecture.rest.UserProfileResponse;
 import com.mcsaatchi.gmfit.architecture.rest.UserProfileResponseDatum;
-import com.mcsaatchi.gmfit.architecture.rest.WeightHistoryResponse;
 import com.mcsaatchi.gmfit.architecture.rest.WeightHistoryResponseDatum;
-import com.mcsaatchi.gmfit.architecture.rest.WidgetsResponse;
-import com.mcsaatchi.gmfit.architecture.rest.WidgetsResponseDatum;
 import com.mcsaatchi.gmfit.architecture.touch_helpers.SimpleSwipeItemTouchHelperCallback;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.CustomizeWidgetsAndChartsActivity;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.common.classes.SimpleDividerItemDecoration;
 import com.mcsaatchi.gmfit.common.components.CustomLineChart;
+import com.mcsaatchi.gmfit.common.fragments.BaseFragment;
 import com.mcsaatchi.gmfit.health.activities.AddNewHealthTestActivity;
 import com.mcsaatchi.gmfit.health.activities.SearchMedicationsActivity;
 import com.mcsaatchi.gmfit.health.adapters.HealthWidgetsRecyclerAdapter;
@@ -56,6 +52,7 @@ import com.mcsaatchi.gmfit.health.adapters.MedicationsRecyclerAdapter;
 import com.mcsaatchi.gmfit.health.adapters.UserTestsRecyclerAdapter;
 import com.mcsaatchi.gmfit.health.models.HealthWidget;
 import com.mcsaatchi.gmfit.health.models.Medication;
+import com.mcsaatchi.gmfit.health.presenters.HealthFragmentPresenter;
 import com.squareup.otto.Subscribe;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -68,12 +65,11 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import timber.log.Timber;
 
-public class HealthFragment extends Fragment {
+public class HealthFragment extends BaseFragment
+    implements HealthFragmentPresenter.HealthFragmentView {
 
   @Bind(R.id.metricCounterTV) TextView metricCounterTV;
   @Bind(R.id.widgetsGridView) RecyclerView widgetsGridView;
-  @Bind(R.id.addEntryBTN_MEDICAL_TESTS) TextView addEntryBTN_MEDICAL_TESTS;
-  @Bind(R.id.addEntryBTN_MEDICATIONS) TextView addEntryBTN_MEDICATIONS;
   @Bind(R.id.userTestsListView) RecyclerView userTestsListView;
   @Bind(R.id.loadingWidgetsProgressBar) ProgressBar loadingWidgetsProgressBar;
   @Bind(R.id.loadingTestsProgressBar) ProgressBar loadingTestsProgressBar;
@@ -86,6 +82,7 @@ public class HealthFragment extends Fragment {
   @Inject SharedPreferences prefs;
   private CustomLineChart customLineChart;
   private ArrayList<HealthWidget> healthWidgetsMap = new ArrayList<>();
+  private HealthFragmentPresenter presenter;
 
   @Override public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
       @Nullable Bundle savedInstanceState) {
@@ -105,25 +102,17 @@ public class HealthFragment extends Fragment {
 
     ((GMFitApplication) getActivity().getApplication()).getAppComponent().inject(this);
 
-    setupMedicationRemindersList(medicationDAO.queryForAll());
+    presenter = new HealthFragmentPresenter(this, medicationDAO, dataAccessHandler);
 
-    getWidgets();
+    setupMedicationRemindersList(presenter.getMedicationsFromDB());
 
-    getTakenMedicalTests();
+    presenter.getWidgets();
 
-    getUserProfile();
+    presenter.getTakenMedicalTests();
 
-    setupWeightChart();
+    presenter.getUserWeight();
 
-    addEntryBTN_MEDICATIONS.setOnClickListener(view -> {
-      Intent intent = new Intent(getActivity(), SearchMedicationsActivity.class);
-      startActivity(intent);
-    });
-
-    addEntryBTN_MEDICAL_TESTS.setOnClickListener(view -> {
-      Intent intent = new Intent(getActivity(), AddNewHealthTestActivity.class);
-      startActivity(intent);
-    });
+    presenter.setupUserWeightChart();
 
     return fragmentView;
   }
@@ -153,64 +142,126 @@ public class HealthFragment extends Fragment {
     return super.onOptionsItemSelected(item);
   }
 
-  private void setupWeightChart() {
-    dataAccessHandler.getUserWeightHistory(new Callback<WeightHistoryResponse>() {
-      @Override public void onResponse(Call<WeightHistoryResponse> call,
-          Response<WeightHistoryResponse> response) {
-        switch (response.code()) {
-          case 200:
-            if (getActivity() != null) {
+  @Override public void onDestroy() {
+    super.onDestroy();
+    EventBusSingleton.getInstance().unregister(this);
+  }
 
-              customLineChart = new CustomLineChart(getActivity());
+  @Override public void setupWidgetViews(ArrayList<HealthWidget> healthWidgetsMap) {
+    if (!healthWidgetsMap.isEmpty() && healthWidgetsMap.size() > 4) {
+      healthWidgetsMap = new ArrayList<>(healthWidgetsMap.subList(0, 4));
 
-              List<WeightHistoryResponseDatum> weightHistoryList =
-                  response.body().getData().getBody().getData();
+      HealthWidgetsRecyclerAdapter healthWidgetsGridAdapter =
+          new HealthWidgetsRecyclerAdapter(getActivity(), healthWidgetsMap,
+              R.layout.grid_item_health_widgets);
+      widgetsGridView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+      widgetsGridView.setAdapter(healthWidgetsGridAdapter);
 
-              if (weightHistoryList != null) {
-                customLineChart.setLineChartData(lineChartContainer, weightHistoryList);
+      loadingWidgetsProgressBar.setVisibility(View.GONE);
+    }
+  }
 
-                final TextView updateUserWeightTV =
-                    (TextView) customLineChart.getView().findViewById(R.id.updateWeightTV);
+  @Override
+  public void displayTakenMedicalTests(List<TakenMedicalTestsResponseBody> takenMedicalTests) {
+    loadingTestsProgressBar.setVisibility(View.GONE);
 
-                updateUserWeightTV.setOnClickListener(view -> {
-                  final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
-                  dialogBuilder.setTitle(R.string.profile_edit_weight_dialog_title);
+    if (takenMedicalTests.isEmpty()) {
+      userTestsListView.setVisibility(View.GONE);
+      medicalTestsEmptyLayout.setVisibility(View.VISIBLE);
+    } else {
+      userTestsListView.setVisibility(View.VISIBLE);
+      medicalTestsEmptyLayout.setVisibility(View.GONE);
 
-                  View dialogView = LayoutInflater.from(getActivity())
-                      .inflate(R.layout.profile_edit_weight_dialog, null);
-                  final EditText editWeightET =
-                      (EditText) dialogView.findViewById(R.id.dialogWeightET);
+      RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+      UserTestsRecyclerAdapter userTestsRecyclerAdapter =
+          new UserTestsRecyclerAdapter(getActivity().getApplication(), takenMedicalTests);
+      ItemTouchHelper.Callback callback =
+          new SimpleSwipeItemTouchHelperCallback(userTestsRecyclerAdapter);
+      ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
 
-                  editWeightET.setText(
-                      String.valueOf(prefs.getFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, 0)));
-                  editWeightET.setSelection(editWeightET.getText().toString().length());
+      userTestsListView.setLayoutManager(mLayoutManager);
+      userTestsListView.setNestedScrollingEnabled(false);
+      userTestsListView.setAdapter(userTestsRecyclerAdapter);
+      userTestsListView.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
+      touchHelper.attachToRecyclerView(userTestsListView);
+    }
+  }
 
-                  dialogBuilder.setView(dialogView);
-                  dialogBuilder.setPositiveButton(R.string.ok, (dialogInterface, i) -> {
-                    double userWeight = Double.parseDouble(editWeightET.getText().toString());
-
-                    updateUserWeight(editWeightET, userWeight,
-                        Helpers.prepareDateWithTimeForAPIRequest(new LocalDateTime()));
-                  });
-                  dialogBuilder.setNegativeButton(R.string.decline_cancel,
-                      (dialogInterface, i) -> dialogInterface.dismiss());
-
-                  AlertDialog alertDialog = dialogBuilder.create();
-                  alertDialog.show();
-                });
-              }
-            }
-            break;
-        }
+  @Override public void saveAndDisplayUserWeight(UserProfileResponseDatum userProfileData) {
+    if (userProfileData != null) {
+      if (userProfileData.getWeight() != null && !userProfileData.getWeight().isEmpty()) {
+        prefs.edit()
+            .putFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT,
+                Float.parseFloat(userProfileData.getWeight()))
+            .apply();
+        metricCounterTV.setText(String.valueOf(String.format(Locale.getDefault(), "%.1f",
+            Float.parseFloat(userProfileData.getWeight()))));
       }
+    }
+  }
 
-      @Override public void onFailure(Call<WeightHistoryResponse> call, Throwable t) {
-        Timber.d("Call failed with error : %s", t.getMessage());
-        final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
-        alertDialog.setMessage(getString(R.string.server_error_got_returned));
-        alertDialog.show();
+  @Override public void displayUserWeightChart(List<WeightHistoryResponseDatum> weightHistoryList) {
+    if (getActivity() != null) {
+
+      if (weightHistoryList != null) {
+        customLineChart = new CustomLineChart(getActivity());
+
+        customLineChart.setLineChartData(lineChartContainer, weightHistoryList);
+
+        final TextView updateUserWeightTV =
+            (TextView) customLineChart.getView().findViewById(R.id.updateWeightTV);
+
+        updateUserWeightTV.setOnClickListener(view -> {
+          final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
+          dialogBuilder.setTitle(R.string.profile_edit_weight_dialog_title);
+
+          View dialogView =
+              LayoutInflater.from(getActivity()).inflate(R.layout.profile_edit_weight_dialog, null);
+          final EditText editWeightET = (EditText) dialogView.findViewById(R.id.dialogWeightET);
+
+          editWeightET.setText(
+              String.valueOf(prefs.getFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, 0)));
+          editWeightET.setSelection(editWeightET.getText().toString().length());
+
+          dialogBuilder.setView(dialogView);
+          dialogBuilder.setPositiveButton(R.string.ok, (dialogInterface, i) -> {
+            double userWeight = Double.parseDouble(editWeightET.getText().toString());
+
+            updateUserWeight(editWeightET, userWeight,
+                Helpers.prepareDateWithTimeForAPIRequest(new LocalDateTime()));
+          });
+          dialogBuilder.setNegativeButton(R.string.decline_cancel,
+              (dialogInterface, i) -> dialogInterface.dismiss());
+
+          AlertDialog alertDialog = dialogBuilder.create();
+          alertDialog.show();
+        });
       }
-    });
+    }
+  }
+
+  @Subscribe public void updateWidgetsOrder(HealthWidgetsOrderChangedEvent event) {
+    healthWidgetsMap = event.getWidgetsMapHealth();
+    setupWidgetViews(healthWidgetsMap);
+  }
+
+  @Subscribe public void reflectMedicalTestEditCreate(MedicalTestEditCreateEvent event) {
+    presenter.getWidgets();
+    presenter.getTakenMedicalTests();
+  }
+
+  @Subscribe public void updateMedicationRemindersList(MedicationItemCreatedEvent event) {
+    setupMedicationRemindersList(medicationDAO.queryForAll());
+  }
+
+  @OnClick(R.id.addEntryBTN_MEDICATIONS) public void handleAddMedication() {
+    Intent intent = new Intent(getActivity(), SearchMedicationsActivity.class);
+    startActivity(intent);
+  }
+
+  @OnClick(R.id.addEntryBTN_MEDICAL_TESTS) public void handleAddMedicalTest() {
+    Intent intent = new Intent(getActivity(), AddNewHealthTestActivity.class);
+    startActivity(intent);
   }
 
   private void updateUserWeight(final EditText editWeightET, double weight, String created_at) {
@@ -238,9 +289,9 @@ public class HealthFragment extends Fragment {
             lineChartContainer.removeAllViews();
             lineChartContainer.invalidate();
 
-            setupWeightChart();
+            presenter.setupUserWeightChart();
 
-            getUserProfile();
+            presenter.getUserWeight();
 
             InputMethodManager imm =
                 (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -274,160 +325,6 @@ public class HealthFragment extends Fragment {
       medicationRemindersRecyclerView.addItemDecoration(
           new SimpleDividerItemDecoration(getActivity()));
       medicationRemindersRecyclerView.setAdapter(medicationsRecyclerAdapter);
-    }
-  }
-
-  private void getUserProfile() {
-    dataAccessHandler.getUserProfile(new Callback<UserProfileResponse>() {
-      @Override public void onResponse(Call<UserProfileResponse> call,
-          Response<UserProfileResponse> response) {
-        switch (response.code()) {
-          case 200:
-            UserProfileResponseDatum userProfileData =
-                response.body().getData().getBody().getData();
-
-            SharedPreferences.Editor prefsEditor = prefs.edit();
-
-            if (userProfileData != null) {
-
-              /**
-               * Set the weight
-               */
-              if (userProfileData.getWeight() != null && !userProfileData.getWeight().isEmpty()) {
-                prefsEditor.putFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT,
-                    Float.parseFloat(userProfileData.getWeight()));
-                metricCounterTV.setText(String.valueOf(String.format(Locale.getDefault(), "%.1f",
-                    Float.parseFloat(userProfileData.getWeight()))));
-              }
-
-              prefsEditor.apply();
-
-              break;
-            }
-        }
-      }
-
-      @Override public void onFailure(Call<UserProfileResponse> call, Throwable t) {
-        Timber.d("Call failed with error : %s", t.getMessage());
-        final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
-        alertDialog.setMessage(getString(R.string.server_error_got_returned));
-        alertDialog.show();
-      }
-    });
-  }
-
-  private void getWidgets() {
-    dataAccessHandler.getWidgets("medical", new Callback<WidgetsResponse>() {
-      @Override
-      public void onResponse(Call<WidgetsResponse> call, Response<WidgetsResponse> response) {
-        switch (response.code()) {
-          case 200:
-            List<WidgetsResponseDatum> widgetsFromResponse =
-                response.body().getData().getBody().getData();
-
-            for (int i = 0; i < widgetsFromResponse.size(); i++) {
-              HealthWidget widget = new HealthWidget();
-
-              widget.setId(widgetsFromResponse.get(i).getWidgetId());
-              widget.setMeasurementUnit(widgetsFromResponse.get(i).getUnit());
-              widget.setPosition(i);
-              widget.setValue(Float.parseFloat(widgetsFromResponse.get(i).getTotal()));
-              widget.setTitle(widgetsFromResponse.get(i).getName());
-              widget.setSlug(widgetsFromResponse.get(i).getSlug());
-
-              healthWidgetsMap.add(widget);
-            }
-
-            setupWidgetViews(healthWidgetsMap);
-
-            break;
-        }
-      }
-
-      @Override public void onFailure(Call<WidgetsResponse> call, Throwable t) {
-        Timber.d("Call failed with error : %s", t.getMessage());
-        final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
-        alertDialog.setMessage(getString(R.string.server_error_got_returned));
-        alertDialog.show();
-      }
-    });
-  }
-
-  private void getTakenMedicalTests() {
-    dataAccessHandler.getTakenMedicalTests(new Callback<TakenMedicalTestsResponse>() {
-      @Override public void onResponse(Call<TakenMedicalTestsResponse> call,
-          Response<TakenMedicalTestsResponse> response) {
-        switch (response.code()) {
-          case 200:
-            List<TakenMedicalTestsResponseBody> takenMedicalTests =
-                response.body().getData().getBody();
-
-            loadingTestsProgressBar.setVisibility(View.GONE);
-
-            if (takenMedicalTests.isEmpty()) {
-              userTestsListView.setVisibility(View.GONE);
-              medicalTestsEmptyLayout.setVisibility(View.VISIBLE);
-            } else {
-              userTestsListView.setVisibility(View.VISIBLE);
-              medicalTestsEmptyLayout.setVisibility(View.GONE);
-
-              RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
-              UserTestsRecyclerAdapter userTestsRecyclerAdapter =
-                  new UserTestsRecyclerAdapter(getActivity().getApplication(), takenMedicalTests);
-              ItemTouchHelper.Callback callback =
-                  new SimpleSwipeItemTouchHelperCallback(userTestsRecyclerAdapter);
-              ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
-
-              userTestsListView.setLayoutManager(mLayoutManager);
-              userTestsListView.setNestedScrollingEnabled(false);
-              userTestsListView.setAdapter(userTestsRecyclerAdapter);
-              userTestsListView.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
-              touchHelper.attachToRecyclerView(userTestsListView);
-            }
-
-            break;
-        }
-      }
-
-      @Override public void onFailure(Call<TakenMedicalTestsResponse> call, Throwable t) {
-        Timber.d("Call failed with error : %s", t.getMessage());
-        final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
-        alertDialog.setMessage(getString(R.string.server_error_got_returned));
-        alertDialog.show();
-      }
-    });
-  }
-
-  @Subscribe public void updateWidgetsOrder(HealthWidgetsOrderChangedEvent event) {
-    healthWidgetsMap = event.getWidgetsMapHealth();
-    setupWidgetViews(healthWidgetsMap);
-  }
-
-  @Subscribe public void reflectMedicalTestEditCreate(MedicalTestEditCreateEvent event) {
-    getWidgets();
-    getTakenMedicalTests();
-  }
-
-  @Subscribe public void updateMedicationRemindersList(MedicationItemCreatedEvent event) {
-    setupMedicationRemindersList(medicationDAO.queryForAll());
-  }
-
-  @Override public void onDestroy() {
-    super.onDestroy();
-    EventBusSingleton.getInstance().unregister(this);
-  }
-
-  private void setupWidgetViews(ArrayList<HealthWidget> healthWidgetsMap) {
-    if (!healthWidgetsMap.isEmpty() && healthWidgetsMap.size() > 4) {
-      healthWidgetsMap = new ArrayList<>(healthWidgetsMap.subList(0, 4));
-
-      HealthWidgetsRecyclerAdapter healthWidgetsGridAdapter =
-          new HealthWidgetsRecyclerAdapter(getActivity(), healthWidgetsMap,
-              R.layout.grid_item_health_widgets);
-      widgetsGridView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
-      widgetsGridView.setAdapter(healthWidgetsGridAdapter);
-
-      loadingWidgetsProgressBar.setVisibility(View.GONE);
     }
   }
 }
