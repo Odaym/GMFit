@@ -3,7 +3,7 @@ package com.mcsaatchi.gmfit.architecture.rest;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class UserMealsResponseDinner {
+public class UserMealsResponseInner {
   @SerializedName("id") @Expose private Integer id;
   @SerializedName("instance_id") @Expose private Integer instance_id;
   @SerializedName("name") @Expose private String name;

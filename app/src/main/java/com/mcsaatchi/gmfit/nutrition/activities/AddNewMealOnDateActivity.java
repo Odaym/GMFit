@@ -13,10 +13,7 @@ import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
 import com.mcsaatchi.gmfit.architecture.otto.MealEntryManipulatedEvent;
 import com.mcsaatchi.gmfit.architecture.rest.UserMealsResponse;
-import com.mcsaatchi.gmfit.architecture.rest.UserMealsResponseBreakfast;
-import com.mcsaatchi.gmfit.architecture.rest.UserMealsResponseDinner;
-import com.mcsaatchi.gmfit.architecture.rest.UserMealsResponseLunch;
-import com.mcsaatchi.gmfit.architecture.rest.UserMealsResponseSnack;
+import com.mcsaatchi.gmfit.architecture.rest.UserMealsResponseInner;
 import com.mcsaatchi.gmfit.architecture.touch_helpers.SimpleSwipeItemTouchHelperCallback;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
@@ -144,7 +141,7 @@ public class AddNewMealOnDateActivity extends BaseActivity {
                 /**
                  * Grab all meals from the API
                  */
-                List<UserMealsResponseBreakfast> breakfastMeals =
+                List<UserMealsResponseInner> breakfastMeals =
                     response.body().getData().getBody().getData().getBreakfast();
                 List<UserMealsResponseLunch> lunchMeals =
                     response.body().getData().getBody().getData().getLunch();

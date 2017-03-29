@@ -6,66 +6,66 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserMealsResponseInnerData {
-  @SerializedName("breakfast") @Expose private List<UserMealsResponseBreakfast> breakfast =
+  @SerializedName("breakfast") @Expose private List<UserMealsResponseInner> breakfast =
       new ArrayList<>();
-  @SerializedName("lunch") @Expose private List<UserMealsResponseLunch> lunch = new ArrayList<>();
-  @SerializedName("dinner") @Expose private List<UserMealsResponseDinner> dinner =
+  @SerializedName("lunch") @Expose private List<UserMealsResponseInner> lunch = new ArrayList<>();
+  @SerializedName("dinner") @Expose private List<UserMealsResponseInner> dinner =
       new ArrayList<>();
-  @SerializedName("snack") @Expose private List<UserMealsResponseSnack> snack = new ArrayList<>();
+  @SerializedName("snack") @Expose private List<UserMealsResponseInner> snack = new ArrayList<>();
 
   /**
    * @return The breakfast
    */
-  public List<UserMealsResponseBreakfast> getBreakfast() {
+  public List<UserMealsResponseInner> getBreakfast() {
     return breakfast;
   }
 
   /**
    * @param breakfast The breakfast
    */
-  public void setBreakfast(List<UserMealsResponseBreakfast> breakfast) {
+  public void setBreakfast(List<UserMealsResponseInner> breakfast) {
     this.breakfast = breakfast;
   }
 
   /**
    * @return The lunch
    */
-  public List<UserMealsResponseLunch> getLunch() {
+  public List<UserMealsResponseInner> getLunch() {
     return lunch;
   }
 
   /**
    * @param lunch The lunch
    */
-  public void setLunch(List<UserMealsResponseLunch> lunch) {
+  public void setLunch(List<UserMealsResponseInner> lunch) {
     this.lunch = lunch;
   }
 
   /**
    * @return The dinner
    */
-  public List<UserMealsResponseDinner> getDinner() {
+  public List<UserMealsResponseInner> getDinner() {
     return dinner;
   }
 
   /**
    * @param dinner The dinner
    */
-  public void setDinner(List<UserMealsResponseDinner> dinner) {
+  public void setDinner(List<UserMealsResponseInner> dinner) {
     this.dinner = dinner;
   }
 
   /**
    * @return The snack
    */
-  public List<UserMealsResponseSnack> getSnack() {
+  public List<UserMealsResponseInner> getSnack() {
     return snack;
   }
 
   /**
    * @param snack The snack
    */
-  public void setSnack(List<UserMealsResponseSnack> snack) {
+  public void setSnack(List<UserMealsResponseInner> snack) {
     this.snack = snack;
   }
 }

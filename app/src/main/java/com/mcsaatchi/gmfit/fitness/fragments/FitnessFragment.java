@@ -80,9 +80,9 @@ public class FitnessFragment extends BaseFragment
   @Inject RuntimeExceptionDao<FitnessWidget, Integer> fitnessWidgetsDAO;
   private FitnessWidgetsRecyclerAdapter widgetsGridAdapter;
   private ArrayList<FitnessWidget> widgetsMap;
+  private FitnessFragmentPresenter presenter;
   private ArrayList<DataChart> chartsMap;
   private String todayDate;
-  private FitnessFragmentPresenter presenter;
 
   @RequiresApi(api = Build.VERSION_CODES.KITKAT) @Override public void onAttach(Context context) {
     super.onAttach(context);
