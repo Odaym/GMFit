@@ -357,9 +357,6 @@ public class NutritionFragment extends BaseFragment
 
   @Override public void displayUiForSection(List<AuthenticationResponseWidget> widgetsMapFromAPI,
       List<AuthenticationResponseChart> chartsMapFromAPI) {
-    /**
-     * Update or create widgets and datacharts into the DB
-     */
     finalWidgets = new ArrayList<>();
 
     for (int i = 0; i < widgetsMapFromAPI.size(); i++) {
