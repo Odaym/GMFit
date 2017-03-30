@@ -4,7 +4,7 @@ import android.app.ProgressDialog;
 
 public class BaseFragmentPresenter {
   public interface BaseFragmentView {
-    void showRequestErrorDialog(String responseMessage);
+    void displayRequestErrorDialog(String responseMessage);
 
     ProgressDialog displayWaitingDialog(String dialogTitle);
 

@@ -66,7 +66,7 @@ public class HealthFragmentPresenter extends BaseFragmentPresenter {
       }
 
       @Override public void onFailure(Call<WidgetsResponse> call, Throwable t) {
-        view.showRequestErrorDialog(t.getMessage());
+        view.displayRequestErrorDialog(t.getMessage());
       }
     });
   }
@@ -87,7 +87,7 @@ public class HealthFragmentPresenter extends BaseFragmentPresenter {
       }
 
       @Override public void onFailure(Call<TakenMedicalTestsResponse> call, Throwable t) {
-        view.showRequestErrorDialog(t.getMessage());
+        view.displayRequestErrorDialog(t.getMessage());
       }
     });
   }
@@ -108,7 +108,7 @@ public class HealthFragmentPresenter extends BaseFragmentPresenter {
       }
 
       @Override public void onFailure(Call<UserProfileResponse> call, Throwable t) {
-        view.showRequestErrorDialog(t.getMessage());
+        view.displayRequestErrorDialog(t.getMessage());
       }
     });
   }
@@ -129,7 +129,7 @@ public class HealthFragmentPresenter extends BaseFragmentPresenter {
       }
 
       @Override public void onFailure(Call<WeightHistoryResponse> call, Throwable t) {
-        view.showRequestErrorDialog(t.getMessage());
+        view.displayRequestErrorDialog(t.getMessage());
       }
     });
   }

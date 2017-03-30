@@ -60,7 +60,7 @@ public class SetupProfileFragmentsPresenter extends BaseFragmentPresenter {
       }
 
       @Override public void onFailure(Call<UserGoalsResponse> call, Throwable t) {
-        view_2.showRequestErrorDialog(t.getMessage());
+        view_2.displayRequestErrorDialog(t.getMessage());
       }
     });
   }
@@ -81,7 +81,7 @@ public class SetupProfileFragmentsPresenter extends BaseFragmentPresenter {
       }
 
       @Override public void onFailure(Call<ActivityLevelsResponse> call, Throwable t) {
-        view_3.showRequestErrorDialog(t.getMessage());
+        view_3.displayRequestErrorDialog(t.getMessage());
       }
     });
   }
@@ -132,7 +132,7 @@ public class SetupProfileFragmentsPresenter extends BaseFragmentPresenter {
           }
 
           @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
-            view_4.showRequestErrorDialog(t.getMessage());
+            view_4.displayRequestErrorDialog(t.getMessage());
           }
         });
   }
@@ -155,7 +155,7 @@ public class SetupProfileFragmentsPresenter extends BaseFragmentPresenter {
           }
 
           @Override public void onFailure(Call<UiResponse> call, Throwable t) {
-            view_4.showRequestErrorDialog(t.getMessage());
+            view_4.displayRequestErrorDialog(t.getMessage());
           }
         });
   }

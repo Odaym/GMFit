@@ -83,7 +83,7 @@ public class NutritionFragmentPresenter extends BaseFragmentPresenter {
       }
 
       @Override public void onFailure(Call<UserMealsResponse> call, Throwable t) {
-        view.showRequestErrorDialog(t.getMessage());
+        view.displayRequestErrorDialog(t.getMessage());
       }
     });
   }
@@ -113,7 +113,7 @@ public class NutritionFragmentPresenter extends BaseFragmentPresenter {
       }
 
       @Override public void onFailure(Call<UiResponse> call, Throwable t) {
-        view.showRequestErrorDialog(t.getMessage());
+        view.displayRequestErrorDialog(t.getMessage());
       }
     });
   }
@@ -139,7 +139,7 @@ public class NutritionFragmentPresenter extends BaseFragmentPresenter {
       }
 
       @Override public void onFailure(Call<SearchMealItemResponse> call, Throwable t) {
-        view.showRequestErrorDialog(t.getMessage());
+        view.displayRequestErrorDialog(t.getMessage());
       }
     });
   }
@@ -226,7 +226,7 @@ public class NutritionFragmentPresenter extends BaseFragmentPresenter {
           }
 
           @Override public void onFailure(Call<ChartMetricBreakdownResponse> call, Throwable t) {
-            view.showRequestErrorDialog(t.getMessage());
+            view.displayRequestErrorDialog(t.getMessage());
           }
         });
   }
@@ -249,7 +249,7 @@ public class NutritionFragmentPresenter extends BaseFragmentPresenter {
           }
 
           @Override public void onFailure(Call<SlugBreakdownResponse> call, Throwable t) {
-            view.showRequestErrorDialog(t.getMessage());
+            view.displayRequestErrorDialog(t.getMessage());
           }
         });
   }

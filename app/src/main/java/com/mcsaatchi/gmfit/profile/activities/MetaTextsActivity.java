@@ -36,7 +36,6 @@ public class MetaTextsActivity extends BaseActivity {
       metaTextsWebView.setVerticalScrollBarEnabled(false);
       metaTextsWebView.setHorizontalScrollBarEnabled(false);
 
-      //No effect
       settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
       metaTextsWebView.setInitialScale(1);
 

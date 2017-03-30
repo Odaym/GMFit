@@ -10,7 +10,7 @@ import timber.log.Timber;
 public class BaseFragment extends Fragment implements BaseFragmentPresenter.BaseFragmentView {
   private ProgressDialog waitingDialog;
 
-  @Override public void showRequestErrorDialog(String responseMessage) {
+  @Override public void displayRequestErrorDialog(String responseMessage) {
     Timber.d("Call failed with error : %s", responseMessage);
     final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
     alertDialog.setMessage(getResources().getString(R.string.server_error_got_returned));
