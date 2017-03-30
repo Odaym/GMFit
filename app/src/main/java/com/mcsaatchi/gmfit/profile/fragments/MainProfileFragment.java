@@ -1,7 +1,6 @@
 package com.mcsaatchi.gmfit.profile.fragments;
 
 import android.Manifest;
-import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -9,11 +8,9 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -23,17 +20,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 import com.mcsaatchi.gmfit.R;
@@ -42,30 +38,24 @@ import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
 import com.mcsaatchi.gmfit.architecture.otto.RemindersStatusChangedEvent;
 import com.mcsaatchi.gmfit.architecture.picasso.CircleTransform;
-import com.mcsaatchi.gmfit.architecture.rest.DefaultGetResponse;
-import com.mcsaatchi.gmfit.architecture.rest.EmergencyProfileResponse;
-import com.mcsaatchi.gmfit.architecture.rest.MetaTextsResponse;
-import com.mcsaatchi.gmfit.architecture.rest.UserProfileResponse;
 import com.mcsaatchi.gmfit.architecture.rest.UserProfileResponseActivityLevel;
 import com.mcsaatchi.gmfit.architecture.rest.UserProfileResponseDatum;
 import com.mcsaatchi.gmfit.architecture.rest.UserProfileResponseGoal;
 import com.mcsaatchi.gmfit.architecture.rest.UserProfileResponseMedicalCondition;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
+import com.mcsaatchi.gmfit.common.fragments.BaseFragment;
 import com.mcsaatchi.gmfit.onboarding.activities.LoginActivity;
 import com.mcsaatchi.gmfit.profile.activities.ChangePasswordActivity;
 import com.mcsaatchi.gmfit.profile.activities.ContactUsActivity;
 import com.mcsaatchi.gmfit.profile.activities.MealRemindersActivity;
 import com.mcsaatchi.gmfit.profile.activities.MetaTextsActivity;
+import com.mcsaatchi.gmfit.profile.presenters.MainProfileFragmentPresenter;
 import com.mukesh.countrypicker.fragments.CountryPicker;
 import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -75,13 +65,11 @@ import java.util.Locale;
 import javax.inject.Inject;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import timber.log.Timber;
 import worker8.com.github.radiogroupplus.RadioGroupPlus;
 
-public class MainProfileFragment extends Fragment {
+public class MainProfileFragment extends BaseFragment
+    implements MainProfileFragmentPresenter.MainProfileFragmentView {
   private static final int REQUEST_WRITE_STORAGE = 112;
   private static final int REQUEST_PICK_IMAGE_GALLERY = 329;
   private static final int ASK_CAMERA_AND_STORAGE_PERMISSION = 834;
@@ -97,27 +85,12 @@ public class MainProfileFragment extends Fragment {
   @Bind(R.id.metricSystemValueTV) TextView metricSystemValueTV;
   @Bind(R.id.activityLevelsEntryValueTV) TextView activityLevelsEntryValueTV;
   @Bind(R.id.appRemindersValueTV) TextView appRemindersValueTV;
-
-  @Bind(R.id.weightLayout) RelativeLayout weightLayout;
-  @Bind(R.id.goalsLayout) RelativeLayout goalsLayout;
-  @Bind(R.id.medicalConditionsLayout) RelativeLayout medicalConditionsLayout;
-  @Bind(R.id.appRemindersLayout) RelativeLayout appRemindersLayout;
-  @Bind(R.id.countryLayout) RelativeLayout countryLayout;
-  @Bind(R.id.metricLayout) RelativeLayout metricLayout;
-  @Bind(R.id.termsConditionsLayout) RelativeLayout termsConditionsLayout;
-  @Bind(R.id.privacyLayout) RelativeLayout privacyLayout;
-  @Bind(R.id.contactUsLayout) RelativeLayout contactUsLayout;
-  @Bind(R.id.shareAppLayout) RelativeLayout shareAppLayout;
-  @Bind(R.id.changePasswordLayout) RelativeLayout changePasswordLayout;
   @Bind(R.id.changePasswordParentLayout) LinearLayout changePasswordParentLayout;
-
-  @Bind(R.id.shareEmergencyProfileBTN) Button shareEmergencyProfileBTN;
-
-  @Bind(R.id.logoutBTN) Button logoutBTN;
 
   @Inject SharedPreferences prefs;
   @Inject DataAccessHandler dataAccessHandler;
 
+  private MainProfileFragmentPresenter presenter;
   private File photoFile;
   private Uri photoFileUri;
   private boolean profilePictureChanged = false;
@@ -145,6 +118,8 @@ public class MainProfileFragment extends Fragment {
 
     setHasOptionsMenu(true);
 
+    presenter = new MainProfileFragmentPresenter(this, dataAccessHandler);
+
     ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.profile_tab_title);
 
     Picasso.with(getActivity())
@@ -152,394 +127,12 @@ public class MainProfileFragment extends Fragment {
         .transform(new CircleTransform())
         .into(userProfileIV);
 
-    getUserProfile();
+    presenter.getUserProfile();
 
-    /**
-     * PROFILE IMAGE EDITOR
-     */
-    userProfileIV.setOnClickListener(view -> {
-      String[] neededPermissions = new String[] {
-          Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE
-      };
-
-      boolean hasCameraPermission =
-          (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA)
-              == PackageManager.PERMISSION_GRANTED);
-
-      boolean hasWriteStoragePermission = (ContextCompat.checkSelfPermission(getActivity(),
-          Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED);
-
-      if (!hasCameraPermission || !hasWriteStoragePermission) {
-        requestPermissions(neededPermissions, ASK_CAMERA_AND_STORAGE_PERMISSION);
-      } else {
-        showImagePickerDialog();
-      }
-    });
-
-    /**
-     * WEIGHT EDITOR
-     */
-    weightLayout.setOnClickListener(view -> {
-      final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
-      dialogBuilder.setTitle(R.string.profile_edit_weight_dialog_title);
-
-      View dialogView =
-          LayoutInflater.from(getActivity()).inflate(R.layout.profile_edit_weight_dialog, null);
-      final EditText editWeightET = (EditText) dialogView.findViewById(R.id.dialogWeightET);
-
-      editWeightET.setText(String.valueOf(prefs.getFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, 0)));
-      editWeightET.setSelection(editWeightET.getText().toString().length());
-
-      dialogBuilder.setView(dialogView);
-      dialogBuilder.setPositiveButton(R.string.ok, (dialogInterface, i) -> {
-        newUserWeight = Double.parseDouble(editWeightET.getText().toString());
-        weightEntryValueTV.setText(
-            String.valueOf(String.format(Locale.getDefault(), "%.1f", newUserWeight)));
-
-        prefs.edit().putFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, (float) newUserWeight).apply();
-
-        updateUserProfile();
-      });
-      dialogBuilder.setNegativeButton(R.string.decline_cancel,
-          (dialogInterface, i) -> dialogInterface.dismiss());
-
-      AlertDialog alertDialog = dialogBuilder.create();
-      alertDialog.show();
-    });
-
-    /**
-     * USER GOALS EDITOR
-     */
-    goalsLayout.setOnClickListener(view -> {
-      final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
-      dialogBuilder.setTitle(R.string.profile_edit_goal_dialog_title);
-
-      View dialogView =
-          LayoutInflater.from(getActivity()).inflate(R.layout.profile_edit_goal_dialog, null);
-
-      final RadioGroup goalRadioButtonsGroup =
-          (RadioGroup) dialogView.findViewById(R.id.goalRadioButtonsGroup);
-
-      for (int i = 0; i < userGoals.size(); i++) {
-        View listItemRadioButton =
-            getActivity().getLayoutInflater().inflate(R.layout.list_item_edit_goal_dialog, null);
-
-        final RadioButton radioButtonItem =
-            (RadioButton) listItemRadioButton.findViewById(R.id.editGoalRadioBTN);
-        radioButtonItem.setText(userGoals.get(i).getName());
-        radioButtonItem.setId(Integer.parseInt(userGoals.get(i).getId()));
-
-        if (radioButtonItem.getText()
-            .toString()
-            .equals(prefs.getString(Constants.EXTRAS_USER_PROFILE_GOAL, ""))) {
-          radioButtonItem.setChecked(true);
-        }
-
-        goalRadioButtonsGroup.addView(listItemRadioButton);
-      }
-
-      dialogBuilder.setView(dialogView);
-      dialogBuilder.setPositiveButton(R.string.ok, (dialogInterface, i) -> {
-        RadioButton selectedRadioButton = (RadioButton) goalRadioButtonsGroup.findViewById(
-            goalRadioButtonsGroup.getCheckedRadioButtonId());
-
-        int newUserGoalId = selectedRadioButton.getId();
-        String newUserGoalText = selectedRadioButton.getText().toString();
-
-        goalsEntryValueTV.setText(newUserGoalText);
-
-        prefs.edit().putInt(Constants.EXTRAS_USER_PROFILE_GOAL_ID, newUserGoalId).apply();
-        prefs.edit().putString(Constants.EXTRAS_USER_PROFILE_GOAL, newUserGoalText).apply();
-
-        updateUserProfile();
-      });
-      dialogBuilder.setNegativeButton(R.string.decline_cancel,
-          (dialogInterface, i) -> dialogInterface.dismiss());
-
-      AlertDialog alertDialog = dialogBuilder.create();
-      alertDialog.show();
-    });
-
-    /**
-     * ACTIVITY LEVELS EDITOR
-     */
-    activityLevelsEntryValueTV.setOnClickListener(view -> {
-      final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
-      dialogBuilder.setTitle(R.string.profile_edit_activity_levels_dialog_title);
-
-      View dialogView = LayoutInflater.from(getActivity())
-          .inflate(R.layout.profile_edit_radio_options_layout, null);
-
-      final RadioGroupPlus activityLevelRadioGRP =
-          (RadioGroupPlus) dialogView.findViewById(R.id.collectionsRadioGroup);
-
-      for (int i = 0; i < userActivityLevels.size(); i++) {
-        View listItemRadioButton = getActivity().getLayoutInflater()
-            .inflate(R.layout.list_item_edit_radio_options_dialog, null);
-
-        final RadioButton radioButtonItem =
-            (RadioButton) listItemRadioButton.findViewById(R.id.editRadioOptionsRadioBTN);
-        radioButtonItem.setText(userActivityLevels.get(i).getName());
-        radioButtonItem.setId(Integer.parseInt(userActivityLevels.get(i).getId()));
-
-        if (radioButtonItem.getText()
-            .toString()
-            .equals(prefs.getString(Constants.EXTRAS_USER_PROFILE_ACTIVITY_LEVEL, ""))) {
-          radioButtonItem.setChecked(true);
-        }
-
-        activityLevelRadioGRP.addView(listItemRadioButton);
-      }
-
-      dialogBuilder.setView(dialogView);
-      dialogBuilder.setPositiveButton(R.string.ok, (dialogInterface, position) -> {
-        RadioButton selectedRadioButton = (RadioButton) activityLevelRadioGRP.findViewById(
-            activityLevelRadioGRP.getCheckedRadioButtonId());
-
-        if (selectedRadioButton != null) {
-          activityLevelsEntryValueTV.setText(selectedRadioButton.getText().toString());
-
-          prefs.edit()
-              .putString(Constants.EXTRAS_USER_PROFILE_ACTIVITY_LEVEL,
-                  selectedRadioButton.getText().toString())
-              .apply();
-          prefs.edit()
-              .putInt(Constants.EXTRAS_USER_PROFILE_ACTIVITY_LEVEL_ID, selectedRadioButton.getId())
-              .apply();
-
-          updateUserProfile();
-        } else {
-          Log.d("TAG", "onClick: Selected Radio Button was null!");
-        }
-      });
-
-      dialogBuilder.setNegativeButton(R.string.decline_cancel,
-          (dialogInterface, i) -> dialogInterface.dismiss());
-
-      AlertDialog alertDialog = dialogBuilder.create();
-      alertDialog.show();
-    });
-
-    /**
-     * MEDICAL CONDITIONS EDITOR
-     */
-    medicalConditionsLayout.setOnClickListener(view -> {
-      final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
-      dialogBuilder.setTitle(R.string.profile_edit_medical_conditions_dialog_title);
-
-      View dialogView = LayoutInflater.from(getActivity())
-          .inflate(R.layout.profile_edit_radio_options_layout, null);
-
-      final RadioGroupPlus medicalRdGroup =
-          (RadioGroupPlus) dialogView.findViewById(R.id.collectionsRadioGroup);
-
-      for (int i = 0; i < userMedicalConditions.size(); i++) {
-        View listItemRadioButton = getActivity().getLayoutInflater()
-            .inflate(R.layout.list_item_edit_radio_options_dialog, null);
-
-        final RadioButton radioButtonItem =
-            (RadioButton) listItemRadioButton.findViewById(R.id.editRadioOptionsRadioBTN);
-        radioButtonItem.setText(userMedicalConditions.get(i).getName());
-        radioButtonItem.setId(Integer.parseInt(userMedicalConditions.get(i).getId()));
-
-        if (radioButtonItem.getText()
-            .toString()
-            .equals(prefs.getString(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION, ""))) {
-          radioButtonItem.setChecked(true);
-        }
-
-        medicalRdGroup.addView(listItemRadioButton);
-      }
-
-      dialogBuilder.setView(dialogView);
-      dialogBuilder.setPositiveButton(R.string.ok, (dialogInterface, position) -> {
-        RadioButton selectedRadioButton =
-            (RadioButton) medicalRdGroup.findViewById(medicalRdGroup.getCheckedRadioButtonId());
-
-        if (selectedRadioButton != null) {
-          medicalConditionsValueTV.setText(selectedRadioButton.getText().toString());
-
-          prefs.edit()
-              .putString(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION,
-                  selectedRadioButton.getText().toString())
-              .apply();
-          prefs.edit()
-              .putInt(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION_ID,
-                  selectedRadioButton.getId())
-              .apply();
-
-          updateUserProfile();
-        } else {
-          Log.d("TAG", "onClick: Selected Radio Button was null!");
-        }
-      });
-
-      dialogBuilder.setNegativeButton(R.string.decline_cancel,
-          (dialogInterface, i) -> dialogInterface.dismiss());
-
-      AlertDialog alertDialog = dialogBuilder.create();
-      alertDialog.show();
-    });
-
-    /**
-     * METRIC SYSTEM EDITOR
-     */
-    metricLayout.setOnClickListener(view -> {
-      final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
-      dialogBuilder.setTitle(R.string.profile_edit_measurement_unit_dialog_title);
-
-      View dialogView = LayoutInflater.from(getActivity())
-          .inflate(R.layout.profile_edit_measurement_unit_layout, null);
-
-      final RadioGroupPlus metricRadioGroup =
-          (RadioGroupPlus) dialogView.findViewById(R.id.measuremeantUnitRdGroup);
-
-      for (int i = 0; i < userMetricSystems.size(); i++) {
-        View listItemRadioButton = getActivity().getLayoutInflater()
-            .inflate(R.layout.list_item_edit_metric_system_dialog, null);
-
-        final RadioButton radioButtonItem =
-            (RadioButton) listItemRadioButton.findViewById(R.id.editMetricSystemRadioBTN);
-        radioButtonItem.setText(userMetricSystems.get(i).toString());
-        radioButtonItem.setId(userMetricSystems.indexOf(radioButtonItem.getText().toString()));
-
-        if (radioButtonItem.getText()
-            .toString()
-            .equalsIgnoreCase(
-                prefs.getString(Constants.EXTRAS_USER_PROFILE_MEASUREMENT_SYSTEM, ""))) {
-          radioButtonItem.setChecked(true);
-        }
-
-        metricRadioGroup.addView(listItemRadioButton);
-      }
-
-      dialogBuilder.setView(dialogView);
-      dialogBuilder.setPositiveButton(R.string.ok, (dialogInterface, position) -> {
-        RadioButton selectedRadioButton =
-            (RadioButton) metricRadioGroup.findViewById(metricRadioGroup.getCheckedRadioButtonId());
-
-        metricSystemValueTV.setText(selectedRadioButton.getText().toString());
-
-        prefs.edit()
-            .putString(Constants.EXTRAS_USER_PROFILE_MEASUREMENT_SYSTEM,
-                selectedRadioButton.getText().toString())
-            .apply();
-
-        updateUserProfile();
-      });
-      dialogBuilder.setNegativeButton(R.string.decline_cancel,
-          (dialogInterface, i) -> dialogInterface.dismiss());
-
-      AlertDialog alertDialog = dialogBuilder.create();
-      alertDialog.show();
-    });
-
-    /**
-     * LOGOUT FROM THE APP
-     */
-    logoutBTN.setOnClickListener(view -> {
-      if (Helpers.isInternetAvailable(getActivity())) {
-        signOutUser();
-      } else {
-        Helpers.showNoInternetDialog(getActivity());
-      }
-    });
-
-    /**
-     * COUNTRY OF ORIGIN EDITOR
-     */
-    countryLayout.setOnClickListener(view -> {
-      final CountryPicker picker =
-          CountryPicker.newInstance(getString(R.string.choose_country_hint));
-
-      picker.show(getActivity().getSupportFragmentManager(), "COUNTRY_PICKER");
-      picker.setListener((countryName, code, dialCode, flagDrawableResID) -> {
-        countryValueTV.setText(countryName);
-
-        prefs.edit().putString(Constants.EXTRAS_USER_PROFILE_NATIONALITY, countryName).apply();
-
-        picker.dismiss();
-
-        updateUserProfile();
-      });
-    });
-
-    /**
-     * SHOW EMERGENCY PROFILE
-     */
-    shareEmergencyProfileBTN.setOnClickListener(view -> {
-      if (Helpers.isInternetAvailable(getActivity())) {
-
-        boolean hasPermission = (ContextCompat.checkSelfPermission(getActivity(),
-            Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED);
-        if (!hasPermission) {
-          requestPermissions(new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE },
-              REQUEST_WRITE_STORAGE);
-        } else {
-          requestEmergencyProfile();
-        }
-      } else {
-        Helpers.showNoInternetDialog(getActivity());
-      }
-    });
-
-    /**
-     * TERMS AND CONDITIONS
-     */
-    termsConditionsLayout.setOnClickListener(view -> getMetaTexts("terms"));
-
-    /**
-     * PRIVACY POLICY
-     */
-    privacyLayout.setOnClickListener(view -> getMetaTexts("privacy"));
-
-    /**
-     * CONTACT US
-     */
-    contactUsLayout.setOnClickListener(view -> {
-      Intent intent = new Intent(getActivity(), ContactUsActivity.class);
-      startActivity(intent);
-    });
-
-    /**
-     * SET APP REMINDERS
-     */
-    appRemindersLayout.setOnClickListener(view -> {
-      Intent intent = new Intent(getActivity(), MealRemindersActivity.class);
-      startActivity(intent);
-    });
-
-    /**
-     * SHARE THE APP
-     */
-    shareAppLayout.setOnClickListener(view -> {
-      try {
-        Intent i = new Intent(Intent.ACTION_SEND);
-        i.setType("text/plain");
-        i.putExtra(Intent.EXTRA_SUBJECT, "GMFit");
-        String sAux = "\nCheck out GlobeMed's new application!\n\n";
-        sAux = sAux + "https://play.google.com/store/apps/details?id=Orion.Soft \n\n";
-        i.putExtra(Intent.EXTRA_TEXT, sAux);
-        startActivity(Intent.createChooser(i, "Choose sharing method"));
-      } catch (Exception e) {
-        //e.toString();
-      }
-    });
-
-    /**
-     * If the user is logged in through Facebook, Token is not -1 (empty)
-     */
+    //If the user is logged in through Facebook, Token is not -1 (empty)
     if (!prefs.getString(Constants.EXTRAS_USER_FACEBOOK_TOKEN, "-1").equals("-1")) {
       changePasswordParentLayout.setVisibility(View.GONE);
     }
-
-    /**
-     * CHANGE PASSWORD LAYOUT
-     */
-    changePasswordLayout.setOnClickListener(view -> {
-      Intent intent = new Intent(getActivity(), ChangePasswordActivity.class);
-      startActivity(intent);
-    });
 
     return fragmentView;
   }
@@ -556,7 +149,7 @@ public class MainProfileFragment extends Fragment {
       case REQUEST_WRITE_STORAGE:
         if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
           //reload my activity with permission granted or use the features what required the permission
-          requestEmergencyProfile();
+          presenter.requestEmergencyProfile();
         } else {
           Toast.makeText(getActivity(),
               "The app was not allowed to write to your storage. Hence, it cannot function properly. Please consider granting it "
@@ -600,12 +193,576 @@ public class MainProfileFragment extends Fragment {
     }
   }
 
+  @Override public void populateUserProfileInformation(UserProfileResponseDatum userProfileData) {
+    SharedPreferences.Editor prefsEditor = prefs.edit();
+
+    if (userProfileData != null) {
+      userMedicalConditions = userProfileData.getMedicalConditions();
+      userGoals = userProfileData.getUserGoals();
+      userActivityLevels = userProfileData.getActivityLevels();
+
+      /**
+       * Set the medical condition
+       */
+      if (prefs.getInt(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION_ID, -1) == -1) {
+        prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION, "None");
+        prefsEditor.putInt(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION_ID, -1);
+
+        medicalConditionsValueTV.setText("None");
+      } else {
+        for (int i = 0; i < userMedicalConditions.size(); i++) {
+          if (userMedicalConditions.get(i).getSelected().equals("1")) {
+            prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION,
+                userMedicalConditions.get(i).getName());
+            prefsEditor.putInt(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION_ID,
+                Integer.parseInt(userMedicalConditions.get(i).getId()));
+
+            medicalConditionsValueTV.setText(userMedicalConditions.get(i).getName());
+          }
+        }
+      }
+
+      /**
+       * Set the activity level
+       */
+      if (prefs.getInt(Constants.EXTRAS_USER_PROFILE_ACTIVITY_LEVEL_ID, -1) == -1) {
+        prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_ACTIVITY_LEVEL,
+            "Lightly Active (1-3 times per week)");
+        prefsEditor.putInt(Constants.EXTRAS_USER_PROFILE_ACTIVITY_LEVEL_ID, 2);
+
+        activityLevelsEntryValueTV.setText("Lightly Active (1-3 times per week)");
+      } else {
+        for (int i = 0; i < userActivityLevels.size(); i++) {
+          if (userActivityLevels.get(i).getSelected().equals("1")) {
+            prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_ACTIVITY_LEVEL,
+                userActivityLevels.get(i).getName());
+            prefsEditor.putInt(Constants.EXTRAS_USER_PROFILE_ACTIVITY_LEVEL_ID,
+                Integer.parseInt(userActivityLevels.get(i).getId()));
+
+            activityLevelsEntryValueTV.setText(userActivityLevels.get(i).getName());
+          }
+        }
+      }
+
+      /**
+       * Set the user goals
+       */
+      for (int i = 0; i < userGoals.size(); i++) {
+        if (userGoals.get(i).getSelected().equals("1")) {
+          prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_GOAL, userGoals.get(i).getName());
+          prefsEditor.putInt(Constants.EXTRAS_USER_PROFILE_GOAL_ID,
+              Integer.parseInt(userGoals.get(i).getId()));
+
+          goalsEntryValueTV.setText(userGoals.get(i).getName());
+        }
+      }
+
+      /**
+       * Set the name
+       */
+      if (userProfileData.getName() != null && !userProfileData.getName().isEmpty()) {
+        prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_USER_FULL_NAME,
+            userProfileData.getName());
+        userFullNameTV.setText(userProfileData.getName());
+      }
+
+      /**
+       * Set the email
+       */
+      if (userProfileData.getEmail() != null && !userProfileData.getEmail().isEmpty()) {
+        prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_USER_EMAIL, userProfileData.getEmail());
+        userEmailTV.setText(userProfileData.getEmail());
+      }
+
+      /**
+       * Set the weight
+       */
+      if (userProfileData.getWeight() != null && !userProfileData.getWeight().isEmpty()) {
+        prefsEditor.putFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT,
+            Float.parseFloat(userProfileData.getWeight()));
+        weightEntryValueTV.setText(String.valueOf(String.format(Locale.getDefault(), "%.1f",
+            Float.parseFloat(userProfileData.getWeight()))));
+      }
+
+      /**
+       * Set the country
+       */
+      if (userProfileData.getCountry() != null && !userProfileData.getCountry().isEmpty()) {
+        prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_NATIONALITY,
+            userProfileData.getCountry());
+        countryValueTV.setText(userProfileData.getCountry());
+      }
+
+      /**
+       * Set the metric system
+       */
+      if (userProfileData.getMetricSystem() != null && !userProfileData.getMetricSystem()
+          .isEmpty()) {
+        prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_MEASUREMENT_SYSTEM,
+            userProfileData.getMetricSystem());
+
+        String cap = userProfileData.getMetricSystem().substring(0, 1).toUpperCase()
+            + userProfileData.getMetricSystem().substring(1);
+
+        metricSystemValueTV.setText(cap);
+      }
+
+      /**
+       * Set the gender
+       */
+      if (userProfileData.getGender() != null && !userProfileData.getGender().isEmpty()) {
+        int finalGender = userProfileData.getGender().equals("Male") ? 0 : 1;
+        prefsEditor.putInt(Constants.EXTRAS_USER_PROFILE_GENDER, finalGender);
+      }
+
+      /**
+       * Set the profile picture
+       */
+      if (userProfileData.getProfile_picture() != null && !userProfileData.getProfile_picture()
+          .equals(Constants.BASE_URL_ADDRESS) && getActivity() != null) {
+
+        prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_IMAGE,
+            userProfileData.getProfile_picture());
+
+        Picasso.with(getActivity())
+            .load(userProfileData.getProfile_picture())
+            .resize(500, 500)
+            .transform(new CircleTransform())
+            .centerInside()
+            .into(userProfileIV);
+      }
+
+      prefsEditor.apply();
+    }
+  }
+
+  @Override public void wipeCredentialsOnSignOut() {
+    prefs.edit()
+        .putString(Constants.PREF_USER_ACCESS_TOKEN, Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS)
+        .apply();
+    prefs.edit().putBoolean(Constants.EXTRAS_USER_LOGGED_IN, false).apply();
+    prefs.edit().putFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, 0f).apply();
+
+    prefs.edit().putString(Constants.EXTRAS_USER_EMAIL, "").apply();
+    prefs.edit().putString(Constants.EXTRAS_USER_PASSWORD, "").apply();
+    prefs.edit().putString(Constants.EXTRAS_INSURANCE_USER_USERNAME, "").apply();
+    prefs.edit().putString(Constants.EXTRAS_INSURANCE_USER_PASSWORD, "").apply();
+    prefs.edit().putString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, "").apply();
+    prefs.edit().putString(Constants.EXTRAS_INSURANCE_COUNTRY_NAME, "").apply();
+    prefs.edit().putString(Constants.EXTRAS_INSURANCE_COUNTRY_CRM_CODE, "").apply();
+    prefs.edit().putString(Constants.EXTRAS_INSURANCE_COUNTRY_ISO_CODE, "").apply();
+
+    if (!prefs.getString(Constants.EXTRAS_USER_FACEBOOK_TOKEN, "-1").equals("-1")) {
+      FacebookSdk.sdkInitialize(getActivity());
+      LoginManager.getInstance().logOut();
+      prefs.edit().putString(Constants.EXTRAS_USER_FACEBOOK_TOKEN, "-1").apply();
+    }
+
+    getActivity().finish();
+
+    Intent intent = new Intent(getActivity(), LoginActivity.class);
+    startActivity(intent);
+  }
+
+  @Override public void openMetaTextsActivity(String metaContents, String section) {
+    Intent intent = new Intent(getActivity(), MetaTextsActivity.class);
+    switch (section) {
+      case "terms":
+        intent.putExtra(Constants.BUNDLE_ACTIVITY_TITLE,
+            getResources().getString(R.string.terms_and_conditions_entry));
+        break;
+      case "privacy":
+        intent.putExtra(Constants.BUNDLE_ACTIVITY_TITLE,
+            getResources().getString(R.string.privacy_and_security_entry));
+        break;
+    }
+
+    intent.putExtra(Constants.EXTRAS_META_HTML_CONTENT, metaContents);
+    startActivity(intent);
+  }
+
+  @Override public void updateProfilePicture() {
+    if (profilePictureChanged) {
+      updateUserPicture();
+    } else {
+      Toast.makeText(getActivity(), "Your profile was updated successfully", Toast.LENGTH_SHORT)
+          .show();
+    }
+
+    InputMethodManager imm =
+        (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+    imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+  }
+
+  @Override public void displayPictureChangeSuccessful() {
+    Toast.makeText(getActivity(), "Your profile was updated successfully", Toast.LENGTH_SHORT)
+        .show();
+
+    profilePictureChanged = false;
+  }
+
+  @Override public void openShareFileDialog() {
+    File pdfFile = new File(
+        Environment.getExternalStorageDirectory() + "/GMFit/" + "my_emergency_profile.pdf");
+    Uri uri = Uri.fromFile(pdfFile);
+
+    Intent i = new Intent(Intent.ACTION_SEND);
+    i.setType("message/rfc822");
+    i.putExtra(Intent.EXTRA_EMAIL, new String[] { "support@gmfit.com" });
+    i.putExtra(Intent.EXTRA_STREAM, uri);
+    i.putExtra(Intent.EXTRA_SUBJECT, "EMERGENCY PROFILE");
+    i.putExtra(Intent.EXTRA_TEXT, "This is an emergency, please check my profile.");
+    try {
+      startActivity(Intent.createChooser(i, "Send email through"));
+    } catch (ActivityNotFoundException ex) {
+      Toast.makeText(getActivity(), "No email client", Toast.LENGTH_SHORT).show();
+    }
+  }
+
   @Subscribe public void updateReminderTextviewFromStatus(RemindersStatusChangedEvent event) {
     if (event.isReminderOn()) {
       appRemindersValueTV.setText("On");
     } else {
       appRemindersValueTV.setText("Off");
     }
+  }
+
+  @OnClick(R.id.userProfileIV) public void handleUserProfilePressed() {
+    String[] neededPermissions = new String[] {
+        Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
+
+    boolean hasCameraPermission =
+        (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA)
+            == PackageManager.PERMISSION_GRANTED);
+
+    boolean hasWriteStoragePermission = (ContextCompat.checkSelfPermission(getActivity(),
+        Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED);
+
+    if (!hasCameraPermission || !hasWriteStoragePermission) {
+      requestPermissions(neededPermissions, ASK_CAMERA_AND_STORAGE_PERMISSION);
+    } else {
+      showImagePickerDialog();
+    }
+  }
+
+  @OnClick(R.id.weightLayout) public void handleWeightLayoutPressed() {
+    final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
+    dialogBuilder.setTitle(R.string.profile_edit_weight_dialog_title);
+
+    View dialogView =
+        LayoutInflater.from(getActivity()).inflate(R.layout.profile_edit_weight_dialog, null);
+    final EditText editWeightET = (EditText) dialogView.findViewById(R.id.dialogWeightET);
+
+    editWeightET.setText(String.valueOf(prefs.getFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, 0)));
+    editWeightET.setSelection(editWeightET.getText().toString().length());
+
+    dialogBuilder.setView(dialogView);
+    dialogBuilder.setPositiveButton(R.string.ok, (dialogInterface, i) -> {
+      newUserWeight = Double.parseDouble(editWeightET.getText().toString());
+      weightEntryValueTV.setText(
+          String.valueOf(String.format(Locale.getDefault(), "%.1f", newUserWeight)));
+
+      prefs.edit().putFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, (float) newUserWeight).apply();
+
+      updateUserProfile();
+    });
+    dialogBuilder.setNegativeButton(R.string.decline_cancel,
+        (dialogInterface, i) -> dialogInterface.dismiss());
+
+    AlertDialog alertDialog = dialogBuilder.create();
+    alertDialog.show();
+  }
+
+  @OnClick(R.id.goalsLayout) public void handleGoalsLayoutPressed() {
+    final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
+    dialogBuilder.setTitle(R.string.profile_edit_goal_dialog_title);
+
+    View dialogView =
+        LayoutInflater.from(getActivity()).inflate(R.layout.profile_edit_goal_dialog, null);
+
+    final RadioGroup goalRadioButtonsGroup =
+        (RadioGroup) dialogView.findViewById(R.id.goalRadioButtonsGroup);
+
+    for (int i = 0; i < userGoals.size(); i++) {
+      View listItemRadioButton =
+          getActivity().getLayoutInflater().inflate(R.layout.list_item_edit_goal_dialog, null);
+
+      final RadioButton radioButtonItem =
+          (RadioButton) listItemRadioButton.findViewById(R.id.editGoalRadioBTN);
+      radioButtonItem.setText(userGoals.get(i).getName());
+      radioButtonItem.setId(Integer.parseInt(userGoals.get(i).getId()));
+
+      if (radioButtonItem.getText()
+          .toString()
+          .equals(prefs.getString(Constants.EXTRAS_USER_PROFILE_GOAL, ""))) {
+        radioButtonItem.setChecked(true);
+      }
+
+      goalRadioButtonsGroup.addView(listItemRadioButton);
+    }
+
+    dialogBuilder.setView(dialogView);
+    dialogBuilder.setPositiveButton(R.string.ok, (dialogInterface, i) -> {
+      RadioButton selectedRadioButton = (RadioButton) goalRadioButtonsGroup.findViewById(
+          goalRadioButtonsGroup.getCheckedRadioButtonId());
+
+      int newUserGoalId = selectedRadioButton.getId();
+      String newUserGoalText = selectedRadioButton.getText().toString();
+
+      goalsEntryValueTV.setText(newUserGoalText);
+
+      prefs.edit().putInt(Constants.EXTRAS_USER_PROFILE_GOAL_ID, newUserGoalId).apply();
+      prefs.edit().putString(Constants.EXTRAS_USER_PROFILE_GOAL, newUserGoalText).apply();
+
+      updateUserProfile();
+    });
+    dialogBuilder.setNegativeButton(R.string.decline_cancel,
+        (dialogInterface, i) -> dialogInterface.dismiss());
+
+    AlertDialog alertDialog = dialogBuilder.create();
+    alertDialog.show();
+  }
+
+  @OnClick(R.id.activityLevelsLayout) public void handleActivityLevelsLayoutPressed() {
+    final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
+    dialogBuilder.setTitle(R.string.profile_edit_activity_levels_dialog_title);
+
+    View dialogView = LayoutInflater.from(getActivity())
+        .inflate(R.layout.profile_edit_radio_options_layout, null);
+
+    final RadioGroupPlus activityLevelRadioGRP =
+        (RadioGroupPlus) dialogView.findViewById(R.id.collectionsRadioGroup);
+
+    for (int i = 0; i < userActivityLevels.size(); i++) {
+      View listItemRadioButton = getActivity().getLayoutInflater()
+          .inflate(R.layout.list_item_edit_radio_options_dialog, null);
+
+      final RadioButton radioButtonItem =
+          (RadioButton) listItemRadioButton.findViewById(R.id.editRadioOptionsRadioBTN);
+      radioButtonItem.setText(userActivityLevels.get(i).getName());
+      radioButtonItem.setId(Integer.parseInt(userActivityLevels.get(i).getId()));
+
+      if (radioButtonItem.getText()
+          .toString()
+          .equals(prefs.getString(Constants.EXTRAS_USER_PROFILE_ACTIVITY_LEVEL, ""))) {
+        radioButtonItem.setChecked(true);
+      }
+
+      activityLevelRadioGRP.addView(listItemRadioButton);
+    }
+
+    dialogBuilder.setView(dialogView);
+    dialogBuilder.setPositiveButton(R.string.ok, (dialogInterface, position) -> {
+      RadioButton selectedRadioButton = (RadioButton) activityLevelRadioGRP.findViewById(
+          activityLevelRadioGRP.getCheckedRadioButtonId());
+
+      if (selectedRadioButton != null) {
+        activityLevelsEntryValueTV.setText(selectedRadioButton.getText().toString());
+
+        prefs.edit()
+            .putString(Constants.EXTRAS_USER_PROFILE_ACTIVITY_LEVEL,
+                selectedRadioButton.getText().toString())
+            .apply();
+        prefs.edit()
+            .putInt(Constants.EXTRAS_USER_PROFILE_ACTIVITY_LEVEL_ID, selectedRadioButton.getId())
+            .apply();
+
+        updateUserProfile();
+      } else {
+        Log.d("TAG", "onClick: Selected Radio Button was null!");
+      }
+    });
+
+    dialogBuilder.setNegativeButton(R.string.decline_cancel,
+        (dialogInterface, i) -> dialogInterface.dismiss());
+
+    AlertDialog alertDialog = dialogBuilder.create();
+    alertDialog.show();
+  }
+
+  @OnClick(R.id.medicalConditionsLayout) public void handleMedicalConditionsLayoutPressed() {
+    final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
+    dialogBuilder.setTitle(R.string.profile_edit_medical_conditions_dialog_title);
+
+    View dialogView = LayoutInflater.from(getActivity())
+        .inflate(R.layout.profile_edit_radio_options_layout, null);
+
+    final RadioGroupPlus medicalRdGroup =
+        (RadioGroupPlus) dialogView.findViewById(R.id.collectionsRadioGroup);
+
+    for (int i = 0; i < userMedicalConditions.size(); i++) {
+      View listItemRadioButton = getActivity().getLayoutInflater()
+          .inflate(R.layout.list_item_edit_radio_options_dialog, null);
+
+      final RadioButton radioButtonItem =
+          (RadioButton) listItemRadioButton.findViewById(R.id.editRadioOptionsRadioBTN);
+      radioButtonItem.setText(userMedicalConditions.get(i).getName());
+      radioButtonItem.setId(Integer.parseInt(userMedicalConditions.get(i).getId()));
+
+      if (radioButtonItem.getText()
+          .toString()
+          .equals(prefs.getString(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION, ""))) {
+        radioButtonItem.setChecked(true);
+      }
+
+      medicalRdGroup.addView(listItemRadioButton);
+    }
+
+    dialogBuilder.setView(dialogView);
+    dialogBuilder.setPositiveButton(R.string.ok, (dialogInterface, position) -> {
+      RadioButton selectedRadioButton =
+          (RadioButton) medicalRdGroup.findViewById(medicalRdGroup.getCheckedRadioButtonId());
+
+      if (selectedRadioButton != null) {
+        medicalConditionsValueTV.setText(selectedRadioButton.getText().toString());
+
+        prefs.edit()
+            .putString(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION,
+                selectedRadioButton.getText().toString())
+            .apply();
+        prefs.edit()
+            .putInt(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION_ID,
+                selectedRadioButton.getId())
+            .apply();
+
+        updateUserProfile();
+      } else {
+        Log.d("TAG", "onClick: Selected Radio Button was null!");
+      }
+    });
+
+    dialogBuilder.setNegativeButton(R.string.decline_cancel,
+        (dialogInterface, i) -> dialogInterface.dismiss());
+
+    AlertDialog alertDialog = dialogBuilder.create();
+    alertDialog.show();
+  }
+
+  @OnClick(R.id.metricLayout) public void handleMetricLayoutPressed() {
+    final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
+    dialogBuilder.setTitle(R.string.profile_edit_measurement_unit_dialog_title);
+
+    View dialogView = LayoutInflater.from(getActivity())
+        .inflate(R.layout.profile_edit_measurement_unit_layout, null);
+
+    final RadioGroupPlus metricRadioGroup =
+        (RadioGroupPlus) dialogView.findViewById(R.id.measuremeantUnitRdGroup);
+
+    for (int i = 0; i < userMetricSystems.size(); i++) {
+      View listItemRadioButton = getActivity().getLayoutInflater()
+          .inflate(R.layout.list_item_edit_metric_system_dialog, null);
+
+      final RadioButton radioButtonItem =
+          (RadioButton) listItemRadioButton.findViewById(R.id.editMetricSystemRadioBTN);
+      radioButtonItem.setText(userMetricSystems.get(i).toString());
+      radioButtonItem.setId(userMetricSystems.indexOf(radioButtonItem.getText().toString()));
+
+      if (radioButtonItem.getText()
+          .toString()
+          .equalsIgnoreCase(
+              prefs.getString(Constants.EXTRAS_USER_PROFILE_MEASUREMENT_SYSTEM, ""))) {
+        radioButtonItem.setChecked(true);
+      }
+
+      metricRadioGroup.addView(listItemRadioButton);
+    }
+
+    dialogBuilder.setView(dialogView);
+    dialogBuilder.setPositiveButton(R.string.ok, (dialogInterface, position) -> {
+      RadioButton selectedRadioButton =
+          (RadioButton) metricRadioGroup.findViewById(metricRadioGroup.getCheckedRadioButtonId());
+
+      metricSystemValueTV.setText(selectedRadioButton.getText().toString());
+
+      prefs.edit()
+          .putString(Constants.EXTRAS_USER_PROFILE_MEASUREMENT_SYSTEM,
+              selectedRadioButton.getText().toString())
+          .apply();
+
+      updateUserProfile();
+    });
+    dialogBuilder.setNegativeButton(R.string.decline_cancel,
+        (dialogInterface, i) -> dialogInterface.dismiss());
+
+    AlertDialog alertDialog = dialogBuilder.create();
+    alertDialog.show();
+  }
+
+  @OnClick(R.id.countryLayout) public void handleCountryLayoutPressed() {
+    final CountryPicker picker = CountryPicker.newInstance(getString(R.string.choose_country_hint));
+
+    picker.show(getActivity().getSupportFragmentManager(), "COUNTRY_PICKER");
+    picker.setListener((countryName, code, dialCode, flagDrawableResID) -> {
+      countryValueTV.setText(countryName);
+
+      prefs.edit().putString(Constants.EXTRAS_USER_PROFILE_NATIONALITY, countryName).apply();
+
+      picker.dismiss();
+
+      updateUserProfile();
+    });
+  }
+
+  @OnClick(R.id.shareEmergencyProfileBTN) public void handleShareEmergencyProfilePressed() {
+    if (Helpers.isInternetAvailable(getActivity())) {
+
+      boolean hasPermission = (ContextCompat.checkSelfPermission(getActivity(),
+          Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED);
+      if (!hasPermission) {
+        requestPermissions(new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE },
+            REQUEST_WRITE_STORAGE);
+      } else {
+        presenter.requestEmergencyProfile();
+      }
+    } else {
+      Helpers.showNoInternetDialog(getActivity());
+    }
+  }
+
+  @OnClick(R.id.shareAppLayout) public void handleShareAppLayoutPressed() {
+    try {
+      Intent i = new Intent(Intent.ACTION_SEND);
+      i.setType("text/plain");
+      i.putExtra(Intent.EXTRA_SUBJECT, "GMFit");
+      String sAux = "\nCheck out GlobeMed's new application!\n\n";
+      sAux = sAux + "https://play.google.com/store/apps/details?id=Orion.Soft \n\n";
+      i.putExtra(Intent.EXTRA_TEXT, sAux);
+      startActivity(Intent.createChooser(i, "Choose sharing method"));
+    } catch (Exception e) {
+      //e.toString();
+    }
+  }
+
+  @OnClick(R.id.logoutBTN) public void handleLogoutButtonPressed() {
+    if (Helpers.isInternetAvailable(getActivity())) {
+      presenter.signOutUser();
+    } else {
+      Helpers.showNoInternetDialog(getActivity());
+    }
+  }
+
+  @OnClick(R.id.appRemindersLayout) public void handleAppRemindersLayoutPressed() {
+    Intent intent = new Intent(getActivity(), MealRemindersActivity.class);
+    startActivity(intent);
+  }
+
+  @OnClick(R.id.termsConditionsLayout) public void handleTermsConditionsLayoutPressed() {
+    presenter.getMetaTexts("terms");
+  }
+
+  @OnClick(R.id.privacyLayout) public void handlePrivacyLayoutPressed() {
+    presenter.getMetaTexts("privacy");
+  }
+
+  @OnClick(R.id.contactUsLayout) public void handleContactUsLayoutPressed() {
+    Intent intent = new Intent(getActivity(), ContactUsActivity.class);
+    startActivity(intent);
+  }
+
+  @OnClick(R.id.changePasswordLayout) public void handleChangePasswordLayoutPressed() {
+    Intent intent = new Intent(getActivity(), ChangePasswordActivity.class);
+    startActivity(intent);
   }
 
   private void setProfilePicture(String finalImagePath) {
@@ -632,7 +789,7 @@ public class MainProfileFragment extends Fragment {
     }
   }
 
-  public void openTakePictureIntent() {
+  private void openTakePictureIntent() {
     Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
     if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
       photoFile = null;
@@ -650,7 +807,7 @@ public class MainProfileFragment extends Fragment {
     }
   }
 
-  public String getPhotoPathFromGallery(Uri uri) {
+  private String getPhotoPathFromGallery(Uri uri) {
     if (uri == null) {
       // TODO perform some logging or show user feedback
       return null;
@@ -719,222 +876,6 @@ public class MainProfileFragment extends Fragment {
     return mediaStorageDir.getPath() + File.separator + imageFileName;
   }
 
-  private void getMetaTexts(final String section) {
-    final ProgressDialog waitingDialog = new ProgressDialog(getActivity());
-    waitingDialog.setTitle(getResources().getString(R.string.loading_data_dialog_title));
-    waitingDialog.setMessage(getResources().getString(R.string.please_wait_dialog_message));
-    waitingDialog.show();
-
-    final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
-    alertDialog.setTitle(R.string.loading_data_dialog_title);
-    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getResources().getString(R.string.ok),
-        (dialog, which) -> {
-          dialog.dismiss();
-
-          if (waitingDialog.isShowing()) waitingDialog.dismiss();
-        });
-
-    dataAccessHandler.getMetaTexts(section, new Callback<MetaTextsResponse>() {
-      @Override
-      public void onResponse(Call<MetaTextsResponse> call, Response<MetaTextsResponse> response) {
-
-        switch (response.code()) {
-          case 200:
-            waitingDialog.dismiss();
-
-            Intent intent = new Intent(getActivity(), MetaTextsActivity.class);
-            switch (section) {
-              case "terms":
-                intent.putExtra(Constants.BUNDLE_ACTIVITY_TITLE,
-                    getResources().getString(R.string.terms_and_conditions_entry));
-                break;
-              case "privacy":
-                intent.putExtra(Constants.BUNDLE_ACTIVITY_TITLE,
-                    getResources().getString(R.string.privacy_and_security_entry));
-                break;
-            }
-
-            intent.putExtra(Constants.EXTRAS_META_HTML_CONTENT,
-                response.body().getData().getBody());
-            startActivity(intent);
-        }
-      }
-
-      @Override public void onFailure(Call<MetaTextsResponse> call, Throwable t) {
-        Timber.d("Call failed with error : %s", t.getMessage());
-        alertDialog.setMessage(getString(R.string.server_error_got_returned));
-        alertDialog.show();
-      }
-    });
-  }
-
-  private void getUserProfile() {
-    dataAccessHandler.getUserProfile(new Callback<UserProfileResponse>() {
-      @Override public void onResponse(Call<UserProfileResponse> call,
-          Response<UserProfileResponse> response) {
-        switch (response.code()) {
-          case 200:
-            UserProfileResponseDatum userProfileData =
-                response.body().getData().getBody().getData();
-
-            SharedPreferences.Editor prefsEditor = prefs.edit();
-
-            if (userProfileData != null) {
-
-              userMedicalConditions = userProfileData.getMedicalConditions();
-              userGoals = userProfileData.getUserGoals();
-              userActivityLevels = userProfileData.getActivityLevels();
-
-              /**
-               * Set the medical condition
-               */
-              if (prefs.getInt(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION_ID, -1) == -1) {
-                prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION, "None");
-                prefsEditor.putInt(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION_ID, -1);
-
-                medicalConditionsValueTV.setText("None");
-              } else {
-                for (int i = 0; i < userMedicalConditions.size(); i++) {
-                  if (userMedicalConditions.get(i).getSelected().equals("1")) {
-                    prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION,
-                        userMedicalConditions.get(i).getName());
-                    prefsEditor.putInt(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION_ID,
-                        Integer.parseInt(userMedicalConditions.get(i).getId()));
-
-                    medicalConditionsValueTV.setText(userMedicalConditions.get(i).getName());
-                  }
-                }
-              }
-
-              /**
-               * Set the activity level
-               */
-              if (prefs.getInt(Constants.EXTRAS_USER_PROFILE_ACTIVITY_LEVEL_ID, -1) == -1) {
-                prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_ACTIVITY_LEVEL,
-                    "Lightly Active (1-3 times per week)");
-                prefsEditor.putInt(Constants.EXTRAS_USER_PROFILE_ACTIVITY_LEVEL_ID, 2);
-
-                activityLevelsEntryValueTV.setText("Lightly Active (1-3 times per week)");
-              } else {
-                for (int i = 0; i < userActivityLevels.size(); i++) {
-                  if (userActivityLevels.get(i).getSelected().equals("1")) {
-                    prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_ACTIVITY_LEVEL,
-                        userActivityLevels.get(i).getName());
-                    prefsEditor.putInt(Constants.EXTRAS_USER_PROFILE_ACTIVITY_LEVEL_ID,
-                        Integer.parseInt(userActivityLevels.get(i).getId()));
-
-                    activityLevelsEntryValueTV.setText(userActivityLevels.get(i).getName());
-                  }
-                }
-              }
-
-              /**
-               * Set the user goals
-               */
-              for (int i = 0; i < userGoals.size(); i++) {
-                if (userGoals.get(i).getSelected().equals("1")) {
-                  prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_GOAL,
-                      userGoals.get(i).getName());
-                  prefsEditor.putInt(Constants.EXTRAS_USER_PROFILE_GOAL_ID,
-                      Integer.parseInt(userGoals.get(i).getId()));
-
-                  goalsEntryValueTV.setText(userGoals.get(i).getName());
-                }
-              }
-
-              /**
-               * Set the name
-               */
-              if (userProfileData.getName() != null && !userProfileData.getName().isEmpty()) {
-                prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_USER_FULL_NAME,
-                    userProfileData.getName());
-                userFullNameTV.setText(userProfileData.getName());
-              }
-
-              /**
-               * Set the email
-               */
-              if (userProfileData.getEmail() != null && !userProfileData.getEmail().isEmpty()) {
-                prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_USER_EMAIL,
-                    userProfileData.getEmail());
-                userEmailTV.setText(userProfileData.getEmail());
-              }
-
-              /**
-               * Set the weight
-               */
-              if (userProfileData.getWeight() != null && !userProfileData.getWeight().isEmpty()) {
-                prefsEditor.putFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT,
-                    Float.parseFloat(userProfileData.getWeight()));
-                weightEntryValueTV.setText(String.valueOf(String.format(Locale.getDefault(), "%.1f",
-                    Float.parseFloat(userProfileData.getWeight()))));
-              }
-
-              /**
-               * Set the country
-               */
-              if (userProfileData.getCountry() != null && !userProfileData.getCountry().isEmpty()) {
-                prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_NATIONALITY,
-                    userProfileData.getCountry());
-                countryValueTV.setText(userProfileData.getCountry());
-              }
-
-              /**
-               * Set the metric system
-               */
-              if (userProfileData.getMetricSystem() != null && !userProfileData.getMetricSystem()
-                  .isEmpty()) {
-                prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_MEASUREMENT_SYSTEM,
-                    userProfileData.getMetricSystem());
-
-                String cap = userProfileData.getMetricSystem().substring(0, 1).toUpperCase()
-                    + userProfileData.getMetricSystem().substring(1);
-
-                metricSystemValueTV.setText(cap);
-              }
-
-              /**
-               * Set the gender
-               */
-              if (userProfileData.getGender() != null && !userProfileData.getGender().isEmpty()) {
-                int finalGender = userProfileData.getGender().equals("Male") ? 0 : 1;
-                prefsEditor.putInt(Constants.EXTRAS_USER_PROFILE_GENDER, finalGender);
-              }
-
-              /**
-               * Set the profile picture
-               */
-              if (userProfileData.getProfile_picture() != null
-                  && !userProfileData.getProfile_picture().equals(Constants.BASE_URL_ADDRESS)
-                  && getActivity() != null) {
-
-                prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_IMAGE,
-                    userProfileData.getProfile_picture());
-
-                Picasso.with(getActivity())
-                    .load(userProfileData.getProfile_picture())
-                    .resize(500, 500)
-                    .transform(new CircleTransform())
-                    .centerInside()
-                    .into(userProfileIV);
-              }
-
-              prefsEditor.apply();
-
-              break;
-            }
-        }
-      }
-
-      @Override public void onFailure(Call<UserProfileResponse> call, Throwable t) {
-        Timber.d("Call failed with error : %s", t.getMessage());
-        final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
-        alertDialog.setMessage(getString(R.string.server_error_got_returned));
-        alertDialog.show();
-      }
-    });
-  }
-
   private void updateUserProfile() {
     String dateOfBirth = prefs.getString(Constants.EXTRAS_USER_PROFILE_DATE_OF_BIRTH, "1990-01-01");
     String bloodType = prefs.getString(Constants.EXTRAS_USER_PROFILE_BLOOD_TYPE, "A+");
@@ -949,51 +890,11 @@ public class MainProfileFragment extends Fragment {
     float height = prefs.getFloat(Constants.EXTRAS_USER_PROFILE_HEIGHT, 180);
     float weight = prefs.getFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, 82);
 
-    final ProgressDialog waitingDialog = new ProgressDialog(getActivity());
-    waitingDialog.setTitle(getString(R.string.updating_user_profile_dialog_title));
-    waitingDialog.setMessage(getString(R.string.please_wait_dialog_message));
-    waitingDialog.show();
-
-    final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
-    alertDialog.setTitle(R.string.updating_user_profile_dialog_title);
-    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok), (dialog, which) -> {
-      dialog.dismiss();
-
-      if (waitingDialog.isShowing()) waitingDialog.dismiss();
-    });
-
-    dataAccessHandler.updateUserProfile(dateOfBirth, bloodType, nationality, medicalCondition,
-        measurementSystem.toLowerCase(), userGoalId, activityLevelId, gender, height, weight, "1",
-        new Callback<DefaultGetResponse>() {
-          @Override public void onResponse(Call<DefaultGetResponse> call,
-              Response<DefaultGetResponse> response) {
-            switch (response.code()) {
-              case 200:
-                if (profilePictureChanged) {
-                  updateUserPicture(waitingDialog);
-                } else {
-                  waitingDialog.dismiss();
-                  Toast.makeText(getActivity(), "Your profile was updated succesfully",
-                      Toast.LENGTH_SHORT).show();
-                }
-
-                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(
-                    Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
-
-                break;
-            }
-          }
-
-          @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
-            Timber.d("Call failed with error : %s", t.getMessage());
-            alertDialog.setMessage(getString(R.string.server_error_got_returned));
-            alertDialog.show();
-          }
-        });
+    presenter.updateUserProfile(dateOfBirth, bloodType, nationality, medicalCondition,
+        measurementSystem.toLowerCase(), userGoalId, activityLevelId, gender, height, weight, "1");
   }
 
-  private void updateUserPicture(final ProgressDialog waitingDialog) {
+  private void updateUserPicture() {
     HashMap<String, RequestBody> profilePictureParts = new HashMap<>();
 
     String userPicturePath = prefs.getString(Constants.EXTRAS_USER_PROFILE_IMAGE, "");
@@ -1004,180 +905,6 @@ public class MainProfileFragment extends Fragment {
 
     profilePictureParts.put("picture\"; filename=\"" + userPicturePath + ".jpg", imageFilePart);
 
-    dataAccessHandler.updateUserPicture(profilePictureParts, new Callback<DefaultGetResponse>() {
-      @Override
-      public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
-        switch (response.code()) {
-          case 200:
-
-            waitingDialog.dismiss();
-            Toast.makeText(getActivity(), "Your profile was updated successfully",
-                Toast.LENGTH_SHORT).show();
-
-            profilePictureChanged = false;
-
-            break;
-        }
-      }
-
-      @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
-        Timber.d("Call failed with error : %s", t.getMessage());
-        final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
-        alertDialog.setMessage(getString(R.string.server_error_got_returned));
-        alertDialog.show();
-      }
-    });
-  }
-
-  private void signOutUser() {
-    final ProgressDialog waitingDialog = new ProgressDialog(getActivity());
-    waitingDialog.setTitle(getString(R.string.signing_out_dialog_title));
-    waitingDialog.setMessage(getString(R.string.please_wait_dialog_message));
-    waitingDialog.show();
-
-    final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
-    alertDialog.setTitle(R.string.signing_out_dialog_title);
-    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok), (dialog, which) -> {
-      dialog.dismiss();
-
-      if (waitingDialog.isShowing()) waitingDialog.dismiss();
-    });
-
-    dataAccessHandler.signOutUser(new Callback<DefaultGetResponse>() {
-      @Override
-      public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
-        switch (response.code()) {
-          case 200:
-            waitingDialog.dismiss();
-
-            prefs.edit()
-                .putString(Constants.PREF_USER_ACCESS_TOKEN,
-                    Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS)
-                .apply();
-            prefs.edit().putBoolean(Constants.EXTRAS_USER_LOGGED_IN, false).apply();
-            prefs.edit().putFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, 0f).apply();
-
-            prefs.edit().putString(Constants.EXTRAS_USER_EMAIL, "").apply();
-            prefs.edit().putString(Constants.EXTRAS_USER_PASSWORD, "").apply();
-            prefs.edit().putString(Constants.EXTRAS_INSURANCE_USER_USERNAME, "").apply();
-            prefs.edit().putString(Constants.EXTRAS_INSURANCE_USER_PASSWORD, "").apply();
-            prefs.edit().putString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, "").apply();
-            prefs.edit().putString(Constants.EXTRAS_INSURANCE_COUNTRY_NAME, "").apply();
-            prefs.edit().putString(Constants.EXTRAS_INSURANCE_COUNTRY_CRM_CODE, "").apply();
-            prefs.edit().putString(Constants.EXTRAS_INSURANCE_COUNTRY_ISO_CODE, "").apply();
-
-            if (!prefs.getString(Constants.EXTRAS_USER_FACEBOOK_TOKEN, "-1").equals("-1")) {
-              FacebookSdk.sdkInitialize(getActivity());
-              LoginManager.getInstance().logOut();
-              prefs.edit().putString(Constants.EXTRAS_USER_FACEBOOK_TOKEN, "-1").apply();
-            }
-
-            getActivity().finish();
-
-            Intent intent = new Intent(getActivity(), LoginActivity.class);
-            startActivity(intent);
-            break;
-        }
-      }
-
-      @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
-        Timber.d("Call failed with error : %s", t.getMessage());
-        alertDialog.setMessage(getString(R.string.server_error_got_returned));
-        alertDialog.show();
-        getActivity().finish();
-      }
-    });
-  }
-
-  private void requestEmergencyProfile() {
-    dataAccessHandler.getEmergencyProfile(new Callback<EmergencyProfileResponse>() {
-      @Override public void onResponse(Call<EmergencyProfileResponse> call,
-          Response<EmergencyProfileResponse> response) {
-        switch (response.code()) {
-          case 200:
-            if (response.body().getData().getBody() != null) {
-              new DownloadPDFFile().execute(response.body().getData().getBody().getUserPdf(),
-                  "my_emergency_profile.pdf");
-            }
-            break;
-        }
-      }
-
-      @Override public void onFailure(Call<EmergencyProfileResponse> call, Throwable t) {
-        Timber.d("Call failed with error : %s", t.getMessage());
-        final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
-        alertDialog.setMessage(getString(R.string.server_error_got_returned));
-        alertDialog.show();
-      }
-    });
-  }
-
-  public static class FileDownloader {
-    private static final int MEGABYTE = 1024 * 1024;
-
-    static void downloadFile(String fileUrl, File directory) {
-      try {
-
-        URL url = new URL(fileUrl);
-        HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-        urlConnection.connect();
-
-        InputStream inputStream = urlConnection.getInputStream();
-        FileOutputStream fileOutputStream = new FileOutputStream(directory);
-
-        byte[] buffer = new byte[MEGABYTE];
-        int bufferLength = 0;
-        while ((bufferLength = inputStream.read(buffer)) > 0) {
-          fileOutputStream.write(buffer, 0, bufferLength);
-        }
-
-        fileOutputStream.close();
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
-    }
-  }
-
-  private class DownloadPDFFile extends AsyncTask<String, Void, Void> {
-
-    @Override protected Void doInBackground(String... strings) {
-      String fileUrl = strings[0];
-      String fileName = strings[1];
-      String extStorageDirectory = Environment.getExternalStorageDirectory().toString();
-      File folder = new File(extStorageDirectory, "GMFit");
-      folder.mkdir();
-
-      File pdfFile = new File(folder, fileName);
-
-      try {
-        pdfFile.createNewFile();
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
-
-      FileDownloader.downloadFile(fileUrl, pdfFile);
-
-      return null;
-    }
-
-    @Override protected void onPostExecute(Void aVoid) {
-      super.onPostExecute(aVoid);
-
-      File pdfFile = new File(
-          Environment.getExternalStorageDirectory() + "/GMFit/" + "my_emergency_profile.pdf");
-      Uri uri = Uri.fromFile(pdfFile);
-
-      Intent i = new Intent(Intent.ACTION_SEND);
-      i.setType("message/rfc822");
-      i.putExtra(Intent.EXTRA_EMAIL, new String[] { "support@gmfit.com" });
-      i.putExtra(Intent.EXTRA_STREAM, uri);
-      i.putExtra(Intent.EXTRA_SUBJECT, "EMERGENCY PROFILE");
-      i.putExtra(Intent.EXTRA_TEXT, "This is an emergency, please check my profile.");
-      try {
-        startActivity(Intent.createChooser(i, "Send email through"));
-      } catch (ActivityNotFoundException ex) {
-        Toast.makeText(getActivity(), "No email client", Toast.LENGTH_SHORT).show();
-      }
-    }
+    presenter.updateUserPicture(profilePictureParts);
   }
 }
