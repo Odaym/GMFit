@@ -45,7 +45,6 @@ public class FitnessWidgetsRecyclerAdapter
         holder.moreInfoIV.setOnClickListener(view -> {
           AlertDialog.Builder builder = new AlertDialog.Builder(context);
           builder.setMessage(R.string.active_calories_calculation_hint_message);
-          builder.setCancelable(true);
           builder.setPositiveButton(android.R.string.ok, (dialog, id) -> dialog.cancel());
 
           AlertDialog alert1 = builder.create();

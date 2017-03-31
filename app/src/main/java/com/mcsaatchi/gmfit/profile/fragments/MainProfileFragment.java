@@ -201,9 +201,7 @@ public class MainProfileFragment extends BaseFragment
       userGoals = userProfileData.getUserGoals();
       userActivityLevels = userProfileData.getActivityLevels();
 
-      /**
-       * Set the medical condition
-       */
+      //Set the medical condition
       if (prefs.getInt(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION_ID, -1) == -1) {
         prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION, "None");
         prefsEditor.putInt(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION_ID, -1);
@@ -222,9 +220,7 @@ public class MainProfileFragment extends BaseFragment
         }
       }
 
-      /**
-       * Set the activity level
-       */
+      //Set the activity level
       if (prefs.getInt(Constants.EXTRAS_USER_PROFILE_ACTIVITY_LEVEL_ID, -1) == -1) {
         prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_ACTIVITY_LEVEL,
             "Lightly Active (1-3 times per week)");
@@ -244,9 +240,7 @@ public class MainProfileFragment extends BaseFragment
         }
       }
 
-      /**
-       * Set the user goals
-       */
+      //Set the user goals
       for (int i = 0; i < userGoals.size(); i++) {
         if (userGoals.get(i).getSelected().equals("1")) {
           prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_GOAL, userGoals.get(i).getName());
@@ -257,26 +251,20 @@ public class MainProfileFragment extends BaseFragment
         }
       }
 
-      /**
-       * Set the name
-       */
+      //Set the name
       if (userProfileData.getName() != null && !userProfileData.getName().isEmpty()) {
         prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_USER_FULL_NAME,
             userProfileData.getName());
         userFullNameTV.setText(userProfileData.getName());
       }
 
-      /**
-       * Set the email
-       */
+      //Set the email
       if (userProfileData.getEmail() != null && !userProfileData.getEmail().isEmpty()) {
         prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_USER_EMAIL, userProfileData.getEmail());
         userEmailTV.setText(userProfileData.getEmail());
       }
 
-      /**
-       * Set the weight
-       */
+      //Set the weight
       if (userProfileData.getWeight() != null && !userProfileData.getWeight().isEmpty()) {
         prefsEditor.putFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT,
             Float.parseFloat(userProfileData.getWeight()));
@@ -284,18 +272,14 @@ public class MainProfileFragment extends BaseFragment
             Float.parseFloat(userProfileData.getWeight()))));
       }
 
-      /**
-       * Set the country
-       */
+      //Set the country
       if (userProfileData.getCountry() != null && !userProfileData.getCountry().isEmpty()) {
         prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_NATIONALITY,
             userProfileData.getCountry());
         countryValueTV.setText(userProfileData.getCountry());
       }
 
-      /**
-       * Set the metric system
-       */
+      //Set the metric system
       if (userProfileData.getMetricSystem() != null && !userProfileData.getMetricSystem()
           .isEmpty()) {
         prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_MEASUREMENT_SYSTEM,
@@ -307,17 +291,13 @@ public class MainProfileFragment extends BaseFragment
         metricSystemValueTV.setText(cap);
       }
 
-      /**
-       * Set the gender
-       */
+      //Set the gender
       if (userProfileData.getGender() != null && !userProfileData.getGender().isEmpty()) {
         int finalGender = userProfileData.getGender().equals("Male") ? 0 : 1;
         prefsEditor.putInt(Constants.EXTRAS_USER_PROFILE_GENDER, finalGender);
       }
 
-      /**
-       * Set the profile picture
-       */
+      //Set the profile picture
       if (userProfileData.getProfile_picture() != null && !userProfileData.getProfile_picture()
           .equals(Constants.BASE_URL_ADDRESS) && getActivity() != null) {
 
@@ -768,9 +748,7 @@ public class MainProfileFragment extends BaseFragment
   private void setProfilePicture(String finalImagePath) {
     String currentImagePath = prefs.getString(Constants.EXTRAS_USER_PROFILE_IMAGE, "");
 
-    /**
-     * If the current picture is different than the one the user just took, change it
-     */
+    //If the current picture is different than the one the user just took, change it
     if (!currentImagePath.equals(finalImagePath)) {
       prefs.edit().putString(Constants.EXTRAS_USER_PROFILE_IMAGE, finalImagePath).apply();
 

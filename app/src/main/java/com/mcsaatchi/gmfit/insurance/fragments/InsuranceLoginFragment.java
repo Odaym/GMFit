@@ -87,7 +87,6 @@ public class InsuranceLoginFragment extends Fragment {
     final ProgressDialog waitingDialog = new ProgressDialog(getActivity());
     waitingDialog.setTitle(getString(R.string.signing_in_dialog_title));
     waitingDialog.setMessage(getString(R.string.please_wait_dialog_message));
-    waitingDialog.setCancelable(false);
     waitingDialog.show();
 
     final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();

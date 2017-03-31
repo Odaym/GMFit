@@ -131,7 +131,6 @@ public class SubmitApprovalRequestsActivity extends BaseActivity {
   @OnClick(R.id.submitApprovalRequestBTN) public void handleSubmitApprovalRequest() {
     final ProgressDialog waitingDialog = new ProgressDialog(this);
     waitingDialog.setTitle(getResources().getString(R.string.submit_new_approval_request));
-    waitingDialog.setCancelable(false);
     waitingDialog.setMessage(
         getResources().getString(R.string.uploading_attachments_dialog_message));
     waitingDialog.setOnShowListener(dialogInterface -> {

@@ -54,7 +54,6 @@ public class AddNewChartActivity extends BaseActivity {
     waitingDialog = new ProgressDialog(this);
     waitingDialog.setTitle(getString(R.string.fetching_chart_data_dialog_title));
     waitingDialog.setMessage(getString(R.string.please_wait_dialog_message));
-    waitingDialog.setCancelable(false);
     waitingDialog.show();
 
     alertDialog = new AlertDialog.Builder(this).create();

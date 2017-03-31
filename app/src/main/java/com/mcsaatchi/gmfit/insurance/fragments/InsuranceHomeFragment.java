@@ -206,7 +206,6 @@ public class InsuranceHomeFragment extends Fragment {
       final Dialog contractChooserDialog = new Dialog(getActivity());
       contractChooserDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
       contractChooserDialog.setContentView(contractsChoiceView);
-      contractChooserDialog.setCancelable(false);
 
       contractsChoiceView.setParentDialog(contractChooserDialog);
 
