@@ -54,7 +54,7 @@ import timber.log.Timber;
 import static com.mcsaatchi.gmfit.insurance.widget.CustomAttachmentPicker.CAPTURE_NEW_PICTURE_REQUEST_CODE;
 import static com.mcsaatchi.gmfit.insurance.widget.CustomAttachmentPicker.REQUEST_PICK_IMAGE_GALLERY;
 
-public class SubmitApprovalRequestsActivity extends BaseActivity {
+public class SubmitApprovalRequestActivity extends BaseActivity {
 
   private static final int REQUEST_CAPTURE_PERMISSIONS = 123;
   @Bind(R.id.toolbar) Toolbar toolbar;
@@ -318,9 +318,9 @@ public class SubmitApprovalRequestsActivity extends BaseActivity {
               Response<CreateNewRequestResponse> response) {
             switch (response.code()) {
               case 200:
-                Intent intent = new Intent(SubmitApprovalRequestsActivity.this,
-                    ApprovalRequestStatusDetailsActivity.class);
-                intent.putExtra(ApprovalRequestStatusDetailsActivity.APPROVAL_REQUEST_CLAIM_ID,
+                Intent intent = new Intent(SubmitApprovalRequestActivity.this,
+                    ApprovalRequestDetailsActivity.class);
+                intent.putExtra(ApprovalRequestDetailsActivity.APPROVAL_REQUEST_CLAIM_ID,
                     response.body().getData().getBody().getData().getRequestId());
 
                 startActivity(intent);

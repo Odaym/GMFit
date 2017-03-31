@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/insurance_background"
     android:orientation="vertical"
-    tools:context="com.mcsaatchi.gmfit.insurance.activities.approval_request.SubmitApprovalRequestsActivity"
+    tools:context="com.mcsaatchi.gmfit.insurance.activities.approval_request.SubmitApprovalRequestActivity"
     >
 
   <include layout="@layout/app_toolbar"/>

@@ -1,4 +1,4 @@
-package com.mcsaatchi.gmfit.insurance.activities.approval_request;
+package com.mcsaatchi.gmfit.insurance.activities.reimbursement;
 
 import android.app.ProgressDialog;
 import android.graphics.Bitmap;
@@ -23,13 +23,16 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import timber.log.Timber;
 
-public class ApprovalRequestStatusDetailsActivity extends BaseActivity {
-  public static final String APPROVAL_REQUEST_CLAIM_ID = "approval_request_claim_id";
+public class ReimbursementDetailsActivity extends BaseActivity {
+
+  public static final String REIMBURSEMENT_REQUEST_ID = "reimbursement_request_id";
+
   @Bind(R.id.toolbar) Toolbar toolbar;
   @Bind(R.id.status) ItemLabel status;
   @Bind(R.id.category) ItemLabel category;
   @Bind(R.id.subCategory) ItemLabel subCategory;
   @Bind(R.id.serviceDate) ItemLabel serviceDate;
+  @Bind(R.id.amount) ItemLabel amount;
   @Bind(R.id.medicalReportImagesPicker) CustomAttachmentPicker medicalReportImagesPicker;
   @Bind(R.id.invoiceImagesPicker) CustomAttachmentPicker invoiceImagesPicker;
   @Bind(R.id.identityCardImagesPicker) CustomAttachmentPicker identityCardImagesPicker;
@@ -39,22 +42,25 @@ public class ApprovalRequestStatusDetailsActivity extends BaseActivity {
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_approval_request_status);
+
+    setContentView(R.layout.activity_reimbursement_status);
+
     ButterKnife.bind(this);
 
     Bundle incomingExtras = getIntent().getExtras();
 
     if (incomingExtras != null) {
-      int requestId = incomingExtras.getInt(APPROVAL_REQUEST_CLAIM_ID);
+      int requestId = incomingExtras.getInt(REIMBURSEMENT_REQUEST_ID);
 
-      getApprovalRequestClaimDetails(requestId);
+      getReimbursementClaimDetails(requestId);
     }
   }
 
-  private void getApprovalRequestClaimDetails(int claimId) {
+  private void getReimbursementClaimDetails(int claimId) {
     final ProgressDialog waitingDialog = new ProgressDialog(this);
     waitingDialog.setTitle(getResources().getString(R.string.loading_data_dialog_title));
     waitingDialog.setMessage(getResources().getString(R.string.please_wait_dialog_message));
+    waitingDialog.setCancelable(false);
     waitingDialog.show();
 
     final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
@@ -67,7 +73,7 @@ public class ApprovalRequestStatusDetailsActivity extends BaseActivity {
         });
 
     dataAccessHandler.getClaimslistDetails(
-        prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""), "2",
+        prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""), "1",
         String.valueOf(claimId), new Callback<ClaimListDetailsResponse>() {
           @Override public void onResponse(Call<ClaimListDetailsResponse> call,
               Response<ClaimListDetailsResponse> response) {
@@ -78,9 +84,10 @@ public class ApprovalRequestStatusDetailsActivity extends BaseActivity {
                 ClaimListDetailsResponseDatum responseDatum =
                     response.body().getData().getBody().getData().get(0);
 
-                setupToolbar(getClass().getSimpleName(), toolbar, "#" + responseDatum.getId(),
-                    true);
+                setupToolbar(getClass().getSimpleName(), toolbar,
+                    "Reimbursement #" + responseDatum.getId(), true);
 
+                amount.setLabel("Amount", String.valueOf(responseDatum.getAmount()));
                 serviceDate.setLabel("Service Date", Helpers.formatInsuranceDate(
                     new LocalDate(responseDatum.getDate().split(" ")[0])));
                 subCategory.setLabel("Sub Category", responseDatum.getSubcategory());

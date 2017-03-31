@@ -39,7 +39,7 @@ import timber.log.Timber;
 import static com.mcsaatchi.gmfit.insurance.widget.CustomAttachmentPicker.CAPTURE_NEW_PICTURE_REQUEST_CODE;
 import static com.mcsaatchi.gmfit.insurance.widget.CustomAttachmentPicker.REQUEST_PICK_IMAGE_GALLERY;
 
-public class RequestChronicDeletionActivity extends BaseActivity {
+public class ChronicDeletionActivity extends BaseActivity {
 
   @Bind(R.id.doctorConfirmationImagePicker) CustomAttachmentPicker doctorConfirmationImagePicker;
   @Bind(R.id.toolbar) Toolbar toolbar;

@@ -20,7 +20,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import timber.log.Timber;
 
-public class ReimbursementStatusListActivity extends BaseActivity {
+public class ReimbursementTrackActivity extends BaseActivity {
 
   @Bind(R.id.toolbar) Toolbar toolbar;
   @Bind(R.id.recyclerView) RecyclerView recyclerView;
@@ -56,17 +56,17 @@ public class ReimbursementStatusListActivity extends BaseActivity {
               Response<ClaimsListResponse> response) {
             switch (response.code()) {
               case 200:
-                statusAdapter = new StatusAdapter(ReimbursementStatusListActivity.this,
+                statusAdapter = new StatusAdapter(ReimbursementTrackActivity.this,
                     response.body().getData().getBody().getData(), (reimbursementModel, index) -> {
-                  Intent intent = new Intent(ReimbursementStatusListActivity.this,
-                      ReimbursementStatusDetailsActivity.class);
-                  intent.putExtra(ReimbursementStatusDetailsActivity.REIMBURSEMENT_REQUEST_ID,
+                  Intent intent = new Intent(ReimbursementTrackActivity.this,
+                      ReimbursementDetailsActivity.class);
+                  intent.putExtra(ReimbursementDetailsActivity.REIMBURSEMENT_REQUEST_ID,
                       reimbursementModel.getId());
                   startActivity(intent);
                 });
 
                 recyclerView.setLayoutManager(
-                    new LinearLayoutManager(ReimbursementStatusListActivity.this));
+                    new LinearLayoutManager(ReimbursementTrackActivity.this));
                 recyclerView.setHasFixedSize(true);
                 recyclerView.setAdapter(statusAdapter);
                 break;

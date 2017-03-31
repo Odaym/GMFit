@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/insurance_background"
     android:orientation="vertical"
-    tools:context="com.mcsaatchi.gmfit.insurance.activities.reimbursement.ReimbursementStatusDetailsActivity"
+    tools:context="com.mcsaatchi.gmfit.insurance.activities.reimbursement.ReimbursementDetailsActivity"
     >
 
   <include layout="@layout/app_toolbar"/>

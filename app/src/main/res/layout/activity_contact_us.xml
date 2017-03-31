@@ -2,7 +2,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:background="@drawable/general_background"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
@@ -93,20 +93,6 @@
               />
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/phoneNumber1"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/add_meal_item_layout_height"
-            android:background="?android:attr/selectableItemBackground"
-            android:clickable="true"
-            android:ellipsize="end"
-            android:focusable="true"
-            android:gravity="center_vertical"
-            android:maxLines="1"
-            android:paddingStart="@dimen/activity_vertical_margin"
-            android:text="+961 1 518300"
-            />
-
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
@@ -114,15 +100,45 @@
             />
 
         <TextView
-            android:id="@+id/phoneNumber2"
+            android:id="@+id/contact1NameTV"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/profile_row_field_height"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/default_margin_2"
+            android:layout_marginTop="@dimen/default_margin_2"
             android:background="?android:attr/selectableItemBackground"
             android:clickable="true"
             android:focusable="true"
             android:gravity="center_vertical"
             android:paddingStart="@dimen/activity_vertical_margin"
-            android:text="24/7 Customer Support Center:\n\n+961 1 518000"
+            android:text="24/7 Customer Care Center"
+            />
+
+        <TextView
+            android:id="@+id/contact1NumberTV"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/default_margin_2"
+            android:autoLink="phone"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center_vertical"
+            android:paddingStart="@dimen/activity_vertical_margin"
+            android:text="+961 1 518000"
+            />
+
+        <TextView
+            android:id="@+id/contact1EmailTV"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/default_margin_2"
+            android:autoLink="email"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center_vertical"
+            android:paddingStart="@dimen/activity_vertical_margin"
+            android:text="customercare@globemedlebanon.com"
             />
 
       </LinearLayout>

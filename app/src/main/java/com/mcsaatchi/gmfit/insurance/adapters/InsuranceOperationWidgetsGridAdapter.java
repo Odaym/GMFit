@@ -18,15 +18,15 @@ import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.architecture.rest.CertainPDFResponse;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
-import com.mcsaatchi.gmfit.insurance.activities.approval_request.ApprovalRequestsStatusListActivity;
-import com.mcsaatchi.gmfit.insurance.activities.approval_request.SubmitApprovalRequestsActivity;
-import com.mcsaatchi.gmfit.insurance.activities.chronic.ChronicStatusListActivity;
+import com.mcsaatchi.gmfit.insurance.activities.approval_request.ApprovalRequestsTrackActivity;
+import com.mcsaatchi.gmfit.insurance.activities.approval_request.SubmitApprovalRequestActivity;
+import com.mcsaatchi.gmfit.insurance.activities.chronic.ChronicTrackActivity;
 import com.mcsaatchi.gmfit.insurance.activities.chronic.SubmitChronicActivity;
 import com.mcsaatchi.gmfit.insurance.activities.home.PDFViewerActivity;
 import com.mcsaatchi.gmfit.insurance.activities.home.SnapshotActivity;
-import com.mcsaatchi.gmfit.insurance.activities.inquiry.InquiryStatusListActivity;
+import com.mcsaatchi.gmfit.insurance.activities.inquiry.InquiryTrackActivity;
 import com.mcsaatchi.gmfit.insurance.activities.inquiry.SubmitInquiryActivity;
-import com.mcsaatchi.gmfit.insurance.activities.reimbursement.ReimbursementStatusListActivity;
+import com.mcsaatchi.gmfit.insurance.activities.reimbursement.ReimbursementTrackActivity;
 import com.mcsaatchi.gmfit.insurance.activities.reimbursement.SubmitReimbursementActivity;
 import com.mcsaatchi.gmfit.insurance.models.InsuranceOperationWidget;
 import java.util.ArrayList;
@@ -285,7 +285,7 @@ public class InsuranceOperationWidgetsGridAdapter
                     fragmentActivity.startActivity(intent);
                     break;
                   case TRACK_ITEM:
-                    intent = new Intent(fragmentActivity, ReimbursementStatusListActivity.class);
+                    intent = new Intent(fragmentActivity, ReimbursementTrackActivity.class);
                     fragmentActivity.startActivity(intent);
                     break;
                 }
@@ -293,11 +293,11 @@ public class InsuranceOperationWidgetsGridAdapter
               case APPROVAL_REQUEST_ITEM:
                 switch (request_purpose) {
                   case SUBMIT_ITEM:
-                    intent = new Intent(fragmentActivity, SubmitApprovalRequestsActivity.class);
+                    intent = new Intent(fragmentActivity, SubmitApprovalRequestActivity.class);
                     fragmentActivity.startActivity(intent);
                     break;
                   case TRACK_ITEM:
-                    intent = new Intent(fragmentActivity, ApprovalRequestsStatusListActivity.class);
+                    intent = new Intent(fragmentActivity, ApprovalRequestsTrackActivity.class);
                     fragmentActivity.startActivity(intent);
                     break;
                 }
@@ -309,7 +309,7 @@ public class InsuranceOperationWidgetsGridAdapter
                     fragmentActivity.startActivity(intent);
                     break;
                   case TRACK_ITEM:
-                    intent = new Intent(fragmentActivity, ChronicStatusListActivity.class);
+                    intent = new Intent(fragmentActivity, ChronicTrackActivity.class);
                     fragmentActivity.startActivity(intent);
                     break;
                 }
@@ -321,7 +321,7 @@ public class InsuranceOperationWidgetsGridAdapter
                     fragmentActivity.startActivity(intent);
                     break;
                   case TRACK_ITEM:
-                    intent = new Intent(fragmentActivity, InquiryStatusListActivity.class);
+                    intent = new Intent(fragmentActivity, InquiryTrackActivity.class);
                     fragmentActivity.startActivity(intent);
                     break;
                 }

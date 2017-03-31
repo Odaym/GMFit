@@ -8,6 +8,7 @@
   <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
   <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
   <uses-permission android:name="com.android.alarm.permission.SET_ALARM"/>
+  <uses-permission android:name="android.permission.CALL_PHONE"/>
   <uses-permission android:name="android.permission.CAMERA"/>
   <uses-permission android:name="android.permission.INTERNET"/>
 
@@ -207,13 +208,13 @@
         android:windowSoftInputMode="adjustPan"/>
 
     <activity
-        android:name=".insurance.activities.reimbursement.ReimbursementStatusListActivity"
+        android:name=".insurance.activities.reimbursement.ReimbursementTrackActivity"
         android:screenOrientation="portrait"
         android:theme="@style/No_Action_Bar_Theme"
         android:windowSoftInputMode="adjustPan"/>
 
     <activity
-        android:name=".insurance.activities.reimbursement.ReimbursementStatusDetailsActivity"
+        android:name=".insurance.activities.reimbursement.ReimbursementDetailsActivity"
         android:screenOrientation="portrait"
         android:theme="@style/No_Action_Bar_Theme"/>
 
@@ -223,19 +224,19 @@
         android:theme="@style/No_Action_Bar_Theme"/>
 
     <activity
-        android:name=".insurance.activities.approval_request.ApprovalRequestsStatusListActivity"
+        android:name=".insurance.activities.approval_request.ApprovalRequestsTrackActivity"
         android:screenOrientation="portrait"
         android:theme="@style/No_Action_Bar_Theme"
         android:windowSoftInputMode="adjustPan"/>
 
     <activity
-        android:name=".insurance.activities.approval_request.SubmitApprovalRequestsActivity"
+        android:name=".insurance.activities.approval_request.SubmitApprovalRequestActivity"
         android:screenOrientation="portrait"
         android:theme="@style/No_Action_Bar_Theme"
         android:windowSoftInputMode="adjustPan"/>
 
     <activity
-        android:name=".insurance.activities.approval_request.ApprovalRequestStatusDetailsActivity"
+        android:name=".insurance.activities.approval_request.ApprovalRequestDetailsActivity"
         android:screenOrientation="portrait"
         android:theme="@style/No_Action_Bar_Theme"/>
 
@@ -245,12 +246,12 @@
         android:theme="@style/No_Action_Bar_Theme"/>
 
     <activity
-        android:name=".insurance.activities.chronic.ChronicStatusListActivity"
+        android:name=".insurance.activities.chronic.ChronicTrackActivity"
         android:screenOrientation="portrait"
         android:theme="@style/No_Action_Bar_Theme"/>
 
     <activity
-        android:name=".insurance.activities.chronic.ChronicStatusDetailsActivity"
+        android:name=".insurance.activities.chronic.ChronicDetailsActivity"
         android:exported="true"
         android:screenOrientation="portrait"
         android:theme="@style/No_Action_Bar_Theme"/>
@@ -274,7 +275,7 @@
         android:windowSoftInputMode="stateHidden"/>
 
     <activity
-        android:name=".insurance.activities.inquiry.InquiryStatusListActivity"
+        android:name=".insurance.activities.inquiry.InquiryTrackActivity"
         android:exported="true"
         android:screenOrientation="portrait"
         android:theme="@style/No_Action_Bar_Theme"/>
@@ -293,7 +294,7 @@
         />
 
     <activity
-        android:name=".insurance.activities.chronic.RequestChronicDeletionActivity"
+        android:name=".insurance.activities.chronic.ChronicDeletionActivity"
         android:screenOrientation="portrait"
         android:theme="@style/No_Action_Bar_Theme"
         android:windowSoftInputMode="stateHidden"/>

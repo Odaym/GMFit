@@ -23,7 +23,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import timber.log.Timber;
 
-public class ChronicStatusListActivity extends BaseActivity {
+public class ChronicTrackActivity extends BaseActivity {
   @Bind(R.id.activeTreatmentsRecyclerView) RecyclerView activeTreatmentsRecyclerView;
   @Bind(R.id.toolbar) Toolbar toolbar;
 

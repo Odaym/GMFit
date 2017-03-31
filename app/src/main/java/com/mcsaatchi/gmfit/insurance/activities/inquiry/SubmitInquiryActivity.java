@@ -315,8 +315,8 @@ public class SubmitInquiryActivity extends BaseActivity {
                 alertDialog.setOnDismissListener(dialogInterface -> finish());
 
                 //Intent intent = new Intent(SubmitInquiryActivity.this,
-                //    ReimbursementStatusDetailsActivity.class);
-                //intent.putExtra(ReimbursementStatusDetailsActivity.REIMBURSEMENT_REQUEST_ID,
+                //    ReimbursementDetailsActivity.class);
+                //intent.putExtra(ReimbursementDetailsActivity.REIMBURSEMENT_REQUEST_ID,
                 //    response.body().getData().getBody().getData().getRequestId());
                 //
                 //startActivity(intent);

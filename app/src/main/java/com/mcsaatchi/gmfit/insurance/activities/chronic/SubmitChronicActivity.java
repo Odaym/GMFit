@@ -269,8 +269,8 @@ public class SubmitChronicActivity extends BaseActivity {
             switch (response.code()) {
               case 200:
                 Intent intent =
-                    new Intent(SubmitChronicActivity.this, ChronicStatusListActivity.class);
-                //intent.putExtra(ReimbursementStatusDetailsActivity.REIMBURSEMENT_REQUEST_ID,
+                    new Intent(SubmitChronicActivity.this, ChronicTrackActivity.class);
+                //intent.putExtra(ReimbursementDetailsActivity.REIMBURSEMENT_REQUEST_ID,
                 //    response.body().getData().getBody().getData().getRequestId());
 
                 startActivity(intent);

@@ -24,7 +24,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import timber.log.Timber;
 
-public class ChronicStatusDetailsActivity extends BaseActivity {
+public class ChronicDetailsActivity extends BaseActivity {
   @Bind(R.id.toolbar) Toolbar toolbar;
   @Bind(R.id.medicalRemindersRecyclerView) RecyclerView medicalRemindersRecyclerView;
   @Bind(R.id.startDateTV) TextView startDateTV;
@@ -90,13 +90,13 @@ public class ChronicStatusDetailsActivity extends BaseActivity {
                   adapter = new MedicalInformationAdapter(
                       response.body().getData().getBody().getData().getItemsList(),
                       (medicalInformationModel, index) -> Toast.makeText(
-                          ChronicStatusDetailsActivity.this, "Medical Information list item!",
+                          ChronicDetailsActivity.this, "Medical Information list item!",
                           Toast.LENGTH_SHORT).show());
                   medicalRemindersRecyclerView.setLayoutManager(
-                      new LinearLayoutManager(ChronicStatusDetailsActivity.this));
+                      new LinearLayoutManager(ChronicDetailsActivity.this));
                   medicalRemindersRecyclerView.setNestedScrollingEnabled(false);
                   medicalRemindersRecyclerView.addItemDecoration(
-                      new SimpleDividerItemDecoration(ChronicStatusDetailsActivity.this));
+                      new SimpleDividerItemDecoration(ChronicDetailsActivity.this));
                   medicalRemindersRecyclerView.setAdapter(adapter);
                 }
 

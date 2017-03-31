@@ -11,8 +11,8 @@ import android.widget.TextView;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.rest.ChronicTreatmentListInnerData;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
-import com.mcsaatchi.gmfit.insurance.activities.chronic.ChronicStatusDetailsActivity;
-import com.mcsaatchi.gmfit.insurance.activities.chronic.RequestChronicDeletionActivity;
+import com.mcsaatchi.gmfit.insurance.activities.chronic.ChronicDetailsActivity;
+import com.mcsaatchi.gmfit.insurance.activities.chronic.ChronicDeletionActivity;
 import java.util.List;
 import org.apache.commons.lang3.text.WordUtils;
 import timber.log.Timber;
@@ -61,7 +61,7 @@ public class ChronicStatusAdapter extends RecyclerView.Adapter {
 
     public void bind(ChronicTreatmentListInnerData chronicTreatment) {
       deleteLayout.setOnClickListener(v -> {
-        Intent intent = new Intent(context, RequestChronicDeletionActivity.class);
+        Intent intent = new Intent(context, ChronicDeletionActivity.class);
         intent.putExtra("CHRONIC_OBJECT", treatmentsList.get(getAdapterPosition()));
         context.startActivity(intent);
 
@@ -85,7 +85,7 @@ public class ChronicStatusAdapter extends RecyclerView.Adapter {
       }
 
       parentLayout.setOnClickListener(view -> {
-        Intent intent = new Intent(context, ChronicStatusDetailsActivity.class);
+        Intent intent = new Intent(context, ChronicDetailsActivity.class);
         intent.putExtra("CHRONIC_OBJECT", treatmentsList.get(getAdapterPosition()));
         //intent.putExtra(Constants.EXTRAS_PURPOSE_EDIT_MEDICATION_REMINDER, true);
         //intent.putExtra(Constants.EXTRAS_MEDICATION_REMINDER_ITEM, medicationItem);

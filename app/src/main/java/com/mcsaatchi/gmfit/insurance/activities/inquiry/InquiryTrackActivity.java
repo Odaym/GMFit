@@ -22,7 +22,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import timber.log.Timber;
 
-public class InquiryStatusListActivity extends BaseActivity {
+public class InquiryTrackActivity extends BaseActivity {
   @Bind(R.id.inquiriesRecyclerView) RecyclerView inquiriesRecyclerView;
   @Bind(R.id.toolbar) Toolbar toolbar;
   private InquiryStatusAdapter statusAdapter;
@@ -68,10 +68,10 @@ public class InquiryStatusListActivity extends BaseActivity {
                     response.body().getData().getBody().getData();
 
                 statusAdapter =
-                    new InquiryStatusAdapter(InquiryStatusListActivity.this, inquiriesList);
+                    new InquiryStatusAdapter(InquiryTrackActivity.this, inquiriesList);
 
                 inquiriesRecyclerView.setLayoutManager(
-                    new LinearLayoutManager(InquiryStatusListActivity.this));
+                    new LinearLayoutManager(InquiryTrackActivity.this));
                 inquiriesRecyclerView.setHasFixedSize(true);
                 inquiriesRecyclerView.setAdapter(statusAdapter);
 

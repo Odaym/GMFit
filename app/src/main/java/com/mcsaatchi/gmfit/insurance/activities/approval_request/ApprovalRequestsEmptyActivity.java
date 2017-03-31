@@ -21,7 +21,7 @@ public class ApprovalRequestsEmptyActivity extends BaseActivity {
   }
 
   @OnClick(R.id.submitRequestBTN) public void submitRequest() {
-    startActivity(new Intent(this, SubmitApprovalRequestsActivity.class));
+    startActivity(new Intent(this, SubmitApprovalRequestActivity.class));
     finish();
   }
 }

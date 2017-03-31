@@ -345,8 +345,8 @@ public class SubmitReimbursementActivity extends BaseActivity {
             switch (response.code()) {
               case 200:
                 Intent intent = new Intent(SubmitReimbursementActivity.this,
-                    ReimbursementStatusDetailsActivity.class);
-                intent.putExtra(ReimbursementStatusDetailsActivity.REIMBURSEMENT_REQUEST_ID,
+                    ReimbursementDetailsActivity.class);
+                intent.putExtra(ReimbursementDetailsActivity.REIMBURSEMENT_REQUEST_ID,
                     response.body().getData().getBody().getData().getRequestId());
 
                 startActivity(intent);
