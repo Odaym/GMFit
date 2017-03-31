@@ -336,9 +336,9 @@ public class SubmitReimbursementActivity extends BaseActivity {
     dataAccessHandler.createNewRequest(
         toRequestBody(prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, "")),
         toRequestBody(categoryValue), toRequestBody(subCategoryId), toRequestBody(requestTypeId),
-        toRequestBody(amountValue), toRequestBody("2"), toRequestBody(
-            Helpers.getFormatServiceDate() + "T" + Helpers.getFormatServiceTime() + "+02:00"),
-        toRequestBody("D"), toRequestBody(remarksET.getText().toString()), attachements,
+        toRequestBody(amountClaimedET.getText().toString()), toRequestBody("2"),
+        toRequestBody(Helpers.formatRequestTime() + "T16:27:32+02:00"), toRequestBody("D"),
+        toRequestBody(remarksET.getText().toString()), attachements,
         new Callback<CreateNewRequestResponse>() {
           @Override public void onResponse(Call<CreateNewRequestResponse> call,
               Response<CreateNewRequestResponse> response) {

@@ -32,7 +32,6 @@ import org.joda.time.format.DateTimeFormatter;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import timber.log.Timber;
 
 public class Helpers {
 
@@ -101,15 +100,11 @@ public class Helpers {
         + formattedDate.getDayOfMonth();
   }
 
-  public static String formatDateFromPicker(LocalDate dt) {
-    DateTimeFormatter formatter = DateTimeFormat.forPattern("dd MMM, yyyy");
-    DateTime formattedDate = formatter.parseDateTime(dt.toString());
+  public static String formatRequestTime() {
+    Date today = Calendar.getInstance().getTime();
+    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 
-    return formattedDate.getYear()
-        + "-"
-        + formattedDate.getMonthOfYear()
-        + "-"
-        + formattedDate.getDayOfMonth();
+    return formatter.format(today);
   }
 
   public static String formatInsuranceDate(LocalDate dt) {
@@ -142,8 +137,6 @@ public class Helpers {
 
   public static int determineStatusColor(String status) {
     if (status != null) {
-      Timber.d("Status is : " + status);
-
       switch (status) {
         case "Processing":
         case "Submited":
@@ -162,20 +155,6 @@ public class Helpers {
     }
 
     return 0;
-  }
-
-  public static String getFormatServiceDate() {
-    Calendar cal = Calendar.getInstance();
-
-    return cal.get(Calendar.YEAR) + "-" + cal.get(Calendar.MONTH) + "-" + cal.get(
-        Calendar.DAY_OF_MONTH);
-  }
-
-  public static String getFormatServiceTime() {
-    Calendar cal = Calendar.getInstance();
-
-    return cal.get(Calendar.HOUR_OF_DAY) + ":" + cal.get(Calendar.MINUTE) + ":" + cal.get(
-        Calendar.SECOND);
   }
 
   public static String provideErrorStringFromJSON(ResponseBody errorResponseBody) {
