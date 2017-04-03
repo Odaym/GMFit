@@ -1,5 +1,7 @@
 package com.mcsaatchi.gmfit.insurance.activities.directory;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
@@ -8,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -56,8 +59,8 @@ public class ClinicDetailsActivity extends BaseActivity implements OnMapReadyCal
         clinicNameTV.setText(clinicObject.getName());
         clinicAddressTV.setText(clinicObject.getAddress());
 
-        phoneTV.setText("+961 1 884 001");
-        mobileTV.setText("+961 70 770 441");
+        phoneTV.setText(clinicObject.getPhone());
+        mobileTV.setText(clinicObject.getMobile());
         emailAddressTV.setText(clinicObject.getName().split(" ")[0] + "_clinic@gmail.com");
 
         if (clinicObject.getOnline() != null && clinicObject.getOnline()) {
@@ -79,6 +82,18 @@ public class ClinicDetailsActivity extends BaseActivity implements OnMapReadyCal
         mapFragment.getMapAsync(this);
       }
     }
+  }
+
+  @OnClick(R.id.mobileTV) public void handleMobileClicked() {
+    Intent intent = new Intent(Intent.ACTION_DIAL);
+    intent.setData(Uri.parse("tel:" + mobileTV.getText().toString()));
+    startActivity(intent);
+  }
+
+  @OnClick(R.id.phoneTV) public void handlePhoneNumberClicked() {
+    Intent intent = new Intent(Intent.ACTION_DIAL);
+    intent.setData(Uri.parse("tel:" + phoneTV.getText().toString()));
+    startActivity(intent);
   }
 
   @Override public void onMapReady(GoogleMap googleMap) {
