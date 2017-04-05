@@ -422,7 +422,10 @@
   <string name="contact_us_activity_title">Contact Us</string>
   <string name="email_addresses_header_title">Email Addresses</string>
   <string name="addresses_header_title">Address</string>
-  <string name="contact_us_address">Kazandjian bldg. 211, st. 64\nSin El Fil, Metn 2707 6205\nP.O.Box 55664, Lebanon</string>
+  <string name="emails_header_title">Emails</string>
+  <string name="contact_us_email_header">Customer Care Center</string>
+  <string name="contact_us_email">customercare@globemedlebanon.com</string>
+  <string name="contact_us_address">Kazandjian Building 211, Street 64, Sin El Fil\nMetn 2707 6203, P.O.Box 55664, Lebanon</string>
   <string name="phone_numbers_header_title">Phone Numbers</string>
 
   <!-- USER POLICY ACTIVITY -->

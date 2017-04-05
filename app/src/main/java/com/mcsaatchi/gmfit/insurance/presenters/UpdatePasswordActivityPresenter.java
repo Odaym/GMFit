@@ -1,4 +1,4 @@
-package com.mcsaatchi.gmfit.insurance.activities.presenters;
+package com.mcsaatchi.gmfit.insurance.presenters;
 
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;

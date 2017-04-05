@@ -13,7 +13,7 @@ import com.mcsaatchi.gmfit.architecture.rest.InsuranceLoginResponseInnerData;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
-import com.mcsaatchi.gmfit.insurance.activities.presenters.UpdatePasswordActivityPresenter;
+import com.mcsaatchi.gmfit.insurance.presenters.UpdatePasswordActivityPresenter;
 import com.mcsaatchi.gmfit.insurance.fragments.InsuranceLoginFragment;
 import java.util.ArrayList;
 
