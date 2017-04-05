@@ -21,15 +21,14 @@ public class ReimbursementTrackActivity extends BaseActivity
   @Bind(R.id.toolbar) Toolbar toolbar;
   @Bind(R.id.recyclerView) RecyclerView recyclerView;
 
-  private ReimbursementTrackActivityPresenter presenter;
-
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_reimbursement_status_list);
     ButterKnife.bind(this);
     setupToolbar(getClass().getSimpleName(), toolbar, "Reimbursement Status", true);
 
-    presenter = new ReimbursementTrackActivityPresenter(this, dataAccessHandler);
+    ReimbursementTrackActivityPresenter presenter =
+        new ReimbursementTrackActivityPresenter(this, dataAccessHandler);
 
     presenter.getReimbursementClaims(
         prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""));

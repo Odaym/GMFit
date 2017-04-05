@@ -37,21 +37,8 @@ import org.json.JSONObject;
 
 public class Helpers {
 
-  public static Helpers helpers = null;
-
-  private Helpers() {
-  }
-
   public static RequestBody toRequestBody(String value) {
     return RequestBody.create(MediaType.parse("text/plain"), value);
-  }
-
-  public static Helpers getInstance() {
-    if (helpers == null) {
-      helpers = new Helpers();
-    }
-
-    return helpers;
   }
 
   public static void hideKeyboard(View currentFocus, Context context) {

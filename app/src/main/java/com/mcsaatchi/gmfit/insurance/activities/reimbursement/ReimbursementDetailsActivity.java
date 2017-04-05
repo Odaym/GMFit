@@ -1,29 +1,24 @@
 package com.mcsaatchi.gmfit.insurance.activities.reimbursement;
 
-import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.rest.ClaimListDetailsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ClaimListDetailsResponseDatum;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
+import com.mcsaatchi.gmfit.insurance.presenters.ReimbursementDetailsActivityPresenter;
 import com.mcsaatchi.gmfit.insurance.widget.CustomAttachmentPicker;
 import com.mcsaatchi.gmfit.insurance.widget.ItemLabel;
 import org.joda.time.LocalDate;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import timber.log.Timber;
 
-public class ReimbursementDetailsActivity extends BaseActivity {
+public class ReimbursementDetailsActivity extends BaseActivity
+    implements ReimbursementDetailsActivityPresenter.ReimbursementDetailsActivityView {
 
   public static final String REIMBURSEMENT_REQUEST_ID = "reimbursement_request_id";
 
@@ -40,6 +35,8 @@ public class ReimbursementDetailsActivity extends BaseActivity {
   @Bind(R.id.testResultsImagesPicker) CustomAttachmentPicker testResultsImagesPicker;
   @Bind(R.id.otherDocumentsImagesPicker) CustomAttachmentPicker otherDocumentsImagesPicker;
 
+  private ReimbursementDetailsActivityPresenter presenter;
+
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
@@ -47,101 +44,62 @@ public class ReimbursementDetailsActivity extends BaseActivity {
 
     ButterKnife.bind(this);
 
+    presenter = new ReimbursementDetailsActivityPresenter(this, dataAccessHandler);
+
     Bundle incomingExtras = getIntent().getExtras();
 
     if (incomingExtras != null) {
       int requestId = incomingExtras.getInt(REIMBURSEMENT_REQUEST_ID);
 
-      getReimbursementClaimDetails(requestId);
+      presenter.getReimbursementClaimDetails(
+          prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""), requestId);
     }
-  }
-
-  private void getReimbursementClaimDetails(int claimId) {
-    final ProgressDialog waitingDialog = new ProgressDialog(this);
-    waitingDialog.setTitle(getResources().getString(R.string.loading_data_dialog_title));
-    waitingDialog.setMessage(getResources().getString(R.string.please_wait_dialog_message));
-    waitingDialog.setCancelable(false);
-    waitingDialog.show();
-
-    final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-    alertDialog.setTitle(R.string.loading_data_dialog_title);
-    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getResources().getString(R.string.ok),
-        (dialog, which) -> {
-          dialog.dismiss();
-
-          if (waitingDialog.isShowing()) waitingDialog.dismiss();
-        });
-
-    dataAccessHandler.getClaimslistDetails(
-        prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""), "1",
-        String.valueOf(claimId), new Callback<ClaimListDetailsResponse>() {
-          @Override public void onResponse(Call<ClaimListDetailsResponse> call,
-              Response<ClaimListDetailsResponse> response) {
-            switch (response.code()) {
-              case 200:
-                waitingDialog.dismiss();
-
-                ClaimListDetailsResponseDatum responseDatum =
-                    response.body().getData().getBody().getData().get(0);
-
-                setupToolbar(getClass().getSimpleName(), toolbar,
-                    "Reimbursement #" + responseDatum.getId(), true);
-
-                amount.setLabel("Amount", String.valueOf(responseDatum.getAmount()));
-                serviceDate.setLabel("Service Date", Helpers.formatInsuranceDate(
-                    new LocalDate(responseDatum.getDate().split(" ")[0])));
-                subCategory.setLabel("Sub Category", responseDatum.getSubcategory());
-                category.setLabel("Category", responseDatum.getCategory());
-                status.setTextColor(Helpers.determineStatusColor(responseDatum.getStatus()));
-                status.setLabel("Status", responseDatum.getStatus());
-
-                for (int i = 0; i < responseDatum.getImages().size(); i++) {
-                  switch (responseDatum.getImages().get(i).getDocumType()) {
-                    case 2:
-                      medicalReportImagesPicker.returnImagePicker(i)
-                          .setImageBitmap(
-                              turnBase64ToImage(responseDatum.getImages().get(i).getContent()));
-                      break;
-                    case 3:
-                      invoiceImagesPicker.returnImagePicker(i)
-                          .setImageBitmap(
-                              turnBase64ToImage(responseDatum.getImages().get(i).getContent()));
-                      break;
-                    case 4:
-                      identityCardImagesPicker.returnImagePicker(i)
-                          .setImageBitmap(
-                              turnBase64ToImage(responseDatum.getImages().get(i).getContent()));
-                      break;
-                    case 5:
-                      passportImagesPicker.returnImagePicker(i)
-                          .setImageBitmap(
-                              turnBase64ToImage(responseDatum.getImages().get(i).getContent()));
-                      break;
-                    case 6:
-                      testResultsImagesPicker.returnImagePicker(i)
-                          .setImageBitmap(
-                              turnBase64ToImage(responseDatum.getImages().get(i).getContent()));
-                      break;
-                    case 7:
-                      otherDocumentsImagesPicker.returnImagePicker(i)
-                          .setImageBitmap(
-                              turnBase64ToImage(responseDatum.getImages().get(i).getContent()));
-                      break;
-                  }
-                }
-            }
-          }
-
-          @Override public void onFailure(Call<ClaimListDetailsResponse> call, Throwable t) {
-            Timber.d("Call failed with error : %s", t.getMessage());
-            alertDialog.setMessage(t.getMessage());
-            alertDialog.show();
-          }
-        });
   }
 
   private Bitmap turnBase64ToImage(String base64String) {
     byte[] decodedString = Base64.decode(base64String, Base64.DEFAULT);
     return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+  }
+
+  @Override public void populateClaimDetails(ClaimListDetailsResponseDatum claimDetails) {
+    setupToolbar(getClass().getSimpleName(), toolbar, "Reimbursement #" + claimDetails.getId(),
+        true);
+
+    amount.setLabel("Amount", String.valueOf(claimDetails.getAmount()));
+    serviceDate.setLabel("Service Date",
+        Helpers.formatInsuranceDate(new LocalDate(claimDetails.getDate().split(" ")[0])));
+    subCategory.setLabel("Sub Category", claimDetails.getSubcategory());
+    category.setLabel("Category", claimDetails.getCategory());
+    status.setTextColor(Helpers.determineStatusColor(claimDetails.getStatus()));
+    status.setLabel("Status", claimDetails.getStatus());
+
+    for (int i = 0; i < claimDetails.getImages().size(); i++) {
+      switch (claimDetails.getImages().get(i).getDocumType()) {
+        case 2:
+          medicalReportImagesPicker.returnImagePicker(i)
+              .setImageBitmap(turnBase64ToImage(claimDetails.getImages().get(i).getContent()));
+          break;
+        case 3:
+          invoiceImagesPicker.returnImagePicker(i)
+              .setImageBitmap(turnBase64ToImage(claimDetails.getImages().get(i).getContent()));
+          break;
+        case 4:
+          identityCardImagesPicker.returnImagePicker(i)
+              .setImageBitmap(turnBase64ToImage(claimDetails.getImages().get(i).getContent()));
+          break;
+        case 5:
+          passportImagesPicker.returnImagePicker(i)
+              .setImageBitmap(turnBase64ToImage(claimDetails.getImages().get(i).getContent()));
+          break;
+        case 6:
+          testResultsImagesPicker.returnImagePicker(i)
+              .setImageBitmap(turnBase64ToImage(claimDetails.getImages().get(i).getContent()));
+          break;
+        case 7:
+          otherDocumentsImagesPicker.returnImagePicker(i)
+              .setImageBitmap(turnBase64ToImage(claimDetails.getImages().get(i).getContent()));
+          break;
+      }
+    }
   }
 }

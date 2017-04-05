@@ -132,34 +132,6 @@ public class SubmitReimbursementActivity extends BaseActivity
     hookupImagesPickerImages(otherDocumentsImagesPicker);
   }
 
-  @OnClick(R.id.submitReimbursementBTN) public void handleSubmitReimbursement() {
-    if (imagePaths.isEmpty()) {
-      final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-      alertDialog.setTitle(R.string.required_fields_dialog_title);
-      alertDialog.setMessage(getString(R.string.attachments_required_to_submit));
-      alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getResources().getString(R.string.ok),
-          (dialog, which) -> {
-            dialog.dismiss();
-          });
-      alertDialog.show();
-    } else {
-      final ProgressDialog waitingDialog = new ProgressDialog(this);
-      waitingDialog.setTitle(getResources().getString(R.string.submit_new_reimbursement));
-      waitingDialog.setMessage(
-          getResources().getString(R.string.uploading_attachments_dialog_message));
-      waitingDialog.setOnShowListener(dialogInterface -> {
-        HashMap<String, RequestBody> attachments = constructSelectedImagesForRequest();
-
-        presenter.submitReimbursement(
-            prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""), categoryValue,
-            subCategoryId, requestTypeId, amountClaimedET.getText().toString(),
-            remarksET.getText().toString(), attachments);
-      });
-
-      waitingDialog.show();
-    }
-  }
-
   @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
 
@@ -186,6 +158,60 @@ public class SubmitReimbursementActivity extends BaseActivity
 
           imagePaths.add(selectedImagePath);
         }
+    }
+  }
+
+  @Override public void populateSubCategories(List<SubCategoriesResponseDatum> subCategoriesList) {
+    ArrayList<String> finalCategoryNames = new ArrayList<>();
+
+    for (int i = 0; i < subCategoriesList.size(); i++) {
+      if (subCategoriesList.get(i).getName() != null) {
+        finalCategoryNames.add(subCategoriesList.get(i).getName());
+      }
+    }
+
+    subcategoryPicker.setUpDropDown("Subcategory", "Choose a subcategory",
+        finalCategoryNames.toArray(new String[finalCategoryNames.size()]), (index, selected) -> {
+          for (SubCategoriesResponseDatum subCategoriesResponseDatum : subCategoriesList) {
+            if (subCategoriesResponseDatum.getName() != null && subCategoriesResponseDatum.getName()
+                .equals(selected)) {
+              subCategoryId = subCategoriesResponseDatum.getId();
+            }
+          }
+        });
+  }
+
+  @Override public void openReimbursementDetailsActivity(Integer claimId) {
+    Intent intent =
+        new Intent(SubmitReimbursementActivity.this, ReimbursementDetailsActivity.class);
+    intent.putExtra(ReimbursementDetailsActivity.REIMBURSEMENT_REQUEST_ID, claimId);
+    startActivity(intent);
+    finish();
+  }
+
+  @OnClick(R.id.submitReimbursementBTN) public void handleSubmitReimbursement() {
+    if (imagePaths.isEmpty()) {
+      final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+      alertDialog.setTitle(R.string.required_fields_dialog_title);
+      alertDialog.setMessage(getString(R.string.attachments_required_to_submit));
+      alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getResources().getString(R.string.ok),
+          (dialog, which) -> dialog.dismiss());
+      alertDialog.show();
+    } else {
+      final ProgressDialog waitingDialog = new ProgressDialog(this);
+      waitingDialog.setTitle(getResources().getString(R.string.submit_new_reimbursement));
+      waitingDialog.setMessage(
+          getResources().getString(R.string.uploading_attachments_dialog_message));
+      waitingDialog.setOnShowListener(dialogInterface -> {
+        HashMap<String, RequestBody> attachments = constructSelectedImagesForRequest();
+
+        presenter.submitReimbursement(
+            prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""), categoryValue,
+            subCategoryId, requestTypeId, amountClaimedET.getText().toString(),
+            remarksET.getText().toString(), attachments);
+      });
+
+      waitingDialog.show();
     }
   }
 
@@ -273,33 +299,5 @@ public class SubmitReimbursementActivity extends BaseActivity
     bm.compress(Bitmap.CompressFormat.JPEG, 100, baos);
 
     return baos.toByteArray();
-  }
-
-  @Override public void populateSubCategories(List<SubCategoriesResponseDatum> subCategoriesList) {
-    ArrayList<String> finalCategoryNames = new ArrayList<>();
-
-    for (int i = 0; i < subCategoriesList.size(); i++) {
-      if (subCategoriesList.get(i).getName() != null) {
-        finalCategoryNames.add(subCategoriesList.get(i).getName());
-      }
-    }
-
-    subcategoryPicker.setUpDropDown("Subcategory", "Choose a subcategory",
-        finalCategoryNames.toArray(new String[finalCategoryNames.size()]), (index, selected) -> {
-          for (SubCategoriesResponseDatum subCategoriesResponseDatum : subCategoriesList) {
-            if (subCategoriesResponseDatum.getName() != null && subCategoriesResponseDatum.getName()
-                .equals(selected)) {
-              subCategoryId = subCategoriesResponseDatum.getId();
-            }
-          }
-        });
-  }
-
-  @Override public void openReimbursementDetailsActivity(Integer claimId) {
-    Intent intent =
-        new Intent(SubmitReimbursementActivity.this, ReimbursementDetailsActivity.class);
-    intent.putExtra(ReimbursementDetailsActivity.REIMBURSEMENT_REQUEST_ID, claimId);
-    startActivity(intent);
-    finish();
   }
 }
