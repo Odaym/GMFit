@@ -322,8 +322,7 @@ public class SubmitInquiryActivity extends BaseActivity {
                 //startActivity(intent);
                 break;
               case 449:
-                alertDialog.setMessage(getString(R.string.server_error_got_returned));
-                alertDialog.show();
+                //view.displayRequestErrorDialog(Helpers.provideErrorStringFromJSON(response.errorBody()));
                 break;
             }
 

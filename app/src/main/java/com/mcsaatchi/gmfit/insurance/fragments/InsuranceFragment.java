@@ -24,7 +24,6 @@ import com.mcsaatchi.gmfit.architecture.GMFitApplication;
 import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.architecture.rest.InsuranceLoginResponse;
 import com.mcsaatchi.gmfit.common.Constants;
-import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.common.classes.NonSwipeableViewPager;
 import java.util.ArrayList;
 import java.util.List;
@@ -116,8 +115,7 @@ public class InsuranceFragment extends Fragment {
 
                 break;
               case 449:
-                alertDialog.setMessage(Helpers.provideErrorStringFromJSON(response.errorBody()));
-                alertDialog.show();
+                //view.displayRequestErrorDialog(Helpers.provideErrorStringFromJSON(response.errorBody()));
                 break;
             }
           }

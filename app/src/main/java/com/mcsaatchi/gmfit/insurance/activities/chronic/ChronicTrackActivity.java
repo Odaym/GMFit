@@ -14,7 +14,6 @@ import com.mcsaatchi.gmfit.architecture.rest.ChronicTreatmentListInnerData;
 import com.mcsaatchi.gmfit.architecture.rest.ChronicTreatmentListResponse;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
-import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.common.classes.SimpleDividerItemDecoration;
 import com.mcsaatchi.gmfit.insurance.adapters.ChronicStatusAdapter;
 import java.util.List;
@@ -77,8 +76,7 @@ public class ChronicTrackActivity extends BaseActivity {
 
                 break;
               case 449:
-                alertDialog.setMessage(Helpers.provideErrorStringFromJSON(response.errorBody()));
-                alertDialog.show();
+                //view.displayRequestErrorDialog(Helpers.provideErrorStringFromJSON(response.errorBody()));
                 break;
             }
 

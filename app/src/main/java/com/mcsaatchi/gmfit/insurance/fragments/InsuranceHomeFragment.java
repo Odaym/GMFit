@@ -30,7 +30,6 @@ import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.architecture.rest.CertainPDFResponse;
 import com.mcsaatchi.gmfit.architecture.rest.InsuranceLoginResponseInnerData;
 import com.mcsaatchi.gmfit.common.Constants;
-import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.insurance.activities.home.ContractsChoiceView;
 import com.mcsaatchi.gmfit.insurance.activities.home.PDFViewerActivity;
 import com.mcsaatchi.gmfit.insurance.adapters.InsuranceOperationWidgetsGridAdapter;
@@ -178,8 +177,7 @@ public class InsuranceHomeFragment extends Fragment {
                 startActivity(intent);
                 break;
               case 449:
-                alertDialog.setMessage(Helpers.provideErrorStringFromJSON(response.errorBody()));
-                alertDialog.show();
+                //view.displayRequestErrorDialog(Helpers.provideErrorStringFromJSON(response.errorBody()));
                 break;
             }
 

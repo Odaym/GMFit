@@ -97,32 +97,32 @@ public class ReimbursementDetailsActivity extends BaseActivity {
 
                 for (int i = 0; i < responseDatum.getImages().size(); i++) {
                   switch (responseDatum.getImages().get(i).getDocumType()) {
-                    case 1:
+                    case 2:
                       medicalReportImagesPicker.returnImagePicker(i)
                           .setImageBitmap(
                               turnBase64ToImage(responseDatum.getImages().get(i).getContent()));
                       break;
-                    case 2:
+                    case 3:
                       invoiceImagesPicker.returnImagePicker(i)
                           .setImageBitmap(
                               turnBase64ToImage(responseDatum.getImages().get(i).getContent()));
                       break;
-                    case 3:
+                    case 4:
                       identityCardImagesPicker.returnImagePicker(i)
                           .setImageBitmap(
                               turnBase64ToImage(responseDatum.getImages().get(i).getContent()));
                       break;
-                    case 4:
+                    case 5:
                       passportImagesPicker.returnImagePicker(i)
                           .setImageBitmap(
                               turnBase64ToImage(responseDatum.getImages().get(i).getContent()));
                       break;
-                    case 5:
+                    case 6:
                       testResultsImagesPicker.returnImagePicker(i)
                           .setImageBitmap(
                               turnBase64ToImage(responseDatum.getImages().get(i).getContent()));
                       break;
-                    case 6:
+                    case 7:
                       otherDocumentsImagesPicker.returnImagePicker(i)
                           .setImageBitmap(
                               turnBase64ToImage(responseDatum.getImages().get(i).getContent()));

@@ -102,8 +102,7 @@ public class ChronicDetailsActivity extends BaseActivity {
 
                 break;
               case 449:
-                alertDialog.setMessage(Helpers.provideErrorStringFromJSON(response.errorBody()));
-                alertDialog.show();
+                //view.displayRequestErrorDialog(Helpers.provideErrorStringFromJSON(response.errorBody()));
                 break;
             }
 

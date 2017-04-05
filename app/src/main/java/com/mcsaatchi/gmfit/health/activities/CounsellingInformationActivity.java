@@ -11,7 +11,6 @@ import butterknife.ButterKnife;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.rest.CounsellingInformationResponse;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
-import com.mcsaatchi.gmfit.common.classes.Helpers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -60,8 +59,7 @@ public class CounsellingInformationActivity extends BaseActivity {
                 response.body().getData().getBody().getData().getCompatibilityCheckDesc());
             break;
           case 449:
-            alertDialog.setMessage(Helpers.provideErrorStringFromJSON(response.errorBody()));
-            alertDialog.show();
+            //view.displayRequestErrorDialog(Helpers.provideErrorStringFromJSON(response.errorBody()));
             break;
         }
 

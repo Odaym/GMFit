@@ -17,7 +17,6 @@ import com.mcsaatchi.gmfit.architecture.GMFitApplication;
 import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.architecture.rest.CertainPDFResponse;
 import com.mcsaatchi.gmfit.common.Constants;
-import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.insurance.activities.approval_request.ApprovalRequestsTrackActivity;
 import com.mcsaatchi.gmfit.insurance.activities.approval_request.SubmitApprovalRequestActivity;
 import com.mcsaatchi.gmfit.insurance.activities.chronic.ChronicTrackActivity;
@@ -116,8 +115,7 @@ public class InsuranceOperationWidgetsGridAdapter
                 fragmentActivity.startActivity(intent);
                 break;
               case 449:
-                alertDialog.setMessage(Helpers.provideErrorStringFromJSON(response.errorBody()));
-                alertDialog.show();
+                //view.displayRequestErrorDialog(Helpers.provideErrorStringFromJSON(response.errorBody()));
                 break;
             }
 
@@ -165,8 +163,7 @@ public class InsuranceOperationWidgetsGridAdapter
                 fragmentActivity.startActivity(intent);
                 break;
               case 449:
-                alertDialog.setMessage(Helpers.provideErrorStringFromJSON(response.errorBody()));
-                alertDialog.show();
+                //view.displayRequestErrorDialog(Helpers.provideErrorStringFromJSON(response.errorBody()));
                 break;
             }
 
@@ -214,8 +211,7 @@ public class InsuranceOperationWidgetsGridAdapter
                 fragmentActivity.startActivity(intent);
                 break;
               case 449:
-                alertDialog.setMessage(Helpers.provideErrorStringFromJSON(response.errorBody()));
-                alertDialog.show();
+                //view.displayRequestErrorDialog(Helpers.provideErrorStringFromJSON(response.errorBody()));
                 break;
             }
 

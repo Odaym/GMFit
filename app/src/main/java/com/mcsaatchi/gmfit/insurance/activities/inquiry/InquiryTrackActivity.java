@@ -14,7 +14,6 @@ import com.mcsaatchi.gmfit.architecture.rest.InquiriesListResponse;
 import com.mcsaatchi.gmfit.architecture.rest.InquiriesListResponseInnerData;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
-import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.insurance.adapters.InquiryStatusAdapter;
 import java.util.List;
 import retrofit2.Call;
@@ -83,8 +82,7 @@ public class InquiryTrackActivity extends BaseActivity {
                 //startActivity(intent);
                 break;
               case 449:
-                alertDialog.setMessage(Helpers.provideErrorStringFromJSON(response.errorBody()));
-                alertDialog.show();
+                //view.displayRequestErrorDialog(Helpers.provideErrorStringFromJSON(response.errorBody()));
                 break;
             }
 

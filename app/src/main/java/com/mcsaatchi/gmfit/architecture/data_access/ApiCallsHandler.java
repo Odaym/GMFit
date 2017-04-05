@@ -208,8 +208,8 @@ public class ApiCallsHandler {
   }
 
   void updateOneSignalToken(String onesignal_id, final Callback<DefaultGetResponse> callback) {
-    Call<DefaultGetResponse> apiCall = restClient.getGMFitService()
-        .updateOneSignalToken(new UpdateOneSignalRequest(onesignal_id));
+    Call<DefaultGetResponse> apiCall =
+        restClient.getGMFitService().updateOneSignalToken(new UpdateOneSignalRequest(onesignal_id));
 
     apiCall.enqueue(new Callback<DefaultGetResponse>() {
       @Override
@@ -1352,7 +1352,7 @@ public class ApiCallsHandler {
   public class DeleteUserChartRequest {
     final String chart_id;
 
-    public DeleteUserChartRequest(String chart_id) {
+    DeleteUserChartRequest(String chart_id) {
       this.chart_id = chart_id;
     }
   }
@@ -1360,7 +1360,7 @@ public class ApiCallsHandler {
   public class DeleteTestRequest {
     final int test_id;
 
-    public DeleteTestRequest(int test_id) {
+    DeleteTestRequest(int test_id) {
       this.test_id = test_id;
     }
   }
@@ -1368,7 +1368,7 @@ public class ApiCallsHandler {
   public class DeleteMealRequest {
     final int instance_id;
 
-    public DeleteMealRequest(int instance_id) {
+    DeleteMealRequest(int instance_id) {
       this.instance_id = instance_id;
     }
   }
@@ -1378,7 +1378,7 @@ public class ApiCallsHandler {
     final String new_password;
     final String confirm_new_password;
 
-    public ChangePasswordRequest(String old_password, String new_password) {
+    ChangePasswordRequest(String old_password, String new_password) {
       this.old_password = old_password;
       this.new_password = new_password;
       this.confirm_new_password = new_password;
@@ -1391,7 +1391,7 @@ public class ApiCallsHandler {
     String language;
     String password;
 
-    public InsuranceLoginRequest(String indNbr, String country, String language, String password) {
+    InsuranceLoginRequest(String indNbr, String country, String language, String password) {
       this.indNbr = indNbr;
       this.country = country;
       this.language = language;
@@ -1406,7 +1406,7 @@ public class ApiCallsHandler {
     String language;
     String password;
 
-    public DefaultBodyForInsuranceRequests(String indNbr, String contractNo, String country,
+    DefaultBodyForInsuranceRequests(String indNbr, String contractNo, String country,
         String language, String password) {
       this.indNbr = indNbr;
       this.contractNo = contractNo;
@@ -1419,7 +1419,7 @@ public class ApiCallsHandler {
   public class SimpleInsuranceRequest {
     String contractNo;
 
-    public SimpleInsuranceRequest(String contractNo) {
+    SimpleInsuranceRequest(String contractNo) {
       this.contractNo = contractNo;
     }
   }
@@ -1432,7 +1432,7 @@ public class ApiCallsHandler {
     String password;
     String key;
 
-    public SearchMedicinesRequest(String indNbr, String contractNo, String country, String language,
+    SearchMedicinesRequest(String indNbr, String contractNo, String country, String language,
         String password, String key) {
       this.indNbr = indNbr;
       this.contractNo = contractNo;
@@ -1446,7 +1446,7 @@ public class ApiCallsHandler {
   public class UpdateOneSignalRequest {
     private String onesignal_id;
 
-    public UpdateOneSignalRequest(String onesignal_id) {
+    UpdateOneSignalRequest(String onesignal_id) {
       this.onesignal_id = onesignal_id;
     }
   }
@@ -1458,7 +1458,7 @@ public class ApiCallsHandler {
     String email;
     String mobileNo;
 
-    public UpdateInsurancePasswordRequest(String contractNo, String oldPswrd, String newPswrd,
+    UpdateInsurancePasswordRequest(String contractNo, String oldPswrd, String newPswrd,
         String email, String mobileNo) {
       this.contractNo = contractNo;
       this.oldPswrd = oldPswrd;
@@ -1476,7 +1476,7 @@ public class ApiCallsHandler {
     double latitude;
     int fetchClosest;
 
-    public NearbyClinicsRequest(String contractNo, String providerTypesCode, int searchCtry,
+    NearbyClinicsRequest(String contractNo, String providerTypesCode, int searchCtry,
         double longitude, double latitude, int fetchClosest) {
       this.contractNo = contractNo;
       this.providerTypesCode = providerTypesCode;
@@ -1491,7 +1491,7 @@ public class ApiCallsHandler {
     String contractNo;
     String identifyReport;
 
-    public CoverageDescriptionRequest(String contractNo, String identifyReport) {
+    CoverageDescriptionRequest(String contractNo, String identifyReport) {
       this.contractNo = contractNo;
       this.identifyReport = identifyReport;
     }
@@ -1501,7 +1501,7 @@ public class ApiCallsHandler {
     String contractNo;
     String requestType;
 
-    public ClaimsListRequest(String contractNo, String requestType) {
+    ClaimsListRequest(String contractNo, String requestType) {
       this.contractNo = contractNo;
       this.requestType = requestType;
     }
@@ -1512,7 +1512,7 @@ public class ApiCallsHandler {
     String requestType;
     String claimId;
 
-    public ClaimsListDetailsRequest(String contractNo, String requestType, String claimId) {
+    ClaimsListDetailsRequest(String contractNo, String requestType, String claimId) {
       this.contractNo = contractNo;
       this.requestType = requestType;
       this.claimId = claimId;
@@ -1523,7 +1523,7 @@ public class ApiCallsHandler {
     String contractNo;
     String period;
 
-    public SnapShotRequest(String contractNo, String period) {
+    SnapShotRequest(String contractNo, String period) {
       this.contractNo = contractNo;
       this.period = period;
     }
@@ -1533,7 +1533,7 @@ public class ApiCallsHandler {
     private String incidentId;
     private String crm_country;
 
-    public InquiriesListRequest(String incidentId, String crm_country) {
+    InquiriesListRequest(String incidentId, String crm_country) {
       this.incidentId = incidentId;
       this.crm_country = crm_country;
     }
@@ -1542,7 +1542,7 @@ public class ApiCallsHandler {
   public class CRMNotesRequest {
     private String incidentId;
 
-    public CRMNotesRequest(String incidentId) {
+    CRMNotesRequest(String incidentId) {
       this.incidentId = incidentId;
     }
   }
@@ -1555,7 +1555,7 @@ public class ApiCallsHandler {
     String fileName;
     String documentBody;
 
-    public AddCRMNoteRequest(String incidentId, String subject, String noteText, String mimeType,
+    AddCRMNoteRequest(String incidentId, String subject, String noteText, String mimeType,
         String fileName, String documentBody) {
       this.incidentId = incidentId;
       this.subject = subject;

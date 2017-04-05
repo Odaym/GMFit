@@ -1,30 +1,27 @@
 package com.mcsaatchi.gmfit.insurance.activities.reimbursement;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.rest.ClaimsListResponse;
+import com.mcsaatchi.gmfit.architecture.rest.ClaimsListResponseDatum;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
-import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.insurance.adapters.StatusAdapter;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import timber.log.Timber;
+import com.mcsaatchi.gmfit.insurance.presenters.ReimbursementTrackActivityPresenter;
+import java.util.List;
 
-public class ReimbursementTrackActivity extends BaseActivity {
+public class ReimbursementTrackActivity extends BaseActivity
+    implements ReimbursementTrackActivityPresenter.ReimbursementTrackActivityView {
 
   @Bind(R.id.toolbar) Toolbar toolbar;
   @Bind(R.id.recyclerView) RecyclerView recyclerView;
-  private StatusAdapter statusAdapter;
+
+  private ReimbursementTrackActivityPresenter presenter;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -32,58 +29,24 @@ public class ReimbursementTrackActivity extends BaseActivity {
     ButterKnife.bind(this);
     setupToolbar(getClass().getSimpleName(), toolbar, "Reimbursement Status", true);
 
-    getReimbursementClaims();
+    presenter = new ReimbursementTrackActivityPresenter(this, dataAccessHandler);
+
+    presenter.getReimbursementClaims(
+        prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""));
   }
 
-  private void getReimbursementClaims() {
-    final ProgressDialog waitingDialog = new ProgressDialog(this);
-    waitingDialog.setTitle(getResources().getString(R.string.loading_data_dialog_title));
-    waitingDialog.setMessage(getResources().getString(R.string.please_wait_dialog_message));
-    waitingDialog.show();
-
-    final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-    alertDialog.setTitle(R.string.loading_data_dialog_title);
-    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getResources().getString(R.string.ok),
-        (dialog, which) -> {
-          dialog.dismiss();
-
-          if (waitingDialog.isShowing()) waitingDialog.dismiss();
+  @Override public void populateClaimsList(List<ClaimsListResponseDatum> claimsList) {
+    StatusAdapter statusAdapter = new StatusAdapter(ReimbursementTrackActivity.this, claimsList,
+        (reimbursementModel, index) -> {
+          Intent intent =
+              new Intent(ReimbursementTrackActivity.this, ReimbursementDetailsActivity.class);
+          intent.putExtra(ReimbursementDetailsActivity.REIMBURSEMENT_REQUEST_ID,
+              reimbursementModel.getId());
+          startActivity(intent);
         });
 
-    dataAccessHandler.getClaimsList(prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""),
-        "1", new Callback<ClaimsListResponse>() {
-          @Override public void onResponse(Call<ClaimsListResponse> call,
-              Response<ClaimsListResponse> response) {
-            switch (response.code()) {
-              case 200:
-                statusAdapter = new StatusAdapter(ReimbursementTrackActivity.this,
-                    response.body().getData().getBody().getData(), (reimbursementModel, index) -> {
-                  Intent intent = new Intent(ReimbursementTrackActivity.this,
-                      ReimbursementDetailsActivity.class);
-                  intent.putExtra(ReimbursementDetailsActivity.REIMBURSEMENT_REQUEST_ID,
-                      reimbursementModel.getId());
-                  startActivity(intent);
-                });
-
-                recyclerView.setLayoutManager(
-                    new LinearLayoutManager(ReimbursementTrackActivity.this));
-                recyclerView.setHasFixedSize(true);
-                recyclerView.setAdapter(statusAdapter);
-                break;
-              case 449:
-                alertDialog.setMessage(Helpers.provideErrorStringFromJSON(response.errorBody()));
-                alertDialog.show();
-                break;
-            }
-
-            waitingDialog.dismiss();
-          }
-
-          @Override public void onFailure(Call<ClaimsListResponse> call, Throwable t) {
-            Timber.d("Call failed with error : %s", t.getMessage());
-            alertDialog.setMessage(t.getMessage());
-            alertDialog.show();
-          }
-        });
+    recyclerView.setLayoutManager(new LinearLayoutManager(ReimbursementTrackActivity.this));
+    recyclerView.setHasFixedSize(true);
+    recyclerView.setAdapter(statusAdapter);
   }
 }

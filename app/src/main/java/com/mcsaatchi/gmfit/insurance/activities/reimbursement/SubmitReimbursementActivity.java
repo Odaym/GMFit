@@ -3,18 +3,15 @@ package com.mcsaatchi.gmfit.insurance.activities.reimbursement;
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
-import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -24,12 +21,12 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.rest.CreateNewRequestResponse;
-import com.mcsaatchi.gmfit.architecture.rest.SubCategoriesResponse;
 import com.mcsaatchi.gmfit.architecture.rest.SubCategoriesResponseDatum;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
+import com.mcsaatchi.gmfit.common.classes.ImageHandler;
+import com.mcsaatchi.gmfit.insurance.presenters.SubmitReimbursementActivityPresenter;
 import com.mcsaatchi.gmfit.insurance.widget.CustomAttachmentPicker;
 import com.mcsaatchi.gmfit.insurance.widget.CustomPicker;
 import com.mcsaatchi.gmfit.insurance.widget.CustomToggle;
@@ -44,18 +41,14 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Locale;
-import okhttp3.MediaType;
 import okhttp3.RequestBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import timber.log.Timber;
 
 import static com.mcsaatchi.gmfit.insurance.widget.CustomAttachmentPicker.CAPTURE_NEW_PICTURE_REQUEST_CODE;
 import static com.mcsaatchi.gmfit.insurance.widget.CustomAttachmentPicker.REQUEST_PICK_IMAGE_GALLERY;
 
-public class SubmitReimbursementActivity extends BaseActivity {
+public class SubmitReimbursementActivity extends BaseActivity
+    implements SubmitReimbursementActivityPresenter.SubmitReimbursementActivityView {
 
   private static final int REQUEST_CAPTURE_PERMISSIONS = 123;
   @Bind(R.id.toolbar) Toolbar toolbar;
@@ -74,21 +67,17 @@ public class SubmitReimbursementActivity extends BaseActivity {
   @Bind(R.id.remarksET) EditText remarksET;
 
   private ArrayList<String> imagePaths = new ArrayList<>();
-  private List<SubCategoriesResponseDatum> subCategoriesList;
-
-  private String categoryValue = "Out";
-  private String serviceDateValue = "";
-  private String amountValue = "";
-  private String subCategoryId = "";
-  private String requestTypeId = "1";
+  private SubmitReimbursementActivityPresenter presenter;
 
   private File photoFile;
   private Uri photoFileUri;
-  private ImageView currentImageView;
 
-  public static RequestBody toRequestBody(String value) {
-    return RequestBody.create(MediaType.parse("text/plain"), value);
-  }
+  private String categoryValue = "Out";
+  private String serviceDateValue = "";
+  private String subCategoryId = "";
+  private String requestTypeId = "1";
+
+  private ImageView currentImageView;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -99,7 +88,9 @@ public class SubmitReimbursementActivity extends BaseActivity {
 
     setupToolbar(getClass().getSimpleName(), toolbar, "Submit Reimbursement", true);
 
-    getSubCategories();
+    presenter = new SubmitReimbursementActivityPresenter(this, dataAccessHandler);
+
+    presenter.getSubCategories(prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""));
 
     currencyLayout.setOnClickListener(view -> {
       final String[] items = new String[] { "LBP", "USD" };
@@ -154,13 +145,15 @@ public class SubmitReimbursementActivity extends BaseActivity {
     } else {
       final ProgressDialog waitingDialog = new ProgressDialog(this);
       waitingDialog.setTitle(getResources().getString(R.string.submit_new_reimbursement));
-      waitingDialog.setCancelable(false);
       waitingDialog.setMessage(
           getResources().getString(R.string.uploading_attachments_dialog_message));
       waitingDialog.setOnShowListener(dialogInterface -> {
         HashMap<String, RequestBody> attachments = constructSelectedImagesForRequest();
 
-        submitReimbursement(attachments, waitingDialog);
+        presenter.submitReimbursement(
+            prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""), categoryValue,
+            subCategoryId, requestTypeId, amountClaimedET.getText().toString(),
+            remarksET.getText().toString(), attachments);
       });
 
       waitingDialog.show();
@@ -187,7 +180,7 @@ public class SubmitReimbursementActivity extends BaseActivity {
       case REQUEST_PICK_IMAGE_GALLERY:
         if (data != null) {
           Uri selectedImageUri = data.getData();
-          String selectedImagePath = getPhotoPathFromGallery(selectedImageUri);
+          String selectedImagePath = ImageHandler.getPhotoPathFromGallery(this, selectedImageUri);
 
           Picasso.with(this).load(new File(selectedImagePath)).fit().into(currentImageView);
 
@@ -239,7 +232,7 @@ public class SubmitReimbursementActivity extends BaseActivity {
             if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
               photoFile = null;
               try {
-                photoFile = createImageFile(constructImageFilename());
+                photoFile = ImageHandler.createImageFile(ImageHandler.constructImageFilename());
                 photoFileUri = Uri.fromFile(photoFile);
               } catch (IOException ex) {
                 ex.printStackTrace();
@@ -258,56 +251,16 @@ public class SubmitReimbursementActivity extends BaseActivity {
     builderSingle.show();
   }
 
-  private File createImageFile(String imagePath) throws IOException {
-    return new File(imagePath);
-  }
-
-  private String getPhotoPathFromGallery(Uri uri) {
-    if (uri == null) {
-      // TODO perform some logging or show user feedback
-      return null;
-    }
-
-    String[] projection = { MediaStore.Images.Media.DATA };
-    Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
-    if (cursor != null) {
-      int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-      cursor.moveToFirst();
-      return cursor.getString(column_index);
-    }
-
-    return uri.getPath();
-  }
-
-  private String constructImageFilename() {
-    String timeStamp =
-        new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
-    String imageFileName = "JPEG_" + timeStamp;
-
-    File mediaStorageDir =
-        new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-            "GMFit");
-
-    if (!mediaStorageDir.exists()) {
-      if (!mediaStorageDir.mkdirs()) {
-        Log.d("Constants.DEBUG_TAG", "failed to create directory");
-        return null;
-      }
-    }
-
-    return mediaStorageDir.getPath() + File.separator + imageFileName;
-  }
-
   private HashMap<String, RequestBody> constructSelectedImagesForRequest() {
     LinkedHashMap<String, RequestBody> imageParts = new LinkedHashMap<>();
 
     for (int i = 0; i < imagePaths.size(); i++) {
       if (imagePaths.get(i) != null) {
-        imageParts.put("attachements[" + i + "][content]", toRequestBody(
+        imageParts.put("attachements[" + i + "][content]", Helpers.toRequestBody(
             Base64.encodeToString(turnImageToByteArray(imagePaths.get(i)), Base64.NO_WRAP)));
-        imageParts.put("attachements[" + i + "][documType]", toRequestBody("2"));
-        imageParts.put("attachements[" + i + "][name]", toRequestBody(imagePaths.get(i)));
-        imageParts.put("attachements[" + i + "][id]", toRequestBody(String.valueOf(i + 1)));
+        imageParts.put("attachements[" + i + "][documType]", Helpers.toRequestBody("2"));
+        imageParts.put("attachements[" + i + "][name]", Helpers.toRequestBody(imagePaths.get(i)));
+        imageParts.put("attachements[" + i + "][id]", Helpers.toRequestBody(String.valueOf(i + 1)));
       }
     }
 
@@ -322,90 +275,31 @@ public class SubmitReimbursementActivity extends BaseActivity {
     return baos.toByteArray();
   }
 
-  private void submitReimbursement(HashMap<String, RequestBody> attachements,
-      final ProgressDialog waitingDialog) {
-    final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-    alertDialog.setTitle(R.string.submit_new_reimbursement);
-    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getResources().getString(R.string.ok),
-        (dialog, which) -> {
-          dialog.dismiss();
+  @Override public void populateSubCategories(List<SubCategoriesResponseDatum> subCategoriesList) {
+    ArrayList<String> finalCategoryNames = new ArrayList<>();
 
-          if (waitingDialog.isShowing()) waitingDialog.dismiss();
-        });
+    for (int i = 0; i < subCategoriesList.size(); i++) {
+      if (subCategoriesList.get(i).getName() != null) {
+        finalCategoryNames.add(subCategoriesList.get(i).getName());
+      }
+    }
 
-    dataAccessHandler.createNewRequest(
-        toRequestBody(prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, "")),
-        toRequestBody(categoryValue), toRequestBody(subCategoryId), toRequestBody(requestTypeId),
-        toRequestBody(amountClaimedET.getText().toString()), toRequestBody("2"),
-        toRequestBody(Helpers.formatRequestTime() + "T16:27:32+02:00"), toRequestBody("D"),
-        toRequestBody(remarksET.getText().toString()), attachements,
-        new Callback<CreateNewRequestResponse>() {
-          @Override public void onResponse(Call<CreateNewRequestResponse> call,
-              Response<CreateNewRequestResponse> response) {
-            switch (response.code()) {
-              case 200:
-                Intent intent = new Intent(SubmitReimbursementActivity.this,
-                    ReimbursementDetailsActivity.class);
-                intent.putExtra(ReimbursementDetailsActivity.REIMBURSEMENT_REQUEST_ID,
-                    response.body().getData().getBody().getData().getRequestId());
-
-                startActivity(intent);
-                break;
-              case 449:
-                alertDialog.setMessage(Helpers.provideErrorStringFromJSON(response.errorBody()));
-                alertDialog.show();
-                break;
+    subcategoryPicker.setUpDropDown("Subcategory", "Choose a subcategory",
+        finalCategoryNames.toArray(new String[finalCategoryNames.size()]), (index, selected) -> {
+          for (SubCategoriesResponseDatum subCategoriesResponseDatum : subCategoriesList) {
+            if (subCategoriesResponseDatum.getName() != null && subCategoriesResponseDatum.getName()
+                .equals(selected)) {
+              subCategoryId = subCategoriesResponseDatum.getId();
             }
-
-            waitingDialog.dismiss();
-          }
-
-          @Override public void onFailure(Call<CreateNewRequestResponse> call, Throwable t) {
-            Timber.d("Call failed with error : %s", t.getMessage());
           }
         });
   }
 
-  private void getSubCategories() {
-    final ProgressDialog waitingDialog = new ProgressDialog(this);
-    waitingDialog.setTitle(getResources().getString(R.string.loading_data_dialog_title));
-    waitingDialog.setMessage(getResources().getString(R.string.please_wait_dialog_message));
-    waitingDialog.show();
-
-    dataAccessHandler.getSubCategories(
-        prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""),
-        new Callback<SubCategoriesResponse>() {
-          @Override public void onResponse(Call<SubCategoriesResponse> call,
-              Response<SubCategoriesResponse> response) {
-            switch (response.code()) {
-              case 200:
-                waitingDialog.dismiss();
-
-                subCategoriesList = response.body().getData().getBody().getData();
-                ArrayList<String> finalCategoryNames = new ArrayList<>();
-
-                for (int i = 0; i < subCategoriesList.size(); i++) {
-                  if (subCategoriesList.get(i).getName() != null) {
-                    finalCategoryNames.add(subCategoriesList.get(i).getName());
-                  }
-                }
-
-                subcategoryPicker.setUpDropDown("Subcategory", "Choose a subcategory",
-                    finalCategoryNames.toArray(new String[finalCategoryNames.size()]),
-                    (index, selected) -> {
-                      for (SubCategoriesResponseDatum subCategoriesResponseDatum : subCategoriesList) {
-                        if (subCategoriesResponseDatum.getName() != null
-                            && subCategoriesResponseDatum.getName().equals(selected)) {
-                          subCategoryId = subCategoriesResponseDatum.getId();
-                        }
-                      }
-                    });
-            }
-          }
-
-          @Override public void onFailure(Call<SubCategoriesResponse> call, Throwable t) {
-            Timber.d("Call failed with error : %s", t.getMessage());
-          }
-        });
+  @Override public void openReimbursementDetailsActivity(Integer claimId) {
+    Intent intent =
+        new Intent(SubmitReimbursementActivity.this, ReimbursementDetailsActivity.class);
+    intent.putExtra(ReimbursementDetailsActivity.REIMBURSEMENT_REQUEST_ID, claimId);
+    startActivity(intent);
+    finish();
   }
 }

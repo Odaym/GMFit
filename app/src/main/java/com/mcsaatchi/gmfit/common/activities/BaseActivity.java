@@ -76,6 +76,7 @@ public class BaseActivity extends AppCompatActivity
   @Override public void finishActivity() {
     finish();
   }
+
   public void setupToolbar(String activityName, Toolbar toolbar, String toolbarTitle,
       boolean backEnabled) {
 
@@ -119,7 +120,8 @@ public class BaseActivity extends AppCompatActivity
   @Override public void displayRequestErrorDialog(String responseMessage) {
     Timber.d("Call failed with error : %s", responseMessage);
     final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-    alertDialog.setMessage(getResources().getString(R.string.server_error_got_returned));
+    alertDialog.setTitle(R.string.error_occurred_dialog_title);
+    alertDialog.setMessage(responseMessage);
     alertDialog.show();
   }
 
@@ -131,7 +133,6 @@ public class BaseActivity extends AppCompatActivity
     alertDialog.setMessage(getString(R.string.login_failed_wrong_credentials));
     alertDialog.show();
   }
-
 
   @Override public boolean checkInternetAvailable() {
     return connectivityManager.getActiveNetworkInfo() != null

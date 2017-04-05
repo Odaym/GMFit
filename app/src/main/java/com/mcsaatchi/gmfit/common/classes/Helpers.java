@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
@@ -38,6 +40,10 @@ public class Helpers {
   public static Helpers helpers = null;
 
   private Helpers() {
+  }
+
+  public static RequestBody toRequestBody(String value) {
+    return RequestBody.create(MediaType.parse("text/plain"), value);
   }
 
   public static Helpers getInstance() {
