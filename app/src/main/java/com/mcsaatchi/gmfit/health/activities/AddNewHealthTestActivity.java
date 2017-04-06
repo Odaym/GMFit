@@ -3,14 +3,12 @@ package com.mcsaatchi.gmfit.health.activities;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
@@ -37,6 +35,7 @@ import com.mcsaatchi.gmfit.architecture.rest.TakenMedicalTestsResponseBody;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
+import com.mcsaatchi.gmfit.common.classes.ImageHandler;
 import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
@@ -47,8 +46,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
 import org.joda.time.DateTime;
 import org.joda.time.IllegalFieldValueException;
 import org.joda.time.LocalDate;
@@ -60,22 +57,20 @@ public class AddNewHealthTestActivity extends BaseActivity
   private static final int REQUEST_PICK_IMAGE_GALLERY = 329;
   private static final int CAPTURE_NEW_PICTURE_REQUEST_CODE = 871;
   private static final String ACTIVITY_TAG_TIME_PICKER = "activity_tag_time_picker";
+
   @Bind(R.id.toolbar) Toolbar toolbar;
   @Bind(R.id.dateTakenTV) TextView dateTakenTV;
   @Bind(R.id.testNameET) FormEditText testNameET;
-
   @Bind(R.id.addPic1) ImageView addPic1;
   @Bind(R.id.addPic2) ImageView addPic2;
   @Bind(R.id.addPic3) ImageView addPic3;
   @Bind(R.id.addPic4) ImageView addPic4;
   @Bind(R.id.addPic5) ImageView addPic5;
-
   @Bind(R.id.pictureHolder1) RelativeLayout pictureHolder1;
   @Bind(R.id.pictureHolder2) RelativeLayout pictureHolder2;
   @Bind(R.id.pictureHolder3) RelativeLayout pictureHolder3;
   @Bind(R.id.pictureHolder4) RelativeLayout pictureHolder4;
   @Bind(R.id.pictureHolder5) RelativeLayout pictureHolder5;
-
   @Bind(R.id.deletePic1) ImageView deletePic1;
   @Bind(R.id.deletePic2) ImageView deletePic2;
   @Bind(R.id.deletePic3) ImageView deletePic3;
@@ -249,26 +244,7 @@ public class AddNewHealthTestActivity extends BaseActivity
         cdp.show(getSupportFragmentManager(), ACTIVITY_TAG_TIME_PICKER);
       });
 
-      for (int i = 0; i < deleteButtonElements.size(); i++) {
-        final int finalI = i;
-        deleteButtonElements.get(i).setOnClickListener(view -> {
-          imageViewElements.get(finalI).setBackgroundResource(0);
-
-          addPictureElements.get(finalI).setVisibility(View.VISIBLE);
-
-          deleteButtonElements.get(finalI).setVisibility(View.GONE);
-
-          picturePaths.set(finalI, null);
-
-          if (existingMedicaltest != null && !existingMedicaltest.getImages().isEmpty()) {
-            try {
-              deletedImages.add(existingMedicaltest.getImages().get(finalI).getId());
-            } catch (IndexOutOfBoundsException e) {
-
-            }
-          }
-        });
-      }
+      hookupDeletImageButtons();
     }
 
     dateTakenTV.setOnClickListener(view -> {
@@ -283,20 +259,6 @@ public class AddNewHealthTestActivity extends BaseActivity
               .setThemeLight();
       cdp.show(getSupportFragmentManager(), ACTIVITY_TAG_TIME_PICKER);
     });
-  }
-
-  @Override
-  public void onDateSet(CalendarDatePickerDialogFragment dialog, int year, int monthOfYear,
-      int dayOfMonth) {
-    dateTakenTV.setText(
-        new DateFormatSymbols().getMonths()[monthOfYear] + " " + dayOfMonth + ", " + year);
-
-    try {
-      dateTakenForRequest = new SimpleDateFormat("yyyy-MM-dd").format(
-          new SimpleDateFormat("MMMM dd, yyyy").parse(dateTakenTV.getText().toString()));
-    } catch (ParseException e) {
-      e.printStackTrace();
-    }
   }
 
   @Override public boolean onCreateOptionsMenu(Menu menu) {
@@ -345,10 +307,68 @@ public class AddNewHealthTestActivity extends BaseActivity
       case REQUEST_PICK_IMAGE_GALLERY:
         if (data != null) {
           Uri selectedImageUri = data.getData();
-          String selectedImagePath = getPhotoPathFromGallery(selectedImageUri);
+          String selectedImagePath = ImageHandler.getPhotoPathFromGallery(this, selectedImageUri);
 
           addTestPicture(selectedImagePath);
         }
+    }
+  }
+
+  @Override public void onRequestPermissionsResult(int requestCode, String[] permissions,
+      int[] grantResults) {
+    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    switch (requestCode) {
+      case ASK_CAMERA_AND_STORAGE_PERMISSION:
+        if (grantResults.length > 0
+            && grantResults[0] == PackageManager.PERMISSION_GRANTED
+            && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+          showImagePickerDialog();
+        } else {
+          Toast.makeText(this,
+              "The app was not allowed to write to your storage or take use the device's Camera. Hence, it cannot function properly."
+                  + "Please consider granting it these permissions", Toast.LENGTH_LONG).show();
+        }
+        break;
+    }
+  }
+
+  @Override
+  public void onDateSet(CalendarDatePickerDialogFragment dialog, int year, int monthOfYear,
+      int dayOfMonth) {
+    dateTakenTV.setText(
+        new DateFormatSymbols().getMonths()[monthOfYear] + " " + dayOfMonth + ", " + year);
+
+    try {
+      dateTakenForRequest = new SimpleDateFormat("yyyy-MM-dd").format(
+          new SimpleDateFormat("MMMM dd, yyyy").parse(dateTakenTV.getText().toString()));
+    } catch (ParseException e) {
+      e.printStackTrace();
+    }
+  }
+
+  @Subscribe public void reflectMedicalTestEditCreate(MedicalTestEditCreateEvent event) {
+    finish();
+  }
+
+  @RequiresApi(api = Build.VERSION_CODES.M) public void triggerAddPicture(View view) {
+    String[] neededPermissions = new String[] {
+        Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
+
+    boolean hasCameraPermission =
+        (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
+            == PackageManager.PERMISSION_GRANTED);
+
+    boolean hasWriteStoragePermission =
+        (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+            == PackageManager.PERMISSION_GRANTED);
+
+    viewIdForTestPicture = view.getId();
+
+    if (!hasCameraPermission || !hasWriteStoragePermission) {
+      requestPermissions(neededPermissions, ASK_CAMERA_AND_STORAGE_PERMISSION);
+    } else {
+      showImagePickerDialog();
     }
   }
 
@@ -388,6 +408,8 @@ public class AddNewHealthTestActivity extends BaseActivity
         break;
     }
 
+    hookupDeletImageButtons();
+
     final RelativeLayout finalViewForPicture = viewForPicture;
 
     Picasso.with(AddNewHealthTestActivity.this)
@@ -411,46 +433,6 @@ public class AddNewHealthTestActivity extends BaseActivity
         });
   }
 
-  @RequiresApi(api = Build.VERSION_CODES.M) public void triggerAddPicture(View view) {
-    String[] neededPermissions = new String[] {
-        Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE
-    };
-
-    boolean hasCameraPermission =
-        (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
-            == PackageManager.PERMISSION_GRANTED);
-
-    boolean hasWriteStoragePermission =
-        (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-            == PackageManager.PERMISSION_GRANTED);
-
-    viewIdForTestPicture = view.getId();
-
-    if (!hasCameraPermission || !hasWriteStoragePermission) {
-      requestPermissions(neededPermissions, ASK_CAMERA_AND_STORAGE_PERMISSION);
-    } else {
-      showImagePickerDialog();
-    }
-  }
-
-  @Override public void onRequestPermissionsResult(int requestCode, String[] permissions,
-      int[] grantResults) {
-    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    switch (requestCode) {
-      case ASK_CAMERA_AND_STORAGE_PERMISSION:
-        if (grantResults.length > 0
-            && grantResults[0] == PackageManager.PERMISSION_GRANTED
-            && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-          showImagePickerDialog();
-        } else {
-          Toast.makeText(this,
-              "The app was not allowed to write to your storage or take use the device's Camera. Hence, it cannot function properly."
-                  + "Please consider granting it these permissions", Toast.LENGTH_LONG).show();
-        }
-        break;
-    }
-  }
-
   private void showImagePickerDialog() {
     AlertDialog.Builder builderSingle = new AlertDialog.Builder(this);
     builderSingle.setTitle("Choose a picture");
@@ -466,9 +448,6 @@ public class AddNewHealthTestActivity extends BaseActivity
       String strName = arrayAdapter.getItem(which);
       if (strName != null) {
         switch (strName) {
-          /**
-           * Can't case by String ID because it has to be constant, bleh
-           */
           case "Choose from gallery":
             Intent galleryIntent =
                 new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -488,7 +467,7 @@ public class AddNewHealthTestActivity extends BaseActivity
     if (takePictureIntent.resolveActivity(this.getPackageManager()) != null) {
       photoFile = null;
       try {
-        photoFile = createImageFile(constructImageFilename());
+        photoFile = ImageHandler.createImageFile(ImageHandler.constructImageFilename());
         photoFileUri = Uri.fromFile(photoFile);
       } catch (IOException ex) {
         ex.printStackTrace();
@@ -501,47 +480,28 @@ public class AddNewHealthTestActivity extends BaseActivity
     }
   }
 
-  private File createImageFile(String imagePath) throws IOException {
-    return new File(imagePath);
-  }
+  public void hookupDeletImageButtons() {
+    for (int i = 0; i < deleteButtonElements.size(); i++) {
+      final int finalI = i;
+      deleteButtonElements.get(i).setOnClickListener(view -> {
+        imageViewElements.get(finalI).setBackgroundResource(0);
 
-  private String constructImageFilename() {
-    String timeStamp =
-        new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
-    String imageFileName = "JPEG_" + timeStamp;
+        Timber.d("Delete button " + finalI + " clicked");
 
-    File mediaStorageDir =
-        new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-            "GMFit");
+        addPictureElements.get(finalI).setVisibility(View.VISIBLE);
 
-    if (!mediaStorageDir.exists()) {
-      if (!mediaStorageDir.mkdirs()) {
-        Log.d("Constants.DEBUG_TAG", "failed to create directory");
-        return null;
-      }
+        deleteButtonElements.get(finalI).setVisibility(View.GONE);
+
+        picturePaths.set(finalI, null);
+
+        if (existingMedicaltest != null && !existingMedicaltest.getImages().isEmpty()) {
+          try {
+            deletedImages.add(existingMedicaltest.getImages().get(finalI).getId());
+          } catch (IndexOutOfBoundsException e) {
+
+          }
+        }
+      });
     }
-
-    return mediaStorageDir.getPath() + File.separator + imageFileName;
-  }
-
-  public String getPhotoPathFromGallery(Uri uri) {
-    if (uri == null) {
-      // TODO perform some logging or show user feedback
-      return null;
-    }
-
-    String[] projection = { MediaStore.Images.Media.DATA };
-    Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
-    if (cursor != null) {
-      int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-      cursor.moveToFirst();
-      return cursor.getString(column_index);
-    }
-
-    return uri.getPath();
-  }
-
-  @Subscribe public void reflectMedicalTestEditCreate(MedicalTestEditCreateEvent event) {
-    finish();
   }
 }
