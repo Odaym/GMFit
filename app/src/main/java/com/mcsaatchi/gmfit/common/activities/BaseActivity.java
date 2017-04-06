@@ -19,7 +19,6 @@ import com.mcsaatchi.gmfit.architecture.PermissionsChecker;
 import com.mcsaatchi.gmfit.architecture.data_access.DBHelper;
 import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.common.Constants;
-import com.mcsaatchi.gmfit.common.presenters.BaseActivityPresenter;
 import javax.inject.Inject;
 import timber.log.Timber;
 

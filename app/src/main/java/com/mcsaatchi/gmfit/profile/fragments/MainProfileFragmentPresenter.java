@@ -9,7 +9,7 @@ import com.mcsaatchi.gmfit.architecture.rest.EmergencyProfileResponse;
 import com.mcsaatchi.gmfit.architecture.rest.MetaTextsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.UserProfileResponse;
 import com.mcsaatchi.gmfit.architecture.rest.UserProfileResponseDatum;
-import com.mcsaatchi.gmfit.common.presenters.BaseFragmentPresenter;
+import com.mcsaatchi.gmfit.common.fragments.BaseFragmentPresenter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;

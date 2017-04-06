@@ -4,7 +4,7 @@ import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.architecture.rest.ClaimsListResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ClaimsListResponseDatum;
-import com.mcsaatchi.gmfit.common.presenters.BaseActivityPresenter;
+import com.mcsaatchi.gmfit.common.activities.BaseActivityPresenter;
 import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;

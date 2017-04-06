@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.common.presenters.BaseFragmentPresenter;
 import timber.log.Timber;
 
 public class BaseFragment extends Fragment implements BaseFragmentPresenter.BaseFragmentView {

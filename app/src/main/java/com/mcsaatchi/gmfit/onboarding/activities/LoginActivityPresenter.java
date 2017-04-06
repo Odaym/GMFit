@@ -11,7 +11,7 @@ import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponseInnerBody;
 import com.mcsaatchi.gmfit.architecture.rest.UiResponse;
 import com.mcsaatchi.gmfit.architecture.rest.UserProfileResponse;
 import com.mcsaatchi.gmfit.common.Constants;
-import com.mcsaatchi.gmfit.common.presenters.BaseActivityPresenter;
+import com.mcsaatchi.gmfit.common.activities.BaseActivityPresenter;
 import java.util.List;
 import org.json.JSONException;
 import retrofit2.Call;

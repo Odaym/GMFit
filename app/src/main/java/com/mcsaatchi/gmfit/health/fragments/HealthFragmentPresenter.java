@@ -1,4 +1,4 @@
-package com.mcsaatchi.gmfit.health.presenters;
+package com.mcsaatchi.gmfit.health.fragments;
 
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
@@ -10,7 +10,7 @@ import com.mcsaatchi.gmfit.architecture.rest.WeightHistoryResponse;
 import com.mcsaatchi.gmfit.architecture.rest.WeightHistoryResponseDatum;
 import com.mcsaatchi.gmfit.architecture.rest.WidgetsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.WidgetsResponseDatum;
-import com.mcsaatchi.gmfit.common.presenters.BaseFragmentPresenter;
+import com.mcsaatchi.gmfit.common.fragments.BaseFragmentPresenter;
 import com.mcsaatchi.gmfit.health.models.HealthWidget;
 import com.mcsaatchi.gmfit.health.models.Medication;
 import java.util.ArrayList;
@@ -19,23 +19,23 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class HealthFragmentPresenter extends BaseFragmentPresenter {
+class HealthFragmentPresenter extends BaseFragmentPresenter {
   private HealthFragmentView view;
   private RuntimeExceptionDao<Medication, Integer> medicationDAO;
   private DataAccessHandler dataAccessHandler;
 
-  public HealthFragmentPresenter(HealthFragmentView view,
+  HealthFragmentPresenter(HealthFragmentView view,
       RuntimeExceptionDao<Medication, Integer> medicationDAO, DataAccessHandler dataAccessHandler) {
     this.view = view;
     this.medicationDAO = medicationDAO;
     this.dataAccessHandler = dataAccessHandler;
   }
 
-  public List<Medication> getMedicationsFromDB() {
+  List<Medication> getMedicationsFromDB() {
     return medicationDAO.queryForAll();
   }
 
-  public void getWidgets() {
+  void getWidgets() {
     dataAccessHandler.getWidgets("medical", new Callback<WidgetsResponse>() {
       @Override
       public void onResponse(Call<WidgetsResponse> call, Response<WidgetsResponse> response) {
@@ -71,7 +71,7 @@ public class HealthFragmentPresenter extends BaseFragmentPresenter {
     });
   }
 
-  public void getTakenMedicalTests() {
+  void getTakenMedicalTests() {
     dataAccessHandler.getTakenMedicalTests(new Callback<TakenMedicalTestsResponse>() {
       @Override public void onResponse(Call<TakenMedicalTestsResponse> call,
           Response<TakenMedicalTestsResponse> response) {
@@ -92,7 +92,7 @@ public class HealthFragmentPresenter extends BaseFragmentPresenter {
     });
   }
 
-  public void getUserWeight() {
+  void getUserWeight() {
     dataAccessHandler.getUserProfile(new Callback<UserProfileResponse>() {
       @Override public void onResponse(Call<UserProfileResponse> call,
           Response<UserProfileResponse> response) {
@@ -113,7 +113,7 @@ public class HealthFragmentPresenter extends BaseFragmentPresenter {
     });
   }
 
-  public void setupUserWeightChart() {
+  void setupUserWeightChart() {
     dataAccessHandler.getUserWeightHistory(new Callback<WeightHistoryResponse>() {
       @Override public void onResponse(Call<WeightHistoryResponse> call,
           Response<WeightHistoryResponse> response) {
@@ -134,7 +134,7 @@ public class HealthFragmentPresenter extends BaseFragmentPresenter {
     });
   }
 
-  public interface HealthFragmentView extends BaseFragmentView {
+  interface HealthFragmentView extends BaseFragmentView {
     void setupWidgetViews(ArrayList<HealthWidget> healthWidgetsMap);
 
     void displayTakenMedicalTests(List<TakenMedicalTestsResponseBody> takenMedicalTests);

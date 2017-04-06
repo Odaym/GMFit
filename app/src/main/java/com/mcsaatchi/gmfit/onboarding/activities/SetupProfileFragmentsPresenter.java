@@ -14,7 +14,7 @@ import com.mcsaatchi.gmfit.architecture.rest.UiResponse;
 import com.mcsaatchi.gmfit.architecture.rest.UserGoalsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.UserGoalsResponseBody;
 import com.mcsaatchi.gmfit.common.Constants;
-import com.mcsaatchi.gmfit.common.presenters.BaseFragmentPresenter;
+import com.mcsaatchi.gmfit.common.fragments.BaseFragmentPresenter;
 import java.util.ArrayList;
 import java.util.List;
 import retrofit2.Call;

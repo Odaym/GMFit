@@ -3,7 +3,7 @@ package com.mcsaatchi.gmfit.insurance.activities.approval_request;
 import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.architecture.rest.CreateNewRequestResponse;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
-import com.mcsaatchi.gmfit.common.presenters.BaseActivityPresenter;
+import com.mcsaatchi.gmfit.common.activities.BaseActivityPresenter;
 import java.util.HashMap;
 import okhttp3.RequestBody;
 import retrofit2.Call;

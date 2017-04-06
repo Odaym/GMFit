@@ -52,7 +52,6 @@ import com.mcsaatchi.gmfit.health.adapters.MedicationsRecyclerAdapter;
 import com.mcsaatchi.gmfit.health.adapters.UserTestsRecyclerAdapter;
 import com.mcsaatchi.gmfit.health.models.HealthWidget;
 import com.mcsaatchi.gmfit.health.models.Medication;
-import com.mcsaatchi.gmfit.health.presenters.HealthFragmentPresenter;
 import com.squareup.otto.Subscribe;
 import java.util.ArrayList;
 import java.util.Collections;

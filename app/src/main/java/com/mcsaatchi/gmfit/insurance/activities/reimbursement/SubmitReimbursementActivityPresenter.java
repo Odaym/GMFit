@@ -6,7 +6,7 @@ import com.mcsaatchi.gmfit.architecture.rest.CreateNewRequestResponse;
 import com.mcsaatchi.gmfit.architecture.rest.SubCategoriesResponse;
 import com.mcsaatchi.gmfit.architecture.rest.SubCategoriesResponseDatum;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
-import com.mcsaatchi.gmfit.common.presenters.BaseActivityPresenter;
+import com.mcsaatchi.gmfit.common.activities.BaseActivityPresenter;
 import java.util.HashMap;
 import java.util.List;
 import okhttp3.RequestBody;

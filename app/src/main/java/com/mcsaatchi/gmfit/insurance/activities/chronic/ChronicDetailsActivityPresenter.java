@@ -5,7 +5,7 @@ import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.architecture.rest.ChronicTreatmentDetailsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ChronicTreatmentDetailsResponseMedicationItem;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
-import com.mcsaatchi.gmfit.common.presenters.BaseActivityPresenter;
+import com.mcsaatchi.gmfit.common.activities.BaseActivityPresenter;
 import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;

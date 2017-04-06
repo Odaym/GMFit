@@ -3,7 +3,7 @@ package com.mcsaatchi.gmfit.profile.activities;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.architecture.rest.DefaultGetResponse;
-import com.mcsaatchi.gmfit.common.presenters.BaseActivityPresenter;
+import com.mcsaatchi.gmfit.common.activities.BaseActivityPresenter;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

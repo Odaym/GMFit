@@ -1,4 +1,4 @@
-package com.mcsaatchi.gmfit.fitness.presenters;
+package com.mcsaatchi.gmfit.fitness.fragments;
 
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.mcsaatchi.gmfit.R;
@@ -12,7 +12,7 @@ import com.mcsaatchi.gmfit.architecture.rest.UserGoalMetricsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.WidgetsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.WidgetsResponseDatum;
 import com.mcsaatchi.gmfit.common.models.DataChart;
-import com.mcsaatchi.gmfit.common.presenters.BaseFragmentPresenter;
+import com.mcsaatchi.gmfit.common.fragments.BaseFragmentPresenter;
 import com.mcsaatchi.gmfit.fitness.models.FitnessWidget;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -22,12 +22,12 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import timber.log.Timber;
 
-public class FitnessFragmentPresenter extends BaseFragmentPresenter {
+class FitnessFragmentPresenter extends BaseFragmentPresenter {
   private FitnessFragmentView view;
   private RuntimeExceptionDao<FitnessWidget, Integer> fitnessWidgetsDAO;
   private DataAccessHandler dataAccessHandler;
 
-  public FitnessFragmentPresenter(FitnessFragmentView view,
+  FitnessFragmentPresenter(FitnessFragmentView view,
       RuntimeExceptionDao<FitnessWidget, Integer> fitnessWidgetsDAO,
       DataAccessHandler dataAccessHandler) {
     this.view = view;
@@ -35,7 +35,7 @@ public class FitnessFragmentPresenter extends BaseFragmentPresenter {
     this.dataAccessHandler = dataAccessHandler;
   }
 
-  public void getUserGoalMetrics(String date, String type, final boolean requestingPreviousData) {
+  void getUserGoalMetrics(String date, String type, final boolean requestingPreviousData) {
     view.showMetricsLoadingBar();
 
     dataAccessHandler.getUserGoalMetrics(date, type, new Callback<UserGoalMetricsResponse>() {
@@ -61,8 +61,7 @@ public class FitnessFragmentPresenter extends BaseFragmentPresenter {
     });
   }
 
-  public void getPeriodicalChartData(final DataChart chartObject, String desiredDate,
-      String fromDate) {
+  void getPeriodicalChartData(final DataChart chartObject, String desiredDate, String fromDate) {
     dataAccessHandler.getPeriodicalChartData(fromDate, desiredDate, "fitness",
         chartObject.getType(), new Callback<ChartMetricBreakdownResponse>() {
           @Override public void onResponse(Call<ChartMetricBreakdownResponse> call,
@@ -80,7 +79,7 @@ public class FitnessFragmentPresenter extends BaseFragmentPresenter {
         });
   }
 
-  public void getBreakdownDataForChart(DataChart chartObject) {
+  void getBreakdownDataForChart(DataChart chartObject) {
     view.callDisplayWaitingDialog(R.string.grabbing_breakdown_data_dialog_title);
 
     dataAccessHandler.getSlugBreakdownForChart(chartObject.getType(),
@@ -102,7 +101,7 @@ public class FitnessFragmentPresenter extends BaseFragmentPresenter {
         });
   }
 
-  public void getWidgetsWithDate(String finalDate) {
+  void getWidgetsWithDate(String finalDate) {
     dataAccessHandler.getWidgetsWithDate("fitness", finalDate, new Callback<WidgetsResponse>() {
       @Override
       public void onResponse(Call<WidgetsResponse> call, Response<WidgetsResponse> response) {
@@ -122,7 +121,7 @@ public class FitnessFragmentPresenter extends BaseFragmentPresenter {
     });
   }
 
-  public void deleteUserChart(DataChart chartObject, String todayDate) {
+  void deleteUserChart(DataChart chartObject, String todayDate) {
     view.callDisplayWaitingDialog(R.string.deleting_chart_dialog_title);
 
     dataAccessHandler.deleteUserChart(String.valueOf(chartObject.getChart_id()),
@@ -143,7 +142,7 @@ public class FitnessFragmentPresenter extends BaseFragmentPresenter {
         });
   }
 
-  public void updateUserCharts(int[] chartIds, int[] chartPositions) {
+  void updateUserCharts(int[] chartIds, int[] chartPositions) {
     dataAccessHandler.updateUserCharts(chartIds, chartPositions,
         new Callback<DefaultGetResponse>() {
           @Override public void onResponse(Call<DefaultGetResponse> call,
@@ -161,7 +160,7 @@ public class FitnessFragmentPresenter extends BaseFragmentPresenter {
         });
   }
 
-  public ArrayList<FitnessWidget> getWidgetsFromDB() {
+  ArrayList<FitnessWidget> getWidgetsFromDB() {
     try {
       return (ArrayList<FitnessWidget>) fitnessWidgetsDAO.queryBuilder()
           .orderBy("position", true)
@@ -173,7 +172,7 @@ public class FitnessFragmentPresenter extends BaseFragmentPresenter {
     return null;
   }
 
-  public interface FitnessFragmentView extends BaseFragmentView {
+  interface FitnessFragmentView extends BaseFragmentView {
     void showMetricsLoadingBar();
 
     void displayUserGoalMetrics(String maxValue, String currentValue,

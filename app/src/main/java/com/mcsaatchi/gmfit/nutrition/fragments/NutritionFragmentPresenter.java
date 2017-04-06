@@ -18,7 +18,7 @@ import com.mcsaatchi.gmfit.architecture.rest.UserMealsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.UserMealsResponseInner;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.models.DataChart;
-import com.mcsaatchi.gmfit.common.presenters.BaseFragmentPresenter;
+import com.mcsaatchi.gmfit.common.fragments.BaseFragmentPresenter;
 import java.util.ArrayList;
 import java.util.List;
 import org.joda.time.LocalDate;

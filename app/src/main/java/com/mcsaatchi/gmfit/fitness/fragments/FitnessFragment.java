@@ -50,7 +50,6 @@ import com.mcsaatchi.gmfit.common.fragments.BaseFragment;
 import com.mcsaatchi.gmfit.common.models.DataChart;
 import com.mcsaatchi.gmfit.fitness.adapters.FitnessWidgetsRecyclerAdapter;
 import com.mcsaatchi.gmfit.fitness.models.FitnessWidget;
-import com.mcsaatchi.gmfit.fitness.presenters.FitnessFragmentPresenter;
 import com.squareup.otto.Subscribe;
 import java.text.DecimalFormat;
 import java.util.ArrayList;

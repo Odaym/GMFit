@@ -1,4 +1,4 @@
-package com.mcsaatchi.gmfit.common.presenters;
+package com.mcsaatchi.gmfit.common.activities;
 
 import android.app.ProgressDialog;
 

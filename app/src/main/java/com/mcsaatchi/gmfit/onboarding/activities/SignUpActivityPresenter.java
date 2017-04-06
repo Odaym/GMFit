@@ -4,7 +4,7 @@ import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponse;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponseInnerBody;
-import com.mcsaatchi.gmfit.common.presenters.BaseActivityPresenter;
+import com.mcsaatchi.gmfit.common.activities.BaseActivityPresenter;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

@@ -6,7 +6,7 @@ import com.mcsaatchi.gmfit.architecture.rest.AddCRMNoteResponse;
 import com.mcsaatchi.gmfit.architecture.rest.CRMNotesResponse;
 import com.mcsaatchi.gmfit.architecture.rest.CRMNotesResponseNoteAttribute;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
-import com.mcsaatchi.gmfit.common.presenters.BaseActivityPresenter;
+import com.mcsaatchi.gmfit.common.activities.BaseActivityPresenter;
 import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
