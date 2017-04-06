@@ -3,8 +3,6 @@ package com.mcsaatchi.gmfit.insurance.activities.chronic;
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -26,7 +24,6 @@ import com.mcsaatchi.gmfit.insurance.activities.reimbursement.ReimbursementDetai
 import com.mcsaatchi.gmfit.insurance.presenters.SubmitChronicActivityPresenter;
 import com.mcsaatchi.gmfit.insurance.widget.CustomAttachmentPicker;
 import com.squareup.picasso.Picasso;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -188,7 +185,7 @@ public class SubmitChronicActivity extends BaseActivity
     for (int i = 0; i < imagePaths.size(); i++) {
       if (imagePaths.get(i) != null) {
         imageParts.put("attachements[" + i + "][content]", toRequestBody(
-            Base64.encodeToString(turnImageToByteArray(imagePaths.get(i)), Base64.NO_WRAP)));
+            Base64.encodeToString(ImageHandler.turnImageToByteArray(imagePaths.get(i)), Base64.NO_WRAP)));
         imageParts.put("attachements[" + i + "][documType]", toRequestBody("2"));
         imageParts.put("attachements[" + i + "][name]", toRequestBody(imagePaths.get(i)));
         imageParts.put("attachements[" + i + "][id]", toRequestBody(String.valueOf(i + 1)));
@@ -196,14 +193,6 @@ public class SubmitChronicActivity extends BaseActivity
     }
 
     return imageParts;
-  }
-
-  private byte[] turnImageToByteArray(String imagePath) {
-    Bitmap bm = BitmapFactory.decodeFile(imagePath);
-    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    bm.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-
-    return baos.toByteArray();
   }
 
   @Override public void openChronicTrackActivity(Integer requestId) {

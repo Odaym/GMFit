@@ -3,12 +3,8 @@ package com.mcsaatchi.gmfit.insurance.activities.inquiry;
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
@@ -16,7 +12,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -37,15 +32,12 @@ import com.mcsaatchi.gmfit.architecture.rest.CRMNotesResponseNoteAttribute;
 import com.mcsaatchi.gmfit.architecture.rest.InquiriesListResponseInnerData;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
+import com.mcsaatchi.gmfit.common.classes.ImageHandler;
 import com.squareup.picasso.Picasso;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -97,7 +89,7 @@ public class InquiryDetailsNotesActivity extends BaseActivity {
   @OnClick(R.id.sendMessageIV) public void handleSendMessage() {
     if (Helpers.validateFields(allFields)) {
       if (imageAttachment != null) {
-        documentBody = Base64.encodeToString(turnImageToByteArray(imageAttachment), Base64.NO_WRAP);
+        documentBody = Base64.encodeToString(ImageHandler.turnImageToByteArray(imageAttachment), Base64.NO_WRAP);
       }
 
       addCRMNote(inquiryItem.getIncidentId(), null, yourReplyET.getText().toString(), "image/jpeg",
@@ -156,7 +148,7 @@ public class InquiryDetailsNotesActivity extends BaseActivity {
       case REQUEST_PICK_IMAGE_GALLERY:
         if (data != null) {
           Uri selectedImageUri = data.getData();
-          String selectedImagePath = getPhotoPathFromGallery(selectedImageUri);
+          String selectedImagePath = ImageHandler.getPhotoPathFromGallery(this, selectedImageUri);
 
           imagePlaceHolderIV.setVisibility(View.VISIBLE);
 
@@ -197,7 +189,7 @@ public class InquiryDetailsNotesActivity extends BaseActivity {
             if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
               photoFile = null;
               try {
-                photoFile = createImageFile(constructImageFilename());
+                photoFile = ImageHandler.createImageFile(ImageHandler.constructImageFilename());
                 photoFileUri = Uri.fromFile(photoFile);
               } catch (IOException ex) {
                 ex.printStackTrace();
@@ -316,7 +308,7 @@ public class InquiryDetailsNotesActivity extends BaseActivity {
 
               if (noteAttributesList.get(i).getDocumentBody() != null) {
                 messageImageIV.setImageBitmap(
-                    turnBase64ToImage(noteAttributesList.get(i).getDocumentBody()));
+                    ImageHandler.turnBase64ToImage(noteAttributesList.get(i).getDocumentBody()));
               }
 
               LinearLayout.LayoutParams params =
@@ -350,59 +342,6 @@ public class InquiryDetailsNotesActivity extends BaseActivity {
         alertDialog.show();
       }
     });
-  }
-
-  private File createImageFile(String imagePath) throws IOException {
-    return new File(imagePath);
-  }
-
-  private String getPhotoPathFromGallery(Uri uri) {
-    if (uri == null) {
-      // TODO perform some logging or show user feedback
-      return null;
-    }
-
-    String[] projection = { MediaStore.Images.Media.DATA };
-    Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
-    if (cursor != null) {
-      int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-      cursor.moveToFirst();
-      return cursor.getString(column_index);
-    }
-
-    return uri.getPath();
-  }
-
-  private String constructImageFilename() {
-    String timeStamp =
-        new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
-    String imageFileName = "JPEG_" + timeStamp;
-
-    File mediaStorageDir =
-        new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-            "GMFit");
-
-    if (!mediaStorageDir.exists()) {
-      if (!mediaStorageDir.mkdirs()) {
-        Log.d("Constants.DEBUG_TAG", "failed to create directory");
-        return null;
-      }
-    }
-
-    return mediaStorageDir.getPath() + File.separator + imageFileName;
-  }
-
-  private byte[] turnImageToByteArray(String imagePath) {
-    Bitmap bm = BitmapFactory.decodeFile(imagePath);
-    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    bm.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-
-    return baos.toByteArray();
-  }
-
-  private Bitmap turnBase64ToImage(String base64String) {
-    byte[] decodedString = Base64.decode(base64String, Base64.DEFAULT);
-    return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
   }
 
   private void hideImagePlaceHolder() {

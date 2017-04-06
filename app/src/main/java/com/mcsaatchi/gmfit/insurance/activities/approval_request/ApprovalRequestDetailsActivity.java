@@ -1,10 +1,7 @@
 package com.mcsaatchi.gmfit.insurance.activities.approval_request;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Base64;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.mcsaatchi.gmfit.R;
@@ -12,6 +9,7 @@ import com.mcsaatchi.gmfit.architecture.rest.ClaimListDetailsResponseDatum;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
+import com.mcsaatchi.gmfit.common.classes.ImageHandler;
 import com.mcsaatchi.gmfit.insurance.presenters.ApprovalRequestDetailsActivityPresenter;
 import com.mcsaatchi.gmfit.insurance.widget.CustomAttachmentPicker;
 import com.mcsaatchi.gmfit.insurance.widget.ItemLabel;
@@ -64,34 +62,29 @@ public class ApprovalRequestDetailsActivity extends BaseActivity
       switch (responseDatum.getImages().get(i).getDocumType()) {
         case 1:
           medicalReportImagesPicker.returnImagePicker(i)
-              .setImageBitmap(turnBase64ToImage(responseDatum.getImages().get(i).getContent()));
+              .setImageBitmap(ImageHandler.turnBase64ToImage(responseDatum.getImages().get(i).getContent()));
           break;
         case 2:
           invoiceImagesPicker.returnImagePicker(i)
-              .setImageBitmap(turnBase64ToImage(responseDatum.getImages().get(i).getContent()));
+              .setImageBitmap(ImageHandler.turnBase64ToImage(responseDatum.getImages().get(i).getContent()));
           break;
         case 3:
           identityCardImagesPicker.returnImagePicker(i)
-              .setImageBitmap(turnBase64ToImage(responseDatum.getImages().get(i).getContent()));
+              .setImageBitmap(ImageHandler.turnBase64ToImage(responseDatum.getImages().get(i).getContent()));
           break;
         case 4:
           passportImagesPicker.returnImagePicker(i)
-              .setImageBitmap(turnBase64ToImage(responseDatum.getImages().get(i).getContent()));
+              .setImageBitmap(ImageHandler.turnBase64ToImage(responseDatum.getImages().get(i).getContent()));
           break;
         case 5:
           testResultsImagesPicker.returnImagePicker(i)
-              .setImageBitmap(turnBase64ToImage(responseDatum.getImages().get(i).getContent()));
+              .setImageBitmap(ImageHandler.turnBase64ToImage(responseDatum.getImages().get(i).getContent()));
           break;
         case 6:
           otherDocumentsImagesPicker.returnImagePicker(i)
-              .setImageBitmap(turnBase64ToImage(responseDatum.getImages().get(i).getContent()));
+              .setImageBitmap(ImageHandler.turnBase64ToImage(responseDatum.getImages().get(i).getContent()));
           break;
       }
     }
-  }
-
-  private Bitmap turnBase64ToImage(String base64String) {
-    byte[] decodedString = Base64.decode(base64String, Base64.DEFAULT);
-    return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
   }
 }

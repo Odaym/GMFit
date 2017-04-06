@@ -1,10 +1,7 @@
 package com.mcsaatchi.gmfit.insurance.activities.reimbursement;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Base64;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.mcsaatchi.gmfit.R;
@@ -12,6 +9,7 @@ import com.mcsaatchi.gmfit.architecture.rest.ClaimListDetailsResponseDatum;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
+import com.mcsaatchi.gmfit.common.classes.ImageHandler;
 import com.mcsaatchi.gmfit.insurance.presenters.ReimbursementDetailsActivityPresenter;
 import com.mcsaatchi.gmfit.insurance.widget.CustomAttachmentPicker;
 import com.mcsaatchi.gmfit.insurance.widget.ItemLabel;
@@ -35,8 +33,6 @@ public class ReimbursementDetailsActivity extends BaseActivity
   @Bind(R.id.testResultsImagesPicker) CustomAttachmentPicker testResultsImagesPicker;
   @Bind(R.id.otherDocumentsImagesPicker) CustomAttachmentPicker otherDocumentsImagesPicker;
 
-  private ReimbursementDetailsActivityPresenter presenter;
-
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
@@ -44,7 +40,8 @@ public class ReimbursementDetailsActivity extends BaseActivity
 
     ButterKnife.bind(this);
 
-    presenter = new ReimbursementDetailsActivityPresenter(this, dataAccessHandler);
+    ReimbursementDetailsActivityPresenter presenter =
+        new ReimbursementDetailsActivityPresenter(this, dataAccessHandler);
 
     Bundle incomingExtras = getIntent().getExtras();
 
@@ -54,11 +51,6 @@ public class ReimbursementDetailsActivity extends BaseActivity
       presenter.getReimbursementClaimDetails(
           prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""), requestId);
     }
-  }
-
-  private Bitmap turnBase64ToImage(String base64String) {
-    byte[] decodedString = Base64.decode(base64String, Base64.DEFAULT);
-    return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
   }
 
   @Override public void populateClaimDetails(ClaimListDetailsResponseDatum claimDetails) {
@@ -77,27 +69,27 @@ public class ReimbursementDetailsActivity extends BaseActivity
       switch (claimDetails.getImages().get(i).getDocumType()) {
         case 2:
           medicalReportImagesPicker.returnImagePicker(i)
-              .setImageBitmap(turnBase64ToImage(claimDetails.getImages().get(i).getContent()));
+              .setImageBitmap(ImageHandler.turnBase64ToImage(claimDetails.getImages().get(i).getContent()));
           break;
         case 3:
           invoiceImagesPicker.returnImagePicker(i)
-              .setImageBitmap(turnBase64ToImage(claimDetails.getImages().get(i).getContent()));
+              .setImageBitmap(ImageHandler.turnBase64ToImage(claimDetails.getImages().get(i).getContent()));
           break;
         case 4:
           identityCardImagesPicker.returnImagePicker(i)
-              .setImageBitmap(turnBase64ToImage(claimDetails.getImages().get(i).getContent()));
+              .setImageBitmap(ImageHandler.turnBase64ToImage(claimDetails.getImages().get(i).getContent()));
           break;
         case 5:
           passportImagesPicker.returnImagePicker(i)
-              .setImageBitmap(turnBase64ToImage(claimDetails.getImages().get(i).getContent()));
+              .setImageBitmap(ImageHandler.turnBase64ToImage(claimDetails.getImages().get(i).getContent()));
           break;
         case 6:
           testResultsImagesPicker.returnImagePicker(i)
-              .setImageBitmap(turnBase64ToImage(claimDetails.getImages().get(i).getContent()));
+              .setImageBitmap(ImageHandler.turnBase64ToImage(claimDetails.getImages().get(i).getContent()));
           break;
         case 7:
           otherDocumentsImagesPicker.returnImagePicker(i)
-              .setImageBitmap(turnBase64ToImage(claimDetails.getImages().get(i).getContent()));
+              .setImageBitmap(ImageHandler.turnBase64ToImage(claimDetails.getImages().get(i).getContent()));
           break;
       }
     }
