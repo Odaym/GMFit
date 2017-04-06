@@ -26,27 +26,24 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.andreabaccega.widget.FormEditText;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.rest.AddCRMNoteResponse;
-import com.mcsaatchi.gmfit.architecture.rest.CRMNotesResponse;
 import com.mcsaatchi.gmfit.architecture.rest.CRMNotesResponseNoteAttribute;
 import com.mcsaatchi.gmfit.architecture.rest.InquiriesListResponseInnerData;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.common.classes.ImageHandler;
+import com.mcsaatchi.gmfit.insurance.presenters.InquiryNotesActivityPresenter;
 import com.squareup.picasso.Picasso;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import timber.log.Timber;
 
 import static com.mcsaatchi.gmfit.insurance.widget.CustomAttachmentPicker.CAPTURE_NEW_PICTURE_REQUEST_CODE;
 import static com.mcsaatchi.gmfit.insurance.widget.CustomAttachmentPicker.REQUEST_PICK_IMAGE_GALLERY;
 
-public class InquiryDetailsNotesActivity extends BaseActivity {
+public class InquiryNotesActivity extends BaseActivity
+    implements InquiryNotesActivityPresenter.InquiryNotesActivityView {
   private static final int REQUEST_CAPTURE_PERMISSIONS = 123;
 
   @Bind(R.id.toolbar) Toolbar toolbar;
@@ -56,11 +53,13 @@ public class InquiryDetailsNotesActivity extends BaseActivity {
   @Bind(R.id.imagePlaceHolderIV) ImageView imagePlaceHolderIV;
   @Bind(R.id.yourReplyET) FormEditText yourReplyET;
 
+  private ProgressDialog waitingDialog;
   private String imageAttachment = null;
   private String mimeType = null;
   private String documentBody = null;
 
   private ArrayList<FormEditText> allFields = new ArrayList<>();
+  private InquiryNotesActivityPresenter presenter;
 
   private File photoFile;
   private Uri photoFileUri;
@@ -75,36 +74,16 @@ public class InquiryDetailsNotesActivity extends BaseActivity {
 
     allFields.add(yourReplyET);
 
+    presenter = new InquiryNotesActivityPresenter(this, dataAccessHandler);
+
     if (getIntent().getExtras() != null) {
       inquiryItem = getIntent().getExtras().getParcelable("INQUIRY_OBJECT");
 
       if (inquiryItem != null) {
         setupToolbar(getClass().getSimpleName(), toolbar, inquiryItem.getTitle(), true);
 
-        getCRMIncidentNotes(inquiryItem.getIncidentId());
+        presenter.getCRMIncidentNotes(inquiryItem.getIncidentId());
       }
-    }
-  }
-
-  @OnClick(R.id.sendMessageIV) public void handleSendMessage() {
-    if (Helpers.validateFields(allFields)) {
-      if (imageAttachment != null) {
-        documentBody = Base64.encodeToString(ImageHandler.turnImageToByteArray(imageAttachment), Base64.NO_WRAP);
-      }
-
-      addCRMNote(inquiryItem.getIncidentId(), null, yourReplyET.getText().toString(), "image/jpeg",
-          imageAttachment, documentBody);
-    }
-  }
-
-  @OnClick(R.id.attachImageIV) public void handleAttachImage() {
-    if (permChecker.lacksPermissions(Manifest.permission.CAMERA,
-        Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-      ActivityCompat.requestPermissions(this,
-          new String[] { Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE },
-          REQUEST_CAPTURE_PERMISSIONS);
-    } else {
-      showImagePickerDialog();
     }
   }
 
@@ -156,6 +135,79 @@ public class InquiryDetailsNotesActivity extends BaseActivity {
 
           Picasso.with(this).load(new File(selectedImagePath)).fit().into(imagePlaceHolderIV);
         }
+    }
+  }
+
+  @Override
+  public void displayCRMIncidentNotes(List<CRMNotesResponseNoteAttribute> noteAttributesList) {
+    for (int i = 0; i < noteAttributesList.size(); i++) {
+      LayoutInflater inflater = getLayoutInflater();
+
+      View noteView = inflater.inflate(R.layout.individual_crm_note, null);
+
+      TextView senderNameTV = (TextView) noteView.findViewById(R.id.senderNameTV);
+      TextView sentDateTV = (TextView) noteView.findViewById(R.id.sentDateTV);
+      TextView messageContentTV = (TextView) noteView.findViewById(R.id.messageContentTV);
+      ImageView messageImageIV = (ImageView) noteView.findViewById(R.id.messageImageIV);
+
+      if (noteAttributesList.get(i).getCreatedBy() != null) {
+        senderNameTV.setText(noteAttributesList.get(i).getCreatedBy());
+      }
+
+      if (noteAttributesList.get(i).getNoteText() != null) {
+        messageContentTV.setText(noteAttributesList.get(i).getNoteText());
+      }
+
+      if (noteAttributesList.get(i).getDocumentBody() != null) {
+        messageImageIV.setImageBitmap(
+            ImageHandler.turnBase64ToImage(noteAttributesList.get(i).getDocumentBody()));
+      }
+
+      LinearLayout.LayoutParams params =
+          new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+              LinearLayout.LayoutParams.WRAP_CONTENT);
+
+      params.setMargins(0, 0, 0, getResources().getDimensionPixelSize(R.dimen.default_margin_3));
+      noteView.setLayoutParams(params);
+
+      mainNotesLayout.addView(noteView);
+    }
+
+    final Handler handler = new Handler();
+
+    handler.postDelayed(() -> mainScrollView.fullScroll(View.FOCUS_DOWN), 500);
+  }
+
+  @Override public void dismissWaitingDialog() {
+    waitingDialog.dismiss();
+  }
+
+  @Override public void clearViews() {
+    mainNotesLayout.removeAllViews();
+    yourReplyET.setText("");
+    hideImagePlaceHolder();
+  }
+
+  @OnClick(R.id.sendMessageIV) public void handleSendMessage() {
+    if (Helpers.validateFields(allFields)) {
+      if (imageAttachment != null) {
+        documentBody = Base64.encodeToString(ImageHandler.turnImageToByteArray(imageAttachment),
+            Base64.NO_WRAP);
+      }
+
+      addCRMNote(inquiryItem.getIncidentId(), null, yourReplyET.getText().toString(), "image/jpeg",
+          imageAttachment, documentBody);
+    }
+  }
+
+  @OnClick(R.id.attachImageIV) public void handleAttachImage() {
+    if (permChecker.lacksPermissions(Manifest.permission.CAMERA,
+        Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+      ActivityCompat.requestPermissions(this,
+          new String[] { Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE },
+          REQUEST_CAPTURE_PERMISSIONS);
+    } else {
+      showImagePickerDialog();
     }
   }
 
@@ -215,7 +267,7 @@ public class InquiryDetailsNotesActivity extends BaseActivity {
     final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
     alertDialog.setTitle(R.string.submitting_data_dialog_title);
 
-    final ProgressDialog waitingDialog = new ProgressDialog(this);
+    waitingDialog = new ProgressDialog(this);
     waitingDialog.setTitle(getResources().getString(R.string.submitting_data_dialog_title));
     waitingDialog.setMessage(getResources().getString(R.string.please_wait_dialog_message));
 
@@ -227,121 +279,10 @@ public class InquiryDetailsNotesActivity extends BaseActivity {
         });
 
     waitingDialog.setOnShowListener(
-        dialogInterface -> dataAccessHandler.addCRMNote(incidentId, subject, noteText, mimeType,
-            fileName, documentBody, new Callback<AddCRMNoteResponse>() {
-
-              @Override public void onResponse(Call<AddCRMNoteResponse> call,
-                  Response<AddCRMNoteResponse> response) {
-
-                switch (response.code()) {
-                  case 200:
-                    mainNotesLayout.removeAllViews();
-
-                    getCRMIncidentNotes(inquiryItem.getIncidentId());
-
-                    yourReplyET.setText("");
-
-                    hideImagePlaceHolder();
-
-                    break;
-                  case 449:
-                    alertDialog.setMessage(
-                        Helpers.provideErrorStringFromJSON(response.errorBody()));
-                    alertDialog.show();
-                    break;
-                }
-
-                waitingDialog.dismiss();
-              }
-
-              @Override public void onFailure(Call<AddCRMNoteResponse> call, Throwable t) {
-                Timber.d("Call failed with error : %s", t.getMessage());
-                alertDialog.setMessage(getString(R.string.server_error_got_returned));
-                alertDialog.show();
-              }
-            }));
+        dialogInterface -> presenter.addCRMNote(incidentId, subject, noteText, mimeType, fileName,
+            documentBody));
 
     waitingDialog.show();
-  }
-
-  private void getCRMIncidentNotes(String incidentId) {
-    final ProgressDialog waitingDialog = new ProgressDialog(this);
-    waitingDialog.setTitle(getResources().getString(R.string.loading_data_dialog_title));
-    waitingDialog.setMessage(getResources().getString(R.string.please_wait_dialog_message));
-    waitingDialog.show();
-
-    final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-    alertDialog.setTitle(R.string.loading_data_dialog_title);
-    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getResources().getString(R.string.ok),
-        (dialog, which) -> {
-          dialog.dismiss();
-
-          if (waitingDialog.isShowing()) waitingDialog.dismiss();
-        });
-
-    dataAccessHandler.getCRMIncidentNotes(incidentId, new Callback<CRMNotesResponse>() {
-      @Override
-      public void onResponse(Call<CRMNotesResponse> call, Response<CRMNotesResponse> response) {
-
-        switch (response.code()) {
-          case 200:
-            List<CRMNotesResponseNoteAttribute> noteAttributesList =
-                response.body().getData().getBody().getData().getNoteAttributesLst();
-
-            for (int i = 0; i < noteAttributesList.size(); i++) {
-              LayoutInflater inflater = getLayoutInflater();
-
-              View noteView = inflater.inflate(R.layout.individual_crm_note, null);
-
-              TextView senderNameTV = (TextView) noteView.findViewById(R.id.senderNameTV);
-              TextView sentDateTV = (TextView) noteView.findViewById(R.id.sentDateTV);
-              TextView messageContentTV = (TextView) noteView.findViewById(R.id.messageContentTV);
-              ImageView messageImageIV = (ImageView) noteView.findViewById(R.id.messageImageIV);
-
-              if (noteAttributesList.get(i).getCreatedBy() != null) {
-                senderNameTV.setText(noteAttributesList.get(i).getCreatedBy());
-              }
-
-              if (noteAttributesList.get(i).getNoteText() != null) {
-                messageContentTV.setText(noteAttributesList.get(i).getNoteText());
-              }
-
-              if (noteAttributesList.get(i).getDocumentBody() != null) {
-                messageImageIV.setImageBitmap(
-                    ImageHandler.turnBase64ToImage(noteAttributesList.get(i).getDocumentBody()));
-              }
-
-              LinearLayout.LayoutParams params =
-                  new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                      LinearLayout.LayoutParams.WRAP_CONTENT);
-
-              params.setMargins(0, 0, 0,
-                  getResources().getDimensionPixelSize(R.dimen.default_margin_3));
-              noteView.setLayoutParams(params);
-
-              mainNotesLayout.addView(noteView);
-            }
-
-            final Handler handler = new Handler();
-
-            handler.postDelayed(() -> mainScrollView.fullScroll(View.FOCUS_DOWN), 500);
-
-            break;
-          case 449:
-            alertDialog.setMessage(Helpers.provideErrorStringFromJSON(response.errorBody()));
-            alertDialog.show();
-            break;
-        }
-
-        waitingDialog.dismiss();
-      }
-
-      @Override public void onFailure(Call<CRMNotesResponse> call, Throwable t) {
-        Timber.d("Call failed with error : %s", t.getMessage());
-        alertDialog.setMessage(getString(R.string.server_error_got_returned));
-        alertDialog.show();
-      }
-    });
   }
 
   private void hideImagePlaceHolder() {

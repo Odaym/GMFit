@@ -286,7 +286,7 @@
         android:theme="@style/No_Action_Bar_Theme"/>
 
     <activity
-        android:name=".insurance.activities.inquiry.InquiryDetailsNotesActivity"
+        android:name=".insurance.activities.inquiry.InquiryNotesActivity"
         android:exported="true"
         android:screenOrientation="portrait"
         android:theme="@style/No_Action_Bar_Theme"

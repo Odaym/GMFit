@@ -3,17 +3,14 @@ package com.mcsaatchi.gmfit.insurance.activities.inquiry;
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
-import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -36,13 +33,10 @@ import com.mcsaatchi.gmfit.insurance.widget.CustomToggle;
 import com.squareup.picasso.Picasso;
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Locale;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -134,7 +128,7 @@ public class SubmitInquiryActivity extends BaseActivity {
       case REQUEST_PICK_IMAGE_GALLERY:
         if (data != null) {
           Uri selectedImageUri = data.getData();
-          String selectedImagePath = getPhotoPathFromGallery(selectedImageUri);
+          String selectedImagePath = ImageHandler.getPhotoPathFromGallery(this, selectedImageUri);
 
           Picasso.with(this).load(new File(selectedImagePath)).fit().into(currentImageView);
 
@@ -203,7 +197,7 @@ public class SubmitInquiryActivity extends BaseActivity {
             if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
               photoFile = null;
               try {
-                photoFile = createImageFile(constructImageFilename());
+                photoFile = ImageHandler.createImageFile(ImageHandler.constructImageFilename());
                 photoFileUri = Uri.fromFile(photoFile);
               } catch (IOException ex) {
                 ex.printStackTrace();
@@ -220,46 +214,6 @@ public class SubmitInquiryActivity extends BaseActivity {
       }
     });
     builderSingle.show();
-  }
-
-  private String getPhotoPathFromGallery(Uri uri) {
-    if (uri == null) {
-      // TODO perform some logging or show user feedback
-      return null;
-    }
-
-    String[] projection = { MediaStore.Images.Media.DATA };
-    Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
-    if (cursor != null) {
-      int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-      cursor.moveToFirst();
-      return cursor.getString(column_index);
-    }
-
-    return uri.getPath();
-  }
-
-  private String constructImageFilename() {
-    String timeStamp =
-        new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
-    String imageFileName = "JPEG_" + timeStamp;
-
-    File mediaStorageDir =
-        new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-            "GMFit");
-
-    if (!mediaStorageDir.exists()) {
-      if (!mediaStorageDir.mkdirs()) {
-        Log.d("Constants.DEBUG_TAG", "failed to create directory");
-        return null;
-      }
-    }
-
-    return mediaStorageDir.getPath() + File.separator + imageFileName;
-  }
-
-  private File createImageFile(String imagePath) throws IOException {
-    return new File(imagePath);
   }
 
   private HashMap<String, RequestBody> constructSelectedImagesForRequest() {

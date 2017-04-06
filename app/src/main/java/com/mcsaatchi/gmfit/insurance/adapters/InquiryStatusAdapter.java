@@ -10,7 +10,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.rest.InquiriesListResponseInnerData;
-import com.mcsaatchi.gmfit.insurance.activities.inquiry.InquiryDetailsNotesActivity;
+import com.mcsaatchi.gmfit.insurance.activities.inquiry.InquiryNotesActivity;
 import java.util.List;
 import org.apache.commons.lang3.text.WordUtils;
 
@@ -65,7 +65,7 @@ public class InquiryStatusAdapter extends RecyclerView.Adapter {
       requestCreatedOnTV.setText(inquiryItem.getStatus() + " - " + inquiryItem.getCreatedOn());
 
       parentLayout.setOnClickListener(view -> {
-        Intent intent = new Intent(context, InquiryDetailsNotesActivity.class);
+        Intent intent = new Intent(context, InquiryNotesActivity.class);
         intent.putExtra("INQUIRY_OBJECT", inquiryItem);
         context.startActivity(intent);
       });
