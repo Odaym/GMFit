@@ -425,8 +425,12 @@
   <string name="emails_header_title">Emails</string>
   <string name="contact_us_email_header">Customer Care Center</string>
   <string name="contact_us_email">customercare@globemedlebanon.com</string>
-  <string name="contact_us_address">Kazandjian Building 211, Street 64, Sin El Fil\nMetn 2707 6203, P.O.Box 55664, Lebanon</string>
+  <string name="contact_us_address">Kazandjian Building 211, Street 64, Sin El Fil\n\nMetn 2707 6203, P.O.Box 55664, Lebanon</string>
   <string name="phone_numbers_header_title">Phone Numbers</string>
+  <string name="phone_number_one_header">GlobeMed Emergency Cases Number</string>
+  <string name="phone_number_one">+961 1 518001</string>
+  <string name="phone_number_two_header">24/7 Customer Care Center</string>
+  <string name="phone_number_two">+961 1 518000</string>
 
   <!-- USER POLICY ACTIVITY -->
   <string name="user_policy_activity_title">User Policy</string>

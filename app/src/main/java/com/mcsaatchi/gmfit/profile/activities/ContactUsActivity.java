@@ -14,8 +14,9 @@ import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 public class ContactUsActivity extends BaseActivity {
 
   @Bind(R.id.toolbar) Toolbar toolbar;
-  @Bind(R.id.contact1NumberTV) TextView contact1NumberTV;
-  @Bind(R.id.contact1EmailTV) TextView contact1EmailTV;
+  @Bind(R.id.emailAddressTV) TextView emailAddressTV;
+  @Bind(R.id.phoneNumber1) TextView phoneNumber1TV;
+  @Bind(R.id.phoneNumber2) TextView phoneNumber2TV;
 
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -28,21 +29,27 @@ public class ContactUsActivity extends BaseActivity {
         getResources().getString(R.string.contact_us_activity_title), true);
   }
 
-  @OnClick(R.id.contact1EmailTV) public void handleContact1EmailPressed() {
+  @OnClick(R.id.emailAddressLayout) public void handleContactEmailPressed() {
     Intent intent = new Intent(Intent.ACTION_SEND);
     intent.setType("message/rfc822");
     intent.putExtra(Intent.EXTRA_SUBJECT, "");
     intent.putExtra(Intent.EXTRA_TEXT, "");
     intent.putExtra(android.content.Intent.EXTRA_EMAIL,
-        new String[] { contact1EmailTV.getText().toString() });
+        new String[] { emailAddressTV.getText().toString() });
 
     Intent mailer = Intent.createChooser(intent, null);
     startActivity(mailer);
   }
 
-  @OnClick(R.id.contact1NumberTV) public void handleContact1NumberPressed() {
+  @OnClick(R.id.phoneNumber1Layout) public void handlePhoneNumber1Clicked() {
     Intent intent = new Intent(Intent.ACTION_DIAL);
-    intent.setData(Uri.parse("tel:" + contact1NumberTV.getText().toString()));
+    intent.setData(Uri.parse("tel:" + phoneNumber1TV.getText().toString()));
+    startActivity(intent);
+  }
+
+  @OnClick(R.id.phoneNumber2Layout) public void handlePhoneNumber2Clicked() {
+    Intent intent = new Intent(Intent.ACTION_DIAL);
+    intent.setData(Uri.parse("tel:" + phoneNumber2TV.getText().toString()));
     startActivity(intent);
   }
 }
