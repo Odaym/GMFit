@@ -1,4 +1,4 @@
-package com.mcsaatchi.gmfit.insurance.presenters;
+package com.mcsaatchi.gmfit.insurance.activities.approval_request;
 
 import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.architecture.rest.CreateNewRequestResponse;
@@ -10,17 +10,17 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class SubmitApprovalRequestActivityPresenter extends BaseActivityPresenter {
+class SubmitApprovalRequestActivityPresenter extends BaseActivityPresenter {
   private SubmitApprovalRequestActivityView view;
   private DataAccessHandler dataAccessHandler;
 
-  public SubmitApprovalRequestActivityPresenter(SubmitApprovalRequestActivityView view,
+  SubmitApprovalRequestActivityPresenter(SubmitApprovalRequestActivityView view,
       DataAccessHandler dataAccessHandler) {
     this.view = view;
     this.dataAccessHandler = dataAccessHandler;
   }
 
-  public void submitApprovalRequest(String contractNo, String remarks, String categoryValue,
+  void submitApprovalRequest(String contractNo, String remarks, String categoryValue,
       HashMap<String, RequestBody> attachements) {
 
     dataAccessHandler.createNewRequest(Helpers.toRequestBody(contractNo),
@@ -51,7 +51,7 @@ public class SubmitApprovalRequestActivityPresenter extends BaseActivityPresente
         });
   }
 
-  public interface SubmitApprovalRequestActivityView extends BaseActivityView {
+  interface SubmitApprovalRequestActivityView extends BaseActivityView {
     void openApprovalRequestDetailsActivity(Integer claimId);
 
     void dismissWaitingDialog();

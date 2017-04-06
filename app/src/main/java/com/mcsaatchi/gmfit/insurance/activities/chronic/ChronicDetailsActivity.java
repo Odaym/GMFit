@@ -17,7 +17,6 @@ import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.common.classes.SimpleDividerItemDecoration;
 import com.mcsaatchi.gmfit.insurance.adapters.MedicalInformationAdapter;
-import com.mcsaatchi.gmfit.insurance.presenters.ChronicDetailsActivityPresenter;
 import java.util.List;
 
 public class ChronicDetailsActivity extends BaseActivity

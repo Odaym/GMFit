@@ -62,7 +62,6 @@ import com.mcsaatchi.gmfit.nutrition.adapters.NutritionWidgetsRecyclerAdapter;
 import com.mcsaatchi.gmfit.nutrition.adapters.UserMealsRecyclerAdapterDragSwipe;
 import com.mcsaatchi.gmfit.nutrition.models.MealItem;
 import com.mcsaatchi.gmfit.nutrition.models.NutritionWidget;
-import com.mcsaatchi.gmfit.nutrition.presenters.NutritionFragmentPresenter;
 import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
 import java.util.ArrayList;

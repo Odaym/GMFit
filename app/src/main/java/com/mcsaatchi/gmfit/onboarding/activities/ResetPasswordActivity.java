@@ -10,7 +10,6 @@ import com.andreabaccega.widget.FormEditText;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.common.presenters.BaseActivityPresenter;
-import com.mcsaatchi.gmfit.onboarding.presenters.ResetPasswordActivityPresenter;
 import java.util.ArrayList;
 
 public class ResetPasswordActivity extends BaseActivity implements

@@ -10,7 +10,6 @@ import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.common.classes.ImageHandler;
-import com.mcsaatchi.gmfit.insurance.presenters.ReimbursementDetailsActivityPresenter;
 import com.mcsaatchi.gmfit.insurance.widget.CustomAttachmentPicker;
 import com.mcsaatchi.gmfit.insurance.widget.ItemLabel;
 import org.joda.time.LocalDate;

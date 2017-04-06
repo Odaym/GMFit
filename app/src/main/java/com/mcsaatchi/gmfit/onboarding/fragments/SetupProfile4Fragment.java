@@ -30,7 +30,7 @@ import com.mcsaatchi.gmfit.common.activities.MainActivity;
 import com.mcsaatchi.gmfit.common.fragments.BaseFragment;
 import com.mcsaatchi.gmfit.onboarding.adapters.MedicalConditionsSpinnerAdapter;
 import com.mcsaatchi.gmfit.onboarding.adapters.TextualSpinnersAdapter;
-import com.mcsaatchi.gmfit.onboarding.presenters.SetupProfileFragmentsPresenter;
+import com.mcsaatchi.gmfit.onboarding.activities.SetupProfileFragmentsPresenter;
 import com.squareup.otto.Subscribe;
 import java.text.DateFormatSymbols;
 import java.util.ArrayList;

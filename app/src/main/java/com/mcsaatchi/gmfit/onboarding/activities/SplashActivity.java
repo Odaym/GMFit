@@ -13,7 +13,6 @@ import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponseChart;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.common.activities.MainActivity;
-import com.mcsaatchi.gmfit.onboarding.presenters.SplashActivityPresenter;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;

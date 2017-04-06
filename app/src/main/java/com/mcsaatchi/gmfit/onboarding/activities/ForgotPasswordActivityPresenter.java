@@ -1,4 +1,4 @@
-package com.mcsaatchi.gmfit.onboarding.presenters;
+package com.mcsaatchi.gmfit.onboarding.activities;
 
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
@@ -8,17 +8,17 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ForgotPasswordActivityPresenter {
+class ForgotPasswordActivityPresenter {
   private ForgotPasswordActivityView view;
   private DataAccessHandler dataAccessHandler;
 
-  public ForgotPasswordActivityPresenter(ForgotPasswordActivityView view,
+  ForgotPasswordActivityPresenter(ForgotPasswordActivityView view,
       DataAccessHandler dataAccessHandler) {
     this.view = view;
     this.dataAccessHandler = dataAccessHandler;
   }
 
-  public void handleForgotPassword(String email) {
+  void handleForgotPassword(String email) {
     view.callDisplayWaitingDialog(R.string.sending_reset_password_dialog_title);
 
     dataAccessHandler.sendResetPasswordLink(email, new Callback<DefaultGetResponse>() {
@@ -39,7 +39,7 @@ public class ForgotPasswordActivityPresenter {
     });
   }
 
-  public interface ForgotPasswordActivityView extends BaseActivityPresenter.BaseActivityView {
+  interface ForgotPasswordActivityView extends BaseActivityPresenter.BaseActivityView {
     void openResetPasswordActivity();
   }
 }

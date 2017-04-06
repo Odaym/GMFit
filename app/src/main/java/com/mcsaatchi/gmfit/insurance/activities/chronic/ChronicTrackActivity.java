@@ -13,7 +13,6 @@ import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.common.classes.SimpleDividerItemDecoration;
 import com.mcsaatchi.gmfit.insurance.adapters.ChronicStatusAdapter;
-import com.mcsaatchi.gmfit.insurance.presenters.ChronicTrackActivityPresenter;
 import java.util.List;
 
 public class ChronicTrackActivity extends BaseActivity

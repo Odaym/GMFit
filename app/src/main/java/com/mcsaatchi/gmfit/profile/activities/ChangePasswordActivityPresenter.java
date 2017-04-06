@@ -1,4 +1,4 @@
-package com.mcsaatchi.gmfit.profile.presenters;
+package com.mcsaatchi.gmfit.profile.activities;
 
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;

@@ -1,4 +1,4 @@
-package com.mcsaatchi.gmfit.profile.presenters;
+package com.mcsaatchi.gmfit.profile.fragments;
 
 import android.os.AsyncTask;
 import android.os.Environment;
@@ -22,17 +22,16 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MainProfileFragmentPresenter extends BaseFragmentPresenter {
+class MainProfileFragmentPresenter extends BaseFragmentPresenter {
   private MainProfileFragmentView view;
   private DataAccessHandler dataAccessHandler;
 
-  public MainProfileFragmentPresenter(MainProfileFragmentView view,
-      DataAccessHandler dataAccessHandler) {
+  MainProfileFragmentPresenter(MainProfileFragmentView view, DataAccessHandler dataAccessHandler) {
     this.view = view;
     this.dataAccessHandler = dataAccessHandler;
   }
 
-  public void getUserProfile() {
+  void getUserProfile() {
     dataAccessHandler.getUserProfile(new Callback<UserProfileResponse>() {
       @Override public void onResponse(Call<UserProfileResponse> call,
           Response<UserProfileResponse> response) {
@@ -52,7 +51,7 @@ public class MainProfileFragmentPresenter extends BaseFragmentPresenter {
     });
   }
 
-  public void getMetaTexts(final String section) {
+  void getMetaTexts(final String section) {
     view.callDisplayWaitingDialog(R.string.loading_data_dialog_title);
 
     dataAccessHandler.getMetaTexts(section, new Callback<MetaTextsResponse>() {
@@ -73,7 +72,7 @@ public class MainProfileFragmentPresenter extends BaseFragmentPresenter {
     });
   }
 
-  public void updateUserProfile(String dateOfBirth, String bloodType, String nationality,
+  void updateUserProfile(String dateOfBirth, String bloodType, String nationality,
       int medicalCondition, String measurementSystem, int userGoalId, int activityLevelId,
       int finalGender, double height, double weight, String onboard) {
 
@@ -99,7 +98,7 @@ public class MainProfileFragmentPresenter extends BaseFragmentPresenter {
         });
   }
 
-  public void updateUserPicture(HashMap<String, RequestBody> profilePictureParts) {
+  void updateUserPicture(HashMap<String, RequestBody> profilePictureParts) {
     dataAccessHandler.updateUserPicture(profilePictureParts, new Callback<DefaultGetResponse>() {
       @Override
       public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
@@ -116,7 +115,7 @@ public class MainProfileFragmentPresenter extends BaseFragmentPresenter {
     });
   }
 
-  public void signOutUser() {
+  void signOutUser() {
     view.callDisplayWaitingDialog(R.string.signing_out_dialog_title);
 
     dataAccessHandler.signOutUser(new Callback<DefaultGetResponse>() {
@@ -137,7 +136,7 @@ public class MainProfileFragmentPresenter extends BaseFragmentPresenter {
     });
   }
 
-  public void requestEmergencyProfile(){
+  void requestEmergencyProfile(){
     dataAccessHandler.getEmergencyProfile(new Callback<EmergencyProfileResponse>() {
       @Override public void onResponse(Call<EmergencyProfileResponse> call,
           Response<EmergencyProfileResponse> response) {
@@ -157,7 +156,7 @@ public class MainProfileFragmentPresenter extends BaseFragmentPresenter {
     });
   }
 
-  public interface MainProfileFragmentView extends BaseFragmentView {
+  interface MainProfileFragmentView extends BaseFragmentView {
     void populateUserProfileInformation(UserProfileResponseDatum userProfileData);
 
     void wipeCredentialsOnSignOut();

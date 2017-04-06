@@ -50,7 +50,6 @@ import com.mcsaatchi.gmfit.profile.activities.ChangePasswordActivity;
 import com.mcsaatchi.gmfit.profile.activities.ContactUsActivity;
 import com.mcsaatchi.gmfit.profile.activities.MealRemindersActivity;
 import com.mcsaatchi.gmfit.profile.activities.MetaTextsActivity;
-import com.mcsaatchi.gmfit.profile.presenters.MainProfileFragmentPresenter;
 import com.mukesh.countrypicker.fragments.CountryPicker;
 import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;

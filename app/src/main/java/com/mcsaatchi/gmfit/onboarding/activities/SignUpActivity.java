@@ -21,7 +21,6 @@ import com.mcsaatchi.gmfit.architecture.otto.SignedUpSuccessfullyEvent;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
-import com.mcsaatchi.gmfit.onboarding.presenters.SignUpActivityPresenter;
 import com.mcsaatchi.gmfit.profile.activities.TOSActivity;
 import java.util.ArrayList;
 

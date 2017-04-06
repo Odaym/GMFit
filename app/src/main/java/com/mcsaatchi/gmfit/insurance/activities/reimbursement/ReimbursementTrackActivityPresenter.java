@@ -1,4 +1,4 @@
-package com.mcsaatchi.gmfit.insurance.presenters;
+package com.mcsaatchi.gmfit.insurance.activities.reimbursement;
 
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
@@ -11,17 +11,17 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ReimbursementTrackActivityPresenter extends BaseActivityPresenter {
+class ReimbursementTrackActivityPresenter extends BaseActivityPresenter {
   private ReimbursementTrackActivityView view;
   private DataAccessHandler dataAccessHandler;
 
-  public ReimbursementTrackActivityPresenter(ReimbursementTrackActivityView view,
+  ReimbursementTrackActivityPresenter(ReimbursementTrackActivityView view,
       DataAccessHandler dataAccessHandler) {
     this.view = view;
     this.dataAccessHandler = dataAccessHandler;
   }
 
-  public void getReimbursementClaims(String contractNo) {
+  void getReimbursementClaims(String contractNo) {
     view.callDisplayWaitingDialog(R.string.loading_data_dialog_title);
 
     dataAccessHandler.getClaimsList(contractNo, "1", new Callback<ClaimsListResponse>() {
@@ -46,7 +46,7 @@ public class ReimbursementTrackActivityPresenter extends BaseActivityPresenter {
     });
   }
 
-  public interface ReimbursementTrackActivityView extends BaseActivityPresenter.BaseActivityView {
+  interface ReimbursementTrackActivityView extends BaseActivityPresenter.BaseActivityView {
     void populateClaimsList(List<ClaimsListResponseDatum> claimsList);
   }
 }

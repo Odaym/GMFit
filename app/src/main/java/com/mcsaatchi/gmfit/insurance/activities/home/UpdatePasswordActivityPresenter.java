@@ -1,4 +1,4 @@
-package com.mcsaatchi.gmfit.insurance.presenters;
+package com.mcsaatchi.gmfit.insurance.activities.home;
 
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
@@ -8,18 +8,18 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class UpdatePasswordActivityPresenter extends BaseActivityPresenter {
+class UpdatePasswordActivityPresenter extends BaseActivityPresenter {
   private UpdatePasswordActivityView view;
   private DataAccessHandler dataAccessHandler;
 
-  public UpdatePasswordActivityPresenter(UpdatePasswordActivityView view,
+  UpdatePasswordActivityPresenter(UpdatePasswordActivityView view,
       DataAccessHandler dataAccessHandler) {
     this.view = view;
     this.dataAccessHandler = dataAccessHandler;
   }
 
-  public void updateInsurancePassword(String contractNumber, String oldPassword,
-      final String newPassword, String email, String mobileNumber) {
+  void updateInsurancePassword(String contractNumber, String oldPassword, final String newPassword,
+      String email, String mobileNumber) {
 
     view.callDisplayWaitingDialog(R.string.loading_data_dialog_title);
 
@@ -40,7 +40,7 @@ public class UpdatePasswordActivityPresenter extends BaseActivityPresenter {
         });
   }
 
-  public interface UpdatePasswordActivityView extends BaseActivityView {
+  interface UpdatePasswordActivityView extends BaseActivityView {
     void sendResultBackAndCloseActivity(String newPassword);
   }
 }

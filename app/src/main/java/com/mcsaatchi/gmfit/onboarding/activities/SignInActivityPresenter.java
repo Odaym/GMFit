@@ -1,4 +1,4 @@
-package com.mcsaatchi.gmfit.onboarding.presenters;
+package com.mcsaatchi.gmfit.onboarding.activities;
 
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
@@ -17,16 +17,16 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import timber.log.Timber;
 
-public class SignInActivityPresenter {
+class SignInActivityPresenter {
   private SignInActivityView view;
   private DataAccessHandler dataAccessHandler;
 
-  public SignInActivityPresenter(SignInActivityView view, DataAccessHandler dataAccessHandler) {
+  SignInActivityPresenter(SignInActivityView view, DataAccessHandler dataAccessHandler) {
     this.view = view;
     this.dataAccessHandler = dataAccessHandler;
   }
 
-  public void signIn(String email, String password) {
+  void signIn(String email, String password) {
     view.callDisplayWaitingDialog(R.string.signing_in_dialog_title);
 
     dataAccessHandler.signInUser(email, password, new Callback<AuthenticationResponse>() {
@@ -109,7 +109,7 @@ public class SignInActivityPresenter {
         });
   }
 
-  public interface SignInActivityView extends BaseActivityPresenter.BaseActivityView {
+  interface SignInActivityView extends BaseActivityPresenter.BaseActivityView {
     void saveUserSignInDetails(String accessToken, String email, String password);
 
     void openAccountVerificationActivity();

@@ -13,7 +13,6 @@ import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
-import com.mcsaatchi.gmfit.profile.presenters.ChangePasswordActivityPresenter;
 import java.util.ArrayList;
 
 public class ChangePasswordActivity extends BaseActivity

@@ -1,4 +1,4 @@
-package com.mcsaatchi.gmfit.nutrition.presenters;
+package com.mcsaatchi.gmfit.nutrition.fragments;
 
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
@@ -27,17 +27,16 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import timber.log.Timber;
 
-public class NutritionFragmentPresenter extends BaseFragmentPresenter {
+class NutritionFragmentPresenter extends BaseFragmentPresenter {
   private NutritionFragmentView view;
   private DataAccessHandler dataAccessHandler;
 
-  public NutritionFragmentPresenter(NutritionFragmentView view,
-      DataAccessHandler dataAccessHandler) {
+  NutritionFragmentPresenter(NutritionFragmentView view, DataAccessHandler dataAccessHandler) {
     this.view = view;
     this.dataAccessHandler = dataAccessHandler;
   }
 
-  public void getUserGoalMetrics(final String date, final String type) {
+  void getUserGoalMetrics(final String date, final String type) {
     dataAccessHandler.getUserGoalMetrics(date, type, new Callback<UserGoalMetricsResponse>() {
       @Override public void onResponse(Call<UserGoalMetricsResponse> call,
           Response<UserGoalMetricsResponse> response) {
@@ -61,7 +60,7 @@ public class NutritionFragmentPresenter extends BaseFragmentPresenter {
     });
   }
 
-  public void getUserAddedMeals(String desiredDate) {
+  void getUserAddedMeals(String desiredDate) {
     dataAccessHandler.getUserAddedMealsOnDate(desiredDate, new Callback<UserMealsResponse>() {
       @Override
       public void onResponse(Call<UserMealsResponse> call, Response<UserMealsResponse> response) {
@@ -88,7 +87,7 @@ public class NutritionFragmentPresenter extends BaseFragmentPresenter {
     });
   }
 
-  public void getUiForSection(String section, String desiredDate) {
+  void getUiForSection(String section, String desiredDate) {
     String finalUrl;
 
     if (desiredDate == null) {
@@ -118,7 +117,7 @@ public class NutritionFragmentPresenter extends BaseFragmentPresenter {
     });
   }
 
-  public void searchForMealBarcode(String barcode, String mealType) {
+  void searchForMealBarcode(String barcode, String mealType) {
     view.callDisplayWaitingDialog(R.string.searching_for_barcode_meal);
 
     dataAccessHandler.searchForMealBarcode(barcode, new Callback<SearchMealItemResponse>() {
@@ -144,7 +143,7 @@ public class NutritionFragmentPresenter extends BaseFragmentPresenter {
     });
   }
 
-  public void updateUserWidgets(int[] widgetIds, int[] widgetPositions) {
+  void updateUserWidgets(int[] widgetIds, int[] widgetPositions) {
     dataAccessHandler.updateUserWidgets(widgetIds, widgetPositions,
         new Callback<DefaultGetResponse>() {
           @Override public void onResponse(Call<DefaultGetResponse> call,
@@ -162,7 +161,7 @@ public class NutritionFragmentPresenter extends BaseFragmentPresenter {
         });
   }
 
-  public void updateUserCharts(int[] chartIds, int[] chartPositions) {
+  void updateUserCharts(int[] chartIds, int[] chartPositions) {
     dataAccessHandler.updateUserCharts(chartIds, chartPositions,
         new Callback<DefaultGetResponse>() {
           @Override public void onResponse(Call<DefaultGetResponse> call,
@@ -180,7 +179,7 @@ public class NutritionFragmentPresenter extends BaseFragmentPresenter {
         });
   }
 
-  public void deleteUserChart(DataChart chartObject) {
+  void deleteUserChart(DataChart chartObject) {
     view.callDisplayWaitingDialog(R.string.deleting_chart_dialog_title);
 
     dataAccessHandler.deleteUserChart(String.valueOf(chartObject.getChart_id()),
@@ -202,7 +201,7 @@ public class NutritionFragmentPresenter extends BaseFragmentPresenter {
         });
   }
 
-  public void getChartMonthlyBreakdown(DataChart chartObject, LocalDate dt) {
+  void getChartMonthlyBreakdown(DataChart chartObject, LocalDate dt) {
     dataAccessHandler.getPeriodicalChartData(dt.minusMonths(1).toString(), dt.toString(),
         "nutrition", chartObject.getName(), new Callback<ChartMetricBreakdownResponse>() {
           @Override public void onResponse(Call<ChartMetricBreakdownResponse> call,
@@ -231,7 +230,7 @@ public class NutritionFragmentPresenter extends BaseFragmentPresenter {
         });
   }
 
-  public void getSlugBreakdownForChart(DataChart chartObject) {
+  void getSlugBreakdownForChart(DataChart chartObject) {
     view.callDisplayWaitingDialog(R.string.grabbing_breakdown_data_dialog_title);
 
     dataAccessHandler.getSlugBreakdownForChart(chartObject.getType(),
@@ -254,7 +253,7 @@ public class NutritionFragmentPresenter extends BaseFragmentPresenter {
         });
   }
 
-  public interface NutritionFragmentView extends BaseFragmentPresenter.BaseFragmentView {
+  interface NutritionFragmentView extends BaseFragmentPresenter.BaseFragmentView {
     void displayUserGoalMetrics(String maxValue, String currentValue);
 
     void displayUserAddedMeals(List<UserMealsResponseInner> breakfastMeals,

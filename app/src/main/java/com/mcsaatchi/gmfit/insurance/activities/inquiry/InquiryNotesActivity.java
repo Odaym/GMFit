@@ -31,7 +31,6 @@ import com.mcsaatchi.gmfit.architecture.rest.InquiriesListResponseInnerData;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.common.classes.ImageHandler;
-import com.mcsaatchi.gmfit.insurance.presenters.InquiryNotesActivityPresenter;
 import com.squareup.picasso.Picasso;
 import java.io.File;
 import java.io.IOException;

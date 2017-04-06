@@ -15,7 +15,7 @@ import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.architecture.rest.ActivityLevelsResponseBody;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.fragments.BaseFragment;
-import com.mcsaatchi.gmfit.onboarding.presenters.SetupProfileFragmentsPresenter;
+import com.mcsaatchi.gmfit.onboarding.activities.SetupProfileFragmentsPresenter;
 import java.util.List;
 import javax.inject.Inject;
 import worker8.com.github.radiogroupplus.RadioGroupPlus;

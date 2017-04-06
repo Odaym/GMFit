@@ -10,7 +10,6 @@ import com.andreabaccega.widget.FormEditText;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
-import com.mcsaatchi.gmfit.onboarding.presenters.ForgotPasswordActivityPresenter;
 import java.util.ArrayList;
 
 public class ForgotPasswordActivity extends BaseActivity

@@ -21,7 +21,6 @@ import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.common.classes.ImageHandler;
 import com.mcsaatchi.gmfit.insurance.activities.reimbursement.ReimbursementDetailsActivity;
-import com.mcsaatchi.gmfit.insurance.presenters.SubmitChronicActivityPresenter;
 import com.mcsaatchi.gmfit.insurance.widget.CustomAttachmentPicker;
 import com.squareup.picasso.Picasso;
 import java.io.File;

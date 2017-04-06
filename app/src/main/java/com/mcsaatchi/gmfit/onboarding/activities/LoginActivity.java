@@ -29,7 +29,6 @@ import com.mcsaatchi.gmfit.common.activities.MainActivity;
 import com.mcsaatchi.gmfit.common.classes.DefaultIndicatorController;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.onboarding.fragments.IntroSliderFragment;
-import com.mcsaatchi.gmfit.onboarding.presenters.LoginActivityPresenter;
 import com.squareup.otto.Subscribe;
 import io.fabric.sdk.android.Fabric;
 import java.util.ArrayList;

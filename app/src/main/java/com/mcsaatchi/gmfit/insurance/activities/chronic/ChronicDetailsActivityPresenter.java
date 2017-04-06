@@ -1,4 +1,4 @@
-package com.mcsaatchi.gmfit.insurance.presenters;
+package com.mcsaatchi.gmfit.insurance.activities.chronic;
 
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
@@ -11,17 +11,17 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ChronicDetailsActivityPresenter extends BaseActivityPresenter {
+class ChronicDetailsActivityPresenter extends BaseActivityPresenter {
   private ChronicDetailsActivityView view;
   private DataAccessHandler dataAccessHandler;
 
-  public ChronicDetailsActivityPresenter(ChronicDetailsActivityView view,
+  ChronicDetailsActivityPresenter(ChronicDetailsActivityView view,
       DataAccessHandler dataAccessHandler) {
     this.view = view;
     this.dataAccessHandler = dataAccessHandler;
   }
 
-  public void getChronicTreatmentDetails(String contractNo, String requestNbr) {
+  void getChronicTreatmentDetails(String contractNo, String requestNbr) {
     view.callDisplayWaitingDialog(R.string.loading_data_dialog_title);
 
     dataAccessHandler.getChronicTreatmentDetails(contractNo, "3", requestNbr,
@@ -50,7 +50,7 @@ public class ChronicDetailsActivityPresenter extends BaseActivityPresenter {
         });
   }
 
-  public interface ChronicDetailsActivityView extends BaseActivityView {
+  interface ChronicDetailsActivityView extends BaseActivityView {
     void displayChronicTreatmentDetails(
         List<ChronicTreatmentDetailsResponseMedicationItem> treatmentItems);
   }

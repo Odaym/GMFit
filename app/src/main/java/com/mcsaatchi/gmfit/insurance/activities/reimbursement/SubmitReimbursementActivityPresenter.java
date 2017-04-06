@@ -1,4 +1,4 @@
-package com.mcsaatchi.gmfit.insurance.presenters;
+package com.mcsaatchi.gmfit.insurance.activities.reimbursement;
 
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
@@ -14,17 +14,17 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class SubmitReimbursementActivityPresenter extends BaseActivityPresenter {
+class SubmitReimbursementActivityPresenter extends BaseActivityPresenter {
   private SubmitReimbursementActivityView view;
   private DataAccessHandler dataAccessHandler;
 
-  public SubmitReimbursementActivityPresenter(SubmitReimbursementActivityView view,
+  SubmitReimbursementActivityPresenter(SubmitReimbursementActivityView view,
       DataAccessHandler dataAccessHandler) {
     this.view = view;
     this.dataAccessHandler = dataAccessHandler;
   }
 
-  public void submitReimbursement(String contractNo, String category, String subCategoryId,
+  void submitReimbursement(String contractNo, String category, String subCategoryId,
       String requestTypeId, String amountClaimed, String remarks,
       HashMap<String, RequestBody> attachements) {
     view.callDisplayWaitingDialog(R.string.submit_new_reimbursement);
@@ -58,7 +58,7 @@ public class SubmitReimbursementActivityPresenter extends BaseActivityPresenter 
         });
   }
 
-  public void getSubCategories(String contractNo) {
+  void getSubCategories(String contractNo) {
     view.callDisplayWaitingDialog(R.string.loading_data_dialog_title);
 
     dataAccessHandler.getSubCategories(contractNo, new Callback<SubCategoriesResponse>() {
@@ -78,7 +78,7 @@ public class SubmitReimbursementActivityPresenter extends BaseActivityPresenter 
     });
   }
 
-  public interface SubmitReimbursementActivityView extends BaseActivityView {
+  interface SubmitReimbursementActivityView extends BaseActivityView {
     void populateSubCategories(List<SubCategoriesResponseDatum> subCategories);
 
     void openReimbursementDetailsActivity(Integer claimId);

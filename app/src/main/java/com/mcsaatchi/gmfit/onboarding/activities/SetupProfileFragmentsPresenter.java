@@ -1,4 +1,4 @@
-package com.mcsaatchi.gmfit.onboarding.presenters;
+package com.mcsaatchi.gmfit.onboarding.activities;
 
 import android.os.Build;
 import android.support.annotation.RequiresApi;

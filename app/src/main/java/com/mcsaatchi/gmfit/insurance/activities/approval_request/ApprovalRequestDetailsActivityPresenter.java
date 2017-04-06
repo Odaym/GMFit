@@ -1,4 +1,4 @@
-package com.mcsaatchi.gmfit.insurance.presenters;
+package com.mcsaatchi.gmfit.insurance.activities.approval_request;
 
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
@@ -9,17 +9,17 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ApprovalRequestDetailsActivityPresenter extends BaseActivityPresenter {
+class ApprovalRequestDetailsActivityPresenter extends BaseActivityPresenter {
   private ApprovalRequestDetailsActivityView view;
   private DataAccessHandler dataAccessHandler;
 
-  public ApprovalRequestDetailsActivityPresenter(ApprovalRequestDetailsActivityView view,
+  ApprovalRequestDetailsActivityPresenter(ApprovalRequestDetailsActivityView view,
       DataAccessHandler dataAccessHandler) {
     this.view = view;
     this.dataAccessHandler = dataAccessHandler;
   }
 
-  public void getClaimDetailsList(String contractNo, String requestType, int claimId) {
+  void getClaimDetailsList(String contractNo, String requestType, int claimId) {
     view.callDisplayWaitingDialog(R.string.loading_data_dialog_title);
 
     dataAccessHandler.getClaimslistDetails(contractNo, requestType, String.valueOf(claimId),
@@ -43,7 +43,7 @@ public class ApprovalRequestDetailsActivityPresenter extends BaseActivityPresent
         });
   }
 
-  public interface ApprovalRequestDetailsActivityView extends BaseActivityView {
+  interface ApprovalRequestDetailsActivityView extends BaseActivityView {
     void displayClaimDetails(ClaimListDetailsResponseDatum responseDatum);
   }
 }

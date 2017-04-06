@@ -1,4 +1,4 @@
-package com.mcsaatchi.gmfit.insurance.presenters;
+package com.mcsaatchi.gmfit.insurance.activities.inquiry;
 
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
@@ -12,17 +12,16 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class InquiryNotesActivityPresenter extends BaseActivityPresenter {
+class InquiryNotesActivityPresenter extends BaseActivityPresenter {
   private InquiryNotesActivityView view;
   private DataAccessHandler dataAccessHandler;
 
-  public InquiryNotesActivityPresenter(InquiryNotesActivityView view,
-      DataAccessHandler dataAccessHandler) {
+  InquiryNotesActivityPresenter(InquiryNotesActivityView view, DataAccessHandler dataAccessHandler) {
     this.view = view;
     this.dataAccessHandler = dataAccessHandler;
   }
 
-  public void addCRMNote(String incidentId, String subject, String noteText, String mimeType,
+  void addCRMNote(String incidentId, String subject, String noteText, String mimeType,
       String fileName, String documentBody) {
     dataAccessHandler.addCRMNote(incidentId, subject, noteText, mimeType, fileName, documentBody,
         new Callback<AddCRMNoteResponse>() {
@@ -51,7 +50,7 @@ public class InquiryNotesActivityPresenter extends BaseActivityPresenter {
         });
   }
 
-  public void getCRMIncidentNotes(String incidentId) {
+  void getCRMIncidentNotes(String incidentId) {
     view.callDisplayWaitingDialog(R.string.submitting_data_dialog_title);
 
     dataAccessHandler.getCRMIncidentNotes(incidentId, new Callback<CRMNotesResponse>() {
@@ -76,7 +75,7 @@ public class InquiryNotesActivityPresenter extends BaseActivityPresenter {
     });
   }
 
-  public interface InquiryNotesActivityView extends BaseActivityView {
+  interface InquiryNotesActivityView extends BaseActivityView {
     void dismissWaitingDialog();
 
     void clearViews();

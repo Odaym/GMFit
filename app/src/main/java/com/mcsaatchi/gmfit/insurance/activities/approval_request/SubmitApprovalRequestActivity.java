@@ -23,7 +23,6 @@ import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.common.classes.ImageHandler;
-import com.mcsaatchi.gmfit.insurance.presenters.SubmitApprovalRequestActivityPresenter;
 import com.mcsaatchi.gmfit.insurance.widget.CustomAttachmentPicker;
 import com.mcsaatchi.gmfit.insurance.widget.CustomPicker;
 import com.mcsaatchi.gmfit.insurance.widget.CustomToggle;

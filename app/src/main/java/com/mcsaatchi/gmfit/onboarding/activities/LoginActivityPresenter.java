@@ -1,8 +1,10 @@
-package com.mcsaatchi.gmfit.onboarding.presenters;
+package com.mcsaatchi.gmfit.onboarding.activities;
 
+import android.os.Bundle;
+import com.facebook.AccessToken;
+import com.facebook.GraphRequest;
+import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
-import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
-import com.mcsaatchi.gmfit.architecture.otto.SignedUpSuccessfullyEvent;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponse;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponseChart;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponseInnerBody;
@@ -11,62 +13,50 @@ import com.mcsaatchi.gmfit.architecture.rest.UserProfileResponse;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.presenters.BaseActivityPresenter;
 import java.util.List;
+import org.json.JSONException;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import timber.log.Timber;
 
-public class SplashActivityPresenter {
-  private SplashActivityView view;
+class LoginActivityPresenter {
+  private LoginActivityView view;
   private DataAccessHandler dataAccessHandler;
 
-  public SplashActivityPresenter(SplashActivityView view, DataAccessHandler dataAccessHandler) {
+  LoginActivityPresenter(LoginActivityView view, DataAccessHandler dataAccessHandler) {
     this.view = view;
     this.dataAccessHandler = dataAccessHandler;
   }
 
-  public void login(boolean loggedIn, String email, String password, String facebookToken) {
-    if (!loggedIn) {
-      view.showLoginActivity();
-    } else {
-      if (view.checkInternetAvailable()) {
-        if (facebookToken.isEmpty()) {
-          signInUserSilently(email, password);
-        } else {
-          loginWithFacebook(facebookToken);
-        }
-      } else {
-        view.displayNoInternetDialog();
-      }
-    }
-  }
+  void handleFacebookSuccessCallback(AccessToken accessToken) {
+    Timber.d("onSuccess: FACEBOOK ACCESS TOKEN IS : %s", accessToken.getToken());
 
-  private void signInUserSilently(String email, String password) {
-    dataAccessHandler.signInUserSilently(email, password, new Callback<AuthenticationResponse>() {
-      @Override public void onResponse(Call<AuthenticationResponse> call,
-          Response<AuthenticationResponse> response) {
+    view.saveFacebookAccessToken(accessToken.getToken());
 
-        AuthenticationResponseInnerBody responseBody;
+    GraphRequest request = GraphRequest.newMeRequest(accessToken, (object, response) -> {
+      try {
 
-        switch (response.code()) {
-          case 200:
-            responseBody = response.body().getData().getBody();
+        String userID = (String) object.get("id");
+        String userName = (String) object.get("name");
+        String userEmail = (String) object.get("email");
 
-            view.saveAccessToken(responseBody.getToken());
+        view.saveFacebookUserDetails(userID, userName, userEmail);
 
-            getOnboardingStatus();
+        view.callDisplayWaitingDialog(R.string.signing_in_dialog_title);
 
-            break;
-        }
-      }
-
-      @Override public void onFailure(Call<AuthenticationResponse> call, Throwable t) {
-        view.displayRequestErrorDialog(t.getMessage());
+        registerWithFacebook(accessToken.getToken());
+      } catch (JSONException e) {
+        e.printStackTrace();
       }
     });
+
+    Bundle parameters = new Bundle();
+    parameters.putString("fields", "id,name,email,link,birthday,picture");
+    request.setParameters(parameters);
+    request.executeAsync();
   }
 
-  private void loginWithFacebook(String accessToken) {
+  private void registerWithFacebook(String accessToken) {
     dataAccessHandler.handleFacebookProcess(accessToken, new Callback<AuthenticationResponse>() {
       @Override public void onResponse(Call<AuthenticationResponse> call,
           Response<AuthenticationResponse> response) {
@@ -82,10 +72,20 @@ public class SplashActivityPresenter {
             getOnboardingStatus();
 
             break;
+          case 201:
+            responseBody = response.body().getData().getBody();
+
+            view.saveAccessToken(responseBody.getToken());
+
+            view.openSetupProfileActivity();
+
+            break;
           case 401:
             view.displayWrongCredentialsError();
             break;
         }
+
+        view.callDismissWaitingDialog();
       }
 
       @Override public void onFailure(Call<AuthenticationResponse> call, Throwable t) {
@@ -106,7 +106,8 @@ public class SplashActivityPresenter {
             if (userOnBoard.equals("1")) {
               getUiForSection("fitness");
             } else {
-              view.handleSuccessfulSignUp();
+              view.finishActivity();
+              view.openSetupProfileActivity();
             }
 
             break;
@@ -114,7 +115,7 @@ public class SplashActivityPresenter {
       }
 
       @Override public void onFailure(Call<UserProfileResponse> call, Throwable t) {
-        view.displayRequestErrorDialog(t.getMessage());
+        Timber.d("Call failed with error : %s", t.getMessage());
       }
     });
   }
@@ -125,12 +126,14 @@ public class SplashActivityPresenter {
           @Override public void onResponse(Call<UiResponse> call, Response<UiResponse> response) {
             switch (response.code()) {
               case 200:
-                EventBusSingleton.getInstance().post(new SignedUpSuccessfullyEvent());
+                view.callDismissWaitingDialog();
 
                 List<AuthenticationResponseChart> chartsMap =
                     response.body().getData().getBody().getCharts();
 
-                view.showMainActivity(chartsMap);
+                view.finishActivity();
+
+                view.openMainActivity(chartsMap);
 
                 break;
             }
@@ -142,13 +145,15 @@ public class SplashActivityPresenter {
         });
   }
 
-  public interface SplashActivityView extends BaseActivityPresenter.BaseActivityView {
-    void showLoginActivity();
+  interface LoginActivityView extends BaseActivityPresenter.BaseActivityView {
+    void initializeFacebookLogin();
 
-    void showMainActivity(List<AuthenticationResponseChart> chartsMap);
+    void openSetupProfileActivity();
 
-    void displayWrongCredentialsError();
+    void saveFacebookAccessToken(String accessToken);
 
-    void handleSuccessfulSignUp();
+    void saveFacebookUserDetails(String userID, String userName, String userEmail);
+
+    void openMainActivity(List<AuthenticationResponseChart> chartsMap);
   }
 }

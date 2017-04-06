@@ -1,4 +1,4 @@
-package com.mcsaatchi.gmfit.onboarding.presenters;
+package com.mcsaatchi.gmfit.onboarding.activities;
 
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
@@ -8,17 +8,17 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class AccountVerificationActivityPresenter {
+class AccountVerificationActivityPresenter {
   private AccountVerificationActivityView view;
   private DataAccessHandler dataAccessHandler;
 
-  public AccountVerificationActivityPresenter(AccountVerificationActivityView view,
+  AccountVerificationActivityPresenter(AccountVerificationActivityView view,
       DataAccessHandler dataAccessHandler) {
     this.view = view;
     this.dataAccessHandler = dataAccessHandler;
   }
 
-  public void setupProfile(String verificationCode){
+  void setupProfile(String verificationCode){
     if (view.checkInternetAvailable()){
       verifyRegistrationCode(verificationCode);
     }else{
@@ -50,7 +50,7 @@ public class AccountVerificationActivityPresenter {
     });
   }
 
-  public interface AccountVerificationActivityView extends BaseActivityPresenter.BaseActivityView {
+  interface AccountVerificationActivityView extends BaseActivityPresenter.BaseActivityView {
     void openSetupProfileActivity();
 
     void displayWrongCodeDialog();

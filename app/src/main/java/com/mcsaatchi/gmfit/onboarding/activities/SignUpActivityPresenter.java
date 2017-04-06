@@ -1,4 +1,4 @@
-package com.mcsaatchi.gmfit.onboarding.presenters;
+package com.mcsaatchi.gmfit.onboarding.activities;
 
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
@@ -9,16 +9,16 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class SignUpActivityPresenter {
+class SignUpActivityPresenter {
   private SignUpActivityView view;
   private DataAccessHandler dataAccessHandler;
 
-  public SignUpActivityPresenter(SignUpActivityView view, DataAccessHandler dataAccessHandler) {
+  SignUpActivityPresenter(SignUpActivityView view, DataAccessHandler dataAccessHandler) {
     this.view = view;
     this.dataAccessHandler = dataAccessHandler;
   }
 
-  public void signUserUp(final String full_name, final String email, final String password) {
+  void signUserUp(final String full_name, final String email, final String password) {
     view.callDisplayWaitingDialog(R.string.signing_up_dialog_title);
 
     dataAccessHandler.registerUser(full_name, email, password,
@@ -48,7 +48,7 @@ public class SignUpActivityPresenter {
         });
   }
 
-  public interface SignUpActivityView
+  interface SignUpActivityView
       extends BaseActivityPresenter.BaseActivityView {
     void saveUserSignUpDetails(String accessToken, String full_name, String email, String password);
 

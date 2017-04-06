@@ -1,4 +1,4 @@
-package com.mcsaatchi.gmfit.onboarding.presenters;
+package com.mcsaatchi.gmfit.onboarding.activities;
 
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
@@ -8,17 +8,17 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ResetPasswordActivityPresenter {
+class ResetPasswordActivityPresenter {
   private BaseActivityPresenter.BaseActivityView view;
   private DataAccessHandler dataAccessHandler;
 
-  public ResetPasswordActivityPresenter(BaseActivityPresenter.BaseActivityView view,
+  ResetPasswordActivityPresenter(BaseActivityPresenter.BaseActivityView view,
       DataAccessHandler dataAccessHandler) {
     this.view = view;
     this.dataAccessHandler = dataAccessHandler;
   }
 
-  public void resetPassword(String token, String newPassword) {
+  void resetPassword(String token, String newPassword) {
     if (view.checkInternetAvailable()) {
       view.callDisplayWaitingDialog(R.string.resetting_password_dialog_title);
 

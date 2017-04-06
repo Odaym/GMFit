@@ -14,7 +14,6 @@ import com.mcsaatchi.gmfit.architecture.picasso.CircleTransform;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
-import com.mcsaatchi.gmfit.onboarding.presenters.AccountVerificationActivityPresenter;
 import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
