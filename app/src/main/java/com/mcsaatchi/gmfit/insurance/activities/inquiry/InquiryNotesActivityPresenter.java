@@ -51,7 +51,7 @@ class InquiryNotesActivityPresenter extends BaseActivityPresenter {
   }
 
   void getCRMIncidentNotes(String incidentId) {
-    view.callDisplayWaitingDialog(R.string.submitting_data_dialog_title);
+    view.callDisplayWaitingDialog(R.string.loading_data_dialog_title);
 
     dataAccessHandler.getCRMIncidentNotes(incidentId, new Callback<CRMNotesResponse>() {
       @Override
