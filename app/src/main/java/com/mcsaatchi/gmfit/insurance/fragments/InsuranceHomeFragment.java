@@ -2,13 +2,10 @@ package com.mcsaatchi.gmfit.insurance.fragments;
 
 import android.Manifest;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -18,7 +15,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -27,9 +23,9 @@ import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.GMFitApplication;
 import com.mcsaatchi.gmfit.architecture.PermissionsChecker;
 import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
-import com.mcsaatchi.gmfit.architecture.rest.CertainPDFResponse;
 import com.mcsaatchi.gmfit.architecture.rest.InsuranceLoginResponseInnerData;
 import com.mcsaatchi.gmfit.common.Constants;
+import com.mcsaatchi.gmfit.common.fragments.BaseFragment;
 import com.mcsaatchi.gmfit.insurance.activities.home.ContractsChoiceView;
 import com.mcsaatchi.gmfit.insurance.activities.home.PDFViewerActivity;
 import com.mcsaatchi.gmfit.insurance.adapters.InsuranceOperationWidgetsGridAdapter;
@@ -38,16 +34,12 @@ import com.mcsaatchi.gmfit.insurance.models.InsuranceOperationWidget;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import timber.log.Timber;
 
-public class InsuranceHomeFragment extends Fragment {
+public class InsuranceHomeFragment extends BaseFragment
+    implements InsuranceHomeFragmentPresenter.InsuranceHomeFragmentView {
 
   private static final int REQUEST_CAMERA_AND_STORAGE_PERMISSIONS = 123;
   @Bind(R.id.insurancePathsGridView) RecyclerView insurancePathsGridView;
-  @Bind(R.id.parentLayout) RelativeLayout parentLayout;
   @Bind(R.id.cardOwnerTV) TextView cardOwnerTV;
   @Bind(R.id.bankNameTV) TextView bankNameTV;
   @Bind(R.id.cardNumberTV) TextView cardNumberTV;
@@ -55,9 +47,9 @@ public class InsuranceHomeFragment extends Fragment {
   @Inject PermissionsChecker permChecker;
   @Inject SharedPreferences prefs;
 
+  private InsuranceHomeFragmentPresenter presenter;
   private ViewGroup parentFragmentView;
   private ImageView contractChooserBTN;
-  private String cardNumber;
 
   @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
@@ -70,13 +62,15 @@ public class InsuranceHomeFragment extends Fragment {
 
     parentFragmentView = ((ViewGroup) getParentFragment().getView());
 
+    presenter = new InsuranceHomeFragmentPresenter(this, dataAccessHandler);
+
     List<InsuranceContract> insuranceContracts = new ArrayList<>();
 
     if (getArguments() != null) {
       InsuranceLoginResponseInnerData insuranceUserData =
           (InsuranceLoginResponseInnerData) getArguments().get(
               Constants.BUNDLE_INSURANCE_USER_OBJECT);
-      cardNumber = getArguments().getString("CARD_NUMBER");
+      String cardNumber = getArguments().getString("CARD_NUMBER");
 
       cardNumberTV.setText("Card Number: " + cardNumber);
 
@@ -122,74 +116,16 @@ public class InsuranceHomeFragment extends Fragment {
     return fragmentView;
   }
 
-  private void setupInsurancePathsGrid(
-      ArrayList<InsuranceOperationWidget> insuranceOperationWidgets) {
+  @Override public void openPDFViewerActivity(String PDF_file) {
+    Intent intent = new Intent(getActivity(), PDFViewerActivity.class);
+    intent.putExtra("TITLE", "Card Details");
+    intent.putExtra("PDF", PDF_file.replace("\\", ""));
 
-    InsuranceOperationWidgetsGridAdapter widgetsAdapter =
-        new InsuranceOperationWidgetsGridAdapter(getActivity(), getActivity().getApplication(),
-            insuranceOperationWidgets);
-
-    GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2);
-    gridLayoutManager.setSpanCount(4);
-    gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-      @Override public int getSpanSize(int position) {
-        return 2;
-      }
-    });
-
-    insurancePathsGridView.setHasFixedSize(true);
-    insurancePathsGridView.setLayoutManager(gridLayoutManager);
-    insurancePathsGridView.setAdapter(widgetsAdapter);
+    startActivity(intent);
   }
 
   @OnClick(R.id.cardDetailsLayout) public void handleCardDetailsClicked() {
-    getCardDetails();
-  }
-
-  private void getCardDetails() {
-    final ProgressDialog waitingDialog = new ProgressDialog(getActivity());
-    waitingDialog.setTitle(getResources().getString(R.string.loading_data_dialog_title));
-    waitingDialog.setMessage(getResources().getString(R.string.please_wait_dialog_message));
-    waitingDialog.show();
-
-    final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
-    alertDialog.setTitle(R.string.loading_data_dialog_title);
-    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getResources().getString(R.string.ok),
-        (dialog, which) -> {
-          dialog.dismiss();
-
-          if (waitingDialog.isShowing()) waitingDialog.dismiss();
-        });
-
-    dataAccessHandler.getCardDetails(
-        prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""),
-        new Callback<CertainPDFResponse>() {
-          @Override public void onResponse(Call<CertainPDFResponse> call,
-              Response<CertainPDFResponse> response) {
-
-            switch (response.code()) {
-              case 200:
-                Intent intent = new Intent(getActivity(), PDFViewerActivity.class);
-                intent.putExtra("TITLE", "Card Details");
-                intent.putExtra("PDF",
-                    response.body().getData().getBody().getData().replace("\\", ""));
-
-                startActivity(intent);
-                break;
-              case 449:
-                //view.displayRequestErrorDialog(Helpers.provideErrorStringFromJSON(response.errorBody()));
-                break;
-            }
-
-            waitingDialog.dismiss();
-          }
-
-          @Override public void onFailure(Call<CertainPDFResponse> call, Throwable t) {
-            Timber.d("Call failed with error : %s", t.getMessage());
-            alertDialog.setMessage(getString(R.string.server_error_got_returned));
-            alertDialog.show();
-          }
-        });
+    presenter.getCardDetails(prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""));
   }
 
   private void setupContractSelectorButton(final List<InsuranceContract> insuranceContracts) {
@@ -242,5 +178,25 @@ public class InsuranceHomeFragment extends Fragment {
         contractChooserBTN.setVisibility(View.GONE);
       });
     }
+  }
+
+  private void setupInsurancePathsGrid(
+      ArrayList<InsuranceOperationWidget> insuranceOperationWidgets) {
+
+    InsuranceOperationWidgetsGridAdapter widgetsAdapter =
+        new InsuranceOperationWidgetsGridAdapter(getActivity(), getActivity().getApplication(),
+            insuranceOperationWidgets);
+
+    GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2);
+    gridLayoutManager.setSpanCount(4);
+    gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+      @Override public int getSpanSize(int position) {
+        return 2;
+      }
+    });
+
+    insurancePathsGridView.setHasFixedSize(true);
+    insurancePathsGridView.setLayoutManager(gridLayoutManager);
+    insurancePathsGridView.setAdapter(widgetsAdapter);
   }
 }
