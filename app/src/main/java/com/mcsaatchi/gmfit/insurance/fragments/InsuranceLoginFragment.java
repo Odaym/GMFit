@@ -1,10 +1,8 @@
 package com.mcsaatchi.gmfit.insurance.fragments;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
@@ -18,23 +16,19 @@ import com.andreabaccega.widget.FormEditText;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.GMFitApplication;
 import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
-import com.mcsaatchi.gmfit.architecture.rest.CountriesListResponse;
 import com.mcsaatchi.gmfit.architecture.rest.CountriesListResponseDatum;
-import com.mcsaatchi.gmfit.architecture.rest.InsuranceLoginResponse;
 import com.mcsaatchi.gmfit.architecture.rest.InsuranceLoginResponseInnerData;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
+import com.mcsaatchi.gmfit.common.fragments.BaseFragment;
 import com.mcsaatchi.gmfit.insurance.activities.home.UpdatePasswordActivity;
 import com.mcsaatchi.gmfit.insurance.widget.CustomCountryPicker;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import timber.log.Timber;
 
-public class InsuranceLoginFragment extends Fragment {
+public class InsuranceLoginFragment extends BaseFragment
+    implements InsuranceLoginFragmentPresenter.InsuranceLoginFragmentView {
   public static final int INFO_UPDATED_SUCCESSFULLY_AFTER_LOGIN = 537;
   @Bind(R.id.memberImageIV) ImageView memberImageIV;
   @Bind(R.id.memberIdET) FormEditText memberIdET;
@@ -44,6 +38,7 @@ public class InsuranceLoginFragment extends Fragment {
   @Inject DataAccessHandler dataAccessHandler;
   @Inject SharedPreferences prefs;
 
+  private InsuranceLoginFragmentPresenter presenter;
   private boolean chosenCountry = false;
 
   private ArrayList<FormEditText> allFields = new ArrayList<>();
@@ -57,105 +52,17 @@ public class InsuranceLoginFragment extends Fragment {
 
     ButterKnife.bind(this, fragmentView);
 
+    presenter = new InsuranceLoginFragmentPresenter(this, dataAccessHandler);
+
     memberIdET.setText("2012250");
     passwordET.setText("odayoday");
 
     allFields.add(memberIdET);
     allFields.add(passwordET);
 
-    getCountriesList();
+    presenter.getCountriesList();
 
     return fragmentView;
-  }
-
-  @OnClick(R.id.loginBTN) public void handleUserLogin() {
-    if (Helpers.validateFields(allFields)) {
-      if (chosenCountry) {
-        insuranceUserLogin();
-      } else {
-        final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
-        alertDialog.setTitle(R.string.country_choice_dialog_title);
-        alertDialog.setMessage(getResources().getString(R.string.no_country_chosen_dialog_message));
-        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
-            (dialog, which) -> dialog.dismiss());
-        alertDialog.show();
-      }
-    }
-  }
-
-  private void insuranceUserLogin() {
-    final ProgressDialog waitingDialog = new ProgressDialog(getActivity());
-    waitingDialog.setTitle(getString(R.string.signing_in_dialog_title));
-    waitingDialog.setMessage(getString(R.string.please_wait_dialog_message));
-    waitingDialog.show();
-
-    final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
-    alertDialog.setTitle(R.string.signing_in_dialog_title);
-    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok), (dialog, which) -> {
-      dialog.dismiss();
-
-      if (waitingDialog.isShowing()) waitingDialog.dismiss();
-    });
-
-    dataAccessHandler.insuranceUserLogin(memberIdET.getText().toString(),
-        prefs.getString(Constants.EXTRAS_INSURANCE_COUNTRY_ISO_CODE, ""), "2",
-        passwordET.getText().toString(), new Callback<InsuranceLoginResponse>() {
-          @Override public void onResponse(Call<InsuranceLoginResponse> call,
-              Response<InsuranceLoginResponse> response) {
-            switch (response.code()) {
-              case 200:
-                prefs.edit()
-                    .putString(Constants.EXTRAS_INSURANCE_USER_PASSWORD,
-                        passwordET.getText().toString())
-                    .apply();
-                prefs.edit()
-                    .putString(Constants.EXTRAS_INSURANCE_USER_USERNAME,
-                        memberIdET.getText().toString())
-                    .apply();
-
-                /**
-                 * First time logging in, prompt them to change password
-                 */
-                if (response.body().getData().getBody().getData().getIsFirstLogin()) {
-                  Intent intent = new Intent(getActivity(), UpdatePasswordActivity.class);
-                  intent.putExtra("OLD_PASSWORD", passwordET.getText().toString());
-                  intent.putExtra(Constants.BUNDLE_INSURANCE_USER_OBJECT,
-                      response.body().getData().getBody().getData());
-                  startActivityForResult(intent, INFO_UPDATED_SUCCESSFULLY_AFTER_LOGIN);
-                } else {
-                  /**
-                   * Not the first time logging in, assume password should have been changed.
-                   * Send them to where they were originally suppposed to go (InsuranceHomeFragment)
-                   */
-                  Bundle bundle = new Bundle();
-                  bundle.putParcelable(Constants.BUNDLE_INSURANCE_USER_OBJECT,
-                      response.body().getData().getBody().getData());
-                  bundle.putString("CARD_NUMBER", memberIdET.getText().toString());
-                  InsuranceHomeFragment insuranceHomeFragment = new InsuranceHomeFragment();
-                  insuranceHomeFragment.setArguments(bundle);
-
-                  getFragmentManager().beginTransaction()
-                      .replace(R.id.root_frame, insuranceHomeFragment)
-                      .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                      .commitAllowingStateLoss();
-                }
-
-                break;
-              case 449:
-                //view.displayRequestErrorDialog(Helpers.provideErrorStringFromJSON(response.errorBody()));
-                break;
-            }
-
-            waitingDialog.dismiss();
-          }
-
-          @Override public void onFailure(Call<InsuranceLoginResponse> call, Throwable t) {
-            Timber.d("Call failed with error : %s", t.getMessage());
-            final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
-            alertDialog.setMessage(getString(R.string.server_error_got_returned));
-            alertDialog.show();
-          }
-        });
   }
 
   @Override public void onActivityResult(int requestCode, int resultCode, Intent intent) {
@@ -183,41 +90,69 @@ public class InsuranceLoginFragment extends Fragment {
     }
   }
 
-  private void getCountriesList() {
-    dataAccessHandler.getCountriesList(new Callback<CountriesListResponse>() {
-      @Override public void onResponse(Call<CountriesListResponse> call,
-          Response<CountriesListResponse> response) {
-        switch (response.code()) {
-          case 200:
-            ArrayList<String> countries = new ArrayList<>();
-            List<CountriesListResponseDatum> countriesResponse =
-                response.body().getData().getBody().getData();
+  @Override public void saveInsuranceCredentials(String memberId, String password) {
+    prefs.edit().putString(Constants.EXTRAS_INSURANCE_USER_PASSWORD, password).apply();
+    prefs.edit().putString(Constants.EXTRAS_INSURANCE_USER_USERNAME, memberId).apply();
+  }
 
-            for (int i = 0; i < countriesResponse.size(); i++) {
-              if (countriesResponse.get(i) != null) {
-                countries.add(countriesResponse.get(i).getLabel());
-              }
-            }
+  @Override public void openUpdatePasswordActivity(InsuranceLoginResponseInnerData userObject) {
+    Intent intent = new Intent(getActivity(), UpdatePasswordActivity.class);
+    intent.putExtra("OLD_PASSWORD", passwordET.getText().toString());
+    intent.putExtra(Constants.BUNDLE_INSURANCE_USER_OBJECT, userObject);
+    startActivityForResult(intent, INFO_UPDATED_SUCCESSFULLY_AFTER_LOGIN);
+  }
 
-            if (!countries.isEmpty()) {
-              countryPicker.setUpDropDown("Choose a country", "",
-                  countries.toArray(new String[countries.size()]), (index, selected) -> {
-                    chosenCountry = true;
+  @Override
+  public void openHomeFragment(InsuranceLoginResponseInnerData userObject, String memberId) {
+    Bundle bundle = new Bundle();
+    bundle.putParcelable(Constants.BUNDLE_INSURANCE_USER_OBJECT, userObject);
+    bundle.putString("CARD_NUMBER", memberId);
+    InsuranceHomeFragment insuranceHomeFragment = new InsuranceHomeFragment();
+    insuranceHomeFragment.setArguments(bundle);
 
-                    saveChosenCountry(countriesResponse, selected);
-                  });
+    getFragmentManager().beginTransaction()
+        .replace(R.id.root_frame, insuranceHomeFragment)
+        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+        .commitAllowingStateLoss();
+  }
 
-              countryPicker.setSelectedItem("");
-            }
+  @Override
+  public void populateCountriesDropdown(List<CountriesListResponseDatum> countriesResponse) {
+    ArrayList<String> countries = new ArrayList<>();
 
-            break;
-        }
+    for (int i = 0; i < countriesResponse.size(); i++) {
+      if (countriesResponse.get(i) != null) {
+        countries.add(countriesResponse.get(i).getLabel());
       }
+    }
 
-      @Override public void onFailure(Call<CountriesListResponse> call, Throwable t) {
-        Timber.d("Call failed with error : %s", t.getMessage());
+    if (!countries.isEmpty()) {
+      countryPicker.setUpDropDown("Choose a country", "Select Country",
+          countries.toArray(new String[countries.size()]), (index, selected) -> {
+            chosenCountry = true;
+
+            saveChosenCountry(countriesResponse, selected);
+          });
+
+      countryPicker.setSelectedItem("");
+    }
+  }
+
+  @OnClick(R.id.loginBTN) public void handleUserLogin() {
+    if (Helpers.validateFields(allFields)) {
+      if (chosenCountry) {
+        presenter.login(memberIdET.getText().toString(),
+            prefs.getString(Constants.EXTRAS_INSURANCE_COUNTRY_ISO_CODE, ""), "2",
+            passwordET.getText().toString());
+      } else {
+        final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+        alertDialog.setTitle(R.string.country_choice_dialog_title);
+        alertDialog.setMessage(getResources().getString(R.string.no_country_chosen_dialog_message));
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
+            (dialog, which) -> dialog.dismiss());
+        alertDialog.show();
       }
-    });
+    }
   }
 
   private void saveChosenCountry(List<CountriesListResponseDatum> countriesResponse,
