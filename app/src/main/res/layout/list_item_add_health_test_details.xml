@@ -12,7 +12,6 @@
       android:id="@+id/metricNameTV"
       android:layout_width="@dimen/text_input_label_width"
       android:layout_height="match_parent"
-      android:layout_weight="1"
       android:gravity="center_vertical"
       />
 
