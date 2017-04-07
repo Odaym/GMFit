@@ -13,7 +13,7 @@ public class BaseFragment extends Fragment implements BaseFragmentPresenter.Base
     Timber.d("Call failed with error : %s", responseMessage);
     final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
     alertDialog.setTitle(R.string.error_occurred_dialog_title);
-    alertDialog.setMessage(getResources().getString(R.string.server_error_got_returned));
+    alertDialog.setMessage(responseMessage);
     alertDialog.show();
   }
 
