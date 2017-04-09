@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
@@ -35,20 +34,19 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.GMFitApplication;
 import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
-import com.mcsaatchi.gmfit.architecture.rest.GetNearbyClinicsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.GetNearbyClinicsResponseDatum;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.classes.SimpleDividerItemDecoration;
+import com.mcsaatchi.gmfit.common.fragments.BaseFragment;
 import com.mcsaatchi.gmfit.insurance.adapters.ClinicAddressesRecyclerAdapter;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import timber.log.Timber;
 
-public class InsuranceDirectoryFragment extends Fragment implements OnMapReadyCallback {
+public class InsuranceDirectoryFragment extends BaseFragment
+    implements InsuranceDirectoryFragmentPresenter.InsuranceDirectoryFragmentView,
+    OnMapReadyCallback {
   private static final int PERMISSION_LOCATION_REQUEST_CODE = 375;
   @Bind(R.id.clinicAddressesRecyclerView) RecyclerView clinicAddressRecycler;
   @Bind(R.id.searchBoxET) EditText searchBoxET;
@@ -56,6 +54,8 @@ public class InsuranceDirectoryFragment extends Fragment implements OnMapReadyCa
 
   @Inject DataAccessHandler dataAccessHandler;
   @Inject SharedPreferences prefs;
+
+  private InsuranceDirectoryFragmentPresenter presenter;
 
   private boolean listingVisible = false;
   private List<GetNearbyClinicsResponseDatum> clinicsWithLocation = new ArrayList<>();
@@ -77,6 +77,8 @@ public class InsuranceDirectoryFragment extends Fragment implements OnMapReadyCa
     ButterKnife.bind(this, fragmentView);
 
     ((GMFitApplication) getActivity().getApplication()).getAppComponent().inject(this);
+
+    presenter = new InsuranceDirectoryFragmentPresenter(this, dataAccessHandler);
 
     parentFragmentView = ((ViewGroup) getParentFragment().getView());
 
@@ -165,6 +167,29 @@ public class InsuranceDirectoryFragment extends Fragment implements OnMapReadyCa
     }
   }
 
+  @Override public void displayNearbyClinics(List<GetNearbyClinicsResponseDatum> clinicsList) {
+    for (int i = 0; i < clinicsList.size(); i++) {
+      if (clinicsList.get(i).getLatitude() != null && clinicsList.get(i).getLongitude() != null) {
+        clinicsWithLocation.add(clinicsList.get(i));
+      }
+    }
+
+    ClinicAddressesRecyclerAdapter clinicAddressesRecyclerAdapter =
+        new ClinicAddressesRecyclerAdapter(getActivity(), clinicsWithLocation);
+
+    clinicAddressRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
+    clinicAddressRecycler.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
+    clinicAddressRecycler.setHasFixedSize(true);
+    clinicAddressRecycler.setAdapter(clinicAddressesRecyclerAdapter);
+
+    mapFragment.getMapAsync(InsuranceDirectoryFragment.this);
+    mapFragment.setListener(() -> {
+      NestedScrollView myScrollingContent =
+          ((NestedScrollView) getActivity().findViewById(R.id.myScrollingContent));
+      myScrollingContent.requestDisallowInterceptTouchEvent(true);
+    });
+  }
+
   private void getNearbyClinics() {
     loadingMapProgress.setVisibility(View.VISIBLE);
 
@@ -173,47 +198,8 @@ public class InsuranceDirectoryFragment extends Fragment implements OnMapReadyCa
     alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
         (dialog, which) -> dialog.dismiss());
 
-    dataAccessHandler.getNearbyClinics(
-        prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""), "H", 22, userLatLong[1],
-        userLatLong[0], 1, new Callback<GetNearbyClinicsResponse>() {
-          @Override public void onResponse(Call<GetNearbyClinicsResponse> call,
-              Response<GetNearbyClinicsResponse> response) {
-            switch (response.code()) {
-              case 200:
-                List<GetNearbyClinicsResponseDatum> clinicsList =
-                    response.body().getData().getBody().getData();
-
-                for (int i = 0; i < clinicsList.size(); i++) {
-                  if (clinicsList.get(i).getLatitude() != null
-                      && clinicsList.get(i).getLongitude() != null) {
-                    clinicsWithLocation.add(clinicsList.get(i));
-                  }
-                }
-
-                ClinicAddressesRecyclerAdapter clinicAddressesRecyclerAdapter =
-                    new ClinicAddressesRecyclerAdapter(getActivity(), clinicsWithLocation);
-
-                clinicAddressRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
-                clinicAddressRecycler.addItemDecoration(
-                    new SimpleDividerItemDecoration(getActivity()));
-                clinicAddressRecycler.setHasFixedSize(true);
-                clinicAddressRecycler.setAdapter(clinicAddressesRecyclerAdapter);
-
-                mapFragment.getMapAsync(InsuranceDirectoryFragment.this);
-                mapFragment.setListener(() -> {
-                  NestedScrollView myScrollingContent =
-                      ((NestedScrollView) getActivity().findViewById(R.id.myScrollingContent));
-                  myScrollingContent.requestDisallowInterceptTouchEvent(true);
-                });
-            }
-          }
-
-          @Override public void onFailure(Call<GetNearbyClinicsResponse> call, Throwable t) {
-            Timber.d("Call failed with error : %s", t.getMessage());
-            alertDialog.setMessage(getString(R.string.server_error_got_returned));
-            alertDialog.show();
-          }
-        });
+    presenter.getNearbyClinics(prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""), "H",
+        22, userLatLong[1], userLatLong[0], 1);
   }
 
   private void setupSwitchMapViewButton() {
