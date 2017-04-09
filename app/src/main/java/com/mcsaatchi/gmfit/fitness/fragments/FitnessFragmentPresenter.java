@@ -51,7 +51,7 @@ class FitnessFragmentPresenter extends BaseFragmentPresenter {
                 response.body().getData().getBody().getMetrics().getStepsCount().getValue();
 
             view.displayUserGoalMetrics(maxValue, currentValue, requestingPreviousData);
-
+            
             break;
         }
       }

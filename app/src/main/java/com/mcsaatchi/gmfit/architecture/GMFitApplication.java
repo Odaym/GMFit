@@ -62,6 +62,8 @@ public class GMFitApplication extends Application {
 
     applicationInstance = this;
 
+    Fabric.with(this, new Crashlytics());
+
     if (BuildConfig.DEBUG) {
       Timber.plant(new Timber.DebugTree() {
         @Override protected String createStackElementTag(StackTraceElement element) {
@@ -70,7 +72,6 @@ public class GMFitApplication extends Application {
       });
     } else {
       Timber.plant(new TimberReleaseTree());
-      Fabric.with(this, new Crashlytics());
     }
 
     addMealAlarms();

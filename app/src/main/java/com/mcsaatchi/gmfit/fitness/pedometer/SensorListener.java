@@ -15,6 +15,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
+import com.crashlytics.android.Crashlytics;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.mcsaatchi.gmfit.BuildConfig;
 import com.mcsaatchi.gmfit.architecture.GMFitApplication;
@@ -196,7 +197,8 @@ public class SensorListener extends Service implements SensorEventListener {
       }
 
       @Override public void onFailure(Call<AuthenticationResponse> call, Throwable t) {
-
+        Crashlytics.log(Log.ERROR, "GM_METRICS",
+            "REFRESHING TOKEN FAILED, CANNOT REACH SYNCHRONISE METRICS");
       }
     });
   }
@@ -227,7 +229,7 @@ public class SensorListener extends Service implements SensorEventListener {
           }
 
           @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
-
+            Crashlytics.log(Log.ERROR, "GM_METRICS", "SYNCRONISING METRICS HAS FAILED!");
           }
         });
   }
