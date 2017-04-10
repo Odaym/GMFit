@@ -8,17 +8,17 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ChangePasswordActivityPresenter {
+class ChangePasswordActivityPresenter {
   private ChangePasswordActivityView view;
   private DataAccessHandler dataAccessHandler;
 
-  public ChangePasswordActivityPresenter(ChangePasswordActivityView view,
+  ChangePasswordActivityPresenter(ChangePasswordActivityView view,
       DataAccessHandler dataAccessHandler) {
     this.view = view;
     this.dataAccessHandler = dataAccessHandler;
   }
 
-  public void changePassword(String old_password, String new_password) {
+  void changePassword(String old_password, String new_password) {
     view.callDisplayWaitingDialog(R.string.change_password_dialog_title);
 
     dataAccessHandler.changePassword(old_password, new_password,
@@ -40,7 +40,7 @@ public class ChangePasswordActivityPresenter {
         });
   }
 
-  public interface ChangePasswordActivityView extends BaseActivityPresenter.BaseActivityView {
+  interface ChangePasswordActivityView extends BaseActivityPresenter.BaseActivityView {
     void displaySuccessToast();
   }
 }
