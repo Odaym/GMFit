@@ -27,8 +27,6 @@ public class CustomizeWidgetsAndChartsActivity extends BaseActivity {
   @Bind(R.id.toolbar) Toolbar toolbar;
   @Bind(R.id.mainLayoutTop) LinearLayout mainLayoutTop;
 
-  private CustomizerViewPager_Adapter fragmentsPagerAdapter;
-
   private String typeOfFragmentToCustomiseFor;
 
   private ArrayList<FitnessWidget> fitnessWidgetsMapExtra;
@@ -82,7 +80,8 @@ public class CustomizeWidgetsAndChartsActivity extends BaseActivity {
       }
     }
 
-    fragmentsPagerAdapter = new CustomizerViewPager_Adapter(getSupportFragmentManager(), tabTitles);
+    CustomizerViewPager_Adapter fragmentsPagerAdapter =
+        new CustomizerViewPager_Adapter(getSupportFragmentManager(), tabTitles);
 
     tabs.setDistributeEvenly(true);
     tabs.setSelectedIndicatorColors(getResources().getColor(android.R.color.white));
@@ -93,11 +92,11 @@ public class CustomizeWidgetsAndChartsActivity extends BaseActivity {
     tabs.setViewPager(pager);
   }
 
-  public class CustomizerViewPager_Adapter extends FragmentStatePagerAdapter {
+  private class CustomizerViewPager_Adapter extends FragmentStatePagerAdapter {
 
     private String[] tabTitles;
 
-    public CustomizerViewPager_Adapter(FragmentManager fm, String[] tabTitles) {
+    CustomizerViewPager_Adapter(FragmentManager fm, String[] tabTitles) {
       super(fm);
 
       this.tabTitles = tabTitles;

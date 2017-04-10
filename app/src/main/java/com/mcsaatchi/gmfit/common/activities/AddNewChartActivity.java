@@ -12,20 +12,15 @@ import android.widget.Toast;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.rest.ChartsBySectionResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ChartsBySectionResponseDatum;
-import com.mcsaatchi.gmfit.architecture.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.adapters.DataChartsListingAdapter;
 import com.mcsaatchi.gmfit.common.models.DataChart;
 import java.util.ArrayList;
 import java.util.List;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import timber.log.Timber;
 
-public class AddNewChartActivity extends BaseActivity {
+public class AddNewChartActivity extends BaseActivity
+    implements AddNewChartActivityPresenter.AddNewChartActivityView {
   private static final int ADD_NEW_FITNESS_CHART_REQUEST_CODE = 1;
   private static final int ADD_NEW_NUTRITION_CHART_REQUEST_CODE = 2;
 
@@ -35,9 +30,9 @@ public class AddNewChartActivity extends BaseActivity {
 
   private List<DataChart> chartItemsMap = new ArrayList<>();
 
+  private AddNewChartActivityPresenter presenter;
   private ArrayList<DataChart> chartsMap;
   private ProgressDialog waitingDialog;
-  private AlertDialog alertDialog;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -49,6 +44,8 @@ public class AddNewChartActivity extends BaseActivity {
     setupToolbar(getClass().getSimpleName(), toolbar,
         getResources().getString(R.string.add_new_chart_activity_title), true);
 
+    presenter = new AddNewChartActivityPresenter(this, dataAccessHandler);
+
     Bundle extras = getIntent().getExtras();
 
     waitingDialog = new ProgressDialog(this);
@@ -56,7 +53,7 @@ public class AddNewChartActivity extends BaseActivity {
     waitingDialog.setMessage(getString(R.string.please_wait_dialog_message));
     waitingDialog.show();
 
-    alertDialog = new AlertDialog.Builder(this).create();
+    AlertDialog alertDialog = new AlertDialog.Builder(this).create();
     alertDialog.setTitle(R.string.fetching_chart_data_dialog_title);
     alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok), (dialog, which) -> {
       dialog.dismiss();
@@ -75,7 +72,7 @@ public class AddNewChartActivity extends BaseActivity {
             chartsMap =
                 getIntent().getExtras().getParcelableArrayList(Constants.BUNDLE_FITNESS_CHARTS_MAP);
 
-            getChartsBySection("fitness", ADD_NEW_FITNESS_CHART_REQUEST_CODE);
+            presenter.getChartsBySection("fitness", ADD_NEW_FITNESS_CHART_REQUEST_CODE);
             break;
           case Constants.EXTRAS_ADD_NUTRIITION_CHART:
             topLayout.setBackground(getResources().getDrawable(R.drawable.nutrition_background));
@@ -83,92 +80,57 @@ public class AddNewChartActivity extends BaseActivity {
             chartsMap = getIntent().getExtras()
                 .getParcelableArrayList(Constants.BUNDLE_NUTRITION_CHARTS_MAP);
 
-            getChartsBySection("nutrition", ADD_NEW_NUTRITION_CHART_REQUEST_CODE);
+            presenter.getChartsBySection("nutrition", ADD_NEW_NUTRITION_CHART_REQUEST_CODE);
             break;
         }
       }
     }
   }
 
-  private void getChartsBySection(String sectionName, final int requestCodeToSendBack) {
-    dataAccessHandler.getChartsBySection(sectionName, new Callback<ChartsBySectionResponse>() {
-      @Override public void onResponse(Call<ChartsBySectionResponse> call,
-          Response<ChartsBySectionResponse> response) {
-        switch (response.code()) {
-          case 200:
-            waitingDialog.dismiss();
+  @Override
+  public void displayChartsBySection(List<ChartsBySectionResponseDatum> chartsFromResponse,
+      int requestCodeToSendBack) {
+    for (int i = 0; i < chartsFromResponse.size(); i++) {
+      DataChart newChartToAdd = new DataChart();
 
-            List<ChartsBySectionResponseDatum> chartsFromResponse =
-                response.body().getData().getBody().getData();
+      newChartToAdd.setType(chartsFromResponse.get(i).getSlug());
+      newChartToAdd.setName(chartsFromResponse.get(i).getName());
+      newChartToAdd.setMeasurementUnit(chartsFromResponse.get(i).getUnit());
+      newChartToAdd.setChart_id(chartsFromResponse.get(i).getId());
 
-            for (int i = 0; i < chartsFromResponse.size(); i++) {
-              DataChart newChartToAdd = new DataChart();
+      chartItemsMap.add(newChartToAdd);
+    }
 
-              newChartToAdd.setType(chartsFromResponse.get(i).getSlug());
-              newChartToAdd.setName(chartsFromResponse.get(i).getName());
-              newChartToAdd.setMeasurementUnit(chartsFromResponse.get(i).getUnit());
-              newChartToAdd.setChart_id(chartsFromResponse.get(i).getId());
+    chartsList.setAdapter(new DataChartsListingAdapter(chartItemsMap, AddNewChartActivity.this));
 
-              chartItemsMap.add(newChartToAdd);
-            }
+    chartsList.setOnItemClickListener((adapterView, view, position, l) -> {
 
-            chartsList.setAdapter(
-                new DataChartsListingAdapter(chartItemsMap, AddNewChartActivity.this));
+      DataChart dataChart = chartItemsMap.get(position);
 
-            chartsList.setOnItemClickListener((adapterView, view, position, l) -> {
+      boolean chartExists = false;
 
-              DataChart dataChart = chartItemsMap.get(position);
-
-              boolean chartExists = false;
-
-              for (int i = 0; i < chartsMap.size(); i++) {
-                if (dataChart.getName().equals(chartsMap.get(i).getName())) {
-                  chartExists = true;
-                }
-              }
-
-              if (chartExists) {
-                Toast.makeText(AddNewChartActivity.this, R.string.duplicate_chart_error,
-                    Toast.LENGTH_SHORT).show();
-              } else {
-                addMetricChart(dataChart.getChart_id());
-
-                Intent intent = new Intent();
-                intent.putExtra(Constants.EXTRAS_CHART_OBJECT, dataChart);
-                setResult(requestCodeToSendBack, intent);
-
-                finish();
-              }
-            });
-
-            break;
+      for (int i = 0; i < chartsMap.size(); i++) {
+        if (dataChart.getName().equals(chartsMap.get(i).getName())) {
+          chartExists = true;
         }
       }
 
-      @Override public void onFailure(Call<ChartsBySectionResponse> call, Throwable t) {
-        Timber.d("Call failed with error : %s", t.getMessage());
-        alertDialog.setMessage(getResources().getString(R.string.server_error_got_returned));
-        alertDialog.show();
+      if (chartExists) {
+        Toast.makeText(AddNewChartActivity.this, R.string.duplicate_chart_error, Toast.LENGTH_SHORT)
+            .show();
+      } else {
+        presenter.addMetricChart(dataChart.getChart_id());
+
+        Intent intent = new Intent();
+        intent.putExtra(Constants.EXTRAS_CHART_OBJECT, dataChart);
+        setResult(requestCodeToSendBack, intent);
+
+        finish();
       }
     });
   }
 
-  private void addMetricChart(int chart_id) {
-    dataAccessHandler.addMetricChart(chart_id, new Callback<DefaultGetResponse>() {
-      @Override
-      public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
-        switch (response.code()) {
-          case 200:
-            Timber.d("onResponse: Successfully add a new chart!");
-            break;
-        }
-      }
-
-      @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
-        Timber.d("Call failed with error : %s", t.getMessage());
-        alertDialog.setMessage(getResources().getString(R.string.server_error_got_returned));
-        alertDialog.show();
-      }
-    });
+  @Override public void dismissWaitingDialog() {
+    waitingDialog.dismiss();
   }
 }
