@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -22,9 +21,7 @@ import butterknife.ButterKnife;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
 import com.mcsaatchi.gmfit.architecture.otto.MedicationItemCreatedEvent;
-import com.mcsaatchi.gmfit.architecture.rest.MostPopularMedicationsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.MostPopularMedicationsResponseDatum;
-import com.mcsaatchi.gmfit.architecture.rest.SearchMedicinesResponse;
 import com.mcsaatchi.gmfit.architecture.rest.SearchMedicinesResponseDatum;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
@@ -34,12 +31,9 @@ import com.mcsaatchi.gmfit.health.models.Medication;
 import com.squareup.otto.Subscribe;
 import java.util.ArrayList;
 import java.util.List;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import timber.log.Timber;
 
-public class SearchMedicationsActivity extends BaseActivity {
+public class SearchMedicationsActivity extends BaseActivity
+    implements SearchMedicationsActivityPresenter.SearchMedicationsActivityView {
 
   @Bind(R.id.toolbar) Toolbar toolbar;
   @Bind(R.id.searchMedicationsTV) EditText searchMedicationsTV;
@@ -50,6 +44,8 @@ public class SearchMedicationsActivity extends BaseActivity {
   @Bind(R.id.searchResultsHintTV) TextView searchResultsHintTV;
   @Bind(R.id.searchResultsListLayout) LinearLayout searchResultsListLayout;
   @Bind(R.id.noSearchResultsFoundLayout) LinearLayout noSearchResultsFoundLayout;
+
+  private SearchMedicationsActivityPresenter presenter;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -63,7 +59,11 @@ public class SearchMedicationsActivity extends BaseActivity {
 
     EventBusSingleton.getInstance().register(this);
 
-    getMostPopularMedications();
+    presenter = new SearchMedicationsActivityPresenter(this, dataAccessHandler);
+
+    presenter.getPopularMedicines(prefs.getString(Constants.EXTRAS_INSURANCE_USER_USERNAME, ""),
+        prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""),
+        prefs.getString(Constants.EXTRAS_INSURANCE_COUNTRY_ISO_CODE, ""), "2", "2013");
 
     searchMedicationsTV.addTextChangedListener(new TextWatcher() {
       @Override public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -78,7 +78,10 @@ public class SearchMedicationsActivity extends BaseActivity {
           searchResultsHintTV.setText(getString(R.string.most_popular_hint));
           pb_loading_indicator.setVisibility(View.GONE);
 
-          getMostPopularMedications();
+          presenter.getPopularMedicines(
+              prefs.getString(Constants.EXTRAS_INSURANCE_USER_USERNAME, ""),
+              prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""),
+              prefs.getString(Constants.EXTRAS_INSURANCE_COUNTRY_ISO_CODE, ""), "2", "2013");
         } else if (charSequence.toString().length() > 2) {
           searchResultsHintTV.setText(getString(R.string.search_results_list_label));
           pb_loading_indicator.setVisibility(View.VISIBLE);
@@ -88,15 +91,15 @@ public class SearchMedicationsActivity extends BaseActivity {
             searchIconIV.setOnClickListener(view -> {
               searchMedicationsTV.setText("");
 
-              /**
-               * Hide keyboard
-               */
               InputMethodManager imm =
                   (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
               imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
             });
 
-            searchMedicines(charSequence.toString());
+            presenter.searchMedicines(prefs.getString(Constants.EXTRAS_INSURANCE_USER_USERNAME, ""),
+                prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""),
+                prefs.getString(Constants.EXTRAS_INSURANCE_COUNTRY_ISO_CODE, ""), "2", "2013",
+                charSequence.toString());
           }, 500);
         }
       }
@@ -112,117 +115,73 @@ public class SearchMedicationsActivity extends BaseActivity {
     EventBusSingleton.getInstance().unregister(this);
   }
 
-  private void searchMedicines(String key) {
-    dataAccessHandler.searchMedicines(prefs.getString(Constants.EXTRAS_INSURANCE_USER_USERNAME, ""),
-        prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""),
-        prefs.getString(Constants.EXTRAS_INSURANCE_COUNTRY_ISO_CODE, ""), "2", "2013", key,
-        new Callback<SearchMedicinesResponse>() {
-          @Override public void onResponse(Call<SearchMedicinesResponse> call,
-              Response<SearchMedicinesResponse> response) {
-            switch (response.code()) {
-              case 200:
-                final List<Medication> medicationsReturned = new ArrayList<>();
+  @Override
+  public void displayMedicineResults(List<SearchMedicinesResponseDatum> medicationsFromResponse) {
+    final List<Medication> medicationsReturned = new ArrayList<>();
 
-                List<SearchMedicinesResponseDatum> medicationsFromResponse =
-                    response.body().getData().getBody().getData().getItemLst();
+    if (medicationsFromResponse != null) {
+      for (int i = 0; i < medicationsFromResponse.size(); i++) {
 
-                if (medicationsFromResponse != null) {
-                  for (int i = 0; i < medicationsFromResponse.size(); i++) {
+        SearchMedicinesResponseDatum medicationDatum = medicationsFromResponse.get(i);
 
-                    SearchMedicinesResponseDatum medicationDatum = medicationsFromResponse.get(i);
+        Medication medication = new Medication();
 
-                    Medication medication = new Medication();
+        medication.setName(medicationDatum.getDescr());
+        medication.setUnitForm(medicationDatum.getUnitForm());
+        medication.setDescription(medicationDatum.getMPres()
+            + " "
+            + medicationDatum.getMForm()
+            + " "
+            + medicationDatum.getMDosg()
+            + " "
+            + medicationDatum.getUnitForm());
 
-                    medication.setName(medicationDatum.getDescr());
-                    medication.setUnitForm(medicationDatum.getUnitForm());
-                    medication.setDescription(medicationDatum.getMPres()
-                        + " "
-                        + medicationDatum.getMForm()
-                        + " "
-                        + medicationDatum.getMDosg()
-                        + " "
-                        + medicationDatum.getUnitForm());
+        medicationsReturned.add(medication);
+      }
 
-                    medicationsReturned.add(medication);
-                  }
+      setupMedicationsList(medicationsReturned);
 
-                  setupMedicationsList(medicationsReturned);
-
-                  pb_loading_indicator.setVisibility(View.GONE);
-                  searchResultsListLayout.setVisibility(View.VISIBLE);
-                  noSearchResultsFoundLayout.setVisibility(View.GONE);
-                } else {
-                  pb_loading_indicator.setVisibility(View.GONE);
-                  searchResultsListLayout.setVisibility(View.GONE);
-                  noSearchResultsFoundLayout.setVisibility(View.VISIBLE);
-                }
-
-                break;
-            }
-          }
-
-          @Override public void onFailure(Call<SearchMedicinesResponse> call, Throwable t) {
-            Timber.d("Call failed with error : %s", t.getMessage());
-            final AlertDialog alertDialog =
-                new AlertDialog.Builder(SearchMedicationsActivity.this).create();
-            alertDialog.setMessage(getString(R.string.server_error_got_returned));
-            alertDialog.show();
-          }
-        });
+      pb_loading_indicator.setVisibility(View.GONE);
+      searchResultsListLayout.setVisibility(View.VISIBLE);
+      noSearchResultsFoundLayout.setVisibility(View.GONE);
+    } else {
+      pb_loading_indicator.setVisibility(View.GONE);
+      searchResultsListLayout.setVisibility(View.GONE);
+      noSearchResultsFoundLayout.setVisibility(View.VISIBLE);
+    }
   }
 
-  private void getMostPopularMedications() {
-    dataAccessHandler.getMostPopularMedications(
-        prefs.getString(Constants.EXTRAS_INSURANCE_USER_USERNAME, ""),
-        prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""),
-        prefs.getString(Constants.EXTRAS_INSURANCE_COUNTRY_ISO_CODE, ""), "2", "2013",
-        new Callback<MostPopularMedicationsResponse>() {
-          @Override public void onResponse(Call<MostPopularMedicationsResponse> call,
-              Response<MostPopularMedicationsResponse> response) {
-            switch (response.code()) {
-              case 200:
-                final List<Medication> medicationsReturned = new ArrayList<>();
+  @Override public void displayPopularMedicines(
+      List<MostPopularMedicationsResponseDatum> medicationsFromResponse) {
+    final List<Medication> medicationsReturned = new ArrayList<>();
 
-                List<MostPopularMedicationsResponseDatum> medicationsFromResponse =
-                    response.body().getData().getBody().getData().getItemLst();
+    for (int i = 0; i < medicationsFromResponse.size(); i++) {
 
-                for (int i = 0; i < medicationsFromResponse.size(); i++) {
+      MostPopularMedicationsResponseDatum medicationDatum = medicationsFromResponse.get(i);
 
-                  MostPopularMedicationsResponseDatum medicationDatum =
-                      medicationsFromResponse.get(i);
+      Medication medication = new Medication();
 
-                  Medication medication = new Medication();
+      medication.setName(medicationDatum.getDescr());
+      medication.setUnitForm(medicationDatum.getUnitForm());
+      medication.setDescription(medicationDatum.getMPres()
+          + " "
+          + medicationDatum.getMForm()
+          + " "
+          + medicationDatum.getMDosg()
+          + " "
+          + medicationDatum.getUnitForm());
 
-                  medication.setName(medicationDatum.getDescr());
-                  medication.setUnitForm(medicationDatum.getUnitForm());
-                  medication.setDescription(medicationDatum.getMPres()
-                      + " "
-                      + medicationDatum.getMForm()
-                      + " "
-                      + medicationDatum.getMDosg()
-                      + " "
-                      + medicationDatum.getUnitForm());
+      medicationsReturned.add(medication);
+    }
 
-                  medicationsReturned.add(medication);
-                }
+    setupMedicationsList(medicationsReturned);
 
-                setupMedicationsList(medicationsReturned);
+    searchResultsListLayout.setVisibility(View.VISIBLE);
+    noSearchResultsFoundLayout.setVisibility(View.GONE);
+  }
 
-                searchResultsListLayout.setVisibility(View.VISIBLE);
-                noSearchResultsFoundLayout.setVisibility(View.GONE);
-
-                break;
-            }
-          }
-
-          @Override public void onFailure(Call<MostPopularMedicationsResponse> call, Throwable t) {
-            Timber.d("Call failed with error : %s", t.getMessage());
-            final AlertDialog alertDialog =
-                new AlertDialog.Builder(SearchMedicationsActivity.this).create();
-            alertDialog.setMessage(getString(R.string.server_error_got_returned));
-            alertDialog.show();
-          }
-        });
+  @Subscribe public void reactToMedicationAdded(MedicationItemCreatedEvent event) {
+    finish();
   }
 
   private void setupMedicationsList(List<Medication> medicationList) {
@@ -233,9 +192,5 @@ public class SearchMedicationsActivity extends BaseActivity {
     mealsAvailableRecyclerView.setAdapter(medicationsRecyclerAdapter);
 
     pb_loading_medications_indicator.setVisibility(View.GONE);
-  }
-
-  @Subscribe public void reactToMedicationAdded(MedicationItemCreatedEvent event) {
-    finish();
   }
 }
