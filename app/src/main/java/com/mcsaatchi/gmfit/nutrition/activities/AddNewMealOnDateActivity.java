@@ -12,7 +12,6 @@ import butterknife.ButterKnife;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
 import com.mcsaatchi.gmfit.architecture.otto.MealEntryManipulatedEvent;
-import com.mcsaatchi.gmfit.architecture.rest.UserMealsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.UserMealsResponseInner;
 import com.mcsaatchi.gmfit.architecture.touch_helpers.SimpleSwipeItemTouchHelperCallback;
 import com.mcsaatchi.gmfit.common.Constants;
@@ -23,12 +22,9 @@ import com.mcsaatchi.gmfit.nutrition.models.MealItem;
 import com.squareup.otto.Subscribe;
 import java.util.ArrayList;
 import java.util.List;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import timber.log.Timber;
 
-public class AddNewMealOnDateActivity extends BaseActivity {
+public class AddNewMealOnDateActivity extends BaseActivity
+    implements AddNewMealOnDateActivityPresenter.AddNewMealOnDateActivityView {
   private static final int BARCODE_CAPTURE_RC = 773;
   /**
    * BREAKFAST CHART
@@ -67,6 +63,8 @@ public class AddNewMealOnDateActivity extends BaseActivity {
   private ArrayList<MealItem> finalSnackMeals = new ArrayList<>();
   private UserMealsRecyclerAdapterDragSwipe userMealsRecyclerAdapter;
 
+  private AddNewMealOnDateActivityPresenter presenter;
+
   @Override public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
@@ -76,6 +74,8 @@ public class AddNewMealOnDateActivity extends BaseActivity {
 
     EventBusSingleton.getInstance().register(this);
 
+    presenter = new AddNewMealOnDateActivityPresenter(this, dataAccessHandler);
+
     if (getIntent().getExtras() != null) {
       chosenDate = getIntent().getExtras().getString(Constants.EXTRAS_DATE_TO_ADD_MEAL_ON, "");
     }
@@ -84,7 +84,7 @@ public class AddNewMealOnDateActivity extends BaseActivity {
 
     hookupMealSectionRowsClickListeners();
 
-    getUserAddedMealsOnDate(chosenDate);
+    presenter.getUserAddedMealsOnDate(chosenDate);
   }
 
   @Override protected void onDestroy() {
@@ -93,8 +93,109 @@ public class AddNewMealOnDateActivity extends BaseActivity {
     EventBusSingleton.getInstance().unregister(this);
   }
 
+  @Override public void displayUserAddedMeals(List<UserMealsResponseInner> breakfastMeals,
+      List<UserMealsResponseInner> lunchMeals, List<UserMealsResponseInner> dinnerMeals,
+      List<UserMealsResponseInner> snackMeals) {
+    finalBreakfastMeals.clear();
+    finalLunchMeals.clear();
+    finalDinnerMeals.clear();
+    finalSnackMeals.clear();
+
+    //Insert Breakfast meals
+    for (int i = 0; i < breakfastMeals.size(); i++) {
+      MealItem breakfastMeal = new MealItem();
+      breakfastMeal.setMeal_id(breakfastMeals.get(i).getId());
+      breakfastMeal.setCreated_at(breakfastMeals.get(i).getCreatedAt());
+      breakfastMeal.setInstance_id(breakfastMeals.get(i).getInstance_id());
+      breakfastMeal.setType("Breakfast");
+      breakfastMeal.setName(breakfastMeals.get(i).getName());
+      breakfastMeal.setMeasurementUnit(breakfastMeals.get(i).getMeasurementUnit());
+      breakfastMeal.setAmount(breakfastMeals.get(i).getAmount());
+      breakfastMeal.setSectionType(2);
+
+      //if (breakfastMeals.get(i).getTotalCalories() != null) {
+      breakfastMeal.setTotalCalories(breakfastMeals.get(i).getTotalCalories());
+      //} else {
+      //  breakfastMeal.setTotalCalories(0);
+      //}
+
+      finalBreakfastMeals.add(breakfastMeal);
+    }
+
+    setupMealSectionsListView(finalBreakfastMeals, "Breakfast");
+
+    //Insert Lunch meals
+    for (int i = 0; i < lunchMeals.size(); i++) {
+      MealItem lunchMeal = new MealItem();
+      lunchMeal.setMeal_id(lunchMeals.get(i).getId());
+      lunchMeal.setCreated_at(lunchMeals.get(i).getCreatedAt());
+      lunchMeal.setInstance_id(lunchMeals.get(i).getInstance_id());
+      lunchMeal.setType("Lunch");
+      lunchMeal.setName(lunchMeals.get(i).getName());
+      lunchMeal.setMeasurementUnit(lunchMeals.get(i).getMeasurementUnit());
+      lunchMeal.setAmount(lunchMeals.get(i).getAmount());
+      lunchMeal.setSectionType(2);
+
+      //if (lunchMeals.get(i).getTotalCalories() != null) {
+      lunchMeal.setTotalCalories(lunchMeals.get(i).getTotalCalories());
+      //} else {
+      //  lunchMeal.setTotalCalories(0);
+      //}
+
+      finalLunchMeals.add(lunchMeal);
+    }
+
+    setupMealSectionsListView(finalLunchMeals, "Lunch");
+
+    //Insert Dinner meals
+    for (int i = 0; i < dinnerMeals.size(); i++) {
+      MealItem dinnerMeal = new MealItem();
+      dinnerMeal.setMeal_id(dinnerMeals.get(i).getId());
+      dinnerMeal.setCreated_at(dinnerMeals.get(i).getCreatedAt());
+      dinnerMeal.setInstance_id(dinnerMeals.get(i).getInstance_id());
+      dinnerMeal.setType("Dinner");
+      dinnerMeal.setName(dinnerMeals.get(i).getName());
+      dinnerMeal.setMeasurementUnit(dinnerMeals.get(i).getMeasurementUnit());
+      dinnerMeal.setAmount(dinnerMeals.get(i).getAmount());
+      dinnerMeal.setSectionType(2);
+
+      //if (dinnerMeals.get(i).getTotalCalories() != null) {
+      dinnerMeal.setTotalCalories(dinnerMeals.get(i).getTotalCalories());
+      //} else {
+      //  dinnerMeal.setTotalCalories(0);
+      //}
+
+      finalDinnerMeals.add(dinnerMeal);
+    }
+
+    setupMealSectionsListView(finalDinnerMeals, "Dinner");
+
+    //Insert Snack meals
+    for (int i = 0; i < snackMeals.size(); i++) {
+      MealItem snackMeal = new MealItem();
+      snackMeal.setMeal_id(snackMeals.get(i).getId());
+      snackMeal.setInstance_id(snackMeals.get(i).getInstance_id());
+      snackMeal.setCreated_at(snackMeals.get(i).getCreatedAt());
+      snackMeal.setType("Snack");
+      snackMeal.setName(snackMeals.get(i).getName());
+      snackMeal.setMeasurementUnit(snackMeals.get(i).getMeasurementUnit());
+      snackMeal.setAmount(snackMeals.get(i).getAmount());
+      snackMeal.setSectionType(2);
+
+      //if (snackMeals.get(i).getTotalCalories() != null) {
+      snackMeal.setTotalCalories(snackMeals.get(i).getTotalCalories());
+      //} else {
+      //  snackMeal.setTotalCalories(0);
+      //}
+
+      finalSnackMeals.add(snackMeal);
+    }
+
+    setupMealSectionsListView(finalSnackMeals, "Snack");
+  }
+
   @Subscribe public void reflectMealEntryChanged(MealEntryManipulatedEvent event) {
-    getUserAddedMealsOnDate(chosenDate);
+    presenter.getUserAddedMealsOnDate(chosenDate);
   }
 
   public void handleScanMealEntry() {
@@ -127,142 +228,6 @@ public class AddNewMealOnDateActivity extends BaseActivity {
     addNewEntryBTN_SNACKS.setOnClickListener(
         view -> openMealEntryPickerActivity(chartTitleTV_SNACKS.getText().toString()));
     scanEntryBTN_SNACKS.setOnClickListener(view -> handleScanMealEntry());
-  }
-
-  private void getUserAddedMealsOnDate(String chosenDate) {
-    dataAccessHandler.getUserAddedMealsOnDate(
-
-        chosenDate, new Callback<UserMealsResponse>() {
-          @Override public void onResponse(Call<UserMealsResponse> call,
-              Response<UserMealsResponse> response) {
-            switch (response.code()) {
-              case 200:
-
-                /**
-                 * Grab all meals from the API
-                 */
-                List<UserMealsResponseInner> breakfastMeals =
-                    response.body().getData().getBody().getData().getBreakfast();
-                List<UserMealsResponseInner> lunchMeals =
-                    response.body().getData().getBody().getData().getLunch();
-                List<UserMealsResponseInner> dinnerMeals =
-                    response.body().getData().getBody().getData().getDinner();
-                List<UserMealsResponseInner> snackMeals =
-                    response.body().getData().getBody().getData().getSnack();
-
-                finalBreakfastMeals.clear();
-                finalLunchMeals.clear();
-                finalDinnerMeals.clear();
-                finalSnackMeals.clear();
-
-                /**
-                 * Insert Breakfast meals
-                 */
-                for (int i = 0; i < breakfastMeals.size(); i++) {
-                  MealItem breakfastMeal = new MealItem();
-                  breakfastMeal.setMeal_id(breakfastMeals.get(i).getId());
-                  breakfastMeal.setCreated_at(breakfastMeals.get(i).getCreatedAt());
-                  breakfastMeal.setInstance_id(breakfastMeals.get(i).getInstance_id());
-                  breakfastMeal.setType("Breakfast");
-                  breakfastMeal.setName(breakfastMeals.get(i).getName());
-                  breakfastMeal.setMeasurementUnit(breakfastMeals.get(i).getMeasurementUnit());
-                  breakfastMeal.setAmount(breakfastMeals.get(i).getAmount());
-                  breakfastMeal.setSectionType(2);
-
-                  //if (breakfastMeals.get(i).getTotalCalories() != null) {
-                  breakfastMeal.setTotalCalories(breakfastMeals.get(i).getTotalCalories());
-                  //} else {
-                  //  breakfastMeal.setTotalCalories(0);
-                  //}
-
-                  finalBreakfastMeals.add(breakfastMeal);
-                }
-
-                setupMealSectionsListView(finalBreakfastMeals, "Breakfast");
-
-                /**
-                 * Insert Lunch meals
-                 */
-                for (int i = 0; i < lunchMeals.size(); i++) {
-                  MealItem lunchMeal = new MealItem();
-                  lunchMeal.setMeal_id(lunchMeals.get(i).getId());
-                  lunchMeal.setCreated_at(lunchMeals.get(i).getCreatedAt());
-                  lunchMeal.setInstance_id(lunchMeals.get(i).getInstance_id());
-                  lunchMeal.setType("Lunch");
-                  lunchMeal.setName(lunchMeals.get(i).getName());
-                  lunchMeal.setMeasurementUnit(lunchMeals.get(i).getMeasurementUnit());
-                  lunchMeal.setAmount(lunchMeals.get(i).getAmount());
-                  lunchMeal.setSectionType(2);
-
-                  //if (lunchMeals.get(i).getTotalCalories() != null) {
-                  lunchMeal.setTotalCalories(lunchMeals.get(i).getTotalCalories());
-                  //} else {
-                  //  lunchMeal.setTotalCalories(0);
-                  //}
-
-                  finalLunchMeals.add(lunchMeal);
-                }
-
-                setupMealSectionsListView(finalLunchMeals, "Lunch");
-
-                /**
-                 * Insert Dinner meals
-                 */
-                for (int i = 0; i < dinnerMeals.size(); i++) {
-                  MealItem dinnerMeal = new MealItem();
-                  dinnerMeal.setMeal_id(dinnerMeals.get(i).getId());
-                  dinnerMeal.setCreated_at(dinnerMeals.get(i).getCreatedAt());
-                  dinnerMeal.setInstance_id(dinnerMeals.get(i).getInstance_id());
-                  dinnerMeal.setType("Dinner");
-                  dinnerMeal.setName(dinnerMeals.get(i).getName());
-                  dinnerMeal.setMeasurementUnit(dinnerMeals.get(i).getMeasurementUnit());
-                  dinnerMeal.setAmount(dinnerMeals.get(i).getAmount());
-                  dinnerMeal.setSectionType(2);
-
-                  //if (dinnerMeals.get(i).getTotalCalories() != null) {
-                  dinnerMeal.setTotalCalories(dinnerMeals.get(i).getTotalCalories());
-                  //} else {
-                  //  dinnerMeal.setTotalCalories(0);
-                  //}
-
-                  finalDinnerMeals.add(dinnerMeal);
-                }
-
-                setupMealSectionsListView(finalDinnerMeals, "Dinner");
-
-                /**
-                 * Insert Snack meals
-                 */
-                for (int i = 0; i < snackMeals.size(); i++) {
-                  MealItem snackMeal = new MealItem();
-                  snackMeal.setMeal_id(snackMeals.get(i).getId());
-                  snackMeal.setInstance_id(snackMeals.get(i).getInstance_id());
-                  snackMeal.setCreated_at(snackMeals.get(i).getCreatedAt());
-                  snackMeal.setType("Snack");
-                  snackMeal.setName(snackMeals.get(i).getName());
-                  snackMeal.setMeasurementUnit(snackMeals.get(i).getMeasurementUnit());
-                  snackMeal.setAmount(snackMeals.get(i).getAmount());
-                  snackMeal.setSectionType(2);
-
-                  //if (snackMeals.get(i).getTotalCalories() != null) {
-                  snackMeal.setTotalCalories(snackMeals.get(i).getTotalCalories());
-                  //} else {
-                  //  snackMeal.setTotalCalories(0);
-                  //}
-
-                  finalSnackMeals.add(snackMeal);
-                }
-
-                setupMealSectionsListView(finalSnackMeals, "Snack");
-
-                break;
-            }
-          }
-
-          @Override public void onFailure(Call<UserMealsResponse> call, Throwable t) {
-            Timber.d("Call failed with error : %s", t.getMessage());
-          }
-        });
   }
 
   private void setupMealSectionsListView(ArrayList<MealItem> mealItems, String mealType) {
