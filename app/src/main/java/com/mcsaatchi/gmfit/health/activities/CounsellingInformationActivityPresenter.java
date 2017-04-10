@@ -1,0 +1,52 @@
+package com.mcsaatchi.gmfit.health.activities;
+
+import com.mcsaatchi.gmfit.R;
+import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
+import com.mcsaatchi.gmfit.architecture.rest.CounsellingInformationResponse;
+import com.mcsaatchi.gmfit.common.activities.BaseActivityPresenter;
+import com.mcsaatchi.gmfit.common.classes.Helpers;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+class CounsellingInformationActivityPresenter extends BaseActivityPresenter {
+  private CounsellingInformationActivityView view;
+  private DataAccessHandler dataAccessHandler;
+
+  CounsellingInformationActivityPresenter(CounsellingInformationActivityView view,
+      DataAccessHandler dataAccessHandler) {
+    this.view = view;
+    this.dataAccessHandler = dataAccessHandler;
+  }
+
+  void getCounsellingInformation() {
+    view.callDisplayWaitingDialog(R.string.loading_data_dialog_title);
+
+    dataAccessHandler.getCounsellingInformation(new Callback<CounsellingInformationResponse>() {
+      @Override public void onResponse(Call<CounsellingInformationResponse> call,
+          Response<CounsellingInformationResponse> response) {
+
+        switch (response.code()) {
+          case 200:
+            view.displayCounsellingInformation(
+                response.body().getData().getBody().getData().getCompatibilityCheckDesc());
+            break;
+          case 449:
+            view.displayRequestErrorDialog(
+                Helpers.provideErrorStringFromJSON(response.errorBody()));
+            break;
+        }
+
+        view.callDismissWaitingDialog();
+      }
+
+      @Override public void onFailure(Call<CounsellingInformationResponse> call, Throwable t) {
+        view.displayRequestErrorDialog(t.getMessage());
+      }
+    });
+  }
+
+  interface CounsellingInformationActivityView extends BaseActivityView {
+    void displayCounsellingInformation(String compatibilityDescription);
+  }
+}
