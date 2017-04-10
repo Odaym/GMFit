@@ -18,7 +18,6 @@ import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
 import com.mcsaatchi.gmfit.architecture.otto.MealEntryManipulatedEvent;
 import com.mcsaatchi.gmfit.architecture.rest.DefaultGetResponse;
-import com.mcsaatchi.gmfit.architecture.rest.MealMetricsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.MealMetricsResponseDatum;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
@@ -33,7 +32,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import timber.log.Timber;
 
-public class SpecifyMealAmountActivity extends BaseActivity {
+public class SpecifyMealAmountActivity extends BaseActivity implements
+    SpecifyMealAmountActivityPresenter.SpecifyMealAmountActivityView{
   private static final int MEAL_AMOUNT_SPECIFIED = 536;
 
   @Bind(R.id.toolbar) Toolbar toolbar;
@@ -47,6 +47,7 @@ public class SpecifyMealAmountActivity extends BaseActivity {
 
   private List<NutritionalFact> nutritionalFacts = new ArrayList<>();
 
+  private SpecifyMealAmountActivityPresenter presenter;
   private MealItem mealItem;
   private boolean purposeIsEditMeal = false;
   private boolean purposeIsToAddMealToDate = false;
@@ -57,6 +58,8 @@ public class SpecifyMealAmountActivity extends BaseActivity {
     setContentView(R.layout.activity_specify_meal_amount);
 
     ButterKnife.bind(this);
+
+    presenter = new SpecifyMealAmountActivityPresenter(this, dataAccessHandler);
 
     allFields.add(mealAmountET);
 
@@ -80,71 +83,9 @@ public class SpecifyMealAmountActivity extends BaseActivity {
 
         measurementUnitTV.setText(mealItem.getMeasurementUnit());
 
-        getMealMetrics(mealItem.getMeal_id());
+        presenter.getMealMetrics(mealItem.getMeal_id());
       }
     }
-  }
-
-  private void getMealMetrics(int meal_id) {
-    final ProgressDialog waitingDialog = new ProgressDialog(this);
-    waitingDialog.setTitle(getString(R.string.fetching_meal_info_dialog_title));
-    waitingDialog.setMessage(getString(R.string.please_wait_dialog_message));
-    waitingDialog.show();
-
-    final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-    alertDialog.setTitle(R.string.fetching_meal_info_dialog_title);
-    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok), (dialog, which) -> {
-      dialog.dismiss();
-
-      if (waitingDialog.isShowing()) waitingDialog.dismiss();
-    });
-
-    dataAccessHandler.getMealMetrics(Constants.BASE_URL_ADDRESS + "meals/" + meal_id,
-        new Callback<MealMetricsResponse>() {
-          @Override public void onResponse(Call<MealMetricsResponse> call,
-              Response<MealMetricsResponse> response) {
-            switch (response.code()) {
-              case 200:
-                waitingDialog.dismiss();
-
-                List<MealMetricsResponseDatum> mealMetricsResponseDatumList =
-                    response.body().getData().getBody().getMetrics();
-
-                for (int i = 0; i < mealMetricsResponseDatumList.size(); i++) {
-                  NutritionalFact nutritionalFact = new NutritionalFact();
-
-                  nutritionalFact.setName(mealMetricsResponseDatumList.get(i).getName());
-                  nutritionalFact.setUnit(
-                      (int) Double.parseDouble(mealMetricsResponseDatumList.get(i).getValue())
-                          + " "
-                          + mealMetricsResponseDatumList.get(i).getUnit());
-
-                  nutritionalFacts.add(nutritionalFact);
-                }
-
-                if (nutritionalFacts.size() > 0) {
-                  int caloriesForThisMeal = 0;
-
-                  for (int i = 0; i < nutritionalFacts.size(); i++) {
-                    if (nutritionalFacts.get(i).getName().equals("Calories")) {
-                      caloriesForThisMeal =
-                          Integer.parseInt(nutritionalFacts.get(i).getUnit().split(" ")[0]);
-                    }
-                  }
-
-                  initNutritionFactsList(nutritionalFacts, caloriesForThisMeal);
-                }
-
-                break;
-            }
-          }
-
-          @Override public void onFailure(Call<MealMetricsResponse> call, Throwable t) {
-            Timber.d("Call failed with error : %s", t.getMessage());
-            alertDialog.setMessage(getResources().getString(R.string.server_error_got_returned));
-            alertDialog.show();
-          }
-        });
   }
 
   private void initNutritionFactsList(List<NutritionalFact> nutritionalFacts,
@@ -156,84 +97,29 @@ public class SpecifyMealAmountActivity extends BaseActivity {
 
     addToDiaryBTN.setOnClickListener(view -> {
       if (Helpers.validateFields(allFields)) {
-
-        final ProgressDialog waitingDialog = new ProgressDialog(SpecifyMealAmountActivity.this);
-        waitingDialog.setTitle(getString(R.string.adding_new_meal_dialog_title));
-        waitingDialog.setMessage(getString(R.string.please_wait_dialog_message));
-        waitingDialog.show();
-
-        final AlertDialog alertDialog =
-            new AlertDialog.Builder(SpecifyMealAmountActivity.this).create();
-        alertDialog.setTitle(R.string.adding_new_meal_dialog_title);
-        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
-            (dialog, which) -> {
-              dialog.dismiss();
-
-              if (waitingDialog.isShowing()) waitingDialog.dismiss();
-            });
-
         if (purposeIsToAddMealToDate) {
           Log.d("TAG", "purpose add meal on specific date");
           if (purposeIsEditMeal) {
-            updateUserMealOnCertainDate(waitingDialog, caloriesForThisMeal);
+            updateUserMealOnCertainDate(caloriesForThisMeal);
             Log.d("TAG", "onClick: Editing");
           } else {
             Log.d("TAG", "onClick: Storing new");
-            storeMealOnCertainDate(waitingDialog, caloriesForThisMeal, chosenDate);
+            presenter.storeMealOnDate(mealItem.getMeal_id(),
+                Float.parseFloat(mealAmountET.getText().toString()), mealItem.getType(), chosenDate, caloriesForThisMeal);
           }
         } else {
           Log.d("TAG", "purpose edit meal existing for TODAY");
           if (purposeIsEditMeal) {
             Log.d("TAG", "Editing");
-            updateUserMeal(waitingDialog, caloriesForThisMeal);
+            updateUserMeal(caloriesForThisMeal);
           } else {
             Log.d("TAG", "Storing new");
-            storeMealOnCertainDate(waitingDialog, caloriesForThisMeal, chosenDate);
+            presenter.storeMealOnDate(mealItem.getMeal_id(),
+                Float.parseFloat(mealAmountET.getText().toString()), mealItem.getType(), chosenDate, caloriesForThisMeal);
           }
         }
       }
     });
-  }
-
-  private void storeMealOnCertainDate(final ProgressDialog waitingDialog,
-      final int caloriesForThisMeal, String chosenDate) {
-    dataAccessHandler.storeNewMeal(mealItem.getMeal_id(),
-        Float.parseFloat(mealAmountET.getText().toString()), mealItem.getType(), chosenDate,
-        new Callback<DefaultGetResponse>() {
-          @Override public void onResponse(Call<DefaultGetResponse> call,
-              Response<DefaultGetResponse> response) {
-            switch (response.code()) {
-              case 200:
-                waitingDialog.dismiss();
-
-                mealItem.setAmount(mealAmountET.getText().toString());
-                mealItem.setTotalCalories(
-                    (int) (Float.parseFloat(mealItem.getAmount()) * caloriesForThisMeal));
-
-                Intent resultIntent = new Intent();
-                resultIntent.putExtra(Constants.EXTRAS_MEAL_OBJECT_DETAILS, mealItem);
-                setResult(MEAL_AMOUNT_SPECIFIED, resultIntent);
-
-                EventBusSingleton.getInstance().post(new MealEntryManipulatedEvent());
-
-                InputMethodManager imm =
-                    (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(mealAmountET.getWindowToken(), 0);
-
-                finish();
-
-                break;
-            }
-          }
-
-          @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
-            Timber.d("Call failed with error : %s", t.getMessage());
-            final AlertDialog alertDialog =
-                new AlertDialog.Builder(SpecifyMealAmountActivity.this).create();
-            alertDialog.setMessage(getResources().getString(R.string.server_error_got_returned));
-            alertDialog.show();
-          }
-        });
   }
 
   private void updateUserMealOnCertainDate(final ProgressDialog waitingDialog,
@@ -297,5 +183,51 @@ public class SpecifyMealAmountActivity extends BaseActivity {
             alertDialog.show();
           }
         });
+  }
+
+  @Override
+  public void displayMealMetrics(List<MealMetricsResponseDatum> mealMetricsResponseDatumList) {
+    for (int i = 0; i < mealMetricsResponseDatumList.size(); i++) {
+      NutritionalFact nutritionalFact = new NutritionalFact();
+
+      nutritionalFact.setName(mealMetricsResponseDatumList.get(i).getName());
+      nutritionalFact.setUnit(
+          (int) Double.parseDouble(mealMetricsResponseDatumList.get(i).getValue())
+              + " "
+              + mealMetricsResponseDatumList.get(i).getUnit());
+
+      nutritionalFacts.add(nutritionalFact);
+    }
+
+    if (nutritionalFacts.size() > 0) {
+      int caloriesForThisMeal = 0;
+
+      for (int i = 0; i < nutritionalFacts.size(); i++) {
+        if (nutritionalFacts.get(i).getName().equals("Calories")) {
+          caloriesForThisMeal =
+              Integer.parseInt(nutritionalFacts.get(i).getUnit().split(" ")[0]);
+        }
+      }
+
+      initNutritionFactsList(nutritionalFacts, caloriesForThisMeal);
+    }
+  }
+
+  @Override public void handleStoreMealOnDate(int caloriesForThisMeal) {
+    mealItem.setAmount(mealAmountET.getText().toString());
+    mealItem.setTotalCalories(
+        (int) (Float.parseFloat(mealItem.getAmount()) * caloriesForThisMeal));
+
+    Intent resultIntent = new Intent();
+    resultIntent.putExtra(Constants.EXTRAS_MEAL_OBJECT_DETAILS, mealItem);
+    setResult(MEAL_AMOUNT_SPECIFIED, resultIntent);
+
+    EventBusSingleton.getInstance().post(new MealEntryManipulatedEvent());
+
+    InputMethodManager imm =
+        (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+    imm.hideSoftInputFromWindow(mealAmountET.getWindowToken(), 0);
+
+    finish();
   }
 }
