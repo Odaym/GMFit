@@ -65,6 +65,14 @@ public class DaysChoiceListActivity extends BaseActivity {
     return super.onOptionsItemSelected(item);
   }
 
+  @Override public void finish() {
+    Intent intent = new Intent();
+    intent.putParcelableArrayListExtra("REMINDER_DAYS", days);
+    setResult(REMINDER_DAYS_CHOSEN, intent);
+
+    super.finish();
+  }
+
   private ArrayList<DayChoice> setupDays() {
     ArrayList<DayChoice> daysToReturn = new ArrayList<>();
     daysToReturn.add(new DayChoice("Monday", false));
@@ -83,13 +91,5 @@ public class DaysChoiceListActivity extends BaseActivity {
     daysRecyclerView.setLayoutManager(new LinearLayoutManager(this));
     daysRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(this));
     daysRecyclerView.setAdapter(daysChoiceRecyclerAdapter);
-  }
-
-  @Override public void finish() {
-    Intent intent = new Intent();
-    intent.putParcelableArrayListExtra("REMINDER_DAYS", days);
-    setResult(REMINDER_DAYS_CHOSEN, intent);
-
-    super.finish();
   }
 }

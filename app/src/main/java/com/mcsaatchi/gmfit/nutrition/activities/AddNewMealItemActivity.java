@@ -1,12 +1,10 @@
 package com.mcsaatchi.gmfit.nutrition.activities;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -23,10 +21,7 @@ import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.rest.DefaultGetResponse;
-import com.mcsaatchi.gmfit.architecture.rest.RecentMealsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.RecentMealsResponseBody;
-import com.mcsaatchi.gmfit.architecture.rest.SearchMealItemResponse;
 import com.mcsaatchi.gmfit.architecture.rest.SearchMealItemResponseDatum;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
@@ -34,16 +29,14 @@ import com.mcsaatchi.gmfit.nutrition.adapters.SimpleSectionedListAdapter;
 import com.mcsaatchi.gmfit.nutrition.models.MealItem;
 import java.util.ArrayList;
 import java.util.List;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import timber.log.Timber;
 
-public class AddNewMealItemActivity extends BaseActivity {
+public class AddNewMealItemActivity extends BaseActivity
+    implements AddNewMealItemActivityPresenter.AddNewMealItemView {
 
   public static final int MEAL_AMOUNT_SPECIFIED = 536;
   private static final int SECTION_VIEWTYPE = 1;
   private static final int ITEM_VIEWTYPE = 2;
+
   @Bind(R.id.toolbar) Toolbar toolbar;
   @Bind(R.id.mealItemsList) ListView mealItemsList;
   @Bind(R.id.searchMealsAutoCompleTV) EditText searchMealsAutoCompleTV;
@@ -59,9 +52,13 @@ public class AddNewMealItemActivity extends BaseActivity {
   private boolean purposeIsToAddMealToDate = false;
   private String chosenDate;
 
+  private AddNewMealItemActivityPresenter presenter;
+
   private List<MealItem> mealItems = new ArrayList<>();
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
+
+    presenter = new AddNewMealItemActivityPresenter(this, dataAccessHandler);
 
     String actionBarTitle;
 
@@ -103,9 +100,9 @@ public class AddNewMealItemActivity extends BaseActivity {
 
     mealItemsList.setOnScrollListener(new AbsListView.OnScrollListener() {
       @Override public void onScrollStateChanged(AbsListView absListView, int i) {
-        /**
-         * Hide keyboard
-         */
+
+        //Hide keyboard
+
         InputMethodManager imm =
             (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(getWindow().getDecorView().getRootView().getWindowToken(), 0);
@@ -121,9 +118,6 @@ public class AddNewMealItemActivity extends BaseActivity {
       }
 
       @Override public void onTextChanged(final CharSequence charSequence, int i, int i1, int i2) {
-        /**
-         * EditText is empty
-         */
         if (charSequence.toString().isEmpty()) {
           searchResultsHintTV.setVisibility(View.GONE);
 
@@ -135,9 +129,6 @@ public class AddNewMealItemActivity extends BaseActivity {
 
           loadRecentMealsFromServer(mealType);
         } else if (charSequence.toString().length() > 2) {
-          /**
-           * If the search box includes enough characters to warrant a search
-           */
 
           pb_loading_indicator.setVisibility(View.VISIBLE);
 
@@ -146,109 +137,12 @@ public class AddNewMealItemActivity extends BaseActivity {
             searchIconIV.setOnClickListener(view -> {
               searchMealsAutoCompleTV.setText("");
 
-              /**
-               * Hide keyboard
-               */
               InputMethodManager imm =
                   (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
               imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
             });
 
-            findMeals(charSequence.toString(), new Callback<SearchMealItemResponse>() {
-              @Override public void onResponse(Call<SearchMealItemResponse> call,
-                  Response<SearchMealItemResponse> response) {
-
-                final List<MealItem> mealsReturned = new ArrayList<>();
-
-                List<SearchMealItemResponseDatum> mealsResponse =
-                    response.body().getData().getBody().getData();
-
-                for (int i3 = 0; i3 < mealsResponse.size(); i3++) {
-                  MealItem mealItem = new MealItem();
-
-                  mealItem.setName(mealsResponse.get(i3).getName());
-                  mealItem.setMeasurementUnit(mealsResponse.get(i3).getMeasurementUnit());
-                  mealItem.setMeal_id(mealsResponse.get(i3).getId());
-                  if (mealType.equals("Snacks")) {
-                    mealItem.setType("Snack");
-                  } else {
-                    mealItem.setType(mealType);
-                  }
-                  mealItem.setSectionType(ITEM_VIEWTYPE);
-
-                  mealsReturned.add(mealItem);
-                }
-
-                mealItems.clear();
-
-                mealItems = mealsReturned;
-
-                if (mealItems.isEmpty()) {
-                  searchResultsListLayout.setVisibility(View.GONE);
-                  requestMealLayout.setVisibility(View.VISIBLE);
-                  mealNotFoundTitleTV.setText("\"" + charSequence.toString() + "\"");
-
-                  requestMealBTN.setText(
-                      getResources().getString(R.string.request_new_meal_button));
-                  requestMealBTN.setAlpha(1);
-                  requestMealBTN.setEnabled(true);
-
-                  requestMealBTN.setOnClickListener(view -> {
-                    final ProgressDialog waitingDialog =
-                        new ProgressDialog(AddNewMealItemActivity.this);
-                    waitingDialog.setTitle(
-                        getResources().getString(R.string.requesting_meal_item_dialog_title));
-                    waitingDialog.setMessage(
-                        getResources().getString(R.string.please_wait_dialog_message));
-                    waitingDialog.show();
-
-                    final AlertDialog alertDialog =
-                        new AlertDialog.Builder(AddNewMealItemActivity.this).create();
-                    alertDialog.setTitle(R.string.requesting_meal_item_dialog_title);
-                    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE,
-                        getResources().getString(R.string.ok), (dialog, which) -> {
-                          dialog.dismiss();
-
-                          if (waitingDialog.isShowing()) waitingDialog.dismiss();
-                        });
-
-                    dataAccessHandler.requestNewMeal(charSequence.toString(),
-                        new Callback<DefaultGetResponse>() {
-                          @Override public void onResponse(Call<DefaultGetResponse> call1,
-                              Response<DefaultGetResponse> response1) {
-                            switch (response1.code()) {
-                              case 200:
-                                waitingDialog.dismiss();
-
-                                requestMealBTN.setText(getResources().getString(
-                                    R.string.request_new_meal_sent_thanks));
-                                requestMealBTN.setAlpha(0.5f);
-                                requestMealBTN.setEnabled(false);
-                                break;
-                            }
-                          }
-
-                          @Override
-                          public void onFailure(Call<DefaultGetResponse> call1, Throwable t) {
-                            Timber.d("Call failed with error : %s", t.getMessage());
-                            final AlertDialog alertDialog =
-                                new AlertDialog.Builder(AddNewMealItemActivity.this).create();
-                            alertDialog.setMessage(getString(R.string.server_error_got_returned));
-                            alertDialog.show();
-                          }
-                        });
-                  });
-                } else {
-                  initMealsList(mealsReturned);
-                }
-
-                searchResultsHintTV.setVisibility(View.VISIBLE);
-                pb_loading_indicator.setVisibility(View.INVISIBLE);
-              }
-
-              @Override public void onFailure(Call<SearchMealItemResponse> call, Throwable t) {
-              }
-            });
+            presenter.findMeals(charSequence.toString());
           }, 500);
         }
       }
@@ -263,17 +157,13 @@ public class AddNewMealItemActivity extends BaseActivity {
     super.onActivityResult(requestCode, resultCode, data);
 
     if (data != null) {
-
       MealItem mealItem = data.getParcelableExtra(Constants.EXTRAS_MEAL_OBJECT_DETAILS);
 
       if (mealItem != null) {
         switch (resultCode) {
           case MEAL_AMOUNT_SPECIFIED:
-            /**
-             * Meal amount specified from SpecifyMealAmountActivity and this is a new meal
-             */
+            //Meal amount specified from SpecifyMealAmountActivity and this is a new meal
             finish();
-
             break;
         }
 
@@ -282,26 +172,76 @@ public class AddNewMealItemActivity extends BaseActivity {
     }
   }
 
-  private void findMeals(String mealName,
-      final Callback<SearchMealItemResponse> mealItemsResponse) {
-    dataAccessHandler.findMeals(mealName, new Callback<SearchMealItemResponse>() {
-      @Override public void onResponse(Call<SearchMealItemResponse> call,
-          Response<SearchMealItemResponse> response) {
-        switch (response.code()) {
-          case 200:
-            mealItemsResponse.onResponse(null, response);
-            break;
-        }
-      }
+  @Override
+  public void displayMealResults(String mealName, List<SearchMealItemResponseDatum> mealsResponse) {
+    final List<MealItem> mealsReturned = new ArrayList<>();
 
-      @Override public void onFailure(Call<SearchMealItemResponse> call, Throwable t) {
-        Timber.d("Call failed with error : %s", t.getMessage());
-        final AlertDialog alertDialog =
-            new AlertDialog.Builder(AddNewMealItemActivity.this).create();
-        alertDialog.setMessage(getString(R.string.server_error_got_returned));
-        alertDialog.show();
+    for (int i3 = 0; i3 < mealsResponse.size(); i3++) {
+      MealItem mealItem = new MealItem();
+
+      mealItem.setName(mealsResponse.get(i3).getName());
+      mealItem.setMeasurementUnit(mealsResponse.get(i3).getMeasurementUnit());
+      mealItem.setMeal_id(mealsResponse.get(i3).getId());
+      if (mealType.equals("Snacks")) {
+        mealItem.setType("Snack");
+      } else {
+        mealItem.setType(mealType);
       }
-    });
+      mealItem.setSectionType(ITEM_VIEWTYPE);
+
+      mealsReturned.add(mealItem);
+    }
+
+    mealItems.clear();
+
+    mealItems = mealsReturned;
+
+    if (mealItems.isEmpty()) {
+      searchResultsListLayout.setVisibility(View.GONE);
+      requestMealLayout.setVisibility(View.VISIBLE);
+      mealNotFoundTitleTV.setText("\"" + mealName + "\"");
+
+      requestMealBTN.setText(getResources().getString(R.string.request_new_meal_button));
+      requestMealBTN.setAlpha(1);
+      requestMealBTN.setEnabled(true);
+
+      requestMealBTN.setOnClickListener(view -> presenter.requestNewMeal(mealName));
+    } else {
+      initMealsList(mealsReturned);
+    }
+
+    searchResultsHintTV.setVisibility(View.VISIBLE);
+    pb_loading_indicator.setVisibility(View.INVISIBLE);
+  }
+
+  @Override public void displaySucceededMealRequest() {
+    requestMealBTN.setText(getResources().getString(R.string.request_new_meal_sent_thanks));
+    requestMealBTN.setAlpha(0.5f);
+    requestMealBTN.setEnabled(false);
+  }
+
+  @Override public void displayRecentMeals(ArrayList<RecentMealsResponseBody> recentMealsFromAPI,
+      String mealType) {
+    MealItem recentlyAddedMealItem = new MealItem();
+    recentlyAddedMealItem.setName("Recently Added");
+    recentlyAddedMealItem.setSectionType(1);
+
+    mealItems.clear();
+
+    mealItems.add(recentlyAddedMealItem);
+
+    for (int i = 0; i < recentMealsFromAPI.size(); i++) {
+      MealItem item = new MealItem();
+      item.setType(mealType);
+      item.setMeal_id(recentMealsFromAPI.get(i).getId());
+      item.setSectionType(2);
+      item.setMeasurementUnit(recentMealsFromAPI.get(i).getMeasurementUnit());
+      item.setName(recentMealsFromAPI.get(i).getName());
+
+      mealItems.add(item);
+    }
+
+    initMealsList(mealItems);
   }
 
   private void loadRecentMealsFromServer(String mealType) {
@@ -309,59 +249,7 @@ public class AddNewMealItemActivity extends BaseActivity {
 
     final String finalMealType = mealType;
 
-    final ProgressDialog waitingDialog = new ProgressDialog(this);
-    waitingDialog.setTitle(
-        getResources().getString(R.string.fetching_available_meals_dialog_title));
-    waitingDialog.setMessage(getResources().getString(R.string.please_wait_dialog_message));
-    waitingDialog.show();
-
-    final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-    alertDialog.setTitle(R.string.fetching_available_meals_dialog_title);
-    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getResources().getString(R.string.ok),
-        (dialog, which) -> {
-          dialog.dismiss();
-
-          if (waitingDialog.isShowing()) waitingDialog.dismiss();
-        });
-
-    dataAccessHandler.getRecentMeals(
-        Constants.BASE_URL_ADDRESS + "user/meals/recent?when=" + mealType.toLowerCase(),
-        new Callback<RecentMealsResponse>() {
-          @Override public void onResponse(Call<RecentMealsResponse> call,
-              Response<RecentMealsResponse> response) {
-            ArrayList<RecentMealsResponseBody> recentMealsFromAPI =
-                (ArrayList<RecentMealsResponseBody>) response.body().getData().getBody();
-
-            MealItem recentlyAddedMealItem = new MealItem();
-            recentlyAddedMealItem.setName("Recently Added");
-            recentlyAddedMealItem.setSectionType(1);
-
-            mealItems.clear();
-
-            mealItems.add(recentlyAddedMealItem);
-
-            for (int i = 0; i < recentMealsFromAPI.size(); i++) {
-              MealItem item = new MealItem();
-              item.setType(finalMealType);
-              item.setMeal_id(recentMealsFromAPI.get(i).getId());
-              item.setSectionType(2);
-              item.setMeasurementUnit(recentMealsFromAPI.get(i).getMeasurementUnit());
-              item.setName(recentMealsFromAPI.get(i).getName());
-
-              mealItems.add(item);
-            }
-
-            initMealsList(mealItems);
-
-            waitingDialog.dismiss();
-          }
-
-          @Override public void onFailure(Call<RecentMealsResponse> call, Throwable t) {
-            Timber.d("Call failed with error : %s", t.getMessage());
-            alertDialog.setMessage(getResources().getString(R.string.server_error_got_returned));
-            alertDialog.show();
-          }
-        });
+    presenter.getRecentMeals(finalMealType);
   }
 
   private void initMealsList(List<MealItem> mealsToShow) {
