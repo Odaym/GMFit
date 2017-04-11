@@ -120,6 +120,8 @@ public class BaseActivity extends AppCompatActivity
     Timber.d("Call failed with error : %s", responseMessage);
     final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
     alertDialog.setTitle(R.string.error_occurred_dialog_title);
+    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
+        (dialog, which) -> dialog.dismiss());
     alertDialog.setMessage(responseMessage);
     alertDialog.show();
   }

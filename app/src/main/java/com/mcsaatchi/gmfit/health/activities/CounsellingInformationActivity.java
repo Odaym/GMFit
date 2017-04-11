@@ -21,13 +21,21 @@ public class CounsellingInformationActivity extends BaseActivity
 
     ButterKnife.bind(this);
 
-    setupToolbar(getClass().getSimpleName(), toolbar,
-        getResources().getString(R.string.counselling_information_activity_title), true);
+    if (getIntent().getExtras() != null) {
+      setupToolbar(getClass().getSimpleName(), toolbar,
+          getResources().getString(R.string.check_compatibility_activity_title), true);
 
-    CounsellingInformationActivityPresenter presenter =
-        new CounsellingInformationActivityPresenter(this, dataAccessHandler);
+      counsellingInformationTV.setText(
+          getIntent().getExtras().getString("COMPATIBILITY_CHECK_RESULT"));
+    } else {
+      setupToolbar(getClass().getSimpleName(), toolbar,
+          getResources().getString(R.string.counselling_information_activity_title), true);
 
-    presenter.getCounsellingInformation();
+      CounsellingInformationActivityPresenter presenter =
+          new CounsellingInformationActivityPresenter(this, dataAccessHandler);
+
+      presenter.getCounsellingInformation();
+    }
   }
 
   @Override public void displayCounsellingInformation(String compatibilityDescription) {

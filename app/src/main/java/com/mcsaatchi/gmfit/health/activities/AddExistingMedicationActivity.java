@@ -45,7 +45,8 @@ import java.util.Iterator;
 import java.util.Map;
 import timber.log.Timber;
 
-public class AddExistingMedicationActivity extends BaseActivity {
+public class AddExistingMedicationActivity extends BaseActivity
+    implements AddExistingMedicationActivityPresenter.AddExistingMedicationActivityView {
 
   public static final int REMINDER_DAYS_CHOSEN = 231;
   @Bind(R.id.toolbar) Toolbar toolbar;
@@ -69,6 +70,8 @@ public class AddExistingMedicationActivity extends BaseActivity {
   private boolean editPurpose = false;
   private int[] daysOfWeekArray;
 
+  private AddExistingMedicationActivityPresenter presenter;
+
   private Map<String, Integer> daysOfWeekMap = new HashMap<String, Integer>() {{
     put("Monday", 1);
     put("Tuesday", 2);
@@ -87,6 +90,8 @@ public class AddExistingMedicationActivity extends BaseActivity {
     ButterKnife.bind(this);
 
     setupToolbar(getClass().getSimpleName(), toolbar, getString(R.string.add_medication), true);
+
+    presenter = new AddExistingMedicationActivityPresenter(this, dataAccessHandler);
 
     medicationDAO = dbHelper.getMedicationDAO();
 
@@ -168,6 +173,36 @@ public class AddExistingMedicationActivity extends BaseActivity {
     });
   }
 
+  @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+
+    if (requestCode == REMINDER_DAYS_CHOSEN) {
+      ArrayList<DayChoice> dayChoices = data.getExtras().getParcelableArrayList("REMINDER_DAYS");
+      daysSelected = dayChoices;
+
+      String daysOfWeekResult = "";
+
+      if (dayChoices != null) {
+        daysOfWeekArray = new int[dayChoices.size()];
+
+        for (int i = 0; i < dayChoices.size(); i++) {
+          if (dayChoices.get(i).isDaySelected()) {
+            daysOfWeekArray[i] = daysOfWeekMap.get(dayChoices.get(i).getDayName());
+            daysOfWeekResult += dayChoices.get(i).getDayName().substring(0, 3) + ", ";
+          }
+        }
+      }
+
+      daysOfWeekTV.setText(daysOfWeekResult.replaceAll(", $", ""));
+    }
+  }
+
+  @Override public void displayCounsellingInformation(String compatibilityDescription) {
+    Intent intent = new Intent(this, CounsellingInformationActivity.class);
+    intent.putExtra("COMPATIBILITY_CHECK_RESULT", compatibilityDescription);
+    startActivity(intent);
+  }
+
   @OnClick(R.id.counsellingInformationHintTV) public void handleGetCounsellingInformation() {
     Intent intent = new Intent(this, CounsellingInformationActivity.class);
     startActivity(intent);
@@ -191,27 +226,6 @@ public class AddExistingMedicationActivity extends BaseActivity {
     });
 
     builderSingle.show();
-  }
-
-  private void prepareRemindersRecyclerView(int frequencyNumber) {
-    medicationReminders = new ArrayList<>(frequencyNumber);
-
-    for (int ind = 0; ind < frequencyNumber; ind++) {
-      medicationReminders.add(new MedicationReminder());
-    }
-
-    setupRemindersRecyclerView(medicationReminders);
-  }
-
-  private void setupRemindersRecyclerView(ArrayList<MedicationReminder> medicationReminderTimes) {
-    MedicationRemindersRecyclerAdapter medicationRemindersRecyclerAdapter =
-        new MedicationRemindersRecyclerAdapter(AddExistingMedicationActivity.this,
-            medicationReminderTimes);
-    remindersRecyclerView.setLayoutManager(
-        new LinearLayoutManager(AddExistingMedicationActivity.this));
-    remindersRecyclerView.addItemDecoration(
-        new SimpleDividerItemDecoration(AddExistingMedicationActivity.this));
-    remindersRecyclerView.setAdapter(medicationRemindersRecyclerAdapter);
   }
 
   @OnClick(R.id.daysOfWeekLayout) void openDaysChooser() {
@@ -301,27 +315,16 @@ public class AddExistingMedicationActivity extends BaseActivity {
     }
   }
 
-  @Override protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    super.onActivityResult(requestCode, resultCode, data);
-
-    if (requestCode == REMINDER_DAYS_CHOSEN) {
-      ArrayList<DayChoice> dayChoices = data.getExtras().getParcelableArrayList("REMINDER_DAYS");
-      daysSelected = dayChoices;
-
-      String daysOfWeekResult = "";
-
-      if (dayChoices != null) {
-        daysOfWeekArray = new int[dayChoices.size()];
-
-        for (int i = 0; i < dayChoices.size(); i++) {
-          if (dayChoices.get(i).isDaySelected()) {
-            daysOfWeekArray[i] = daysOfWeekMap.get(dayChoices.get(i).getDayName());
-            daysOfWeekResult += dayChoices.get(i).getDayName().substring(0, 3) + ", ";
-          }
-        }
-      }
-
-      daysOfWeekTV.setText(daysOfWeekResult.replaceAll(", $", ""));
+  @OnClick(R.id.checkCompatibilityTextView) public void handleCheckCompatibilityClicked() {
+    if (prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, "").isEmpty()) {
+      final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+      alertDialog.setTitle(R.string.check_compatibility_activity_title);
+      alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
+          (dialog, which) -> dialog.dismiss());
+      alertDialog.setMessage(getString(R.string.check_compatibility_dialog_hint));
+      alertDialog.show();
+    } else {
+      presenter.getCounsellingInformation();
     }
   }
 
@@ -412,5 +415,26 @@ public class AddExistingMedicationActivity extends BaseActivity {
         medication.setFrequencyType(3);
         break;
     }
+  }
+
+  private void prepareRemindersRecyclerView(int frequencyNumber) {
+    medicationReminders = new ArrayList<>(frequencyNumber);
+
+    for (int ind = 0; ind < frequencyNumber; ind++) {
+      medicationReminders.add(new MedicationReminder());
+    }
+
+    setupRemindersRecyclerView(medicationReminders);
+  }
+
+  private void setupRemindersRecyclerView(ArrayList<MedicationReminder> medicationReminderTimes) {
+    MedicationRemindersRecyclerAdapter medicationRemindersRecyclerAdapter =
+        new MedicationRemindersRecyclerAdapter(AddExistingMedicationActivity.this,
+            medicationReminderTimes);
+    remindersRecyclerView.setLayoutManager(
+        new LinearLayoutManager(AddExistingMedicationActivity.this));
+    remindersRecyclerView.addItemDecoration(
+        new SimpleDividerItemDecoration(AddExistingMedicationActivity.this));
+    remindersRecyclerView.setAdapter(medicationRemindersRecyclerAdapter);
   }
 }

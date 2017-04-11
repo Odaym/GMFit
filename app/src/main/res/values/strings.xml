@@ -234,6 +234,9 @@
   <string name="update_weight_label">+ Update</string>
   <string name="search_tests_hint">Find a test from the list below</string>
   <string name="counselling_information_activity_title">Counselling Information</string>
+  <string name="check_compatibility_activity_title">Check Compatibility</string>
+  <string name="check_compatibility_dialog_hint">This feature is available for the insured members only.\n
+    You may enable the “Check Compatibility” by login to the Insurance section.</string>
   <string name="inquiry_more_details_menu">Details</string>
   <string name="write_reply_hint">Write your reply here…</string>
 

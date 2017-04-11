@@ -12,6 +12,8 @@ public class BaseFragment extends Fragment implements BaseFragmentPresenter.Base
   @Override public void displayRequestErrorDialog(String responseMessage) {
     Timber.d("Call failed with error : %s", responseMessage);
     final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
+        (dialog, which) -> dialog.dismiss());
     alertDialog.setTitle(R.string.error_occurred_dialog_title);
     alertDialog.setMessage(responseMessage);
     alertDialog.show();
