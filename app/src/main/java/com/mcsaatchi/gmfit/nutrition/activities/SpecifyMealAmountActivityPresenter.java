@@ -65,9 +65,49 @@ class SpecifyMealAmountActivityPresenter extends BaseActivityPresenter {
         });
   }
 
+  void updateMealOnDate(int instance_id, float amount, int caloriesForThisMeal) {
+    view.callDisplayWaitingDialog(R.string.adding_new_meal_dialog_title);
+
+    dataAccessHandler.updateUserMeals(instance_id, amount, new Callback<DefaultGetResponse>() {
+      @Override
+      public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
+        switch (response.code()) {
+          case 200:
+            view.handleUpdateMealOnDate(caloriesForThisMeal);
+            break;
+        }
+      }
+
+      @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+        view.displayRequestErrorDialog(t.getMessage());
+      }
+    });
+  }
+
+  void updateUserMeals(int instance_id, float amount, int caloriesForThisMeal) {
+    dataAccessHandler.updateUserMeals(instance_id, amount, new Callback<DefaultGetResponse>() {
+      @Override
+      public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
+        switch (response.code()) {
+          case 200:
+            view.handleUpdateUserMeals(caloriesForThisMeal);
+            break;
+        }
+      }
+
+      @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+        view.displayRequestErrorDialog(t.getMessage());
+      }
+    });
+  }
+
   interface SpecifyMealAmountActivityView extends BaseActivityView {
     void displayMealMetrics(List<MealMetricsResponseDatum> mealMetricsResponseDatumList);
 
     void handleStoreMealOnDate(int caloriesForThisMeal);
+
+    void handleUpdateMealOnDate(int caloriesForThisMeal);
+
+    void handleUpdateUserMeals(int caloriesForThisMeal);
   }
 }
