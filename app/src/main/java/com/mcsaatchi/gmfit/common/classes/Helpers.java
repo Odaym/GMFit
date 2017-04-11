@@ -217,7 +217,7 @@ public class Helpers {
         intent.putExtra("MEAL_TYPE", "Breakfast");
         pendingIntent =
             PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        prefs.edit().putString(Constants.BREAKFAST_REMINDER_ALARM_TIME, "09:00 AM").apply();
+        prefs.edit().putString(Constants.BREAKFAST_REMINDER_ALARM_TIME, "09:30 AM").apply();
 
         break;
       case "Lunch":
@@ -233,7 +233,7 @@ public class Helpers {
         intent.putExtra("MEAL_TYPE", "Lunch");
         pendingIntent =
             PendingIntent.getBroadcast(context, 1, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-        prefs.edit().putString(Constants.LUNCH_REMINDER_ALARM_TIME, "02:45 PM").apply();
+        prefs.edit().putString(Constants.LUNCH_REMINDER_ALARM_TIME, "03:00 PM").apply();
 
         break;
       case "Dinner":
@@ -249,7 +249,7 @@ public class Helpers {
         intent.putExtra("MEAL_TYPE", "Dinner");
         pendingIntent =
             PendingIntent.getBroadcast(context, 2, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-        prefs.edit().putString(Constants.DINNER_REMINDER_ALARM_TIME, "08:00 PM").apply();
+        prefs.edit().putString(Constants.DINNER_REMINDER_ALARM_TIME, "09:00 PM").apply();
 
         break;
     }

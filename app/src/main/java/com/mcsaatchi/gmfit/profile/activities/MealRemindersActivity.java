@@ -99,13 +99,13 @@ public class MealRemindersActivity extends BaseActivity {
 
     areAlarmsEnabled = prefs.getBoolean(Constants.ARE_ALARMS_ENABLED, false);
 
-    breakfastAlarmTime = prefs.getString(Constants.BREAKFAST_REMINDER_ALARM_TIME, "09:00 AM");
+    breakfastAlarmTime = prefs.getString(Constants.BREAKFAST_REMINDER_ALARM_TIME, "09:30 AM");
     breakfastReminderValueTV.setText(breakfastAlarmTime);
 
-    lunchAlarmTime = prefs.getString(Constants.LUNCH_REMINDER_ALARM_TIME, "02:45 PM");
+    lunchAlarmTime = prefs.getString(Constants.LUNCH_REMINDER_ALARM_TIME, "03:00 PM");
     lunchReminderValueTV.setText(lunchAlarmTime);
 
-    dinnerAlarmTime = prefs.getString(Constants.DINNER_REMINDER_ALARM_TIME, "08:00 PM");
+    dinnerAlarmTime = prefs.getString(Constants.DINNER_REMINDER_ALARM_TIME, "09:00 PM");
     dinnerReminderValueTV.setText(dinnerAlarmTime);
 
     if (prefs.getBoolean(Constants.ARE_ALARMS_ENABLED, true)) {
@@ -144,7 +144,7 @@ public class MealRemindersActivity extends BaseActivity {
   }
 
   @OnClick(R.id.breakfastReminderLayout) public void handleBreakfastReminderPress() {
-    breakfastAlarmTime = prefs.getString(Constants.BREAKFAST_REMINDER_ALARM_TIME, "08:00 PM");
+    breakfastAlarmTime = prefs.getString(Constants.BREAKFAST_REMINDER_ALARM_TIME, "09:30 AM");
 
     timeForDisplay = getLocalTimeFormatted(breakfastAlarmTime);
 
@@ -164,7 +164,7 @@ public class MealRemindersActivity extends BaseActivity {
   }
 
   @OnClick(R.id.lunchReminderLayout) public void handleLunchReminderPress() {
-    lunchAlarmTime = prefs.getString(Constants.LUNCH_REMINDER_ALARM_TIME, "02:45 PM");
+    lunchAlarmTime = prefs.getString(Constants.LUNCH_REMINDER_ALARM_TIME, "03:00 PM");
 
     timeForDisplay = getLocalTimeFormatted(lunchAlarmTime);
 
@@ -184,7 +184,7 @@ public class MealRemindersActivity extends BaseActivity {
   }
 
   @OnClick(R.id.dinnerReminderLayout) public void dinnerLunchReminderPress() {
-    dinnerAlarmTime = prefs.getString(Constants.DINNER_REMINDER_ALARM_TIME, "08:00 PM");
+    dinnerAlarmTime = prefs.getString(Constants.DINNER_REMINDER_ALARM_TIME, "09:00 PM");
 
     timeForDisplay = getLocalTimeFormatted(dinnerAlarmTime);
 

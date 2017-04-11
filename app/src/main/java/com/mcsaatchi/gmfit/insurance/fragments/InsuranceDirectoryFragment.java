@@ -199,7 +199,7 @@ public class InsuranceDirectoryFragment extends BaseFragment
         (dialog, which) -> dialog.dismiss());
 
     presenter.getNearbyClinics(prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""), "H",
-        22, userLatLong[1], userLatLong[0], 1);
+        22, userLatLong[1], userLatLong[0], 0);
   }
 
   private void setupSwitchMapViewButton() {
@@ -254,7 +254,7 @@ public class InsuranceDirectoryFragment extends BaseFragment
     map.addMarker(new MarkerOptions().position(new LatLng(userLatLong[0], userLatLong[1]))
         .title("You")
         .snippet("")
-        .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_custom_map_marker)));
+        .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_you_custom_map_marker)));
 
     for (int i = 0; i < validClinics.size(); i++) {
       StringBuilder snippet = new StringBuilder();
