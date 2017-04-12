@@ -11,9 +11,11 @@ import java.util.ArrayList;
 
 public class MedicalChoiceRecyclerAdapter
     extends RecyclerView.Adapter<MedicalChoiceRecyclerAdapter.RecyclerViewHolder> {
+  private RecyclerView RV;
   private ArrayList<MedicalCondition> conditions;
 
-  public MedicalChoiceRecyclerAdapter(ArrayList<MedicalCondition> conditions) {
+  public MedicalChoiceRecyclerAdapter(RecyclerView RV, ArrayList<MedicalCondition> conditions) {
+    this.RV = RV;
     this.conditions = conditions;
   }
 
@@ -40,10 +42,20 @@ public class MedicalChoiceRecyclerAdapter
     }
 
     holder.medicalCheckbox.setOnCheckedChangeListener((compoundButton, selected) -> {
-      if (compoundButton.getText().equals("None")){
+      if (compoundButton.getText().equals("None")) {
+        for (int i = 0; i < conditions.size(); i++) {
+          conditions.get(i).setSelected(false);
 
+          if (conditions.get(i).getMedicalCondition().equals("None")) {
+            conditions.get(i).setSelected(true);
+          }
+        }
+
+
+        //new Handler().post(this::notifyDataSetChanged);
+      } else {
+        conditions.get(position).setSelected(selected);
       }
-      conditions.get(position).setSelected(selected);
     });
   }
 

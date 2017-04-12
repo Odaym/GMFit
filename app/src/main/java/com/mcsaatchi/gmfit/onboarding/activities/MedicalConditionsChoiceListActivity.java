@@ -67,7 +67,8 @@ public class MedicalConditionsChoiceListActivity extends BaseActivity {
   }
 
   private void setMedicalConditionsChoiceList(ArrayList<MedicalCondition> medicalConditions) {
-    medicalConditionsChoiceListAdapter = new MedicalChoiceRecyclerAdapter(medicalConditions);
+    medicalConditionsChoiceListAdapter =
+        new MedicalChoiceRecyclerAdapter(medicalConditionsRecyclerView, medicalConditions);
     medicalConditionsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
     medicalConditionsRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(this));
     medicalConditionsRecyclerView.setAdapter(medicalConditionsChoiceListAdapter);

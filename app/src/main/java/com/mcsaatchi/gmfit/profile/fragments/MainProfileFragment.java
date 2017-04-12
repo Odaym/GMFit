@@ -96,7 +96,6 @@ public class MainProfileFragment extends BaseFragment
   private HashMap<String, RequestBody> medicalConditionParts;
   private ArrayList<MedicalCondition> medicalConditions = new ArrayList<>();
   private ArrayList<Integer> medicalConditionIDs = new ArrayList<>();
-  private ArrayList<MedicalCondition> conditionsReturned;
 
   private MainProfileFragmentPresenter presenter;
   private File photoFile;
@@ -187,21 +186,24 @@ public class MainProfileFragment extends BaseFragment
         if (data != null) {
           String valueForCondition = null;
 
-          conditionsReturned = data.getExtras().getParcelableArrayList("MEDICAL_CONDITIONS");
+          ArrayList<MedicalCondition> conditionsFromExtras =
+              data.getExtras().getParcelableArrayList("MEDICAL_CONDITIONS");
 
-          if (conditionsReturned != null) {
-            for (int i = 0; i < conditionsReturned.size(); i++) {
-              if (conditionsReturned.get(i).isSelected()) {
-                medicalConditionIDs.add(conditionsReturned.get(i).getId());
-                valueForCondition = conditionsReturned.get(i).getMedicalCondition();
+          if (conditionsFromExtras != null) {
+            for (int i = 0; i < conditionsFromExtras.size(); i++) {
+              if (conditionsFromExtras.get(i).isSelected()) {
+                medicalConditionIDs.add(conditionsFromExtras.get(i).getId());
+                valueForCondition = conditionsFromExtras.get(i).getMedicalCondition();
               } else {
-                valueForCondition = "None";
+                if (valueForCondition == null) valueForCondition = "None";
               }
             }
 
             medicalConditionsValueTV.setText(valueForCondition);
 
             medicalConditionParts = constructMedicalConditionsForRequest(medicalConditionIDs);
+
+            medicalConditions = conditionsFromExtras;
 
             updateUserProfile();
           }
@@ -605,9 +607,9 @@ public class MainProfileFragment extends BaseFragment
   }
 
   @OnClick(R.id.medicalConditionsLayout) public void handleMedicalConditionsLayoutPressed() {
-      Intent intent = new Intent(getActivity(), MedicalConditionsChoiceListActivity.class);
-      intent.putExtra("MEDICAL_CONDITIONS", medicalConditions);
-      startActivityForResult(intent, MEDICAL_CONDITIONS_SELECTED);
+    Intent intent = new Intent(getActivity(), MedicalConditionsChoiceListActivity.class);
+    intent.putExtra("MEDICAL_CONDITIONS", medicalConditions);
+    startActivityForResult(intent, MEDICAL_CONDITIONS_SELECTED);
   }
 
   @OnClick(R.id.metricLayout) public void handleMetricLayoutPressed() {
