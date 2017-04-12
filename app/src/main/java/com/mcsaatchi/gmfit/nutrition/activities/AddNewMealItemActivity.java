@@ -57,8 +57,10 @@ public class AddNewMealItemActivity extends BaseActivity
   private List<MealItem> mealItems = new ArrayList<>();
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_add_new_meal_item);
 
-    presenter = new AddNewMealItemActivityPresenter(this, dataAccessHandler);
+    ButterKnife.bind(this);
 
     String actionBarTitle;
 
@@ -74,13 +76,9 @@ public class AddNewMealItemActivity extends BaseActivity
       mealType = getString(R.string.meal_headline_title_breakfast);
     }
 
-    super.onCreate(savedInstanceState);
-
-    setContentView(R.layout.activity_add_new_meal_item);
-
-    ButterKnife.bind(this);
-
     setupToolbar(getClass().getSimpleName(), toolbar, actionBarTitle, true);
+
+    presenter = new AddNewMealItemActivityPresenter(this, dataAccessHandler);
 
     loadRecentMealsFromServer(mealType);
 

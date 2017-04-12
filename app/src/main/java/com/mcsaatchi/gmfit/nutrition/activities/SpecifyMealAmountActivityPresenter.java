@@ -34,6 +34,8 @@ class SpecifyMealAmountActivityPresenter extends BaseActivityPresenter {
                 view.displayMealMetrics(response.body().getData().getBody().getMetrics());
                 break;
             }
+
+            view.callDismissWaitingDialog();
           }
 
           @Override public void onFailure(Call<MealMetricsResponse> call, Throwable t) {

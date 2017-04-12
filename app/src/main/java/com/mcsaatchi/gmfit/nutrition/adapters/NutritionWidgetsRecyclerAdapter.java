@@ -33,8 +33,19 @@ public class NutritionWidgetsRecyclerAdapter
 
   @Override public void onBindViewHolder(RecyclerViewHolder holder, int position) {
     holder.metricTitleTV.setText((widgetsMap.get(position)).getTitle());
-    holder.metricTV.setText(String.valueOf(widgetsMap.get(position).getValue()));
-    holder.metricPercentageTV.setText("(" + (widgetsMap.get(position)).getPercentage() + "%)");
+
+    if (widgetsMap.get(position).getValue() == 0.0) {
+      holder.metricTV.setText(String.valueOf(0));
+    } else {
+      holder.metricTV.setText(String.valueOf(widgetsMap.get(position).getValue()));
+    }
+
+    if ((widgetsMap.get(position)).getPercentage() == 0.0) {
+      holder.metricPercentageTV.setText("(0%)");
+    } else {
+      holder.metricPercentageTV.setText("(" + (widgetsMap.get(position)).getPercentage() + "%)");
+    }
+
     holder.measurementUnitTV.setText((widgetsMap.get(position)).getMeasurementUnit());
   }
 
