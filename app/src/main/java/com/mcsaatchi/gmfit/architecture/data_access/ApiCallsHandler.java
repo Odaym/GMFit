@@ -45,6 +45,7 @@ import com.mcsaatchi.gmfit.architecture.rest.WeightHistoryResponse;
 import com.mcsaatchi.gmfit.architecture.rest.WidgetsResponse;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
+import java.util.HashMap;
 import java.util.Map;
 import javax.inject.Inject;
 import okhttp3.RequestBody;
@@ -171,14 +172,14 @@ public class ApiCallsHandler {
     });
   }
 
-  void updateUserProfile(String finalDateOfBirth, String bloodType, String nationality,
-      int medical_condition, String measurementSystem, int goalId, int activityLevelId,
-      int finalGender, double height, double weight, String onboard,
+  void updateUserProfile(RequestBody finalDateOfBirth, RequestBody bloodType,
+      RequestBody nationality, HashMap<String, RequestBody> medicalConditions,
+      RequestBody measurementSystem, RequestBody goalId, RequestBody activityLevelId,
+      RequestBody finalGender, RequestBody height, RequestBody weight, RequestBody onboard,
       final Callback<DefaultGetResponse> callback) {
     Call<DefaultGetResponse> apiCall = restClient.getGMFitService()
-        .updateUserProfile(
-            new UpdateProfileRequest(finalDateOfBirth, bloodType, nationality, medical_condition,
-                measurementSystem, goalId, activityLevelId, finalGender, height, weight, onboard));
+        .updateUserProfile(finalDateOfBirth, bloodType, nationality, measurementSystem,
+            medicalConditions, goalId, activityLevelId, finalGender, height, weight, onboard);
 
     apiCall.enqueue(new Callback<DefaultGetResponse>() {
       @Override
@@ -1220,7 +1221,7 @@ public class ApiCallsHandler {
     final String blood_type;
     final String country;
     final String metric_system;
-    final int medical_conditions;
+    final Map<String, RequestBody> medical_conditions;
     final int user_goal;
     final int activity_level;
     final int gender;
@@ -1229,8 +1230,8 @@ public class ApiCallsHandler {
     final String onboard;
 
     UpdateProfileRequest(String date_of_birth, String blood_type, String country,
-        int medical_conditions, String metric_system, int user_goal, int activity_level, int gender,
-        double height, double weight, String onboard) {
+        Map<String, RequestBody> medical_conditions, String metric_system, int user_goal,
+        int activity_level, int gender, double height, double weight, String onboard) {
       this.date_of_birth = date_of_birth;
       this.blood_type = blood_type;
       this.country = country;

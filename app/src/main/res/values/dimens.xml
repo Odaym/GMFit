@@ -41,6 +41,8 @@
   <dimen name="nutrition_widgets_main_metric_value_font_size">50sp</dimen>
   <dimen name="fitness_widgets_main_metric_value_font_size">40sp</dimen>
 
+  <dimen name="medical_conditions_choice_checkbox_height">60dp</dimen>
+
   <!-- SPLASH ACTIVITY-->
   <dimen name="splash_image_dimens">200dp</dimen>
 

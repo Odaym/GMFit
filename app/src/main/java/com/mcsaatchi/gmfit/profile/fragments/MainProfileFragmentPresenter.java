@@ -72,14 +72,15 @@ class MainProfileFragmentPresenter extends BaseFragmentPresenter {
     });
   }
 
-  void updateUserProfile(String dateOfBirth, String bloodType, String nationality,
-      int medicalCondition, String measurementSystem, int userGoalId, int activityLevelId,
-      int finalGender, double height, double weight, String onboard) {
+  void updateUserProfile(RequestBody finalDateOfBirth, RequestBody bloodType,
+      RequestBody nationality, HashMap<String, RequestBody> medicalConditions,
+      RequestBody measurementSystem, RequestBody goalId, RequestBody activityLevelId,
+      RequestBody finalGender, RequestBody height, RequestBody weight, RequestBody onboard) {
 
     view.callDisplayWaitingDialog(R.string.updating_user_profile_dialog_title);
 
-    dataAccessHandler.updateUserProfile(dateOfBirth, bloodType, nationality, medicalCondition,
-        measurementSystem.toLowerCase(), userGoalId, activityLevelId, finalGender, height, weight,
+    dataAccessHandler.updateUserProfile(finalDateOfBirth, bloodType, nationality, medicalConditions,
+        measurementSystem, goalId, activityLevelId, finalGender, height, weight,
         onboard, new Callback<DefaultGetResponse>() {
           @Override public void onResponse(Call<DefaultGetResponse> call,
               Response<DefaultGetResponse> response) {
@@ -136,7 +137,7 @@ class MainProfileFragmentPresenter extends BaseFragmentPresenter {
     });
   }
 
-  void requestEmergencyProfile(){
+  void requestEmergencyProfile() {
     dataAccessHandler.getEmergencyProfile(new Callback<EmergencyProfileResponse>() {
       @Override public void onResponse(Call<EmergencyProfileResponse> call,
           Response<EmergencyProfileResponse> response) {

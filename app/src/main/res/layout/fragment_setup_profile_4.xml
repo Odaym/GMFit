@@ -172,13 +172,32 @@
             android:background="@color/separator_gray"
             />
 
-        <Spinner
-            android:id="@+id/medicalConditionsSpinner"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/setup_profile_spinners"
-            android:paddingEnd="@dimen/default_margin_1"
-            />
+            android:orientation="horizontal"
+            >
+
+          <TextView
+              android:id="@+id/medicalConditionsValueTV"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@drawable/setup_profile_spinners"
+              android:gravity="start|center_vertical"
+              android:paddingEnd="@dimen/default_margin_1"
+              android:paddingStart="@dimen/default_margin_1"
+              android:textColor="@color/white"
+              />
+
+          <ImageView
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_alignParentEnd="true"
+              android:layout_centerVertical="true"
+              android:paddingEnd="@dimen/default_margin_1_5"
+              android:src="@drawable/ic_keyboard_arrow_down_white_24dp"
+              />
+        </RelativeLayout>
       </LinearLayout>
 
       <com.wrapp.floatlabelededittext.FloatLabeledEditText

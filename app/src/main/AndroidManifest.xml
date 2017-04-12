@@ -99,6 +99,13 @@
         android:windowSoftInputMode="stateHidden|adjustPan"/>
 
     <activity
+        android:name=".onboarding.activities.MedicalConditionsChoiceListActivity"
+        android:exported="true"
+        android:screenOrientation="portrait"
+        android:theme="@style/No_Action_Bar_Theme"
+        android:windowSoftInputMode="stateHidden|adjustPan"/>
+
+    <activity
         android:name=".common.activities.CustomizeWidgetsAndChartsActivity"
         android:screenOrientation="portrait"
         android:theme="@style/No_Action_Bar_Theme"/>

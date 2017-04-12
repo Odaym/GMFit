@@ -26,8 +26,13 @@ public interface GMFitService {
 
   @GET("logout") Call<DefaultGetResponse> signOutUser();
 
-  @POST("user/update-profile") Call<DefaultGetResponse> updateUserProfile(
-      @Body ApiCallsHandler.UpdateProfileRequest updateProfileRequest);
+  @Multipart @POST("user/update-profile") Call<DefaultGetResponse> updateUserProfile(
+      @Part("date_of_birth") RequestBody date_of_birth, @Part("blood_type") RequestBody blood_type,
+      @Part("country") RequestBody country, @Part("metric_system") RequestBody metric_system,
+      @PartMap() Map<String, RequestBody> medical_conditions,
+      @Part("user_goal") RequestBody user_goal, @Part("activity_level") RequestBody activity_level,
+      @Part("gender") RequestBody gender, @Part("height") RequestBody height,
+      @Part("weight") RequestBody weight, @Part("onboard") RequestBody onboard);
 
   @POST("user/update-profile") Call<DefaultGetResponse> updateUserWeight(
       @Body ApiCallsHandler.UpdateUserWeightRequest updateUserWeightRequest);

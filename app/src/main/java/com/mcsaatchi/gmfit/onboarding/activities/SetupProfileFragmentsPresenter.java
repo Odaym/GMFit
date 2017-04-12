@@ -14,9 +14,12 @@ import com.mcsaatchi.gmfit.architecture.rest.UiResponse;
 import com.mcsaatchi.gmfit.architecture.rest.UserGoalsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.UserGoalsResponseBody;
 import com.mcsaatchi.gmfit.common.Constants;
+import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.common.fragments.BaseFragmentPresenter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -113,15 +116,16 @@ public class SetupProfileFragmentsPresenter extends BaseFragmentPresenter {
     });
   }
 
-  public void setupUserProfile(String finalDateOfBirth, String bloodType, String nationality,
-      int medical_condition, String measurementSystem, int goalId, int activityLevelId,
-      int finalGender, double height, double weight) {
+  public void setupUserProfile(RequestBody finalDateOfBirth, RequestBody bloodType,
+      RequestBody nationality, HashMap<String, RequestBody> medicalConditions,
+      RequestBody measurementSystem, RequestBody goalId, RequestBody activityLevelId,
+      RequestBody finalGender, RequestBody height, RequestBody weight) {
 
     view_4.callDisplayWaitingDialog(R.string.signing_up_dialog_title);
 
-    dataAccessHandler.updateUserProfile(finalDateOfBirth, bloodType, nationality, medical_condition,
-        measurementSystem, goalId, activityLevelId, finalGender, height, weight, "1",
-        new Callback<DefaultGetResponse>() {
+    dataAccessHandler.updateUserProfile(finalDateOfBirth, bloodType, nationality, medicalConditions,
+        measurementSystem, goalId, activityLevelId, finalGender, height, weight,
+        Helpers.toRequestBody("1"), new Callback<DefaultGetResponse>() {
           @Override public void onResponse(Call<DefaultGetResponse> call,
               Response<DefaultGetResponse> response) {
             switch (response.code()) {

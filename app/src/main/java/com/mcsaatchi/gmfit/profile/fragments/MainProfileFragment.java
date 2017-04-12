@@ -46,6 +46,8 @@ import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.common.fragments.BaseFragment;
 import com.mcsaatchi.gmfit.onboarding.activities.LoginActivity;
+import com.mcsaatchi.gmfit.onboarding.activities.MedicalConditionsChoiceListActivity;
+import com.mcsaatchi.gmfit.onboarding.models.MedicalCondition;
 import com.mcsaatchi.gmfit.profile.activities.ChangePasswordActivity;
 import com.mcsaatchi.gmfit.profile.activities.ContactUsActivity;
 import com.mcsaatchi.gmfit.profile.activities.MealRemindersActivity;
@@ -66,6 +68,8 @@ import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import timber.log.Timber;
 import worker8.com.github.radiogroupplus.RadioGroupPlus;
+
+import static com.mcsaatchi.gmfit.onboarding.fragments.SetupProfile4Fragment.MEDICAL_CONDITIONS_SELECTED;
 
 public class MainProfileFragment extends BaseFragment
     implements MainProfileFragmentPresenter.MainProfileFragmentView {
@@ -88,6 +92,11 @@ public class MainProfileFragment extends BaseFragment
 
   @Inject SharedPreferences prefs;
   @Inject DataAccessHandler dataAccessHandler;
+
+  private HashMap<String, RequestBody> medicalConditionParts;
+  private ArrayList<MedicalCondition> medicalConditions = new ArrayList<>();
+  private ArrayList<Integer> medicalConditionIDs = new ArrayList<>();
+  private ArrayList<MedicalCondition> conditionsReturned;
 
   private MainProfileFragmentPresenter presenter;
   private File photoFile;
@@ -174,6 +183,33 @@ public class MainProfileFragment extends BaseFragment
     super.onActivityResult(requestCode, resultCode, data);
 
     switch (requestCode) {
+      case MEDICAL_CONDITIONS_SELECTED:
+        if (data != null) {
+          String valueForCondition = null;
+
+          conditionsReturned = data.getExtras().getParcelableArrayList("MEDICAL_CONDITIONS");
+
+          if (conditionsReturned != null) {
+            for (int i = 0; i < conditionsReturned.size(); i++) {
+              if (conditionsReturned.get(i).isSelected()) {
+                medicalConditionIDs.add(conditionsReturned.get(i).getId());
+                valueForCondition = conditionsReturned.get(i).getMedicalCondition();
+              } else {
+                valueForCondition = "None";
+              }
+            }
+
+            medicalConditionsValueTV.setText(valueForCondition);
+
+            medicalConditionParts = constructMedicalConditionsForRequest(medicalConditionIDs);
+
+            updateUserProfile();
+          }
+        } else {
+          Timber.d("Conditions returned is null");
+        }
+
+        break;
       case CAPTURE_NEW_PICTURE_REQUEST_CODE:
         if (photoFile.getTotalSpace() > 0) {
           setProfilePicture(photoFile.getAbsolutePath());
@@ -200,22 +236,30 @@ public class MainProfileFragment extends BaseFragment
       userGoals = userProfileData.getUserGoals();
       userActivityLevels = userProfileData.getActivityLevels();
 
-      //Set the medical condition
-      if (prefs.getInt(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION_ID, -1) == -1) {
-        prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION, "None");
-        prefsEditor.putInt(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION_ID, -1);
+      for (int i = 0; i < userMedicalConditions.size(); i++) {
+        if (userMedicalConditions.get(i).getName() != null) {
 
-        medicalConditionsValueTV.setText("None");
-      } else {
-        for (int i = 0; i < userMedicalConditions.size(); i++) {
-          if (userMedicalConditions.get(i).getSelected().equals("1")) {
-            prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION,
-                userMedicalConditions.get(i).getName());
-            prefsEditor.putInt(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION_ID,
-                Integer.parseInt(userMedicalConditions.get(i).getId()));
+          //Initialize Medical Conditions array from the response array
+          MedicalCondition MC = new MedicalCondition();
+          MC.setMedicalCondition(userMedicalConditions.get(i).getName());
+          MC.setId(Integer.parseInt(userMedicalConditions.get(i).getId()));
 
-            medicalConditionsValueTV.setText(userMedicalConditions.get(i).getName());
+          if (userMedicalConditions.get(i).getSelected().equals("0")) {
+            MC.setSelected(false);
+          } else {
+            MC.setSelected(true);
           }
+
+          medicalConditions.add(MC);
+        }
+      }
+
+      for (int i = 0; i < medicalConditions.size(); i++) {
+        if (userMedicalConditions.get(i).getSelected().equals("0")) {
+          medicalConditionsValueTV.setText("None");
+        } else {
+          medicalConditionsValueTV.setText(userMedicalConditions.get(i).getName());
+          break;
         }
       }
 
@@ -561,61 +605,9 @@ public class MainProfileFragment extends BaseFragment
   }
 
   @OnClick(R.id.medicalConditionsLayout) public void handleMedicalConditionsLayoutPressed() {
-    final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
-    dialogBuilder.setTitle(R.string.profile_edit_medical_conditions_dialog_title);
-
-    View dialogView = LayoutInflater.from(getActivity())
-        .inflate(R.layout.profile_edit_radio_options_layout, null);
-
-    final RadioGroupPlus medicalRdGroup =
-        (RadioGroupPlus) dialogView.findViewById(R.id.collectionsRadioGroup);
-
-    for (int i = 0; i < userMedicalConditions.size(); i++) {
-      View listItemRadioButton = getActivity().getLayoutInflater()
-          .inflate(R.layout.list_item_edit_radio_options_dialog, null);
-
-      final RadioButton radioButtonItem =
-          (RadioButton) listItemRadioButton.findViewById(R.id.editRadioOptionsRadioBTN);
-      radioButtonItem.setText(userMedicalConditions.get(i).getName());
-      radioButtonItem.setId(Integer.parseInt(userMedicalConditions.get(i).getId()));
-
-      if (radioButtonItem.getText()
-          .toString()
-          .equals(prefs.getString(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION, ""))) {
-        radioButtonItem.setChecked(true);
-      }
-
-      medicalRdGroup.addView(listItemRadioButton);
-    }
-
-    dialogBuilder.setView(dialogView);
-    dialogBuilder.setPositiveButton(R.string.ok, (dialogInterface, position) -> {
-      RadioButton selectedRadioButton =
-          (RadioButton) medicalRdGroup.findViewById(medicalRdGroup.getCheckedRadioButtonId());
-
-      if (selectedRadioButton != null) {
-        medicalConditionsValueTV.setText(selectedRadioButton.getText().toString());
-
-        prefs.edit()
-            .putString(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION,
-                selectedRadioButton.getText().toString())
-            .apply();
-        prefs.edit()
-            .putInt(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION_ID,
-                selectedRadioButton.getId())
-            .apply();
-
-        updateUserProfile();
-      } else {
-        Log.d("TAG", "onClick: Selected Radio Button was null!");
-      }
-    });
-
-    dialogBuilder.setNegativeButton(R.string.decline_cancel,
-        (dialogInterface, i) -> dialogInterface.dismiss());
-
-    AlertDialog alertDialog = dialogBuilder.create();
-    alertDialog.show();
+      Intent intent = new Intent(getActivity(), MedicalConditionsChoiceListActivity.class);
+      intent.putExtra("MEDICAL_CONDITIONS", medicalConditions);
+      startActivityForResult(intent, MEDICAL_CONDITIONS_SELECTED);
   }
 
   @OnClick(R.id.metricLayout) public void handleMetricLayoutPressed() {
@@ -861,14 +853,18 @@ public class MainProfileFragment extends BaseFragment
         prefs.getString(Constants.EXTRAS_USER_PROFILE_MEASUREMENT_SYSTEM, "metric");
     int userGoalId = prefs.getInt(Constants.EXTRAS_USER_PROFILE_GOAL_ID, 0);
     int activityLevelId = prefs.getInt(Constants.EXTRAS_USER_PROFILE_ACTIVITY_LEVEL_ID, 2);
-    int medicalCondition =
-        prefs.getInt(Constants.EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION_ID, -1);
     int gender = prefs.getInt(Constants.EXTRAS_USER_PROFILE_GENDER, 1);
     float height = prefs.getFloat(Constants.EXTRAS_USER_PROFILE_HEIGHT, 180);
     float weight = prefs.getFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, 82);
 
-    presenter.updateUserProfile(dateOfBirth, bloodType, nationality, medicalCondition,
-        measurementSystem.toLowerCase(), userGoalId, activityLevelId, gender, height, weight, "1");
+    presenter.updateUserProfile(Helpers.toRequestBody(dateOfBirth),
+        Helpers.toRequestBody(bloodType), Helpers.toRequestBody(nationality), medicalConditionParts,
+        Helpers.toRequestBody(measurementSystem.toLowerCase()),
+        Helpers.toRequestBody(String.valueOf(userGoalId)),
+        Helpers.toRequestBody(String.valueOf(activityLevelId)),
+        Helpers.toRequestBody(String.valueOf(gender)),
+        Helpers.toRequestBody(String.valueOf(height)),
+        Helpers.toRequestBody(String.valueOf(weight)), Helpers.toRequestBody("1"));
   }
 
   private void updateUserPicture() {
@@ -883,5 +879,17 @@ public class MainProfileFragment extends BaseFragment
     profilePictureParts.put("picture\"; filename=\"" + userPicturePath + ".jpg", imageFilePart);
 
     presenter.updateUserPicture(profilePictureParts);
+  }
+
+  private HashMap<String, RequestBody> constructMedicalConditionsForRequest(
+      ArrayList<Integer> medicalConditionIDs) {
+    HashMap<String, RequestBody> medicalConditionParts = new HashMap<>();
+
+    for (int i = 0; i < medicalConditionIDs.size(); i++) {
+      medicalConditionParts.put("medical_conditions[" + i + "]",
+          Helpers.toRequestBody(String.valueOf(medicalConditionIDs.get(i))));
+    }
+
+    return medicalConditionParts;
   }
 }

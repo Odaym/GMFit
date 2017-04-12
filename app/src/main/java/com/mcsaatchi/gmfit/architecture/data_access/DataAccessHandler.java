@@ -42,6 +42,7 @@ import com.mcsaatchi.gmfit.architecture.rest.UserMealsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.UserProfileResponse;
 import com.mcsaatchi.gmfit.architecture.rest.WeightHistoryResponse;
 import com.mcsaatchi.gmfit.architecture.rest.WidgetsResponse;
+import java.util.HashMap;
 import java.util.Map;
 import javax.inject.Inject;
 import okhttp3.RequestBody;
@@ -95,11 +96,11 @@ public class DataAccessHandler {
     apiCallsHandler.signOutUser(callback);
   }
 
-  public void updateUserProfile(String finalDateOfBirth, String bloodType, String nationality,
-      int medical_condition, String measurementSystem, int goalId, int activityLevelId,
-      int finalGender, double height, double weight, String onboard,
+  public void updateUserProfile(RequestBody finalDateOfBirth, RequestBody bloodType, RequestBody nationality,
+      HashMap<String, RequestBody> medicalConditions, RequestBody measurementSystem, RequestBody goalId, RequestBody activityLevelId,
+      RequestBody finalGender, RequestBody height, RequestBody weight, RequestBody onboard,
       Callback<DefaultGetResponse> callback) {
-    apiCallsHandler.updateUserProfile(finalDateOfBirth, bloodType, nationality, medical_condition,
+    apiCallsHandler.updateUserProfile(finalDateOfBirth, bloodType, nationality, medicalConditions,
         measurementSystem, goalId, activityLevelId, finalGender, height, weight, onboard, callback);
   }
 

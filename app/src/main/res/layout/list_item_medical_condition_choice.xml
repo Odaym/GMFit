@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/medical_conditions_choice_checkbox_height"
+    android:background="@color/white"
+    android:clickable="true"
+    android:orientation="horizontal"
+    android:paddingStart="@dimen/default_margin_2"
+    >
+
+  <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:background="?android:attr/selectableItemBackground"
+      android:clickable="false"
+      android:focusable="true"
+      >
+
+    <CheckBox
+        android:id="@+id/medicalCheckbox"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+        android:paddingStart="@dimen/default_margin_1_5"
+        />
+  </RelativeLayout>
+</RelativeLayout>
