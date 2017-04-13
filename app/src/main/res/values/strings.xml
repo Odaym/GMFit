@@ -61,10 +61,10 @@
   <string name="password_hint">Password</string>
   <string name="confirm_password_hint">Confirm Password</string>
   <string name="create_account_button">Create Account</string>
-  <string name="creating_account_TOS">By signing up, you agree to the &lt;u>Terms of Use&lt;u>.</string>
+  <string name="creating_account_TOS">* By creating an account, you agree to the &lt;u>Terms of Use&lt;u>.</string>
   <string name="signing_up_dialog_title">Registering a new account</string>
   <string name="email_already_taken_api_response">Email already in use, please choose a different email.</string>
-  <string name="signup_failed_alert_dialog_title">Registeration failed</string>
+  <string name="signup_failed_alert_dialog_title">Registration failed</string>
   <string name="first_name_hint">First Name</string>
   <string name="last_name_hint">Last Name</string>
 
@@ -127,7 +127,7 @@
   <string name="welcome_globemed_message">An all-in-one app that helps you manage your health.\nSwipe left for more details.</string>
   <string name="fitness_tracking_title">Automatic Fitness Tracking</string>
   <string name="fitness_tracking_message">Keep an eye on your day-to-day activities through\nthe customizable widgets and charts.</string>
-  <string name="food_logging_title">Food Logging\n&amp; Recommendations</string>
+  <string name="food_logging_title">Food Logging</string>
   <string name="food_logging_message">Search, scan or log your meals and track your daily\ninstake of calories, protein, carbs and more.</string>
   <string name="health_tracking_title">Health Tracking &amp; Monitoring</string>
   <string name="health_tracking_message">Monitor your health and keep a record of all\nyour medical tests.</string>
@@ -136,7 +136,7 @@
   <string name="daily_goals_section_title">Daily Goals</string>
   <string name="daily_goals_section_message">Complete your daily goals.</string>
   <string name="get_started_title">Let\'s Get Started</string>
-  <string name="get_started_message">Sign up for the GM Fit app via e-mail\nor through Facebook. If you\'ve already signed up,\nyou can sign in below.</string>
+  <string name="get_started_message">Sign up for the GlobeMed Fit app via e-mail\nor through Facebook. If you\'ve already signed up,\nyou can sign in below.</string>
 
   <!-- SETUP PROFILE ACTIVITY -->
   <string name="setup_profile_activity_title">Setup Profile</string>
@@ -235,8 +235,7 @@
   <string name="search_tests_hint">Find a test from the list below</string>
   <string name="counselling_information_activity_title">Counselling Information</string>
   <string name="check_compatibility_activity_title">Check Compatibility</string>
-  <string name="check_compatibility_dialog_hint">This feature is available for the insured members only.\n
-    You may enable the “Check Compatibility” by login to the Insurance section.</string>
+  <string name="check_compatibility_dialog_hint">This feature is available for the insured members only.\nYou may enable the “Check Compatibility” by login to the Insurance section.</string>
   <string name="inquiry_more_details_menu">Details</string>
   <string name="write_reply_hint">Write your reply here…</string>
 

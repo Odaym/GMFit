@@ -224,7 +224,7 @@
           android:gravity="center"
           android:paddingEnd="@dimen/default_margin_2"
           android:paddingStart="@dimen/default_margin_2"
-          android:textColor="@android:color/white"
+          android:textColor="@color/offwhite_background_gray"
           />
 
     </LinearLayout>

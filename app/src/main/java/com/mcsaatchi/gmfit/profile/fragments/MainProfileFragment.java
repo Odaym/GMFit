@@ -87,7 +87,6 @@ public class MainProfileFragment extends BaseFragment
   @Bind(R.id.weightEntryValueTV) TextView weightEntryValueTV;
   @Bind(R.id.goalsEntryValueTV) TextView goalsEntryValueTV;
   @Bind(R.id.medicalConditionsValueTV) TextView medicalConditionsValueTV;
-  @Bind(R.id.metricSystemValueTV) TextView metricSystemValueTV;
   @Bind(R.id.activityLevelsEntryValueTV) TextView activityLevelsEntryValueTV;
   @Bind(R.id.appRemindersValueTV) TextView appRemindersValueTV;
   @Bind(R.id.changePasswordParentLayout) LinearLayout changePasswordParentLayout;
@@ -108,10 +107,6 @@ public class MainProfileFragment extends BaseFragment
 
   private List<UserProfileResponseMedicalCondition> userMedicalConditions = new ArrayList<>();
   private List<UserProfileResponseActivityLevel> userActivityLevels = new ArrayList<>();
-
-  private ArrayList userMetricSystems = new ArrayList<String>() {{
-    add(0, "Metric");
-  }};
 
   private List<UserProfileResponseGoal> userGoals = new ArrayList<>();
 
@@ -324,18 +319,6 @@ public class MainProfileFragment extends BaseFragment
         prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_NATIONALITY,
             userProfileData.getCountry());
         countryValueTV.setText(userProfileData.getCountry());
-      }
-
-      //Set the metric system
-      if (userProfileData.getMetricSystem() != null && !userProfileData.getMetricSystem()
-          .isEmpty()) {
-        prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_MEASUREMENT_SYSTEM,
-            userProfileData.getMetricSystem());
-
-        String cap = userProfileData.getMetricSystem().substring(0, 1).toUpperCase()
-            + userProfileData.getMetricSystem().substring(1);
-
-        metricSystemValueTV.setText(cap);
       }
 
       //Set the gender
@@ -616,56 +599,6 @@ public class MainProfileFragment extends BaseFragment
     Intent intent = new Intent(getActivity(), MedicalConditionsChoiceListActivity.class);
     intent.putExtra("MEDICAL_CONDITIONS", medicalConditions);
     startActivityForResult(intent, MEDICAL_CONDITIONS_SELECTED);
-  }
-
-  @OnClick(R.id.metricLayout) public void handleMetricLayoutPressed() {
-    final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
-    dialogBuilder.setTitle(R.string.profile_edit_measurement_unit_dialog_title);
-
-    View dialogView = LayoutInflater.from(getActivity())
-        .inflate(R.layout.profile_edit_measurement_unit_layout, null);
-
-    final RadioGroupPlus metricRadioGroup =
-        (RadioGroupPlus) dialogView.findViewById(R.id.measuremeantUnitRdGroup);
-
-    for (int i = 0; i < userMetricSystems.size(); i++) {
-      View listItemRadioButton = getActivity().getLayoutInflater()
-          .inflate(R.layout.list_item_edit_metric_system_dialog, null);
-
-      final RadioButton radioButtonItem =
-          (RadioButton) listItemRadioButton.findViewById(R.id.editMetricSystemRadioBTN);
-      radioButtonItem.setText(userMetricSystems.get(i).toString());
-      radioButtonItem.setId(userMetricSystems.indexOf(radioButtonItem.getText().toString()));
-
-      if (radioButtonItem.getText()
-          .toString()
-          .equalsIgnoreCase(
-              prefs.getString(Constants.EXTRAS_USER_PROFILE_MEASUREMENT_SYSTEM, ""))) {
-        radioButtonItem.setChecked(true);
-      }
-
-      metricRadioGroup.addView(listItemRadioButton);
-    }
-
-    dialogBuilder.setView(dialogView);
-    dialogBuilder.setPositiveButton(R.string.ok, (dialogInterface, position) -> {
-      RadioButton selectedRadioButton =
-          (RadioButton) metricRadioGroup.findViewById(metricRadioGroup.getCheckedRadioButtonId());
-
-      metricSystemValueTV.setText(selectedRadioButton.getText().toString());
-
-      prefs.edit()
-          .putString(Constants.EXTRAS_USER_PROFILE_MEASUREMENT_SYSTEM,
-              selectedRadioButton.getText().toString())
-          .apply();
-
-      updateUserProfile();
-    });
-    dialogBuilder.setNegativeButton(R.string.decline_cancel,
-        (dialogInterface, i) -> dialogInterface.dismiss());
-
-    AlertDialog alertDialog = dialogBuilder.create();
-    alertDialog.show();
   }
 
   @OnClick(R.id.countryLayout) public void handleCountryLayoutPressed() {

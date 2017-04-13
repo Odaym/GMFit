@@ -61,8 +61,9 @@ public class SetupProfile4Fragment extends BaseFragment
 
   private SetupProfileFragmentsPresenter presenter;
 
-  private HashMap<String, RequestBody> medicalConditions;
+  private ArrayList<MedicalCondition> medicalConditions = new ArrayList<>();
   private ArrayList<Integer> medicalConditionIDs = new ArrayList<>();
+  private HashMap<String, RequestBody> medicalConditionParts;
 
   private float finalWeight = 0, finalHeight = 0;
 
@@ -169,18 +170,27 @@ public class SetupProfile4Fragment extends BaseFragment
     switch (requestCode) {
       case MEDICAL_CONDITIONS_SELECTED:
         if (data != null) {
-          ArrayList<MedicalCondition> conditionsReturned =
+          ArrayList<MedicalCondition> conditionsFromExtras =
               data.getExtras().getParcelableArrayList("MEDICAL_CONDITIONS");
 
-          if (conditionsReturned != null) {
-            for (int i = 0; i < conditionsReturned.size(); i++) {
-              if (conditionsReturned.get(i).isSelected()) {
-                medicalConditionIDs.add(conditionsReturned.get(i).getId());
+          String finalMedicalConditions = "";
+
+          if (conditionsFromExtras != null) {
+            medicalConditionsValueTV.setText("");
+
+            for (int i = 0; i < conditionsFromExtras.size(); i++) {
+              if (conditionsFromExtras.get(i).isSelected()) {
+                medicalConditionIDs.add(conditionsFromExtras.get(i).getId());
+                finalMedicalConditions += conditionsFromExtras.get(i).getMedicalCondition() + ", ";
               }
             }
+
+            medicalConditionsValueTV.setText(finalMedicalConditions.replaceAll(", $", ""));
           }
 
-          medicalConditions = constructMedicalConditionsForRequest(medicalConditionIDs);
+          medicalConditionParts = constructMedicalConditionsForRequest(medicalConditionIDs);
+
+          medicalConditions = conditionsFromExtras;
         } else {
           Timber.d("Conditions returned is null");
         }
@@ -192,22 +202,25 @@ public class SetupProfile4Fragment extends BaseFragment
   @Override public void populateMedicalConditionsSpinner(
       ArrayList<MedicalConditionsResponseDatum> allMedicalData) {
 
-    ArrayList<MedicalCondition> medicalConditions = new ArrayList<>();
-
     for (int i = 0; i < allMedicalData.size(); i++) {
       if (allMedicalData.get(i).getName() != null) {
-        medicalConditions.add(new MedicalCondition(Integer.parseInt(allMedicalData.get(i).getId()),
-            allMedicalData.get(i).getName(), false));
+
+        //Initialize Medical Conditions array from the response array
+        MedicalCondition MC = new MedicalCondition();
+        MC.setMedicalCondition(allMedicalData.get(i).getName());
+        MC.setId(Integer.parseInt(allMedicalData.get(i).getId()));
+
+        if (allMedicalData.get(i).getSelected().equals("0")) {
+          MC.setSelected(false);
+        } else {
+          MC.setSelected(true);
+        }
+
+        medicalConditions.add(MC);
       }
     }
 
-    medicalConditionsValueTV.setText(medicalConditions.get(0).getMedicalCondition());
-
-    medicalConditionsValueTV.setOnClickListener(view -> {
-      Intent intent = new Intent(getActivity(), MedicalConditionsChoiceListActivity.class);
-      intent.putExtra("MEDICAL_CONDITIONS", medicalConditions);
-      startActivityForResult(intent, MEDICAL_CONDITIONS_SELECTED);
-    });
+    medicalConditionsValueTV.setText("None");
   }
 
   @Override public void openMainActivity(List<AuthenticationResponseChart> chartsMap) {
@@ -253,7 +266,7 @@ public class SetupProfile4Fragment extends BaseFragment
 
     presenter.setupUserProfile(Helpers.toRequestBody(finalDateOfBirth),
         Helpers.toRequestBody(finalBloodType), Helpers.toRequestBody(nationality),
-        medicalConditions, Helpers.toRequestBody(measurementSystem),
+        medicalConditionParts, Helpers.toRequestBody(measurementSystem),
         Helpers.toRequestBody(String.valueOf(goalId)),
         Helpers.toRequestBody(String.valueOf(activityLevelId)),
         Helpers.toRequestBody(String.valueOf(finalGender)),
@@ -270,6 +283,12 @@ public class SetupProfile4Fragment extends BaseFragment
             .setPreselectedDate(2000, 0, 1)
             .setThemeLight();
     cdp.show(getActivity().getSupportFragmentManager(), FRAG_TAG_DATE_PICKER);
+  }
+
+  @OnClick(R.id.medicalConditionsValueTV) public void handleMedicalConditionsLayoutPressed() {
+    Intent intent = new Intent(getActivity(), MedicalConditionsChoiceListActivity.class);
+    intent.putExtra("MEDICAL_CONDITIONS", medicalConditions);
+    startActivityForResult(intent, MEDICAL_CONDITIONS_SELECTED);
   }
 
   private void initCustomSpinner(ArrayList<String> listItems, Spinner spinner) {

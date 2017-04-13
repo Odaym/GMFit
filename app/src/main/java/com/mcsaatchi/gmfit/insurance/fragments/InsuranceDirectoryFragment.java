@@ -21,9 +21,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -51,6 +53,7 @@ public class InsuranceDirectoryFragment extends BaseFragment
   @Bind(R.id.clinicAddressesRecyclerView) RecyclerView clinicAddressRecycler;
   @Bind(R.id.searchBoxET) EditText searchBoxET;
   @Bind(R.id.loadingMapProgress) ProgressBar loadingMapProgress;
+  @Bind(R.id.mapKeyLayout) LinearLayout mapKeyLayout;
 
   @Inject DataAccessHandler dataAccessHandler;
   @Inject SharedPreferences prefs;
@@ -91,6 +94,10 @@ public class InsuranceDirectoryFragment extends BaseFragment
 
     });
 
+    if (prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, "").isEmpty()) {
+      mapKeyLayout.setVisibility(View.VISIBLE);
+    }
+
     setupSwitchMapViewButton();
 
     searchBoxET.addTextChangedListener(new TextWatcher() {
@@ -124,6 +131,10 @@ public class InsuranceDirectoryFragment extends BaseFragment
     });
 
     return fragmentView;
+  }
+
+  @OnClick(R.id.myLocationLayout) public void handleOnMyLocationPressed() {
+    zoomAnimateCamera();
   }
 
   @Override public void setUserVisibleHint(boolean isVisibleToUser) {

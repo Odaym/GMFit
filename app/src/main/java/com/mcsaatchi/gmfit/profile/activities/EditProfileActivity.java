@@ -68,6 +68,15 @@ public class EditProfileActivity extends BaseActivity
     weightValueET.setText(String.valueOf(prefs.getFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, 0)));
 
     heightValueET.setText(String.valueOf(prefs.getFloat(Constants.EXTRAS_USER_PROFILE_HEIGHT, 0)));
+
+    bloodTypeValueTV.setText(prefs.getString(Constants.EXTRAS_USER_PROFILE_BLOOD_TYPE, ""));
+
+    int gender = prefs.getInt(Constants.EXTRAS_USER_PROFILE_GENDER, 0);
+    if (gender == 0) {
+      genderValueTV.setText("Male");
+    } else {
+      genderValueTV.setText("Female");
+    }
   }
 
   @OnClick(R.id.genderLayout) public void handleGenderLayoutPressed() {
@@ -153,6 +162,11 @@ public class EditProfileActivity extends BaseActivity
         .apply();
 
     prefs.edit()
+        .putString(Constants.EXTRAS_USER_PROFILE_DATE_OF_BIRTH,
+            dateOfBirthValueTV.getText().toString())
+        .apply();
+
+    prefs.edit()
         .putString(Constants.EXTRAS_USER_PROFILE_USER_FULL_NAME,
             firstNameValueET + " " + lastNameValueET)
         .apply();
@@ -176,5 +190,7 @@ public class EditProfileActivity extends BaseActivity
         .apply();
 
     EventBusSingleton.getInstance().post(new ProfileUpdatedEvent());
+
+    finish();
   }
 }
