@@ -247,6 +247,43 @@
             android:layout_height="0.5dp"
             android:background="@color/offwhite_background_gray"
             />
+
+        <!-- EDIT PROFILE ENTRY -->
+        <RelativeLayout
+            android:id="@+id/editProfileLayout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/add_meal_item_layout_height"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:paddingStart="@dimen/activity_vertical_margin"
+            >
+
+          <TextView
+              android:id="@+id/editProfileTitleTV"
+              android:layout_width="@dimen/meal_item_name_width"
+              android:layout_height="match_parent"
+              android:ellipsize="end"
+              android:gravity="center_vertical"
+              android:maxLines="1"
+              android:text="@string/edit_profile_activity_title"
+              />
+
+          <LinearLayout
+              android:layout_width="@dimen/profile_value_fields_item_width"
+              android:layout_height="match_parent"
+              android:layout_alignParentEnd="true"
+              android:background="@color/much_lighter_gray"
+              android:gravity="center"
+              >
+
+            <ImageView
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:src="@drawable/ic_medical_tests_item_arrow"
+                />
+          </LinearLayout>
+        </RelativeLayout>
       </LinearLayout>
 
       <!-- EMERGENCY PROFILE SECTION -->

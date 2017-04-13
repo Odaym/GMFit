@@ -23,7 +23,7 @@
       android:background="@color/much_lighter_gray"
       android:gravity="center"
       android:inputType="number"
-      android:maxLength="3"
+      android:maxLength="4"
       android:textSize="15sp"
       />
 

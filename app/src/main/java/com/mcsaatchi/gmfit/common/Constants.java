@@ -34,6 +34,7 @@ public class Constants {
 
   public static final int NUMBER_OF_DAYS_IN_DATE_CAROUSEL = 30;
 
+  public static final String EXTRAS_USER_PROFILE_PHONE_NUMBER = "user_profile_phone_number";
   public static final String EXTRAS_USER_PROFILE_USER_FULL_NAME = "user_profile_user_full_name";
   public static final String EXTRAS_USER_PROFILE_USER_EMAIL = "user_profile_user_email";
   public static final String EXTRAS_USER_PROFILE_USER_MEDICAL_CONDITION =

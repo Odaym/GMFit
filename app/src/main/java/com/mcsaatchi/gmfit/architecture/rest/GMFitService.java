@@ -34,6 +34,13 @@ public interface GMFitService {
       @Part("gender") RequestBody gender, @Part("height") RequestBody height,
       @Part("weight") RequestBody weight, @Part("onboard") RequestBody onboard);
 
+  @Multipart @POST("user/update-profile") Call<DefaultGetResponse> updateUserProfileExplicitly(
+      @Part("name") RequestBody name, @Part("phone_number") RequestBody phone_number,
+      @Part("gender") RequestBody gender, @Part("date_of_birth") RequestBody date_of_birth,
+      @Part("blood_type") RequestBody blood_type, @Part("height") RequestBody height,
+      @Part("weight") RequestBody weight);
+
+
   @POST("user/update-profile") Call<DefaultGetResponse> updateUserWeight(
       @Body ApiCallsHandler.UpdateUserWeightRequest updateUserWeightRequest);
 

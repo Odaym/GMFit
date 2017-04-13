@@ -127,6 +127,8 @@
   <!-- PROFILE SECTION -->
   <dimen name="profile_value_fields_item_width">120dp</dimen>
   <dimen name="profile_row_field_height">120dp</dimen>
+  <dimen name="right_arrow_dimens">25dp</dimen>
+  <dimen name="edit_profile_fields_width">150dp</dimen>
 
   <!-- INSURANCE SECTION -->
   <dimen name="insurance_home_header_section_height">150dp</dimen>

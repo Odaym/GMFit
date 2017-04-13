@@ -192,6 +192,24 @@ public class ApiCallsHandler {
     });
   }
 
+  void updateUserProfileExplicitly(RequestBody name, RequestBody phone_number,
+      RequestBody gender, RequestBody date_of_birth, RequestBody blood_type, RequestBody height,
+      RequestBody weight, Callback<DefaultGetResponse> callback) {
+    Call<DefaultGetResponse> apiCall = restClient.getGMFitService()
+        .updateUserProfileExplicitly(name, phone_number, gender, date_of_birth,
+            blood_type, height, weight);
+
+    apiCall.enqueue(new Callback<DefaultGetResponse>() {
+      @Override
+      public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
+        callback.onResponse(call, response);
+      }
+
+      @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+      }
+    });
+  }
+
   void updateUserWeight(double weight, String created_at,
       final Callback<DefaultGetResponse> callback) {
     Call<DefaultGetResponse> apiCall = restClient.getGMFitService()

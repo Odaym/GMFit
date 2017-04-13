@@ -8,7 +8,6 @@ import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -30,7 +29,6 @@ import javax.inject.Inject;
 public class InsuranceLoginFragment extends BaseFragment
     implements InsuranceLoginFragmentPresenter.InsuranceLoginFragmentView {
   public static final int INFO_UPDATED_SUCCESSFULLY_AFTER_LOGIN = 537;
-  @Bind(R.id.memberImageIV) ImageView memberImageIV;
   @Bind(R.id.memberIdET) FormEditText memberIdET;
   @Bind(R.id.passwordET) FormEditText passwordET;
   @Bind(R.id.countryPicker) CustomCountryPicker countryPicker;

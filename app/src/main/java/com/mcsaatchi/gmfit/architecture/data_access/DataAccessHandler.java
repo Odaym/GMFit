@@ -96,12 +96,20 @@ public class DataAccessHandler {
     apiCallsHandler.signOutUser(callback);
   }
 
-  public void updateUserProfile(RequestBody finalDateOfBirth, RequestBody bloodType, RequestBody nationality,
-      HashMap<String, RequestBody> medicalConditions, RequestBody measurementSystem, RequestBody goalId, RequestBody activityLevelId,
+  public void updateUserProfile(RequestBody finalDateOfBirth, RequestBody bloodType,
+      RequestBody nationality, HashMap<String, RequestBody> medicalConditions,
+      RequestBody measurementSystem, RequestBody goalId, RequestBody activityLevelId,
       RequestBody finalGender, RequestBody height, RequestBody weight, RequestBody onboard,
       Callback<DefaultGetResponse> callback) {
     apiCallsHandler.updateUserProfile(finalDateOfBirth, bloodType, nationality, medicalConditions,
         measurementSystem, goalId, activityLevelId, finalGender, height, weight, onboard, callback);
+  }
+
+  public void updateUserProfileExplicitly(RequestBody name, RequestBody phone_number,
+      RequestBody gender, RequestBody date_of_birth, RequestBody blood_type, RequestBody height,
+      RequestBody weight, Callback<DefaultGetResponse> callback) {
+    apiCallsHandler.updateUserProfileExplicitly(name, phone_number, gender, date_of_birth,
+        blood_type, height, weight, callback);
   }
 
   public void updateUserWeight(double weight, String created_at,

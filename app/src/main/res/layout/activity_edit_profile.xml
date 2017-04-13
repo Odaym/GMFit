@@ -1,0 +1,386 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/general_background"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    >
+
+  <include layout="@layout/app_toolbar"/>
+
+  <ScrollView
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:background="@color/offwhite_background_gray"
+      android:clipToPadding="false"
+      android:paddingBottom="100dp"
+      >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+
+
+      <RelativeLayout
+          android:id="@+id/firstNameLayout"
+          android:layout_width="match_parent"
+          android:layout_height="@dimen/add_meal_item_layout_height"
+          android:background="@color/white"
+          android:paddingStart="@dimen/activity_vertical_margin"
+          >
+
+        <TextView
+            android:id="@+id/firstNameTV"
+            android:layout_width="@dimen/meal_item_name_width"
+            android:layout_height="match_parent"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:text="@string/first_name_hint"
+            />
+
+        <EditText
+            android:id="@+id/firstNameValueET"
+            android:layout_width="@dimen/edit_profile_fields_width"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:background="@null"
+            android:gravity="center"
+            android:inputType="textNoSuggestions"
+            android:paddingEnd="@dimen/activity_vertical_margin"
+            android:textColor="@color/profile_blue"
+            />
+      </RelativeLayout>
+
+      <View
+          android:layout_width="match_parent"
+          android:layout_height="2dp"
+          android:background="@color/offwhite_background_gray"
+          />
+
+      <RelativeLayout
+          android:id="@+id/lastNameLayout"
+          android:layout_width="match_parent"
+          android:layout_height="@dimen/add_meal_item_layout_height"
+          android:background="@color/white"
+          android:paddingStart="@dimen/activity_vertical_margin"
+          >
+
+        <TextView
+            android:id="@+id/lastNameTV"
+            android:layout_width="@dimen/meal_item_name_width"
+            android:layout_height="match_parent"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:text="@string/last_name_hint"
+            />
+
+        <EditText
+            android:id="@+id/lastNameValueET"
+            android:layout_width="@dimen/edit_profile_fields_width"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:background="@null"
+            android:gravity="center"
+            android:inputType="textNoSuggestions"
+            android:paddingEnd="@dimen/activity_vertical_margin"
+            android:textColor="@color/profile_blue"
+            />
+      </RelativeLayout>
+
+      <View
+          android:layout_width="match_parent"
+          android:layout_height="2dp"
+          android:background="@color/offwhite_background_gray"
+          />
+
+      <RelativeLayout
+          android:id="@+id/emailLayout"
+          android:layout_width="match_parent"
+          android:layout_height="@dimen/add_meal_item_layout_height"
+          android:background="@color/white"
+          android:paddingStart="@dimen/activity_vertical_margin"
+          >
+
+        <TextView
+            android:id="@+id/emailTV"
+            android:layout_width="@dimen/meal_item_name_width"
+            android:layout_height="match_parent"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:text="@string/email_address_label"
+            />
+
+        <TextView
+            android:id="@+id/emailValueTV"
+            android:layout_width="@dimen/edit_profile_fields_width"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:enabled="false"
+            android:gravity="center"
+            android:paddingEnd="@dimen/activity_vertical_margin"
+            android:textColor="@color/profile_blue"
+            />
+      </RelativeLayout>
+
+      <View
+          android:layout_width="match_parent"
+          android:layout_height="2dp"
+          android:background="@color/offwhite_background_gray"
+          />
+
+      <RelativeLayout
+          android:id="@+id/mobileNumberLayout"
+          android:layout_width="match_parent"
+          android:layout_height="@dimen/add_meal_item_layout_height"
+          android:background="@color/white"
+          android:paddingStart="@dimen/activity_vertical_margin"
+          >
+
+        <TextView
+            android:id="@+id/mobileNumberTV"
+            android:layout_width="@dimen/meal_item_name_width"
+            android:layout_height="match_parent"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:text="@string/clinic_mobile_hint"
+            />
+
+        <EditText
+            android:id="@+id/mobileNumberValueET"
+            android:layout_width="@dimen/edit_profile_fields_width"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:background="@null"
+            android:gravity="center"
+            android:inputType="phone"
+            android:paddingEnd="@dimen/activity_vertical_margin"
+            android:textColor="@color/profile_blue"
+            />
+      </RelativeLayout>
+
+      <View
+          android:layout_width="match_parent"
+          android:layout_height="2dp"
+          android:background="@color/offwhite_background_gray"
+          />
+
+      <RelativeLayout
+          android:id="@+id/genderLayout"
+          android:layout_width="match_parent"
+          android:layout_height="@dimen/add_meal_item_layout_height"
+          android:background="@color/white"
+          android:paddingStart="@dimen/activity_vertical_margin"
+          >
+
+        <TextView
+            android:id="@+id/genderTV"
+            android:layout_width="@dimen/meal_item_name_width"
+            android:layout_height="match_parent"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:text="@string/gender_hint"
+            />
+
+        <TextView
+            android:id="@+id/genderValueTV"
+            android:layout_width="@dimen/edit_profile_fields_width"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:gravity="center"
+            android:paddingEnd="@dimen/activity_vertical_margin"
+            android:textColor="@color/profile_blue"
+            />
+
+        <ImageView
+            android:layout_width="@dimen/right_arrow_dimens"
+            android:layout_height="@dimen/right_arrow_dimens"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:paddingEnd="@dimen/default_margin_1_5"
+            android:src="@drawable/ic_arrow_down_blue"
+            />
+      </RelativeLayout>
+
+      <View
+          android:layout_width="match_parent"
+          android:layout_height="2dp"
+          android:background="@color/offwhite_background_gray"
+          />
+
+      <RelativeLayout
+          android:id="@+id/dateOfBirthLayout"
+          android:layout_width="match_parent"
+          android:layout_height="@dimen/add_meal_item_layout_height"
+          android:background="@color/white"
+          android:paddingStart="@dimen/activity_vertical_margin"
+          >
+
+        <TextView
+            android:id="@+id/dateOfBirthTV"
+            android:layout_width="@dimen/meal_item_name_width"
+            android:layout_height="match_parent"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:text="@string/date_of_birth_hint"
+            />
+
+        <TextView
+            android:id="@+id/dateOfBirthValueTV"
+            android:layout_width="@dimen/edit_profile_fields_width"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:gravity="center"
+            android:paddingEnd="@dimen/activity_vertical_margin"
+            android:textColor="@color/profile_blue"
+            />
+
+        <ImageView
+            android:layout_width="@dimen/right_arrow_dimens"
+            android:layout_height="@dimen/right_arrow_dimens"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:paddingEnd="@dimen/default_margin_1_5"
+            android:src="@drawable/ic_arrow_down_blue"
+            />
+      </RelativeLayout>
+
+      <View
+          android:layout_width="match_parent"
+          android:layout_height="2dp"
+          android:background="@color/offwhite_background_gray"
+          />
+
+      <RelativeLayout
+          android:id="@+id/bloodTypeLayout"
+          android:layout_width="match_parent"
+          android:layout_height="@dimen/add_meal_item_layout_height"
+          android:background="@color/white"
+          android:paddingStart="@dimen/activity_vertical_margin"
+          >
+
+        <TextView
+            android:id="@+id/bloodTypeTV"
+            android:layout_width="@dimen/meal_item_name_width"
+            android:layout_height="match_parent"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:text="@string/blood_type_hint"
+            />
+
+        <TextView
+            android:id="@+id/bloodTypeValueTV"
+            android:layout_width="@dimen/edit_profile_fields_width"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:gravity="center"
+            android:paddingEnd="@dimen/activity_vertical_margin"
+            android:textColor="@color/profile_blue"
+            />
+
+        <ImageView
+            android:layout_width="@dimen/right_arrow_dimens"
+            android:layout_height="@dimen/right_arrow_dimens"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:paddingEnd="@dimen/default_margin_1_5"
+            android:src="@drawable/ic_arrow_down_blue"
+            />
+      </RelativeLayout>
+
+      <View
+          android:layout_width="match_parent"
+          android:layout_height="2dp"
+          android:background="@color/offwhite_background_gray"
+          />
+
+      <RelativeLayout
+          android:id="@+id/weightLayout"
+          android:layout_width="match_parent"
+          android:layout_height="@dimen/add_meal_item_layout_height"
+          android:background="@color/white"
+          android:paddingStart="@dimen/activity_vertical_margin"
+          >
+
+        <TextView
+            android:id="@+id/weightTV"
+            android:layout_width="@dimen/meal_item_name_width"
+            android:layout_height="match_parent"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:text="@string/weight_hint"
+            />
+
+        <EditText
+            android:id="@+id/weightValueET"
+            android:layout_width="@dimen/edit_profile_fields_width"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:background="@null"
+            android:gravity="center"
+            android:inputType="numberDecimal"
+            android:maxLength="4"
+            android:paddingEnd="@dimen/activity_vertical_margin"
+            android:textColor="@color/profile_blue"
+            />
+      </RelativeLayout>
+
+      <View
+          android:layout_width="match_parent"
+          android:layout_height="2dp"
+          android:background="@color/offwhite_background_gray"
+          />
+
+
+      <RelativeLayout
+          android:id="@+id/heightLayout"
+          android:layout_width="match_parent"
+          android:layout_height="@dimen/add_meal_item_layout_height"
+          android:background="@color/white"
+          android:paddingStart="@dimen/activity_vertical_margin"
+          >
+
+        <TextView
+            android:id="@+id/heightTV"
+            android:layout_width="@dimen/meal_item_name_width"
+            android:layout_height="match_parent"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:text="@string/height_hint"
+            />
+
+        <EditText
+            android:id="@+id/heightValueET"
+            android:layout_width="@dimen/edit_profile_fields_width"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:background="@null"
+            android:gravity="center"
+            android:inputType="numberDecimal"
+            android:maxLength="4"
+            android:paddingEnd="@dimen/activity_vertical_margin"
+            android:textColor="@color/profile_blue"
+            />
+      </RelativeLayout>
+
+      <View
+          android:layout_width="match_parent"
+          android:layout_height="2dp"
+          android:background="@color/offwhite_background_gray"
+          />
+
+    </LinearLayout>
+  </ScrollView>
+</LinearLayout>

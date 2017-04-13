@@ -36,6 +36,7 @@ import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.GMFitApplication;
 import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
+import com.mcsaatchi.gmfit.architecture.otto.ProfileUpdatedEvent;
 import com.mcsaatchi.gmfit.architecture.otto.RemindersStatusChangedEvent;
 import com.mcsaatchi.gmfit.architecture.picasso.CircleTransform;
 import com.mcsaatchi.gmfit.architecture.rest.UserProfileResponseActivityLevel;
@@ -50,6 +51,7 @@ import com.mcsaatchi.gmfit.onboarding.activities.MedicalConditionsChoiceListActi
 import com.mcsaatchi.gmfit.onboarding.models.MedicalCondition;
 import com.mcsaatchi.gmfit.profile.activities.ChangePasswordActivity;
 import com.mcsaatchi.gmfit.profile.activities.ContactUsActivity;
+import com.mcsaatchi.gmfit.profile.activities.EditProfileActivity;
 import com.mcsaatchi.gmfit.profile.activities.MealRemindersActivity;
 import com.mcsaatchi.gmfit.profile.activities.MetaTextsActivity;
 import com.mukesh.countrypicker.fragments.CountryPicker;
@@ -452,6 +454,10 @@ public class MainProfileFragment extends BaseFragment
     }
   }
 
+  @Subscribe public void handleSuccessfulProfileUpdate(ProfileUpdatedEvent event) {
+    presenter.getUserProfile();
+  }
+
   @OnClick(R.id.userProfileIV) public void handleUserProfilePressed() {
     String[] neededPermissions = new String[] {
         Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE
@@ -735,6 +741,12 @@ public class MainProfileFragment extends BaseFragment
 
   @OnClick(R.id.changePasswordLayout) public void handleChangePasswordLayoutPressed() {
     Intent intent = new Intent(getActivity(), ChangePasswordActivity.class);
+    startActivity(intent);
+  }
+
+  @OnClick(R.id.editProfileLayout) public void handleEditProfileLayoutPressed() {
+    Intent intent = new Intent(getActivity(), EditProfileActivity.class);
+    intent.putExtra("MEDICAL_CONDITIONS", medicalConditions);
     startActivity(intent);
   }
 

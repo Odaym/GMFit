@@ -290,6 +290,7 @@
   <string name="no_barcode_detected_here">No barcode detected here</string>
 
   <!-- MAIN PROFILE FRAGMENT -->
+  <string name="edit_profile_activity_title">Edit Profile</string>
   <string name="grabbing_user_policy_dialog_title">Loading user policy</string>
   <string name="downloading_pdf_profile_dialog_title">Downloading PDF Profile</string>
   <string name="downloading_pdf_profile_dialog_message">Please Wait…</string>
@@ -469,7 +470,7 @@
   <string name="reminder_2">Reminder 2</string>
   <string name="reminder_3">Reminder 3</string>
   <string name="check_compatibility_label">Check Compatibility</string>
-  <string name="check_compatibility_recommended_hint">It is recommended that you run the compatibility check before adding the medication</string>
+  <string name="check_compatibility_recommended_hint">This feature is available for the insured members only. You may enable the “Check Compatibility” by login to the Insurance section.</string>
   <string name="days_choice_activity_title">Days of Week</string>
   <string name="add_medication_button">Add Medication</string>
   <string name="edit_medication_button">Edit Medication</string>
