@@ -4,6 +4,7 @@ import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponse;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponseInnerBody;
+import com.mcsaatchi.gmfit.architecture.rest.MetaTextsResponse;
 import com.mcsaatchi.gmfit.common.activities.BaseActivityPresenter;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -48,6 +49,28 @@ class SignUpActivityPresenter {
         });
   }
 
+  void getMetaTexts(final String section) {
+    view.callDisplayWaitingDialog(R.string.loading_data_dialog_title);
+
+    dataAccessHandler.getMetaTexts(section, new Callback<MetaTextsResponse>() {
+      @Override
+      public void onResponse(Call<MetaTextsResponse> call, Response<MetaTextsResponse> response) {
+        switch (response.code()) {
+          case 200:
+            view.openMetaTextsActivity(response.body().getData().getBody(), section);
+            break;
+        }
+
+        view.callDismissWaitingDialog();
+      }
+
+      @Override public void onFailure(Call<MetaTextsResponse> call, Throwable t) {
+        view.displayRequestErrorDialog(t.getMessage());
+      }
+    });
+  }
+
+
   interface SignUpActivityView
       extends BaseActivityPresenter.BaseActivityView {
     void saveUserSignUpDetails(String accessToken, String full_name, String email, String password);
@@ -55,5 +78,7 @@ class SignUpActivityPresenter {
     void openAccountVerificationActivity();
 
     void showEmailTakenErrorDialog();
+
+    void openMetaTextsActivity(String metaContents, String section);
   }
 }

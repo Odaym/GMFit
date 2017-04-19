@@ -37,7 +37,7 @@ public class MetaTextsActivity extends BaseActivity {
       metaTextsWebView.setHorizontalScrollBarEnabled(false);
 
       settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
-      metaTextsWebView.setInitialScale(1);
+      metaTextsWebView.setInitialScale(200);
 
       String finalHTMLString = "<!DOCTYPE html>\n"
           + "<html>\n"

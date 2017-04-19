@@ -125,14 +125,14 @@ public class InsuranceLoginFragment extends BaseFragment
     }
 
     if (!countries.isEmpty()) {
-      countryPicker.setUpDropDown("Choose a country", "Select Country",
+      countryPicker.setUpDropDown("Choose a country", "",
           countries.toArray(new String[countries.size()]), (index, selected) -> {
             chosenCountry = true;
 
             saveChosenCountry(countriesResponse, selected);
           });
 
-      countryPicker.setSelectedItem("");
+      countryPicker.setSelectedItem("Select Country");
     }
   }
 

@@ -109,7 +109,7 @@
           android:id="@+id/otherDocumentsImagesPicker"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          custom:header_text="Other Documents"
+          custom:header_text="Other Documents (Optional)"
           />
 
       <RelativeLayout

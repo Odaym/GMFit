@@ -333,6 +333,17 @@
             android:paddingEnd="@dimen/activity_vertical_margin"
             android:textColor="@color/profile_blue"
             />
+
+        <TextView
+            android:id="@+id/weightUnitTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:paddingEnd="@dimen/default_margin_1"
+            android:text="kg"
+            android:textColor="@color/profile_blue"
+            />
       </RelativeLayout>
 
       <View
@@ -340,7 +351,6 @@
           android:layout_height="2dp"
           android:background="@color/offwhite_background_gray"
           />
-
 
       <RelativeLayout
           android:id="@+id/heightLayout"
@@ -369,6 +379,17 @@
             android:gravity="center"
             android:inputType="numberDecimal"
             android:paddingEnd="@dimen/activity_vertical_margin"
+            android:textColor="@color/profile_blue"
+            />
+
+        <TextView
+            android:id="@+id/heightUnitTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:paddingEnd="@dimen/default_margin_1"
+            android:text="cm"
             android:textColor="@color/profile_blue"
             />
       </RelativeLayout>

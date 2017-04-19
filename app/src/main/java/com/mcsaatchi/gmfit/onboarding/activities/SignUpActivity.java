@@ -21,7 +21,7 @@ import com.mcsaatchi.gmfit.architecture.otto.SignedUpSuccessfullyEvent;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
-import com.mcsaatchi.gmfit.profile.activities.TOSActivity;
+import com.mcsaatchi.gmfit.profile.activities.MetaTextsActivity;
 import java.util.ArrayList;
 
 public class SignUpActivity extends BaseActivity
@@ -76,31 +76,17 @@ public class SignUpActivity extends BaseActivity
     });
   }
 
-  @OnClick(R.id.creatingAccountTOSTV) public void handleShowTermsOfService() {
-    startActivity(new Intent(SignUpActivity.this, TOSActivity.class));
-  }
-
-  @OnClick(R.id.showPasswordTV) public void handleShowPassword() {
-    if (passwordShowing) {
-      passwordET.setTransformationMethod(new PasswordTransformationMethod());
-      showPasswordTV.setText(R.string.show_password);
-    } else {
-      passwordET.setTransformationMethod(null);
-      showPasswordTV.setText(R.string.hide_password);
+  @Override public void openMetaTextsActivity(String metaContents, String section) {
+    Intent intent = new Intent(this, MetaTextsActivity.class);
+    switch (section) {
+      case "terms":
+        intent.putExtra(Constants.BUNDLE_ACTIVITY_TITLE,
+            getResources().getString(R.string.terms_and_conditions_entry));
+        break;
     }
 
-    passwordET.setSelection(passwordET.getText().length());
-
-    passwordShowing = !passwordShowing;
-  }
-
-  @OnClick(R.id.createAccountBTN) public void handleCreateAccount() {
-    if (Helpers.validateFields(allFields)) {
-      presenter.signUserUp(firstNameET.getText().toString() + " " + lastNameET.getText().toString(),
-          emailET.getText().toString(), passwordET.getText().toString());
-    } else {
-      showPasswordTV.setVisibility(View.GONE);
-    }
+    intent.putExtra(Constants.EXTRAS_META_HTML_CONTENT, metaContents);
+    startActivity(intent);
   }
 
   @Override public void saveUserSignUpDetails(String accessToken, String full_name, String email,
@@ -127,5 +113,32 @@ public class SignUpActivity extends BaseActivity
         (dialog, which) -> dialog.dismiss());
     alertDialog.setMessage(getString(R.string.email_already_taken_api_response));
     alertDialog.show();
+  }
+
+  @OnClick(R.id.creatingAccountTOSTV) public void handleShowTermsOfService() {
+    presenter.getMetaTexts("terms");
+  }
+
+  @OnClick(R.id.showPasswordTV) public void handleShowPassword() {
+    if (passwordShowing) {
+      passwordET.setTransformationMethod(new PasswordTransformationMethod());
+      showPasswordTV.setText(R.string.show_password);
+    } else {
+      passwordET.setTransformationMethod(null);
+      showPasswordTV.setText(R.string.hide_password);
+    }
+
+    passwordET.setSelection(passwordET.getText().length());
+
+    passwordShowing = !passwordShowing;
+  }
+
+  @OnClick(R.id.createAccountBTN) public void handleCreateAccount() {
+    if (Helpers.validateFields(allFields)) {
+      presenter.signUserUp(firstNameET.getText().toString() + " " + lastNameET.getText().toString(),
+          emailET.getText().toString(), passwordET.getText().toString());
+    } else {
+      showPasswordTV.setVisibility(View.GONE);
+    }
   }
 }
