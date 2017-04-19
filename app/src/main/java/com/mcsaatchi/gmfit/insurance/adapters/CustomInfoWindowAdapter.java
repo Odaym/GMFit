@@ -1,4 +1,4 @@
-package com.mcsaatchi.gmfit.insurance.fragments;
+package com.mcsaatchi.gmfit.insurance.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;

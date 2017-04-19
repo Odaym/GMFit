@@ -69,6 +69,12 @@
         android:windowSoftInputMode="stateHidden"/>
 
     <activity
+        android:name=".insurance.activities.forgotpassword.ForgotInsurancePasswordActivity"
+        android:screenOrientation="portrait"
+        android:theme="@style/No_Action_Bar_Theme"
+        android:windowSoftInputMode="stateHidden"/>
+
+    <activity
         android:name=".onboarding.activities.ResetPasswordActivity"
         android:screenOrientation="portrait"
         android:theme="@style/No_Action_Bar_Theme"

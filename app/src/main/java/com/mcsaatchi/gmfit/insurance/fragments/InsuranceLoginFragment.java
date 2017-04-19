@@ -5,9 +5,11 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -20,6 +22,7 @@ import com.mcsaatchi.gmfit.architecture.rest.InsuranceLoginResponseInnerData;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.common.fragments.BaseFragment;
+import com.mcsaatchi.gmfit.insurance.activities.forgotpassword.ForgotInsurancePasswordActivity;
 import com.mcsaatchi.gmfit.insurance.activities.home.UpdatePasswordActivity;
 import com.mcsaatchi.gmfit.insurance.widget.CustomCountryPicker;
 import java.util.ArrayList;
@@ -32,6 +35,7 @@ public class InsuranceLoginFragment extends BaseFragment
   @Bind(R.id.memberIdET) FormEditText memberIdET;
   @Bind(R.id.passwordET) FormEditText passwordET;
   @Bind(R.id.countryPicker) CustomCountryPicker countryPicker;
+  @Bind(R.id.forgotPasswordTV) TextView forgotPasswordTV;
 
   @Inject DataAccessHandler dataAccessHandler;
   @Inject SharedPreferences prefs;
@@ -59,6 +63,8 @@ public class InsuranceLoginFragment extends BaseFragment
     allFields.add(passwordET);
 
     presenter.getCountriesList();
+
+    forgotPasswordTV.setText(Html.fromHtml(getString(R.string.forgot_password_button)));
 
     return fragmentView;
   }
@@ -125,8 +131,8 @@ public class InsuranceLoginFragment extends BaseFragment
     }
 
     if (!countries.isEmpty()) {
-      countryPicker.setUpDropDown("Choose a country", "",
-          countries.toArray(new String[countries.size()]), (index, selected) -> {
+      countryPicker.setUpDropDown("Country", "", countries.toArray(new String[countries.size()]),
+          (index, selected) -> {
             chosenCountry = true;
 
             saveChosenCountry(countriesResponse, selected);
@@ -151,6 +157,11 @@ public class InsuranceLoginFragment extends BaseFragment
         alertDialog.show();
       }
     }
+  }
+
+  @OnClick(R.id.forgotPasswordTV) public void handleForgotPasswordPressed() {
+    Intent intent = new Intent(getActivity(), ForgotInsurancePasswordActivity.class);
+    startActivity(intent);
   }
 
   private void saveChosenCountry(List<CountriesListResponseDatum> countriesResponse,

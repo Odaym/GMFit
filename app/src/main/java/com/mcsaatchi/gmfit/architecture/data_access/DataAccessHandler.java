@@ -292,7 +292,6 @@ public class DataAccessHandler {
   /**
    * INSURANCE API's
    */
-
   public void getMostPopularMedications(String indNbr, String contractNo, String country,
       String language, String password, Callback<MostPopularMedicationsResponse> callback) {
     apiCallsHandler.getMostPopularMedications(indNbr, contractNo, country, language, password,
@@ -400,6 +399,10 @@ public class DataAccessHandler {
 
   public void getCRMIncidentNotes(String incidentId, final Callback<CRMNotesResponse> callback) {
     apiCallsHandler.getCRMIncidentNotes(incidentId, callback);
+  }
+
+  public void sendInsurancePasswordResetLink(String email, Callback<DefaultGetResponse> callback) {
+    apiCallsHandler.sendInsurancePasswordResetLink(email, callback);
   }
 
   public void addCRMNote(String incidentId, String subject, String noteText, String mimeType,

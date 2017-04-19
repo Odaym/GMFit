@@ -41,6 +41,7 @@ import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.classes.SimpleDividerItemDecoration;
 import com.mcsaatchi.gmfit.common.fragments.BaseFragment;
 import com.mcsaatchi.gmfit.insurance.adapters.ClinicAddressesRecyclerAdapter;
+import com.mcsaatchi.gmfit.insurance.adapters.CustomInfoWindowAdapter;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;

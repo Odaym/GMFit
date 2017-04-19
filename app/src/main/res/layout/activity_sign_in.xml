@@ -113,7 +113,6 @@
           android:layout_height="@dimen/default_button_height_1"
           android:layout_marginStart="@dimen/default_margin_2"
           android:layout_marginTop="@dimen/default_margin_2"
-          android:text="@string/forgot_password_button"
           android:textColor="@android:color/white"
           />
 

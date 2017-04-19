@@ -40,7 +40,6 @@ public interface GMFitService {
       @Part("blood_type") RequestBody blood_type, @Part("height") RequestBody height,
       @Part("weight") RequestBody weight);
 
-
   @POST("user/update-profile") Call<DefaultGetResponse> updateUserWeight(
       @Body ApiCallsHandler.UpdateUserWeightRequest updateUserWeightRequest);
 
@@ -241,5 +240,8 @@ public interface GMFitService {
 
   @POST("insurance/crm/request/notes/add") Call<AddCRMNoteResponse> addCRMNote(
       @Body ApiCallsHandler.AddCRMNoteRequest crmNotesRequest);
+
+  @POST("insurance/forgot_password") Call<DefaultGetResponse> sendInsurancePasswordResetLink(
+      @Body ApiCallsHandler.ForgotPasswordRequest sendResetPasswordLinkRequest);
   // SUBMISSIONS AND LISTINGS
 }
