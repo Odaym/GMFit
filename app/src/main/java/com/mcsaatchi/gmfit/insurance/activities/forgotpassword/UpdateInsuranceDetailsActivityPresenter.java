@@ -1,4 +1,4 @@
-package com.mcsaatchi.gmfit.insurance.activities.home;
+package com.mcsaatchi.gmfit.insurance.activities.forgotpassword;
 
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
@@ -8,20 +8,20 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-class UpdatePasswordActivityPresenter extends BaseActivityPresenter {
+class UpdateInsuranceDetailsActivityPresenter extends BaseActivityPresenter {
   private UpdatePasswordActivityView view;
   private DataAccessHandler dataAccessHandler;
 
-  UpdatePasswordActivityPresenter(UpdatePasswordActivityView view,
+  UpdateInsuranceDetailsActivityPresenter(UpdatePasswordActivityView view,
       DataAccessHandler dataAccessHandler) {
     this.view = view;
     this.dataAccessHandler = dataAccessHandler;
   }
 
-  void updateInsurancePassword(String contractNumber, String oldPassword, final String newPassword,
+  void updateInsuranceDetails(String contractNumber, String oldPassword, final String newPassword,
       String email, String mobileNumber) {
 
-    view.callDisplayWaitingDialog(R.string.updating_password_dialog_title);
+    view.callDisplayWaitingDialog(R.string.updating_insurance_details_dialog_title);
 
     dataAccessHandler.updateInsurancePassword(contractNumber, oldPassword, newPassword, email,
         mobileNumber, new Callback<UpdateInsurancePasswordResponse>() {
@@ -29,7 +29,7 @@ class UpdatePasswordActivityPresenter extends BaseActivityPresenter {
               Response<UpdateInsurancePasswordResponse> response) {
             switch (response.code()) {
               case 200:
-                view.sendResultBackAndCloseActivity(newPassword);
+                //view.sendResultBackAndCloseActivity(newPassword);
                 break;
             }
           }
@@ -41,6 +41,5 @@ class UpdatePasswordActivityPresenter extends BaseActivityPresenter {
   }
 
   interface UpdatePasswordActivityView extends BaseActivityView {
-    void sendResultBackAndCloseActivity(String newPassword);
   }
 }

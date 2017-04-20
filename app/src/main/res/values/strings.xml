@@ -76,6 +76,7 @@
   <string name="error_occurred_dialog_title">An Error Occurred</string>
   <string name="login_failed_wrong_credentials">Wrong email and password combination, please try again.</string>
   <string name="error_email_address_not_valid">The email address you entered is not valid. Please try again.</string>
+  <string name="fill_in_credentials_to_sign_in">Please fill in your email and password below</string>
   <string name="show_password">Show</string>
   <string name="hide_password">Hide</string>
 
@@ -191,7 +192,7 @@
   <string name="deleting_chart_dialog_title">Deleting chart</string>
   <string name="steps_today_title">Steps</string>
   <string name="steps_shorthand_unit">steps</string>
-  <string name="goal_exceeded_tv">Goal Exceeded!</string>
+  <string name="goal_exceeded_tv">Goal Exceeded</string>
   <string name="goal_nutrition_excess">Excess!</string>
   <string name="active_calories_calculation_hint_message">Tracking of some metrics such as calories burnt, requires the presence of specific devices or wearables.</string>
 
@@ -238,6 +239,7 @@
   <string name="check_compatibility_dialog_hint">This feature is available for the insured members only.\nYou may enable the “Check Compatibility” by login to the Insurance section.</string>
   <string name="inquiry_more_details_menu">Details</string>
   <string name="write_reply_hint">Write your reply here…</string>
+  <string name="choose_date_hint">Choose a date</string>
 
   <!-- PILL REMINDER ACTIVITY -->
   <string name="pill_reminder_activity_title">Pill Reminder</string>
@@ -420,6 +422,14 @@
   <string name="phone_number_label">Phone Number</string>
   <string name="phone_number_hint">Enter your phone number</string>
   <string name="update_button_label">Update</string>
+
+  <!-- INSURANCE UPDATE DETAILS ACTIVITY -->
+  <string name="contact_information_tip_label_not_optional">Keep your contact information up to date</string>
+  <string name="update_your_password_label_optional">Update your password (optional)</string>
+  <string name="updating_insurance_details_dialog_title">Updating Insurance Details</string>
+  <string name="insurance_update_details_activity_title">Update Details</string>
+  <string name="update_password_conflict_dialog_title">Passwords Conflict</string>
+  <string name="update_password_conflict_dialog_message">The passwords you typed do not match.</string>
 
   <!-- CONTACT US ACTIVITY -->
   <string name="contact_us_activity_title">Contact Us</string>

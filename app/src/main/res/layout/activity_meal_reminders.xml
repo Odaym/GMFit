@@ -79,7 +79,6 @@
           android:layout_width="@dimen/reminders_value_row_width"
           android:layout_height="match_parent"
           android:layout_alignParentEnd="true"
-          android:background="@color/much_lighter_gray"
           android:gravity="center"
           android:orientation="horizontal"
           >
@@ -134,7 +133,6 @@
           android:layout_width="@dimen/reminders_value_row_width"
           android:layout_height="match_parent"
           android:layout_alignParentEnd="true"
-          android:background="@color/much_lighter_gray"
           android:gravity="center"
           >
 
@@ -189,7 +187,6 @@
           android:layout_width="@dimen/reminders_value_row_width"
           android:layout_height="match_parent"
           android:layout_alignParentEnd="true"
-          android:background="@color/much_lighter_gray"
           android:gravity="center"
           >
 

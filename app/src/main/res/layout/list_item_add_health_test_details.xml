@@ -19,9 +19,9 @@
       android:id="@+id/metricValueET"
       android:layout_width="@dimen/text_input_label_width_smaller"
       android:layout_height="match_parent"
-      android:layout_weight="3"
-      android:background="@color/much_lighter_gray"
+      android:background="@null"
       android:gravity="center"
+      android:hint="Enter value"
       android:inputType="number"
       android:maxLength="4"
       android:textSize="15sp"
@@ -29,10 +29,10 @@
 
   <Spinner
       android:id="@+id/metricUnitsSpinner"
-      android:layout_width="wrap_content"
+      android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:layout_weight="1"
-      android:background="@color/much_lighter_gray"
+      android:layout_gravity="end"
+      android:background="@null"
       android:paddingEnd="@dimen/default_margin_1"
       />
 

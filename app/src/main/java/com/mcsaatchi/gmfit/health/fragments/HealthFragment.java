@@ -147,6 +147,8 @@ public class HealthFragment extends BaseFragment
   }
 
   @Override public void setupWidgetViews(ArrayList<HealthWidget> healthWidgetsMap) {
+    this.healthWidgetsMap = healthWidgetsMap;
+
     if (!healthWidgetsMap.isEmpty() && healthWidgetsMap.size() > 4) {
       healthWidgetsMap = new ArrayList<>(healthWidgetsMap.subList(0, 4));
 

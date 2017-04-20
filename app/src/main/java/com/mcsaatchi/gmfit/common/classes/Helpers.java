@@ -131,6 +131,7 @@ public class Helpers {
   public static int determineStatusColor(String status) {
     if (status != null) {
       switch (status) {
+        case "Under Processing":
         case "Processing":
         case "Submited":
         case "Dispensed":

@@ -28,6 +28,14 @@
         android:orientation="vertical"
         >
 
+      <TextView
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_margin="@dimen/default_margin_2"
+          android:text="@string/fill_in_credentials_to_sign_in"
+          android:textColor="@color/white"
+          />
+
       <com.wrapp.floatlabelededittext.FloatLabeledEditText
           android:id="@+id/emailETFloating"
           android:layout_width="match_parent"

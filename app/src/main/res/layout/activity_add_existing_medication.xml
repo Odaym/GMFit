@@ -40,7 +40,7 @@
             android:id="@+id/medicineNameET"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/much_lighter_gray"
+            android:background="@null"
             android:gravity="center_vertical"
             android:paddingStart="@dimen/default_margin_2"
             android:textColor="@color/black_alpha_50"
@@ -76,7 +76,6 @@
             android:layout_width="@dimen/right_arrow_layout_width"
             android:layout_height="match_parent"
             android:layout_gravity="end"
-            android:background="@color/much_lighter_gray"
             android:gravity="center"
             >
 
@@ -131,7 +130,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="5"
-            android:background="@color/much_lighter_gray"
+            android:background="@null"
             android:gravity="center_vertical"
             android:inputType="number"
             android:maxLength="2"
@@ -144,26 +143,9 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1.47"
-            android:background="@color/much_lighter_gray"
             android:gravity="center_vertical|end"
             android:textColor="@color/black_alpha_50"
             />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="end"
-            android:layout_weight="0.68"
-            android:background="@color/much_lighter_gray"
-            android:gravity="center"
-            >
-
-          <ImageView
-              android:layout_width="@dimen/far_right_arrow_icon_dimens"
-              android:layout_height="@dimen/far_right_arrow_icon_dimens"
-              android:src="@drawable/ic_right_arrow_green"
-              />
-        </LinearLayout>
       </LinearLayout>
 
       <View
@@ -192,7 +174,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="5"
-            android:background="@color/much_lighter_gray"
+            android:background="@null"
             android:gravity="center_vertical"
             android:inputType="number"
             android:maxLength="2"
@@ -204,7 +186,6 @@
             android:id="@+id/timesPerDayMeasurementTV"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:background="@color/much_lighter_gray"
             android:gravity="center_vertical|end"
             android:text="@string/times_per_day_label_small"
             android:textColor="@color/black_alpha_50"
@@ -215,7 +196,6 @@
             android:layout_height="match_parent"
             android:layout_gravity="end"
             android:layout_weight="0.77"
-            android:background="@color/much_lighter_gray"
             android:gravity="center"
             >
 
@@ -256,7 +236,6 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="11"
-            android:background="@color/much_lighter_gray"
             android:gravity="center_vertical"
             android:paddingStart="@dimen/default_margin_2"
             android:textColor="@color/black_alpha_50"
@@ -267,7 +246,6 @@
             android:layout_height="match_parent"
             android:layout_gravity="end"
             android:layout_weight="1.17"
-            android:background="@color/much_lighter_gray"
             android:gravity="center"
             >
 
@@ -305,7 +283,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="4"
-            android:background="@color/much_lighter_gray"
+            android:background="@null"
             android:gravity="center_vertical"
             android:inputType="number"
             android:maxLength="2"
@@ -317,7 +295,6 @@
             android:id="@+id/treatmentDurationTV"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:background="@color/much_lighter_gray"
             android:gravity="center_vertical|end"
             android:text="@string/times_per_week_label_small"
             android:textColor="@color/black_alpha_50"
@@ -328,7 +305,6 @@
             android:layout_height="match_parent"
             android:layout_gravity="end"
             android:layout_weight="0.48"
-            android:background="@color/much_lighter_gray"
             android:gravity="center"
             >
 
@@ -437,7 +413,6 @@
             android:layout_width="@dimen/right_arrow_layout_width"
             android:layout_height="match_parent"
             android:layout_gravity="end"
-            android:background="@color/much_lighter_gray"
             android:gravity="center"
             >
 

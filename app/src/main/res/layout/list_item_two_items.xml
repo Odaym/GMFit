@@ -17,8 +17,8 @@
       android:layout_width="@dimen/add_new_chart_list_item_edge_width"
       android:layout_height="@dimen/login_button_height"
       android:layout_alignParentEnd="true"
-      android:background="@color/much_lighter_gray"
       >
+
     <TextView
         android:id="@+id/itemHintTV"
         android:layout_width="wrap_content"

@@ -116,7 +116,6 @@
               android:layout_width="@dimen/profile_value_fields_item_width"
               android:layout_height="match_parent"
               android:layout_alignParentEnd="true"
-              android:background="@color/much_lighter_gray"
               android:gravity="center"
               android:textColor="@color/fitness_dark_blue"
               />
@@ -155,7 +154,6 @@
               android:layout_width="@dimen/profile_value_fields_item_width"
               android:layout_height="match_parent"
               android:layout_alignParentEnd="true"
-              android:background="@color/much_lighter_gray"
               android:gravity="center"
               android:textColor="@color/fitness_dark_blue"
               />
@@ -194,7 +192,6 @@
               android:layout_width="@dimen/profile_value_fields_item_width"
               android:layout_height="match_parent"
               android:layout_alignParentEnd="true"
-              android:background="@color/much_lighter_gray"
               android:gravity="center"
               android:paddingEnd="@dimen/default_margin_1"
               android:paddingStart="@dimen/default_margin_1"
@@ -235,9 +232,17 @@
               android:layout_width="@dimen/profile_value_fields_item_width"
               android:layout_height="match_parent"
               android:layout_alignParentEnd="true"
-              android:background="@color/much_lighter_gray"
               android:gravity="center"
               android:textColor="@color/fitness_dark_blue"
+              />
+
+          <ImageView
+              android:layout_width="15dp"
+              android:layout_height="15dp"
+              android:layout_alignParentEnd="true"
+              android:layout_centerVertical="true"
+              android:layout_marginEnd="@dimen/default_margin_2"
+              android:src="@drawable/ic_arrow_right_blue"
               />
         </RelativeLayout>
 
@@ -269,20 +274,14 @@
               android:text="@string/edit_profile_activity_title"
               />
 
-          <LinearLayout
-              android:layout_width="@dimen/profile_value_fields_item_width"
-              android:layout_height="match_parent"
+          <ImageView
+              android:layout_width="15dp"
+              android:layout_height="15dp"
               android:layout_alignParentEnd="true"
-              android:background="@color/much_lighter_gray"
-              android:gravity="center"
-              >
-
-            <ImageView
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:src="@drawable/ic_medical_tests_item_arrow"
-                />
-          </LinearLayout>
+              android:layout_centerVertical="true"
+              android:layout_marginEnd="@dimen/default_margin_2"
+              android:src="@drawable/ic_arrow_right_blue"
+              />
         </RelativeLayout>
       </LinearLayout>
 
@@ -395,7 +394,6 @@
               android:layout_width="@dimen/profile_value_fields_item_width"
               android:layout_height="match_parent"
               android:layout_alignParentEnd="true"
-              android:background="@color/much_lighter_gray"
               android:gravity="center"
               android:text="On"
               android:textColor="@color/fitness_dark_blue"
@@ -435,10 +433,18 @@
               android:layout_width="@dimen/profile_value_fields_item_width"
               android:layout_height="match_parent"
               android:layout_alignParentEnd="true"
-              android:background="@color/much_lighter_gray"
               android:gravity="center"
               android:text="Lebanon"
               android:textColor="@color/fitness_dark_blue"
+              />
+
+          <ImageView
+              android:layout_width="15dp"
+              android:layout_height="15dp"
+              android:layout_alignParentEnd="true"
+              android:layout_centerVertical="true"
+              android:layout_marginEnd="@dimen/default_margin_2"
+              android:src="@drawable/ic_arrow_right_blue"
               />
         </RelativeLayout>
 
@@ -501,20 +507,14 @@
               android:text="@string/terms_and_conditions_entry"
               />
 
-          <LinearLayout
-              android:layout_width="@dimen/profile_value_fields_item_width"
-              android:layout_height="match_parent"
+          <ImageView
+              android:layout_width="15dp"
+              android:layout_height="15dp"
               android:layout_alignParentEnd="true"
-              android:background="@color/much_lighter_gray"
-              android:gravity="center"
-              >
-
-            <ImageView
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:src="@drawable/ic_medical_tests_item_arrow"
-                />
-          </LinearLayout>
+              android:layout_centerVertical="true"
+              android:layout_marginEnd="@dimen/default_margin_2"
+              android:src="@drawable/ic_arrow_right_blue"
+              />
         </RelativeLayout>
 
         <!-- SEPARATOR -->
@@ -545,20 +545,14 @@
               android:text="@string/privacy_and_security_entry"
               />
 
-          <LinearLayout
-              android:layout_width="@dimen/profile_value_fields_item_width"
-              android:layout_height="match_parent"
+          <ImageView
+              android:layout_width="15dp"
+              android:layout_height="15dp"
               android:layout_alignParentEnd="true"
-              android:background="@color/much_lighter_gray"
-              android:gravity="center"
-              >
-
-            <ImageView
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:src="@drawable/ic_medical_tests_item_arrow"
-                />
-          </LinearLayout>
+              android:layout_centerVertical="true"
+              android:layout_marginEnd="@dimen/default_margin_2"
+              android:src="@drawable/ic_arrow_right_blue"
+              />
         </RelativeLayout>
 
         <!-- SEPARATOR -->
@@ -589,20 +583,14 @@
               android:text="@string/contact_us_entry"
               />
 
-          <LinearLayout
-              android:layout_width="@dimen/profile_value_fields_item_width"
-              android:layout_height="match_parent"
+          <ImageView
+              android:layout_width="15dp"
+              android:layout_height="15dp"
               android:layout_alignParentEnd="true"
-              android:background="@color/much_lighter_gray"
-              android:gravity="center"
-              >
-
-            <ImageView
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:src="@drawable/ic_medical_tests_item_arrow"
-                />
-          </LinearLayout>
+              android:layout_centerVertical="true"
+              android:layout_marginEnd="@dimen/default_margin_2"
+              android:src="@drawable/ic_arrow_right_blue"
+              />
         </RelativeLayout>
 
         <!-- SEPARATOR -->
@@ -633,20 +621,14 @@
               android:text="@string/share_the_app_entry"
               />
 
-          <LinearLayout
-              android:layout_width="@dimen/profile_value_fields_item_width"
-              android:layout_height="match_parent"
+          <ImageView
+              android:layout_width="15dp"
+              android:layout_height="15dp"
               android:layout_alignParentEnd="true"
-              android:background="@color/much_lighter_gray"
-              android:gravity="center"
-              >
-
-            <ImageView
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:src="@drawable/ic_medical_tests_item_arrow"
-                />
-          </LinearLayout>
+              android:layout_centerVertical="true"
+              android:layout_marginEnd="@dimen/default_margin_2"
+              android:src="@drawable/ic_arrow_right_blue"
+              />
         </RelativeLayout>
 
         <!-- SEPARATOR -->
@@ -692,20 +674,14 @@
                 android:text="@string/change_password_entry"
                 />
 
-            <LinearLayout
-                android:layout_width="@dimen/profile_value_fields_item_width"
-                android:layout_height="match_parent"
+            <ImageView
+                android:layout_width="15dp"
+                android:layout_height="15dp"
                 android:layout_alignParentEnd="true"
-                android:background="@color/much_lighter_gray"
-                android:gravity="center"
-                >
-
-              <ImageView
-                  android:layout_width="15dp"
-                  android:layout_height="15dp"
-                  android:src="@drawable/ic_medical_tests_item_arrow"
-                  />
-            </LinearLayout>
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/default_margin_2"
+                android:src="@drawable/ic_arrow_right_blue"
+                />
           </RelativeLayout>
 
           <!-- SEPARATOR -->

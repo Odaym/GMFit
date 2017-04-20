@@ -40,6 +40,8 @@ public class BaseActivity extends AppCompatActivity
     ((GMFitApplication) getApplication()).getAppComponent().inject(this);
 
     firebaseAnalytics = FirebaseAnalytics.getInstance(this);
+
+    overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
   }
 
   @Override protected void onSaveInstanceState(Bundle outState) {
