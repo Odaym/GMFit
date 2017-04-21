@@ -55,13 +55,11 @@
       android:layout_height="match_parent"
       >
 
-    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+    <fragment class="com.mcsaatchi.gmfit.insurance.fragments.WorkaroundMapFragment"
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/map"
-        android:name="com.mcsaatchi.gmfit.insurance.fragments.WorkaroundMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".MapsActivity"
         />
 
     <LinearLayout
@@ -165,7 +163,6 @@
           android:layout_marginEnd="@dimen/default_margin_2"
           android:background="@drawable/my_location_white_box"
           android:gravity="center"
-          android:visibility="gone"
           >
 
         <ImageView

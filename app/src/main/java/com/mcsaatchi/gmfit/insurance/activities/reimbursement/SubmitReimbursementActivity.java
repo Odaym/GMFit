@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
@@ -53,14 +54,16 @@ public class SubmitReimbursementActivity extends BaseActivity
   @Bind(R.id.categoryInOutToggle) CustomToggle categoryToggle;
   @Bind(R.id.medicalReportImagesPicker) CustomAttachmentPicker medicalReportImagesPicker;
   @Bind(R.id.invoiceImagesPicker) CustomAttachmentPicker invoiceImagesPicker;
+  @Bind(R.id.originalReceiptImagesPicker) CustomAttachmentPicker originalReceiptImagesPicker;
   @Bind(R.id.identityCardImagesPicker) CustomAttachmentPicker identityCardImagesPicker;
-  @Bind(R.id.passportImagesPicker) CustomAttachmentPicker passportImagesPicker;
   @Bind(R.id.testResultsImagesPicker) CustomAttachmentPicker testResultsImagesPicker;
   @Bind(R.id.otherDocumentsImagesPicker) CustomAttachmentPicker otherDocumentsImagesPicker;
   @Bind(R.id.currencyLayout) LinearLayout currencyLayout;
   @Bind(R.id.currencyLabel) TextView currencyLabel;
   @Bind(R.id.amountClaimedET) EditText amountClaimedET;
   @Bind(R.id.remarksET) EditText remarksET;
+
+  private boolean medical = false, original = false, identity = false;
 
   private ArrayList<String> imagePaths = new ArrayList<>();
   private SubmitReimbursementActivityPresenter presenter;
@@ -122,8 +125,8 @@ public class SubmitReimbursementActivity extends BaseActivity
 
     hookupImagesPickerImages(medicalReportImagesPicker);
     hookupImagesPickerImages(invoiceImagesPicker);
+    hookupImagesPickerImages(originalReceiptImagesPicker);
     hookupImagesPickerImages(identityCardImagesPicker);
-    hookupImagesPickerImages(passportImagesPicker);
     hookupImagesPickerImages(testResultsImagesPicker);
     hookupImagesPickerImages(otherDocumentsImagesPicker);
   }
@@ -255,7 +258,7 @@ public class SubmitReimbursementActivity extends BaseActivity
               photoFile = null;
               try {
                 photoFile = ImageHandler.createImageFile(ImageHandler.constructImageFilename());
-                photoFileUri = Uri.fromFile(photoFile);
+                photoFileUri = FileProvider.getUriForFile(this, getApplicationContext().getPackageName() + ".provider", photoFile);
               } catch (IOException ex) {
                 ex.printStackTrace();
               }

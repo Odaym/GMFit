@@ -28,7 +28,6 @@ public class ReimbursementDetailsActivity extends BaseActivity
   @Bind(R.id.medicalReportImagesPicker) CustomAttachmentPicker medicalReportImagesPicker;
   @Bind(R.id.invoiceImagesPicker) CustomAttachmentPicker invoiceImagesPicker;
   @Bind(R.id.identityCardImagesPicker) CustomAttachmentPicker identityCardImagesPicker;
-  @Bind(R.id.passportImagesPicker) CustomAttachmentPicker passportImagesPicker;
   @Bind(R.id.testResultsImagesPicker) CustomAttachmentPicker testResultsImagesPicker;
   @Bind(R.id.otherDocumentsImagesPicker) CustomAttachmentPicker otherDocumentsImagesPicker;
 
@@ -76,10 +75,6 @@ public class ReimbursementDetailsActivity extends BaseActivity
           break;
         case 4:
           identityCardImagesPicker.returnImagePicker(i)
-              .setImageBitmap(ImageHandler.turnBase64ToImage(claimDetails.getImages().get(i).getContent()));
-          break;
-        case 5:
-          passportImagesPicker.returnImagePicker(i)
               .setImageBitmap(ImageHandler.turnBase64ToImage(claimDetails.getImages().get(i).getContent()));
           break;
         case 6:

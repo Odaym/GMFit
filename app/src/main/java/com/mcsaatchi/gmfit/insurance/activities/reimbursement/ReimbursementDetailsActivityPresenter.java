@@ -31,6 +31,8 @@ class ReimbursementDetailsActivityPresenter extends BaseActivityPresenter {
                 view.populateClaimDetails(response.body().getData().getBody().getData().get(0));
                 break;
             }
+
+            view.callDismissWaitingDialog();
           }
 
           @Override public void onFailure(Call<ClaimListDetailsResponse> call, Throwable t) {

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -21,6 +22,9 @@ import java.util.Collections;
 import java.util.List;
 import org.joda.time.DateTime;
 
+import static com.mcsaatchi.gmfit.common.Constants.EXTRAS_FITNESS_FRAGMENT;
+import static com.mcsaatchi.gmfit.common.Constants.EXTRAS_NUTRITION_FRAGMENT;
+
 public class CustomBarChart extends BarChart {
 
   @Bind(R.id.barChart) BarChart barChart;
@@ -30,6 +34,8 @@ public class CustomBarChart extends BarChart {
   @Bind(R.id.dateTV_3) TextView dateTV_3;
   @Bind(R.id.dateTV_4) TextView dateTV_4;
   @Bind(R.id.dateTV_5) TextView dateTV_5;
+  @Bind(R.id.chartHeader) RelativeLayout chartHeader;
+
   private View barChartLayout;
 
   private DataChart chartObject;
@@ -128,6 +134,12 @@ public class CustomBarChart extends BarChart {
       valsMetrics.add(val1);
 
       k++;
+    }
+
+    if (whichFragment.equals(EXTRAS_NUTRITION_FRAGMENT)) {
+      chartHeader.setBackgroundColor(context.getResources().getColor(R.color.nutrition_red));
+    } else if (whichFragment.equals(EXTRAS_FITNESS_FRAGMENT)) {
+      chartHeader.setBackgroundColor(context.getResources().getColor(R.color.fitness_pink));
     }
 
     BarDataSet set1;

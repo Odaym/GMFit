@@ -144,6 +144,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1.47"
             android:gravity="center_vertical|end"
+            android:paddingEnd="@dimen/default_margin_2"
             android:textColor="@color/black_alpha_50"
             />
       </LinearLayout>
@@ -236,8 +237,9 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="11"
-            android:gravity="center_vertical"
-            android:paddingStart="@dimen/default_margin_2"
+            android:gravity="center_vertical|end"
+            android:hint="select days of week"
+            android:paddingStart="@dimen/default_margin_1"
             android:textColor="@color/black_alpha_50"
             />
 

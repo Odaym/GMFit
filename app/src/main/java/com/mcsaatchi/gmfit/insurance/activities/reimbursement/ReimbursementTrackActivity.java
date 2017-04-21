@@ -12,6 +12,7 @@ import com.mcsaatchi.gmfit.architecture.rest.ClaimsListResponseDatum;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.insurance.adapters.StatusAdapter;
+import java.util.Collections;
 import java.util.List;
 
 public class ReimbursementTrackActivity extends BaseActivity
@@ -34,6 +35,8 @@ public class ReimbursementTrackActivity extends BaseActivity
   }
 
   @Override public void populateClaimsList(List<ClaimsListResponseDatum> claimsList) {
+    Collections.reverse(claimsList);
+
     StatusAdapter statusAdapter = new StatusAdapter(ReimbursementTrackActivity.this, claimsList,
         (reimbursementModel, index) -> {
           Intent intent =

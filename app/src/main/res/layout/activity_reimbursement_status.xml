@@ -97,28 +97,21 @@
           android:id="@+id/identityCardImagesPicker"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          custom:header_text="Identity Card"
-          />
-
-      <com.mcsaatchi.gmfit.insurance.widget.CustomAttachmentPicker
-          android:id="@+id/passportImagesPicker"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          custom:header_text="Passport"
+          custom:header_text="Identity Card / Passport"
           />
 
       <com.mcsaatchi.gmfit.insurance.widget.CustomAttachmentPicker
           android:id="@+id/testResultsImagesPicker"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          custom:header_text="Test Results"
+          custom:header_text="Test Results (Optional)"
           />
 
       <com.mcsaatchi.gmfit.insurance.widget.CustomAttachmentPicker
           android:id="@+id/otherDocumentsImagesPicker"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          custom:header_text="Other Documents"
+          custom:header_text="Other Documents (Optional)"
           />
 
     </LinearLayout>

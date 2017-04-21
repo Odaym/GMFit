@@ -131,7 +131,9 @@ public class AddExistingMedicationActivity extends BaseActivity
 
       unitsET.setText(String.valueOf(medicationItem.getUnits()));
       treatmentDurationET.setText(String.valueOf(medicationItem.getTreatmentDuration()));
-      unitMeasurementTV.setText(medicationItem.getUnitForm());
+      unitMeasurementTV.setText(
+          medicationItem.getUnitForm().substring(0, 1).toUpperCase() + medicationItem.getUnitForm()
+              .substring(1));
       frequencyET.setText(String.valueOf(medicationItem.getFrequency()));
       daysOfWeekTV.setText(medicationItem.getWhenString());
       treatmentDurationET.setText(String.valueOf(medicationItem.getTreatmentDuration()));

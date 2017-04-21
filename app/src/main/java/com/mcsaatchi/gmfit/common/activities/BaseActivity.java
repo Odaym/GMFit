@@ -41,7 +41,19 @@ public class BaseActivity extends AppCompatActivity
 
     firebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
-    overridePendingTransition(R.anim.slide_in, R.anim.slide_out);
+    overridePendingTransitionEnter();
+  }
+
+  @Override
+  public void finish() {
+    super.finish();
+    overridePendingTransitionExit();
+  }
+
+  @Override
+  public void onBackPressed() {
+    super.onBackPressed();
+    overridePendingTransitionExit();
   }
 
   @Override protected void onSaveInstanceState(Bundle outState) {
@@ -76,29 +88,6 @@ public class BaseActivity extends AppCompatActivity
 
   @Override public void finishActivity() {
     finish();
-  }
-
-  public void setupToolbar(String activityName, Toolbar toolbar, String toolbarTitle,
-      boolean backEnabled) {
-
-    Bundle params = new Bundle();
-    params.putString("activity_name", activityName);
-    firebaseAnalytics.logEvent("activity_visited", params);
-
-    if (toolbarTitle == null) {
-      toolbar.setTitle(R.string.app_name);
-    } else {
-      toolbar.setTitle(toolbarTitle);
-    }
-
-    setSupportActionBar(toolbar);
-
-    if (backEnabled) {
-      getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-      toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_arrow_left));
-    }
-
-    toolbar.setTitleTextAppearance(this, R.style.Toolbar_TitleTextStyle);
   }
 
   @Override public void displayNoInternetDialog() {
@@ -161,5 +150,42 @@ public class BaseActivity extends AppCompatActivity
 
   @Override public void callDismissWaitingDialog() {
     dismissWaitingDialog(waitingDialog);
+  }
+
+  public void setupToolbar(String activityName, Toolbar toolbar, String toolbarTitle,
+      boolean backEnabled) {
+
+    Bundle params = new Bundle();
+    params.putString("activity_name", activityName);
+    firebaseAnalytics.logEvent("activity_visited", params);
+
+    if (toolbarTitle == null) {
+      toolbar.setTitle(R.string.app_name);
+    } else {
+      toolbar.setTitle(toolbarTitle);
+    }
+
+    setSupportActionBar(toolbar);
+
+    if (backEnabled) {
+      getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+      toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_arrow_left));
+    }
+
+    toolbar.setTitleTextAppearance(this, R.style.Toolbar_TitleTextStyle);
+  }
+
+  /**
+   * Overrides the pending Activity transition by performing the "Enter" animation.
+   */
+  protected void overridePendingTransitionEnter() {
+    overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
+  }
+
+  /**
+   * Overrides the pending Activity transition by performing the "Exit" animation.
+   */
+  protected void overridePendingTransitionExit() {
+    overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);
   }
 }

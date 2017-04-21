@@ -96,7 +96,8 @@ public class InsuranceDirectoryFragment extends BaseFragment
     });
 
     if (prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, "").isEmpty()) {
-      mapKeyLayout.setVisibility(View.VISIBLE);
+      Timber.d("contract is empty!");
+      mapKeyLayout.setVisibility(View.GONE);
     }
 
     setupSwitchMapViewButton();

@@ -76,7 +76,7 @@
   <string name="error_occurred_dialog_title">An Error Occurred</string>
   <string name="login_failed_wrong_credentials">Wrong email and password combination, please try again.</string>
   <string name="error_email_address_not_valid">The email address you entered is not valid. Please try again.</string>
-  <string name="fill_in_credentials_to_sign_in">Please fill in your email and password below</string>
+  <string name="fill_in_credentials_to_sign_in">Please fill in your email and password</string>
   <string name="show_password">Show</string>
   <string name="hide_password">Hide</string>
 

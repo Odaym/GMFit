@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -71,6 +72,7 @@ import okhttp3.RequestBody;
 import timber.log.Timber;
 import worker8.com.github.radiogroupplus.RadioGroupPlus;
 
+import static com.facebook.FacebookSdk.getApplicationContext;
 import static com.mcsaatchi.gmfit.onboarding.fragments.SetupProfile4Fragment.MEDICAL_CONDITIONS_SELECTED;
 
 public class MainProfileFragment extends BaseFragment
@@ -711,7 +713,7 @@ public class MainProfileFragment extends BaseFragment
       photoFile = null;
       try {
         photoFile = createImageFile(constructImageFilename());
-        photoFileUri = Uri.fromFile(photoFile);
+        photoFileUri = FileProvider.getUriForFile(getActivity(), getApplicationContext().getPackageName() + ".provider", photoFile);
       } catch (IOException ex) {
         ex.printStackTrace();
       }

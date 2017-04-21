@@ -18,10 +18,10 @@ class AccountVerificationActivityPresenter {
     this.dataAccessHandler = dataAccessHandler;
   }
 
-  void setupProfile(String verificationCode){
-    if (view.checkInternetAvailable()){
+  void setupProfile(String verificationCode) {
+    if (view.checkInternetAvailable()) {
       verifyRegistrationCode(verificationCode);
-    }else{
+    } else {
       view.displayNoInternetDialog();
     }
   }

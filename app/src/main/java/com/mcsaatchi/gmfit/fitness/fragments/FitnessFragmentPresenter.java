@@ -11,8 +11,8 @@ import com.mcsaatchi.gmfit.architecture.rest.SlugBreakdownResponseInnerData;
 import com.mcsaatchi.gmfit.architecture.rest.UserGoalMetricsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.WidgetsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.WidgetsResponseDatum;
-import com.mcsaatchi.gmfit.common.models.DataChart;
 import com.mcsaatchi.gmfit.common.fragments.BaseFragmentPresenter;
+import com.mcsaatchi.gmfit.common.models.DataChart;
 import com.mcsaatchi.gmfit.fitness.models.FitnessWidget;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -51,7 +51,7 @@ class FitnessFragmentPresenter extends BaseFragmentPresenter {
                 response.body().getData().getBody().getMetrics().getStepsCount().getValue();
 
             view.displayUserGoalMetrics(maxValue, currentValue, requestingPreviousData);
-            
+
             break;
         }
       }
@@ -109,6 +109,12 @@ class FitnessFragmentPresenter extends BaseFragmentPresenter {
           case 200:
             List<WidgetsResponseDatum> widgetsFromResponse =
                 response.body().getData().getBody().getData();
+
+            for (int i = 0; i < widgetsFromResponse.size(); i++) {
+              if (widgetsFromResponse.get(i).getSlug().equals("flights-climbed")) {
+                widgetsFromResponse.remove(i);
+              }
+            }
 
             view.callSetupWidgetViews(widgetsFromResponse);
 

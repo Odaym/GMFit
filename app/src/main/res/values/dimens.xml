@@ -60,7 +60,7 @@
 
   <!-- DASHBOARD CHARTS -->
   <dimen name="remove_chart_button_dimens">35dp</dimen>
-  <dimen name="chart_height">200dp</dimen>
+  <dimen name="chart_height">190dp</dimen>
   <dimen name="chart_height_2">300dp</dimen>
   <dimen name="weight_chart_height">310dp</dimen>
   <dimen name="cardview_corner_radius">2dp</dimen>
@@ -152,7 +152,7 @@
   <dimen name="map_dimensions_box_clinic_details">150dp</dimen>
   <dimen name="map_info_window_right_arrow_dimens">20dp</dimen>
   <dimen name="insurance_tab_icons_dimens">25dp</dimen>
-  <dimen name="contact_us_row_height">60dp</dimen>
+  <dimen name="contact_us_row_height">70dp</dimen>
   <dimen name="contact_us_right_block_width">90dp</dimen>
 
   <!-- PILL REMINDER SECTION -->
