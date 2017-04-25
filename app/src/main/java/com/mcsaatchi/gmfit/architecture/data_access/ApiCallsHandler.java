@@ -1,7 +1,7 @@
 package com.mcsaatchi.gmfit.architecture.data_access;
 
 import android.content.Context;
-import com.mcsaatchi.gmfit.architecture.GMFitApplication;
+import com.mcsaatchi.gmfit.architecture.classes.GMFitApplication;
 import com.mcsaatchi.gmfit.architecture.rest.ActivityLevelsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.AddCRMNoteResponse;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponse;

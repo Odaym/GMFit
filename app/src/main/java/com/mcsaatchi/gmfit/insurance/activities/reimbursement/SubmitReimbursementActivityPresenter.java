@@ -1,7 +1,7 @@
 package com.mcsaatchi.gmfit.insurance.activities.reimbursement;
 
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
+import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandlerImpl;
 import com.mcsaatchi.gmfit.architecture.rest.CreateNewRequestResponse;
 import com.mcsaatchi.gmfit.architecture.rest.SubCategoriesResponse;
 import com.mcsaatchi.gmfit.architecture.rest.SubCategoriesResponseDatum;
@@ -16,10 +16,10 @@ import retrofit2.Response;
 
 class SubmitReimbursementActivityPresenter extends BaseActivityPresenter {
   private SubmitReimbursementActivityView view;
-  private DataAccessHandler dataAccessHandler;
+  private DataAccessHandlerImpl dataAccessHandler;
 
   SubmitReimbursementActivityPresenter(SubmitReimbursementActivityView view,
-      DataAccessHandler dataAccessHandler) {
+      DataAccessHandlerImpl dataAccessHandler) {
     this.view = view;
     this.dataAccessHandler = dataAccessHandler;
   }

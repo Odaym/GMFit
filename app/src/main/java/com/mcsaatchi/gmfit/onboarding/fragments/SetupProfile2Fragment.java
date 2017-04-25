@@ -9,8 +9,8 @@ import android.widget.RadioButton;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.GMFitApplication;
-import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
+import com.mcsaatchi.gmfit.architecture.classes.GMFitApplication;
+import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandlerImpl;
 import com.mcsaatchi.gmfit.architecture.rest.UserGoalsResponseBody;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.fragments.BaseFragment;
@@ -22,7 +22,7 @@ import worker8.com.github.radiogroupplus.RadioGroupPlus;
 public class SetupProfile2Fragment extends BaseFragment
     implements SetupProfileFragmentsPresenter.SetupProfileFragmentsView_2 {
 
-  @Inject DataAccessHandler dataAccessHandler;
+  @Inject DataAccessHandlerImpl dataAccessHandler;
   @Inject SharedPreferences prefs;
 
   @Bind(R.id.goalRadioButtonsGroup) RadioGroupPlus goalRadioButtonsGroup;

@@ -34,8 +34,8 @@ import butterknife.OnClick;
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.GMFitApplication;
-import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
+import com.mcsaatchi.gmfit.architecture.classes.GMFitApplication;
+import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandlerImpl;
 import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
 import com.mcsaatchi.gmfit.architecture.otto.ProfileUpdatedEvent;
 import com.mcsaatchi.gmfit.architecture.otto.RemindersStatusChangedEvent;
@@ -94,7 +94,7 @@ public class MainProfileFragment extends BaseFragment
   @Bind(R.id.changePasswordParentLayout) LinearLayout changePasswordParentLayout;
 
   @Inject SharedPreferences prefs;
-  @Inject DataAccessHandler dataAccessHandler;
+  @Inject DataAccessHandlerImpl dataAccessHandler;
 
   private HashMap<String, RequestBody> medicalConditionParts;
   private ArrayList<MedicalCondition> medicalConditions = new ArrayList<>();

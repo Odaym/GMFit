@@ -34,8 +34,8 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.GMFitApplication;
-import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
+import com.mcsaatchi.gmfit.architecture.classes.GMFitApplication;
+import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandlerImpl;
 import com.mcsaatchi.gmfit.architecture.rest.GetNearbyClinicsResponseDatum;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.classes.SimpleDividerItemDecoration;
@@ -56,7 +56,7 @@ public class InsuranceDirectoryFragment extends BaseFragment
   @Bind(R.id.loadingMapProgress) ProgressBar loadingMapProgress;
   @Bind(R.id.mapKeyLayout) LinearLayout mapKeyLayout;
 
-  @Inject DataAccessHandler dataAccessHandler;
+  @Inject DataAccessHandlerImpl dataAccessHandler;
   @Inject SharedPreferences prefs;
 
   private InsuranceDirectoryFragmentPresenter presenter;

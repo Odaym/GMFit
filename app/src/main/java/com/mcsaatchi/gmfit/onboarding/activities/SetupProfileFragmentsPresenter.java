@@ -3,7 +3,7 @@ package com.mcsaatchi.gmfit.onboarding.activities;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
+import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandlerImpl;
 import com.mcsaatchi.gmfit.architecture.rest.ActivityLevelsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ActivityLevelsResponseBody;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponseChart;
@@ -28,22 +28,22 @@ public class SetupProfileFragmentsPresenter extends BaseFragmentPresenter {
   private SetupProfileFragmentsView_2 view_2;
   private SetupProfileFragmentsView_3 view_3;
   private SetupProfileFragmentsView_4 view_4;
-  private DataAccessHandler dataAccessHandler;
+  private DataAccessHandlerImpl dataAccessHandler;
 
   public SetupProfileFragmentsPresenter(SetupProfileFragmentsView_2 view_2,
-      DataAccessHandler dataAccessHandler) {
+      DataAccessHandlerImpl dataAccessHandler) {
     this.view_2 = view_2;
     this.dataAccessHandler = dataAccessHandler;
   }
 
   public SetupProfileFragmentsPresenter(SetupProfileFragmentsView_3 view_3,
-      DataAccessHandler dataAccessHandler) {
+      DataAccessHandlerImpl dataAccessHandler) {
     this.view_3 = view_3;
     this.dataAccessHandler = dataAccessHandler;
   }
 
   public SetupProfileFragmentsPresenter(SetupProfileFragmentsView_4 view_4,
-      DataAccessHandler dataAccessHandler) {
+      DataAccessHandlerImpl dataAccessHandler) {
     this.view_4 = view_4;
     this.dataAccessHandler = dataAccessHandler;
   }

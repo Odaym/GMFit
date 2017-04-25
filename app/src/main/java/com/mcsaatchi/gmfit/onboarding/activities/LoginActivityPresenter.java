@@ -4,7 +4,7 @@ import android.os.Bundle;
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
+import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandlerImpl;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponse;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponseChart;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponseInnerBody;
@@ -21,9 +21,9 @@ import timber.log.Timber;
 
 class LoginActivityPresenter {
   private LoginActivityView view;
-  private DataAccessHandler dataAccessHandler;
+  private DataAccessHandlerImpl dataAccessHandler;
 
-  LoginActivityPresenter(LoginActivityView view, DataAccessHandler dataAccessHandler) {
+  LoginActivityPresenter(LoginActivityView view, DataAccessHandlerImpl dataAccessHandler) {
     this.view = view;
     this.dataAccessHandler = dataAccessHandler;
   }

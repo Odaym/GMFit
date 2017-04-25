@@ -1,6 +1,6 @@
 package com.mcsaatchi.gmfit.onboarding.activities;
 
-import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
+import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandlerImpl;
 import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
 import com.mcsaatchi.gmfit.architecture.otto.SignedUpSuccessfullyEvent;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponse;
@@ -18,30 +18,30 @@ import timber.log.Timber;
 
 class SplashActivityPresenter {
   private SplashActivityView view;
-  private DataAccessHandler dataAccessHandler;
+  private DataAccessHandlerImpl dataAccessHandler;
 
-  SplashActivityPresenter(SplashActivityView view, DataAccessHandler dataAccessHandler) {
+  SplashActivityPresenter(SplashActivityView view, DataAccessHandlerImpl dataAccessHandler) {
     this.view = view;
     this.dataAccessHandler = dataAccessHandler;
   }
 
-  void login(boolean loggedIn, String email, String password, String facebookToken) {
-    if (!loggedIn) {
-      view.showLoginActivity();
+  void login(String email, String password) {
+    if (view.checkInternetAvailable()) {
+      signInUserSilently(email, password);
     } else {
-      if (view.checkInternetAvailable()) {
-        if (facebookToken.isEmpty()) {
-          signInUserSilently(email, password);
-        } else {
-          loginWithFacebook(facebookToken);
-        }
-      } else {
-        view.displayNoInternetDialog();
-      }
+      view.displayNoInternetDialog();
     }
   }
 
-  private void signInUserSilently(String email, String password) {
+  void login(String facebookToken) {
+    if (view.checkInternetAvailable()) {
+      loginWithFacebook(facebookToken);
+    } else {
+      view.displayNoInternetDialog();
+    }
+  }
+
+  public void signInUserSilently(String email, String password) {
     dataAccessHandler.signInUserSilently(email, password, new Callback<AuthenticationResponse>() {
       @Override public void onResponse(Call<AuthenticationResponse> call,
           Response<AuthenticationResponse> response) {
@@ -66,7 +66,7 @@ class SplashActivityPresenter {
     });
   }
 
-  private void loginWithFacebook(String accessToken) {
+  public void loginWithFacebook(String accessToken) {
     dataAccessHandler.handleFacebookProcess(accessToken, new Callback<AuthenticationResponse>() {
       @Override public void onResponse(Call<AuthenticationResponse> call,
           Response<AuthenticationResponse> response) {

@@ -20,9 +20,9 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.GMFitApplication;
-import com.mcsaatchi.gmfit.architecture.PermissionsChecker;
-import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
+import com.mcsaatchi.gmfit.architecture.classes.GMFitApplication;
+import com.mcsaatchi.gmfit.architecture.classes.PermissionsChecker;
+import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandlerImpl;
 import com.mcsaatchi.gmfit.architecture.rest.InsuranceLoginResponseInnerData;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.fragments.BaseFragment;
@@ -43,7 +43,7 @@ public class InsuranceHomeFragment extends BaseFragment
   @Bind(R.id.cardOwnerTV) TextView cardOwnerTV;
   @Bind(R.id.bankNameTV) TextView bankNameTV;
   @Bind(R.id.cardNumberTV) TextView cardNumberTV;
-  @Inject DataAccessHandler dataAccessHandler;
+  @Inject DataAccessHandlerImpl dataAccessHandler;
   @Inject PermissionsChecker permChecker;
   @Inject SharedPreferences prefs;
 

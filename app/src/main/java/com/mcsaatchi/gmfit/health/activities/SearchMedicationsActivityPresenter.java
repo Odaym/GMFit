@@ -1,6 +1,6 @@
 package com.mcsaatchi.gmfit.health.activities;
 
-import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
+import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandlerImpl;
 import com.mcsaatchi.gmfit.architecture.rest.MostPopularMedicationsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.MostPopularMedicationsResponseDatum;
 import com.mcsaatchi.gmfit.architecture.rest.SearchMedicinesResponse;
@@ -13,10 +13,10 @@ import retrofit2.Response;
 
 class SearchMedicationsActivityPresenter extends BaseActivityPresenter {
   private SearchMedicationsActivityView view;
-  private DataAccessHandler dataAccessHandler;
+  private DataAccessHandlerImpl dataAccessHandler;
 
   SearchMedicationsActivityPresenter(SearchMedicationsActivityView view,
-      DataAccessHandler dataAccessHandler) {
+      DataAccessHandlerImpl dataAccessHandler) {
     this.view = view;
     this.dataAccessHandler = dataAccessHandler;
   }

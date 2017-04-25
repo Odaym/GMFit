@@ -1,6 +1,6 @@
 package com.mcsaatchi.gmfit.nutrition.activities;
 
-import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
+import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandlerImpl;
 import com.mcsaatchi.gmfit.architecture.rest.UserMealsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.UserMealsResponseInner;
 import com.mcsaatchi.gmfit.common.activities.BaseActivityPresenter;
@@ -12,10 +12,10 @@ import timber.log.Timber;
 
 class AddNewMealOnDateActivityPresenter extends BaseActivityPresenter {
   private AddNewMealOnDateActivityView view;
-  private DataAccessHandler dataAccessHandler;
+  private DataAccessHandlerImpl dataAccessHandler;
 
   AddNewMealOnDateActivityPresenter(AddNewMealOnDateActivityView view,
-      DataAccessHandler dataAccessHandler) {
+      DataAccessHandlerImpl dataAccessHandler) {
     this.view = view;
     this.dataAccessHandler = dataAccessHandler;
   }

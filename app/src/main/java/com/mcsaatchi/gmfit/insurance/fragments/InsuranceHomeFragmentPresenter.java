@@ -1,7 +1,7 @@
 package com.mcsaatchi.gmfit.insurance.fragments;
 
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
+import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandlerImpl;
 import com.mcsaatchi.gmfit.architecture.rest.CertainPDFResponse;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.common.fragments.BaseFragmentPresenter;
@@ -11,10 +11,10 @@ import retrofit2.Response;
 
 class InsuranceHomeFragmentPresenter extends BaseFragmentPresenter {
   private InsuranceHomeFragmentView view;
-  private DataAccessHandler dataAccessHandler;
+  private DataAccessHandlerImpl dataAccessHandler;
 
   InsuranceHomeFragmentPresenter(InsuranceHomeFragmentView view,
-      DataAccessHandler dataAccessHandler) {
+      DataAccessHandlerImpl dataAccessHandler) {
     this.view = view;
     this.dataAccessHandler = dataAccessHandler;
   }

@@ -11,8 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.GMFitApplication;
-import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
+import com.mcsaatchi.gmfit.architecture.classes.GMFitApplication;
+import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandlerImpl;
 import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
 import com.mcsaatchi.gmfit.architecture.otto.MealEntryManipulatedEvent;
 import com.mcsaatchi.gmfit.architecture.rest.DefaultGetResponse;
@@ -31,7 +31,7 @@ public class UserMealsRecyclerAdapterDragSwipe
     extends RecyclerView.Adapter<UserMealsRecyclerAdapterDragSwipe.MyViewHolder>
     implements DragSwipeItemTouchHelperAdapter {
 
-  @Inject DataAccessHandler dataAccessHandler;
+  @Inject DataAccessHandlerImpl dataAccessHandler;
   @Inject SharedPreferences prefs;
   private List<MealItem> mealItems;
   private Context context;

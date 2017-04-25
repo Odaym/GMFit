@@ -1,4 +1,4 @@
-package com.mcsaatchi.gmfit.architecture;
+package com.mcsaatchi.gmfit.architecture.classes;
 
 import android.content.Context;
 import android.content.pm.PackageManager;

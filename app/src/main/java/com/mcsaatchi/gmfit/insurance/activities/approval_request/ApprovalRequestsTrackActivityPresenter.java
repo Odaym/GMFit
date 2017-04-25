@@ -1,7 +1,7 @@
 package com.mcsaatchi.gmfit.insurance.activities.approval_request;
 
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
+import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandlerImpl;
 import com.mcsaatchi.gmfit.architecture.rest.ClaimsListResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ClaimsListResponseDatum;
 import com.mcsaatchi.gmfit.common.activities.BaseActivityPresenter;
@@ -12,10 +12,10 @@ import retrofit2.Response;
 
 class ApprovalRequestsTrackActivityPresenter extends BaseActivityPresenter {
   private ApprovalRequestsTrackActivityView view;
-  private DataAccessHandler dataAccessHandler;
+  private DataAccessHandlerImpl dataAccessHandler;
 
   ApprovalRequestsTrackActivityPresenter(ApprovalRequestsTrackActivityView view,
-      DataAccessHandler dataAccessHandler) {
+      DataAccessHandlerImpl dataAccessHandler) {
     this.view = view;
     this.dataAccessHandler = dataAccessHandler;
   }

@@ -1,4 +1,4 @@
-package com.mcsaatchi.gmfit.architecture;
+package com.mcsaatchi.gmfit.architecture.classes;
 
 import android.app.Application;
 import android.content.Context;
@@ -12,7 +12,7 @@ import com.mcsaatchi.gmfit.architecture.dagger.AppModule;
 import com.mcsaatchi.gmfit.architecture.dagger.DBModule;
 import com.mcsaatchi.gmfit.architecture.dagger.DaggerAppComponent;
 import com.mcsaatchi.gmfit.architecture.dagger.NetworkModule;
-import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
+import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandlerImpl;
 import com.mcsaatchi.gmfit.architecture.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.architecture.timber.TimberReleaseTree;
 import com.mcsaatchi.gmfit.common.Constants;
@@ -30,7 +30,7 @@ public class GMFitApplication extends Application {
 
   private static GMFitApplication applicationInstance;
   @Inject SharedPreferences prefs;
-  @Inject DataAccessHandler dataAccessHandler;
+  @Inject DataAccessHandlerImpl dataAccessHandler;
   private AppComponent component;
 
   public static boolean hasNetwork() {

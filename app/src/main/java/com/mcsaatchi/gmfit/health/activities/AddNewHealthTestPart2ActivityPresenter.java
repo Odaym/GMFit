@@ -1,7 +1,7 @@
 package com.mcsaatchi.gmfit.health.activities;
 
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
+import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandlerImpl;
 import com.mcsaatchi.gmfit.architecture.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.architecture.rest.MedicalTestMetricsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.MedicalTestMetricsResponseBody;
@@ -16,10 +16,10 @@ import retrofit2.Response;
 
 class AddNewHealthTestPart2ActivityPresenter extends BaseActivityPresenter {
   private AddNewHealthTestPart2ActivityView view;
-  private DataAccessHandler dataAccessHandler;
+  private DataAccessHandlerImpl dataAccessHandler;
 
   AddNewHealthTestPart2ActivityPresenter(AddNewHealthTestPart2ActivityView view,
-      DataAccessHandler dataAccessHandler) {
+      DataAccessHandlerImpl dataAccessHandler) {
     this.view = view;
     this.dataAccessHandler = dataAccessHandler;
   }

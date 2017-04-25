@@ -14,10 +14,10 @@ import android.view.MenuItem;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.GMFitApplication;
-import com.mcsaatchi.gmfit.architecture.PermissionsChecker;
+import com.mcsaatchi.gmfit.architecture.classes.GMFitApplication;
+import com.mcsaatchi.gmfit.architecture.classes.PermissionsChecker;
 import com.mcsaatchi.gmfit.architecture.data_access.DBHelper;
-import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
+import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandlerImpl;
 import com.mcsaatchi.gmfit.common.Constants;
 import javax.inject.Inject;
 import timber.log.Timber;
@@ -26,7 +26,7 @@ public class BaseActivity extends AppCompatActivity
     implements BaseActivityPresenter.BaseActivityView {
   @Inject public SharedPreferences prefs;
   @Inject public ConnectivityManager connectivityManager;
-  @Inject public DataAccessHandler dataAccessHandler;
+  @Inject public DataAccessHandlerImpl dataAccessHandler;
   @Inject public DBHelper dbHelper;
   @Inject public PermissionsChecker permChecker;
 

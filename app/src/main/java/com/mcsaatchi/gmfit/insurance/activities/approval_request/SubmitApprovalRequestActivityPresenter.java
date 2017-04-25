@@ -1,6 +1,6 @@
 package com.mcsaatchi.gmfit.insurance.activities.approval_request;
 
-import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
+import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandlerImpl;
 import com.mcsaatchi.gmfit.architecture.rest.CreateNewRequestResponse;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.common.activities.BaseActivityPresenter;
@@ -12,10 +12,10 @@ import retrofit2.Response;
 
 class SubmitApprovalRequestActivityPresenter extends BaseActivityPresenter {
   private SubmitApprovalRequestActivityView view;
-  private DataAccessHandler dataAccessHandler;
+  private DataAccessHandlerImpl dataAccessHandler;
 
   SubmitApprovalRequestActivityPresenter(SubmitApprovalRequestActivityView view,
-      DataAccessHandler dataAccessHandler) {
+      DataAccessHandlerImpl dataAccessHandler) {
     this.view = view;
     this.dataAccessHandler = dataAccessHandler;
   }

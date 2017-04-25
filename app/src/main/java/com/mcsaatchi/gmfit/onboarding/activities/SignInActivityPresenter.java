@@ -1,7 +1,7 @@
 package com.mcsaatchi.gmfit.onboarding.activities;
 
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
+import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandlerImpl;
 import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
 import com.mcsaatchi.gmfit.architecture.otto.SignedInSuccessfullyEvent;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponse;
@@ -19,9 +19,9 @@ import timber.log.Timber;
 
 class SignInActivityPresenter {
   private SignInActivityView view;
-  private DataAccessHandler dataAccessHandler;
+  private DataAccessHandlerImpl dataAccessHandler;
 
-  SignInActivityPresenter(SignInActivityView view, DataAccessHandler dataAccessHandler) {
+  SignInActivityPresenter(SignInActivityView view, DataAccessHandlerImpl dataAccessHandler) {
     this.view = view;
     this.dataAccessHandler = dataAccessHandler;
   }

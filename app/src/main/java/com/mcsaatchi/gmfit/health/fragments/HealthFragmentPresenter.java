@@ -1,7 +1,7 @@
 package com.mcsaatchi.gmfit.health.fragments;
 
 import com.j256.ormlite.dao.RuntimeExceptionDao;
-import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
+import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandlerImpl;
 import com.mcsaatchi.gmfit.architecture.rest.TakenMedicalTestsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.TakenMedicalTestsResponseBody;
 import com.mcsaatchi.gmfit.architecture.rest.UserProfileResponse;
@@ -22,10 +22,10 @@ import retrofit2.Response;
 class HealthFragmentPresenter extends BaseFragmentPresenter {
   private HealthFragmentView view;
   private RuntimeExceptionDao<Medication, Integer> medicationDAO;
-  private DataAccessHandler dataAccessHandler;
+  private DataAccessHandlerImpl dataAccessHandler;
 
   HealthFragmentPresenter(HealthFragmentView view,
-      RuntimeExceptionDao<Medication, Integer> medicationDAO, DataAccessHandler dataAccessHandler) {
+      RuntimeExceptionDao<Medication, Integer> medicationDAO, DataAccessHandlerImpl dataAccessHandler) {
     this.view = view;
     this.medicationDAO = medicationDAO;
     this.dataAccessHandler = dataAccessHandler;

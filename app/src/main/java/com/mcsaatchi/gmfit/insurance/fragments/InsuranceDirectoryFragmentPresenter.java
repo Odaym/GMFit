@@ -1,6 +1,6 @@
 package com.mcsaatchi.gmfit.insurance.fragments;
 
-import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
+import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandlerImpl;
 import com.mcsaatchi.gmfit.architecture.rest.GetNearbyClinicsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.GetNearbyClinicsResponseDatum;
 import com.mcsaatchi.gmfit.common.fragments.BaseFragmentPresenter;
@@ -11,10 +11,10 @@ import retrofit2.Response;
 
 class InsuranceDirectoryFragmentPresenter extends BaseFragmentPresenter {
   private InsuranceDirectoryFragmentView view;
-  private DataAccessHandler dataAccessHandler;
+  private DataAccessHandlerImpl dataAccessHandler;
 
   InsuranceDirectoryFragmentPresenter(InsuranceDirectoryFragmentView view,
-      DataAccessHandler dataAccessHandler) {
+      DataAccessHandlerImpl dataAccessHandler) {
     this.view = view;
     this.dataAccessHandler = dataAccessHandler;
   }

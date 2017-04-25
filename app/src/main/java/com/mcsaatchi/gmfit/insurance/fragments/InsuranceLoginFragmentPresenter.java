@@ -1,7 +1,7 @@
 package com.mcsaatchi.gmfit.insurance.fragments;
 
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
+import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandlerImpl;
 import com.mcsaatchi.gmfit.architecture.rest.CountriesListResponse;
 import com.mcsaatchi.gmfit.architecture.rest.CountriesListResponseDatum;
 import com.mcsaatchi.gmfit.architecture.rest.InsuranceLoginResponse;
@@ -16,10 +16,10 @@ import timber.log.Timber;
 
 class InsuranceLoginFragmentPresenter extends BaseFragmentPresenter {
   private InsuranceLoginFragmentView view;
-  private DataAccessHandler dataAccessHandler;
+  private DataAccessHandlerImpl dataAccessHandler;
 
   InsuranceLoginFragmentPresenter(InsuranceLoginFragmentView view,
-      DataAccessHandler dataAccessHandler) {
+      DataAccessHandlerImpl dataAccessHandler) {
     this.view = view;
     this.dataAccessHandler = dataAccessHandler;
   }

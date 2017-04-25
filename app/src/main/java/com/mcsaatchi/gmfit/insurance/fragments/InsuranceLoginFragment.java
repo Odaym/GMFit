@@ -15,8 +15,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.andreabaccega.widget.FormEditText;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.GMFitApplication;
-import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
+import com.mcsaatchi.gmfit.architecture.classes.GMFitApplication;
+import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandlerImpl;
 import com.mcsaatchi.gmfit.architecture.rest.CountriesListResponseDatum;
 import com.mcsaatchi.gmfit.architecture.rest.InsuranceLoginResponseInnerData;
 import com.mcsaatchi.gmfit.common.Constants;
@@ -37,7 +37,7 @@ public class InsuranceLoginFragment extends BaseFragment
   @Bind(R.id.countryPicker) CustomCountryPicker countryPicker;
   @Bind(R.id.forgotPasswordTV) TextView forgotPasswordTV;
 
-  @Inject DataAccessHandler dataAccessHandler;
+  @Inject DataAccessHandlerImpl dataAccessHandler;
   @Inject SharedPreferences prefs;
 
   private InsuranceLoginFragmentPresenter presenter;

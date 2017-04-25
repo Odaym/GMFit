@@ -29,8 +29,8 @@ import butterknife.OnClick;
 import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.GMFitApplication;
-import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
+import com.mcsaatchi.gmfit.architecture.classes.GMFitApplication;
+import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandlerImpl;
 import com.mcsaatchi.gmfit.architecture.otto.DataChartDeletedEvent;
 import com.mcsaatchi.gmfit.architecture.otto.DataChartsOrderChangedEvent;
 import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
@@ -101,7 +101,7 @@ public class NutritionFragment extends BaseFragment
   @Bind(R.id.dinnerMealsEmptyLayout) LinearLayout dinnerMealsEmptyLayout;
   @Bind(R.id.snackMealsEmptyLayout) LinearLayout snackMealsEmptyLayout;
 
-  @Inject DataAccessHandler dataAccessHandler;
+  @Inject DataAccessHandlerImpl dataAccessHandler;
   @Inject SharedPreferences prefs;
   @Inject LocalDate dt;
 

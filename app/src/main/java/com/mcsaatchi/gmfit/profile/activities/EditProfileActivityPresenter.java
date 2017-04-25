@@ -1,7 +1,7 @@
 package com.mcsaatchi.gmfit.profile.activities;
 
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
+import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandlerImpl;
 import com.mcsaatchi.gmfit.architecture.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.common.activities.BaseActivityPresenter;
 import okhttp3.RequestBody;
@@ -11,9 +11,9 @@ import retrofit2.Response;
 
 class EditProfileActivityPresenter extends BaseActivityPresenter {
   private EditProfileActivityView view;
-  private DataAccessHandler dataAccessHandler;
+  private DataAccessHandlerImpl dataAccessHandler;
 
-  EditProfileActivityPresenter(EditProfileActivityView view, DataAccessHandler dataAccessHandler) {
+  EditProfileActivityPresenter(EditProfileActivityView view, DataAccessHandlerImpl dataAccessHandler) {
     this.view = view;
     this.dataAccessHandler = dataAccessHandler;
   }

@@ -11,7 +11,7 @@ import android.widget.LinearLayout;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.GMFitApplication;
+import com.mcsaatchi.gmfit.architecture.classes.GMFitApplication;
 import com.mcsaatchi.gmfit.common.classes.SimpleDividerItemDecoration;
 import com.mcsaatchi.gmfit.insurance.adapters.ContractsChoiceRecyclerAdapter;
 import com.mcsaatchi.gmfit.insurance.models.InsuranceContract;

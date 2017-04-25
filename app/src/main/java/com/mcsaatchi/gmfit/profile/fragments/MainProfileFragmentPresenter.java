@@ -3,7 +3,7 @@ package com.mcsaatchi.gmfit.profile.fragments;
 import android.os.AsyncTask;
 import android.os.Environment;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
+import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandlerImpl;
 import com.mcsaatchi.gmfit.architecture.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.architecture.rest.EmergencyProfileResponse;
 import com.mcsaatchi.gmfit.architecture.rest.MetaTextsResponse;
@@ -24,9 +24,9 @@ import retrofit2.Response;
 
 class MainProfileFragmentPresenter extends BaseFragmentPresenter {
   private MainProfileFragmentView view;
-  private DataAccessHandler dataAccessHandler;
+  private DataAccessHandlerImpl dataAccessHandler;
 
-  MainProfileFragmentPresenter(MainProfileFragmentView view, DataAccessHandler dataAccessHandler) {
+  MainProfileFragmentPresenter(MainProfileFragmentView view, DataAccessHandlerImpl dataAccessHandler) {
     this.view = view;
     this.dataAccessHandler = dataAccessHandler;
   }

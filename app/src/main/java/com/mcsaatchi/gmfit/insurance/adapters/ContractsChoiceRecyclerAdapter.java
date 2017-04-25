@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.GMFitApplication;
+import com.mcsaatchi.gmfit.architecture.classes.GMFitApplication;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.insurance.models.InsuranceContract;
 import java.util.List;

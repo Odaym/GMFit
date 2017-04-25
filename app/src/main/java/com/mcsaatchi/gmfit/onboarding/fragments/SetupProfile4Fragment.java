@@ -19,8 +19,8 @@ import butterknife.OnClick;
 import com.andreabaccega.widget.FormEditText;
 import com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialogFragment;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.GMFitApplication;
-import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
+import com.mcsaatchi.gmfit.architecture.classes.GMFitApplication;
+import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandlerImpl;
 import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
 import com.mcsaatchi.gmfit.architecture.otto.UserFinalizedSetupProfileEvent;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponseChart;
@@ -56,7 +56,7 @@ public class SetupProfile4Fragment extends BaseFragment
   @Bind(R.id.genderSpinner) Spinner genderSpinner;
   @Bind(R.id.medicalConditionsValueTV) TextView medicalConditionsValueTV;
 
-  @Inject DataAccessHandler dataAccessHandler;
+  @Inject DataAccessHandlerImpl dataAccessHandler;
   @Inject SharedPreferences prefs;
 
   private SetupProfileFragmentsPresenter presenter;

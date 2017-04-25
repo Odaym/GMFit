@@ -1,7 +1,7 @@
 package com.mcsaatchi.gmfit.insurance.activities.inquiry;
 
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
+import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandlerImpl;
 import com.mcsaatchi.gmfit.architecture.rest.AddCRMNoteResponse;
 import com.mcsaatchi.gmfit.architecture.rest.CRMNotesResponse;
 import com.mcsaatchi.gmfit.architecture.rest.CRMNotesResponseNoteAttribute;
@@ -14,9 +14,9 @@ import retrofit2.Response;
 
 class InquiryNotesActivityPresenter extends BaseActivityPresenter {
   private InquiryNotesActivityView view;
-  private DataAccessHandler dataAccessHandler;
+  private DataAccessHandlerImpl dataAccessHandler;
 
-  InquiryNotesActivityPresenter(InquiryNotesActivityView view, DataAccessHandler dataAccessHandler) {
+  InquiryNotesActivityPresenter(InquiryNotesActivityView view, DataAccessHandlerImpl dataAccessHandler) {
     this.view = view;
     this.dataAccessHandler = dataAccessHandler;
   }

@@ -1,7 +1,5 @@
 package com.mcsaatchi.gmfit.architecture.data_access;
 
-import android.content.Context;
-import com.mcsaatchi.gmfit.architecture.GMFitApplication;
 import com.mcsaatchi.gmfit.architecture.rest.ActivityLevelsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.AddCRMNoteResponse;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponse;
@@ -44,370 +42,205 @@ import com.mcsaatchi.gmfit.architecture.rest.WeightHistoryResponse;
 import com.mcsaatchi.gmfit.architecture.rest.WidgetsResponse;
 import java.util.HashMap;
 import java.util.Map;
-import javax.inject.Inject;
 import okhttp3.RequestBody;
 import retrofit2.Callback;
 
-public class DataAccessHandler {
+public interface DataAccessHandler {
+  void findMeals(String mealName, Callback<SearchMealItemResponse> callback);
 
-  @Inject ApiCallsHandler apiCallsHandler;
+  void searchForMealBarcode(String barcode, Callback<SearchMealItemResponse> callback);
 
-  public DataAccessHandler(Context app) {
-    ((GMFitApplication) app).getAppComponent().inject(this);
-  }
+  void getSlugBreakdownForChart(final String chartType,
+      final Callback<SlugBreakdownResponse> callback);
 
-  public void findMeals(String mealName, Callback<SearchMealItemResponse> callback) {
-    apiCallsHandler.findMeals(mealName, callback);
-  }
+  void refreshAccessToken(Callback<AuthenticationResponse> callback);
 
-  public void searchForMealBarcode(String barcode, Callback<SearchMealItemResponse> callback) {
-    apiCallsHandler.searchForMealBarcode(barcode, callback);
-  }
+  void synchronizeMetricsWithServer(String[] slugsArray, Number[] valuesArray,
+      Callback<DefaultGetResponse> callback);
 
-  public void getSlugBreakdownForChart(final String chartType,
-      final Callback<SlugBreakdownResponse> callback) {
-    apiCallsHandler.getSlugBreakdownForChart(chartType, callback);
-  }
+  void signInUser(String email, String password, Callback<AuthenticationResponse> callback);
 
-  public void refreshAccessToken(Callback<AuthenticationResponse> callback) {
-    apiCallsHandler.refreshAccessToken(callback);
-  }
+  void registerUser(String full_name, String email, String password,
+      Callback<AuthenticationResponse> callback);
 
-  public void synchronizeMetricsWithServer(String[] slugsArray, Number[] valuesArray,
-      Callback<DefaultGetResponse> callback) {
-    apiCallsHandler.synchronizeMetricsWithServer(slugsArray, valuesArray, callback);
-  }
+  void signInUserSilently(String email, String password,
+      Callback<AuthenticationResponse> callback);
 
-  public void signInUser(String email, String password, Callback<AuthenticationResponse> callback) {
-    apiCallsHandler.signInUser(email, password, callback);
-  }
+  void signOutUser(Callback<DefaultGetResponse> callback);
 
-  public void registerUser(String full_name, String email, String password,
-      Callback<AuthenticationResponse> callback) {
-    apiCallsHandler.registerUser(full_name, email, password, callback);
-  }
-
-  public void signInUserSilently(String email, String password,
-      Callback<AuthenticationResponse> callback) {
-    apiCallsHandler.signInUserSilently(email, password, callback);
-  }
-
-  public void signOutUser(Callback<DefaultGetResponse> callback) {
-    apiCallsHandler.signOutUser(callback);
-  }
-
-  public void updateUserProfile(RequestBody finalDateOfBirth, RequestBody bloodType,
+  void updateUserProfile(RequestBody finalDateOfBirth, RequestBody bloodType,
       RequestBody nationality, HashMap<String, RequestBody> medicalConditions,
       RequestBody measurementSystem, RequestBody goalId, RequestBody activityLevelId,
       RequestBody finalGender, RequestBody height, RequestBody weight, RequestBody onboard,
-      Callback<DefaultGetResponse> callback) {
-    apiCallsHandler.updateUserProfile(finalDateOfBirth, bloodType, nationality, medicalConditions,
-        measurementSystem, goalId, activityLevelId, finalGender, height, weight, onboard, callback);
-  }
+      Callback<DefaultGetResponse> callback);
 
-  public void updateUserProfileExplicitly(RequestBody name, RequestBody phone_number,
+  void updateUserProfileExplicitly(RequestBody name, RequestBody phone_number,
       RequestBody gender, RequestBody date_of_birth, RequestBody blood_type, RequestBody height,
-      RequestBody weight, Callback<DefaultGetResponse> callback) {
-    apiCallsHandler.updateUserProfileExplicitly(name, phone_number, gender, date_of_birth,
-        blood_type, height, weight, callback);
-  }
+      RequestBody weight, Callback<DefaultGetResponse> callback);
 
-  public void updateUserWeight(double weight, String created_at,
-      Callback<DefaultGetResponse> callback) {
-    apiCallsHandler.updateUserWeight(weight, created_at, callback);
-  }
+  void updateUserWeight(double weight, String created_at,
+      Callback<DefaultGetResponse> callback);
 
-  public void updateOneSignalToken(String onesignal_id, Callback<DefaultGetResponse> callback) {
-    apiCallsHandler.updateOneSignalToken(onesignal_id, callback);
-  }
+  void updateOneSignalToken(String onesignal_id, Callback<DefaultGetResponse> callback);
 
-  public void updateUserPicture(Map<String, RequestBody> profilePicture,
-      Callback<DefaultGetResponse> callback) {
-    apiCallsHandler.updateUserPicture(profilePicture, callback);
-  }
+  void updateUserPicture(Map<String, RequestBody> profilePicture,
+      Callback<DefaultGetResponse> callback);
 
-  public void getUiForSection(String section, Callback<UiResponse> callback) {
-    apiCallsHandler.getUiForSection(section, callback);
-  }
+  void getUiForSection(String section, Callback<UiResponse> callback);
 
-  public void getMedicalConditions(Callback<MedicalConditionsResponse> callback) {
-    apiCallsHandler.getMedicalConditions(callback);
-  }
+  void getMedicalConditions(Callback<MedicalConditionsResponse> callback);
 
-  public void sendResetPasswordLink(String email, Callback<DefaultGetResponse> callback) {
-    apiCallsHandler.sendResetPasswordLink(email, callback);
-  }
+  void sendResetPasswordLink(String email, Callback<DefaultGetResponse> callback);
 
-  public void changePassword(String old_password, String new_password,
-      Callback<DefaultGetResponse> callback) {
-    apiCallsHandler.changePassword(old_password, new_password, callback);
-  }
+  void changePassword(String old_password, String new_password,
+      Callback<DefaultGetResponse> callback);
 
-  public void finalizeResetPassword(String resetPasswordToken, String newPassword,
-      Callback<DefaultGetResponse> callback) {
-    apiCallsHandler.finalizeResetPassword(resetPasswordToken, newPassword, callback);
-  }
+  void finalizeResetPassword(String resetPasswordToken, String newPassword,
+      Callback<DefaultGetResponse> callback);
 
-  public void getMealMetrics(String fullUrl, Callback<MealMetricsResponse> callback) {
-    apiCallsHandler.getMealMetrics(fullUrl, callback);
-  }
+  void getMealMetrics(String fullUrl, Callback<MealMetricsResponse> callback);
 
-  public void getUserGoalMetrics(String date, String type,
-      Callback<UserGoalMetricsResponse> callback) {
-    apiCallsHandler.getUserGoalMetrics(date, type, callback);
-  }
+  void getUserGoalMetrics(String date, String type,
+      Callback<UserGoalMetricsResponse> callback);
 
-  public void verifyUser(String verificationCode, Callback<DefaultGetResponse> callback) {
-    apiCallsHandler.verifyUser(verificationCode, callback);
-  }
+  void verifyUser(String verificationCode, Callback<DefaultGetResponse> callback);
 
-  public void updateUserWidgets(int[] widgetIds, int[] widgetPositions,
-      Callback<DefaultGetResponse> callback) {
-    apiCallsHandler.updateUserWidgets(widgetIds, widgetPositions, callback);
-  }
+  void updateUserWidgets(int[] widgetIds, int[] widgetPositions,
+      Callback<DefaultGetResponse> callback);
 
-  public void updateUserCharts(int[] chartIds, int[] chartPositions,
-      Callback<DefaultGetResponse> callback) {
-    apiCallsHandler.updateUserCharts(chartIds, chartPositions, callback);
-  }
+  void updateUserCharts(int[] chartIds, int[] chartPositions,
+      Callback<DefaultGetResponse> callback);
 
-  public void updateUserMeals(int instance_id, float amount,
-      Callback<DefaultGetResponse> callback) {
-    apiCallsHandler.updateUserMeals(instance_id, amount, callback);
-  }
+  void updateUserMeals(int instance_id, float amount,
+      Callback<DefaultGetResponse> callback);
 
-  public void deleteUserTest(int instance_id, Callback<DefaultGetResponse> callback) {
-    apiCallsHandler.deleteUserTest(instance_id, callback);
-  }
+  void deleteUserTest(int instance_id, Callback<DefaultGetResponse> callback);
 
-  public void deleteUserMeal(int instance_id, Callback<DefaultGetResponse> callback) {
-    apiCallsHandler.deleteUserMeal(instance_id, callback);
-  }
+  void deleteUserMeal(int instance_id, Callback<DefaultGetResponse> callback);
 
-  public void getUserAddedMeals(Callback<UserMealsResponse> callback) {
-    apiCallsHandler.getUserAddedMeals(callback);
-  }
+  void getUserAddedMeals(Callback<UserMealsResponse> callback);
 
-  public void getUserAddedMealsOnDate(String chosenDate, Callback<UserMealsResponse> callback) {
-    apiCallsHandler.getUserAddedMealsOnDate(chosenDate, callback);
-  }
+  void getUserAddedMealsOnDate(String chosenDate, Callback<UserMealsResponse> callback);
 
-  public void getMetaTexts(String section, Callback<MetaTextsResponse> callback) {
-    apiCallsHandler.getMetaTexts(section, callback);
-  }
+  void getMetaTexts(String section, Callback<MetaTextsResponse> callback);
 
-  public void handleFacebookProcess(String facebookAccessToken,
-      Callback<AuthenticationResponse> callback) {
-    apiCallsHandler.handleFacebookProcess(facebookAccessToken, callback);
-  }
+  void handleFacebookProcess(String facebookAccessToken,
+      Callback<AuthenticationResponse> callback);
 
-  public void storeNewMeal(int meal_id, float servingsAmount, String when, String date,
-      Callback<DefaultGetResponse> callback) {
-    apiCallsHandler.storeNewMeal(meal_id, servingsAmount, when, date, callback);
-  }
+  void storeNewMeal(int meal_id, float servingsAmount, String when, String date,
+      Callback<DefaultGetResponse> callback);
 
-  public void getRecentMeals(String fullUrl, Callback<RecentMealsResponse> callback) {
-    apiCallsHandler.getRecentMeals(fullUrl, callback);
-  }
+  void getRecentMeals(String fullUrl, Callback<RecentMealsResponse> callback);
 
-  public void getPeriodicalChartData(String start_date, String end_date, String type,
-      String monitored_metric, Callback<ChartMetricBreakdownResponse> callback) {
-    apiCallsHandler.getPeriodicalChartData(start_date, end_date, type, monitored_metric, callback);
-  }
+  void getPeriodicalChartData(String start_date, String end_date, String type,
+      String monitored_metric, Callback<ChartMetricBreakdownResponse> callback);
 
-  public void addMetricChart(int chart_id, Callback<DefaultGetResponse> callback) {
-    apiCallsHandler.addMetricChart(chart_id, callback);
-  }
+  void addMetricChart(int chart_id, Callback<DefaultGetResponse> callback);
 
-  public void getChartsBySection(String sectionName, Callback<ChartsBySectionResponse> callback) {
-    apiCallsHandler.getChartsBySection(sectionName, callback);
-  }
+  void getChartsBySection(String sectionName, Callback<ChartsBySectionResponse> callback);
 
-  public void requestNewMeal(String mealName, Callback<DefaultGetResponse> callback) {
-    apiCallsHandler.requestNewMeal(mealName, callback);
-  }
+  void requestNewMeal(String mealName, Callback<DefaultGetResponse> callback);
 
-  public void getTesticularMetrics(Callback<MedicalTestMetricsResponse> callback) {
-    apiCallsHandler.getTesticularMetrics(callback);
-  }
+  void getTesticularMetrics(Callback<MedicalTestMetricsResponse> callback);
 
-  public void getMedicalTests(Callback<MedicalTestsResponse> callback) {
-    apiCallsHandler.getMedicalTests(callback);
-  }
+  void getMedicalTests(Callback<MedicalTestsResponse> callback);
 
-  public void getWidgets(String sectionName, Callback<WidgetsResponse> callback) {
-    apiCallsHandler.getWidgets(sectionName, callback);
-  }
+  void getWidgets(String sectionName, Callback<WidgetsResponse> callback);
 
-  public void getWidgetsWithDate(String sectionName, String date,
-      Callback<WidgetsResponse> callback) {
-    apiCallsHandler.getWidgetsWithDate(sectionName, date, callback);
-  }
+  void getWidgetsWithDate(String sectionName, String date,
+      Callback<WidgetsResponse> callback);
 
-  public void storeNewHealthTest(RequestBody test_name, RequestBody date_taken,
+  void storeNewHealthTest(RequestBody test_name, RequestBody date_taken,
       Map<String, RequestBody> metrics, Map<String, RequestBody> imageFiles,
-      Callback<DefaultGetResponse> callback) {
-    apiCallsHandler.storeNewHealthTest(test_name, date_taken, metrics, imageFiles, callback);
-  }
+      Callback<DefaultGetResponse> callback);
 
-  public void editExistingHealthTest(RequestBody instance_id, RequestBody name,
+  void editExistingHealthTest(RequestBody instance_id, RequestBody name,
       RequestBody date_taken, Map<String, RequestBody> metrics, Map<String, RequestBody> imageFiles,
-      RequestBody deletedImages, Callback<DefaultGetResponse> callback) {
-    apiCallsHandler.editExistingHealthTest(instance_id, name, date_taken, metrics, imageFiles,
-        deletedImages, callback);
-  }
+      RequestBody deletedImages, Callback<DefaultGetResponse> callback);
 
-  public void getTakenMedicalTests(Callback<TakenMedicalTestsResponse> callback) {
-    apiCallsHandler.getTakenMedicalTests(callback);
-  }
+  void getTakenMedicalTests(Callback<TakenMedicalTestsResponse> callback);
 
-  public void getOnboardingStatus(Callback<UserProfileResponse> callback) {
-    apiCallsHandler.getOnboardingStatus(callback);
-  }
+  void getOnboardingStatus(Callback<UserProfileResponse> callback);
 
-  public void getUserProfile(Callback<UserProfileResponse> callback) {
-    apiCallsHandler.getUserProfile(callback);
-  }
+  void getUserProfile(Callback<UserProfileResponse> callback);
 
-  public void getEmergencyProfile(Callback<EmergencyProfileResponse> callback) {
-    apiCallsHandler.getEmergencyProfile(callback);
-  }
+  void getEmergencyProfile(Callback<EmergencyProfileResponse> callback);
 
-  public void deleteUserChart(String chart_id, Callback<DefaultGetResponse> callback) {
-    apiCallsHandler.deleteUserChart(chart_id, callback);
-  }
+  void deleteUserChart(String chart_id, Callback<DefaultGetResponse> callback);
 
-  public void getActivityLevels(Callback<ActivityLevelsResponse> callback) {
-    apiCallsHandler.getActivityLevels(callback);
-  }
+  void getActivityLevels(Callback<ActivityLevelsResponse> callback);
 
-  public void getUserWeightHistory(Callback<WeightHistoryResponse> callback) {
-    apiCallsHandler.getUserWeightHistory(callback);
-  }
+  void getUserWeightHistory(Callback<WeightHistoryResponse> callback);
 
-  public void getUserGoals(Callback<UserGoalsResponse> callback) {
-    apiCallsHandler.getUserGoals(callback);
-  }
+  void getUserGoals(Callback<UserGoalsResponse> callback);
 
   /**
    * INSURANCE API's
    */
-  public void getMostPopularMedications(String indNbr, String contractNo, String country,
-      String language, String password, Callback<MostPopularMedicationsResponse> callback) {
-    apiCallsHandler.getMostPopularMedications(indNbr, contractNo, country, language, password,
-        callback);
-  }
+  void getMostPopularMedications(String indNbr, String contractNo, String country,
+      String language, String password, Callback<MostPopularMedicationsResponse> callback);
 
-  public void searchMedicines(String indNbr, String contractNo, String country, String language,
-      String password, String key, Callback<SearchMedicinesResponse> callback) {
-    apiCallsHandler.searchMedicines(indNbr, contractNo, country, language, password, key, callback);
-  }
+  void searchMedicines(String indNbr, String contractNo, String country, String language,
+      String password, String key, Callback<SearchMedicinesResponse> callback);
 
-  public void insuranceUserLogin(String indNbr, String country, String language, String password,
-      Callback<InsuranceLoginResponse> callback) {
-    apiCallsHandler.insuranceUserLogin(indNbr, country, language, password, callback);
-  }
+  void insuranceUserLogin(String indNbr, String country, String language, String password,
+      Callback<InsuranceLoginResponse> callback);
 
-  public void getCoverageDescription(String contractNo, String indNbr,
-      Callback<CertainPDFResponse> callback) {
-    apiCallsHandler.getCoverageDescription(contractNo, indNbr, callback);
-  }
+  void getCoverageDescription(String contractNo, String indNbr,
+      Callback<CertainPDFResponse> callback);
 
-  public void getMembersGuide(String contractNo, String indNbr,
-      Callback<CertainPDFResponse> callback) {
-    apiCallsHandler.getMembersGuide(contractNo, indNbr, callback);
-  }
+  void getMembersGuide(String contractNo, String indNbr,
+      Callback<CertainPDFResponse> callback);
 
-  public void updateInsurancePassword(String contractNo, String oldPassword, String newPassword,
-      String email, String mobileNumber, Callback<UpdateInsurancePasswordResponse> callback) {
-    apiCallsHandler.updateInsurancePassword(contractNo, oldPassword, newPassword, email,
-        mobileNumber, callback);
-  }
+  void updateInsurancePassword(String contractNo, String oldPassword, String newPassword,
+      String email, String mobileNumber, Callback<UpdateInsurancePasswordResponse> callback);
 
-  public void getCardDetails(String contractNo, Callback<CertainPDFResponse> callback) {
-    apiCallsHandler.getCardDetails(contractNo, callback);
-  }
+  void getCardDetails(String contractNo, Callback<CertainPDFResponse> callback);
 
-  public void getSubCategories(String contractNo, Callback<SubCategoriesResponse> callback) {
-    apiCallsHandler.getSubCategories(contractNo, callback);
-  }
+  void getSubCategories(String contractNo, Callback<SubCategoriesResponse> callback);
 
-  public void getNearbyClinics(String contractNo, String providerTypesCode, int searchCtry,
+  void getNearbyClinics(String contractNo, String providerTypesCode, int searchCtry,
       double longitude, double latitude, int fetchClosest,
-      Callback<GetNearbyClinicsResponse> callback) {
-    apiCallsHandler.getNearbyClinics(contractNo, providerTypesCode, searchCtry, longitude, latitude,
-        fetchClosest, callback);
-  }
+      Callback<GetNearbyClinicsResponse> callback);
 
-  public void createNewRequest(RequestBody contractNo, RequestBody categ, RequestBody subCategId,
+  void createNewRequest(RequestBody contractNo, RequestBody categ, RequestBody subCategId,
       RequestBody requestTypeId, RequestBody claimedAmount, RequestBody currencyCode,
       RequestBody serviceDate, RequestBody providerCode, RequestBody remarks,
-      Map<String, RequestBody> attachements, final Callback<CreateNewRequestResponse> callback) {
-    apiCallsHandler.createNewRequest(contractNo, categ, subCategId, requestTypeId, claimedAmount,
-        currencyCode, serviceDate, providerCode, remarks, attachements, callback);
-  }
+      Map<String, RequestBody> attachements, final Callback<CreateNewRequestResponse> callback);
 
-  public void createNewInquiryComplaint(RequestBody contractNo, RequestBody category,
+  void createNewInquiryComplaint(RequestBody contractNo, RequestBody category,
       RequestBody subcategory, RequestBody title, RequestBody area, RequestBody crm_country,
-      Map<String, RequestBody> attachements, final Callback<CreateNewRequestResponse> callback) {
-    apiCallsHandler.createNewInquiryComplaint(contractNo, category, subcategory, title, area,
-        crm_country, attachements, callback);
-  }
+      Map<String, RequestBody> attachements, final Callback<CreateNewRequestResponse> callback);
 
-  public void getCountriesList(final Callback<CountriesListResponse> callback) {
-    apiCallsHandler.getCountriesList(callback);
-  }
+  void getCountriesList(final Callback<CountriesListResponse> callback);
 
-  public void getCRMCategories(RequestBody contractNo,
-      final Callback<CRMCategoriesResponse> callback) {
-    apiCallsHandler.getCRMCategories(contractNo, callback);
-  }
+  void getCRMCategories(RequestBody contractNo,
+      final Callback<CRMCategoriesResponse> callback);
 
-  public void getClaimsList(String contractNo, String requestType,
-      final Callback<ClaimsListResponse> callback) {
-    apiCallsHandler.getClaimslist(contractNo, requestType, callback);
-  }
+  void getClaimsList(String contractNo, String requestType,
+      final Callback<ClaimsListResponse> callback);
 
-  public void getClaimslistDetails(String contractNo, String requestType, String claimId,
-      final Callback<ClaimListDetailsResponse> callback) {
-    apiCallsHandler.getClaimslistDetails(contractNo, requestType, claimId, callback);
-  }
+  void getClaimslistDetails(String contractNo, String requestType, String claimId,
+      final Callback<ClaimListDetailsResponse> callback);
 
-  public void getChronicTreatmentDetails(String contractNo, String requestType, String claimId,
-      final Callback<ChronicTreatmentDetailsResponse> callback) {
-    apiCallsHandler.getChronicTreatmentDetails(contractNo, requestType, claimId, callback);
-  }
+  void getChronicTreatmentDetails(String contractNo, String requestType, String claimId,
+      final Callback<ChronicTreatmentDetailsResponse> callback);
 
-  public void getChronicTreatmentsList(String contractNo, String requestType,
-      final Callback<ChronicTreatmentListResponse> callback) {
-    apiCallsHandler.getChronicTreatmentsList(contractNo, requestType, callback);
-  }
+  void getChronicTreatmentsList(String contractNo, String requestType,
+      final Callback<ChronicTreatmentListResponse> callback);
 
-  public void getSnapshot(String contractNo, String period,
-      final Callback<CertainPDFResponse> callback) {
-    apiCallsHandler.getSnapshot(contractNo, period, callback);
-  }
+  void getSnapshot(String contractNo, String period,
+      final Callback<CertainPDFResponse> callback);
 
-  public void getInquiriesList(String incidentId, String crm_country,
-      final Callback<InquiriesListResponse> callback) {
-    apiCallsHandler.getInquiriesList(incidentId, crm_country, callback);
-  }
+  void getInquiriesList(String incidentId, String crm_country,
+      final Callback<InquiriesListResponse> callback);
 
-  public void getCounsellingInformation(final Callback<CounsellingInformationResponse> callback) {
-    apiCallsHandler.getCounsellingInformation(callback);
-  }
+  void getCounsellingInformation(final Callback<CounsellingInformationResponse> callback);
 
-  public void getCRMIncidentNotes(String incidentId, final Callback<CRMNotesResponse> callback) {
-    apiCallsHandler.getCRMIncidentNotes(incidentId, callback);
-  }
+  void getCRMIncidentNotes(String incidentId, final Callback<CRMNotesResponse> callback);
 
-  public void sendInsurancePasswordResetLink(String email, Callback<DefaultGetResponse> callback) {
-    apiCallsHandler.sendInsurancePasswordResetLink(email, callback);
-  }
+  void sendInsurancePasswordResetLink(String email, Callback<DefaultGetResponse> callback);
 
-  public void addCRMNote(String incidentId, String subject, String noteText, String mimeType,
-      String fileName, String documentBody, final Callback<AddCRMNoteResponse> callback) {
-    apiCallsHandler.addCRMNote(incidentId, subject, noteText, mimeType, fileName, documentBody,
-        callback);
-  }
+  void addCRMNote(String incidentId, String subject, String noteText, String mimeType,
+      String fileName, String documentBody, final Callback<AddCRMNoteResponse> callback);
 }

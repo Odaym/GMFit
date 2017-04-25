@@ -2,7 +2,7 @@ package com.mcsaatchi.gmfit.fitness.fragments;
 
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
+import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandlerImpl;
 import com.mcsaatchi.gmfit.architecture.rest.ChartMetricBreakdownResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ChartMetricBreakdownResponseDatum;
 import com.mcsaatchi.gmfit.architecture.rest.DefaultGetResponse;
@@ -25,11 +25,11 @@ import timber.log.Timber;
 class FitnessFragmentPresenter extends BaseFragmentPresenter {
   private FitnessFragmentView view;
   private RuntimeExceptionDao<FitnessWidget, Integer> fitnessWidgetsDAO;
-  private DataAccessHandler dataAccessHandler;
+  private DataAccessHandlerImpl dataAccessHandler;
 
   FitnessFragmentPresenter(FitnessFragmentView view,
       RuntimeExceptionDao<FitnessWidget, Integer> fitnessWidgetsDAO,
-      DataAccessHandler dataAccessHandler) {
+      DataAccessHandlerImpl dataAccessHandler) {
     this.view = view;
     this.fitnessWidgetsDAO = fitnessWidgetsDAO;
     this.dataAccessHandler = dataAccessHandler;

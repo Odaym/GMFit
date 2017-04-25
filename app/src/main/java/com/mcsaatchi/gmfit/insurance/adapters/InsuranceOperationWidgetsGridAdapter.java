@@ -13,8 +13,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.GMFitApplication;
-import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
+import com.mcsaatchi.gmfit.architecture.classes.GMFitApplication;
+import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandlerImpl;
 import com.mcsaatchi.gmfit.architecture.rest.CertainPDFResponse;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.insurance.activities.approval_request.ApprovalRequestsTrackActivity;
@@ -48,7 +48,7 @@ public class InsuranceOperationWidgetsGridAdapter
   private static final int CHRONIC_ITEM = 2;
   private static final int INQUIRY_REQUESTS_ITEM = 3;
 
-  @Inject DataAccessHandler dataAccessHandler;
+  @Inject DataAccessHandlerImpl dataAccessHandler;
   @Inject SharedPreferences prefs;
 
   private ArrayList<InsuranceOperationWidget> widgetsMap;

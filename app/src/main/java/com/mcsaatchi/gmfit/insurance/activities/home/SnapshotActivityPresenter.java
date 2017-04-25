@@ -1,7 +1,7 @@
 package com.mcsaatchi.gmfit.insurance.activities.home;
 
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
+import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandlerImpl;
 import com.mcsaatchi.gmfit.architecture.rest.CertainPDFResponse;
 import com.mcsaatchi.gmfit.common.activities.BaseActivityPresenter;
 import retrofit2.Call;
@@ -10,9 +10,9 @@ import retrofit2.Response;
 
 class SnapshotActivityPresenter {
   private SnapshotActivityView view;
-  private DataAccessHandler dataAccessHandler;
+  private DataAccessHandlerImpl dataAccessHandler;
 
-  SnapshotActivityPresenter(SnapshotActivityView view, DataAccessHandler dataAccessHandler) {
+  SnapshotActivityPresenter(SnapshotActivityView view, DataAccessHandlerImpl dataAccessHandler) {
     this.view = view;
     this.dataAccessHandler = dataAccessHandler;
   }

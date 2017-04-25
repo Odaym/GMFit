@@ -1,7 +1,7 @@
 package com.mcsaatchi.gmfit.insurance.activities.chronic;
 
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
+import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandlerImpl;
 import com.mcsaatchi.gmfit.architecture.rest.ChronicTreatmentDetailsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ChronicTreatmentDetailsResponseMedicationItem;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
@@ -13,10 +13,10 @@ import retrofit2.Response;
 
 class ChronicDetailsActivityPresenter extends BaseActivityPresenter {
   private ChronicDetailsActivityView view;
-  private DataAccessHandler dataAccessHandler;
+  private DataAccessHandlerImpl dataAccessHandler;
 
   ChronicDetailsActivityPresenter(ChronicDetailsActivityView view,
-      DataAccessHandler dataAccessHandler) {
+      DataAccessHandlerImpl dataAccessHandler) {
     this.view = view;
     this.dataAccessHandler = dataAccessHandler;
   }

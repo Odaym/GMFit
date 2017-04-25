@@ -1,6 +1,6 @@
 package com.mcsaatchi.gmfit.common.activities;
 
-import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
+import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandlerImpl;
 import com.mcsaatchi.gmfit.architecture.rest.ChartsBySectionResponse;
 import com.mcsaatchi.gmfit.architecture.rest.ChartsBySectionResponseDatum;
 import com.mcsaatchi.gmfit.architecture.rest.DefaultGetResponse;
@@ -13,8 +13,8 @@ import timber.log.Timber;
 public class AddNewChartActivityPresenter extends BaseActivityPresenter {
 
   private AddNewChartActivityView view;
-  private DataAccessHandler dataAccessHandler;
-  AddNewChartActivityPresenter(AddNewChartActivityView view, DataAccessHandler dataAccessHandler) {
+  private DataAccessHandlerImpl dataAccessHandler;
+  AddNewChartActivityPresenter(AddNewChartActivityView view, DataAccessHandlerImpl dataAccessHandler) {
     this.view = view;
     this.dataAccessHandler = dataAccessHandler;
   }

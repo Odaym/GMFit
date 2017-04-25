@@ -15,8 +15,8 @@ import android.view.ViewGroup;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.GMFitApplication;
-import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
+import com.mcsaatchi.gmfit.architecture.classes.GMFitApplication;
+import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandlerImpl;
 import com.mcsaatchi.gmfit.architecture.rest.InsuranceLoginResponseInnerData;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.classes.NonSwipeableViewPager;
@@ -27,7 +27,7 @@ import javax.inject.Inject;
 
 public class InsuranceFragment extends BaseFragment
     implements InsuranceFragmentPresenter.InsuranceFragmentView {
-  @Inject DataAccessHandler dataAccessHandler;
+  @Inject DataAccessHandlerImpl dataAccessHandler;
   @Inject SharedPreferences prefs;
   @Bind(R.id.pager) NonSwipeableViewPager pager;
   @Bind(R.id.tabs) TabLayout tabs;

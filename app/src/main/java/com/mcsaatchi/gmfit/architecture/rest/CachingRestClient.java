@@ -1,7 +1,7 @@
 package com.mcsaatchi.gmfit.architecture.rest;
 
 import android.util.Log;
-import com.mcsaatchi.gmfit.architecture.GMFitApplication;
+import com.mcsaatchi.gmfit.architecture.classes.GMFitApplication;
 import com.mcsaatchi.gmfit.common.Constants;
 import java.io.File;
 import java.util.concurrent.TimeUnit;

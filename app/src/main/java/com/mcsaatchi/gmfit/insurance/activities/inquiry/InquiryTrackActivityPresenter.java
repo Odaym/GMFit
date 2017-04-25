@@ -1,7 +1,7 @@
 package com.mcsaatchi.gmfit.insurance.activities.inquiry;
 
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
+import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandlerImpl;
 import com.mcsaatchi.gmfit.architecture.rest.InquiriesListResponse;
 import com.mcsaatchi.gmfit.architecture.rest.InquiriesListResponseInnerData;
 import com.mcsaatchi.gmfit.common.activities.BaseActivityPresenter;
@@ -13,10 +13,10 @@ import retrofit2.Response;
 
 class InquiryTrackActivityPresenter extends BaseActivityPresenter {
   private InquiryTrackActivityView view;
-  private DataAccessHandler dataAccessHandler;
+  private DataAccessHandlerImpl dataAccessHandler;
 
   InquiryTrackActivityPresenter(InquiryTrackActivityView view,
-      DataAccessHandler dataAccessHandler) {
+      DataAccessHandlerImpl dataAccessHandler) {
     this.view = view;
     this.dataAccessHandler = dataAccessHandler;
   }

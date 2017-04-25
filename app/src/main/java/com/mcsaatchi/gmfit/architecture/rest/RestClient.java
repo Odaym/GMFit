@@ -2,7 +2,7 @@ package com.mcsaatchi.gmfit.architecture.rest;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import com.mcsaatchi.gmfit.architecture.GMFitApplication;
+import com.mcsaatchi.gmfit.architecture.classes.GMFitApplication;
 import com.mcsaatchi.gmfit.common.Constants;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

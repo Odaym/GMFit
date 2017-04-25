@@ -1,8 +1,8 @@
 package com.mcsaatchi.gmfit.architecture.dagger;
 
-import com.mcsaatchi.gmfit.architecture.GMFitApplication;
+import com.mcsaatchi.gmfit.architecture.classes.GMFitApplication;
 import com.mcsaatchi.gmfit.architecture.data_access.ApiCallsHandler;
-import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
+import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandlerImpl;
 import com.mcsaatchi.gmfit.architecture.rest.RestClient;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.fitness.fragments.FitnessFragment;
@@ -48,7 +48,7 @@ public interface AppComponent {
 
   void inject(InsuranceFragment insuranceFragment);
 
-  void inject(DataAccessHandler dataAccessHaFndler);
+  void inject(DataAccessHandlerImpl dataAccessHaFndler);
 
   void inject(NutritionFragment nutrition_fragment);
 

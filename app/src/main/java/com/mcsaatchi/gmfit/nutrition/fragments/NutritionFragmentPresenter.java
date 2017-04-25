@@ -1,7 +1,7 @@
 package com.mcsaatchi.gmfit.nutrition.fragments;
 
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
+import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandlerImpl;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponseChart;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponseChartData;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponseWidget;
@@ -29,9 +29,9 @@ import timber.log.Timber;
 
 class NutritionFragmentPresenter extends BaseFragmentPresenter {
   private NutritionFragmentView view;
-  private DataAccessHandler dataAccessHandler;
+  private DataAccessHandlerImpl dataAccessHandler;
 
-  NutritionFragmentPresenter(NutritionFragmentView view, DataAccessHandler dataAccessHandler) {
+  NutritionFragmentPresenter(NutritionFragmentView view, DataAccessHandlerImpl dataAccessHandler) {
     this.view = view;
     this.dataAccessHandler = dataAccessHandler;
   }

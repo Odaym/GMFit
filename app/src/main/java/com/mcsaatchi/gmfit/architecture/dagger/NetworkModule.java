@@ -2,7 +2,7 @@ package com.mcsaatchi.gmfit.architecture.dagger;
 
 import android.content.Context;
 import com.mcsaatchi.gmfit.architecture.data_access.ApiCallsHandler;
-import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
+import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandlerImpl;
 import com.mcsaatchi.gmfit.architecture.rest.RestClient;
 import dagger.Module;
 import dagger.Provides;
@@ -20,7 +20,7 @@ import javax.inject.Singleton;
     return new RestClient(app);
   }
 
-  @Provides @Singleton DataAccessHandler provideDataAccessHandler(Context app) {
-    return new DataAccessHandler(app);
+  @Provides @Singleton DataAccessHandlerImpl provideDataAccessHandler(Context app) {
+    return new DataAccessHandlerImpl(app);
   }
 }

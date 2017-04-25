@@ -1,7 +1,7 @@
 package com.mcsaatchi.gmfit.nutrition.activities;
 
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
+import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandlerImpl;
 import com.mcsaatchi.gmfit.architecture.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.architecture.rest.RecentMealsResponse;
 import com.mcsaatchi.gmfit.architecture.rest.RecentMealsResponseBody;
@@ -17,9 +17,9 @@ import retrofit2.Response;
 
 class AddNewMealItemActivityPresenter extends BaseActivityPresenter {
   private AddNewMealItemView view;
-  private DataAccessHandler dataAccessHandler;
+  private DataAccessHandlerImpl dataAccessHandler;
 
-  AddNewMealItemActivityPresenter(AddNewMealItemView view, DataAccessHandler dataAccessHandler) {
+  AddNewMealItemActivityPresenter(AddNewMealItemView view, DataAccessHandlerImpl dataAccessHandler) {
     this.view = view;
     this.dataAccessHandler = dataAccessHandler;
   }

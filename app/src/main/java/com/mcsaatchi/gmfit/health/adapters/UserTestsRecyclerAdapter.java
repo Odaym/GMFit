@@ -10,8 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.GMFitApplication;
-import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
+import com.mcsaatchi.gmfit.architecture.classes.GMFitApplication;
+import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandlerImpl;
 import com.mcsaatchi.gmfit.architecture.otto.DeletedMealEntryEvent;
 import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
 import com.mcsaatchi.gmfit.architecture.otto.MedicalTestEditCreateEvent;
@@ -33,7 +33,7 @@ public class UserTestsRecyclerAdapter
     extends RecyclerView.Adapter<UserTestsRecyclerAdapter.MyViewHolder>
     implements DragSwipeItemTouchHelperAdapter {
 
-  @Inject DataAccessHandler dataAccessHandler;
+  @Inject DataAccessHandlerImpl dataAccessHandler;
   private List<TakenMedicalTestsResponseBody> userTests;
   private Context context;
 

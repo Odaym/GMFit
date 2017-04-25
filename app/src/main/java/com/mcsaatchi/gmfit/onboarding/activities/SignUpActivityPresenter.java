@@ -1,7 +1,7 @@
 package com.mcsaatchi.gmfit.onboarding.activities;
 
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
+import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandlerImpl;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponse;
 import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponseInnerBody;
 import com.mcsaatchi.gmfit.architecture.rest.MetaTextsResponse;
@@ -12,9 +12,9 @@ import retrofit2.Response;
 
 class SignUpActivityPresenter {
   private SignUpActivityView view;
-  private DataAccessHandler dataAccessHandler;
+  private DataAccessHandlerImpl dataAccessHandler;
 
-  SignUpActivityPresenter(SignUpActivityView view, DataAccessHandler dataAccessHandler) {
+  SignUpActivityPresenter(SignUpActivityView view, DataAccessHandlerImpl dataAccessHandler) {
     this.view = view;
     this.dataAccessHandler = dataAccessHandler;
   }

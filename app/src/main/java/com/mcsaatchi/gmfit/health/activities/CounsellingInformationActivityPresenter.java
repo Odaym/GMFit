@@ -1,7 +1,7 @@
 package com.mcsaatchi.gmfit.health.activities;
 
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
+import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandlerImpl;
 import com.mcsaatchi.gmfit.architecture.rest.CounsellingInformationResponse;
 import com.mcsaatchi.gmfit.common.activities.BaseActivityPresenter;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
@@ -11,10 +11,10 @@ import retrofit2.Response;
 
 class CounsellingInformationActivityPresenter extends BaseActivityPresenter {
   private CounsellingInformationActivityView view;
-  private DataAccessHandler dataAccessHandler;
+  private DataAccessHandlerImpl dataAccessHandler;
 
   CounsellingInformationActivityPresenter(CounsellingInformationActivityView view,
-      DataAccessHandler dataAccessHandler) {
+      DataAccessHandlerImpl dataAccessHandler) {
     this.view = view;
     this.dataAccessHandler = dataAccessHandler;
   }

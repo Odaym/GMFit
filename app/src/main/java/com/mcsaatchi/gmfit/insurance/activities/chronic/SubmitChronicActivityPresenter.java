@@ -1,6 +1,6 @@
 package com.mcsaatchi.gmfit.insurance.activities.chronic;
 
-import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandler;
+import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandlerImpl;
 import com.mcsaatchi.gmfit.architecture.rest.CreateNewRequestResponse;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.common.activities.BaseActivityPresenter;
@@ -13,10 +13,10 @@ import timber.log.Timber;
 
 class SubmitChronicActivityPresenter extends BaseActivityPresenter {
   private SubmitChronicActivityView view;
-  private DataAccessHandler dataAccessHandler;
+  private DataAccessHandlerImpl dataAccessHandler;
 
   SubmitChronicActivityPresenter(SubmitChronicActivityView view,
-      DataAccessHandler dataAccessHandler) {
+      DataAccessHandlerImpl dataAccessHandler) {
     this.view = view;
     this.dataAccessHandler = dataAccessHandler;
   }
