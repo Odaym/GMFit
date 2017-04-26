@@ -19,6 +19,7 @@ import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import com.andreabaccega.widget.FormEditText;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.rest.SubCategoriesResponseDatum;
 import com.mcsaatchi.gmfit.common.Constants;
@@ -60,10 +61,10 @@ public class SubmitReimbursementActivity extends BaseActivity
   @Bind(R.id.otherDocumentsImagesPicker) CustomAttachmentPicker otherDocumentsImagesPicker;
   @Bind(R.id.currencyLayout) LinearLayout currencyLayout;
   @Bind(R.id.currencyLabel) TextView currencyLabel;
-  @Bind(R.id.amountClaimedET) EditText amountClaimedET;
+  @Bind(R.id.amountClaimedET) FormEditText amountClaimedET;
   @Bind(R.id.remarksET) EditText remarksET;
 
-  private boolean medical = false, original = false, identity = false;
+  private ProgressDialog waitingDialog;
 
   private ArrayList<String> imagePaths = new ArrayList<>();
   private SubmitReimbursementActivityPresenter presenter;
@@ -188,6 +189,10 @@ public class SubmitReimbursementActivity extends BaseActivity
     finish();
   }
 
+  @Override public void dismissWaitingDialog() {
+    waitingDialog.dismiss();
+  }
+
   @OnClick(R.id.submitReimbursementBTN) public void handleSubmitReimbursement() {
     if (imagePaths.isEmpty()) {
       final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
@@ -197,7 +202,7 @@ public class SubmitReimbursementActivity extends BaseActivity
           (dialog, which) -> dialog.dismiss());
       alertDialog.show();
     } else {
-      final ProgressDialog waitingDialog = new ProgressDialog(this);
+      waitingDialog = new ProgressDialog(this);
       waitingDialog.setTitle(getResources().getString(R.string.submit_new_reimbursement));
       waitingDialog.setMessage(
           getResources().getString(R.string.uploading_attachments_dialog_message));
@@ -258,7 +263,8 @@ public class SubmitReimbursementActivity extends BaseActivity
               photoFile = null;
               try {
                 photoFile = ImageHandler.createImageFile(ImageHandler.constructImageFilename());
-                photoFileUri = FileProvider.getUriForFile(this, getApplicationContext().getPackageName() + ".provider", photoFile);
+                photoFileUri = FileProvider.getUriForFile(this,
+                    getApplicationContext().getPackageName() + ".provider", photoFile);
               } catch (IOException ex) {
                 ex.printStackTrace();
               }
@@ -282,7 +288,8 @@ public class SubmitReimbursementActivity extends BaseActivity
     for (int i = 0; i < imagePaths.size(); i++) {
       if (imagePaths.get(i) != null) {
         imageParts.put("attachements[" + i + "][content]", Helpers.toRequestBody(
-            Base64.encodeToString(ImageHandler.turnImageToByteArray(imagePaths.get(i)), Base64.NO_WRAP)));
+            Base64.encodeToString(ImageHandler.turnImageToByteArray(imagePaths.get(i)),
+                Base64.NO_WRAP)));
         imageParts.put("attachements[" + i + "][documType]", Helpers.toRequestBody("2"));
         imageParts.put("attachements[" + i + "][name]", Helpers.toRequestBody(imagePaths.get(i)));
         imageParts.put("attachements[" + i + "][id]", Helpers.toRequestBody(String.valueOf(i + 1)));

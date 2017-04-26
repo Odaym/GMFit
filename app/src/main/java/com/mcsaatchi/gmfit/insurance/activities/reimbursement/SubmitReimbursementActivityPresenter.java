@@ -49,7 +49,7 @@ class SubmitReimbursementActivityPresenter extends BaseActivityPresenter {
                 break;
             }
 
-            view.callDismissWaitingDialog();
+            view.dismissWaitingDialog();
           }
 
           @Override public void onFailure(Call<CreateNewRequestResponse> call, Throwable t) {
@@ -82,5 +82,7 @@ class SubmitReimbursementActivityPresenter extends BaseActivityPresenter {
     void populateSubCategories(List<SubCategoriesResponseDatum> subCategories);
 
     void openReimbursementDetailsActivity(Integer claimId);
+
+    void dismissWaitingDialog();
   }
 }

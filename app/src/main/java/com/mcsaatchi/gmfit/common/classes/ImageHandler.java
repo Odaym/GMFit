@@ -24,7 +24,7 @@ public class ImageHandler {
   public static byte[] turnImageToByteArray(String imagePath) {
     Bitmap bm = BitmapFactory.decodeFile(imagePath);
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    bm.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+    bm.compress(Bitmap.CompressFormat.JPEG, 50, baos);
 
     return baos.toByteArray();
   }
