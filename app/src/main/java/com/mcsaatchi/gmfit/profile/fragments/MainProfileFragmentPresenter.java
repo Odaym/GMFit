@@ -26,7 +26,8 @@ class MainProfileFragmentPresenter extends BaseFragmentPresenter {
   private MainProfileFragmentView view;
   private DataAccessHandlerImpl dataAccessHandler;
 
-  MainProfileFragmentPresenter(MainProfileFragmentView view, DataAccessHandlerImpl dataAccessHandler) {
+  MainProfileFragmentPresenter(MainProfileFragmentView view,
+      DataAccessHandlerImpl dataAccessHandler) {
     this.view = view;
     this.dataAccessHandler = dataAccessHandler;
   }
@@ -75,18 +76,19 @@ class MainProfileFragmentPresenter extends BaseFragmentPresenter {
   void updateUserProfile(RequestBody finalDateOfBirth, RequestBody bloodType,
       RequestBody nationality, HashMap<String, RequestBody> medicalConditions,
       RequestBody measurementSystem, RequestBody goalId, RequestBody activityLevelId,
-      RequestBody finalGender, RequestBody height, RequestBody weight, RequestBody onboard) {
+      RequestBody finalGender, RequestBody height, RequestBody weight, RequestBody onboard,
+      boolean profilePictureChanged) {
 
     view.callDisplayWaitingDialog(R.string.updating_user_profile_dialog_title);
 
     dataAccessHandler.updateUserProfile(finalDateOfBirth, bloodType, nationality, medicalConditions,
-        measurementSystem, goalId, activityLevelId, finalGender, height, weight,
-        onboard, new Callback<DefaultGetResponse>() {
+        measurementSystem, goalId, activityLevelId, finalGender, height, weight, onboard,
+        new Callback<DefaultGetResponse>() {
           @Override public void onResponse(Call<DefaultGetResponse> call,
               Response<DefaultGetResponse> response) {
             switch (response.code()) {
               case 200:
-                view.updateProfilePicture();
+                if (profilePictureChanged) view.updateProfilePicture();
                 break;
             }
 
@@ -108,6 +110,8 @@ class MainProfileFragmentPresenter extends BaseFragmentPresenter {
             view.displayPictureChangeSuccessful();
             break;
         }
+
+        view.callDismissWaitingDialog();
       }
 
       @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {

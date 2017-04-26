@@ -29,7 +29,7 @@ import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.MainActivity;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.common.fragments.BaseFragment;
-import com.mcsaatchi.gmfit.onboarding.activities.MedicalConditionsChoiceListActivity;
+import com.mcsaatchi.gmfit.onboarding.activities.MedicalConditionsChoiceActivity;
 import com.mcsaatchi.gmfit.onboarding.activities.SetupProfileFragmentsPresenter;
 import com.mcsaatchi.gmfit.onboarding.adapters.TextualSpinnersAdapter;
 import com.mcsaatchi.gmfit.onboarding.models.MedicalCondition;
@@ -286,7 +286,7 @@ public class SetupProfile4Fragment extends BaseFragment
   }
 
   @OnClick(R.id.medicalConditionsValueTV) public void handleMedicalConditionsLayoutPressed() {
-    Intent intent = new Intent(getActivity(), MedicalConditionsChoiceListActivity.class);
+    Intent intent = new Intent(getActivity(), MedicalConditionsChoiceActivity.class);
     intent.putExtra("MEDICAL_CONDITIONS", medicalConditions);
     startActivityForResult(intent, MEDICAL_CONDITIONS_SELECTED);
   }

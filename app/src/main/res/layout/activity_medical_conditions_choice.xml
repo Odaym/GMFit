@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/profile_blue"
@@ -8,10 +9,17 @@
 
   <include layout="@layout/app_toolbar"/>
 
-  <android.support.v7.widget.RecyclerView
-      android:id="@+id/medicalConditionsRecyclerView"
+  <ScrollView
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:background="@color/offwhite_background_gray"
-      />
+      >
+
+    <LinearLayout
+        android:id="@+id/medicalChoicesContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/offwhite_background_gray"
+        android:orientation="vertical"
+        />
+  </ScrollView>
 </LinearLayout>

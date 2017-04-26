@@ -48,7 +48,7 @@ import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.common.fragments.BaseFragment;
 import com.mcsaatchi.gmfit.onboarding.activities.LoginActivity;
-import com.mcsaatchi.gmfit.onboarding.activities.MedicalConditionsChoiceListActivity;
+import com.mcsaatchi.gmfit.onboarding.activities.MedicalConditionsChoiceActivity;
 import com.mcsaatchi.gmfit.onboarding.models.MedicalCondition;
 import com.mcsaatchi.gmfit.profile.activities.ChangePasswordActivity;
 import com.mcsaatchi.gmfit.profile.activities.ContactUsActivity;
@@ -183,7 +183,7 @@ public class MainProfileFragment extends BaseFragment
     switch (requestCode) {
       case MEDICAL_CONDITIONS_SELECTED:
         if (data != null) {
-          String valueForCondition = null;
+          String valueForCondition = "";
 
           ArrayList<MedicalCondition> conditionsFromExtras =
               data.getExtras().getParcelableArrayList("MEDICAL_CONDITIONS");
@@ -191,12 +191,16 @@ public class MainProfileFragment extends BaseFragment
           if (conditionsFromExtras != null) {
             for (int i = 0; i < conditionsFromExtras.size(); i++) {
               if (conditionsFromExtras.get(i).isSelected()) {
-                medicalConditionIDs.add(conditionsFromExtras.get(i).getId());
-                valueForCondition = conditionsFromExtras.get(i).getMedicalCondition();
-              } else {
-                if (valueForCondition == null) valueForCondition = "None";
+                if (!conditionsFromExtras.get(i).getMedicalCondition().equals("None")) {
+                  medicalConditionIDs.add(conditionsFromExtras.get(i).getId());
+                  valueForCondition += conditionsFromExtras.get(i).getMedicalCondition() + ", ";
+                } else {
+                  valueForCondition += "None";
+                }
               }
             }
+
+            valueForCondition = valueForCondition.replaceAll(", $", "");
 
             medicalConditionsValueTV.setText(valueForCondition);
 
@@ -255,14 +259,20 @@ public class MainProfileFragment extends BaseFragment
         }
       }
 
+      String medicalConditionString = "";
       for (int i = 0; i < medicalConditions.size(); i++) {
-        if (userMedicalConditions.get(i).getSelected().equals("0")) {
-          medicalConditionsValueTV.setText("None");
-        } else {
-          medicalConditionsValueTV.setText(userMedicalConditions.get(i).getName());
-          break;
+        try {
+          if (userMedicalConditions.get(i).getSelected().equals("0")) {
+            medicalConditionsValueTV.setText("None");
+          } else {
+            medicalConditionString += userMedicalConditions.get(i).getName() + ", ";
+          }
+        } catch (IndexOutOfBoundsException ignored) {
         }
       }
+
+      medicalConditionString.replaceAll(", $", "");
+      medicalConditionsValueTV.setText(medicalConditionString);
 
       //Set the activity level
       if (prefs.getInt(Constants.EXTRAS_USER_PROFILE_ACTIVITY_LEVEL_ID, -1) == -1) {
@@ -598,7 +608,7 @@ public class MainProfileFragment extends BaseFragment
   }
 
   @OnClick(R.id.medicalConditionsLayout) public void handleMedicalConditionsLayoutPressed() {
-    Intent intent = new Intent(getActivity(), MedicalConditionsChoiceListActivity.class);
+    Intent intent = new Intent(getActivity(), MedicalConditionsChoiceActivity.class);
     intent.putExtra("MEDICAL_CONDITIONS", medicalConditions);
     startActivityForResult(intent, MEDICAL_CONDITIONS_SELECTED);
   }
@@ -713,7 +723,8 @@ public class MainProfileFragment extends BaseFragment
       photoFile = null;
       try {
         photoFile = createImageFile(constructImageFilename());
-        photoFileUri = FileProvider.getUriForFile(getActivity(), getApplicationContext().getPackageName() + ".provider", photoFile);
+        photoFileUri = FileProvider.getUriForFile(getActivity(),
+            getApplicationContext().getPackageName() + ".provider", photoFile);
       } catch (IOException ex) {
         ex.printStackTrace();
       }
@@ -806,6 +817,8 @@ public class MainProfileFragment extends BaseFragment
     float height = prefs.getFloat(Constants.EXTRAS_USER_PROFILE_HEIGHT, 180);
     float weight = prefs.getFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, 82);
 
+    Timber.d("Updating user profile");
+
     presenter.updateUserProfile(Helpers.toRequestBody(dateOfBirth),
         Helpers.toRequestBody(bloodType), Helpers.toRequestBody(nationality), medicalConditionParts,
         Helpers.toRequestBody(measurementSystem.toLowerCase()),
@@ -813,7 +826,8 @@ public class MainProfileFragment extends BaseFragment
         Helpers.toRequestBody(String.valueOf(activityLevelId)),
         Helpers.toRequestBody(String.valueOf(gender)),
         Helpers.toRequestBody(String.valueOf(height)),
-        Helpers.toRequestBody(String.valueOf(weight)), Helpers.toRequestBody("1"));
+        Helpers.toRequestBody(String.valueOf(weight)), Helpers.toRequestBody("1"),
+        profilePictureChanged);
   }
 
   private void updateUserPicture() {

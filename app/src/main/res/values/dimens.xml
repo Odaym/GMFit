@@ -127,7 +127,7 @@
   <dimen name="search_medications_hint_height">50dp</dimen>
 
   <!-- PROFILE SECTION -->
-  <dimen name="profile_value_fields_item_width">140dp</dimen>
+  <dimen name="profile_value_fields_item_width">200dp</dimen>
   <dimen name="profile_row_field_height">120dp</dimen>
   <dimen name="right_arrow_dimens">25dp</dimen>
   <dimen name="edit_profile_fields_width">150dp</dimen>

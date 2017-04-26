@@ -214,7 +214,7 @@
         <RelativeLayout
             android:id="@+id/medicalConditionsLayout"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/add_meal_item_layout_height"
+            android:layout_height="wrap_content"
             android:background="?android:attr/selectableItemBackground"
             android:clickable="true"
             android:focusable="true"
@@ -225,6 +225,7 @@
               android:id="@+id/medicalConditionsTitleTV"
               android:layout_width="@dimen/meal_item_name_width"
               android:layout_height="match_parent"
+              android:layout_centerVertical="true"
               android:ellipsize="end"
               android:gravity="center_vertical"
               android:maxLines="1"
@@ -234,10 +235,11 @@
           <TextView
               android:id="@+id/medicalConditionsValueTV"
               android:layout_width="@dimen/profile_value_fields_item_width"
-              android:layout_height="match_parent"
+              android:layout_height="@dimen/add_meal_item_layout_height"
               android:layout_alignParentEnd="true"
               android:gravity="end|center_vertical"
               android:paddingEnd="@dimen/default_margin_5"
+              android:textAppearance="?android:textAppearanceSmall"
               android:textColor="@color/fitness_dark_blue"
               />
 

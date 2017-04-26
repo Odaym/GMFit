@@ -18,7 +18,11 @@ import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
 import java.text.DateFormatSymbols;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import timber.log.Timber;
 
 public class EditProfileActivity extends BaseActivity
     implements EditProfileActivityPresenter.EditProfileActivityView,
@@ -37,7 +41,7 @@ public class EditProfileActivity extends BaseActivity
   @Bind(R.id.weightValueET) EditText weightValueET;
   @Bind(R.id.heightValueET) EditText heightValueET;
 
-  private String finalDOB = "";
+  private String finalDOB = null;
 
   private EditProfileActivityPresenter presenter;
 
@@ -147,10 +151,29 @@ public class EditProfileActivity extends BaseActivity
     String weightValue = weightValueET.getText().toString();
     String heightValue = heightValueET.getText().toString();
 
+    String DOBToSend = "";
+
+    if (finalDOB == null) {
+      try {
+        Date unformattedDOB = new SimpleDateFormat("MMM dd, yyyy").parse(
+            prefs.getString(Constants.EXTRAS_USER_PROFILE_DATE_OF_BIRTH, ""));
+
+        SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd");
+
+        DOBToSend = dt.format(unformattedDOB).toString();
+
+        Timber.d(DOBToSend + " is date");
+      } catch (ParseException e) {
+        e.printStackTrace();
+      }
+    } else {
+      DOBToSend = finalDOB;
+    }
+
     presenter.updateUserProfileExplicitly(
         Helpers.toRequestBody(firstNameValue + " " + lastNameValue),
         Helpers.toRequestBody(mobileNumberValue),
-        Helpers.toRequestBody(String.valueOf(genderValue)), Helpers.toRequestBody(finalDOB),
+        Helpers.toRequestBody(String.valueOf(genderValue)), Helpers.toRequestBody(DOBToSend),
         Helpers.toRequestBody(bloodTypeValue), Helpers.toRequestBody(String.valueOf(heightValue)),
         Helpers.toRequestBody(String.valueOf(weightValue)));
   }
