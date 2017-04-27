@@ -61,6 +61,11 @@ public class CustomPicker extends LinearLayout implements View.OnClickListener {
     datePickerDialog = new DatePickerDialog(context,
         (datePicker, year1, month1, dayOfMonth) -> datePickerClickListener.dateSet(year1, month1,
             dayOfMonth), year, month, day);
+
+    c.add(Calendar.YEAR, -25);
+
+    datePickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis() - 1000);
+    datePickerDialog.getDatePicker().setMinDate(c.getTimeInMillis());
   }
 
   private void setItemName(String itemName) {
@@ -68,6 +73,8 @@ public class CustomPicker extends LinearLayout implements View.OnClickListener {
   }
 
   public void setSelectedItem(String selected) {
+    if (!selected.contains("Choose")) itemSelectedTv.setAlpha(1f);
+
     itemSelectedTv.setText(selected);
   }
 

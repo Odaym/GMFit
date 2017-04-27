@@ -89,7 +89,10 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:background="@null"
+              android:hint="Enter Amount"
               android:inputType="numberDecimal"
+              android:paddingStart="@dimen/default_margin_3"
+              android:textAppearance="?android:textAppearanceSmall"
               android:textColor="@color/buttons_text_color"
               />
 

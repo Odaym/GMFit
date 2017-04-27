@@ -44,9 +44,10 @@
 
       <TextView
           android:id="@+id/item_selected"
-          android:layout_width="wrap_content"
+          android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_centerVertical="true"
+          android:gravity="end|center_vertical"
           />
     </RelativeLayout>
   </LinearLayout>

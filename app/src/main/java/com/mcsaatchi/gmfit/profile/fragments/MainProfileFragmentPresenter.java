@@ -82,8 +82,6 @@ class MainProfileFragmentPresenter extends BaseFragmentPresenter {
 
     view.callDisplayWaitingDialog(R.string.updating_user_profile_dialog_title);
 
-    Timber.d("Updating user profile inside Presenter");
-
     dataAccessHandler.updateUserProfile(finalDateOfBirth, bloodType, nationality, medicalConditions,
         measurementSystem, goalId, activityLevelId, finalGender, height, weight, onboard,
         new Callback<DefaultGetResponse>() {
@@ -91,8 +89,6 @@ class MainProfileFragmentPresenter extends BaseFragmentPresenter {
               Response<DefaultGetResponse> response) {
             switch (response.code()) {
               case 200:
-                Timber.d("Updating user profile SUCCEEDED");
-
                 if (profilePictureChanged) view.updateProfilePicture();
                 break;
             }

@@ -137,11 +137,17 @@ public class DateCarousel extends HorizontalScrollView {
       dateEntryLayout.setBackgroundColor(0);
       dateEntryLayout.setLayoutParams(new LinearLayout.LayoutParams(
           getResources().getDimensionPixelSize(R.dimen.date_carousel_unfocused_item_cell_width),
-          ViewGroup.LayoutParams.WRAP_CONTENT));
+          ViewGroup.LayoutParams.MATCH_PARENT));
 
       indicatorArrowIV.setVisibility(View.GONE);
       dayOfMonthTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
       monthOfYearTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+
+      dayOfMonthTV.setPadding(0, 40, 0, 20);
+
+      monthOfYearTV.setPadding(0, 0, 0, 20);
+
+
       dayOfMonthTV.setTypeface(null, Typeface.NORMAL);
       monthOfYearTV.setTypeface(null, Typeface.NORMAL);
     }
@@ -159,6 +165,11 @@ public class DateCarousel extends HorizontalScrollView {
     dateEntryLayout.setBackgroundColor(getResources().getColor(R.color.offwhite_transparent));
     dayOfMonthTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
     monthOfYearTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+
+    dayOfMonthTV.setPadding(0, 0, 0, 0);
+
+    monthOfYearTV.setPadding(0, 0, 0, 0);
+
     dayOfMonthTV.setTypeface(null, Typeface.BOLD);
     monthOfYearTV.setTypeface(null, Typeface.BOLD);
   }

@@ -22,7 +22,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import timber.log.Timber;
+import java.util.Locale;
 
 public class EditProfileActivity extends BaseActivity
     implements EditProfileActivityPresenter.EditProfileActivityView,
@@ -153,20 +153,25 @@ public class EditProfileActivity extends BaseActivity
 
     String DOBToSend = "";
 
-    Timber.d("finalDOB is : " + finalDOB);
-
     if (finalDOB == null) {
       try {
-        Date unformattedDOB = new SimpleDateFormat("MMM dd, yyyy").parse(
+        Date unformattedDOB = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault()).parse(
             prefs.getString(Constants.EXTRAS_USER_PROFILE_DATE_OF_BIRTH, ""));
 
-        SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
 
-        DOBToSend = dt.format(unformattedDOB).toString();
-
-        Timber.d(DOBToSend + " is date");
+        DOBToSend = dt.format(unformattedDOB);
       } catch (ParseException e) {
-        e.printStackTrace();
+        try {
+          Date unformattedDOB = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(
+              prefs.getString(Constants.EXTRAS_USER_PROFILE_DATE_OF_BIRTH, ""));
+
+          SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+
+          DOBToSend = dt.format(unformattedDOB);
+        } catch (ParseException e1) {
+          e1.printStackTrace();
+        }
       }
     } else {
       DOBToSend = finalDOB;
