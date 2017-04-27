@@ -27,8 +27,6 @@ class SubmitReimbursementActivityPresenter extends BaseActivityPresenter {
   void submitReimbursement(String contractNo, String category, String subCategoryId,
       String requestTypeId, String amountClaimed, String remarks,
       HashMap<String, RequestBody> attachements) {
-    view.callDisplayWaitingDialog(R.string.submit_new_reimbursement);
-
     dataAccessHandler.createNewRequest(Helpers.toRequestBody(contractNo),
         Helpers.toRequestBody(category), Helpers.toRequestBody(subCategoryId),
         Helpers.toRequestBody(requestTypeId), Helpers.toRequestBody(amountClaimed),
@@ -42,10 +40,12 @@ class SubmitReimbursementActivityPresenter extends BaseActivityPresenter {
               case 200:
                 view.openReimbursementDetailsActivity(
                     response.body().getData().getBody().getData().getRequestId());
+                view.finishActivity();
                 break;
               case 449:
                 view.displayRequestErrorDialog(
                     Helpers.provideErrorStringFromJSON(response.errorBody()));
+                view.dismissWaitingDialog();
                 break;
             }
 

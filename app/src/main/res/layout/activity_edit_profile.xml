@@ -49,9 +49,10 @@
             android:layout_height="match_parent"
             android:layout_alignParentEnd="true"
             android:background="@null"
-            android:gravity="center"
+            android:gravity="end|center_vertical"
             android:inputType="textNoSuggestions"
             android:paddingEnd="@dimen/activity_vertical_margin"
+            android:textAppearance="?android:textAppearanceSmall"
             android:textColor="@color/profile_blue"
             />
       </RelativeLayout>
@@ -86,9 +87,10 @@
             android:layout_height="match_parent"
             android:layout_alignParentEnd="true"
             android:background="@null"
-            android:gravity="center"
+            android:gravity="end|center_vertical"
             android:inputType="textNoSuggestions"
             android:paddingEnd="@dimen/activity_vertical_margin"
+            android:textAppearance="?android:textAppearanceSmall"
             android:textColor="@color/profile_blue"
             />
       </RelativeLayout>
@@ -123,8 +125,9 @@
             android:layout_height="match_parent"
             android:layout_alignParentEnd="true"
             android:enabled="false"
-            android:gravity="center"
+            android:gravity="end|center_vertical"
             android:paddingEnd="@dimen/activity_vertical_margin"
+            android:textAppearance="?android:textAppearanceSmall"
             android:textColor="@color/profile_blue"
             />
       </RelativeLayout>
@@ -159,9 +162,10 @@
             android:layout_height="match_parent"
             android:layout_alignParentEnd="true"
             android:background="@null"
-            android:gravity="center"
+            android:gravity="end|center_vertical"
             android:inputType="phone"
             android:paddingEnd="@dimen/activity_vertical_margin"
+            android:textAppearance="?android:textAppearanceSmall"
             android:textColor="@color/profile_blue"
             />
       </RelativeLayout>
@@ -195,8 +199,9 @@
             android:layout_width="@dimen/edit_profile_fields_width"
             android:layout_height="match_parent"
             android:layout_alignParentEnd="true"
-            android:gravity="center"
-            android:paddingEnd="@dimen/activity_vertical_margin"
+            android:gravity="end|center_vertical"
+            android:paddingEnd="@dimen/default_margin_4"
+            android:textAppearance="?android:textAppearanceSmall"
             android:textColor="@color/profile_blue"
             />
 
@@ -239,8 +244,9 @@
             android:layout_width="@dimen/edit_profile_fields_width"
             android:layout_height="match_parent"
             android:layout_alignParentEnd="true"
-            android:gravity="center"
-            android:paddingEnd="@dimen/activity_vertical_margin"
+            android:gravity="end|center_vertical"
+            android:paddingEnd="@dimen/default_margin_4"
+            android:textAppearance="?android:textAppearanceSmall"
             android:textColor="@color/profile_blue"
             />
 
@@ -283,8 +289,9 @@
             android:layout_width="@dimen/edit_profile_fields_width"
             android:layout_height="match_parent"
             android:layout_alignParentEnd="true"
-            android:gravity="center"
-            android:paddingEnd="@dimen/activity_vertical_margin"
+            android:gravity="end|center_vertical"
+            android:paddingEnd="@dimen/default_margin_4"
+            android:textAppearance="?android:textAppearanceSmall"
             android:textColor="@color/profile_blue"
             />
 
@@ -328,9 +335,10 @@
             android:layout_height="match_parent"
             android:layout_alignParentEnd="true"
             android:background="@null"
-            android:gravity="center"
+            android:gravity="end|center_vertical"
             android:inputType="numberDecimal"
-            android:paddingEnd="@dimen/activity_vertical_margin"
+            android:paddingEnd="@dimen/default_margin_4"
+            android:textAppearance="?android:textAppearanceSmall"
             android:textColor="@color/profile_blue"
             />
 
@@ -376,9 +384,10 @@
             android:layout_height="match_parent"
             android:layout_alignParentEnd="true"
             android:background="@null"
-            android:gravity="center"
+            android:gravity="end|center_vertical"
             android:inputType="numberDecimal"
-            android:paddingEnd="@dimen/activity_vertical_margin"
+            android:paddingEnd="@dimen/default_margin_4"
+            android:textAppearance="?android:textAppearanceSmall"
             android:textColor="@color/profile_blue"
             />
 

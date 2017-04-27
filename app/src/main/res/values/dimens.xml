@@ -61,6 +61,7 @@
   <!-- DASHBOARD CHARTS -->
   <dimen name="remove_chart_button_dimens">35dp</dimen>
   <dimen name="chart_height">190dp</dimen>
+  <dimen name="separator_push_from_top">235dp</dimen>
   <dimen name="chart_height_2">300dp</dimen>
   <dimen name="weight_chart_height">310dp</dimen>
   <dimen name="cardview_corner_radius">2dp</dimen>

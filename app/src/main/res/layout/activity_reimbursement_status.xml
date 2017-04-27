@@ -94,6 +94,13 @@
           />
 
       <com.mcsaatchi.gmfit.insurance.widget.CustomAttachmentPicker
+          android:id="@+id/originalReceiptImagesPicker"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          custom:header_text="Original Receipt"
+          />
+
+      <com.mcsaatchi.gmfit.insurance.widget.CustomAttachmentPicker
           android:id="@+id/identityCardImagesPicker"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"

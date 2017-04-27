@@ -56,9 +56,6 @@ public class InsuranceLoginFragment extends BaseFragment
 
     presenter = new InsuranceLoginFragmentPresenter(this, dataAccessHandler);
 
-    memberIdET.setText("2012250");
-    passwordET.setText("odayoday");
-
     allFields.add(memberIdET);
     allFields.add(passwordET);
 

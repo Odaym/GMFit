@@ -19,7 +19,6 @@ import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import com.andreabaccega.widget.FormEditText;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.rest.SubCategoriesResponseDatum;
 import com.mcsaatchi.gmfit.common.Constants;
@@ -61,7 +60,7 @@ public class SubmitReimbursementActivity extends BaseActivity
   @Bind(R.id.otherDocumentsImagesPicker) CustomAttachmentPicker otherDocumentsImagesPicker;
   @Bind(R.id.currencyLayout) LinearLayout currencyLayout;
   @Bind(R.id.currencyLabel) TextView currencyLabel;
-  @Bind(R.id.amountClaimedET) FormEditText amountClaimedET;
+  @Bind(R.id.amountClaimedET) EditText amountClaimedET;
   @Bind(R.id.remarksET) EditText remarksET;
 
   private ProgressDialog waitingDialog;
@@ -194,10 +193,31 @@ public class SubmitReimbursementActivity extends BaseActivity
   }
 
   @OnClick(R.id.submitReimbursementBTN) public void handleSubmitReimbursement() {
+    ArrayList<String> errorMessages = new ArrayList<>();
+
+    if (amountClaimedET.getText().toString().isEmpty()) {
+      errorMessages.add("The Amount field is required.");
+    }
+    if (serviceDateValue.isEmpty()) {
+      errorMessages.add("The Service Date field is required.");
+    }
+    if (subCategoryId.isEmpty()) {
+      errorMessages.add("The Subcategory field is required.");
+    }
     if (imagePaths.isEmpty()) {
+      errorMessages.add("You are required to attach some images.");
+    }
+
+    if (!errorMessages.isEmpty()) {
+      String finalErrorMessage = "";
+
+      for (String errorMessage : errorMessages) {
+        finalErrorMessage += errorMessage + "\n\n";
+      }
+
       final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
       alertDialog.setTitle(R.string.required_fields_dialog_title);
-      alertDialog.setMessage(getString(R.string.attachments_required_to_submit));
+      alertDialog.setMessage(finalErrorMessage);
       alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getResources().getString(R.string.ok),
           (dialog, which) -> dialog.dismiss());
       alertDialog.show();

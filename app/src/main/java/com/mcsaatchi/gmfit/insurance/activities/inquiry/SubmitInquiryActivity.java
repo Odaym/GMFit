@@ -26,7 +26,6 @@ import com.mcsaatchi.gmfit.architecture.rest.CRMCategoriesResponseDatum;
 import com.mcsaatchi.gmfit.architecture.rest.CreateNewRequestResponse;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
-import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.common.classes.ImageHandler;
 import com.mcsaatchi.gmfit.insurance.widget.CustomAttachmentPicker;
 import com.mcsaatchi.gmfit.insurance.widget.CustomPicker;
@@ -63,15 +62,13 @@ public class SubmitInquiryActivity extends BaseActivity {
   private File photoFile;
   private Uri photoFileUri;
 
-  private ArrayList<FormEditText> allFields = new ArrayList<>();
-
   private ImageView currentImageView;
 
   private ArrayList<String> imagePaths = new ArrayList<>();
   private List<CRMCategoriesResponseDatum> categoriesList;
 
-  private String category = "ecd80d97-27da-e511-80e3-005056983dee";
-  private String subcategory = "8402c6b4-27da-e511-80e3-005056983dee";
+  private String category = "";
+  private String subcategory = "";
   private String area = "local";
 
   public static RequestBody toRequestBody(String value) {
@@ -86,8 +83,6 @@ public class SubmitInquiryActivity extends BaseActivity {
     setupToolbar(getClass().getSimpleName(), toolbar, "Submit Complaint/Inquiry", true);
 
     getCRMCategories();
-
-    allFields.add(requestTitleTV);
 
     cardNumberET.setText(prefs.getString(Constants.EXTRAS_INSURANCE_USER_USERNAME, ""));
     fullNameET.setText(prefs.getString(Constants.EXTRAS_INSURANCE_FULL_NAME, ""));
@@ -139,7 +134,32 @@ public class SubmitInquiryActivity extends BaseActivity {
   }
 
   @OnClick(R.id.submitInquiryBTN) public void handleSubmitInquiry() {
-    if (Helpers.validateFields(allFields)) {
+    ArrayList<String> errorMessages = new ArrayList<>();
+
+    if (category.isEmpty()) {
+      errorMessages.add("The Category field is required.");
+    }
+    if (subcategory.isEmpty()) {
+      errorMessages.add("The Subcategory field is required.");
+    }
+
+    if (imagePaths.isEmpty()) {
+      errorMessages.add("You are required to attach some images.");
+    }
+    if (!errorMessages.isEmpty()) {
+      String finalErrorMessage = "";
+
+      for (String errorMessage : errorMessages) {
+        finalErrorMessage += errorMessage + "\n\n";
+      }
+
+      final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+      alertDialog.setTitle(R.string.required_fields_dialog_title);
+      alertDialog.setMessage(finalErrorMessage);
+      alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getResources().getString(R.string.ok),
+          (dialog, which) -> dialog.dismiss());
+      alertDialog.show();
+    } else {
       final ProgressDialog waitingDialog = new ProgressDialog(this);
       waitingDialog.setTitle(getResources().getString(R.string.submit_new_inquiry));
       waitingDialog.setCancelable(false);
@@ -199,7 +219,8 @@ public class SubmitInquiryActivity extends BaseActivity {
               photoFile = null;
               try {
                 photoFile = ImageHandler.createImageFile(ImageHandler.constructImageFilename());
-                photoFileUri = FileProvider.getUriForFile(this, getApplicationContext().getPackageName() + ".provider", photoFile);
+                photoFileUri = FileProvider.getUriForFile(this,
+                    getApplicationContext().getPackageName() + ".provider", photoFile);
               } catch (IOException ex) {
                 ex.printStackTrace();
               }
@@ -223,7 +244,8 @@ public class SubmitInquiryActivity extends BaseActivity {
     for (int i = 0; i < imagePaths.size(); i++) {
       if (imagePaths.get(i) != null) {
         imageParts.put("attachements[" + i + "][content]", toRequestBody(
-            Base64.encodeToString(ImageHandler.turnImageToByteArray(imagePaths.get(i)), Base64.NO_WRAP)));
+            Base64.encodeToString(ImageHandler.turnImageToByteArray(imagePaths.get(i)),
+                Base64.NO_WRAP)));
         imageParts.put("attachements[" + i + "][documType]", toRequestBody("2"));
         imageParts.put("attachements[" + i + "][name]", toRequestBody(imagePaths.get(i)));
         imageParts.put("attachements[" + i + "][id]", toRequestBody(String.valueOf(i + 1)));

@@ -16,7 +16,6 @@ import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandlerImpl;
 import com.mcsaatchi.gmfit.architecture.rest.DefaultGetResponse;
 import com.mcsaatchi.gmfit.architecture.timber.TimberReleaseTree;
 import com.mcsaatchi.gmfit.common.Constants;
-import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.onesignal.OneSignal;
 import io.fabric.sdk.android.Fabric;
 import javax.inject.Inject;
@@ -73,8 +72,6 @@ public class GMFitApplication extends Application {
     } else {
       Timber.plant(new TimberReleaseTree());
     }
-
-    addMealAlarms();
   }
 
   public AppComponent getAppComponent() {
@@ -85,17 +82,6 @@ public class GMFitApplication extends Application {
     ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
     NetworkInfo networkInfo = cm.getActiveNetworkInfo();
     return networkInfo != null && networkInfo.isConnected();
-  }
-
-  private void addMealAlarms() {
-    if (prefs.getBoolean(Constants.APP_FIRST_RUN, true)) {
-      prefs.edit().putBoolean(Constants.APP_FIRST_RUN, false).apply();
-      Helpers.setupAlarmForMeal(this, prefs, "Breakfast");
-      Helpers.setupAlarmForMeal(this, prefs, "Lunch");
-      Helpers.setupAlarmForMeal(this, prefs, "Dinner");
-    } else {
-      Timber.d("App has run before");
-    }
   }
 
   private void updateOneSignalToken(String userOneSignalId) {

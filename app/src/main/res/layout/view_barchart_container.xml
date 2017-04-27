@@ -55,7 +55,8 @@
         android:id="@+id/separator"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_below="@id/barChart"
+        android:layout_marginBottom="@dimen/default_margin_2"
+        android:layout_marginTop="@dimen/separator_push_from_top"
         android:background="@color/offwhite_background_gray"
         />
 
@@ -63,7 +64,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/separator"
-        android:layout_marginBottom="@dimen/default_margin_2"
+        android:layout_marginBottom="@dimen/default_margin_1"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingBottom="5dp"

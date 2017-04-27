@@ -56,7 +56,7 @@
           android:paddingBottom="@dimen/default_margin_1"
           android:paddingEnd="@dimen/default_margin_4"
           android:textAppearance="?android:textAppearanceSmall"
-          android:textColor="@color/offwhite_transparent"
+          android:textColor="@color/white"
           />
 
     </com.wrapp.floatlabelededittext.FloatLabeledEditText>

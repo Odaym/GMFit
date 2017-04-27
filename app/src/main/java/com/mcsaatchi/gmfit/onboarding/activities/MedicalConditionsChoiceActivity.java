@@ -86,26 +86,13 @@ public class MedicalConditionsChoiceActivity extends BaseActivity {
 
       int tempI = i;
       medicalCheckbox.setOnCheckedChangeListener((compoundButton, selected) -> {
-
-        // Take care of the None choice
         if (medicalCheckbox.getText().equals("None")) {
           for (int j = 0; j < allCheckBoxes.size(); j++) {
             allCheckBoxes.get(j).setChecked(false);
             medicalConditions.get(j).setSelected(false);
           }
-
-          //medicalCheckbox.setChecked(true);
         } else {
           medicalConditions.get(tempI).setSelected(selected);
-          //allCheckBoxes.get(tempI).setChecked(true);
-
-          //if (medicalCheckbox.getText().equals("None"))
-          //for (int j = 0; j < allCheckBoxes.size(); j++) {
-          //  if (allCheckBoxes.get(j).getText().equals("None")) {
-          //    allCheckBoxes.get(j).setChecked(false);
-          //    medicalConditions.get(j).setSelected(false);
-          //  }
-          //}
         }
       });
 

@@ -29,6 +29,7 @@ public class ReimbursementDetailsActivity extends BaseActivity
   @Bind(R.id.invoiceImagesPicker) CustomAttachmentPicker invoiceImagesPicker;
   @Bind(R.id.identityCardImagesPicker) CustomAttachmentPicker identityCardImagesPicker;
   @Bind(R.id.testResultsImagesPicker) CustomAttachmentPicker testResultsImagesPicker;
+  @Bind(R.id.originalReceiptImagesPicker) CustomAttachmentPicker originalReceiptImagesPicker;
   @Bind(R.id.otherDocumentsImagesPicker) CustomAttachmentPicker otherDocumentsImagesPicker;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
@@ -64,27 +65,40 @@ public class ReimbursementDetailsActivity extends BaseActivity
     status.setLabel("Status", claimDetails.getStatus());
 
     for (int i = 0; i < claimDetails.getImages().size(); i++) {
-      switch (claimDetails.getImages().get(i).getDocumType()) {
-        case 2:
-          medicalReportImagesPicker.returnImagePicker(i)
-              .setImageBitmap(ImageHandler.turnBase64ToImage(claimDetails.getImages().get(i).getContent()));
-          break;
-        case 3:
-          invoiceImagesPicker.returnImagePicker(i)
-              .setImageBitmap(ImageHandler.turnBase64ToImage(claimDetails.getImages().get(i).getContent()));
-          break;
-        case 4:
-          identityCardImagesPicker.returnImagePicker(i)
-              .setImageBitmap(ImageHandler.turnBase64ToImage(claimDetails.getImages().get(i).getContent()));
-          break;
-        case 6:
-          testResultsImagesPicker.returnImagePicker(i)
-              .setImageBitmap(ImageHandler.turnBase64ToImage(claimDetails.getImages().get(i).getContent()));
-          break;
-        case 7:
-          otherDocumentsImagesPicker.returnImagePicker(i)
-              .setImageBitmap(ImageHandler.turnBase64ToImage(claimDetails.getImages().get(i).getContent()));
-          break;
+      try {
+        switch (claimDetails.getImages().get(i).getDocumType()) {
+          case 1:
+            medicalReportImagesPicker.returnImagePicker(i)
+                .setImageBitmap(
+                    ImageHandler.turnBase64ToImage(claimDetails.getImages().get(i).getContent()));
+            break;
+          case 2:
+            invoiceImagesPicker.returnImagePicker(i)
+                .setImageBitmap(
+                    ImageHandler.turnBase64ToImage(claimDetails.getImages().get(i).getContent()));
+            break;
+          case 3:
+            originalReceiptImagesPicker.returnImagePicker(i)
+                .setImageBitmap(
+                    ImageHandler.turnBase64ToImage(claimDetails.getImages().get(i).getContent()));
+            break;
+          case 4:
+            identityCardImagesPicker.returnImagePicker(i)
+                .setImageBitmap(
+                    ImageHandler.turnBase64ToImage(claimDetails.getImages().get(i).getContent()));
+            break;
+          case 5:
+            testResultsImagesPicker.returnImagePicker(i)
+                .setImageBitmap(
+                    ImageHandler.turnBase64ToImage(claimDetails.getImages().get(i).getContent()));
+            break;
+          case 6:
+            otherDocumentsImagesPicker.returnImagePicker(i)
+                .setImageBitmap(
+                    ImageHandler.turnBase64ToImage(claimDetails.getImages().get(i).getContent()));
+            break;
+        }
+      } catch (NullPointerException ignored) {
       }
     }
   }

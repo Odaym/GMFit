@@ -22,9 +22,16 @@ public class ImageHandler {
   }
 
   public static byte[] turnImageToByteArray(String imagePath) {
-    Bitmap bm = BitmapFactory.decodeFile(imagePath);
+    int h = 800;
+    int w = 800;
+
+    Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
+
+    Bitmap scaled = Bitmap.createScaledBitmap(bitmap, w, h, true);
+    
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    bm.compress(Bitmap.CompressFormat.JPEG, 50, baos);
+
+    scaled.compress(Bitmap.CompressFormat.JPEG, 50, baos);
 
     return baos.toByteArray();
   }
@@ -50,7 +57,6 @@ public class ImageHandler {
 
     return uri.getPath();
   }
-
 
   public static String constructImageFilename() {
     String timeStamp =

@@ -33,12 +33,13 @@
             />
 
       </RelativeLayout>
+
       <TextView
           android:id="@+id/userFullNameTV"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginBottom="@dimen/default_margin_3"
-          android:layout_marginTop="@dimen/default_margin_2"
+          android:layout_marginBottom="@dimen/default_margin_1"
+          android:layout_marginTop="@dimen/default_margin_1"
           android:textColor="@color/white"
           android:textSize="30sp"
           />
@@ -47,7 +48,7 @@
           android:id="@+id/userEmailTV"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginBottom="@dimen/default_margin_3"
+          android:layout_marginBottom="@dimen/default_margin_2"
           android:textAppearance="?android:textAppearanceMedium"
           android:textColor="@color/white"
           />

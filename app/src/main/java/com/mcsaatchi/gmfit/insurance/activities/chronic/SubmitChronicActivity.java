@@ -12,6 +12,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import butterknife.Bind;
@@ -43,6 +44,7 @@ public class SubmitChronicActivity extends BaseActivity
   @Bind(R.id.toolbar) Toolbar toolbar;
   @Bind(R.id.medicalReportImagesPicker) CustomAttachmentPicker medicalReportImagesPicker;
   @Bind(R.id.prescriptionImagesPicker) CustomAttachmentPicker prescriptionImagesPicker;
+  @Bind(R.id.providerNameET) EditText providerNameET;
 
   private File photoFile;
   private Uri photoFileUri;
@@ -119,19 +121,43 @@ public class SubmitChronicActivity extends BaseActivity
   }
 
   @OnClick(R.id.submitChronicTreatmentBTN) public void handleSubmitChronicTreatment() {
-    final ProgressDialog waitingDialog = new ProgressDialog(this);
-    waitingDialog.setTitle(
-        getResources().getString(R.string.submit_new_chronic_treatment_dialog_title));
-    waitingDialog.setMessage(
-        getResources().getString(R.string.uploading_attachments_dialog_message));
-    waitingDialog.setOnShowListener(dialogInterface -> {
-      HashMap<String, RequestBody> attachments = constructSelectedImagesForRequest();
+    ArrayList<String> errorMessages = new ArrayList<>();
 
-      presenter.submitChronicTreatment(
-          prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""), attachments);
-    });
+    if (providerNameET.getText().toString().isEmpty()) {
+      errorMessages.add("The Provider Name field is required.");
+    }
+    if (imagePaths.isEmpty()) {
+      errorMessages.add("You are required to attach some images.");
+    }
 
-    waitingDialog.show();
+    if (!errorMessages.isEmpty()) {
+      String finalErrorMessage = "";
+
+      for (String errorMessage : errorMessages) {
+        finalErrorMessage += errorMessage + "\n\n";
+      }
+
+      final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+      alertDialog.setTitle(R.string.required_fields_dialog_title);
+      alertDialog.setMessage(finalErrorMessage);
+      alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getResources().getString(R.string.ok),
+          (dialog, which) -> dialog.dismiss());
+      alertDialog.show();
+    } else {
+      final ProgressDialog waitingDialog = new ProgressDialog(this);
+      waitingDialog.setTitle(
+          getResources().getString(R.string.submit_new_chronic_treatment_dialog_title));
+      waitingDialog.setMessage(
+          getResources().getString(R.string.uploading_attachments_dialog_message));
+      waitingDialog.setOnShowListener(dialogInterface -> {
+        HashMap<String, RequestBody> attachments = constructSelectedImagesForRequest();
+
+        presenter.submitChronicTreatment(
+            prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""), attachments);
+      });
+
+      waitingDialog.show();
+    }
   }
 
   private void showImagePickerDialog(ImageView view) {
@@ -162,7 +188,8 @@ public class SubmitChronicActivity extends BaseActivity
               photoFile = null;
               try {
                 photoFile = ImageHandler.createImageFile(ImageHandler.constructImageFilename());
-                photoFileUri = FileProvider.getUriForFile(this, getApplicationContext().getPackageName() + ".provider", photoFile);
+                photoFileUri = FileProvider.getUriForFile(this,
+                    getApplicationContext().getPackageName() + ".provider", photoFile);
               } catch (IOException ex) {
                 ex.printStackTrace();
               }
@@ -185,7 +212,8 @@ public class SubmitChronicActivity extends BaseActivity
     for (int i = 0; i < imagePaths.size(); i++) {
       if (imagePaths.get(i) != null) {
         imageParts.put("attachements[" + i + "][content]", toRequestBody(
-            Base64.encodeToString(ImageHandler.turnImageToByteArray(imagePaths.get(i)), Base64.NO_WRAP)));
+            Base64.encodeToString(ImageHandler.turnImageToByteArray(imagePaths.get(i)),
+                Base64.NO_WRAP)));
         imageParts.put("attachements[" + i + "][documType]", toRequestBody("2"));
         imageParts.put("attachements[" + i + "][name]", toRequestBody(imagePaths.get(i)));
         imageParts.put("attachements[" + i + "][id]", toRequestBody(String.valueOf(i + 1)));

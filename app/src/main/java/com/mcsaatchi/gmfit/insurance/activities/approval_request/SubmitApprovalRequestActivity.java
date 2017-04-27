@@ -67,8 +67,8 @@ public class SubmitApprovalRequestActivity extends BaseActivity
   private File photoFile;
   private Uri photoFileUri;
   private String categoryValue = "Out";
-  private String subCategoryValue = "Dental PCC";
-  private String serviceDateValue;
+  private String subCategoryValue = "";
+  private String serviceDateValue = "";
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -157,19 +157,46 @@ public class SubmitApprovalRequestActivity extends BaseActivity
   }
 
   @OnClick(R.id.submitApprovalRequestBTN) public void handleSubmitApprovalRequest() {
-    waitingDialog = new ProgressDialog(this);
-    waitingDialog.setTitle(getResources().getString(R.string.submit_new_approval_request));
-    waitingDialog.setMessage(
-        getResources().getString(R.string.uploading_attachments_dialog_message));
-    waitingDialog.setOnShowListener(dialogInterface -> {
-      HashMap<String, RequestBody> attachments = constructSelectedImagesForRequest();
+    ArrayList<String> errorMessages = new ArrayList<>();
 
-      presenter.submitApprovalRequest(
-          prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""),
-          remarksET.getText().toString(), categoryValue, attachments);
-    });
+    if (serviceDateValue.isEmpty()) {
+      errorMessages.add("The Service Date field is required.");
+    }
+    if (subCategoryValue.isEmpty()) {
+      errorMessages.add("The Subcategory field is required.");
+    }
+    if (imagePaths.isEmpty()) {
+      errorMessages.add("You are required to attach some images.");
+    }
 
-    waitingDialog.show();
+    if (!errorMessages.isEmpty()) {
+      String finalErrorMessage = "";
+
+      for (String errorMessage : errorMessages) {
+        finalErrorMessage += errorMessage + "\n\n";
+      }
+
+      final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+      alertDialog.setTitle(R.string.required_fields_dialog_title);
+      alertDialog.setMessage(finalErrorMessage);
+      alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getResources().getString(R.string.ok),
+          (dialog, which) -> dialog.dismiss());
+      alertDialog.show();
+    } else {
+      waitingDialog = new ProgressDialog(this);
+      waitingDialog.setTitle(getResources().getString(R.string.submit_new_approval_request));
+      waitingDialog.setMessage(
+          getResources().getString(R.string.uploading_attachments_dialog_message));
+      waitingDialog.setOnShowListener(dialogInterface -> {
+        HashMap<String, RequestBody> attachments = constructSelectedImagesForRequest();
+
+        presenter.submitApprovalRequest(
+            prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""),
+            remarksET.getText().toString(), categoryValue, attachments);
+      });
+
+      waitingDialog.show();
+    }
   }
 
   private void hookupImagesPickerImages(CustomAttachmentPicker imagePicker) {
@@ -216,7 +243,8 @@ public class SubmitApprovalRequestActivity extends BaseActivity
               photoFile = null;
               try {
                 photoFile = ImageHandler.createImageFile(ImageHandler.constructImageFilename());
-                photoFileUri = FileProvider.getUriForFile(this, getApplicationContext().getPackageName() + ".provider", photoFile);
+                photoFileUri = FileProvider.getUriForFile(this,
+                    getApplicationContext().getPackageName() + ".provider", photoFile);
               } catch (IOException ex) {
                 ex.printStackTrace();
               }
@@ -240,7 +268,8 @@ public class SubmitApprovalRequestActivity extends BaseActivity
     for (int i = 0; i < imagePaths.size(); i++) {
       if (imagePaths.get(i) != null) {
         imageParts.put("attachements[" + i + "][content]", Helpers.toRequestBody(
-            Base64.encodeToString(ImageHandler.turnImageToByteArray(imagePaths.get(i)), Base64.NO_WRAP)));
+            Base64.encodeToString(ImageHandler.turnImageToByteArray(imagePaths.get(i)),
+                Base64.NO_WRAP)));
         imageParts.put("attachements[" + i + "][documType]", Helpers.toRequestBody("2"));
         imageParts.put("attachements[" + i + "][name]", Helpers.toRequestBody(imagePaths.get(i)));
         imageParts.put("attachements[" + i + "][id]", Helpers.toRequestBody(String.valueOf(i + 1)));

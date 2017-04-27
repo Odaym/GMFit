@@ -32,7 +32,8 @@
   <color name="nutrition_orange_faded_transparent">#FE826D</color>
   <color name="nutrition_goals_pink">#C4458A</color>
 
-  <color name="offwhite_transparent">#26FFFFFF</color>
+  <!--<color name="offwhite_transparent">#26FFFFFF</color>-->
+  <color name="offwhite_transparent">#80FFFFFF</color>
   <color name="offwhite_more_transparent">#33FFFFFF</color>
   <color name="another_gray">#FAFAFA</color>
   <color name="separator_gray">#806a6cff</color>

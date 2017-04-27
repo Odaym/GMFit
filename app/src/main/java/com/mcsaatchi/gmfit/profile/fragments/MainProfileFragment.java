@@ -162,7 +162,6 @@ public class MainProfileFragment extends BaseFragment
                   + "this permission", Toast.LENGTH_LONG).show();
         }
         break;
-
       case ASK_CAMERA_AND_STORAGE_PERMISSION:
         if (grantResults.length > 0
             && grantResults[0] == PackageManager.PERMISSION_GRANTED
@@ -193,14 +192,14 @@ public class MainProfileFragment extends BaseFragment
               if (conditionsFromExtras.get(i).isSelected()) {
                 if (!conditionsFromExtras.get(i).getMedicalCondition().equals("None")) {
                   medicalConditionIDs.add(conditionsFromExtras.get(i).getId());
-                  valueForCondition += conditionsFromExtras.get(i).getMedicalCondition() + ", ";
+                  valueForCondition += conditionsFromExtras.get(i).getMedicalCondition() + " ";
                 } else {
                   valueForCondition += "None";
                 }
               }
             }
 
-            valueForCondition = valueForCondition.replaceAll(", $", "");
+            valueForCondition = valueForCondition.replaceAll(" ", ", ");
 
             medicalConditionsValueTV.setText(valueForCondition);
 
@@ -303,6 +302,19 @@ public class MainProfileFragment extends BaseFragment
 
           goalsEntryValueTV.setText(userGoals.get(i).getName());
         }
+      }
+
+      //Set the mobile number
+      if (userProfileData.getPhone_number() != null && !userProfileData.getPhone_number()
+          .isEmpty()) {
+        prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_PHONE_NUMBER,
+            userProfileData.getPhone_number());
+      }
+
+      //Set the birthday
+      if (userProfileData.getBirthday() != null && !userProfileData.getBirthday().isEmpty()) {
+        prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_DATE_OF_BIRTH,
+            userProfileData.getBirthday());
       }
 
       //Set the name
@@ -817,7 +829,7 @@ public class MainProfileFragment extends BaseFragment
     float height = prefs.getFloat(Constants.EXTRAS_USER_PROFILE_HEIGHT, 180);
     float weight = prefs.getFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, 82);
 
-    Timber.d("Updating user profile");
+    medicalConditionParts = constructMedicalConditionsForRequest(medicalConditionIDs);
 
     presenter.updateUserProfile(Helpers.toRequestBody(dateOfBirth),
         Helpers.toRequestBody(bloodType), Helpers.toRequestBody(nationality), medicalConditionParts,

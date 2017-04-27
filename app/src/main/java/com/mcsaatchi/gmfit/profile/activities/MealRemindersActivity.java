@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
+import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 import butterknife.Bind;
@@ -36,6 +37,10 @@ public class MealRemindersActivity extends BaseActivity {
   @Bind(R.id.breakfastReminderValueTV) TextView breakfastReminderValueTV;
   @Bind(R.id.lunchReminderValueTV) TextView lunchReminderValueTV;
   @Bind(R.id.dinnerReminderValueTV) TextView dinnerReminderValueTV;
+  @Bind(R.id.breakfastReminderLayout) RelativeLayout breakfastReminderLayout;
+  @Bind(R.id.lunchReminderLayout) RelativeLayout lunchReminderLayout;
+  @Bind(R.id.dinnerReminderLayout) RelativeLayout dinnerReminderLayout;
+
   private boolean areAlarmsEnabled = false;
   private String breakfastAlarmTime;
   private String lunchAlarmTime;
@@ -99,13 +104,13 @@ public class MealRemindersActivity extends BaseActivity {
 
     areAlarmsEnabled = prefs.getBoolean(Constants.ARE_ALARMS_ENABLED, false);
 
-    breakfastAlarmTime = prefs.getString(Constants.BREAKFAST_REMINDER_ALARM_TIME, "09:30 AM");
+    breakfastAlarmTime = prefs.getString(Constants.BREAKFAST_REMINDER_ALARM_TIME, "None");
     breakfastReminderValueTV.setText(breakfastAlarmTime);
 
-    lunchAlarmTime = prefs.getString(Constants.LUNCH_REMINDER_ALARM_TIME, "03:00 PM");
+    lunchAlarmTime = prefs.getString(Constants.LUNCH_REMINDER_ALARM_TIME, "None");
     lunchReminderValueTV.setText(lunchAlarmTime);
 
-    dinnerAlarmTime = prefs.getString(Constants.DINNER_REMINDER_ALARM_TIME, "09:00 PM");
+    dinnerAlarmTime = prefs.getString(Constants.DINNER_REMINDER_ALARM_TIME, "None");
     dinnerReminderValueTV.setText(dinnerAlarmTime);
 
     if (prefs.getBoolean(Constants.ARE_ALARMS_ENABLED, true)) {
@@ -116,7 +121,13 @@ public class MealRemindersActivity extends BaseActivity {
 
     enableRemindersSwitch.setOnCheckedChangeListener((compoundButton, checked) -> {
       if (checked) {
-        triggerAlarmsState(true);
+        breakfastReminderLayout.setEnabled(true);
+        lunchReminderLayout.setEnabled(true);
+        dinnerReminderLayout.setEnabled(true);
+
+        breakfastReminderLayout.setAlpha(1f);
+        lunchReminderLayout.setAlpha(1f);
+        dinnerReminderLayout.setAlpha(1f);
 
         setupMealRemindersAlarm(MealRemindersActivity.this, prefs, "Breakfast", Integer.parseInt(
             reverseTimeFormatter.print(getLocalTimeFormatted(breakfastAlarmTime)).split(":")[0]),
@@ -135,9 +146,18 @@ public class MealRemindersActivity extends BaseActivity {
                 reverseTimeFormatter.print(getLocalTimeFormatted(dinnerAlarmTime)).split(":")[1]),
             dinnerAlarmTime);
       } else {
-        triggerAlarmsState(false);
         cancelAllPendingAlarms();
+
+        breakfastReminderLayout.setEnabled(false);
+        lunchReminderLayout.setEnabled(false);
+        dinnerReminderLayout.setEnabled(false);
+
+        breakfastReminderLayout.setAlpha(0.5f);
+        lunchReminderLayout.setAlpha(0.5f);
+        dinnerReminderLayout.setAlpha(0.5f);
       }
+
+      triggerAlarmsState(checked);
 
       EventBusSingleton.getInstance().post(new RemindersStatusChangedEvent(areAlarmsEnabled));
     });

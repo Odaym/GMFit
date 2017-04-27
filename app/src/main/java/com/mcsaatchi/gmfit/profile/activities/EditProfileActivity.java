@@ -153,6 +153,8 @@ public class EditProfileActivity extends BaseActivity
 
     String DOBToSend = "";
 
+    Timber.d("finalDOB is : " + finalDOB);
+
     if (finalDOB == null) {
       try {
         Date unformattedDOB = new SimpleDateFormat("MMM dd, yyyy").parse(

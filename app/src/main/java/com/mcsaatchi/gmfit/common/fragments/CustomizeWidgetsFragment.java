@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
@@ -28,6 +29,7 @@ import java.util.ArrayList;
 
 public class CustomizeWidgetsFragment extends Fragment {
   @Bind(R.id.widgetsListView) DragSortListView widgetsListView;
+  @Bind(R.id.hintDragDropTV) TextView hintDragDropTV;
 
   private FitnessWidgetsListAdapter customizeFitnessWidgetsAdapter;
   private NutritionWidgetsListAdapter customizeNutritionWidgetsAdapter;
@@ -164,16 +166,20 @@ public class CustomizeWidgetsFragment extends Fragment {
             itemsMapFitness =
                 fragmentBundle.getParcelableArrayList(Constants.BUNDLE_FITNESS_WIDGETS_MAP);
             hookUpListWithFitnessItems(itemsMapFitness);
+            hintDragDropTV.setBackgroundColor(getResources().getColor(R.color.fitness_pink));
             break;
           case Constants.EXTRAS_NUTRITION_FRAGMENT:
             itemsMapNutrition =
                 fragmentBundle.getParcelableArrayList(Constants.BUNDLE_NUTRITION_WIDGETS_MAP);
             hookUpListWithNutritionItems(itemsMapNutrition);
+            hintDragDropTV.setBackgroundColor(
+                getResources().getColor(R.color.nutrition_meal_bars_orange));
             break;
           case Constants.EXTRAS_HEALTH_FRAGMENT:
             itemsMapHealth =
                 fragmentBundle.getParcelableArrayList(Constants.BUNDLE_HEALTH_WIDGETS_MAP);
             hookUpListWithHealthItems(itemsMapHealth);
+            hintDragDropTV.setBackgroundColor(getResources().getColor(R.color.health_green));
             break;
         }
       }

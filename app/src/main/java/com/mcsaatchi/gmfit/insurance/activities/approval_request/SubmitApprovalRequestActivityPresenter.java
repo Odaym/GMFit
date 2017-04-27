@@ -35,6 +35,7 @@ class SubmitApprovalRequestActivityPresenter extends BaseActivityPresenter {
               case 200:
                 view.openApprovalRequestDetailsActivity(
                     response.body().getData().getBody().getData().getRequestId());
+                view.finishActivity();
                 break;
               case 449:
                 view.displayRequestErrorDialog(

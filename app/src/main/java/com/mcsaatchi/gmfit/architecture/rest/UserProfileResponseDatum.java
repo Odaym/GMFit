@@ -12,6 +12,7 @@ public class UserProfileResponseDatum {
   @SerializedName("blood_type") @Expose private String bloodType;
   @SerializedName("gender") @Expose private String gender;
   @SerializedName("weight") @Expose private String weight;
+  @SerializedName("phone_number") @Expose private String phone_number;
   @SerializedName("onboard") @Expose private String onboard;
   @SerializedName("height") @Expose private String height;
   @SerializedName("country") @Expose private String country;
@@ -188,5 +189,13 @@ public class UserProfileResponseDatum {
 
   public void setOnboard(String onboard) {
     this.onboard = onboard;
+  }
+
+  public String getPhone_number() {
+    return phone_number;
+  }
+
+  public void setPhone_number(String phone_number) {
+    this.phone_number = phone_number;
   }
 }
