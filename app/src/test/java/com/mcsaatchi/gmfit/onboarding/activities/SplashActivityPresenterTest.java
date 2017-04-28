@@ -2,50 +2,36 @@ package com.mcsaatchi.gmfit.onboarding.activities;
 
 import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandlerImpl;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnit;
-import org.mockito.junit.MockitoRule;
-
-import static org.mockito.Mockito.verify;
+import org.mockito.Mockito;
 
 public class SplashActivityPresenterTest {
 
-  @Rule public MockitoRule mockitoRule = MockitoJUnit.rule();
+  private DataAccessHandlerImpl mockDataAccessHandler;
+  private SplashActivityPresenter.SplashActivityView mockView;
 
-  @Mock SplashActivityPresenter.SplashActivityView view;
-
-  SplashActivityPresenter presenter;
-
-  @Mock DataAccessHandlerImpl dataAccessHandler;
+  private SplashActivityPresenter presenter;
 
   @Before public void setUp() {
-    presenter = new SplashActivityPresenter(view, dataAccessHandler);
+    mockDataAccessHandler = Mockito.mock(DataAccessHandlerImpl.class);
+    mockView = Mockito.mock(SplashActivityPresenter.SplashActivityView.class);
+
+    presenter = new SplashActivityPresenter(mockView, mockDataAccessHandler);
   }
 
+  @Test public void displayDialogIfLoginNotConnected() {
+    Mockito.when(mockView.checkInternetAvailable()).thenReturn(false);
 
-  @Test public void doesLoginSilently() {
-    String email = "cura.app@gmail.com", password = "odayoday";
+    presenter.login("foo@bar.com", "password");
 
-    verify(view).showLoginActivity();
-
-    //if (connected) {
-    //  presenter.signInUserSilently(email, password);
-    //} else {
-    //  verify(view).displayNoInternetDialog();
-    //}
+    Mockito.verify(mockView).displayNoInternetDialog();
   }
 
-  @Test public void doesFacebookLogin() {
-    String facebookToken = "091u2i30912kj310231203ij123";
+  @Test public void signInSilentlyIfLoginConnected() {
+    Mockito.when(mockView.checkInternetAvailable()).thenReturn(true);
 
-    boolean connected = verify(view).checkInternetAvailable();
+    presenter.login("foo@bar.com", "password");
 
-    if (connected) {
-      presenter.loginWithFacebook(facebookToken);
-    } else {
-      verify(view).displayNoInternetDialog();
-    }
+    Mockito.verify(mockView).saveAccessToken(Mockito.anyString());
   }
 }
