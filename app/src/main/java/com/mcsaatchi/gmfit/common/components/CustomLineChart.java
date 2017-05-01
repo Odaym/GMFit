@@ -12,7 +12,7 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.rest.WeightHistoryResponseDatum;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.WeightHistoryResponseDatum;
 import java.util.ArrayList;
 import java.util.List;
 import org.joda.time.DateTime;

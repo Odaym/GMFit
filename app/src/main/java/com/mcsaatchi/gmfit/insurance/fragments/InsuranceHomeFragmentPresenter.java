@@ -1,8 +1,8 @@
 package com.mcsaatchi.gmfit.insurance.fragments;
 
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandlerImpl;
-import com.mcsaatchi.gmfit.architecture.rest.CertainPDFResponse;
+import com.mcsaatchi.gmfit.architecture.retrofit.architecture.DataAccessHandlerImpl;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.CertainPDFResponse;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.common.fragments.BaseFragmentPresenter;
 import retrofit2.Call;

@@ -1,7 +1,7 @@
 package com.mcsaatchi.gmfit.insurance.activities.chronic;
 
-import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandlerImpl;
-import com.mcsaatchi.gmfit.architecture.rest.CreateNewRequestResponse;
+import com.mcsaatchi.gmfit.architecture.retrofit.architecture.DataAccessHandlerImpl;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.CreateNewRequestResponse;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.common.activities.BaseActivityPresenter;
 import java.util.HashMap;

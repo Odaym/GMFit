@@ -5,7 +5,7 @@ import android.os.Parcelable;
 import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
-import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponseChartData;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.AuthenticationResponseChartData;
 import java.util.ArrayList;
 
 @DatabaseTable(tableName = "DataChart") public class DataChart implements Parcelable {

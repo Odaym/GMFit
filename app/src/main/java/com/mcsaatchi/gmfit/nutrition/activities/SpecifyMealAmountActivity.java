@@ -15,7 +15,7 @@ import com.andreabaccega.widget.FormEditText;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
 import com.mcsaatchi.gmfit.architecture.otto.MealEntryManipulatedEvent;
-import com.mcsaatchi.gmfit.architecture.rest.MealMetricsResponseDatum;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.MealMetricsResponseDatum;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.common.classes.Helpers;

@@ -1,12 +1,12 @@
 package com.mcsaatchi.gmfit.nutrition.activities;
 
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandlerImpl;
-import com.mcsaatchi.gmfit.architecture.rest.DefaultGetResponse;
-import com.mcsaatchi.gmfit.architecture.rest.RecentMealsResponse;
-import com.mcsaatchi.gmfit.architecture.rest.RecentMealsResponseBody;
-import com.mcsaatchi.gmfit.architecture.rest.SearchMealItemResponse;
-import com.mcsaatchi.gmfit.architecture.rest.SearchMealItemResponseDatum;
+import com.mcsaatchi.gmfit.architecture.retrofit.architecture.DataAccessHandlerImpl;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.DefaultGetResponse;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.RecentMealsResponse;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.RecentMealsResponseBody;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.SearchMealItemResponse;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.SearchMealItemResponseDatum;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.BaseActivityPresenter;
 import java.util.ArrayList;

@@ -1,9 +1,9 @@
 package com.mcsaatchi.gmfit.insurance.activities.chronic;
 
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandlerImpl;
-import com.mcsaatchi.gmfit.architecture.rest.ChronicTreatmentListInnerData;
-import com.mcsaatchi.gmfit.architecture.rest.ChronicTreatmentListResponse;
+import com.mcsaatchi.gmfit.architecture.retrofit.architecture.DataAccessHandlerImpl;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.ChronicTreatmentListInnerData;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.ChronicTreatmentListResponse;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.common.activities.BaseActivityPresenter;
 import java.util.List;

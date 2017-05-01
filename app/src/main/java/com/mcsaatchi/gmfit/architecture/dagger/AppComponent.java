@@ -1,9 +1,9 @@
 package com.mcsaatchi.gmfit.architecture.dagger;
 
 import com.mcsaatchi.gmfit.architecture.classes.GMFitApplication;
-import com.mcsaatchi.gmfit.architecture.data_access.ApiCallsHandler;
-import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandlerImpl;
-import com.mcsaatchi.gmfit.architecture.rest.RestClient;
+import com.mcsaatchi.gmfit.architecture.retrofit.architecture.ApiCallsHandler;
+import com.mcsaatchi.gmfit.architecture.retrofit.architecture.DataAccessHandlerImpl;
+import com.mcsaatchi.gmfit.architecture.retrofit.architecture.RestClient;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.fitness.fragments.FitnessFragment;
 import com.mcsaatchi.gmfit.fitness.pedometer.SensorListener;

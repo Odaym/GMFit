@@ -1,8 +1,8 @@
 package com.mcsaatchi.gmfit.onboarding.activities;
 
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandlerImpl;
-import com.mcsaatchi.gmfit.architecture.rest.DefaultGetResponse;
+import com.mcsaatchi.gmfit.architecture.retrofit.architecture.DataAccessHandlerImpl;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.DefaultGetResponse;
 import com.mcsaatchi.gmfit.common.activities.BaseActivityPresenter;
 import retrofit2.Call;
 import retrofit2.Callback;

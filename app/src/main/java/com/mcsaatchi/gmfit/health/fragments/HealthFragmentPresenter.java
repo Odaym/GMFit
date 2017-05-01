@@ -1,15 +1,15 @@
 package com.mcsaatchi.gmfit.health.fragments;
 
 import com.j256.ormlite.dao.RuntimeExceptionDao;
-import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandlerImpl;
-import com.mcsaatchi.gmfit.architecture.rest.TakenMedicalTestsResponse;
-import com.mcsaatchi.gmfit.architecture.rest.TakenMedicalTestsResponseBody;
-import com.mcsaatchi.gmfit.architecture.rest.UserProfileResponse;
-import com.mcsaatchi.gmfit.architecture.rest.UserProfileResponseDatum;
-import com.mcsaatchi.gmfit.architecture.rest.WeightHistoryResponse;
-import com.mcsaatchi.gmfit.architecture.rest.WeightHistoryResponseDatum;
-import com.mcsaatchi.gmfit.architecture.rest.WidgetsResponse;
-import com.mcsaatchi.gmfit.architecture.rest.WidgetsResponseDatum;
+import com.mcsaatchi.gmfit.architecture.retrofit.architecture.DataAccessHandlerImpl;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.TakenMedicalTestsResponse;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.TakenMedicalTestsResponseBody;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.UserProfileResponse;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.UserProfileResponseDatum;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.WeightHistoryResponse;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.WeightHistoryResponseDatum;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.WidgetsResponse;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.WidgetsResponseDatum;
 import com.mcsaatchi.gmfit.common.fragments.BaseFragmentPresenter;
 import com.mcsaatchi.gmfit.health.models.HealthWidget;
 import com.mcsaatchi.gmfit.health.models.Medication;

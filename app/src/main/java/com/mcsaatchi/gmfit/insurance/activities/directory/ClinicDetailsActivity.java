@@ -19,7 +19,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.rest.GetNearbyClinicsResponseDatum;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.GetNearbyClinicsResponseDatum;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 
 public class ClinicDetailsActivity extends BaseActivity implements OnMapReadyCallback {

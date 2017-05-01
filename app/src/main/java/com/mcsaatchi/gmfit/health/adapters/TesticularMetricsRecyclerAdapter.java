@@ -12,8 +12,8 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.rest.MedicalTestMetricsResponseBody;
-import com.mcsaatchi.gmfit.architecture.rest.MedicalTestMetricsResponseDatum;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.MedicalTestMetricsResponseBody;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.MedicalTestMetricsResponseDatum;
 import java.util.ArrayList;
 
 public class TesticularMetricsRecyclerAdapter

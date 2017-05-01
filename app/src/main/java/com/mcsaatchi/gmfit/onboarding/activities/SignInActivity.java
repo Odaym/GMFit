@@ -17,7 +17,7 @@ import com.andreabaccega.widget.FormEditText;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
 import com.mcsaatchi.gmfit.architecture.otto.SignedInSuccessfullyEvent;
-import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponseChart;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.AuthenticationResponseChart;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.common.activities.MainActivity;

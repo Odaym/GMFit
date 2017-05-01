@@ -8,7 +8,7 @@ import android.support.v7.widget.Toolbar;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.rest.ClaimsListResponseDatum;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.ClaimsListResponseDatum;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.insurance.adapters.StatusAdapter;

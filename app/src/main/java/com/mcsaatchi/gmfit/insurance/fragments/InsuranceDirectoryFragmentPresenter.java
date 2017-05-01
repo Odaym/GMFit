@@ -1,8 +1,8 @@
 package com.mcsaatchi.gmfit.insurance.fragments;
 
-import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandlerImpl;
-import com.mcsaatchi.gmfit.architecture.rest.GetNearbyClinicsResponse;
-import com.mcsaatchi.gmfit.architecture.rest.GetNearbyClinicsResponseDatum;
+import com.mcsaatchi.gmfit.architecture.retrofit.architecture.DataAccessHandlerImpl;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.GetNearbyClinicsResponse;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.GetNearbyClinicsResponseDatum;
 import com.mcsaatchi.gmfit.common.fragments.BaseFragmentPresenter;
 import java.util.List;
 import retrofit2.Call;

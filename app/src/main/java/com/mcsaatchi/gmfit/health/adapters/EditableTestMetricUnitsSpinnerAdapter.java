@@ -9,7 +9,7 @@ import android.widget.BaseAdapter;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.rest.TakenMedicalTestsResponseUnit;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.TakenMedicalTestsResponseUnit;
 import java.util.ArrayList;
 
 public class EditableTestMetricUnitsSpinnerAdapter extends BaseAdapter implements SpinnerAdapter {

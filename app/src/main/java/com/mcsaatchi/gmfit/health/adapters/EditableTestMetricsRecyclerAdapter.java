@@ -12,8 +12,8 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.rest.TakenMedicalTestsResponseMetricsDatum;
-import com.mcsaatchi.gmfit.architecture.rest.TakenMedicalTestsResponseUnit;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.TakenMedicalTestsResponseMetricsDatum;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.TakenMedicalTestsResponseUnit;
 import java.util.ArrayList;
 import java.util.List;
 

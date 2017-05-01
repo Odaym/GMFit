@@ -12,7 +12,7 @@ import butterknife.ButterKnife;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
 import com.mcsaatchi.gmfit.architecture.otto.MealEntryManipulatedEvent;
-import com.mcsaatchi.gmfit.architecture.rest.UserMealsResponseInner;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.UserMealsResponseInner;
 import com.mcsaatchi.gmfit.architecture.touch_helpers.SimpleSwipeItemTouchHelperCallback;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;

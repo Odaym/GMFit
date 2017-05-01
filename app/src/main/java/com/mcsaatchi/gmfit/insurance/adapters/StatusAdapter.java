@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.rest.ClaimsListResponseDatum;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.ClaimsListResponseDatum;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
 import java.util.ArrayList;
 import java.util.List;

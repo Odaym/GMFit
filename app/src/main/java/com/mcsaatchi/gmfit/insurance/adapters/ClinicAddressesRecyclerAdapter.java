@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.rest.GetNearbyClinicsResponseDatum;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.GetNearbyClinicsResponseDatum;
 import com.mcsaatchi.gmfit.insurance.activities.directory.ClinicDetailsActivity;
 import java.util.List;
 import org.apache.commons.lang3.text.WordUtils;

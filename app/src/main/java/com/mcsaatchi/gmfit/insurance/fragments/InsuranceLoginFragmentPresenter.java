@@ -1,11 +1,11 @@
 package com.mcsaatchi.gmfit.insurance.fragments;
 
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandlerImpl;
-import com.mcsaatchi.gmfit.architecture.rest.CountriesListResponse;
-import com.mcsaatchi.gmfit.architecture.rest.CountriesListResponseDatum;
-import com.mcsaatchi.gmfit.architecture.rest.InsuranceLoginResponse;
-import com.mcsaatchi.gmfit.architecture.rest.InsuranceLoginResponseInnerData;
+import com.mcsaatchi.gmfit.architecture.retrofit.architecture.DataAccessHandlerImpl;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.CountriesListResponse;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.CountriesListResponseDatum;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.InsuranceLoginResponse;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.InsuranceLoginResponseInnerData;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.common.fragments.BaseFragmentPresenter;
 import java.util.List;

@@ -1,6 +1,6 @@
 package com.mcsaatchi.gmfit.onboarding.activities;
 
-import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandlerImpl;
+import com.mcsaatchi.gmfit.architecture.retrofit.architecture.DataAccessHandlerImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;

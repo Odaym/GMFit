@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.rest.ChronicTreatmentListInnerData;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.ChronicTreatmentListInnerData;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.insurance.activities.chronic.ChronicDetailsActivity;
 import com.mcsaatchi.gmfit.insurance.activities.chronic.ChronicDeletionActivity;

@@ -1,9 +1,9 @@
 package com.mcsaatchi.gmfit.insurance.activities.reimbursement;
 
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandlerImpl;
-import com.mcsaatchi.gmfit.architecture.rest.ClaimListDetailsResponse;
-import com.mcsaatchi.gmfit.architecture.rest.ClaimListDetailsResponseDatum;
+import com.mcsaatchi.gmfit.architecture.retrofit.architecture.DataAccessHandlerImpl;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.ClaimListDetailsResponse;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.ClaimListDetailsResponseDatum;
 import com.mcsaatchi.gmfit.common.activities.BaseActivityPresenter;
 import retrofit2.Call;
 import retrofit2.Callback;

@@ -3,7 +3,7 @@ package com.mcsaatchi.gmfit.architecture.dagger;
 import android.content.Context;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
-import com.mcsaatchi.gmfit.architecture.data_access.DBHelper;
+import com.mcsaatchi.gmfit.architecture.database.DBHelper;
 import com.mcsaatchi.gmfit.fitness.models.FitnessWidget;
 import com.mcsaatchi.gmfit.health.models.Medication;
 import dagger.Module;

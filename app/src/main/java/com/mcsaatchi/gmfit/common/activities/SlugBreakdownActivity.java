@@ -16,7 +16,7 @@ import butterknife.ButterKnife;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.otto.DataChartDeletedEvent;
 import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
-import com.mcsaatchi.gmfit.architecture.rest.SlugBreakdownResponseInnerData;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.SlugBreakdownResponseInnerData;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.classes.SlidingTabLayout;
 import com.mcsaatchi.gmfit.common.fragments.SlugBreakdownFragment;

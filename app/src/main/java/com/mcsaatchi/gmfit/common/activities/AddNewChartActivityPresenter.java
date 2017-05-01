@@ -1,9 +1,9 @@
 package com.mcsaatchi.gmfit.common.activities;
 
-import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandlerImpl;
-import com.mcsaatchi.gmfit.architecture.rest.ChartsBySectionResponse;
-import com.mcsaatchi.gmfit.architecture.rest.ChartsBySectionResponseDatum;
-import com.mcsaatchi.gmfit.architecture.rest.DefaultGetResponse;
+import com.mcsaatchi.gmfit.architecture.retrofit.architecture.DataAccessHandlerImpl;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.ChartsBySectionResponse;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.ChartsBySectionResponseDatum;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.DefaultGetResponse;
 import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;

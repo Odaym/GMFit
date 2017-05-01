@@ -1,9 +1,9 @@
 package com.mcsaatchi.gmfit.insurance.activities.approval_request;
 
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandlerImpl;
-import com.mcsaatchi.gmfit.architecture.rest.ClaimsListResponse;
-import com.mcsaatchi.gmfit.architecture.rest.ClaimsListResponseDatum;
+import com.mcsaatchi.gmfit.architecture.retrofit.architecture.DataAccessHandlerImpl;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.ClaimsListResponse;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.ClaimsListResponseDatum;
 import com.mcsaatchi.gmfit.common.activities.BaseActivityPresenter;
 import java.util.List;
 import retrofit2.Call;

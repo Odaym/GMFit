@@ -8,7 +8,7 @@ import android.support.v7.widget.Toolbar;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.rest.ChronicTreatmentListInnerData;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.ChronicTreatmentListInnerData;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.common.classes.SimpleDividerItemDecoration;

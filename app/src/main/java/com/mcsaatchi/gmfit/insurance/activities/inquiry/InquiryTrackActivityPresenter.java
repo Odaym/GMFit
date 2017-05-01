@@ -1,9 +1,9 @@
 package com.mcsaatchi.gmfit.insurance.activities.inquiry;
 
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandlerImpl;
-import com.mcsaatchi.gmfit.architecture.rest.InquiriesListResponse;
-import com.mcsaatchi.gmfit.architecture.rest.InquiriesListResponseInnerData;
+import com.mcsaatchi.gmfit.architecture.retrofit.architecture.DataAccessHandlerImpl;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.InquiriesListResponse;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.InquiriesListResponseInnerData;
 import com.mcsaatchi.gmfit.common.activities.BaseActivityPresenter;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
 import java.util.List;

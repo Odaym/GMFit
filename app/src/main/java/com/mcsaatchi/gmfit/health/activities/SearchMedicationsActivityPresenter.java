@@ -1,10 +1,10 @@
 package com.mcsaatchi.gmfit.health.activities;
 
-import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandlerImpl;
-import com.mcsaatchi.gmfit.architecture.rest.MostPopularMedicationsResponse;
-import com.mcsaatchi.gmfit.architecture.rest.MostPopularMedicationsResponseDatum;
-import com.mcsaatchi.gmfit.architecture.rest.SearchMedicinesResponse;
-import com.mcsaatchi.gmfit.architecture.rest.SearchMedicinesResponseDatum;
+import com.mcsaatchi.gmfit.architecture.retrofit.architecture.DataAccessHandlerImpl;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.MostPopularMedicationsResponse;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.MostPopularMedicationsResponseDatum;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.SearchMedicinesResponse;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.SearchMedicinesResponseDatum;
 import com.mcsaatchi.gmfit.common.activities.BaseActivityPresenter;
 import java.util.List;
 import retrofit2.Call;

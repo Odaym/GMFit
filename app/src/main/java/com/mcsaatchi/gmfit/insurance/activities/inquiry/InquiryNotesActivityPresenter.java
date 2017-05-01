@@ -1,10 +1,10 @@
 package com.mcsaatchi.gmfit.insurance.activities.inquiry;
 
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandlerImpl;
-import com.mcsaatchi.gmfit.architecture.rest.AddCRMNoteResponse;
-import com.mcsaatchi.gmfit.architecture.rest.CRMNotesResponse;
-import com.mcsaatchi.gmfit.architecture.rest.CRMNotesResponseNoteAttribute;
+import com.mcsaatchi.gmfit.architecture.retrofit.architecture.DataAccessHandlerImpl;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.AddCRMNoteResponse;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.CRMNotesResponse;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.CRMNotesResponseNoteAttribute;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.common.activities.BaseActivityPresenter;
 import java.util.List;

@@ -1,10 +1,10 @@
 package com.mcsaatchi.gmfit.onboarding.activities;
 
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandlerImpl;
-import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponse;
-import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponseInnerBody;
-import com.mcsaatchi.gmfit.architecture.rest.MetaTextsResponse;
+import com.mcsaatchi.gmfit.architecture.retrofit.architecture.DataAccessHandlerImpl;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.AuthenticationResponse;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.AuthenticationResponseInnerBody;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.MetaTextsResponse;
 import com.mcsaatchi.gmfit.common.activities.BaseActivityPresenter;
 import retrofit2.Call;
 import retrofit2.Callback;

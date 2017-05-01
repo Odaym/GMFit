@@ -9,7 +9,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.andreabaccega.widget.FormEditText;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.rest.InsuranceLoginResponseInnerData;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.InsuranceLoginResponseInnerData;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.common.classes.Helpers;

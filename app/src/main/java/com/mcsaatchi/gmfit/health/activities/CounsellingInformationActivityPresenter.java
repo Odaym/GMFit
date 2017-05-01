@@ -1,8 +1,8 @@
 package com.mcsaatchi.gmfit.health.activities;
 
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandlerImpl;
-import com.mcsaatchi.gmfit.architecture.rest.CounsellingInformationResponse;
+import com.mcsaatchi.gmfit.architecture.retrofit.architecture.DataAccessHandlerImpl;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.CounsellingInformationResponse;
 import com.mcsaatchi.gmfit.common.activities.BaseActivityPresenter;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
 import retrofit2.Call;

@@ -14,7 +14,7 @@ import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.rest.AuthenticationResponseChartData;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.AuthenticationResponseChartData;
 import com.mcsaatchi.gmfit.common.classes.CustomBarChartRenderer;
 import com.mcsaatchi.gmfit.common.models.DataChart;
 import java.util.ArrayList;

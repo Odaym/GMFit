@@ -1,10 +1,10 @@
 package com.mcsaatchi.gmfit.insurance.activities.reimbursement;
 
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandlerImpl;
-import com.mcsaatchi.gmfit.architecture.rest.CreateNewRequestResponse;
-import com.mcsaatchi.gmfit.architecture.rest.SubCategoriesResponse;
-import com.mcsaatchi.gmfit.architecture.rest.SubCategoriesResponseDatum;
+import com.mcsaatchi.gmfit.architecture.retrofit.architecture.DataAccessHandlerImpl;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.CreateNewRequestResponse;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.SubCategoriesResponse;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.SubCategoriesResponseDatum;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.common.activities.BaseActivityPresenter;
 import java.util.HashMap;

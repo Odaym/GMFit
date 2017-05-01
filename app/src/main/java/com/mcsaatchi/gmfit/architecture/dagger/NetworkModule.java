@@ -1,9 +1,9 @@
 package com.mcsaatchi.gmfit.architecture.dagger;
 
 import android.content.Context;
-import com.mcsaatchi.gmfit.architecture.data_access.ApiCallsHandler;
-import com.mcsaatchi.gmfit.architecture.data_access.DataAccessHandlerImpl;
-import com.mcsaatchi.gmfit.architecture.rest.RestClient;
+import com.mcsaatchi.gmfit.architecture.retrofit.architecture.ApiCallsHandler;
+import com.mcsaatchi.gmfit.architecture.retrofit.architecture.DataAccessHandlerImpl;
+import com.mcsaatchi.gmfit.architecture.retrofit.architecture.RestClient;
 import dagger.Module;
 import dagger.Provides;
 import javax.inject.Singleton;

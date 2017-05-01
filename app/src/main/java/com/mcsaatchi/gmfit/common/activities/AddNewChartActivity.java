@@ -12,7 +12,7 @@ import android.widget.Toast;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.rest.ChartsBySectionResponseDatum;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.ChartsBySectionResponseDatum;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.adapters.DataChartsListingAdapter;
 import com.mcsaatchi.gmfit.common.models.DataChart;

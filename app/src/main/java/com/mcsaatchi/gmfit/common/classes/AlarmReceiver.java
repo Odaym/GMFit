@@ -10,7 +10,7 @@ import android.support.v4.content.WakefulBroadcastReceiver;
 import android.support.v7.app.NotificationCompat;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.data_access.DBHelper;
+import com.mcsaatchi.gmfit.architecture.database.DBHelper;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.health.models.MedicationReminder;
 import com.mcsaatchi.gmfit.nutrition.activities.AddNewMealItemActivity;

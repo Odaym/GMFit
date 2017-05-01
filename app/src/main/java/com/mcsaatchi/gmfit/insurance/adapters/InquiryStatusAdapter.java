@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.rest.InquiriesListResponseInnerData;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.InquiriesListResponseInnerData;
 import com.mcsaatchi.gmfit.insurance.activities.inquiry.InquiryNotesActivity;
 import java.util.List;
 import org.apache.commons.lang3.text.WordUtils;

@@ -8,7 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.rest.MedicalConditionsResponseDatum;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.MedicalConditionsResponseDatum;
 import java.util.ArrayList;
 
 public class MedicalConditionsSpinnerAdapter extends BaseAdapter implements SpinnerAdapter {
