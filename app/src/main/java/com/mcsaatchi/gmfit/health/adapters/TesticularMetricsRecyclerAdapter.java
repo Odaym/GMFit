@@ -59,9 +59,7 @@ public class TesticularMetricsRecyclerAdapter
     });
 
     holder.metricValueET.setTextColor(context.getResources().getColor(R.color.health_green));
-
     holder.metricValueET.setText(testMetrics.get(position).getValue());
-
     holder.metricValueET.addTextChangedListener(new TextWatcher() {
       @Override public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 

@@ -156,8 +156,8 @@
             android:layout_weight="5"
             android:autoLink="phone"
             android:background="@color/white"
-            android:gravity="center_vertical"
-            android:paddingStart="@dimen/default_margin_2"
+            android:gravity="center_vertical|end"
+            android:paddingEnd="@dimen/default_margin_2"
             android:textColor="@color/black_alpha_50"
             />
       </LinearLayout>
@@ -189,8 +189,8 @@
             android:layout_weight="5"
             android:autoLink="phone"
             android:background="@color/white"
-            android:gravity="center_vertical"
-            android:paddingStart="@dimen/default_margin_2"
+            android:gravity="center_vertical|end"
+            android:paddingEnd="@dimen/default_margin_2"
             android:textColor="@color/black_alpha_50"
             />
       </LinearLayout>
@@ -221,8 +221,8 @@
             android:layout_height="match_parent"
             android:layout_weight="5"
             android:background="@color/white"
-            android:gravity="center_vertical"
-            android:paddingStart="@dimen/default_margin_2"
+            android:gravity="center_vertical|end"
+            android:paddingEnd="@dimen/default_margin_2"
             android:textColor="@color/black_alpha_50"
             />
       </LinearLayout>
@@ -235,6 +235,7 @@
           />
 
       <LinearLayout
+          android:id="@+id/locationDetailsLayout"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:background="@color/white"

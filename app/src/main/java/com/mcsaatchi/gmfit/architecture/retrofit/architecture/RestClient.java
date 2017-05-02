@@ -33,8 +33,6 @@ public class RestClient {
     OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
     httpClient.readTimeout(45, TimeUnit.SECONDS);
     httpClient.writeTimeout(45, TimeUnit.SECONDS);
-    httpClient.addNetworkInterceptor(new FakeInterceptor());
-    //httpClient.addInterceptor(new ChuckInterceptor(context));
     httpClient.addInterceptor(loggingInterceptor);
     httpClient.addInterceptor(chain -> {
       Request original = chain.request();

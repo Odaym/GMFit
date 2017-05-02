@@ -33,7 +33,6 @@ public class ClinicDetailsActivity extends BaseActivity implements OnMapReadyCal
   @Bind(R.id.emailAddressTV) TextView emailAddressTV;
   @Bind(R.id.clinicNameOnMapTV) TextView clinicNameOnMapTV;
   @Bind(R.id.clinicAddressOnMapTV) TextView clinicAddressOnMapTV;
-
   @Bind(R.id.withinNetworkLayout) LinearLayout withinNetworkLayout;
   @Bind(R.id.open247Layout) LinearLayout open247Layout;
   @Bind(R.id.onlineNowLayout) LinearLayout onlineNowLayout;
@@ -84,6 +83,29 @@ public class ClinicDetailsActivity extends BaseActivity implements OnMapReadyCal
     }
   }
 
+  @Override public void onMapReady(GoogleMap googleMap) {
+    map = googleMap;
+    map.getUiSettings().setRotateGesturesEnabled(false);
+    map.getUiSettings().setZoomControlsEnabled(false);
+    map.getUiSettings().setZoomGesturesEnabled(false);
+    map.getUiSettings().setTiltGesturesEnabled(false);
+
+    zoomAnimateCamera();
+  }
+
+  @OnClick(R.id.locationDetailsLayout) public void handleLocationDetailsClicked() {
+    double latitude = Double.parseDouble(clinicObject.getLatitude());
+    double longitude = Double.parseDouble(clinicObject.getLongitude());
+    String label = clinicObject.getName();
+    String uriBegin = "geo:" + latitude + "," + longitude;
+    String query = latitude + "," + longitude + "(" + label + ")";
+    String encodedQuery = Uri.encode(query);
+    String uriString = uriBegin + "?q=" + encodedQuery + "&z=16";
+    Uri uri = Uri.parse(uriString);
+    Intent intent = new Intent(android.content.Intent.ACTION_VIEW, uri);
+    startActivity(intent);
+  }
+
   @OnClick(R.id.mobileTV) public void handleMobileClicked() {
     Intent intent = new Intent(Intent.ACTION_DIAL);
     intent.setData(Uri.parse("tel:" + mobileTV.getText().toString()));
@@ -94,16 +116,6 @@ public class ClinicDetailsActivity extends BaseActivity implements OnMapReadyCal
     Intent intent = new Intent(Intent.ACTION_DIAL);
     intent.setData(Uri.parse("tel:" + phoneTV.getText().toString()));
     startActivity(intent);
-  }
-
-  @Override public void onMapReady(GoogleMap googleMap) {
-    map = googleMap;
-    map.getUiSettings().setRotateGesturesEnabled(false);
-    map.getUiSettings().setZoomControlsEnabled(false);
-    map.getUiSettings().setZoomGesturesEnabled(false);
-    map.getUiSettings().setTiltGesturesEnabled(false);
-
-    zoomAnimateCamera();
   }
 
   private void zoomAnimateCamera() {

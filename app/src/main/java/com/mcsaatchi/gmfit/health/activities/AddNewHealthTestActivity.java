@@ -245,7 +245,7 @@ public class AddNewHealthTestActivity extends BaseActivity
         cdp.show(getSupportFragmentManager(), ACTIVITY_TAG_TIME_PICKER);
       });
 
-      hookupDeletImageButtons();
+      hookupDeleteImageButtons();
     }
 
     dateTakenTV.setOnClickListener(view -> {
@@ -409,7 +409,7 @@ public class AddNewHealthTestActivity extends BaseActivity
         break;
     }
 
-    hookupDeletImageButtons();
+    hookupDeleteImageButtons();
 
     final RelativeLayout finalViewForPicture = viewForPicture;
 
@@ -481,7 +481,7 @@ public class AddNewHealthTestActivity extends BaseActivity
     }
   }
 
-  public void hookupDeletImageButtons() {
+  public void hookupDeleteImageButtons() {
     for (int i = 0; i < deleteButtonElements.size(); i++) {
       final int finalI = i;
       deleteButtonElements.get(i).setOnClickListener(view -> {
@@ -498,7 +498,7 @@ public class AddNewHealthTestActivity extends BaseActivity
         if (existingMedicaltest != null && !existingMedicaltest.getImages().isEmpty()) {
           try {
             deletedImages.add(existingMedicaltest.getImages().get(finalI).getId());
-          } catch (IndexOutOfBoundsException e) {
+          } catch (IndexOutOfBoundsException ignored) {
 
           }
         }
