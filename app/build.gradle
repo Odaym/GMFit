@@ -76,6 +76,10 @@ dependencies {
     exclude group: 'com.android.support'
   }
 
+  androidTestCompile("com.squareup.okhttp3:mockwebserver:$OkHttpVersion") {
+    exclude group: 'com.squareup.okhttp3'
+  }
+
   // Espresso-contrib for DatePicker, RecyclerView, Drawer actions, Accessibility checks, CountingIdlingResource
   //  androidTestCompile 'com.android.support.test.espresso:espresso-contrib:2.2.2'
   //  // Espresso-web for WebView support
@@ -112,7 +116,6 @@ dependencies {
   compile 'com.wrapp.floatlabelededittext:library:0.0.6'
   compile 'com.github.nguyenhoanglam:ImagePicker:1.1.2'
   compile "com.squareup.okhttp3:okhttp:$OkHttpVersion"
-  compile "com.squareup.okhttp3:mockwebserver:$OkHttpVersion"
   compile 'de.halfbit:pinned-section-listview:1.0.0'
   compile 'com.github.PhilJay:MPAndroidChart:v2.2.5'
   compile 'com.github.worker8:RadioGroupPlus:v1.0.1'
