@@ -35,11 +35,11 @@ import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.classes.GMFitApplication;
-import com.mcsaatchi.gmfit.architecture.retrofit.architecture.DataAccessHandlerImpl;
 import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
 import com.mcsaatchi.gmfit.architecture.otto.ProfileUpdatedEvent;
 import com.mcsaatchi.gmfit.architecture.otto.RemindersStatusChangedEvent;
 import com.mcsaatchi.gmfit.architecture.picasso.CircleTransform;
+import com.mcsaatchi.gmfit.architecture.retrofit.architecture.DataAccessHandlerImpl;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.UserProfileResponseActivityLevel;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.UserProfileResponseDatum;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.UserProfileResponseGoal;
@@ -192,16 +192,14 @@ public class MainProfileFragment extends BaseFragment
               if (conditionsFromExtras.get(i).isSelected()) {
                 if (!conditionsFromExtras.get(i).getMedicalCondition().equals("None")) {
                   medicalConditionIDs.add(conditionsFromExtras.get(i).getId());
-                  valueForCondition += conditionsFromExtras.get(i).getMedicalCondition() + " ";
+                  valueForCondition += conditionsFromExtras.get(i).getMedicalCondition() + ", ";
                 } else {
                   valueForCondition += "None";
                 }
               }
             }
 
-            valueForCondition = valueForCondition.replaceAll(" ", ", ");
-
-            medicalConditionsValueTV.setText(valueForCondition);
+            medicalConditionsValueTV.setText(valueForCondition.replaceAll(", $", ""));
 
             medicalConditionParts = constructMedicalConditionsForRequest(medicalConditionIDs);
 
@@ -270,8 +268,7 @@ public class MainProfileFragment extends BaseFragment
         }
       }
 
-      medicalConditionString.replaceAll(", $", "");
-      medicalConditionsValueTV.setText(medicalConditionString);
+      medicalConditionsValueTV.setText(medicalConditionString.replaceAll(", $", ""));
 
       //Set the activity level
       if (prefs.getInt(Constants.EXTRAS_USER_PROFILE_ACTIVITY_LEVEL_ID, -1) == -1) {

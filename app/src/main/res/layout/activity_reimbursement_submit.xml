@@ -137,9 +137,12 @@
           android:layout_width="match_parent"
           android:layout_height="120dp"
           android:background="@color/much_lighter_gray"
+          android:gravity="top"
           android:hint="@string/add_your_remarks_here"
           android:paddingLeft="20dp"
           android:paddingRight="20dp"
+          android:paddingTop="@dimen/default_margin_2"
+          android:textAppearance="?android:textAppearanceSmall"
           />
 
       <View

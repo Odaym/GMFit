@@ -207,16 +207,16 @@ public class EditProfileActivity extends BaseActivity
         .apply();
 
     prefs.edit()
+        .putFloat(Constants.EXTRAS_USER_PROFILE_HEIGHT,
+            Float.parseFloat(heightValueET.getText().toString()))
+        .apply();
+
+    prefs.edit()
         .putString(Constants.EXTRAS_USER_PROFILE_BLOOD_TYPE, bloodTypeValueTV.getText().toString())
         .apply();
 
     prefs.edit()
         .putString(Constants.EXTRAS_USER_PROFILE_GENDER, genderValueTV.getText().toString())
-        .apply();
-
-    prefs.edit()
-        .putFloat(Constants.EXTRAS_USER_PROFILE_HEIGHT,
-            Float.parseFloat(heightValueET.getText().toString()))
         .apply();
 
     EventBusSingleton.getInstance().post(new ProfileUpdatedEvent());

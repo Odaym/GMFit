@@ -2,6 +2,7 @@ package com.mcsaatchi.gmfit.health.fragments;
 
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.mcsaatchi.gmfit.architecture.retrofit.architecture.DataAccessHandlerImpl;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.DefaultGetResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.TakenMedicalTestsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.TakenMedicalTestsResponseBody;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.UserProfileResponse;
@@ -18,6 +19,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import timber.log.Timber;
 
 class HealthFragmentPresenter extends BaseFragmentPresenter {
   private HealthFragmentView view;
@@ -25,7 +27,8 @@ class HealthFragmentPresenter extends BaseFragmentPresenter {
   private DataAccessHandlerImpl dataAccessHandler;
 
   HealthFragmentPresenter(HealthFragmentView view,
-      RuntimeExceptionDao<Medication, Integer> medicationDAO, DataAccessHandlerImpl dataAccessHandler) {
+      RuntimeExceptionDao<Medication, Integer> medicationDAO,
+      DataAccessHandlerImpl dataAccessHandler) {
     this.view = view;
     this.medicationDAO = medicationDAO;
     this.dataAccessHandler = dataAccessHandler;
@@ -49,9 +52,9 @@ class HealthFragmentPresenter extends BaseFragmentPresenter {
             for (int i = 0; i < widgetsFromResponse.size(); i++) {
               HealthWidget widget = new HealthWidget();
 
-              widget.setId(widgetsFromResponse.get(i).getWidgetId());
+              widget.setWidget_id(widgetsFromResponse.get(i).getWidgetId());
               widget.setMeasurementUnit(widgetsFromResponse.get(i).getUnit());
-              widget.setPosition(i);
+              widget.setPosition(Integer.parseInt(widgetsFromResponse.get(i).getPosition()));
               widget.setValue(Float.parseFloat(widgetsFromResponse.get(i).getTotal()));
               widget.setTitle(widgetsFromResponse.get(i).getName());
               widget.setSlug(widgetsFromResponse.get(i).getSlug());
@@ -90,6 +93,24 @@ class HealthFragmentPresenter extends BaseFragmentPresenter {
         view.displayRequestErrorDialog(t.getMessage());
       }
     });
+  }
+
+  void updateUserWidgets(int[] widgetIds, int[] widgetPositions) {
+    dataAccessHandler.updateUserWidgets(widgetIds, widgetPositions,
+        new Callback<DefaultGetResponse>() {
+          @Override public void onResponse(Call<DefaultGetResponse> call,
+              Response<DefaultGetResponse> response) {
+            switch (response.code()) {
+              case 200:
+                Timber.d("onResponse: User's widgets updated successfully");
+                break;
+            }
+          }
+
+          @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+
+          }
+        });
   }
 
   void getUserWeight() {

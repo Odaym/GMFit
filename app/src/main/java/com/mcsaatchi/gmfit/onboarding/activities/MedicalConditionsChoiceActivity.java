@@ -14,7 +14,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
-import com.mcsaatchi.gmfit.onboarding.adapters.MedicalChoiceRecyclerAdapter;
 import com.mcsaatchi.gmfit.onboarding.models.MedicalCondition;
 import java.util.ArrayList;
 
@@ -27,8 +26,6 @@ public class MedicalConditionsChoiceActivity extends BaseActivity {
   @Bind(R.id.medicalChoicesContainer) LinearLayout medicalChoicesContainer;
 
   private ArrayList<MedicalCondition> medicalConditions = new ArrayList<>();
-
-  private MedicalChoiceRecyclerAdapter medicalConditionsChoiceListAdapter;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);

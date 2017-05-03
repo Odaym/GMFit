@@ -59,7 +59,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/userProfileBasicInfoLayout"
-        android:background="@color/white"
+        android:background="@color/offwhite_background_gray"
         android:orientation="vertical"
         >
 
@@ -67,6 +67,7 @@
       <LinearLayout
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
+          android:background="@color/white"
           android:orientation="vertical"
           >
 
@@ -293,11 +294,19 @@
         </RelativeLayout>
       </LinearLayout>
 
+      <!-- SEPARATOR -->
+      <View
+          android:layout_width="match_parent"
+          android:layout_height="0.5dp"
+          android:background="@color/offwhite_background_gray"
+          />
+
       <!-- EMERGENCY PROFILE SECTION -->
       <LinearLayout
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_marginTop="@dimen/default_margin_2"
+          android:background="@color/white"
           android:orientation="vertical"
           >
 
@@ -352,6 +361,7 @@
       <LinearLayout
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
+          android:background="@color/white"
           android:orientation="vertical"
           >
 
@@ -441,13 +451,15 @@
               android:id="@+id/countryValueTV"
               android:layout_width="@dimen/profile_value_fields_item_width"
               android:layout_height="match_parent"
-              android:layout_alignParentEnd="true"
-              android:gravity="center"
+              android:layout_toStartOf="@+id/arrowImage"
+              android:gravity="center_vertical|end"
+              android:paddingEnd="@dimen/default_margin_1"
               android:text="Lebanon"
               android:textColor="@color/fitness_dark_blue"
               />
 
           <ImageView
+              android:id="@+id/arrowImage"
               android:layout_width="15dp"
               android:layout_height="15dp"
               android:layout_alignParentEnd="true"
@@ -471,6 +483,7 @@
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_marginTop="@dimen/default_margin_2"
+          android:background="@color/white"
           android:orientation="vertical"
           >
 

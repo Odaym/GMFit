@@ -89,7 +89,7 @@
   <dimen name="slug_breakdown_value_box_width">80dp</dimen>
 
   <!-- NUTRITION FRAGMENT -->
-  <dimen name="nutrition_metric_title_font_size">15sp</dimen>
+  <dimen name="nutrition_metric_title_font_size">13sp</dimen>
   <dimen name="add_meal_item_layout_height">60dp</dimen>
   <dimen name="nutrition_widgets_gridview_height">110dp</dimen>
   <dimen name="meal_item_name_width">250dp</dimen>

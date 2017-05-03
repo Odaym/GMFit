@@ -74,16 +74,6 @@ public class GMFitApplication extends Application {
     }
   }
 
-  public AppComponent getAppComponent() {
-    return component;
-  }
-
-  public boolean checkIfHasNetwork() {
-    ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-    NetworkInfo networkInfo = cm.getActiveNetworkInfo();
-    return networkInfo != null && networkInfo.isConnected();
-  }
-
   private void updateOneSignalToken(String userOneSignalId) {
     dataAccessHandler.updateOneSignalToken(userOneSignalId, new Callback<DefaultGetResponse>() {
       @Override
@@ -98,5 +88,19 @@ public class GMFitApplication extends Application {
         Timber.d("Call failed with error : %s", t.getMessage());
       }
     });
+  }
+
+  public AppComponent getAppComponent() {
+    return component;
+  }
+
+  public boolean checkIfHasNetwork() {
+    ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+    NetworkInfo networkInfo = cm.getActiveNetworkInfo();
+    return networkInfo != null && networkInfo.isConnected();
+  }
+
+  public String getBaseURL(){
+    return "https://mobileapp.globemedfit.com/api/v1/";
   }
 }

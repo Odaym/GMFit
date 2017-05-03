@@ -12,7 +12,8 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginBottom="@dimen/default_margin_0"
-      android:layout_marginTop="@dimen/default_margin_1"
+      android:layout_marginTop="@dimen/default_margin_2"
+      android:gravity="center_vertical"
       android:textColor="@android:color/black"
       />
 

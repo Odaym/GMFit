@@ -79,14 +79,14 @@
           android:layout_width="@dimen/reminders_value_row_width"
           android:layout_height="match_parent"
           android:layout_alignParentEnd="true"
-          android:gravity="center"
+          android:gravity="end"
           android:orientation="horizontal"
           >
 
         <TextView
             android:id="@+id/breakfastReminderValueTV"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:gravity="center_vertical"
             android:textColor="@color/profile_blue"
             />
@@ -95,6 +95,7 @@
             android:layout_width="10dp"
             android:layout_height="10dp"
             android:layout_gravity="center_vertical"
+            android:layout_marginEnd="@dimen/default_margin_2"
             android:layout_marginStart="@dimen/default_margin_1"
             android:src="@drawable/ic_medical_tests_item_arrow"
             />
@@ -133,13 +134,14 @@
           android:layout_width="@dimen/reminders_value_row_width"
           android:layout_height="match_parent"
           android:layout_alignParentEnd="true"
-          android:gravity="center"
+          android:layout_marginEnd="@dimen/default_margin_2"
+          android:gravity="end"
           >
 
         <TextView
             android:id="@+id/lunchReminderValueTV"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:gravity="center_vertical"
             android:textColor="@color/profile_blue"
             />
@@ -160,7 +162,6 @@
         android:layout_height="0.5dp"
         android:background="@color/offwhite_background_gray"
         />
-
 
     <!-- DINNER REMINDER ROW -->
     <RelativeLayout
@@ -187,13 +188,15 @@
           android:layout_width="@dimen/reminders_value_row_width"
           android:layout_height="match_parent"
           android:layout_alignParentEnd="true"
-          android:gravity="center"
+          android:layout_marginEnd="@dimen/default_margin_2"
+          android:gravity="end"
           >
 
         <TextView
             android:id="@+id/dinnerReminderValueTV"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
             android:textColor="@color/profile_blue"
             />
 

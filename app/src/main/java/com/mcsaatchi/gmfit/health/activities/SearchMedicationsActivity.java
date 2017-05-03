@@ -62,8 +62,7 @@ public class SearchMedicationsActivity extends BaseActivity
     presenter = new SearchMedicationsActivityPresenter(this, dataAccessHandler);
 
     presenter.getPopularMedicines(prefs.getString(Constants.EXTRAS_INSURANCE_USER_USERNAME, ""),
-        prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""),
-        prefs.getString(Constants.EXTRAS_INSURANCE_COUNTRY_ISO_CODE, ""), "2", "2013");
+        prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""), "422", "2", "2013");
 
     searchMedicationsTV.addTextChangedListener(new TextWatcher() {
       @Override public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {

@@ -121,7 +121,7 @@
 
         <TextView
             android:id="@+id/emailValueTV"
-            android:layout_width="@dimen/edit_profile_fields_width"
+            android:layout_width="@dimen/meal_item_name_width"
             android:layout_height="match_parent"
             android:layout_alignParentEnd="true"
             android:enabled="false"

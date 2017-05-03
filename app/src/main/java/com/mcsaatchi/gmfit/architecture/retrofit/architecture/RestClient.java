@@ -38,6 +38,7 @@ public class RestClient {
       Request original = chain.request();
 
       Request.Builder requestBuilder = null;
+
       try {
         requestBuilder = original.newBuilder()
             .header("Authorization", prefs.getString(Constants.PREF_USER_ACCESS_TOKEN,
@@ -63,7 +64,7 @@ public class RestClient {
       return chain.proceed(request);
     });
 
-    Retrofit retrofit = new Retrofit.Builder().baseUrl(Constants.BASE_URL_ADDRESS)
+    Retrofit retrofit = new Retrofit.Builder().baseUrl(((GMFitApplication) context).getBaseURL())
         .client(httpClient.build())
         .addConverterFactory(GsonConverterFactory.create())
         .addCallAdapterFactory(RxJavaCallAdapterFactory.create())

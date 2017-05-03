@@ -29,11 +29,11 @@ import butterknife.OnClick;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.classes.GMFitApplication;
-import com.mcsaatchi.gmfit.architecture.retrofit.architecture.DataAccessHandlerImpl;
 import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
 import com.mcsaatchi.gmfit.architecture.otto.HealthWidgetsOrderChangedEvent;
 import com.mcsaatchi.gmfit.architecture.otto.MedicalTestEditCreateEvent;
 import com.mcsaatchi.gmfit.architecture.otto.MedicationItemCreatedEvent;
+import com.mcsaatchi.gmfit.architecture.retrofit.architecture.DataAccessHandlerImpl;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.DefaultGetResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.TakenMedicalTestsResponseBody;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.UserProfileResponseDatum;
@@ -244,6 +244,16 @@ public class HealthFragment extends BaseFragment
   @Subscribe public void updateWidgetsOrder(HealthWidgetsOrderChangedEvent event) {
     healthWidgetsMap = event.getWidgetsMapHealth();
     setupWidgetViews(healthWidgetsMap);
+
+    int[] widgets = new int[healthWidgetsMap.size()];
+    int[] positions = new int[healthWidgetsMap.size()];
+
+    for (int i = 0; i < healthWidgetsMap.size(); i++) {
+      widgets[i] = healthWidgetsMap.get(i).getWidget_id();
+      positions[i] = healthWidgetsMap.get(i).getPosition();
+    }
+
+    presenter.updateUserWidgets(widgets, positions);
   }
 
   @Subscribe public void reflectMedicalTestEditCreate(MedicalTestEditCreateEvent event) {
