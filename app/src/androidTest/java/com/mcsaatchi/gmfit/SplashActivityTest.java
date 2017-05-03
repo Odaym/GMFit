@@ -2,7 +2,7 @@ package com.mcsaatchi.gmfit;
 
 import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
-import com.mcsaatchi.gmfit.onboarding.activities.LoginActivity;
+import com.mcsaatchi.gmfit.onboarding.activities.SplashActivity;
 import java.io.IOException;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
@@ -14,14 +14,10 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
-public class SplashActivityTest extends ActivityTestRule<LoginActivity> {
+public class SplashActivityTest {
 
-  @Rule public ActivityTestRule<LoginActivity> activityRule =
-      new ActivityTestRule<>(LoginActivity.class, true, true);
-
-  public SplashActivityTest(Class<LoginActivity> activityClass) {
-    super(activityClass);
-  }
+  @Rule public ActivityTestRule<SplashActivity> activityRule =
+      new ActivityTestRule<>(SplashActivity.class, true, false);
 
   @Test public void doesLoginSuccessfully() throws IOException {
     MockWebServer server = new MockWebServer();
