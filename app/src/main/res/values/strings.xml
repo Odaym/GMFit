@@ -400,6 +400,11 @@
   <string name="country_choice_dialog_title">Choose Country</string>
   <string name="no_country_chosen_dialog_message">Please choose a country from the list to proceed.</string>
   <string name="choose_a_country_hint">Choose a country</string>
+  <string name="search_filter_by_section_title">By Status</string>
+  <string name="search_filter_by_year_title">By Year</string>
+  <string name="search_filters_activity_title">Filters</string>
+  <string name="apply_search_filters_button_title">Apply</string>
+  <string name="clear_filters_label">Clear Filter</string>
 
   <!-- MEMBER'S GUIDE-->
   <string name="members_guide_activity_title">Member\'s Guide</string>

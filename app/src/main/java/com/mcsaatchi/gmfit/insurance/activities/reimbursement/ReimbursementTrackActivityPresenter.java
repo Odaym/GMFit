@@ -30,6 +30,9 @@ class ReimbursementTrackActivityPresenter extends BaseActivityPresenter {
         switch (response.code()) {
           case 200:
             view.populateClaimsList(response.body().getData().getBody().getData());
+
+            view.hookupSearchBar(response.body().getData().getBody().getData());
+
             break;
           case 449:
             view.displayRequestErrorDialog(
@@ -48,5 +51,7 @@ class ReimbursementTrackActivityPresenter extends BaseActivityPresenter {
 
   interface ReimbursementTrackActivityView extends BaseActivityPresenter.BaseActivityView {
     void populateClaimsList(List<ClaimsListResponseDatum> claimsList);
+
+    void hookupSearchBar(List<ClaimsListResponseDatum> claimsList);
   }
 }

@@ -20,6 +20,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.GetNearbyClinicsResponseDatum;
+import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 
 public class ClinicDetailsActivity extends BaseActivity implements OnMapReadyCallback {
@@ -62,16 +63,18 @@ public class ClinicDetailsActivity extends BaseActivity implements OnMapReadyCal
         mobileTV.setText(clinicObject.getMobile());
         emailAddressTV.setText(clinicObject.getName().split(" ")[0] + "_clinic@gmail.com");
 
-        if (clinicObject.getOnline() != null && clinicObject.getOnline()) {
-          onlineNowLayout.setVisibility(View.VISIBLE);
-        }
+        if (!prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, "").isEmpty()) {
+          if (clinicObject.getOnline() != null && clinicObject.getOnline()) {
+            onlineNowLayout.setVisibility(View.VISIBLE);
+          }
 
-        if (clinicObject.getPartOfNetwork() != null && clinicObject.getPartOfNetwork()) {
-          withinNetworkLayout.setVisibility(View.VISIBLE);
-        }
+          if (clinicObject.getPartOfNetwork() != null && clinicObject.getPartOfNetwork()) {
+            withinNetworkLayout.setVisibility(View.VISIBLE);
+          }
 
-        if (clinicObject.getTwentyfourseven() != null && clinicObject.getTwentyfourseven()) {
-          open247Layout.setVisibility(View.VISIBLE);
+          if (clinicObject.getTwentyfourseven() != null && clinicObject.getTwentyfourseven()) {
+            open247Layout.setVisibility(View.VISIBLE);
+          }
         }
 
         clinicNameOnMapTV.setText(clinicObject.getName());

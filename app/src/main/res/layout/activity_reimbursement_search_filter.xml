@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/insurance_background"
+    android:orientation="vertical"
+    >
+
+  <include layout="@layout/app_toolbar"/>
+
+  <ScrollView
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      >
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/offwhite_background_gray"
+        android:orientation="vertical"
+        >
+
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="@dimen/add_meal_item_layout_height"
+          android:background="@color/insurance_blue"
+          android:gravity="center_vertical"
+          android:orientation="horizontal"
+          android:paddingEnd="@dimen/activity_vertical_margin"
+          android:paddingStart="@dimen/activity_vertical_margin"
+          >
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="30"
+            android:text="@string/search_filter_by_section_title"
+            android:textAppearance="?android:textAppearanceMedium"
+            android:textColor="@android:color/white"
+            />
+      </LinearLayout>
+
+      <android.support.v7.widget.RecyclerView
+          android:id="@+id/statusFilterRecycler"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginBottom="@dimen/default_margin_2"
+          />
+
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="@dimen/add_meal_item_layout_height"
+          android:background="@color/insurance_blue"
+          android:gravity="center_vertical"
+          android:orientation="horizontal"
+          android:paddingEnd="@dimen/activity_vertical_margin"
+          android:paddingStart="@dimen/activity_vertical_margin"
+          >
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="30"
+            android:text="@string/search_filter_by_year_title"
+            android:textAppearance="?android:textAppearanceMedium"
+            android:textColor="@android:color/white"
+            />
+      </LinearLayout>
+
+      <android.support.v7.widget.RecyclerView
+          android:id="@+id/yearFilterRecycler"
+          android:layout_width="match_parent"
+          android:layout_height="@dimen/years_choice_recycler_height"
+          />
+
+      <Button
+          android:id="@+id/applySearchFiltersBTN"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginBottom="16dp"
+          android:layout_marginLeft="16dp"
+          android:layout_marginRight="16dp"
+          android:layout_marginTop="16dp"
+          android:background="@color/buttons_blue"
+          android:text="@string/apply_search_filters_button_title"
+          android:textAllCaps="false"
+          android:textColor="@color/white"
+          />
+
+    </LinearLayout>
+  </ScrollView>
+</LinearLayout>

@@ -14,44 +14,107 @@
 
   <LinearLayout
       android:layout_width="match_parent"
-      android:layout_height="wrap_content"
+      android:layout_height="@dimen/search_bar_height"
       android:layout_marginBottom="12dp"
       android:layout_marginTop="12dp"
-      android:background="@color/offwhite_transparent"
+      android:background="@color/search_bar_offwhite_transparent"
       android:orientation="horizontal"
-      android:paddingLeft="20dp"
-      android:weightSum="1"
+      android:paddingStart="@dimen/default_margin_2"
       >
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight=".2"
-        android:paddingBottom="8dp"
-        android:paddingTop="8dp"
         >
 
+      <EditText
+          android:id="@+id/searchBarET"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_centerVertical="true"
+          android:background="@null"
+          android:hint="Search"
+          android:maxLines="1"
+          android:textColor="@color/white"
+          android:textColorHint="@color/edittext_hint_color_white"
+          />
+
       <ImageView
+          android:id="@+id/searchImage"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_alignParentEnd="true"
           android:layout_centerVertical="true"
           android:layout_marginEnd="15dp"
+          android:layout_toStartOf="@+id/filtersLayout"
           android:src="@drawable/ic_search_holo_light"
           android:tint="@color/white"
           />
 
-      <EditText
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_centerVertical="true"
-          android:background="#00FFFFFF"
-          android:hint="Search"
-          android:textColor="@color/white"
-          android:textColorHint="@color/white"
-          />
+      <LinearLayout
+          android:id="@+id/filtersLayout"
+          android:layout_width="wrap_content"
+          android:layout_height="match_parent"
+          android:layout_alignParentEnd="true"
+          android:background="@color/filters_box_offwhite_transparent"
+          android:gravity="center_vertical"
+          android:orientation="horizontal"
+          android:paddingEnd="@dimen/default_margin_2"
+          android:paddingStart="@dimen/default_margin_1"
+          >
+
+        <ImageView
+            android:layout_width="@dimen/insurance_tab_icons_dimens"
+            android:layout_height="@dimen/insurance_tab_icons_dimens"
+            android:paddingEnd="@dimen/default_margin_1"
+            android:src="@drawable/ic_search_filter_indicator"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:hint="@string/search_filters_activity_title"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white"
+            />
+
+      </LinearLayout>
     </RelativeLayout>
   </LinearLayout>
+
+  <RelativeLayout
+      android:id="@+id/searchResultsLayout"
+      android:layout_width="match_parent"
+      android:layout_height="@dimen/add_meal_item_layout_height"
+      android:background="@color/insurance_blue"
+      android:gravity="center_vertical"
+      android:orientation="horizontal"
+      android:paddingEnd="@dimen/activity_vertical_margin"
+      android:paddingStart="@dimen/activity_vertical_margin"
+      android:visibility="gone"
+      >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:text="@string/search_results_list_label"
+        android:textAppearance="?android:textAppearanceMedium"
+        android:textColor="@android:color/white"
+        />
+
+    <TextView
+        android:id="@+id/clearFilterTV"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:gravity="center_vertical"
+        android:text="@string/clear_filters_label"
+        android:textAppearance="?android:textAppearanceSmall"
+        android:textColor="@android:color/white"
+        />
+  </RelativeLayout>
 
   <android.support.v7.widget.RecyclerView
       android:id="@+id/recyclerView"

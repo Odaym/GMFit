@@ -154,7 +154,9 @@
   <dimen name="map_info_window_right_arrow_dimens">20dp</dimen>
   <dimen name="insurance_tab_icons_dimens">25dp</dimen>
   <dimen name="contact_us_row_height">70dp</dimen>
+  <dimen name="search_bar_height">50dp</dimen>
   <dimen name="contact_us_right_block_width">90dp</dimen>
+  <dimen name="years_choice_recycler_height">210dp</dimen>
 
   <!-- PILL REMINDER SECTION -->
   <dimen name="medications_list_row_item_height">100dp</dimen>

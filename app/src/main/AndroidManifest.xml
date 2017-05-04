@@ -227,6 +227,11 @@
         android:windowSoftInputMode="stateHidden"/>
 
     <activity
+        android:name=".insurance.activities.reimbursement.ReimbursementSearchFilterActivity"
+        android:screenOrientation="portrait"
+        android:theme="@style/No_Action_Bar_Theme"/>
+
+    <activity
         android:name=".insurance.activities.reimbursement.ReimbursementEmptyActivity"
         android:screenOrientation="portrait"
         android:theme="@style/No_Action_Bar_Theme"/>

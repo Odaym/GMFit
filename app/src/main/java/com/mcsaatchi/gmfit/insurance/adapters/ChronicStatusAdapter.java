@@ -11,11 +11,10 @@ import android.widget.TextView;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ChronicTreatmentListInnerData;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
-import com.mcsaatchi.gmfit.insurance.activities.chronic.ChronicDetailsActivity;
 import com.mcsaatchi.gmfit.insurance.activities.chronic.ChronicDeletionActivity;
+import com.mcsaatchi.gmfit.insurance.activities.chronic.ChronicDetailsActivity;
 import java.util.List;
 import org.apache.commons.lang3.text.WordUtils;
-import timber.log.Timber;
 
 public class ChronicStatusAdapter extends RecyclerView.Adapter {
   private List<ChronicTreatmentListInnerData> treatmentsList;
@@ -68,8 +67,6 @@ public class ChronicStatusAdapter extends RecyclerView.Adapter {
         treatmentsList.remove(getAdapterPosition());
         notifyItemRemoved(getAdapterPosition());
       });
-
-      Timber.d("Chronic item : " + chronicTreatment.getRequestNbr());
 
       treatmentNameTV.setText(WordUtils.capitalizeFully(chronicTreatment.getName()));
       treatmentStatusTV.setTextColor(context.getResources()
