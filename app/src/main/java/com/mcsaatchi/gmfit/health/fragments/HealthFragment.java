@@ -173,18 +173,19 @@ public class HealthFragment extends BaseFragment
       userTestsListView.setVisibility(View.VISIBLE);
       medicalTestsEmptyLayout.setVisibility(View.GONE);
 
-      RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
-      UserTestsRecyclerAdapter userTestsRecyclerAdapter =
-          new UserTestsRecyclerAdapter(getActivity().getApplication(), takenMedicalTests);
-      ItemTouchHelper.Callback callback =
-          new SimpleSwipeItemTouchHelperCallback(userTestsRecyclerAdapter);
-      ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
+      if (getActivity() != null) {
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
+        UserTestsRecyclerAdapter userTestsRecyclerAdapter =
+            new UserTestsRecyclerAdapter(getActivity().getApplication(), takenMedicalTests);
+        ItemTouchHelper.Callback callback = new SimpleSwipeItemTouchHelperCallback(userTestsRecyclerAdapter);
+        ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
 
-      userTestsListView.setLayoutManager(mLayoutManager);
-      userTestsListView.setNestedScrollingEnabled(false);
-      userTestsListView.setAdapter(userTestsRecyclerAdapter);
-      userTestsListView.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
-      touchHelper.attachToRecyclerView(userTestsListView);
+        userTestsListView.setLayoutManager(mLayoutManager);
+        userTestsListView.setNestedScrollingEnabled(false);
+        userTestsListView.setAdapter(userTestsRecyclerAdapter);
+        userTestsListView.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
+        touchHelper.attachToRecyclerView(userTestsListView);
+      }
     }
   }
 

@@ -14,14 +14,14 @@
       android:background="@color/offwhite_transparent"
       android:baselineAligned="false"
       android:orientation="horizontal"
-      android:paddingStart="@dimen/default_margin_2"
-      android:weightSum="1"
       >
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/search_bar_offwhite_transparent"
         android:paddingBottom="8dp"
+        android:paddingStart="@dimen/default_margin_2"
         android:paddingTop="8dp"
         >
 
@@ -40,11 +40,11 @@
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_centerVertical="true"
-          android:background="#00FFFFFF"
+          android:background="@null"
           android:hint="Search"
           android:inputType="textCapSentences"
           android:textColor="@color/white"
-          android:textColorHint="@color/white"
+          android:textColorHint="@color/edittext_hint_color_white"
           />
     </RelativeLayout>
   </LinearLayout>

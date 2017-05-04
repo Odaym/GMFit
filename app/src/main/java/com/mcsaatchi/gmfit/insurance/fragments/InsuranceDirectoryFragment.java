@@ -45,7 +45,6 @@ import com.mcsaatchi.gmfit.insurance.adapters.CustomInfoWindowAdapter;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
-import timber.log.Timber;
 
 public class InsuranceDirectoryFragment extends BaseFragment
     implements InsuranceDirectoryFragmentPresenter.InsuranceDirectoryFragmentView,
@@ -96,7 +95,6 @@ public class InsuranceDirectoryFragment extends BaseFragment
     });
 
     if (prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, "").isEmpty()) {
-      Timber.d("contract is empty!");
       mapKeyLayout.setVisibility(View.GONE);
     }
 
@@ -122,13 +120,16 @@ public class InsuranceDirectoryFragment extends BaseFragment
           }
         }
 
-        ClinicAddressesRecyclerAdapter clinicAddressesRecyclerAdapter =
-            new ClinicAddressesRecyclerAdapter(getActivity(), searchResults);
+        if (getActivity() != null) {
+          ClinicAddressesRecyclerAdapter clinicAddressesRecyclerAdapter =
+              new ClinicAddressesRecyclerAdapter((GMFitApplication) getActivity().getApplication(),
+                  getActivity(), searchResults);
 
-        clinicAddressRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
-        clinicAddressRecycler.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
-        clinicAddressRecycler.setHasFixedSize(true);
-        clinicAddressRecycler.setAdapter(clinicAddressesRecyclerAdapter);
+          clinicAddressRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
+          clinicAddressRecycler.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
+          clinicAddressRecycler.setHasFixedSize(true);
+          clinicAddressRecycler.setAdapter(clinicAddressesRecyclerAdapter);
+        }
       }
     });
 
@@ -187,20 +188,23 @@ public class InsuranceDirectoryFragment extends BaseFragment
       }
     }
 
-    ClinicAddressesRecyclerAdapter clinicAddressesRecyclerAdapter =
-        new ClinicAddressesRecyclerAdapter(getActivity(), clinicsWithLocation);
+    if (getActivity() != null) {
+      ClinicAddressesRecyclerAdapter clinicAddressesRecyclerAdapter =
+          new ClinicAddressesRecyclerAdapter((GMFitApplication) getActivity().getApplication(),
+              getActivity(), clinicsWithLocation);
 
-    clinicAddressRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
-    clinicAddressRecycler.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
-    clinicAddressRecycler.setHasFixedSize(true);
-    clinicAddressRecycler.setAdapter(clinicAddressesRecyclerAdapter);
+      clinicAddressRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
+      clinicAddressRecycler.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
+      clinicAddressRecycler.setHasFixedSize(true);
+      clinicAddressRecycler.setAdapter(clinicAddressesRecyclerAdapter);
 
-    mapFragment.getMapAsync(InsuranceDirectoryFragment.this);
-    mapFragment.setListener(() -> {
-      NestedScrollView myScrollingContent =
-          ((NestedScrollView) getActivity().findViewById(R.id.myScrollingContent));
-      myScrollingContent.requestDisallowInterceptTouchEvent(true);
-    });
+      mapFragment.getMapAsync(InsuranceDirectoryFragment.this);
+      mapFragment.setListener(() -> {
+        NestedScrollView myScrollingContent =
+            ((NestedScrollView) getActivity().findViewById(R.id.myScrollingContent));
+        myScrollingContent.requestDisallowInterceptTouchEvent(true);
+      });
+    }
   }
 
   private void getNearbyClinics() {
@@ -292,7 +296,9 @@ public class InsuranceDirectoryFragment extends BaseFragment
           .title(validClinics.get(i).getName())
           .snippet(snippet.toString())
           .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_custom_map_marker)));
-      map.setInfoWindowAdapter(new CustomInfoWindowAdapter(getActivity()));
+      map.setInfoWindowAdapter(
+          new CustomInfoWindowAdapter((GMFitApplication) getActivity().getApplication(),
+              getActivity()));
     }
 
     zoomAnimateCamera();
@@ -301,7 +307,6 @@ public class InsuranceDirectoryFragment extends BaseFragment
   private void getUserLocation() {
     if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
         != PackageManager.PERMISSION_GRANTED) {
-      Timber.d("Do we have permission?");
       requestPermissions(new String[] {
           Manifest.permission.ACCESS_FINE_LOCATION
       }, PERMISSION_LOCATION_REQUEST_CODE);

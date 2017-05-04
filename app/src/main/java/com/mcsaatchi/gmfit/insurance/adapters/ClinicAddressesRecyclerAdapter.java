@@ -2,6 +2,7 @@ package com.mcsaatchi.gmfit.insurance.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,19 +11,25 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.mcsaatchi.gmfit.R;
+import com.mcsaatchi.gmfit.architecture.classes.GMFitApplication;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.GetNearbyClinicsResponseDatum;
+import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.insurance.activities.directory.ClinicDetailsActivity;
 import java.util.List;
+import javax.inject.Inject;
 import org.apache.commons.lang3.text.WordUtils;
 
 public class ClinicAddressesRecyclerAdapter extends RecyclerView.Adapter {
+  @Inject SharedPreferences prefs;
   private List<GetNearbyClinicsResponseDatum> clinicsList;
   private Context context;
 
-  public ClinicAddressesRecyclerAdapter(Context context,
+  public ClinicAddressesRecyclerAdapter(GMFitApplication application, Context context,
       List<GetNearbyClinicsResponseDatum> clinicsList) {
     this.context = context;
     this.clinicsList = clinicsList;
+
+    application.getAppComponent().inject(this);
   }
 
   @Override public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -63,21 +70,23 @@ public class ClinicAddressesRecyclerAdapter extends RecyclerView.Adapter {
       clinicNameTV.setText(WordUtils.capitalizeFully(clinic.getName()));
       clinicAddressTV.setText(clinic.getAddress());
 
-      if (clinic.getOnline() != null) {
-        if (clinic.getOnline()) {
-          onlineNowIV.setVisibility(View.VISIBLE);
+      if (!prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, "").isEmpty()) {
+        if (clinic.getOnline() != null) {
+          if (clinic.getOnline()) {
+            onlineNowIV.setVisibility(View.VISIBLE);
+          }
         }
-      }
 
-      if (clinic.getPartOfNetwork() != null) {
-        if (clinic.getPartOfNetwork()) {
-          withinNetworkIV.setVisibility(View.VISIBLE);
+        if (clinic.getPartOfNetwork() != null) {
+          if (clinic.getPartOfNetwork()) {
+            withinNetworkIV.setVisibility(View.VISIBLE);
+          }
         }
-      }
 
-      if (clinic.getTwentyfourseven() != null) {
-        if (clinic.getTwentyfourseven()) {
-          open247IV.setVisibility(View.VISIBLE);
+        if (clinic.getTwentyfourseven() != null) {
+          if (clinic.getTwentyfourseven()) {
+            open247IV.setVisibility(View.VISIBLE);
+          }
         }
       }
 

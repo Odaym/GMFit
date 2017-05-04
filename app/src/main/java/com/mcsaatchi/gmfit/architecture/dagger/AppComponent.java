@@ -10,7 +10,9 @@ import com.mcsaatchi.gmfit.fitness.pedometer.SensorListener;
 import com.mcsaatchi.gmfit.health.adapters.UserTestsRecyclerAdapter;
 import com.mcsaatchi.gmfit.health.fragments.HealthFragment;
 import com.mcsaatchi.gmfit.insurance.activities.home.ContractsChoiceView;
+import com.mcsaatchi.gmfit.insurance.adapters.ClinicAddressesRecyclerAdapter;
 import com.mcsaatchi.gmfit.insurance.adapters.ContractsChoiceRecyclerAdapter;
+import com.mcsaatchi.gmfit.insurance.adapters.CustomInfoWindowAdapter;
 import com.mcsaatchi.gmfit.insurance.adapters.InsuranceOperationWidgetsGridAdapter;
 import com.mcsaatchi.gmfit.insurance.fragments.InsuranceDirectoryFragment;
 import com.mcsaatchi.gmfit.insurance.fragments.InsuranceFragment;
@@ -71,6 +73,10 @@ public interface AppComponent {
   void inject(UserTestsRecyclerAdapter userTestsRecyclerAdapter);
 
   void inject(InsuranceDirectoryFragment insuranceDirectoryFragment);
+
+  void inject(CustomInfoWindowAdapter customInfoWindowAdapter);
+
+  void inject(ClinicAddressesRecyclerAdapter clinicAddressesRecyclerAdapter);
 
   void inject(ContractsChoiceRecyclerAdapter contractsChoiceRecyclerAdapter);
 

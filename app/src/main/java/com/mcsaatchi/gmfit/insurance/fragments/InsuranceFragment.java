@@ -51,6 +51,7 @@ public class InsuranceFragment extends BaseFragment
     String userName = prefs.getString(Constants.EXTRAS_INSURANCE_USER_USERNAME, "");
     String userPassword = prefs.getString(Constants.EXTRAS_INSURANCE_USER_PASSWORD, "");
 
+    pager.setOffscreenPageLimit(1);
     setupViewPager(pager);
     tabs.setupWithViewPager(pager);
 
