@@ -228,6 +228,7 @@
 
     <activity
         android:name=".insurance.activities.reimbursement.ReimbursementSearchFilterActivity"
+        android:exported="true"
         android:screenOrientation="portrait"
         android:theme="@style/No_Action_Bar_Theme"/>
 
@@ -373,8 +374,8 @@
         android:value="36e136351325660be3ac92f428de565fcbdc3033"/>
 
     <!--<meta-data-->
-        <!--android:name="com.google.android.geo.API_KEY"-->
-        <!--android:value="AIzaSyBzptbw8-xsnunOTUpQfAM7xe5YyGk87i4"/>-->
+    <!--android:name="com.google.android.geo.API_KEY"-->
+    <!--android:value="AIzaSyBzptbw8-xsnunOTUpQfAM7xe5YyGk87i4"/>-->
     <!---->
     <meta-data
         android:name="com.google.android.geo.API_KEY"

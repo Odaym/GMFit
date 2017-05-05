@@ -57,12 +57,26 @@ public class FilterChoiceRecyclerAdapter
     }
 
     @Override public void onClick(View view) {
-      if (choices.get(getAdapterPosition()).isSelected()) {
-        choices.get(getAdapterPosition()).setSelected(false);
-        choiceCheckedLayout.setVisibility(View.GONE);
+      if (!choices.get(getAdapterPosition()).isSelected()) {
+        if (choices.get(getAdapterPosition()).getName().contains("All")) {
+          for (int i = 0; i < choices.size(); i++) {
+            choices.get(i).setSelected(true);
+          }
+        } else {
+          choices.get(getAdapterPosition()).setSelected(true);
+        }
+
+        notifyDataSetChanged();
       } else {
-        choices.get(getAdapterPosition()).setSelected(true);
-        choiceCheckedLayout.setVisibility(View.VISIBLE);
+        if (choices.get(getAdapterPosition()).getName().contains("All")) {
+          for (int i = 0; i < choices.size(); i++) {
+            choices.get(i).setSelected(false);
+          }
+        } else {
+          choices.get(getAdapterPosition()).setSelected(false);
+        }
+
+        notifyDataSetChanged();
       }
     }
   }
