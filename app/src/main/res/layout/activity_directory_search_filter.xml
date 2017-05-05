@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/insurance_background"
+    android:orientation="vertical"
+    >
+
+  <include layout="@layout/app_toolbar"/>
+
+  <ScrollView
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:background="@color/offwhite_background_gray"
+      >
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="@dimen/add_meal_item_layout_height"
+          android:background="@color/insurance_blue"
+          android:gravity="center_vertical"
+          android:orientation="horizontal"
+          android:paddingEnd="@dimen/activity_vertical_margin"
+          android:paddingStart="@dimen/activity_vertical_margin"
+          >
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="30"
+            android:text="@string/by_location_header_title"
+            android:textAppearance="?android:textAppearanceMedium"
+            android:textColor="@android:color/white"
+            />
+      </LinearLayout>
+
+      <com.mcsaatchi.gmfit.insurance.widget.CustomPicker
+          android:id="@+id/countryPicker"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          />
+
+      <com.mcsaatchi.gmfit.insurance.widget.CustomPicker
+          android:id="@+id/cityPicker"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          />
+
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="@dimen/add_meal_item_layout_height"
+          android:layout_marginTop="@dimen/default_margin_2"
+          android:background="@color/insurance_blue"
+          android:gravity="center_vertical"
+          android:orientation="horizontal"
+          android:paddingEnd="@dimen/activity_vertical_margin"
+          android:paddingStart="@dimen/activity_vertical_margin"
+          >
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="30"
+            android:text="@string/by_provider_header_title"
+            android:textAppearance="?android:textAppearanceMedium"
+            android:textColor="@android:color/white"
+            />
+      </LinearLayout>
+
+      <com.mcsaatchi.gmfit.insurance.widget.CustomPicker
+          android:id="@+id/typePicker"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          />
+
+      <com.mcsaatchi.gmfit.insurance.widget.CustomPicker
+          android:id="@+id/servicesPicker"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          />
+
+      <com.mcsaatchi.gmfit.insurance.widget.CustomPicker
+          android:id="@+id/statusPicker"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          />
+
+      <com.mcsaatchi.gmfit.insurance.widget.CustomPicker
+          android:id="@+id/networkPicker"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          />
+
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="@dimen/add_meal_item_layout_height"
+          android:layout_marginTop="@dimen/default_margin_2"
+          android:background="@color/insurance_blue"
+          android:gravity="center_vertical"
+          android:orientation="horizontal"
+          android:paddingEnd="@dimen/activity_vertical_margin"
+          android:paddingStart="@dimen/activity_vertical_margin"
+          >
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="30"
+            android:text="@string/working_days_header_title"
+            android:textAppearance="?android:textAppearanceMedium"
+            android:textColor="@android:color/white"
+            />
+      </LinearLayout>
+
+      <android.support.v7.widget.RecyclerView
+          android:id="@+id/workingDaysRecycler"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          />
+
+      <Button
+          android:id="@+id/searchFiltersBTN"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginBottom="@dimen/default_margin_2"
+          android:layout_marginLeft="@dimen/default_margin_2"
+          android:layout_marginRight="@dimen/default_margin_2"
+          android:layout_marginTop="@dimen/default_margin_2"
+          android:background="@color/buttons_blue"
+          android:text="@string/search"
+          android:textAllCaps="false"
+          android:textColor="@color/white"
+          />
+
+    </LinearLayout>
+  </ScrollView>
+</LinearLayout>

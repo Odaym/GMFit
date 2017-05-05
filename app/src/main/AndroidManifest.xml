@@ -347,6 +347,12 @@
         android:theme="@style/No_Action_Bar_Theme"/>
 
     <activity
+        android:name=".insurance.activities.directory.DirectorySearchFilterActivity"
+        android:exported="true"
+        android:screenOrientation="portrait"
+        android:theme="@style/No_Action_Bar_Theme"/>
+
+    <activity
         android:name=".insurance.activities.home.SnapshotActivity"
         android:screenOrientation="portrait"
         android:theme="@style/No_Action_Bar_Theme"/>
@@ -373,13 +379,13 @@
         android:name="io.fabric.ApiKey"
         android:value="36e136351325660be3ac92f428de565fcbdc3033"/>
 
-    <!--<meta-data-->
-    <!--android:name="com.google.android.geo.API_KEY"-->
-    <!--android:value="AIzaSyBzptbw8-xsnunOTUpQfAM7xe5YyGk87i4"/>-->
-    <!---->
     <meta-data
-        android:name="com.google.android.geo.API_KEY"
-        android:value="AIzaSyDzwRq628GqkaxN3cZQoTuAergqlZJms6k"/>
+    android:name="com.google.android.geo.API_KEY"
+    android:value="AIzaSyBzptbw8-xsnunOTUpQfAM7xe5YyGk87i4"/>
+
+    <!--<meta-data-->
+        <!--android:name="com.google.android.geo.API_KEY"-->
+        <!--android:value="AIzaSyDzwRq628GqkaxN3cZQoTuAergqlZJms6k"/>-->
 
     <meta-data
         android:name="com.google.android.gms.version"

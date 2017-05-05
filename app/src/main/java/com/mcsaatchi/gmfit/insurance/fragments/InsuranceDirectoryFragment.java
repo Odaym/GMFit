@@ -2,6 +2,7 @@ package com.mcsaatchi.gmfit.insurance.fragments;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -23,6 +24,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -40,30 +43,36 @@ import com.mcsaatchi.gmfit.architecture.retrofit.responses.GetNearbyClinicsRespo
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.classes.SimpleDividerItemDecoration;
 import com.mcsaatchi.gmfit.common.fragments.BaseFragment;
+import com.mcsaatchi.gmfit.insurance.activities.directory.DirectorySearchFilterActivity;
 import com.mcsaatchi.gmfit.insurance.adapters.ClinicAddressesRecyclerAdapter;
 import com.mcsaatchi.gmfit.insurance.adapters.CustomInfoWindowAdapter;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
 
+import static com.mcsaatchi.gmfit.insurance.activities.reimbursement.ReimbursementTrackActivity.SEARCH_CRITERIA_SELECTED;
+
 public class InsuranceDirectoryFragment extends BaseFragment
     implements InsuranceDirectoryFragmentPresenter.InsuranceDirectoryFragmentView,
     OnMapReadyCallback {
   private static final int PERMISSION_LOCATION_REQUEST_CODE = 375;
-  @Bind(R.id.clinicAddressesRecyclerView) RecyclerView clinicAddressRecycler;
-  @Bind(R.id.searchBoxET) EditText searchBoxET;
-  @Bind(R.id.loadingMapProgress) ProgressBar loadingMapProgress;
-  @Bind(R.id.mapKeyLayout) LinearLayout mapKeyLayout;
 
   @Inject DataAccessHandlerImpl dataAccessHandler;
   @Inject SharedPreferences prefs;
 
-  private InsuranceDirectoryFragmentPresenter presenter;
+  @Bind(R.id.clinicAddressesRecyclerView) RecyclerView clinicAddressRecycler;
+  @Bind(R.id.loadingMapProgress) ProgressBar loadingMapProgress;
+  @Bind(R.id.mapKeyLayout) LinearLayout mapKeyLayout;
+  @Bind(R.id.searchBarET) EditText searchBarET;
+  @Bind(R.id.searchImage) ImageView searchImage;
+  @Bind(R.id.searchResultsLayout) RelativeLayout searchResultsLayout;
+  @Bind(R.id.clearFilterTV) TextView clearFilterTV;
 
-  private boolean listingVisible = false;
+  private InsuranceDirectoryFragmentPresenter presenter;
   private List<GetNearbyClinicsResponseDatum> clinicsWithLocation = new ArrayList<>();
-  private LocationManager lm;
   private double[] userLatLong = new double[2];
+  private boolean listingVisible = false;
+  private LocationManager lm;
 
   private GoogleMap map;
   private ImageView switchMapViewBTN;
@@ -95,12 +104,12 @@ public class InsuranceDirectoryFragment extends BaseFragment
     });
 
     if (prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, "").isEmpty()) {
-      mapKeyLayout.setVisibility(View.GONE);
+      mapKeyLayout.setVisibility(View.INVISIBLE);
     }
 
     setupSwitchMapViewButton();
 
-    searchBoxET.addTextChangedListener(new TextWatcher() {
+    searchBarET.addTextChangedListener(new TextWatcher() {
       @Override public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
       }
@@ -111,24 +120,27 @@ public class InsuranceDirectoryFragment extends BaseFragment
       @Override public void afterTextChanged(Editable editable) {
         List<GetNearbyClinicsResponseDatum> searchResults = new ArrayList<>();
 
-        for (int i = 0; i < clinicsWithLocation.size(); i++) {
-          if (clinicsWithLocation.get(i)
-              .getName()
-              .toLowerCase()
-              .contains(editable.toString().toLowerCase())) {
-            searchResults.add(clinicsWithLocation.get(i));
+        if (editable.toString().length() > 2) {
+          searchImage.setImageResource(R.drawable.ic_clear_search);
+          searchImage.setOnClickListener(view -> searchBarET.setText(""));
+
+          for (int i = 0; i < clinicsWithLocation.size(); i++) {
+            if (clinicsWithLocation.get(i)
+                .getName()
+                .toLowerCase()
+                .contains(editable.toString().toLowerCase())) {
+              searchResults.add(clinicsWithLocation.get(i));
+            }
           }
-        }
 
-        if (getActivity() != null) {
-          ClinicAddressesRecyclerAdapter clinicAddressesRecyclerAdapter =
-              new ClinicAddressesRecyclerAdapter((GMFitApplication) getActivity().getApplication(),
-                  getActivity(), searchResults);
+          if (getActivity() != null) {
+            displayClinicAddressesRecycler(searchResults);
+          }
+        } else if (editable.toString().isEmpty()) {
+          searchImage.setImageResource(R.drawable.ic_search_holo_light);
+          searchResultsLayout.setVisibility(View.GONE);
 
-          clinicAddressRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
-          clinicAddressRecycler.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
-          clinicAddressRecycler.setHasFixedSize(true);
-          clinicAddressRecycler.setAdapter(clinicAddressesRecyclerAdapter);
+          displayClinicAddressesRecycler(clinicsWithLocation);
         }
       }
     });
@@ -136,8 +148,62 @@ public class InsuranceDirectoryFragment extends BaseFragment
     return fragmentView;
   }
 
-  @OnClick(R.id.myLocationLayout) public void handleOnMyLocationPressed() {
-    zoomAnimateCamera();
+  @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+
+    switch (requestCode) {
+      case PERMISSION_LOCATION_REQUEST_CODE:
+        if (ActivityCompat.checkSelfPermission(getActivity(),
+            Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+
+          Location location = lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+          userLatLong[0] = location.getLatitude();
+          userLatLong[1] = location.getLongitude();
+
+          getNearbyClinics(prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""), "H", 22,
+              userLatLong[1], userLatLong[0], 0);
+        }
+
+        break;
+      case SEARCH_CRITERIA_SELECTED:
+        String countrySelected, citySelected, typeSelected, serviceSelected, networkSelected,
+            statusSelected;
+
+        if (data != null) {
+          //Unused so far
+          ArrayList<String> workingDaysCriteria =
+              data.getExtras().getStringArrayList("WORKING_DAYS");
+
+          countrySelected = data.getExtras().getString("Country");
+          citySelected = data.getExtras().getString("City");
+          typeSelected = data.getExtras().getString("Type");
+          serviceSelected = data.getExtras().getString("Service");
+          networkSelected = data.getExtras().getString("Status");
+          statusSelected = data.getExtras().getString("Network");
+
+          String finalProviderType = "D";
+
+          if (typeSelected != null) {
+            switch (typeSelected) {
+              case "Hospital":
+                finalProviderType = "H";
+                break;
+              case "Doctor":
+                finalProviderType = "D";
+                break;
+              case "Clinic":
+                finalProviderType = "C";
+                break;
+            }
+          }
+
+          getNearbyClinics(prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""),
+              finalProviderType, Integer.valueOf(countrySelected), userLatLong[1], userLatLong[0],
+              0);
+        }
+
+        break;
+    }
   }
 
   @Override public void setUserVisibleHint(boolean isVisibleToUser) {
@@ -175,7 +241,8 @@ public class InsuranceDirectoryFragment extends BaseFragment
           userLatLong[0] = location.getLatitude();
           userLatLong[1] = location.getLongitude();
 
-          getNearbyClinics();
+          getNearbyClinics(prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""), "H", 22,
+              userLatLong[1], userLatLong[0], 0);
         }
       }
     }
@@ -189,14 +256,7 @@ public class InsuranceDirectoryFragment extends BaseFragment
     }
 
     if (getActivity() != null) {
-      ClinicAddressesRecyclerAdapter clinicAddressesRecyclerAdapter =
-          new ClinicAddressesRecyclerAdapter((GMFitApplication) getActivity().getApplication(),
-              getActivity(), clinicsWithLocation);
-
-      clinicAddressRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
-      clinicAddressRecycler.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
-      clinicAddressRecycler.setHasFixedSize(true);
-      clinicAddressRecycler.setAdapter(clinicAddressesRecyclerAdapter);
+      displayClinicAddressesRecycler(clinicsWithLocation);
 
       mapFragment.getMapAsync(InsuranceDirectoryFragment.this);
       mapFragment.setListener(() -> {
@@ -207,7 +267,30 @@ public class InsuranceDirectoryFragment extends BaseFragment
     }
   }
 
-  private void getNearbyClinics() {
+  @OnClick(R.id.myLocationLayout) public void handleOnMyLocationPressed() {
+    zoomAnimateCamera();
+  }
+
+  @OnClick(R.id.filtersLayout) public void handleFiltersLayoutClicked() {
+    searchBarET.setText("");
+
+    Intent intent = new Intent(getActivity(), DirectorySearchFilterActivity.class);
+    startActivityForResult(intent, SEARCH_CRITERIA_SELECTED);
+  }
+
+  private void displayClinicAddressesRecycler(List<GetNearbyClinicsResponseDatum> clinicsList) {
+    ClinicAddressesRecyclerAdapter clinicAddressesRecyclerAdapter =
+        new ClinicAddressesRecyclerAdapter((GMFitApplication) getActivity().getApplication(),
+            getActivity(), clinicsList);
+
+    clinicAddressRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
+    clinicAddressRecycler.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
+    clinicAddressRecycler.setHasFixedSize(true);
+    clinicAddressRecycler.setAdapter(clinicAddressesRecyclerAdapter);
+  }
+
+  private void getNearbyClinics(String contractNo, String providerTypesCode, int searchCtry,
+      double longitude, double latitude, int fetchClosest) {
     loadingMapProgress.setVisibility(View.VISIBLE);
 
     final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
@@ -215,8 +298,8 @@ public class InsuranceDirectoryFragment extends BaseFragment
     alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
         (dialog, which) -> dialog.dismiss());
 
-    presenter.getNearbyClinics(prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""), "H",
-        22, userLatLong[1], userLatLong[0], 0);
+    presenter.getNearbyClinics(contractNo, providerTypesCode, searchCtry, longitude, latitude,
+        fetchClosest);
   }
 
   private void setupSwitchMapViewButton() {
@@ -315,7 +398,8 @@ public class InsuranceDirectoryFragment extends BaseFragment
       userLatLong[0] = location.getLatitude();
       userLatLong[1] = location.getLongitude();
 
-      getNearbyClinics();
+      getNearbyClinics(prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""), "H", 22,
+          userLatLong[1], userLatLong[0], 0);
     }
   }
 
@@ -323,9 +407,11 @@ public class InsuranceDirectoryFragment extends BaseFragment
     CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(userLatLong[0], userLatLong[1]));
     CameraUpdate zoom = CameraUpdateFactory.zoomTo(13);
 
-    map.moveCamera(center);
-    map.animateCamera(zoom, 400, null);
+    if (map != null) {
+      map.moveCamera(center);
+      map.animateCamera(zoom, 400, null);
 
-    loadingMapProgress.setVisibility(View.GONE);
+      loadingMapProgress.setVisibility(View.GONE);
+    }
   }
 }

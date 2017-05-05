@@ -38,6 +38,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import okhttp3.RequestBody;
 import timber.log.Timber;
 
@@ -109,7 +110,7 @@ public class SubmitReimbursementActivity extends BaseActivity
 
       Date d = new Date(calendar.getTimeInMillis());
 
-      SimpleDateFormat dateFormatter = new SimpleDateFormat("dd MMM, yyyy");
+      SimpleDateFormat dateFormatter = new SimpleDateFormat("dd MMM, yyyy", Locale.getDefault());
       serviceDateValue = dateFormatter.format(d);
       serviceDate.setSelectedItem(serviceDateValue);
     });

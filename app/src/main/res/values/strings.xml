@@ -509,4 +509,8 @@
   <string name="clinic_working_hours_saturday">Saturday</string>
   <string name="clinic_working_hours_sunday">Sunday</string>
   <string name="updating_password_dialog_title">Updating your password</string>
+  <string name="by_location_header_title">By Location</string>
+  <string name="by_provider_header_title">By Provider</string>
+  <string name="working_days_header_title">Working Days</string>
+  <string name="advanced_search_activity_title">Advanced Search</string>
 </resources>
