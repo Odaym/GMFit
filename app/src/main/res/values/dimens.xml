@@ -91,6 +91,7 @@
   <!-- NUTRITION FRAGMENT -->
   <dimen name="nutrition_metric_title_font_size">13sp</dimen>
   <dimen name="add_meal_item_layout_height">60dp</dimen>
+  <dimen name="meal_reminder_row_height">60dp</dimen>
   <dimen name="nutrition_widgets_gridview_height">110dp</dimen>
   <dimen name="meal_item_name_width">250dp</dimen>
   <dimen name="add_and_scan_icons_dimens">20dp</dimen>
@@ -156,7 +157,7 @@
   <dimen name="contact_us_row_height">70dp</dimen>
   <dimen name="search_bar_height">50dp</dimen>
   <dimen name="contact_us_right_block_width">90dp</dimen>
-  <dimen name="years_choice_recycler_height">210dp</dimen>
+  <dimen name="years_choice_recycler_height">280dp</dimen>
 
   <!-- PILL REMINDER SECTION -->
   <dimen name="medications_list_row_item_height">100dp</dimen>

@@ -43,13 +43,6 @@
             android:textAppearance="?android:textAppearanceMedium"
             android:textColor="@android:color/white"
             />
-
-        <Switch
-            android:id="@+id/enableRemindersSwitch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:checked="true"
-            />
       </LinearLayout>
     </LinearLayout>
 
@@ -58,7 +51,7 @@
     <RelativeLayout
         android:id="@+id/breakfastReminderLayout"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/add_meal_item_layout_height"
+        android:layout_height="@dimen/meal_reminder_row_height"
         android:background="?android:attr/selectableItemBackground"
         android:clickable="true"
         android:focusable="true"
@@ -68,38 +61,34 @@
       <TextView
           android:id="@+id/breakfastReminderTV"
           android:layout_width="@dimen/meal_item_name_width"
-          android:layout_height="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="@dimen/default_margin_1"
           android:ellipsize="end"
           android:gravity="center_vertical"
           android:maxLines="1"
           android:text="@string/meal_headline_title_breakfast"
           />
 
-      <LinearLayout
-          android:layout_width="@dimen/reminders_value_row_width"
+      <TextView
+          android:id="@+id/breakfastReminderValueTV"
+          android:layout_width="wrap_content"
           android:layout_height="match_parent"
+          android:layout_below="@+id/breakfastReminderTV"
+          android:layout_marginBottom="@dimen/default_margin_1"
+          android:gravity="center_vertical"
+          android:textColor="@color/profile_blue"
+          />
+
+      <Switch
+          android:id="@+id/breakfastRemindersSwitch"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
           android:layout_alignParentEnd="true"
-          android:gravity="end"
-          android:orientation="horizontal"
-          >
+          android:layout_centerVertical="true"
+          android:layout_marginEnd="@dimen/default_margin_2"
+          android:checked="true"
+          />
 
-        <TextView
-            android:id="@+id/breakfastReminderValueTV"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:textColor="@color/profile_blue"
-            />
-
-        <ImageView
-            android:layout_width="10dp"
-            android:layout_height="10dp"
-            android:layout_gravity="center_vertical"
-            android:layout_marginEnd="@dimen/default_margin_2"
-            android:layout_marginStart="@dimen/default_margin_1"
-            android:src="@drawable/ic_medical_tests_item_arrow"
-            />
-      </LinearLayout>
     </RelativeLayout>
 
     <!-- SEPARATOR -->
@@ -113,7 +102,8 @@
     <RelativeLayout
         android:id="@+id/lunchReminderLayout"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/add_meal_item_layout_height"
+        android:layout_height="@dimen/meal_reminder_row_height"
+        android:layout_marginTop="@dimen/default_margin_1"
         android:background="?android:attr/selectableItemBackground"
         android:clickable="true"
         android:focusable="true"
@@ -121,39 +111,34 @@
         >
 
       <TextView
-          android:id="@+id/privacySecurityTitleTV"
+          android:id="@+id/lunchReminderTV"
           android:layout_width="@dimen/meal_item_name_width"
-          android:layout_height="match_parent"
+          android:layout_height="wrap_content"
           android:ellipsize="end"
           android:gravity="center_vertical"
           android:maxLines="1"
           android:text="@string/meal_headline_title_lunch"
           />
 
-      <LinearLayout
-          android:layout_width="@dimen/reminders_value_row_width"
+      <TextView
+          android:id="@+id/lunchReminderValueTV"
+          android:layout_width="wrap_content"
           android:layout_height="match_parent"
+          android:layout_below="@+id/lunchReminderTV"
+          android:layout_marginBottom="@dimen/default_margin_1"
+          android:gravity="center_vertical"
+          android:textColor="@color/profile_blue"
+          />
+
+      <Switch
+          android:id="@+id/lunchRemindersSwitch"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
           android:layout_alignParentEnd="true"
+          android:layout_centerVertical="true"
           android:layout_marginEnd="@dimen/default_margin_2"
-          android:gravity="end"
-          >
-
-        <TextView
-            android:id="@+id/lunchReminderValueTV"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:textColor="@color/profile_blue"
-            />
-
-        <ImageView
-            android:layout_width="10dp"
-            android:layout_height="10dp"
-            android:layout_gravity="center_vertical"
-            android:layout_marginStart="@dimen/default_margin_1"
-            android:src="@drawable/ic_medical_tests_item_arrow"
-            />
-      </LinearLayout>
+          android:checked="true"
+          />
     </RelativeLayout>
 
     <!-- SEPARATOR -->
@@ -177,37 +162,34 @@
       <TextView
           android:id="@+id/dinnerReminderTV"
           android:layout_width="@dimen/meal_item_name_width"
-          android:layout_height="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="@dimen/default_margin_1"
           android:ellipsize="end"
           android:gravity="center_vertical"
           android:maxLines="1"
           android:text="@string/meal_headline_title_dinner"
           />
 
-      <LinearLayout
-          android:layout_width="@dimen/reminders_value_row_width"
+      <TextView
+          android:id="@+id/dinnerReminderValueTV"
+          android:layout_width="wrap_content"
           android:layout_height="match_parent"
+          android:layout_below="@+id/dinnerReminderTV"
+          android:layout_marginBottom="@dimen/default_margin_1"
+          android:gravity="center_vertical"
+          android:textColor="@color/profile_blue"
+          />
+
+      <Switch
+          android:id="@+id/dinnerRemindersSwitch"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
           android:layout_alignParentEnd="true"
+          android:layout_centerVertical="true"
           android:layout_marginEnd="@dimen/default_margin_2"
-          android:gravity="end"
-          >
+          android:checked="true"
+          />
 
-        <TextView
-            android:id="@+id/dinnerReminderValueTV"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:textColor="@color/profile_blue"
-            />
-
-        <ImageView
-            android:layout_width="10dp"
-            android:layout_height="10dp"
-            android:layout_gravity="center_vertical"
-            android:layout_marginStart="@dimen/default_margin_1"
-            android:src="@drawable/ic_medical_tests_item_arrow"
-            />
-      </LinearLayout>
     </RelativeLayout>
 
     <!-- SEPARATOR -->

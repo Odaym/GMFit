@@ -37,7 +37,6 @@ import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.classes.GMFitApplication;
 import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
 import com.mcsaatchi.gmfit.architecture.otto.ProfileUpdatedEvent;
-import com.mcsaatchi.gmfit.architecture.otto.RemindersStatusChangedEvent;
 import com.mcsaatchi.gmfit.architecture.picasso.CircleTransform;
 import com.mcsaatchi.gmfit.architecture.retrofit.architecture.DataAccessHandlerImpl;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.UserProfileResponseActivityLevel;
@@ -90,7 +89,6 @@ public class MainProfileFragment extends BaseFragment
   @Bind(R.id.goalsEntryValueTV) TextView goalsEntryValueTV;
   @Bind(R.id.medicalConditionsValueTV) TextView medicalConditionsValueTV;
   @Bind(R.id.activityLevelsEntryValueTV) TextView activityLevelsEntryValueTV;
-  @Bind(R.id.appRemindersValueTV) TextView appRemindersValueTV;
   @Bind(R.id.changePasswordParentLayout) LinearLayout changePasswordParentLayout;
 
   @Inject SharedPreferences prefs;
@@ -447,14 +445,6 @@ public class MainProfileFragment extends BaseFragment
       startActivity(Intent.createChooser(i, "Send email through"));
     } catch (ActivityNotFoundException ex) {
       Toast.makeText(getActivity(), "No email client", Toast.LENGTH_SHORT).show();
-    }
-  }
-
-  @Subscribe public void updateReminderTextviewFromStatus(RemindersStatusChangedEvent event) {
-    if (event.isReminderOn()) {
-      appRemindersValueTV.setText("On");
-    } else {
-      appRemindersValueTV.setText("Off");
     }
   }
 

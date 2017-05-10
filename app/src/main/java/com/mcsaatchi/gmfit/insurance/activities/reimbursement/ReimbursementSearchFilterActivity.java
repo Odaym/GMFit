@@ -88,10 +88,17 @@ public class ReimbursementSearchFilterActivity extends BaseActivity {
   private ArrayList<FilterChoice> getStatusChoices() {
     ArrayList<FilterChoice> choicesToReturn = new ArrayList<>();
     choicesToReturn.add(new FilterChoice("All Statuses", false));
-    choicesToReturn.add(new FilterChoice("Processing", false));
-    choicesToReturn.add(new FilterChoice("Received", false));
+    choicesToReturn.add(new FilterChoice("Submitted", false));
     choicesToReturn.add(new FilterChoice("Rejected", false));
+    choicesToReturn.add(new FilterChoice("Suspended", false));
+    choicesToReturn.add(new FilterChoice("Under Processing", false));
     choicesToReturn.add(new FilterChoice("Closed", false));
+    choicesToReturn.add(new FilterChoice("Under Payment", false));
+    choicesToReturn.add(new FilterChoice("Paid", false));
+    choicesToReturn.add(new FilterChoice("Received", false));
+    choicesToReturn.add(new FilterChoice("Approved", false));
+    choicesToReturn.add(new FilterChoice("Posted", false));
+    choicesToReturn.add(new FilterChoice("Dispensed", false));
 
     return choicesToReturn;
   }
@@ -102,6 +109,7 @@ public class ReimbursementSearchFilterActivity extends BaseActivity {
     yearsToReturn.add(new FilterChoice("All Years", false));
     yearsToReturn.add(new FilterChoice(String.valueOf(cal.get(Calendar.YEAR)), false));
     yearsToReturn.add(new FilterChoice(String.valueOf(cal.get(Calendar.YEAR) - 1), false));
+    yearsToReturn.add(new FilterChoice(String.valueOf(cal.get(Calendar.YEAR) - 2), false));
 
     return yearsToReturn;
   }

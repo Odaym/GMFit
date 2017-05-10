@@ -33,7 +33,9 @@ public class MealRemindersActivity extends BaseActivity {
   private final DateTimeFormatter reverseTimeFormatter =
       DateTimeFormat.forPattern("HH:mm").withLocale(Locale.getDefault());
   @Bind(R.id.toolbar) Toolbar toolbar;
-  @Bind(R.id.enableRemindersSwitch) Switch enableRemindersSwitch;
+  @Bind(R.id.breakfastRemindersSwitch) Switch breakfastRemindersSwitch;
+  @Bind(R.id.lunchRemindersSwitch) Switch lunchRemindersSwitch;
+  @Bind(R.id.dinnerRemindersSwitch) Switch dinnerRemindersSwitch;
   @Bind(R.id.breakfastReminderValueTV) TextView breakfastReminderValueTV;
   @Bind(R.id.lunchReminderValueTV) TextView lunchReminderValueTV;
   @Bind(R.id.dinnerReminderValueTV) TextView dinnerReminderValueTV;
@@ -113,53 +115,35 @@ public class MealRemindersActivity extends BaseActivity {
     dinnerAlarmTime = prefs.getString(Constants.DINNER_REMINDER_ALARM_TIME, "None");
     dinnerReminderValueTV.setText(dinnerAlarmTime);
 
-    if (prefs.getBoolean(Constants.ARE_ALARMS_ENABLED, true)) {
-      enableRemindersSwitch.setChecked(true);
-    } else {
-      enableRemindersSwitch.setChecked(false);
-    }
-
-    enableRemindersSwitch.setOnCheckedChangeListener((compoundButton, checked) -> {
-      if (checked) {
-        breakfastReminderLayout.setEnabled(true);
-        lunchReminderLayout.setEnabled(true);
-        dinnerReminderLayout.setEnabled(true);
-
-        breakfastReminderLayout.setAlpha(1f);
-        lunchReminderLayout.setAlpha(1f);
-        dinnerReminderLayout.setAlpha(1f);
-
+    breakfastRemindersSwitch.setOnCheckedChangeListener((compoundButton, checked) -> {
+      if (checked && !breakfastAlarmTime.equals("None")) {
         setupMealRemindersAlarm(MealRemindersActivity.this, prefs, "Breakfast", Integer.parseInt(
             reverseTimeFormatter.print(getLocalTimeFormatted(breakfastAlarmTime)).split(":")[0]),
             Integer.parseInt(reverseTimeFormatter.print(getLocalTimeFormatted(breakfastAlarmTime))
                 .split(":")[1]), breakfastAlarmTime);
+      }
 
+      EventBusSingleton.getInstance().post(new RemindersStatusChangedEvent(areAlarmsEnabled));
+    });
+
+    lunchRemindersSwitch.setOnCheckedChangeListener((compoundButton, checked) -> {
+      if (checked && !lunchAlarmTime.equals("None")) {
         setupMealRemindersAlarm(MealRemindersActivity.this, prefs, "Lunch", Integer.parseInt(
             reverseTimeFormatter.print(getLocalTimeFormatted(lunchAlarmTime)).split(":")[0]),
             Integer.parseInt(
                 reverseTimeFormatter.print(getLocalTimeFormatted(lunchAlarmTime)).split(":")[1]),
             lunchAlarmTime);
+      }
+    });
 
+    dinnerRemindersSwitch.setOnCheckedChangeListener((compoundButton, checked) -> {
+      if (checked && !dinnerAlarmTime.equals("None")) {
         setupMealRemindersAlarm(MealRemindersActivity.this, prefs, "Dinner", Integer.parseInt(
             reverseTimeFormatter.print(getLocalTimeFormatted(dinnerAlarmTime)).split(":")[0]),
             Integer.parseInt(
                 reverseTimeFormatter.print(getLocalTimeFormatted(dinnerAlarmTime)).split(":")[1]),
             dinnerAlarmTime);
-      } else {
-        cancelAllPendingAlarms();
-
-        breakfastReminderLayout.setEnabled(false);
-        lunchReminderLayout.setEnabled(false);
-        dinnerReminderLayout.setEnabled(false);
-
-        breakfastReminderLayout.setAlpha(0.5f);
-        lunchReminderLayout.setAlpha(0.5f);
-        dinnerReminderLayout.setAlpha(0.5f);
       }
-
-      triggerAlarmsState(checked);
-
-      EventBusSingleton.getInstance().post(new RemindersStatusChangedEvent(areAlarmsEnabled));
     });
   }
 
@@ -244,13 +228,13 @@ public class MealRemindersActivity extends BaseActivity {
     dinnerPendingAlarm.cancel();
   }
 
-  private void triggerAlarmsState(boolean enabled) {
-    if (enabled) {
-      prefs.edit().putBoolean(Constants.ARE_ALARMS_ENABLED, true).apply();
-    } else {
-      prefs.edit().putBoolean(Constants.ARE_ALARMS_ENABLED, false).apply();
-    }
-
-    areAlarmsEnabled = enabled;
-  }
+  //private void triggerAlarmsState(boolean enabled) {
+  //  if (enabled) {
+  //    prefs.edit().putBoolean(Constants.ARE_ALARMS_ENABLED, true).apply();
+  //  } else {
+  //    prefs.edit().putBoolean(Constants.ARE_ALARMS_ENABLED, false).apply();
+  //  }
+  //
+  //  areAlarmsEnabled = enabled;
+  //}
 }
