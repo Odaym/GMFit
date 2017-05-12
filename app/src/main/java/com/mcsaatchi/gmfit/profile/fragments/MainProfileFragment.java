@@ -50,7 +50,7 @@ import com.mcsaatchi.gmfit.onboarding.activities.LoginActivity;
 import com.mcsaatchi.gmfit.onboarding.activities.MedicalConditionsChoiceActivity;
 import com.mcsaatchi.gmfit.onboarding.models.MedicalCondition;
 import com.mcsaatchi.gmfit.profile.activities.ChangePasswordActivity;
-import com.mcsaatchi.gmfit.profile.activities.ContactUsActivity;
+import com.mcsaatchi.gmfit.profile.activities.ContactUsListActivity;
 import com.mcsaatchi.gmfit.profile.activities.EditProfileActivity;
 import com.mcsaatchi.gmfit.profile.activities.MealRemindersActivity;
 import com.mcsaatchi.gmfit.profile.activities.MetaTextsActivity;
@@ -679,7 +679,7 @@ public class MainProfileFragment extends BaseFragment
   }
 
   @OnClick(R.id.contactUsLayout) public void handleContactUsLayoutPressed() {
-    Intent intent = new Intent(getActivity(), ContactUsActivity.class);
+    Intent intent = new Intent(getActivity(), ContactUsListActivity.class);
     startActivity(intent);
   }
 
