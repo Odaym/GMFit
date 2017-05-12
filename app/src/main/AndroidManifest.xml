@@ -222,6 +222,18 @@
         android:theme="@style/No_Action_Bar_Theme"/>
 
     <activity
+        android:name=".profile.activities.ContactUsListActivity"
+        android:exported="true"
+        android:screenOrientation="portrait"
+        android:theme="@style/No_Action_Bar_Theme"/>
+
+    <activity
+        android:name=".profile.activities.OperationContactDetailsActivity"
+        android:exported="true"
+        android:screenOrientation="portrait"
+        android:theme="@style/No_Action_Bar_Theme"/>
+
+    <activity
         android:name=".insurance.activities.home.UpdatePasswordActivity"
         android:screenOrientation="portrait"
         android:theme="@style/No_Action_Bar_Theme"

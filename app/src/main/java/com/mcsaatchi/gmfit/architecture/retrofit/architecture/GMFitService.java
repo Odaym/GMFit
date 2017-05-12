@@ -26,6 +26,7 @@ import com.mcsaatchi.gmfit.architecture.retrofit.responses.MedicalTestMetricsRes
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.MedicalTestsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.MetaTextsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.MostPopularMedicationsResponse;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.OperationContactsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.RecentMealsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.SearchMealItemResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.SearchMedicinesResponse;
@@ -186,6 +187,8 @@ public interface GMFitService {
   @GET("user/profile") Call<UserProfileResponse> getOnboardingStatus();
 
   @GET("user/profile") Call<UserProfileResponse> getUserProfile();
+
+  @GET("operations") Call<OperationContactsResponse> getOperationContacts();
 
   @GET("emergency") Call<EmergencyProfileResponse> getEmergencyProfile();
 

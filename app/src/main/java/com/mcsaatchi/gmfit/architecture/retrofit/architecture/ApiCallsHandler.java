@@ -28,8 +28,8 @@ import com.mcsaatchi.gmfit.architecture.retrofit.responses.MedicalTestMetricsRes
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.MedicalTestsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.MetaTextsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.MostPopularMedicationsResponse;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.OperationContactsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.RecentMealsResponse;
-import com.mcsaatchi.gmfit.architecture.retrofit.architecture.RestClient;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.SearchMealItemResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.SearchMedicinesResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.SlugBreakdownResponse;
@@ -719,6 +719,20 @@ public class ApiCallsHandler {
       }
 
       @Override public void onFailure(Call<UserProfileResponse> call, Throwable t) {
+      }
+    });
+  }
+
+  void getOperationContacts(final Callback<OperationContactsResponse> callback) {
+    Call<OperationContactsResponse> apiCall = restClient.getGMFitService().getOperationContacts();
+
+    apiCall.enqueue(new Callback<OperationContactsResponse>() {
+      @Override public void onResponse(Call<OperationContactsResponse> call,
+          Response<OperationContactsResponse> response) {
+        callback.onResponse(call, response);
+      }
+
+      @Override public void onFailure(Call<OperationContactsResponse> call, Throwable t) {
       }
     });
   }

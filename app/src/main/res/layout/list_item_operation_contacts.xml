@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/clickableLayout"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/add_medication_row_height"
+    android:background="@color/white"
+    android:paddingStart="@dimen/default_margin_2"
+    >
+
+  <TextView
+      android:id="@+id/operationContactNameTV"
+      android:layout_width="wrap_content"
+      android:layout_height="match_parent"
+      android:layout_centerVertical="true"
+      android:gravity="center_vertical"
+      android:paddingStart="@dimen/default_margin_1"
+      android:textColor="@color/black_alpha_50"
+      />
+
+  <ImageView
+      android:layout_width="@dimen/far_right_arrow_icon_dimens"
+      android:layout_height="@dimen/far_right_arrow_icon_dimens"
+      android:layout_alignParentEnd="true"
+      android:layout_centerVertical="true"
+      android:layout_marginEnd="@dimen/default_margin_2"
+      android:src="@drawable/ic_arrow_right_blue"
+      />
+</RelativeLayout>

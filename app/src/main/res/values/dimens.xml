@@ -133,6 +133,7 @@
   <dimen name="profile_row_field_height">120dp</dimen>
   <dimen name="right_arrow_dimens">25dp</dimen>
   <dimen name="edit_profile_fields_width">150dp</dimen>
+  <dimen name="social_media_icons_profile">40dp</dimen>
 
   <!-- INSURANCE SECTION -->
   <dimen name="insurance_home_header_section_height">150dp</dimen>

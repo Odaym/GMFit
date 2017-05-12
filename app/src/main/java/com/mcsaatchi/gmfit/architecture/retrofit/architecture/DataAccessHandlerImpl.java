@@ -28,6 +28,7 @@ import com.mcsaatchi.gmfit.architecture.retrofit.responses.MedicalTestMetricsRes
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.MedicalTestsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.MetaTextsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.MostPopularMedicationsResponse;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.OperationContactsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.RecentMealsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.SearchMealItemResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.SearchMedicinesResponse;
@@ -272,6 +273,10 @@ public class DataAccessHandlerImpl implements DataAccessHandler {
 
   @Override public void getUserProfile(Callback<UserProfileResponse> callback) {
     apiCallsHandler.getUserProfile(callback);
+  }
+
+  @Override public void getOperationContacts(Callback<OperationContactsResponse> callback) {
+    apiCallsHandler.getOperationContacts(callback);
   }
 
   @Override public void getEmergencyProfile(Callback<EmergencyProfileResponse> callback) {

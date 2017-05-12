@@ -26,6 +26,7 @@ import com.mcsaatchi.gmfit.architecture.retrofit.responses.MedicalTestMetricsRes
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.MedicalTestsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.MetaTextsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.MostPopularMedicationsResponse;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.OperationContactsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.RecentMealsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.SearchMealItemResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.SearchMedicinesResponse;
@@ -163,6 +164,8 @@ public interface DataAccessHandler {
   void getOnboardingStatus(Callback<UserProfileResponse> callback);
 
   void getUserProfile(Callback<UserProfileResponse> callback);
+
+  void getOperationContacts(Callback<OperationContactsResponse> callback);
 
   void getEmergencyProfile(Callback<EmergencyProfileResponse> callback);
 
