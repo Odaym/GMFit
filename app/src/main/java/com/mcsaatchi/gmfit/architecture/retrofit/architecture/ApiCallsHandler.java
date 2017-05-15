@@ -2,6 +2,7 @@ package com.mcsaatchi.gmfit.architecture.retrofit.architecture;
 
 import android.content.Context;
 import com.mcsaatchi.gmfit.architecture.classes.GMFitApplication;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.ActivitiesListResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ActivityLevelsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.AddCRMNoteResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.AuthenticationResponse;
@@ -733,6 +734,20 @@ public class ApiCallsHandler {
       }
 
       @Override public void onFailure(Call<OperationContactsResponse> call, Throwable t) {
+      }
+    });
+  }
+
+  void getAllActivities(final Callback<ActivitiesListResponse> callback) {
+    Call<ActivitiesListResponse> apiCall = restClient.getGMFitService().getAllActivities();
+
+    apiCall.enqueue(new Callback<ActivitiesListResponse>() {
+      @Override public void onResponse(Call<ActivitiesListResponse> call,
+          Response<ActivitiesListResponse> response) {
+        callback.onResponse(call, response);
+      }
+
+      @Override public void onFailure(Call<ActivitiesListResponse> call, Throwable t) {
       }
     });
   }

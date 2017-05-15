@@ -63,7 +63,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:text="@string/add_new_meal"
+                android:text="@string/add_item_with_plussign"
                 android:textColor="@android:color/white"
                 />
 
@@ -144,7 +144,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:text="@string/add_new_meal"
+                android:text="@string/add_item_with_plussign"
                 android:textColor="@android:color/white"
                 />
 
@@ -225,7 +225,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:text="@string/add_new_meal"
+                android:text="@string/add_item_with_plussign"
                 android:textColor="@android:color/white"
                 />
 
@@ -306,7 +306,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:text="@string/add_new_meal"
+                android:text="@string/add_item_with_plussign"
                 android:textColor="@android:color/white"
                 />
 

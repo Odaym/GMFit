@@ -26,7 +26,6 @@ import butterknife.OnClick;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.classes.GMFitApplication;
-import com.mcsaatchi.gmfit.architecture.retrofit.architecture.DataAccessHandlerImpl;
 import com.mcsaatchi.gmfit.architecture.otto.CaloriesCounterIncrementedEvent;
 import com.mcsaatchi.gmfit.architecture.otto.DataChartDeletedEvent;
 import com.mcsaatchi.gmfit.architecture.otto.DataChartsOrderChangedEvent;
@@ -34,6 +33,7 @@ import com.mcsaatchi.gmfit.architecture.otto.DistanceCounterIncrementedEvent;
 import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
 import com.mcsaatchi.gmfit.architecture.otto.FitnessWidgetsOrderChangedEvent;
 import com.mcsaatchi.gmfit.architecture.otto.StepCounterIncrementedEvent;
+import com.mcsaatchi.gmfit.architecture.retrofit.architecture.DataAccessHandlerImpl;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.AuthenticationResponseChartData;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ChartMetricBreakdownResponseDatum;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.SlugBreakdownResponseInnerData;
@@ -48,6 +48,7 @@ import com.mcsaatchi.gmfit.common.components.CustomBarChart;
 import com.mcsaatchi.gmfit.common.components.DateCarousel;
 import com.mcsaatchi.gmfit.common.fragments.BaseFragment;
 import com.mcsaatchi.gmfit.common.models.DataChart;
+import com.mcsaatchi.gmfit.fitness.activities.ActivitiesListActivity;
 import com.mcsaatchi.gmfit.fitness.adapters.FitnessWidgetsRecyclerAdapter;
 import com.mcsaatchi.gmfit.fitness.models.FitnessWidget;
 import com.squareup.otto.Subscribe;
@@ -311,8 +312,7 @@ public class FitnessFragment extends BaseFragment
   }
 
   @Override public void callSetupChartViews(DataChart chartObject, String todayDate) {
-    Toast.makeText(getActivity(), "Chart deleted successfully", Toast.LENGTH_SHORT)
-        .show();
+    Toast.makeText(getActivity(), "Chart deleted successfully", Toast.LENGTH_SHORT).show();
 
     cards_container.removeAllViews();
 
@@ -398,6 +398,11 @@ public class FitnessFragment extends BaseFragment
     intent.putExtra(Constants.EXTRAS_ADD_CHART_WHAT_TYPE, Constants.EXTRAS_ADD_FITNESS_CHART);
     intent.putExtra(Constants.BUNDLE_FITNESS_CHARTS_MAP, chartsMap);
     startActivityForResult(intent, ADD_NEW_FITNESS_CHART_REQUEST_CODE);
+  }
+
+  @OnClick(R.id.addActivityLabelBTN) public void handleaddActivityPressed() {
+    Intent intent = new Intent(getActivity(), ActivitiesListActivity.class);
+    startActivity(intent);
   }
 
   public void addNewBarChart(DataChart chartObject, String desiredDate) {

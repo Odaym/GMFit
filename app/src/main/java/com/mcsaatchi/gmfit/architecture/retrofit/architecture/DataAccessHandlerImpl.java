@@ -2,6 +2,7 @@ package com.mcsaatchi.gmfit.architecture.retrofit.architecture;
 
 import android.content.Context;
 import com.mcsaatchi.gmfit.architecture.classes.GMFitApplication;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.ActivitiesListResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ActivityLevelsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.AddCRMNoteResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.AuthenticationResponse;
@@ -118,6 +119,10 @@ public class DataAccessHandlerImpl implements DataAccessHandler {
   @Override public void updateUserWeight(double weight, String created_at,
       Callback<DefaultGetResponse> callback) {
     apiCallsHandler.updateUserWeight(weight, created_at, callback);
+  }
+
+  @Override public void getAllActivities(Callback<ActivitiesListResponse> callback) {
+    apiCallsHandler.getAllActivities(callback);
   }
 
   @Override

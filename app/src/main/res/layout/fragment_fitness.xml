@@ -97,6 +97,40 @@
           />
     </LinearLayout>
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/chart_title_headline_bar_height"
+        android:layout_marginBottom="@dimen/default_margin_2"
+        android:layout_marginTop="@dimen/default_margin_2"
+        android:background="@color/fitness_pink"
+        >
+
+      <TextView
+          android:id="@+id/activitiesTitleTV"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_centerVertical="true"
+          android:gravity="center_vertical"
+          android:paddingEnd="@dimen/default_margin_2"
+          android:paddingStart="@dimen/default_margin_2"
+          android:text="@string/activities_section_title"
+          android:textAppearance="?android:textAppearanceMedium"
+          android:textColor="@android:color/white"
+          />
+
+      <TextView
+          android:id="@+id/addActivityLabelBTN"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_alignParentEnd="true"
+          android:layout_centerVertical="true"
+          android:paddingEnd="@dimen/default_margin_2"
+          android:paddingStart="@dimen/default_margin_2"
+          android:text="@string/add_item_with_plussign"
+          android:textColor="@color/white"
+          />
+    </RelativeLayout>
+
     <LinearLayout
         android:id="@+id/cards_container"
         android:layout_width="match_parent"

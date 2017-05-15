@@ -1,5 +1,6 @@
 package com.mcsaatchi.gmfit.architecture.retrofit.architecture;
 
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.ActivitiesListResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ActivityLevelsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.AddCRMNoteResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.AuthenticationResponse;
@@ -166,6 +167,8 @@ public interface DataAccessHandler {
   void getUserProfile(Callback<UserProfileResponse> callback);
 
   void getOperationContacts(Callback<OperationContactsResponse> callback);
+
+  void getAllActivities(Callback<ActivitiesListResponse> callback);
 
   void getEmergencyProfile(Callback<EmergencyProfileResponse> callback);
 

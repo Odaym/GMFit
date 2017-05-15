@@ -1,5 +1,6 @@
 package com.mcsaatchi.gmfit.architecture.retrofit.architecture;
 
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.ActivitiesListResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ActivityLevelsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.AddCRMNoteResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.AuthenticationResponse;
@@ -194,6 +195,8 @@ public interface GMFitService {
 
   @POST("user/charts/delete") Call<DefaultGetResponse> deleteUserChart(
       @Body ApiCallsHandler.DeleteUserChartRequest chart_id);
+
+  @GET("fitness_activities") Call<ActivitiesListResponse> getAllActivities();
 
   @GET("activity_levels") Call<ActivityLevelsResponse> getActivityLevels();
 
