@@ -17,7 +17,7 @@ import com.mcsaatchi.gmfit.architecture.retrofit.responses.CounsellingInformatio
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.CountriesListResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.CreateNewRequestResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.DefaultGetResponse;
-import com.mcsaatchi.gmfit.architecture.retrofit.responses.EmergencyProfileResponse;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.DeleteActivityResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.GetNearbyClinicsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.InquiriesListResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.InsuranceLoginResponse;
@@ -36,6 +36,7 @@ import com.mcsaatchi.gmfit.architecture.retrofit.responses.SubCategoriesResponse
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.TakenMedicalTestsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.UiResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.UpdateInsurancePasswordResponse;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.UserActivitiesResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.UserGoalMetricsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.UserGoalsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.UserMealsResponse;
@@ -96,6 +97,9 @@ public interface GMFitService {
 
   @POST("user/add-metric") Call<DefaultGetResponse> updateMetrics(
       @Body ApiCallsHandler.UpdateMetricsRequest updateMetricsRequest);
+
+  @POST("user/fitness_activities/add") Call<DefaultGetResponse> addFitnessActivity(
+      @Body ApiCallsHandler.AddFitnessActivityRequest addFitnessActivityRequest);
 
   @GET("user/metrics/range") Call<ChartMetricBreakdownResponse> getPeriodicalChartData(
       @Query("start_date") String start_date, @Query("end_date") String end_date,
@@ -191,10 +195,13 @@ public interface GMFitService {
 
   @GET("operations") Call<OperationContactsResponse> getOperationContacts();
 
-  @GET("emergency") Call<EmergencyProfileResponse> getEmergencyProfile();
-
   @POST("user/charts/delete") Call<DefaultGetResponse> deleteUserChart(
       @Body ApiCallsHandler.DeleteUserChartRequest chart_id);
+
+  @GET("user/fitness_activities") Call<UserActivitiesResponse> getUserActivities();
+
+  @POST("user/fitness_activities/delete") Call<DeleteActivityResponse> deleteUserActivity(
+      @Body ApiCallsHandler.DeleteUserActivityRequest deleteUserActivityRequest);
 
   @GET("fitness_activities") Call<ActivitiesListResponse> getAllActivities();
 

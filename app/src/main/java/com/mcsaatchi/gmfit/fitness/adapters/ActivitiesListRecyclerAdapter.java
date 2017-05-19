@@ -1,6 +1,7 @@
 package com.mcsaatchi.gmfit.fitness.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ActivitiesListResponseBody;
+import com.mcsaatchi.gmfit.fitness.activities.AddActivityDetailsActivity;
 import java.util.List;
 
 public class ActivitiesListRecyclerAdapter extends RecyclerView.Adapter {
@@ -50,12 +52,11 @@ public class ActivitiesListRecyclerAdapter extends RecyclerView.Adapter {
 
       activityNameTV = (TextView) itemView.findViewById(R.id.activityNameTV);
 
-      //itemView.setOnClickListener(view -> {
-      //  Intent intent = new Intent(context, OperationContactDetailsActivity.class);
-      //  intent.putExtra("OPERATION_CONTACT",
-      //      activitiesListResponseBody.get(getAdapterPosition()));
-      //  context.startActivity(intent);
-      //});
+      itemView.setOnClickListener(view -> {
+        Intent intent = new Intent(context, AddActivityDetailsActivity.class);
+        intent.putExtra("ACTIVITY_ITEM", activitiesListResponseBody.get(getAdapterPosition()));
+        context.startActivity(intent);
+      });
     }
   }
 }

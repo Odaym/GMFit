@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/days_choice_checkbox_height"
+    android:background="@color/white"
+    android:clickable="true"
+    android:orientation="horizontal"
+    >
+
+  <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:background="?android:attr/selectableItemBackground"
+      android:clickable="false"
+      android:focusable="true"
+      >
+
+    <TextView
+        android:id="@+id/activityLevelTV"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+        android:gravity="center_vertical"
+        android:paddingStart="@dimen/default_margin_2"
+        />
+
+    <LinearLayout
+        android:id="@+id/activityCheckedLayout"
+        android:layout_width="@dimen/days_choice_checkbox_width"
+        android:layout_height="match_parent"
+        android:layout_alignParentEnd="true"
+        android:layout_gravity="end"
+        android:gravity="center"
+        android:visibility="gone"
+        >
+
+      <ImageView
+          android:layout_width="@dimen/far_right_arrow_icon_dimens"
+          android:layout_height="@dimen/far_right_arrow_icon_dimens"
+          android:src="@drawable/ic_checkmark_day_chosen"
+          />
+    </LinearLayout>
+  </RelativeLayout>
+</RelativeLayout>

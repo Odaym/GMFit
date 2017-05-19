@@ -8,6 +8,8 @@ import com.mcsaatchi.gmfit.architecture.retrofit.responses.ChartMetricBreakdownR
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.DefaultGetResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.SlugBreakdownResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.SlugBreakdownResponseInnerData;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.UserActivitiesResponse;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.UserActivitiesResponseBody;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.UserGoalMetricsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.WidgetsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.WidgetsResponseDatum;
@@ -166,6 +168,22 @@ class FitnessFragmentPresenter extends BaseFragmentPresenter {
         });
   }
 
+  void getUserActivities() {
+    dataAccessHandler.getUserActivities(new Callback<UserActivitiesResponse>() {
+      @Override public void onResponse(Call<UserActivitiesResponse> call,
+          Response<UserActivitiesResponse> response) {
+        switch (response.code()) {
+          case 200:
+            view.populateUserActivities(response.body().getData().getBody());
+            break;
+        }
+      }
+
+      @Override public void onFailure(Call<UserActivitiesResponse> call, Throwable t) {
+      }
+    });
+  }
+
   ArrayList<FitnessWidget> getWidgetsFromDB() {
     try {
       return (ArrayList<FitnessWidget>) fitnessWidgetsDAO.queryBuilder()
@@ -193,5 +211,7 @@ class FitnessFragmentPresenter extends BaseFragmentPresenter {
     void callSetupWidgetViews(List<WidgetsResponseDatum> widgetsFromResponse);
 
     void callSetupChartViews(DataChart chartObject, String todayDate);
+
+    void populateUserActivities(List<UserActivitiesResponseBody> userActivitiesResponseBodies);
   }
 }

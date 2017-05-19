@@ -5,7 +5,6 @@ import android.os.Environment;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.retrofit.architecture.DataAccessHandlerImpl;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.DefaultGetResponse;
-import com.mcsaatchi.gmfit.architecture.retrofit.responses.EmergencyProfileResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.MetaTextsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.UserProfileResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.UserProfileResponseDatum;
@@ -142,23 +141,23 @@ class MainProfileFragmentPresenter extends BaseFragmentPresenter {
   }
 
   void requestEmergencyProfile() {
-    dataAccessHandler.getEmergencyProfile(new Callback<EmergencyProfileResponse>() {
-      @Override public void onResponse(Call<EmergencyProfileResponse> call,
-          Response<EmergencyProfileResponse> response) {
-        switch (response.code()) {
-          case 200:
-            if (response.body().getData().getBody() != null) {
-              new DownloadPDFFile().execute(response.body().getData().getBody().getUserPdf(),
+              new DownloadPDFFile().execute("https://mobileapp.globemedfit.com/api/v1/emergency_response",
                   "my_emergency_profile.pdf");
-            }
-            break;
-        }
-      }
-
-      @Override public void onFailure(Call<EmergencyProfileResponse> call, Throwable t) {
-        view.displayRequestErrorDialog(t.getMessage());
-      }
-    });
+    //dataAccessHandler.getEmergencyProfile(new Callback<EmergencyProfileResponse>() {
+    //  @Override public void onResponse(Call<EmergencyProfileResponse> call,
+    //      Response<EmergencyProfileResponse> response) {
+    //    switch (response.code()) {
+    //      case 200:
+    //        if (response.body().getData().getBody() != null) {
+    //        }
+    //        break;
+    //    }
+    //  }
+    //
+    //  @Override public void onFailure(Call<EmergencyProfileResponse> call, Throwable t) {
+    //    view.displayRequestErrorDialog(t.getMessage());
+    //  }
+    //});
   }
 
   interface MainProfileFragmentView extends BaseFragmentView {

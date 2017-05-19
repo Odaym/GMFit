@@ -19,7 +19,7 @@ import com.mcsaatchi.gmfit.architecture.retrofit.responses.CounsellingInformatio
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.CountriesListResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.CreateNewRequestResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.DefaultGetResponse;
-import com.mcsaatchi.gmfit.architecture.retrofit.responses.EmergencyProfileResponse;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.DeleteActivityResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.GetNearbyClinicsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.InquiriesListResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.InsuranceLoginResponse;
@@ -38,6 +38,7 @@ import com.mcsaatchi.gmfit.architecture.retrofit.responses.SubCategoriesResponse
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.TakenMedicalTestsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.UiResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.UpdateInsurancePasswordResponse;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.UserActivitiesResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.UserGoalMetricsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.UserGoalsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.UserMealsResponse;
@@ -121,8 +122,22 @@ public class DataAccessHandlerImpl implements DataAccessHandler {
     apiCallsHandler.updateUserWeight(weight, created_at, callback);
   }
 
+  @Override
+  public void addFitnessActivity(String fitness_activity_level_id, String duration, String date,
+      Callback<DefaultGetResponse> callback) {
+    apiCallsHandler.addFitnessActivity(fitness_activity_level_id, duration, date, callback);
+  }
+
   @Override public void getAllActivities(Callback<ActivitiesListResponse> callback) {
     apiCallsHandler.getAllActivities(callback);
+  }
+
+  @Override public void getUserActivities(Callback<UserActivitiesResponse> callback) {
+    apiCallsHandler.getUserActivities(callback);
+  }
+
+  @Override public void deleteUserActivity(int instance_id, Callback<DeleteActivityResponse> callback) {
+    apiCallsHandler.deleteUserActivity(instance_id, callback);
   }
 
   @Override
@@ -282,10 +297,6 @@ public class DataAccessHandlerImpl implements DataAccessHandler {
 
   @Override public void getOperationContacts(Callback<OperationContactsResponse> callback) {
     apiCallsHandler.getOperationContacts(callback);
-  }
-
-  @Override public void getEmergencyProfile(Callback<EmergencyProfileResponse> callback) {
-    apiCallsHandler.getEmergencyProfile(callback);
   }
 
   @Override public void deleteUserChart(String chart_id, Callback<DefaultGetResponse> callback) {

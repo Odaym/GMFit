@@ -51,9 +51,15 @@ public class GMFitApplication extends Application {
 
     component.inject(this);
 
-    OneSignal.startInit(this).init();
+    OneSignal.startInit(this)
+        .inFocusDisplaying(OneSignal.OSInFocusDisplayOption.Notification)
+        .unsubscribeWhenNotificationsAreDisabled(true)
+        .init();
 
-    OneSignal.idsAvailable((userId, registrationId) -> updateOneSignalToken(userId));
+    OneSignal.idsAvailable((userId, registrationId) -> {
+      Timber.d("OneSignal User ID : " + userId);
+      updateOneSignalToken(userId);
+    });
 
     JodaTimeAndroid.init(this);
 

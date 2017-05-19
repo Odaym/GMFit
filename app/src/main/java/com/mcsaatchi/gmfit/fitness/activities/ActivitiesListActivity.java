@@ -7,10 +7,13 @@ import android.support.v7.widget.Toolbar;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.mcsaatchi.gmfit.R;
+import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
+import com.mcsaatchi.gmfit.architecture.otto.FitnessActivityEvent;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ActivitiesListResponseBody;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.common.classes.SimpleDividerItemDecoration;
 import com.mcsaatchi.gmfit.fitness.adapters.ActivitiesListRecyclerAdapter;
+import com.squareup.otto.Subscribe;
 import java.util.List;
 
 public class ActivitiesListActivity extends BaseActivity
@@ -26,6 +29,8 @@ public class ActivitiesListActivity extends BaseActivity
 
     ButterKnife.bind(this);
 
+    EventBusSingleton.getInstance().register(this);
+
     setupToolbar(getClass().getSimpleName(), toolbar,
         getResources().getString(R.string.add_activity_activity_title), true);
 
@@ -33,6 +38,11 @@ public class ActivitiesListActivity extends BaseActivity
         new ActivitiesListActivityPresenter(this, dataAccessHandler);
 
     presenter.getAllActivities();
+  }
+
+  @Override public void onDestroy() {
+    super.onDestroy();
+    EventBusSingleton.getInstance().unregister(this);
   }
 
   @Override
@@ -45,5 +55,9 @@ public class ActivitiesListActivity extends BaseActivity
     activitiesRecycler.setAdapter(operationContactsRecyclerAdapter);
     activitiesRecycler.setNestedScrollingEnabled(false);
     activitiesRecycler.addItemDecoration(new SimpleDividerItemDecoration(this));
+  }
+
+  @Subscribe public void handleFitnessActivityEvent(FitnessActivityEvent event){
+    finish();
   }
 }

@@ -34,7 +34,7 @@ import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.common.classes.AlarmReceiver;
 import com.mcsaatchi.gmfit.common.classes.SimpleDividerItemDecoration;
 import com.mcsaatchi.gmfit.health.adapters.MedicationRemindersRecyclerAdapter;
-import com.mcsaatchi.gmfit.health.models.DayChoice;
+import com.mcsaatchi.gmfit.health.models.SelectionItem;
 import com.mcsaatchi.gmfit.health.models.Medication;
 import com.mcsaatchi.gmfit.health.models.MedicationReminder;
 import java.util.ArrayList;
@@ -66,7 +66,7 @@ public class AddExistingMedicationActivity extends BaseActivity
   private RuntimeExceptionDao<Medication, Integer> medicationDAO;
   private ArrayList<MedicationReminder> medicationReminders;
   private Medication medicationItem;
-  private ArrayList<DayChoice> daysSelected = null;
+  private ArrayList<SelectionItem> daysSelected = null;
   private boolean editPurpose = false;
   private int[] daysOfWeekArray;
 
@@ -112,8 +112,8 @@ public class AddExistingMedicationActivity extends BaseActivity
         daysOfWeekArray = new int[daysSelected.size()];
 
         for (int i = 0; i < daysSelected.size(); i++) {
-          if (daysSelected.get(i).isDaySelected()) {
-            daysOfWeekArray[i] = daysOfWeekMap.get(daysSelected.get(i).getDayName());
+          if (daysSelected.get(i).isItemSelected()) {
+            daysOfWeekArray[i] = daysOfWeekMap.get(daysSelected.get(i).getSelectionName());
           }
         }
       }
@@ -179,7 +179,7 @@ public class AddExistingMedicationActivity extends BaseActivity
     super.onActivityResult(requestCode, resultCode, data);
 
     if (requestCode == REMINDER_DAYS_CHOSEN) {
-      ArrayList<DayChoice> dayChoices = data.getExtras().getParcelableArrayList("REMINDER_DAYS");
+      ArrayList<SelectionItem> dayChoices = data.getExtras().getParcelableArrayList("REMINDER_DAYS");
       daysSelected = dayChoices;
 
       String daysOfWeekResult = "";
@@ -188,9 +188,9 @@ public class AddExistingMedicationActivity extends BaseActivity
         daysOfWeekArray = new int[dayChoices.size()];
 
         for (int i = 0; i < dayChoices.size(); i++) {
-          if (dayChoices.get(i).isDaySelected()) {
-            daysOfWeekArray[i] = daysOfWeekMap.get(dayChoices.get(i).getDayName());
-            daysOfWeekResult += dayChoices.get(i).getDayName().substring(0, 3) + ", ";
+          if (dayChoices.get(i).isItemSelected()) {
+            daysOfWeekArray[i] = daysOfWeekMap.get(dayChoices.get(i).getSelectionName());
+            daysOfWeekResult += dayChoices.get(i).getSelectionName().substring(0, 3) + ", ";
           }
         }
       }

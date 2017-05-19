@@ -7,14 +7,14 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.health.models.DayChoice;
+import com.mcsaatchi.gmfit.health.models.SelectionItem;
 import java.util.ArrayList;
 
 public class DaysChoiceRecyclerAdapter
     extends RecyclerView.Adapter<DaysChoiceRecyclerAdapter.RecyclerViewHolder> {
-  private ArrayList<DayChoice> days;
+  private ArrayList<SelectionItem> days;
 
-  public DaysChoiceRecyclerAdapter(ArrayList<DayChoice> days) {
+  public DaysChoiceRecyclerAdapter(ArrayList<SelectionItem> days) {
     this.days = days;
   }
 
@@ -34,13 +34,13 @@ public class DaysChoiceRecyclerAdapter
   }
 
   @Override public void onBindViewHolder(RecyclerViewHolder holder, int position) {
-    if (days.get(position).isDaySelected()) {
+    if (days.get(position).isItemSelected()) {
       holder.dayCheckedLayout.setVisibility(View.VISIBLE);
     } else {
       holder.dayCheckedLayout.setVisibility(View.GONE);
     }
 
-    holder.dayNameTV.setText((days.get(position)).getDayName());
+    holder.dayNameTV.setText((days.get(position)).getSelectionName());
   }
 
   class RecyclerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -57,11 +57,11 @@ public class DaysChoiceRecyclerAdapter
     }
 
     @Override public void onClick(View view) {
-      if (days.get(getAdapterPosition()).isDaySelected()) {
-        days.get(getAdapterPosition()).setDaySelected(false);
+      if (days.get(getAdapterPosition()).isItemSelected()) {
+        days.get(getAdapterPosition()).setItemSelected(false);
         dayCheckedLayout.setVisibility(View.GONE);
       } else {
-        days.get(getAdapterPosition()).setDaySelected(true);
+        days.get(getAdapterPosition()).setItemSelected(true);
         dayCheckedLayout.setVisibility(View.VISIBLE);
       }
     }

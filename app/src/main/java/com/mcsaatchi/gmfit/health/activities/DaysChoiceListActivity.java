@@ -14,7 +14,7 @@ import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.common.classes.SimpleDividerItemDecoration;
 import com.mcsaatchi.gmfit.health.adapters.DaysChoiceRecyclerAdapter;
-import com.mcsaatchi.gmfit.health.models.DayChoice;
+import com.mcsaatchi.gmfit.health.models.SelectionItem;
 import java.util.ArrayList;
 
 import static com.mcsaatchi.gmfit.health.activities.AddExistingMedicationActivity.REMINDER_DAYS_CHOSEN;
@@ -23,7 +23,7 @@ public class DaysChoiceListActivity extends BaseActivity {
   @Bind(R.id.daysRecyclerView) RecyclerView daysRecyclerView;
   @Bind(R.id.toolbar) Toolbar toolbar;
 
-  private ArrayList<DayChoice> days = new ArrayList<>();
+  private ArrayList<SelectionItem> days = new ArrayList<>();
 
   private DaysChoiceRecyclerAdapter daysChoiceRecyclerAdapter;
 
@@ -54,8 +54,8 @@ public class DaysChoiceListActivity extends BaseActivity {
   @Override public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
       case R.id.selectAllitem:
-        for (DayChoice day : days) {
-          day.setDaySelected(true);
+        for (SelectionItem day : days) {
+          day.setItemSelected(true);
         }
 
         daysChoiceRecyclerAdapter.notifyDataSetChanged();
@@ -73,20 +73,20 @@ public class DaysChoiceListActivity extends BaseActivity {
     super.finish();
   }
 
-  private ArrayList<DayChoice> setupDays() {
-    ArrayList<DayChoice> daysToReturn = new ArrayList<>();
-    daysToReturn.add(new DayChoice("Monday", false));
-    daysToReturn.add(new DayChoice("Tuesday", false));
-    daysToReturn.add(new DayChoice("Wednesday", false));
-    daysToReturn.add(new DayChoice("Thursday", false));
-    daysToReturn.add(new DayChoice("Friday", false));
-    daysToReturn.add(new DayChoice("Saturday", false));
-    daysToReturn.add(new DayChoice("Sunday", false));
+  private ArrayList<SelectionItem> setupDays() {
+    ArrayList<SelectionItem> daysToReturn = new ArrayList<>();
+    daysToReturn.add(new SelectionItem("Monday", false));
+    daysToReturn.add(new SelectionItem("Tuesday", false));
+    daysToReturn.add(new SelectionItem("Wednesday", false));
+    daysToReturn.add(new SelectionItem("Thursday", false));
+    daysToReturn.add(new SelectionItem("Friday", false));
+    daysToReturn.add(new SelectionItem("Saturday", false));
+    daysToReturn.add(new SelectionItem("Sunday", false));
 
     return daysToReturn;
   }
 
-  private void setupDaysChoiceList(ArrayList<DayChoice> daysToSetup) {
+  private void setupDaysChoiceList(ArrayList<SelectionItem> daysToSetup) {
     daysChoiceRecyclerAdapter = new DaysChoiceRecyclerAdapter(daysToSetup);
     daysRecyclerView.setLayoutManager(new LinearLayoutManager(this));
     daysRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(this));

@@ -17,7 +17,7 @@ import java.util.ArrayList;
   @DatabaseField private int frequencyType;
   @DatabaseField private int treatmentDuration;
   @ForeignCollectionField private ForeignCollection<MedicationReminder> medicationReminders;
-  @DatabaseField(dataType = DataType.SERIALIZABLE) private ArrayList<DayChoice> when;
+  @DatabaseField(dataType = DataType.SERIALIZABLE) private ArrayList<SelectionItem> when;
   @DatabaseField private String whenString;
   @DatabaseField private int units;
   @DatabaseField private String unitForm;
@@ -75,11 +75,11 @@ import java.util.ArrayList;
     this.medicationReminders = medicationReminders;
   }
 
-  public ArrayList<DayChoice> getWhen() {
+  public ArrayList<SelectionItem> getWhen() {
     return when;
   }
 
-  public void setWhen(ArrayList<DayChoice> when) {
+  public void setWhen(ArrayList<SelectionItem> when) {
     this.when = when;
   }
 

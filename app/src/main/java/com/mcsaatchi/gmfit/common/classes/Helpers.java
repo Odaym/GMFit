@@ -114,6 +114,21 @@ public class Helpers {
     return fmtOut.format(date);
   }
 
+  public static String formatActivitiesDate(String dt) {
+    SimpleDateFormat fmt = new SimpleDateFormat("dd MMM, yyyy");
+    Date date = null;
+    try {
+      date = fmt.parse(dt);
+    } catch (ParseException e) {
+      e.printStackTrace();
+    }
+
+    SimpleDateFormat fmtOut = new SimpleDateFormat("yyyy-MM-dd");
+
+    return fmtOut.format(date);
+  }
+
+
   public static String prepareDateWithTimeForAPIRequest(LocalDateTime dt) {
     return dt.getYear()
         + "-"

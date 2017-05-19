@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -31,12 +32,14 @@ import com.mcsaatchi.gmfit.architecture.otto.DataChartDeletedEvent;
 import com.mcsaatchi.gmfit.architecture.otto.DataChartsOrderChangedEvent;
 import com.mcsaatchi.gmfit.architecture.otto.DistanceCounterIncrementedEvent;
 import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
+import com.mcsaatchi.gmfit.architecture.otto.FitnessActivityEvent;
 import com.mcsaatchi.gmfit.architecture.otto.FitnessWidgetsOrderChangedEvent;
 import com.mcsaatchi.gmfit.architecture.otto.StepCounterIncrementedEvent;
 import com.mcsaatchi.gmfit.architecture.retrofit.architecture.DataAccessHandlerImpl;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.AuthenticationResponseChartData;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ChartMetricBreakdownResponseDatum;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.SlugBreakdownResponseInnerData;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.UserActivitiesResponseBody;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.WidgetsResponseDatum;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.AddNewChartActivity;
@@ -44,12 +47,14 @@ import com.mcsaatchi.gmfit.common.activities.CustomizeWidgetsAndChartsActivity;
 import com.mcsaatchi.gmfit.common.activities.SlugBreakdownActivity;
 import com.mcsaatchi.gmfit.common.classes.FontTextView;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
+import com.mcsaatchi.gmfit.common.classes.SimpleDividerItemDecoration;
 import com.mcsaatchi.gmfit.common.components.CustomBarChart;
 import com.mcsaatchi.gmfit.common.components.DateCarousel;
 import com.mcsaatchi.gmfit.common.fragments.BaseFragment;
 import com.mcsaatchi.gmfit.common.models.DataChart;
 import com.mcsaatchi.gmfit.fitness.activities.ActivitiesListActivity;
 import com.mcsaatchi.gmfit.fitness.adapters.FitnessWidgetsRecyclerAdapter;
+import com.mcsaatchi.gmfit.fitness.adapters.UserActivitiesListRecyclerAdapter;
 import com.mcsaatchi.gmfit.fitness.models.FitnessWidget;
 import com.squareup.otto.Subscribe;
 import java.text.DecimalFormat;
@@ -64,6 +69,8 @@ public class FitnessFragment extends BaseFragment
     implements FitnessFragmentPresenter.FitnessFragmentView {
 
   private static final int ADD_NEW_FITNESS_CHART_REQUEST_CODE = 1;
+  private static final int FITNESS_ACTIVITY_EVENT_OCCURRED = 319;
+
   @Bind(R.id.dateCarouselLayout) DateCarousel dateCarouselLayout;
   @Bind(R.id.widgetsGridView) RecyclerView widgetsGridView;
   @Bind(R.id.cards_container) LinearLayout cards_container;
@@ -74,6 +81,8 @@ public class FitnessFragment extends BaseFragment
   @Bind(R.id.todayTV) FontTextView todayTV;
   @Bind(R.id.metricProgressBar) ProgressBar metricProgressBar;
   @Bind(R.id.loadingMetricProgressBar) ProgressBar loadingMetricProgressBar;
+  @Bind(R.id.activitiesRecycler) RecyclerView activitiesRecycler;
+
   @Inject SharedPreferences prefs;
   @Inject LocalDate dt;
   @Inject DataAccessHandlerImpl dataAccessHandler;
@@ -96,6 +105,8 @@ public class FitnessFragment extends BaseFragment
     presenter = new FitnessFragmentPresenter(this, fitnessWidgetsDAO, dataAccessHandler);
 
     presenter.getUserGoalMetrics(todayDate, "fitness", false);
+
+    presenter.getUserActivities();
 
     if (((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
       ((AppCompatActivity) getActivity()).getSupportActionBar()
@@ -131,6 +142,8 @@ public class FitnessFragment extends BaseFragment
 
       presenter.getUserGoalMetrics(finalDate, "fitness",
           !finalTodayDateTime.isEqual(finalDesiredDateTime));
+
+      presenter.getUserActivities();
 
       presenter.getWidgetsWithDate(finalDate);
 
@@ -215,7 +228,7 @@ public class FitnessFragment extends BaseFragment
 
   @Override public void displayUserGoalMetrics(String maxValue, String currentValue,
       boolean requestingPreviousData) {
-    int remainingValue = 0;
+    int remainingValue;
 
     goalTV.setText(Helpers.getFormattedString(Integer.parseInt(maxValue)));
 
@@ -325,6 +338,15 @@ public class FitnessFragment extends BaseFragment
     setupChartViews(chartsMap, todayDate);
   }
 
+  @Override public void populateUserActivities(
+      List<UserActivitiesResponseBody> userActivitiesResponseBodies) {
+    UserActivitiesListRecyclerAdapter userActivitiesListRecyclerAdapter =
+        new UserActivitiesListRecyclerAdapter(getActivity(), userActivitiesResponseBodies);
+    activitiesRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
+    activitiesRecycler.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
+    activitiesRecycler.setAdapter(userActivitiesListRecyclerAdapter);
+  }
+
   @Subscribe public void updateWidgetsOrder(FitnessWidgetsOrderChangedEvent event) {
     widgetsMap = event.getWidgetsMapFitness();
     setupWidgetViews(widgetsMap);
@@ -353,6 +375,10 @@ public class FitnessFragment extends BaseFragment
     }
 
     presenter.updateUserCharts(charts, chartPositions);
+  }
+
+  @Subscribe public void fetchNewlyChangedActivities(FitnessActivityEvent event) {
+    presenter.getUserActivities();
   }
 
   @Subscribe public void incrementStepCounter(StepCounterIncrementedEvent event) {
@@ -402,7 +428,7 @@ public class FitnessFragment extends BaseFragment
 
   @OnClick(R.id.addActivityLabelBTN) public void handleaddActivityPressed() {
     Intent intent = new Intent(getActivity(), ActivitiesListActivity.class);
-    startActivity(intent);
+    startActivityForResult(intent, FITNESS_ACTIVITY_EVENT_OCCURRED);
   }
 
   public void addNewBarChart(DataChart chartObject, String desiredDate) {

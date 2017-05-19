@@ -17,7 +17,7 @@ import com.mcsaatchi.gmfit.architecture.retrofit.responses.CounsellingInformatio
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.CountriesListResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.CreateNewRequestResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.DefaultGetResponse;
-import com.mcsaatchi.gmfit.architecture.retrofit.responses.EmergencyProfileResponse;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.DeleteActivityResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.GetNearbyClinicsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.InquiriesListResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.InsuranceLoginResponse;
@@ -36,6 +36,7 @@ import com.mcsaatchi.gmfit.architecture.retrofit.responses.SubCategoriesResponse
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.TakenMedicalTestsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.UiResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.UpdateInsurancePasswordResponse;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.UserActivitiesResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.UserGoalMetricsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.UserGoalsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.UserMealsResponse;
@@ -65,8 +66,7 @@ public interface DataAccessHandler {
   void registerUser(String full_name, String email, String password,
       Callback<AuthenticationResponse> callback);
 
-  void signInUserSilently(String email, String password,
-      Callback<AuthenticationResponse> callback);
+  void signInUserSilently(String email, String password, Callback<AuthenticationResponse> callback);
 
   void signOutUser(Callback<DefaultGetResponse> callback);
 
@@ -76,12 +76,11 @@ public interface DataAccessHandler {
       RequestBody finalGender, RequestBody height, RequestBody weight, RequestBody onboard,
       Callback<DefaultGetResponse> callback);
 
-  void updateUserProfileExplicitly(RequestBody name, RequestBody phone_number,
-      RequestBody gender, RequestBody date_of_birth, RequestBody blood_type, RequestBody height,
-      RequestBody weight, Callback<DefaultGetResponse> callback);
-
-  void updateUserWeight(double weight, String created_at,
+  void updateUserProfileExplicitly(RequestBody name, RequestBody phone_number, RequestBody gender,
+      RequestBody date_of_birth, RequestBody blood_type, RequestBody height, RequestBody weight,
       Callback<DefaultGetResponse> callback);
+
+  void updateUserWeight(double weight, String created_at, Callback<DefaultGetResponse> callback);
 
   void updateOneSignalToken(String onesignal_id, Callback<DefaultGetResponse> callback);
 
@@ -102,8 +101,7 @@ public interface DataAccessHandler {
 
   void getMealMetrics(String fullUrl, Callback<MealMetricsResponse> callback);
 
-  void getUserGoalMetrics(String date, String type,
-      Callback<UserGoalMetricsResponse> callback);
+  void getUserGoalMetrics(String date, String type, Callback<UserGoalMetricsResponse> callback);
 
   void verifyUser(String verificationCode, Callback<DefaultGetResponse> callback);
 
@@ -113,8 +111,7 @@ public interface DataAccessHandler {
   void updateUserCharts(int[] chartIds, int[] chartPositions,
       Callback<DefaultGetResponse> callback);
 
-  void updateUserMeals(int instance_id, float amount,
-      Callback<DefaultGetResponse> callback);
+  void updateUserMeals(int instance_id, float amount, Callback<DefaultGetResponse> callback);
 
   void deleteUserTest(int instance_id, Callback<DefaultGetResponse> callback);
 
@@ -126,8 +123,7 @@ public interface DataAccessHandler {
 
   void getMetaTexts(String section, Callback<MetaTextsResponse> callback);
 
-  void handleFacebookProcess(String facebookAccessToken,
-      Callback<AuthenticationResponse> callback);
+  void handleFacebookProcess(String facebookAccessToken, Callback<AuthenticationResponse> callback);
 
   void storeNewMeal(int meal_id, float servingsAmount, String when, String date,
       Callback<DefaultGetResponse> callback);
@@ -149,15 +145,14 @@ public interface DataAccessHandler {
 
   void getWidgets(String sectionName, Callback<WidgetsResponse> callback);
 
-  void getWidgetsWithDate(String sectionName, String date,
-      Callback<WidgetsResponse> callback);
+  void getWidgetsWithDate(String sectionName, String date, Callback<WidgetsResponse> callback);
 
   void storeNewHealthTest(RequestBody test_name, RequestBody date_taken,
       Map<String, RequestBody> metrics, Map<String, RequestBody> imageFiles,
       Callback<DefaultGetResponse> callback);
 
-  void editExistingHealthTest(RequestBody instance_id, RequestBody name,
-      RequestBody date_taken, Map<String, RequestBody> metrics, Map<String, RequestBody> imageFiles,
+  void editExistingHealthTest(RequestBody instance_id, RequestBody name, RequestBody date_taken,
+      Map<String, RequestBody> metrics, Map<String, RequestBody> imageFiles,
       RequestBody deletedImages, Callback<DefaultGetResponse> callback);
 
   void getTakenMedicalTests(Callback<TakenMedicalTestsResponse> callback);
@@ -168,9 +163,14 @@ public interface DataAccessHandler {
 
   void getOperationContacts(Callback<OperationContactsResponse> callback);
 
+  void addFitnessActivity(String fitness_activity_level_id, String duration, String date,
+      Callback<DefaultGetResponse> callback);
+
   void getAllActivities(Callback<ActivitiesListResponse> callback);
 
-  void getEmergencyProfile(Callback<EmergencyProfileResponse> callback);
+  void getUserActivities(Callback<UserActivitiesResponse> callback);
+
+  void deleteUserActivity(int instance_id, Callback<DeleteActivityResponse> callback);
 
   void deleteUserChart(String chart_id, Callback<DefaultGetResponse> callback);
 
@@ -183,8 +183,8 @@ public interface DataAccessHandler {
   /**
    * INSURANCE API's
    */
-  void getMostPopularMedications(String indNbr, String contractNo, String country,
-      String language, String password, Callback<MostPopularMedicationsResponse> callback);
+  void getMostPopularMedications(String indNbr, String contractNo, String country, String language,
+      String password, Callback<MostPopularMedicationsResponse> callback);
 
   void searchMedicines(String indNbr, String contractNo, String country, String language,
       String password, String key, Callback<SearchMedicinesResponse> callback);
@@ -195,8 +195,7 @@ public interface DataAccessHandler {
   void getCoverageDescription(String contractNo, String indNbr,
       Callback<CertainPDFResponse> callback);
 
-  void getMembersGuide(String contractNo, String indNbr,
-      Callback<CertainPDFResponse> callback);
+  void getMembersGuide(String contractNo, String indNbr, Callback<CertainPDFResponse> callback);
 
   void updateInsurancePassword(String contractNo, String oldPassword, String newPassword,
       String email, String mobileNumber, Callback<UpdateInsurancePasswordResponse> callback);
@@ -220,8 +219,7 @@ public interface DataAccessHandler {
 
   void getCountriesList(final Callback<CountriesListResponse> callback);
 
-  void getCRMCategories(RequestBody contractNo,
-      final Callback<CRMCategoriesResponse> callback);
+  void getCRMCategories(RequestBody contractNo, final Callback<CRMCategoriesResponse> callback);
 
   void getClaimsList(String contractNo, String requestType,
       final Callback<ClaimsListResponse> callback);
@@ -235,8 +233,7 @@ public interface DataAccessHandler {
   void getChronicTreatmentsList(String contractNo, String requestType,
       final Callback<ChronicTreatmentListResponse> callback);
 
-  void getSnapshot(String contractNo, String period,
-      final Callback<CertainPDFResponse> callback);
+  void getSnapshot(String contractNo, String period, final Callback<CertainPDFResponse> callback);
 
   void getInquiriesList(String incidentId, String crm_country,
       final Callback<InquiriesListResponse> callback);

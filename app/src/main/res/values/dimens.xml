@@ -84,6 +84,8 @@
   <dimen name="date_carousel_unfocused_item_cell_width">60dp</dimen>
   <dimen name="date_carousel_items_font_size_normal">12sp</dimen>
   <dimen name="date_carousel_items_font_size_large">15sp</dimen>
+  <dimen name="activity_info_picture_section_height">170dp</dimen>
+  <dimen name="activity_info_picture_dimens">80dp</dimen>
 
   <!-- BREAKDOWN ACTIVITY -->
   <dimen name="slug_breakdown_value_box_width">80dp</dimen>
@@ -159,6 +161,8 @@
   <dimen name="search_bar_height">50dp</dimen>
   <dimen name="contact_us_right_block_width">90dp</dimen>
   <dimen name="years_choice_recycler_height">280dp</dimen>
+  <dimen name="activity_levels_list_height">260dp</dimen>
+  <dimen name="delete_activity_layout_height">50dp</dimen>
 
   <!-- PILL REMINDER SECTION -->
   <dimen name="medications_list_row_item_height">100dp</dimen>

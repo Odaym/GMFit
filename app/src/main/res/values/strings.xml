@@ -198,6 +198,15 @@
   <string name="active_calories_calculation_hint_message">Tracking of some metrics such as calories burnt, requires the presence of specific devices or wearables.</string>
   <string name="add_activity_activity_title">Add Activity</string>
   <string name="activities_list_choose_activity_hint">Choose one of the activities below</string>
+  <string name="activities_calories_burned_label">Total calories burned</string>
+  <string name="activity_date_recorded">Date</string>
+  <string name="activity_time_recorded">Time</string>
+  <string name="activities_level_section_title">Activity Level</string>
+  <string name="add_activity_button">+ Add Activity</string>
+  <string name="activity_period_choice_minutes">Minutes</string>
+  <string name="adding_new_activity_dialog_title">Adding new activity</string>
+  <string name="delete_activity_hint">Delete Activity</string>
+  <string name="deleting_user_activity_dialog_title">Deleting activity</string>
 
   <!-- BREAKDOWN ACTIVITY -->
   <string name="all_time_breakdown_bar_hint">All Time</string>

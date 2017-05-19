@@ -19,7 +19,7 @@ import com.mcsaatchi.gmfit.architecture.retrofit.responses.CounsellingInformatio
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.CountriesListResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.CreateNewRequestResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.DefaultGetResponse;
-import com.mcsaatchi.gmfit.architecture.retrofit.responses.EmergencyProfileResponse;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.DeleteActivityResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.GetNearbyClinicsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.InquiriesListResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.InsuranceLoginResponse;
@@ -38,6 +38,7 @@ import com.mcsaatchi.gmfit.architecture.retrofit.responses.SubCategoriesResponse
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.TakenMedicalTestsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.UiResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.UpdateInsurancePasswordResponse;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.UserActivitiesResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.UserGoalMetricsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.UserGoalsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.UserMealsResponse;
@@ -738,6 +739,23 @@ public class ApiCallsHandler {
     });
   }
 
+  void addFitnessActivity(String fitness_activity_level_id, String duration, String date,
+      final Callback<DefaultGetResponse> callback) {
+    Call<DefaultGetResponse> apiCall = restClient.getGMFitService()
+        .addFitnessActivity(
+            new AddFitnessActivityRequest(fitness_activity_level_id, duration, date));
+
+    apiCall.enqueue(new Callback<DefaultGetResponse>() {
+      @Override
+      public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
+        callback.onResponse(call, response);
+      }
+
+      @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+      }
+    });
+  }
+
   void getAllActivities(final Callback<ActivitiesListResponse> callback) {
     Call<ActivitiesListResponse> apiCall = restClient.getGMFitService().getAllActivities();
 
@@ -752,16 +770,31 @@ public class ApiCallsHandler {
     });
   }
 
-  void getEmergencyProfile(final Callback<EmergencyProfileResponse> callback) {
-    Call<EmergencyProfileResponse> apiCall = restClient.getGMFitService().getEmergencyProfile();
+  void deleteUserActivity(int instance_id, final Callback<DeleteActivityResponse> callback) {
+    Call<DeleteActivityResponse> apiCall =
+        restClient.getGMFitService().deleteUserActivity(new DeleteUserActivityRequest(instance_id));
 
-    apiCall.enqueue(new Callback<EmergencyProfileResponse>() {
-      @Override public void onResponse(Call<EmergencyProfileResponse> call,
-          Response<EmergencyProfileResponse> response) {
+    apiCall.enqueue(new Callback<DeleteActivityResponse>() {
+      @Override public void onResponse(Call<DeleteActivityResponse> call,
+          Response<DeleteActivityResponse> response) {
         callback.onResponse(call, response);
       }
 
-      @Override public void onFailure(Call<EmergencyProfileResponse> call, Throwable t) {
+      @Override public void onFailure(Call<DeleteActivityResponse> call, Throwable t) {
+      }
+    });
+  }
+
+  void getUserActivities(final Callback<UserActivitiesResponse> callback) {
+    Call<UserActivitiesResponse> apiCall = restClient.getGMFitService().getUserActivities();
+
+    apiCall.enqueue(new Callback<UserActivitiesResponse>() {
+      @Override public void onResponse(Call<UserActivitiesResponse> call,
+          Response<UserActivitiesResponse> response) {
+        callback.onResponse(call, response);
+      }
+
+      @Override public void onFailure(Call<UserActivitiesResponse> call, Throwable t) {
       }
     });
   }
@@ -1626,6 +1659,27 @@ public class ApiCallsHandler {
       this.mimeType = mimeType;
       this.fileName = fileName;
       this.documentBody = documentBody;
+    }
+  }
+
+  public class AddFitnessActivityRequest {
+    String fitness_activity_level_id;
+    String duration;
+    String date;
+
+    public AddFitnessActivityRequest(String fitness_activity_level_id, String duration,
+        String date) {
+      this.fitness_activity_level_id = fitness_activity_level_id;
+      this.duration = duration;
+      this.date = date;
+    }
+  }
+
+  public class DeleteUserActivityRequest {
+    int instance_id;
+
+    public DeleteUserActivityRequest(int instance_id) {
+      this.instance_id = instance_id;
     }
   }
 }

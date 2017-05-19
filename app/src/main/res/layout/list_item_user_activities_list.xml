@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/clickableLayout"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/add_medication_row_height"
+    android:layout_marginBottom="@dimen/default_margin_1"
+    android:background="@color/white"
+    android:gravity="center_vertical"
+    android:paddingEnd="@dimen/default_margin_2"
+    android:paddingStart="@dimen/default_margin_2"
+    >
+
+  <TextView
+      android:id="@+id/activityNameTV"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_centerVertical="true"
+      android:gravity="center_vertical"
+      android:textAppearance="?android:textAppearanceMedium"
+      android:textColor="@color/black_alpha_50"
+      />
+
+  <TextView
+      android:id="@+id/durationAndLevelTV"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_below="@id/activityNameTV"
+      android:layout_marginTop="@dimen/default_margin_0"
+      android:textColor="@color/fitness_pink"
+      />
+
+  <TextView
+      android:id="@+id/caloriesBurnedTV"
+      android:layout_width="wrap_content"
+      android:layout_height="match_parent"
+      android:layout_alignParentEnd="true"
+      android:layout_centerVertical="true"
+      android:gravity="center_vertical"
+      android:textAppearance="?android:textAppearanceMedium"
+      android:textColor="@color/fitness_pink"
+      />
+
+</RelativeLayout>
