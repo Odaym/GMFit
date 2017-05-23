@@ -4,6 +4,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
+import android.os.Environment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
@@ -15,21 +17,22 @@ import android.widget.TextView;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.classes.GMFitApplication;
 import com.mcsaatchi.gmfit.architecture.retrofit.architecture.DataAccessHandlerImpl;
-import com.mcsaatchi.gmfit.architecture.retrofit.responses.CertainPDFResponse;
 import com.mcsaatchi.gmfit.common.Constants;
+import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.insurance.activities.approval_request.ApprovalRequestsTrackActivity;
 import com.mcsaatchi.gmfit.insurance.activities.approval_request.SubmitApprovalRequestActivity;
 import com.mcsaatchi.gmfit.insurance.activities.chronic.ChronicTrackActivity;
 import com.mcsaatchi.gmfit.insurance.activities.chronic.SubmitChronicActivity;
-import com.mcsaatchi.gmfit.insurance.activities.home.PDFViewerActivity;
 import com.mcsaatchi.gmfit.insurance.activities.home.SnapshotActivity;
 import com.mcsaatchi.gmfit.insurance.activities.inquiry.InquiryTrackActivity;
 import com.mcsaatchi.gmfit.insurance.activities.inquiry.SubmitInquiryActivity;
 import com.mcsaatchi.gmfit.insurance.activities.reimbursement.ReimbursementTrackActivity;
 import com.mcsaatchi.gmfit.insurance.activities.reimbursement.SubmitReimbursementActivity;
 import com.mcsaatchi.gmfit.insurance.models.InsuranceOperationWidget;
+import java.io.File;
 import java.util.ArrayList;
 import javax.inject.Inject;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -99,30 +102,24 @@ public class InsuranceOperationWidgetsGridAdapter
 
     dataAccessHandler.getCoverageDescription(
         prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""), "0",
-        new Callback<CertainPDFResponse>() {
+        new Callback<ResponseBody>() {
 
-          @Override public void onResponse(Call<CertainPDFResponse> call,
-              Response<CertainPDFResponse> response) {
+          @Override
+          public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
 
             switch (response.code()) {
               case 200:
-                Intent intent = new Intent(context, PDFViewerActivity.class);
-                intent.putExtra("TITLE",
-                    context.getResources().getString(R.string.policy_limitation_activity_title));
-                intent.putExtra("PDF",
-                    response.body().getData().getBody().getData().replace("\\", ""));
+                String PDFname = "PolicyLimitation.pdf";
 
-                fragmentActivity.startActivity(intent);
-                break;
-              case 449:
-                //view.displayRequestErrorDialog(Helpers.provideErrorStringFromJSON(response.errorBody()));
+                saveAndOpenPDF(response.body(), PDFname);
+
                 break;
             }
 
             waitingDialog.dismiss();
           }
 
-          @Override public void onFailure(Call<CertainPDFResponse> call, Throwable t) {
+          @Override public void onFailure(Call<ResponseBody> call, Throwable t) {
             Timber.d("Call failed with error : %s", t.getMessage());
             alertDialog.setMessage(context.getString(R.string.server_error_got_returned));
             alertDialog.show();
@@ -147,30 +144,24 @@ public class InsuranceOperationWidgetsGridAdapter
 
     dataAccessHandler.getCoverageDescription(
         prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""), "1",
-        new Callback<CertainPDFResponse>() {
+        new Callback<ResponseBody>() {
 
-          @Override public void onResponse(Call<CertainPDFResponse> call,
-              Response<CertainPDFResponse> response) {
+          @Override
+          public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
 
             switch (response.code()) {
               case 200:
-                Intent intent = new Intent(context, PDFViewerActivity.class);
-                intent.putExtra("TITLE",
-                    context.getResources().getString(R.string.coverage_description_activity_title));
-                intent.putExtra("PDF",
-                    response.body().getData().getBody().getData().replace("\\", ""));
+                String PDFname = "CoverageDescription.pdf";
 
-                fragmentActivity.startActivity(intent);
-                break;
-              case 449:
-                //view.displayRequestErrorDialog(Helpers.provideErrorStringFromJSON(response.errorBody()));
+                saveAndOpenPDF(response.body(), PDFname);
+
                 break;
             }
 
             waitingDialog.dismiss();
           }
 
-          @Override public void onFailure(Call<CertainPDFResponse> call, Throwable t) {
+          @Override public void onFailure(Call<ResponseBody> call, Throwable t) {
             Timber.d("Call failed with error : %s", t.getMessage());
             alertDialog.setMessage(context.getString(R.string.server_error_got_returned));
             alertDialog.show();
@@ -195,20 +186,17 @@ public class InsuranceOperationWidgetsGridAdapter
 
     dataAccessHandler.getMembersGuide(
         prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""), "0",
-        new Callback<CertainPDFResponse>() {
+        new Callback<ResponseBody>() {
 
-          @Override public void onResponse(Call<CertainPDFResponse> call,
-              Response<CertainPDFResponse> response) {
+          @Override
+          public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
 
             switch (response.code()) {
               case 200:
-                Intent intent = new Intent(context, PDFViewerActivity.class);
-                intent.putExtra("TITLE",
-                    context.getResources().getString(R.string.members_guide_activity_title));
-                intent.putExtra("PDF",
-                    response.body().getData().getBody().getData().replace("\\", ""));
+                String PDFname = "MembersGuide.pdf";
 
-                fragmentActivity.startActivity(intent);
+                saveAndOpenPDF(response.body(), PDFname);
+
                 break;
               case 449:
                 //view.displayRequestErrorDialog(Helpers.provideErrorStringFromJSON(response.errorBody()));
@@ -218,12 +206,27 @@ public class InsuranceOperationWidgetsGridAdapter
             waitingDialog.dismiss();
           }
 
-          @Override public void onFailure(Call<CertainPDFResponse> call, Throwable t) {
+          @Override public void onFailure(Call<ResponseBody> call, Throwable t) {
             Timber.d("Call failed with error : %s", t.getMessage());
             alertDialog.setMessage(context.getString(R.string.server_error_got_returned));
             alertDialog.show();
           }
         });
+  }
+
+  private void saveAndOpenPDF(ResponseBody responseBody, String PDFname) {
+    Helpers.writeResponseBodyToDisk(responseBody, PDFname);
+
+    File file = new File(Environment.getExternalStorageDirectory()
+        + File.separator
+        + "GMFit"
+        + File.separator
+        + PDFname);
+
+    Intent intent = new Intent(Intent.ACTION_VIEW);
+    intent.setDataAndType(Uri.fromFile(file), "application/pdf");
+    intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+    fragmentActivity.startActivity(intent);
   }
 
   class RecyclerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

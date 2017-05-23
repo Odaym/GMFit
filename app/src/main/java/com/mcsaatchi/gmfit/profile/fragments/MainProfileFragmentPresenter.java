@@ -141,23 +141,8 @@ class MainProfileFragmentPresenter extends BaseFragmentPresenter {
   }
 
   void requestEmergencyProfile() {
-              new DownloadPDFFile().execute("https://mobileapp.globemedfit.com/api/v1/emergency_response",
-                  "my_emergency_profile.pdf");
-    //dataAccessHandler.getEmergencyProfile(new Callback<EmergencyProfileResponse>() {
-    //  @Override public void onResponse(Call<EmergencyProfileResponse> call,
-    //      Response<EmergencyProfileResponse> response) {
-    //    switch (response.code()) {
-    //      case 200:
-    //        if (response.body().getData().getBody() != null) {
-    //        }
-    //        break;
-    //    }
-    //  }
-    //
-    //  @Override public void onFailure(Call<EmergencyProfileResponse> call, Throwable t) {
-    //    view.displayRequestErrorDialog(t.getMessage());
-    //  }
-    //});
+    new DownloadPDFFile().execute("https://mobileapp.globemedfit.com/api/v1/emergency_response",
+        "my_emergency_profile.pdf");
   }
 
   interface MainProfileFragmentView extends BaseFragmentView {

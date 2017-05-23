@@ -8,7 +8,6 @@ import com.mcsaatchi.gmfit.architecture.retrofit.responses.AddCRMNoteResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.AuthenticationResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.CRMCategoriesResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.CRMNotesResponse;
-import com.mcsaatchi.gmfit.architecture.retrofit.responses.CertainPDFResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ChartMetricBreakdownResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ChartsBySectionResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ChronicTreatmentDetailsResponse;
@@ -51,6 +50,7 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.inject.Inject;
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -957,33 +957,33 @@ public class ApiCallsHandler {
   }
 
   void getCoverageDescription(String contractNo, String indNbr,
-      final Callback<CertainPDFResponse> callback) {
-    Call<CertainPDFResponse> apiCall = restClient.getGMFitService()
+      final Callback<ResponseBody> callback) {
+    Call<ResponseBody> apiCall = restClient.getGMFitService()
         .getCoverageDescription(new CoverageDescriptionRequest(contractNo, indNbr));
 
-    apiCall.enqueue(new Callback<CertainPDFResponse>() {
+    apiCall.enqueue(new Callback<ResponseBody>() {
       @Override
-      public void onResponse(Call<CertainPDFResponse> call, Response<CertainPDFResponse> response) {
+      public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
         callback.onResponse(call, response);
       }
 
-      @Override public void onFailure(Call<CertainPDFResponse> call, Throwable t) {
+      @Override public void onFailure(Call<ResponseBody> call, Throwable t) {
       }
     });
   }
 
   void getMembersGuide(String contractNo, String indNbr,
-      final Callback<CertainPDFResponse> callback) {
-    Call<CertainPDFResponse> apiCall = restClient.getGMFitService()
+      final Callback<ResponseBody> callback) {
+    Call<ResponseBody> apiCall = restClient.getGMFitService()
         .getMembersGuide(new CoverageDescriptionRequest(contractNo, indNbr));
 
-    apiCall.enqueue(new Callback<CertainPDFResponse>() {
+    apiCall.enqueue(new Callback<ResponseBody>() {
       @Override
-      public void onResponse(Call<CertainPDFResponse> call, Response<CertainPDFResponse> response) {
+      public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
         callback.onResponse(call, response);
       }
 
-      @Override public void onFailure(Call<CertainPDFResponse> call, Throwable t) {
+      @Override public void onFailure(Call<ResponseBody> call, Throwable t) {
       }
     });
   }
@@ -1006,17 +1006,17 @@ public class ApiCallsHandler {
     });
   }
 
-  void getCardDetails(String contractNo, final Callback<CertainPDFResponse> callback) {
-    Call<CertainPDFResponse> apiCall =
+  void getCardDetails(String contractNo, final Callback<ResponseBody> callback) {
+    Call<ResponseBody> apiCall =
         restClient.getGMFitService().getCardDetails(new SimpleInsuranceRequest(contractNo));
 
-    apiCall.enqueue(new Callback<CertainPDFResponse>() {
+    apiCall.enqueue(new Callback<ResponseBody>() {
       @Override
-      public void onResponse(Call<CertainPDFResponse> call, Response<CertainPDFResponse> response) {
+      public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
         callback.onResponse(call, response);
       }
 
-      @Override public void onFailure(Call<CertainPDFResponse> call, Throwable t) {
+      @Override public void onFailure(Call<ResponseBody> call, Throwable t) {
       }
     });
   }
@@ -1199,17 +1199,17 @@ public class ApiCallsHandler {
     });
   }
 
-  void getSnapshot(String contractNo, String period, final Callback<CertainPDFResponse> callback) {
-    Call<CertainPDFResponse> apiCall =
+  void getSnapshot(String contractNo, String period, final Callback<ResponseBody> callback) {
+    Call<ResponseBody> apiCall =
         restClient.getGMFitService().getSnapshot(new SnapShotRequest(contractNo, period));
 
-    apiCall.enqueue(new Callback<CertainPDFResponse>() {
+    apiCall.enqueue(new Callback<ResponseBody>() {
       @Override
-      public void onResponse(Call<CertainPDFResponse> call, Response<CertainPDFResponse> response) {
+      public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
         callback.onResponse(call, response);
       }
 
-      @Override public void onFailure(Call<CertainPDFResponse> call, Throwable t) {
+      @Override public void onFailure(Call<ResponseBody> call, Throwable t) {
       }
     });
   }

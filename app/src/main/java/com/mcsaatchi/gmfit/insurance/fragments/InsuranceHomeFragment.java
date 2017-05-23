@@ -4,7 +4,9 @@ import android.Manifest;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -25,15 +27,17 @@ import com.mcsaatchi.gmfit.architecture.classes.PermissionsChecker;
 import com.mcsaatchi.gmfit.architecture.retrofit.architecture.DataAccessHandlerImpl;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.InsuranceLoginResponseInnerData;
 import com.mcsaatchi.gmfit.common.Constants;
+import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.common.fragments.BaseFragment;
 import com.mcsaatchi.gmfit.insurance.activities.home.ContractsChoiceView;
-import com.mcsaatchi.gmfit.insurance.activities.home.PDFViewerActivity;
 import com.mcsaatchi.gmfit.insurance.adapters.InsuranceOperationWidgetsGridAdapter;
 import com.mcsaatchi.gmfit.insurance.models.InsuranceContract;
 import com.mcsaatchi.gmfit.insurance.models.InsuranceOperationWidget;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
+import okhttp3.ResponseBody;
 
 public class InsuranceHomeFragment extends BaseFragment
     implements InsuranceHomeFragmentPresenter.InsuranceHomeFragmentView {
@@ -116,11 +120,18 @@ public class InsuranceHomeFragment extends BaseFragment
     return fragmentView;
   }
 
-  @Override public void openPDFViewerActivity(String PDF_file) {
-    Intent intent = new Intent(getActivity(), PDFViewerActivity.class);
-    intent.putExtra("TITLE", "Card Details");
-    intent.putExtra("PDF", PDF_file.replace("\\", ""));
+  @Override public void saveAndOpenPDF(ResponseBody responseBody, String PDFname) {
+    Helpers.writeResponseBodyToDisk(responseBody, PDFname);
 
+    File file = new File(Environment.getExternalStorageDirectory()
+        + File.separator
+        + "GMFit"
+        + File.separator
+        + PDFname);
+
+    Intent intent = new Intent(Intent.ACTION_VIEW);
+    intent.setDataAndType(Uri.fromFile(file), "application/pdf");
+    intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
     startActivity(intent);
   }
 

@@ -1,20 +1,20 @@
 package com.mcsaatchi.gmfit.common.classes;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
-import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import com.andreabaccega.widget.FormEditText;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.common.Constants;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -128,7 +128,6 @@ public class Helpers {
     return fmtOut.format(date);
   }
 
-
   public static String prepareDateWithTimeForAPIRequest(LocalDateTime dt) {
     return dt.getYear()
         + "-"
@@ -212,76 +211,51 @@ public class Helpers {
     alertDialog.show();
   }
 
-  public static void setupAlarmForMeal(Context context, SharedPreferences prefs, String mealType) {
-    Intent intent = new Intent(context, AlarmReceiver.class);
+  public static boolean writeResponseBodyToDisk(ResponseBody body, String desiredFileName) {
+    try {
+      File folder = new File(Environment.getExternalStorageDirectory().toString(),
+          "GMFit" + File.separator + desiredFileName);
 
-    PendingIntent pendingIntent = null;
+      InputStream inputStream = null;
+      OutputStream outputStream = null;
 
-    Calendar calendar = null;
+      try {
+        byte[] fileReader = new byte[4096];
 
-    switch (mealType) {
-      case "Breakfast":
-        calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, 9);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
+        long fileSize = body.contentLength();
+        long fileSizeDownloaded = 0;
 
-        if (calendar.before(Calendar.getInstance())) {
-          calendar.add(Calendar.DATE, 1);
+        inputStream = body.byteStream();
+        outputStream = new FileOutputStream(folder);
+
+        while (true) {
+          int read = inputStream.read(fileReader);
+
+          if (read == -1) {
+            break;
+          }
+
+          outputStream.write(fileReader, 0, read);
+
+          fileSizeDownloaded += read;
         }
 
-        intent.putExtra("MEAL_TYPE", "Breakfast");
-        pendingIntent =
-            PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        prefs.edit().putString(Constants.BREAKFAST_REMINDER_ALARM_TIME, "09:30 AM").apply();
+        outputStream.flush();
 
-        break;
-      case "Lunch":
-        calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, 14);
-        calendar.set(Calendar.MINUTE, 45);
-        calendar.set(Calendar.SECOND, 0);
-
-        if (calendar.before(Calendar.getInstance())) {
-          calendar.add(Calendar.DATE, 1);
+        return true;
+      } catch (IOException e) {
+        return false;
+      } finally {
+        if (inputStream != null) {
+          inputStream.close();
         }
 
-        intent.putExtra("MEAL_TYPE", "Lunch");
-        pendingIntent =
-            PendingIntent.getBroadcast(context, 1, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-        prefs.edit().putString(Constants.LUNCH_REMINDER_ALARM_TIME, "03:00 PM").apply();
-
-        break;
-      case "Dinner":
-        calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, 20);
-        calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.SECOND, 0);
-
-        if (calendar.before(Calendar.getInstance())) {
-          calendar.add(Calendar.DATE, 1);
+        if (outputStream != null) {
+          outputStream.close();
         }
-
-        intent.putExtra("MEAL_TYPE", "Dinner");
-        pendingIntent =
-            PendingIntent.getBroadcast(context, 2, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-        prefs.edit().putString(Constants.DINNER_REMINDER_ALARM_TIME, "09:00 PM").apply();
-
-        break;
-    }
-
-    if (calendar != null) {
-      AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-      int ALARM_TYPE = AlarmManager.RTC_WAKEUP;
-
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        am.setRepeating(ALARM_TYPE, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY,
-            pendingIntent);
-      } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-        am.setExact(ALARM_TYPE, calendar.getTimeInMillis(), pendingIntent);
-      } else {
-        am.set(ALARM_TYPE, calendar.getTimeInMillis(), pendingIntent);
       }
+    } catch (IOException e) {
+      return false;
     }
   }
 }

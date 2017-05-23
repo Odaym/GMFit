@@ -6,7 +6,6 @@ import com.mcsaatchi.gmfit.architecture.retrofit.responses.AddCRMNoteResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.AuthenticationResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.CRMCategoriesResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.CRMNotesResponse;
-import com.mcsaatchi.gmfit.architecture.retrofit.responses.CertainPDFResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ChartMetricBreakdownResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ChartsBySectionResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ChronicTreatmentDetailsResponse;
@@ -45,6 +44,7 @@ import com.mcsaatchi.gmfit.architecture.retrofit.responses.WeightHistoryResponse
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.WidgetsResponse;
 import java.util.Map;
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
@@ -215,16 +215,16 @@ public interface GMFitService {
    * INSURANCE API's
    */
   //HOME SCREEN
-  @POST("insurance/insurance-card-details") Call<CertainPDFResponse> getCardDetails(
+  @POST("insurance/insurance-card-details") Call<ResponseBody> getCardDetails(
       @Body ApiCallsHandler.SimpleInsuranceRequest simpleInsuranceRequest);
 
   @POST("insurance/login") Call<InsuranceLoginResponse> insuranceUserLogin(
       @Body ApiCallsHandler.InsuranceLoginRequest insuranceUserLoginRequest);
 
-  @POST("insurance/coverage") Call<CertainPDFResponse> getCoverageDescription(
+  @POST("insurance/coverage") Call<ResponseBody> getCoverageDescription(
       @Body ApiCallsHandler.CoverageDescriptionRequest coverageDescriptionRequest);
 
-  @POST("insurance/guide/pdf") Call<CertainPDFResponse> getMembersGuide(
+  @POST("insurance/guide/pdf") Call<ResponseBody> getMembersGuide(
       @Body ApiCallsHandler.CoverageDescriptionRequest coverageDescriptionRequest);
 
   @POST("insurance/update-info") Call<UpdateInsurancePasswordResponse> updateInsurancePassword(
@@ -233,7 +233,7 @@ public interface GMFitService {
   @POST("insurance/network/advanced-search") Call<GetNearbyClinicsResponse> getNearbyClinics(
       @Body ApiCallsHandler.NearbyClinicsRequest simpleInsuranceRequest);
 
-  @POST("insurance/snapshot/pdf") Call<CertainPDFResponse> getSnapshot(
+  @POST("insurance/snapshot/pdf") Call<ResponseBody> getSnapshot(
       @Body ApiCallsHandler.SnapShotRequest snapShotRequest);
 
   @POST("insurance/countries") Call<CountriesListResponse> getCountriesList();

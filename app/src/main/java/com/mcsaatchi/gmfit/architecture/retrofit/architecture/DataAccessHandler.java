@@ -6,7 +6,6 @@ import com.mcsaatchi.gmfit.architecture.retrofit.responses.AddCRMNoteResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.AuthenticationResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.CRMCategoriesResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.CRMNotesResponse;
-import com.mcsaatchi.gmfit.architecture.retrofit.responses.CertainPDFResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ChartMetricBreakdownResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ChartsBySectionResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ChronicTreatmentDetailsResponse;
@@ -46,6 +45,7 @@ import com.mcsaatchi.gmfit.architecture.retrofit.responses.WidgetsResponse;
 import java.util.HashMap;
 import java.util.Map;
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Callback;
 
 public interface DataAccessHandler {
@@ -193,14 +193,14 @@ public interface DataAccessHandler {
       Callback<InsuranceLoginResponse> callback);
 
   void getCoverageDescription(String contractNo, String indNbr,
-      Callback<CertainPDFResponse> callback);
+      Callback<ResponseBody> callback);
 
-  void getMembersGuide(String contractNo, String indNbr, Callback<CertainPDFResponse> callback);
+  void getMembersGuide(String contractNo, String indNbr, Callback<ResponseBody> callback);
 
   void updateInsurancePassword(String contractNo, String oldPassword, String newPassword,
       String email, String mobileNumber, Callback<UpdateInsurancePasswordResponse> callback);
 
-  void getCardDetails(String contractNo, Callback<CertainPDFResponse> callback);
+  void getCardDetails(String contractNo, Callback<ResponseBody> callback);
 
   void getSubCategories(String contractNo, Callback<SubCategoriesResponse> callback);
 
@@ -233,7 +233,7 @@ public interface DataAccessHandler {
   void getChronicTreatmentsList(String contractNo, String requestType,
       final Callback<ChronicTreatmentListResponse> callback);
 
-  void getSnapshot(String contractNo, String period, final Callback<CertainPDFResponse> callback);
+  void getSnapshot(String contractNo, String period, final Callback<ResponseBody> callback);
 
   void getInquiriesList(String incidentId, String crm_country,
       final Callback<InquiriesListResponse> callback);

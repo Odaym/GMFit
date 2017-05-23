@@ -2,9 +2,8 @@ package com.mcsaatchi.gmfit.insurance.fragments;
 
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.retrofit.architecture.DataAccessHandlerImpl;
-import com.mcsaatchi.gmfit.architecture.retrofit.responses.CertainPDFResponse;
-import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.common.fragments.BaseFragmentPresenter;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -22,29 +21,24 @@ class InsuranceHomeFragmentPresenter extends BaseFragmentPresenter {
   void getCardDetails(String contractNo) {
     view.callDisplayWaitingDialog(R.string.loading_data_dialog_title);
 
-    dataAccessHandler.getCardDetails(contractNo, new Callback<CertainPDFResponse>() {
-      @Override
-      public void onResponse(Call<CertainPDFResponse> call, Response<CertainPDFResponse> response) {
+    dataAccessHandler.getCardDetails(contractNo, new Callback<ResponseBody>() {
+      @Override public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
         switch (response.code()) {
           case 200:
-            view.openPDFViewerActivity(response.body().getData().getBody().getData());
-            break;
-          case 449:
-            view.displayRequestErrorDialog(
-                Helpers.provideErrorStringFromJSON(response.errorBody()));
+            view.saveAndOpenPDF(response.body(), "CardDetailsPDF.pdf");
             break;
         }
 
         view.callDismissWaitingDialog();
       }
 
-      @Override public void onFailure(Call<CertainPDFResponse> call, Throwable t) {
+      @Override public void onFailure(Call<ResponseBody> call, Throwable t) {
         view.displayRequestErrorDialog(t.getMessage());
       }
     });
   }
 
   interface InsuranceHomeFragmentView extends BaseFragmentView {
-    void openPDFViewerActivity(String PDF_file);
+    void saveAndOpenPDF(ResponseBody responseBody, String PDFname);
   }
 }

@@ -8,7 +8,6 @@ import com.mcsaatchi.gmfit.architecture.retrofit.responses.AddCRMNoteResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.AuthenticationResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.CRMCategoriesResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.CRMNotesResponse;
-import com.mcsaatchi.gmfit.architecture.retrofit.responses.CertainPDFResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ChartMetricBreakdownResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ChartsBySectionResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ChronicTreatmentDetailsResponse;
@@ -49,6 +48,7 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.inject.Inject;
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Callback;
 
 public class DataAccessHandlerImpl implements DataAccessHandler {
@@ -337,12 +337,12 @@ public class DataAccessHandlerImpl implements DataAccessHandler {
   }
 
   @Override public void getCoverageDescription(String contractNo, String indNbr,
-      Callback<CertainPDFResponse> callback) {
+      Callback<ResponseBody> callback) {
     apiCallsHandler.getCoverageDescription(contractNo, indNbr, callback);
   }
 
   @Override public void getMembersGuide(String contractNo, String indNbr,
-      Callback<CertainPDFResponse> callback) {
+      Callback<ResponseBody> callback) {
     apiCallsHandler.getMembersGuide(contractNo, indNbr, callback);
   }
 
@@ -353,7 +353,7 @@ public class DataAccessHandlerImpl implements DataAccessHandler {
         mobileNumber, callback);
   }
 
-  @Override public void getCardDetails(String contractNo, Callback<CertainPDFResponse> callback) {
+  @Override public void getCardDetails(String contractNo, Callback<ResponseBody> callback) {
     apiCallsHandler.getCardDetails(contractNo, callback);
   }
 
@@ -417,7 +417,7 @@ public class DataAccessHandlerImpl implements DataAccessHandler {
   }
 
   @Override public void getSnapshot(String contractNo, String period,
-      final Callback<CertainPDFResponse> callback) {
+      final Callback<ResponseBody> callback) {
     apiCallsHandler.getSnapshot(contractNo, period, callback);
   }
 

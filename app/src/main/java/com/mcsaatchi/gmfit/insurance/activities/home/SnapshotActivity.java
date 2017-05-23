@@ -1,12 +1,12 @@
 package com.mcsaatchi.gmfit.insurance.activities.home;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -14,12 +14,13 @@ import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
+import java.io.File;
+import okhttp3.ResponseBody;
 import org.joda.time.LocalDate;
 
 public class SnapshotActivity extends BaseActivity
     implements SnapshotActivityPresenter.SnapshotActivityView {
   @Bind(R.id.toolbar) Toolbar toolbar;
-  @Bind(R.id.webView) WebView webView;
   @Bind(R.id.selectPeriodTV) TextView selectPeriodTV;
 
   private SnapshotActivityPresenter presenter;
@@ -44,29 +45,30 @@ public class SnapshotActivity extends BaseActivity
 
       AlertDialog.Builder builder = new AlertDialog.Builder(SnapshotActivity.this);
       builder.setTitle("Pick currency").setItems(items, (dialogInterface, i) -> {
-        presenter.getSnapshot(items[i], prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""));
+        presenter.getSnapshot(items[i],
+            prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""));
         selectPeriodTV.setText(items[i]);
       });
       builder.create();
       builder.show();
     });
 
-    presenter.getSnapshot(selectPeriodTV.getText().toString(), prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""));
+    presenter.getSnapshot(selectPeriodTV.getText().toString(),
+        prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""));
   }
 
-  @Override public void displaySnapshotPDF(String pdfData) {
-    WebSettings settings = webView.getSettings();
-    settings.setLoadWithOverviewMode(true);
-    settings.setBuiltInZoomControls(true);
-    settings.setUseWideViewPort(true);
-    settings.setJavaScriptEnabled(true);
-    settings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
+  @Override public void saveAndOpenPDF(ResponseBody responseBody, String PDFname) {
+    Helpers.writeResponseBodyToDisk(responseBody, PDFname);
 
-    webView.setVerticalScrollBarEnabled(false);
-    webView.setHorizontalScrollBarEnabled(false);
-    webView.setWebViewClient(new WebViewClient());
-    webView.setInitialScale(1);
+    File file = new File(Environment.getExternalStorageDirectory()
+        + File.separator
+        + "GMFit"
+        + File.separator
+        + PDFname);
 
-    webView.loadUrl("https://docs.google.com/gview?embedded=true&url=" + pdfData);
+    Intent intent = new Intent(Intent.ACTION_VIEW);
+    intent.setDataAndType(Uri.fromFile(file), "application/pdf");
+    intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+    startActivity(intent);
   }
 }
