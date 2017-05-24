@@ -205,8 +205,10 @@
   <string name="add_activity_button">+ Add Activity</string>
   <string name="activity_period_choice_minutes">Minutes</string>
   <string name="adding_new_activity_dialog_title">Adding new activity</string>
+  <string name="editing_new_activity_dialog_title">Deleting activity</string>
   <string name="delete_activity_hint">Delete Activity</string>
   <string name="deleting_user_activity_dialog_title">Deleting activity</string>
+  <string name="articles_section_title">Recommended Readings</string>
 
   <!-- BREAKDOWN ACTIVITY -->
   <string name="all_time_breakdown_bar_hint">All Time</string>

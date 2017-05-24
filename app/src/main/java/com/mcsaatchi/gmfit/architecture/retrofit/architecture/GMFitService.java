@@ -3,6 +3,7 @@ package com.mcsaatchi.gmfit.architecture.retrofit.architecture;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ActivitiesListResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ActivityLevelsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.AddCRMNoteResponse;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.ArticlesResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.AuthenticationResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.CRMCategoriesResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.CRMNotesResponse;
@@ -100,6 +101,14 @@ public interface GMFitService {
 
   @POST("user/fitness_activities/add") Call<DefaultGetResponse> addFitnessActivity(
       @Body ApiCallsHandler.AddFitnessActivityRequest addFitnessActivityRequest);
+
+  @POST("user/fitness_activities/edit") Call<DefaultGetResponse> editFitnessActivity(
+      @Body ApiCallsHandler.EditFitnessActivityRequest editFitnessActivityRequest);
+
+  @POST("user/fitness_activities/delete") Call<DeleteActivityResponse> deleteFitnessActivity(
+      @Body ApiCallsHandler.DeleteFitnessActivityRequest deleteFitnessActivityRequest);
+
+  @GET("articles") Call<ArticlesResponse> getArticles(@Query("section") String sectionName);
 
   @GET("user/metrics/range") Call<ChartMetricBreakdownResponse> getPeriodicalChartData(
       @Query("start_date") String start_date, @Query("end_date") String end_date,
@@ -199,9 +208,6 @@ public interface GMFitService {
       @Body ApiCallsHandler.DeleteUserChartRequest chart_id);
 
   @GET("user/fitness_activities") Call<UserActivitiesResponse> getUserActivities();
-
-  @POST("user/fitness_activities/delete") Call<DeleteActivityResponse> deleteUserActivity(
-      @Body ApiCallsHandler.DeleteUserActivityRequest deleteUserActivityRequest);
 
   @GET("fitness_activities") Call<ActivitiesListResponse> getAllActivities();
 

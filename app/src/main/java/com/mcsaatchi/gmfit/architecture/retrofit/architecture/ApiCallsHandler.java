@@ -5,6 +5,7 @@ import com.mcsaatchi.gmfit.architecture.classes.GMFitApplication;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ActivitiesListResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ActivityLevelsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.AddCRMNoteResponse;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.ArticlesResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.AuthenticationResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.CRMCategoriesResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.CRMNotesResponse;
@@ -756,6 +757,51 @@ public class ApiCallsHandler {
     });
   }
 
+  void editFitnessActivity(String id, String duration, String date, String level_id,
+      final Callback<DefaultGetResponse> callback) {
+    Call<DefaultGetResponse> apiCall = restClient.getGMFitService()
+        .editFitnessActivity(new EditFitnessActivityRequest(id, duration, date, level_id));
+
+    apiCall.enqueue(new Callback<DefaultGetResponse>() {
+      @Override
+      public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
+        callback.onResponse(call, response);
+      }
+
+      @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+      }
+    });
+  }
+
+  void deleteFitnessActivity(int instance_id, final Callback<DeleteActivityResponse> callback) {
+    Call<DeleteActivityResponse> apiCall = restClient.getGMFitService()
+        .deleteFitnessActivity(new DeleteFitnessActivityRequest(instance_id));
+
+    apiCall.enqueue(new Callback<DeleteActivityResponse>() {
+      @Override public void onResponse(Call<DeleteActivityResponse> call,
+          Response<DeleteActivityResponse> response) {
+        callback.onResponse(call, response);
+      }
+
+      @Override public void onFailure(Call<DeleteActivityResponse> call, Throwable t) {
+      }
+    });
+  }
+
+  void getArticles(String sectionName, final Callback<ArticlesResponse> callback) {
+    Call<ArticlesResponse> apiCall = restClient.getGMFitService().getArticles(sectionName);
+
+    apiCall.enqueue(new Callback<ArticlesResponse>() {
+      @Override public void onResponse(Call<ArticlesResponse> call,
+          Response<ArticlesResponse> response) {
+        callback.onResponse(call, response);
+      }
+
+      @Override public void onFailure(Call<ArticlesResponse> call, Throwable t) {
+      }
+    });
+  }
+
   void getAllActivities(final Callback<ActivitiesListResponse> callback) {
     Call<ActivitiesListResponse> apiCall = restClient.getGMFitService().getAllActivities();
 
@@ -766,21 +812,6 @@ public class ApiCallsHandler {
       }
 
       @Override public void onFailure(Call<ActivitiesListResponse> call, Throwable t) {
-      }
-    });
-  }
-
-  void deleteUserActivity(int instance_id, final Callback<DeleteActivityResponse> callback) {
-    Call<DeleteActivityResponse> apiCall =
-        restClient.getGMFitService().deleteUserActivity(new DeleteUserActivityRequest(instance_id));
-
-    apiCall.enqueue(new Callback<DeleteActivityResponse>() {
-      @Override public void onResponse(Call<DeleteActivityResponse> call,
-          Response<DeleteActivityResponse> response) {
-        callback.onResponse(call, response);
-      }
-
-      @Override public void onFailure(Call<DeleteActivityResponse> call, Throwable t) {
       }
     });
   }
@@ -962,8 +993,7 @@ public class ApiCallsHandler {
         .getCoverageDescription(new CoverageDescriptionRequest(contractNo, indNbr));
 
     apiCall.enqueue(new Callback<ResponseBody>() {
-      @Override
-      public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+      @Override public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
         callback.onResponse(call, response);
       }
 
@@ -972,14 +1002,12 @@ public class ApiCallsHandler {
     });
   }
 
-  void getMembersGuide(String contractNo, String indNbr,
-      final Callback<ResponseBody> callback) {
+  void getMembersGuide(String contractNo, String indNbr, final Callback<ResponseBody> callback) {
     Call<ResponseBody> apiCall = restClient.getGMFitService()
         .getMembersGuide(new CoverageDescriptionRequest(contractNo, indNbr));
 
     apiCall.enqueue(new Callback<ResponseBody>() {
-      @Override
-      public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+      @Override public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
         callback.onResponse(call, response);
       }
 
@@ -1011,8 +1039,7 @@ public class ApiCallsHandler {
         restClient.getGMFitService().getCardDetails(new SimpleInsuranceRequest(contractNo));
 
     apiCall.enqueue(new Callback<ResponseBody>() {
-      @Override
-      public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+      @Override public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
         callback.onResponse(call, response);
       }
 
@@ -1204,8 +1231,7 @@ public class ApiCallsHandler {
         restClient.getGMFitService().getSnapshot(new SnapShotRequest(contractNo, period));
 
     apiCall.enqueue(new Callback<ResponseBody>() {
-      @Override
-      public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+      @Override public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
         callback.onResponse(call, response);
       }
 
@@ -1675,10 +1701,24 @@ public class ApiCallsHandler {
     }
   }
 
-  public class DeleteUserActivityRequest {
+  public class EditFitnessActivityRequest {
+    String id;
+    String duration;
+    String date;
+    String level_id;
+
+    public EditFitnessActivityRequest(String id, String duration, String date, String level_id) {
+      this.id = id;
+      this.duration = duration;
+      this.date = date;
+      this.level_id = level_id;
+    }
+  }
+
+  public class DeleteFitnessActivityRequest {
     int instance_id;
 
-    public DeleteUserActivityRequest(int instance_id) {
+    public DeleteFitnessActivityRequest(int instance_id) {
       this.instance_id = instance_id;
     }
   }

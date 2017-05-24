@@ -163,6 +163,7 @@
   <dimen name="years_choice_recycler_height">280dp</dimen>
   <dimen name="activity_levels_list_height">260dp</dimen>
   <dimen name="delete_activity_layout_height">50dp</dimen>
+  <dimen name="article_image_dimens">60dp</dimen>
 
   <!-- PILL REMINDER SECTION -->
   <dimen name="medications_list_row_item_height">100dp</dimen>

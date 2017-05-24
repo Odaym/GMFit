@@ -36,6 +36,7 @@ import com.mcsaatchi.gmfit.architecture.otto.FitnessActivityEvent;
 import com.mcsaatchi.gmfit.architecture.otto.FitnessWidgetsOrderChangedEvent;
 import com.mcsaatchi.gmfit.architecture.otto.StepCounterIncrementedEvent;
 import com.mcsaatchi.gmfit.architecture.retrofit.architecture.DataAccessHandlerImpl;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.ArticlesResponseBody;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.AuthenticationResponseChartData;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ChartMetricBreakdownResponseDatum;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.SlugBreakdownResponseInnerData;
@@ -53,6 +54,7 @@ import com.mcsaatchi.gmfit.common.components.DateCarousel;
 import com.mcsaatchi.gmfit.common.fragments.BaseFragment;
 import com.mcsaatchi.gmfit.common.models.DataChart;
 import com.mcsaatchi.gmfit.fitness.activities.ActivitiesListActivity;
+import com.mcsaatchi.gmfit.fitness.adapters.ArticlesRecyclerAdapter;
 import com.mcsaatchi.gmfit.fitness.adapters.FitnessWidgetsRecyclerAdapter;
 import com.mcsaatchi.gmfit.fitness.adapters.UserActivitiesListRecyclerAdapter;
 import com.mcsaatchi.gmfit.fitness.models.FitnessWidget;
@@ -82,6 +84,7 @@ public class FitnessFragment extends BaseFragment
   @Bind(R.id.metricProgressBar) ProgressBar metricProgressBar;
   @Bind(R.id.loadingMetricProgressBar) ProgressBar loadingMetricProgressBar;
   @Bind(R.id.activitiesRecycler) RecyclerView activitiesRecycler;
+  @Bind(R.id.articlesRecycler) RecyclerView articlesRecycler;
 
   @Inject SharedPreferences prefs;
   @Inject LocalDate dt;
@@ -107,6 +110,8 @@ public class FitnessFragment extends BaseFragment
     presenter.getUserGoalMetrics(todayDate, "fitness", false);
 
     presenter.getUserActivities();
+
+    presenter.getArticles("fitness");
 
     if (((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
       ((AppCompatActivity) getActivity()).getSupportActionBar()
@@ -142,6 +147,8 @@ public class FitnessFragment extends BaseFragment
 
       presenter.getUserGoalMetrics(finalDate, "fitness",
           !finalTodayDateTime.isEqual(finalDesiredDateTime));
+
+      presenter.getArticles("fitness");
 
       presenter.getUserActivities();
 
@@ -197,9 +204,13 @@ public class FitnessFragment extends BaseFragment
         dateCarouselContainer.removeAllViews();
         dateCarouselLayout.setupDateCarousel();
 
-        presenter.getUserGoalMetrics(todayDate, "fitness", false);
+        presenter.getArticles("fitness");
+
+        presenter.getUserActivities();
 
         presenter.getWidgetsWithDate(todayDate);
+
+        presenter.getUserGoalMetrics(todayDate, "fitness", false);
 
         setupChartViews(chartsMap, todayDate);
 
@@ -345,6 +356,14 @@ public class FitnessFragment extends BaseFragment
     activitiesRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
     activitiesRecycler.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
     activitiesRecycler.setAdapter(userActivitiesListRecyclerAdapter);
+  }
+
+  @Override public void populateArticles(List<ArticlesResponseBody> articlesResponseBodies) {
+    ArticlesRecyclerAdapter userActivitiesListRecyclerAdapter =
+        new ArticlesRecyclerAdapter(getActivity(), articlesResponseBodies);
+    articlesRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
+    articlesRecycler.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
+    articlesRecycler.setAdapter(userActivitiesListRecyclerAdapter);
   }
 
   @Subscribe public void updateWidgetsOrder(FitnessWidgetsOrderChangedEvent event) {

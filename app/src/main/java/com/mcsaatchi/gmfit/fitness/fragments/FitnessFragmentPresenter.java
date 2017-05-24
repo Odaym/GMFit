@@ -3,6 +3,8 @@ package com.mcsaatchi.gmfit.fitness.fragments;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.retrofit.architecture.DataAccessHandlerImpl;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.ArticlesResponse;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.ArticlesResponseBody;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ChartMetricBreakdownResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ChartMetricBreakdownResponseDatum;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.DefaultGetResponse;
@@ -184,6 +186,22 @@ class FitnessFragmentPresenter extends BaseFragmentPresenter {
     });
   }
 
+  void getArticles(String sectionName) {
+    dataAccessHandler.getArticles(sectionName, new Callback<ArticlesResponse>() {
+      @Override
+      public void onResponse(Call<ArticlesResponse> call, Response<ArticlesResponse> response) {
+        switch (response.code()) {
+          case 200:
+            view.populateArticles(response.body().getData().getBody());
+            break;
+        }
+      }
+
+      @Override public void onFailure(Call<ArticlesResponse> call, Throwable t) {
+      }
+    });
+  }
+
   ArrayList<FitnessWidget> getWidgetsFromDB() {
     try {
       return (ArrayList<FitnessWidget>) fitnessWidgetsDAO.queryBuilder()
@@ -213,5 +231,7 @@ class FitnessFragmentPresenter extends BaseFragmentPresenter {
     void callSetupChartViews(DataChart chartObject, String todayDate);
 
     void populateUserActivities(List<UserActivitiesResponseBody> userActivitiesResponseBodies);
+
+    void populateArticles(List<ArticlesResponseBody> articlesResponseBodies);
   }
 }

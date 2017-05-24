@@ -3,6 +3,7 @@ package com.mcsaatchi.gmfit.architecture.retrofit.architecture;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ActivitiesListResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ActivityLevelsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.AddCRMNoteResponse;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.ArticlesResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.AuthenticationResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.CRMCategoriesResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.CRMNotesResponse;
@@ -166,11 +167,16 @@ public interface DataAccessHandler {
   void addFitnessActivity(String fitness_activity_level_id, String duration, String date,
       Callback<DefaultGetResponse> callback);
 
+  void editFitnessActivity(String id, String duration, String date, String level_id,
+      Callback<DefaultGetResponse> callback);
+
+  void deleteFitnessActivity(int instance_id, Callback<DeleteActivityResponse> callback);
+
   void getAllActivities(Callback<ActivitiesListResponse> callback);
 
   void getUserActivities(Callback<UserActivitiesResponse> callback);
 
-  void deleteUserActivity(int instance_id, Callback<DeleteActivityResponse> callback);
+  void getArticles(String sectionName, Callback<ArticlesResponse> callback);
 
   void deleteUserChart(String chart_id, Callback<DefaultGetResponse> callback);
 
@@ -192,8 +198,7 @@ public interface DataAccessHandler {
   void insuranceUserLogin(String indNbr, String country, String language, String password,
       Callback<InsuranceLoginResponse> callback);
 
-  void getCoverageDescription(String contractNo, String indNbr,
-      Callback<ResponseBody> callback);
+  void getCoverageDescription(String contractNo, String indNbr, Callback<ResponseBody> callback);
 
   void getMembersGuide(String contractNo, String indNbr, Callback<ResponseBody> callback);
 

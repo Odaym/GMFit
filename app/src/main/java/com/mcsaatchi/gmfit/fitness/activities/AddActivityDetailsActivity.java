@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -46,6 +47,7 @@ public class AddActivityDetailsActivity extends BaseActivity
   @Bind(R.id.datePicker) CustomDatePickerFitnessActivity datePicker;
   @Bind(R.id.caloriesValueTV) FontTextView caloriesValueTV;
   @Bind(R.id.deleteActivityLayout) LinearLayout deleteActivityLayout;
+  @Bind(R.id.addActivityBTN) Button addActivityBTN;
 
   private AddActivityDetailsActivityPresenter presenter;
   private ArrayList<SelectionItem> activityLevelChoices;
@@ -68,6 +70,7 @@ public class AddActivityDetailsActivity extends BaseActivity
 
       if (call_purpose_edit) {
         deleteActivityLayout.setVisibility(View.VISIBLE);
+        addActivityBTN.setVisibility(View.INVISIBLE);
 
         UserActivitiesResponseBody userActivitiesResponseBody =
             getIntent().getExtras().getParcelable("ACTIVITY_ITEM");
@@ -81,7 +84,9 @@ public class AddActivityDetailsActivity extends BaseActivity
 
           setupDatePicker();
 
-          datePicker.setSelectedItem(userActivitiesResponseBody.getDate().split(" ")[0]);
+          activityDate = userActivitiesResponseBody.getDate().split(" ")[0];
+
+          datePicker.setSelectedItem(activityDate);
 
           timeSpentActivityET.setText(userActivitiesResponseBody.getDuration());
           timeSpentActivityET.setSelection(timeSpentActivityET.getText().toString().length());
@@ -193,9 +198,9 @@ public class AddActivityDetailsActivity extends BaseActivity
   }
 
   private void gatherInfoAndSubmitActivity(boolean editingActivity) {
-    if (activityDate != null) {
-      presenter.addFitnessActivity(String.valueOf(activityLevelID),
-          timeSpentActivityET.getText().toString(), Helpers.formatActivitiesDate(activityDate));
+    if (editingActivity) {
+      presenter.editFitnessActivity(String.valueOf(activityInstanceID),
+          timeSpentActivityET.getText().toString(), activityDate, String.valueOf(activityLevelID));
     } else {
       presenter.addFitnessActivity(String.valueOf(activityLevelID),
           timeSpentActivityET.getText().toString(), Helpers.getCalendarDate());

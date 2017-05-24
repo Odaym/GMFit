@@ -138,6 +138,35 @@
         android:layout_marginBottom="@dimen/default_margin_2"
         />
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/chart_title_headline_bar_height"
+        android:layout_marginTop="@dimen/default_margin_2"
+        android:background="@color/fitness_pink"
+        >
+
+      <TextView
+          android:id="@+id/articlesTitleTV"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_centerVertical="true"
+          android:gravity="center_vertical"
+          android:paddingEnd="@dimen/default_margin_2"
+          android:paddingStart="@dimen/default_margin_2"
+          android:text="@string/articles_section_title"
+          android:textAppearance="?android:textAppearanceMedium"
+          android:textColor="@android:color/white"
+          />
+
+    </RelativeLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/articlesRecycler"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/default_margin_2"
+        />
+
     <LinearLayout
         android:id="@+id/cards_container"
         android:layout_width="match_parent"

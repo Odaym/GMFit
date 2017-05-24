@@ -5,6 +5,7 @@ import com.mcsaatchi.gmfit.architecture.classes.GMFitApplication;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ActivitiesListResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ActivityLevelsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.AddCRMNoteResponse;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.ArticlesResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.AuthenticationResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.CRMCategoriesResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.CRMNotesResponse;
@@ -128,6 +129,16 @@ public class DataAccessHandlerImpl implements DataAccessHandler {
     apiCallsHandler.addFitnessActivity(fitness_activity_level_id, duration, date, callback);
   }
 
+  @Override
+  public void editFitnessActivity(String id, String duration, String date, String level_id,
+      Callback<DefaultGetResponse> callback) {
+    apiCallsHandler.editFitnessActivity(id, duration, date, level_id, callback);
+  }
+
+  @Override public void deleteFitnessActivity(int instance_id, Callback<DeleteActivityResponse> callback) {
+    apiCallsHandler.deleteFitnessActivity(instance_id, callback);
+  }
+
   @Override public void getAllActivities(Callback<ActivitiesListResponse> callback) {
     apiCallsHandler.getAllActivities(callback);
   }
@@ -136,8 +147,8 @@ public class DataAccessHandlerImpl implements DataAccessHandler {
     apiCallsHandler.getUserActivities(callback);
   }
 
-  @Override public void deleteUserActivity(int instance_id, Callback<DeleteActivityResponse> callback) {
-    apiCallsHandler.deleteUserActivity(instance_id, callback);
+  @Override public void getArticles(String sectionName, Callback<ArticlesResponse> callback) {
+    apiCallsHandler.getArticles(sectionName, callback);
   }
 
   @Override

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/clickableLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:gravity="center_vertical"
+    android:paddingEnd="@dimen/default_margin_2"
+    android:paddingStart="@dimen/default_margin_2"
+    >
+
+  <ImageView
+      android:id="@+id/articleImageIV"
+      android:layout_width="@dimen/article_image_dimens"
+      android:layout_height="@dimen/article_image_dimens"
+      android:layout_centerVertical="true"
+      />
+
+  <TextView
+      android:id="@+id/articleNameTV"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_centerVertical="true"
+      android:layout_marginStart="@dimen/default_margin_2"
+      android:layout_toEndOf="@+id/articleImageIV"
+      android:gravity="center_vertical"
+      android:paddingBottom="@dimen/default_margin_2"
+      android:textAppearance="?android:textAppearanceLarge"
+      android:textColor="@color/black_alpha_50"
+      />
+
+  <TextView
+      android:id="@+id/articleDateTV"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_below="@id/articleNameTV"
+      android:layout_marginStart="@dimen/default_margin_2"
+      android:layout_marginTop="@dimen/default_margin_0"
+      android:layout_toEndOf="@+id/articleImageIV"
+      android:paddingBottom="@dimen/default_margin_2"
+      android:textAppearance="?android:textAppearanceSmall"
+      android:textColor="@color/fitness_pink"
+      />
+
+  <ImageView
+      android:layout_width="15dp"
+      android:layout_height="15dp"
+      android:layout_alignParentEnd="true"
+      android:layout_centerVertical="true"
+      android:src="@drawable/ic_right_arrow_blue"
+      android:tint="@color/fitness_pink"
+      />
+</RelativeLayout>

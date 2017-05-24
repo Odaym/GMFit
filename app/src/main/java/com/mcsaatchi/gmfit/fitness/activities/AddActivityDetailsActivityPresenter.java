@@ -43,6 +43,27 @@ class AddActivityDetailsActivityPresenter extends BaseActivityPresenter {
         });
   }
 
+  void editFitnessActivity(String id, String duration, String date, String level_id) {
+    view.callDisplayWaitingDialog(R.string.editing_new_activity_dialog_title);
+
+    dataAccessHandler.editFitnessActivity(id, duration, date, level_id,
+        new Callback<DefaultGetResponse>() {
+          @Override public void onResponse(Call<DefaultGetResponse> call,
+              Response<DefaultGetResponse> response) {
+            switch (response.code()) {
+              case 200:
+                view.finishAndLoadActivities();
+                break;
+            }
+
+            view.callDismissWaitingDialog();
+          }
+
+          @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
+          }
+        });
+  }
+
   void getAllActivities(int activity_id) {
     view.callDisplayWaitingDialog(R.string.loading_data_dialog_title);
 
@@ -74,7 +95,7 @@ class AddActivityDetailsActivityPresenter extends BaseActivityPresenter {
   void deleteUserActivity(int instance_id) {
     view.callDisplayWaitingDialog(R.string.deleting_user_activity_dialog_title);
 
-    dataAccessHandler.deleteUserActivity(instance_id, new Callback<DeleteActivityResponse>() {
+    dataAccessHandler.deleteFitnessActivity(instance_id, new Callback<DeleteActivityResponse>() {
       @Override public void onResponse(Call<DeleteActivityResponse> call,
           Response<DeleteActivityResponse> response) {
         switch (response.code()) {
