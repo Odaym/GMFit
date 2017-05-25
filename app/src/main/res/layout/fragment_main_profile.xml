@@ -172,7 +172,7 @@
               android:layout_alignParentEnd="true"
               android:gravity="end|center_vertical"
               android:padding="@dimen/default_margin_2"
-              android:paddingEnd="@dimen/default_margin_3"
+              android:paddingEnd="@dimen/default_margin_2"
               android:textColor="@color/fitness_dark_blue"
               />
         </RelativeLayout>
@@ -211,9 +211,8 @@
               android:layout_height="match_parent"
               android:layout_alignParentEnd="true"
               android:layout_alignParentTop="true"
+              android:layout_marginEnd="@dimen/default_margin_2"
               android:gravity="end|center_vertical"
-              android:paddingEnd="@dimen/default_margin_3"
-              android:paddingStart="@dimen/default_margin_3"
               android:textColor="@color/fitness_dark_blue"
               />
         </RelativeLayout>

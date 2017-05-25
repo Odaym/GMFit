@@ -1,6 +1,8 @@
-package com.mcsaatchi.gmfit.fitness.adapters;
+package com.mcsaatchi.gmfit.profile.adapters;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Parcelable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,7 +10,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.AchievementsResponseBody;
+import com.mcsaatchi.gmfit.profile.activities.AchievementsListActivity;
 import com.squareup.picasso.Picasso;
+import java.util.ArrayList;
 import java.util.List;
 
 public class AchievementsRecyclerAdapter extends RecyclerView.Adapter {
@@ -62,11 +66,12 @@ public class AchievementsRecyclerAdapter extends RecyclerView.Adapter {
       achievementCompletedCheckmarkIV =
           (ImageView) itemView.findViewById(R.id.achievementCompletedCheckmarkIV);
 
-      //itemView.setOnClickListener(view -> {
-      //  Intent intent = new Intent(context, AchievementsListActivity.class);
-      //  intent.putExtra("ACHIEVEMENT_ITEM", achievementsResponseBodies.get(getAdapterPosition()));
-      //  context.startActivity(intent);
-      //});
+      itemView.setOnClickListener(view -> {
+        Intent intent = new Intent(context, AchievementsListActivity.class);
+        intent.putParcelableArrayListExtra("ACHIEVEMENTS",
+            (ArrayList<? extends Parcelable>) achievementsResponseBodies);
+        context.startActivity(intent);
+      });
     }
   }
 }

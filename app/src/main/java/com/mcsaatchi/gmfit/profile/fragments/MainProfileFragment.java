@@ -48,9 +48,8 @@ import com.mcsaatchi.gmfit.architecture.retrofit.responses.UserProfileResponseGo
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.UserProfileResponseMedicalCondition;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
-import com.mcsaatchi.gmfit.common.classes.SimpleDividerItemDecoration;
 import com.mcsaatchi.gmfit.common.fragments.BaseFragment;
-import com.mcsaatchi.gmfit.fitness.adapters.AchievementsRecyclerAdapter;
+import com.mcsaatchi.gmfit.profile.adapters.AchievementsRecyclerAdapter;
 import com.mcsaatchi.gmfit.onboarding.activities.LoginActivity;
 import com.mcsaatchi.gmfit.onboarding.activities.MedicalConditionsChoiceActivity;
 import com.mcsaatchi.gmfit.onboarding.models.MedicalCondition;
@@ -462,7 +461,6 @@ public class MainProfileFragment extends BaseFragment
         new AchievementsRecyclerAdapter(getActivity(), achievementsResponseBodies);
     achievementsRecycler.setLayoutManager(
         new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
-    achievementsRecycler.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
     achievementsRecycler.setAdapter(userActivitiesListRecyclerAdapter);
   }
 

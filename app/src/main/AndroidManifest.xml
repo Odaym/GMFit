@@ -234,6 +234,12 @@
         android:theme="@style/No_Action_Bar_Theme"/>
 
     <activity
+        android:name=".profile.activities.AchievementsListActivity"
+        android:exported="true"
+        android:screenOrientation="portrait"
+        android:theme="@style/No_Action_Bar_Theme"/>
+
+    <activity
         android:name=".fitness.activities.AddActivityDetailsActivity"
         android:exported="true"
         android:screenOrientation="portrait"

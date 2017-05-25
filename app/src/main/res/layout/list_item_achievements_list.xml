@@ -18,7 +18,7 @@
       android:layout_height="@dimen/achievement_checkmark_icon_inside_recycler_dimens"
       android:layout_alignParentBottom="true"
       android:layout_alignParentEnd="true"
-      android:src="@drawable/ic_checkmark_day_chosen"
+      android:src="@drawable/ic_achievement_completed_checkmark"
       />
 
 </RelativeLayout>
