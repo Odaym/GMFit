@@ -109,6 +109,13 @@ public class AddActivityDetailsActivity extends BaseActivity
 
         setupDatePicker();
 
+        timeSpentActivityET.setSelection(timeSpentActivityET.getText().toString().length());
+
+        /**
+         * Set calories value to Rate of activity * minutes spent
+         */
+        //caloriesValueTV.setText(Integer.parseInt(timeSpentActivityET.getText().toString()) * activitiesListResponseBody.get)
+
         activityLevelChoices =
             setupActivityLevelChoices(activitiesListResponseBody.getActivityLevels());
 

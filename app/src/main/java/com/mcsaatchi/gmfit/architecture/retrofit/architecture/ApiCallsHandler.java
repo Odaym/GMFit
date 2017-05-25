@@ -2,6 +2,7 @@ package com.mcsaatchi.gmfit.architecture.retrofit.architecture;
 
 import android.content.Context;
 import com.mcsaatchi.gmfit.architecture.classes.GMFitApplication;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.AchievementsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ActivitiesListResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ActivityLevelsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.AddCRMNoteResponse;
@@ -792,12 +793,26 @@ public class ApiCallsHandler {
     Call<ArticlesResponse> apiCall = restClient.getGMFitService().getArticles(sectionName);
 
     apiCall.enqueue(new Callback<ArticlesResponse>() {
-      @Override public void onResponse(Call<ArticlesResponse> call,
-          Response<ArticlesResponse> response) {
+      @Override
+      public void onResponse(Call<ArticlesResponse> call, Response<ArticlesResponse> response) {
         callback.onResponse(call, response);
       }
 
       @Override public void onFailure(Call<ArticlesResponse> call, Throwable t) {
+      }
+    });
+  }
+
+  void getUserAchievements(final Callback<AchievementsResponse> callback) {
+    Call<AchievementsResponse> apiCall = restClient.getGMFitService().getUserAchievements();
+
+    apiCall.enqueue(new Callback<AchievementsResponse>() {
+      @Override public void onResponse(Call<AchievementsResponse> call,
+          Response<AchievementsResponse> response) {
+        callback.onResponse(call, response);
+      }
+
+      @Override public void onFailure(Call<AchievementsResponse> call, Throwable t) {
       }
     });
   }

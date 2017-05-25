@@ -353,6 +353,7 @@
   <string name="old_password_conflict_existing_password">Your old password does not match your existing password</string>
   <string name="website_header_title">Website</string>
   <string name="social_media_sites_header_title">Social Media</string>
+  <string name="achievements_section_header_title">Achievements</string>
 
   <!-- INSURANCE SECTION -->
   <string name="insurance_section_title">Insurance</string>

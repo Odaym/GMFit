@@ -1,5 +1,6 @@
 package com.mcsaatchi.gmfit.architecture.retrofit.architecture;
 
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.AchievementsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ActivitiesListResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ActivityLevelsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.AddCRMNoteResponse;
@@ -177,6 +178,8 @@ public interface DataAccessHandler {
   void getUserActivities(Callback<UserActivitiesResponse> callback);
 
   void getArticles(String sectionName, Callback<ArticlesResponse> callback);
+
+  void getUserAchievements(Callback<AchievementsResponse> callback);
 
   void deleteUserChart(String chart_id, Callback<DefaultGetResponse> callback);
 

@@ -15,6 +15,8 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,13 +41,16 @@ import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
 import com.mcsaatchi.gmfit.architecture.otto.ProfileUpdatedEvent;
 import com.mcsaatchi.gmfit.architecture.picasso.CircleTransform;
 import com.mcsaatchi.gmfit.architecture.retrofit.architecture.DataAccessHandlerImpl;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.AchievementsResponseBody;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.UserProfileResponseActivityLevel;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.UserProfileResponseDatum;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.UserProfileResponseGoal;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.UserProfileResponseMedicalCondition;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
+import com.mcsaatchi.gmfit.common.classes.SimpleDividerItemDecoration;
 import com.mcsaatchi.gmfit.common.fragments.BaseFragment;
+import com.mcsaatchi.gmfit.fitness.adapters.AchievementsRecyclerAdapter;
 import com.mcsaatchi.gmfit.onboarding.activities.LoginActivity;
 import com.mcsaatchi.gmfit.onboarding.activities.MedicalConditionsChoiceActivity;
 import com.mcsaatchi.gmfit.onboarding.models.MedicalCondition;
@@ -90,6 +95,7 @@ public class MainProfileFragment extends BaseFragment
   @Bind(R.id.medicalConditionsValueTV) TextView medicalConditionsValueTV;
   @Bind(R.id.activityLevelsEntryValueTV) TextView activityLevelsEntryValueTV;
   @Bind(R.id.changePasswordParentLayout) LinearLayout changePasswordParentLayout;
+  @Bind(R.id.achievementsRecycler) RecyclerView achievementsRecycler;
 
   @Inject SharedPreferences prefs;
   @Inject DataAccessHandlerImpl dataAccessHandler;
@@ -132,6 +138,8 @@ public class MainProfileFragment extends BaseFragment
         .into(userProfileIV);
 
     presenter.getUserProfile();
+
+    presenter.getUserAchievements();
 
     //If the user is logged in through Facebook, Token is not -1 (empty)
     if (!prefs.getString(Constants.EXTRAS_USER_FACEBOOK_TOKEN, "-1").equals("-1")) {
@@ -446,6 +454,16 @@ public class MainProfileFragment extends BaseFragment
     } catch (ActivityNotFoundException ex) {
       Toast.makeText(getActivity(), "No email client", Toast.LENGTH_SHORT).show();
     }
+  }
+
+  @Override
+  public void displayUserAchievements(List<AchievementsResponseBody> achievementsResponseBodies) {
+    AchievementsRecyclerAdapter userActivitiesListRecyclerAdapter =
+        new AchievementsRecyclerAdapter(getActivity(), achievementsResponseBodies);
+    achievementsRecycler.setLayoutManager(
+        new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+    achievementsRecycler.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
+    achievementsRecycler.setAdapter(userActivitiesListRecyclerAdapter);
   }
 
   @Subscribe public void handleSuccessfulProfileUpdate(ProfileUpdatedEvent event) {

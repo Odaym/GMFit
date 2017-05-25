@@ -63,6 +63,58 @@
         android:orientation="vertical"
         >
 
+      <!-- USER ACHIEVEMENTS SECTION -->
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginBottom="@dimen/default_margin_2"
+          android:orientation="vertical"
+          >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/chart_title_headline_bar_height"
+            android:background="@color/profile_blue"
+            >
+
+          <TextView
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_centerVertical="true"
+              android:gravity="center_vertical"
+              android:paddingEnd="@dimen/default_margin_2"
+              android:paddingStart="@dimen/default_margin_2"
+              android:text="@string/achievements_section_header_title"
+              android:textAppearance="?android:textAppearanceMedium"
+              android:textColor="@android:color/white"
+              />
+
+          <TextView
+              android:id="@+id/achievementsInfoTV"
+              android:layout_width="wrap_content"
+              android:layout_height="match_parent"
+              android:layout_alignParentEnd="true"
+              android:layout_centerVertical="true"
+              android:gravity="center_vertical"
+              android:paddingEnd="@dimen/default_margin_2"
+              android:paddingStart="@dimen/default_margin_2"
+              android:text="2 of 14 completed"
+              android:textAppearance="?android:textAppearanceSmall"
+              android:textColor="@color/offwhite_background_gray"
+              />
+        </RelativeLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/achievementsRecycler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:paddingBottom="@dimen/default_margin_1"
+            android:paddingTop="@dimen/default_margin_1"
+            />
+
+      </LinearLayout>
+
       <!-- PROFILE INFORMATION SECTION -->
       <LinearLayout
           android:layout_width="match_parent"
@@ -250,7 +302,7 @@
               android:layout_height="15dp"
               android:layout_alignParentEnd="true"
               android:layout_centerVertical="true"
-              android:layout_marginEnd="@dimen/default_margin_3"
+              android:layout_marginEnd="@dimen/default_margin_2"
               android:src="@drawable/ic_arrow_right_blue"
               />
         </RelativeLayout>
@@ -288,7 +340,7 @@
               android:layout_height="15dp"
               android:layout_alignParentEnd="true"
               android:layout_centerVertical="true"
-              android:layout_marginEnd="@dimen/default_margin_3"
+              android:layout_marginEnd="@dimen/default_margin_2"
               android:src="@drawable/ic_arrow_right_blue"
               />
         </RelativeLayout>
@@ -453,7 +505,7 @@
               android:layout_height="15dp"
               android:layout_alignParentEnd="true"
               android:layout_centerVertical="true"
-              android:layout_marginEnd="@dimen/default_margin_3"
+              android:layout_marginEnd="@dimen/default_margin_2"
               android:src="@drawable/ic_arrow_right_blue"
               />
         </RelativeLayout>
@@ -523,7 +575,7 @@
               android:layout_height="15dp"
               android:layout_alignParentEnd="true"
               android:layout_centerVertical="true"
-              android:layout_marginEnd="@dimen/default_margin_3"
+              android:layout_marginEnd="@dimen/default_margin_2"
               android:src="@drawable/ic_arrow_right_blue"
               />
         </RelativeLayout>
@@ -561,7 +613,7 @@
               android:layout_height="15dp"
               android:layout_alignParentEnd="true"
               android:layout_centerVertical="true"
-              android:layout_marginEnd="@dimen/default_margin_3"
+              android:layout_marginEnd="@dimen/default_margin_2"
               android:src="@drawable/ic_arrow_right_blue"
               />
         </RelativeLayout>
@@ -599,7 +651,7 @@
               android:layout_height="15dp"
               android:layout_alignParentEnd="true"
               android:layout_centerVertical="true"
-              android:layout_marginEnd="@dimen/default_margin_3"
+              android:layout_marginEnd="@dimen/default_margin_2"
               android:src="@drawable/ic_arrow_right_blue"
               />
         </RelativeLayout>
@@ -637,7 +689,7 @@
               android:layout_height="15dp"
               android:layout_alignParentEnd="true"
               android:layout_centerVertical="true"
-              android:layout_marginEnd="@dimen/default_margin_3"
+              android:layout_marginEnd="@dimen/default_margin_2"
               android:src="@drawable/ic_arrow_right_blue"
               />
         </RelativeLayout>
@@ -690,7 +742,7 @@
                 android:layout_height="15dp"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:layout_marginEnd="@dimen/default_margin_3"
+                android:layout_marginEnd="@dimen/default_margin_2"
                 android:src="@drawable/ic_arrow_right_blue"
                 />
           </RelativeLayout>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/clickableLayout"
+    android:layout_width="@dimen/achievements_cell_item_dimens"
+    android:layout_height="@dimen/achievements_cell_item_dimens"
+    >
+
+  <ImageView
+      android:id="@+id/achievementImageIV"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      />
+
+  <ImageView
+      android:id="@+id/achievementCompletedCheckmarkIV"
+      android:layout_width="@dimen/achievement_checkmark_icon_inside_recycler_dimens"
+      android:layout_height="@dimen/achievement_checkmark_icon_inside_recycler_dimens"
+      android:layout_alignParentBottom="true"
+      android:layout_alignParentEnd="true"
+      android:src="@drawable/ic_checkmark_day_chosen"
+      />
+
+</RelativeLayout>

@@ -1,5 +1,6 @@
 package com.mcsaatchi.gmfit.architecture.retrofit.architecture;
 
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.AchievementsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ActivitiesListResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ActivityLevelsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.AddCRMNoteResponse;
@@ -201,6 +202,8 @@ public interface GMFitService {
   @GET("user/profile") Call<UserProfileResponse> getOnboardingStatus();
 
   @GET("user/profile") Call<UserProfileResponse> getUserProfile();
+
+  @GET("user/achievements") Call<AchievementsResponse> getUserAchievements();
 
   @GET("operations") Call<OperationContactsResponse> getOperationContacts();
 

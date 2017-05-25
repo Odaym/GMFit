@@ -1,6 +1,7 @@
 package com.mcsaatchi.gmfit.fitness.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ArticlesResponseBody;
+import com.mcsaatchi.gmfit.fitness.activities.ArticleDetailsActivity;
 import com.squareup.picasso.Picasso;
 import java.util.List;
 
@@ -62,12 +64,11 @@ public class ArticlesRecyclerAdapter extends RecyclerView.Adapter {
       articleDateTV = (TextView) itemView.findViewById(R.id.articleDateTV);
       articleImageIV = (ImageView) itemView.findViewById(R.id.articleImageIV);
 
-      //itemView.setOnClickListener(view -> {
-      //  Intent intent = new Intent(context, AddActivityDetailsActivity.class);
-      //  intent.putExtra("ACTIVITY_ITEM", articlesResponseBodies.get(getAdapterPosition()));
-      //  intent.putExtra("CALL_PURPOSE_EDIT", true);
-      //  context.startActivity(intent);
-      //});
+      itemView.setOnClickListener(view -> {
+        Intent intent = new Intent(context, ArticleDetailsActivity.class);
+        intent.putExtra("ARTICLE", articlesResponseBodies.get(getAdapterPosition()));
+        context.startActivity(intent);
+      });
     }
   }
 }

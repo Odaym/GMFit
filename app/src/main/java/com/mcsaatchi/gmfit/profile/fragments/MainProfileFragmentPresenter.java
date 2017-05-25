@@ -4,6 +4,8 @@ import android.os.AsyncTask;
 import android.os.Environment;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.retrofit.architecture.DataAccessHandlerImpl;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.AchievementsResponse;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.AchievementsResponseBody;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.DefaultGetResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.MetaTextsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.UserProfileResponse;
@@ -16,6 +18,7 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.List;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -140,6 +143,23 @@ class MainProfileFragmentPresenter extends BaseFragmentPresenter {
     });
   }
 
+  void getUserAchievements() {
+    dataAccessHandler.getUserAchievements(new Callback<AchievementsResponse>() {
+      @Override public void onResponse(Call<AchievementsResponse> call,
+          Response<AchievementsResponse> response) {
+        switch (response.code()) {
+          case 200:
+            view.displayUserAchievements(response.body().getData().getBody());
+            break;
+        }
+      }
+
+      @Override public void onFailure(Call<AchievementsResponse> call, Throwable t) {
+        view.displayRequestErrorDialog(t.getMessage());
+      }
+    });
+  }
+
   void requestEmergencyProfile() {
     new DownloadPDFFile().execute("https://mobileapp.globemedfit.com/api/v1/emergency_response",
         "my_emergency_profile.pdf");
@@ -157,6 +177,8 @@ class MainProfileFragmentPresenter extends BaseFragmentPresenter {
     void displayPictureChangeSuccessful();
 
     void openShareFileDialog();
+
+    void displayUserAchievements(List<AchievementsResponseBody> achievementsResponseBodies);
   }
 
   private static class FileDownloader {

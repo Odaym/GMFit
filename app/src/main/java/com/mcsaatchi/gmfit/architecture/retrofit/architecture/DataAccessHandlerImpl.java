@@ -2,6 +2,7 @@ package com.mcsaatchi.gmfit.architecture.retrofit.architecture;
 
 import android.content.Context;
 import com.mcsaatchi.gmfit.architecture.classes.GMFitApplication;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.AchievementsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ActivitiesListResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ActivityLevelsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.AddCRMNoteResponse;
@@ -149,6 +150,10 @@ public class DataAccessHandlerImpl implements DataAccessHandler {
 
   @Override public void getArticles(String sectionName, Callback<ArticlesResponse> callback) {
     apiCallsHandler.getArticles(sectionName, callback);
+  }
+
+  @Override public void getUserAchievements(Callback<AchievementsResponse> callback) {
+    apiCallsHandler.getUserAchievements(callback);
   }
 
   @Override

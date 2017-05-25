@@ -134,6 +134,11 @@
         android:theme="@style/No_Action_Bar_Theme"/>
 
     <activity
+        android:name=".fitness.activities.ArticleDetailsActivity"
+        android:screenOrientation="portrait"
+        android:theme="@style/No_Action_Bar_Theme"/>
+
+    <activity
         android:name=".nutrition.activities.AddNewMealItemActivity"
         android:screenOrientation="portrait"
         android:theme="@style/No_Action_Bar_Theme"
