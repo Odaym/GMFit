@@ -50,12 +50,16 @@ public class AchievementDetailsRecyclerAdapter extends RecyclerView.Adapter {
 
     if (achievementsResponseBodies.get(position).getIsDone()) {
       holder.achievementCompletionProgressLayout.setVisibility(View.VISIBLE);
+      holder.achievementCompletedDetailsTV.setVisibility(View.INVISIBLE);
 
       holder.achievementCompletedPercentageTV.setText(
           achievementsResponseBodies.get(position).getProgress() + "%");
       holder.completionProgressBar.setProgress(
           achievementsResponseBodies.get(position).getProgress());
     } else {
+      holder.achievementCompletionProgressLayout.setVisibility(View.INVISIBLE);
+      holder.achievementCompletedDetailsTV.setVisibility(View.VISIBLE);
+
       holder.achievementCompletedDetailsTV.setText(
           achievementsResponseBodies.get(position).getFinishes()
               + " times - Last completed: "
