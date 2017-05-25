@@ -18,6 +18,8 @@
       android:layout_height="@dimen/achievement_checkmark_icon_inside_recycler_dimens"
       android:layout_alignParentBottom="true"
       android:layout_alignParentEnd="true"
+      android:layout_marginBottom="@dimen/default_margin_0"
+      android:layout_marginEnd="@dimen/default_margin_0"
       android:src="@drawable/ic_achievement_completed_checkmark"
       />
 

@@ -11,6 +11,7 @@ import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.UserActivitiesResponseBody;
 import com.mcsaatchi.gmfit.fitness.activities.AddActivityDetailsActivity;
 import java.util.List;
+import timber.log.Timber;
 
 public class UserActivitiesListRecyclerAdapter extends RecyclerView.Adapter {
   private Context context;
@@ -37,8 +38,14 @@ public class UserActivitiesListRecyclerAdapter extends RecyclerView.Adapter {
     holder.durationAndLevelTV.setText(userActivitiesResponseBodies.get(position).getDuration()
         + " - "
         + userActivitiesResponseBodies.get(position).getName());
-    holder.caloriesBurnedTV.setText(String.format("%.2f",
-        userActivitiesResponseBodies.get(position).getCalories()) + " kcal");
+    if (userActivitiesResponseBodies.get(position).getCalories() % 1 == 0) {
+      holder.caloriesBurnedTV.setText(
+          (int) userActivitiesResponseBodies.get(position).getCalories() + " kcal");
+    } else {
+      holder.caloriesBurnedTV.setText(
+          String.format("%.2f", userActivitiesResponseBodies.get(position).getCalories())
+              + " kcal");
+    }
   }
 
   @Override public int getItemCount() {
@@ -64,6 +71,8 @@ public class UserActivitiesListRecyclerAdapter extends RecyclerView.Adapter {
         intent.putExtra("ACTIVITY_ITEM", userActivitiesResponseBodies.get(getAdapterPosition()));
         intent.putExtra("CALL_PURPOSE_EDIT", true);
         context.startActivity(intent);
+
+        Timber.d("Activity rate is : " + userActivitiesResponseBodies.get(getAdapterPosition()).getRate());
       });
     }
   }

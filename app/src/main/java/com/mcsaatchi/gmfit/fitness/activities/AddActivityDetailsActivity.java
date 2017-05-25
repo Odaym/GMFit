@@ -86,12 +86,23 @@ public class AddActivityDetailsActivity extends BaseActivity
 
           activityDate = userActivitiesResponseBody.getDate().split(" ")[0];
 
+          /**
+           * double activity_rate = getIntent().getExtras().getDouble("ACTIVITY_RATE");
+           caloriesValueTV.setText(String.valueOf(
+           Integer.parseInt(timeSpentActivityET.getText().toString()) * (int) (activity_rate)));
+           */
+
           datePicker.setSelectedItem(activityDate);
 
           timeSpentActivityET.setText(userActivitiesResponseBody.getDuration());
           timeSpentActivityET.setSelection(timeSpentActivityET.getText().toString().length());
 
-          caloriesValueTV.setText(String.format("%.2f", userActivitiesResponseBody.getCalories()));
+          if (userActivitiesResponseBody.getCalories() % 1 == 0) {
+            caloriesValueTV.setText(String.valueOf((int) userActivitiesResponseBody.getCalories()));
+          } else {
+            caloriesValueTV.setText(
+                String.format("%.2f", userActivitiesResponseBody.getCalories()));
+          }
 
           presenter.getAllActivities(userActivitiesResponseBody.getActivityId());
         }
@@ -110,11 +121,6 @@ public class AddActivityDetailsActivity extends BaseActivity
         setupDatePicker();
 
         timeSpentActivityET.setSelection(timeSpentActivityET.getText().toString().length());
-
-        /**
-         * Set calories value to Rate of activity * minutes spent
-         */
-        //caloriesValueTV.setText(Integer.parseInt(timeSpentActivityET.getText().toString()) * activitiesListResponseBody.get)
 
         activityLevelChoices =
             setupActivityLevelChoices(activitiesListResponseBody.getActivityLevels());

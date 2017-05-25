@@ -44,7 +44,7 @@
               />
 
           <View
-              android:layout_width="1dp"
+              android:layout_width="0.5dp"
               android:layout_height="match_parent"
               android:background="@color/grey"
               />
@@ -217,7 +217,7 @@
           android:layout_marginBottom="@dimen/default_margin_2"
           android:layout_marginEnd="@dimen/activity_vertical_margin"
           android:layout_marginStart="@dimen/activity_vertical_margin"
-          android:layout_marginTop="@dimen/default_margin_2"
+          android:layout_marginTop="@dimen/default_margin_1"
           android:background="@color/fitness_dark_blue"
           android:text="@string/add_activity_button"
           android:textColor="@android:color/white"

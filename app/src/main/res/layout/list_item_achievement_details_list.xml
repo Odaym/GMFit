@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/clickableLayout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="@dimen/achievement_details_cell_height"
+    android:layout_marginBottom="@dimen/default_margin_1"
+    android:layout_marginTop="@dimen/default_margin_1"
     android:orientation="horizontal"
     >
 
   <RelativeLayout
-      android:layout_width="@dimen/achievements_cell_item_dimens"
-      android:layout_height="@dimen/achievements_cell_item_dimens"
+      android:layout_width="@dimen/achievement_details_cell_item_dimens"
+      android:layout_height="@dimen/achievement_details_cell_item_dimens"
       >
 
     <ImageView
@@ -20,8 +21,8 @@
 
     <ImageView
         android:id="@+id/achievementCompletedCheckmarkIV"
-        android:layout_width="@dimen/achievement_checkmark_icon_inside_recycler_dimens"
-        android:layout_height="@dimen/achievement_checkmark_icon_inside_recycler_dimens"
+        android:layout_width="@dimen/achievement_details_checkmark_icon_inside_recycler_dimens"
+        android:layout_height="@dimen/achievement_details_checkmark_icon_inside_recycler_dimens"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_marginBottom="@dimen/default_margin_1"
@@ -32,7 +33,9 @@
 
   <LinearLayout
       android:layout_width="match_parent"
-      android:layout_height="wrap_content"
+      android:layout_height="match_parent"
+      android:layout_marginStart="@dimen/default_margin_1_5"
+      android:gravity="center_vertical"
       android:orientation="vertical"
       >
 
@@ -52,6 +55,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/default_margin_2"
         >
 
       <TextView
@@ -65,6 +69,7 @@
           android:id="@+id/achievementCompletionProgressLayout"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
+          android:gravity="center_vertical"
           android:visibility="gone"
           >
 
@@ -72,16 +77,22 @@
             android:id="@+id/achievementCompletedPercentageTV"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/default_margin_1"
             android:textColor="@color/profile_blue"
             />
 
         <ProgressBar
             android:id="@+id/completionProgressBar"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/achievement_progress_bar_height"
+            android:layout_width="@dimen/achievement_details_progress_bar_width"
+            android:layout_height="wrap_content"
+            android:indeterminate="false"
             android:max="100"
-            style="@android:style/Widget.Holo.Light.ProgressBar.Horizontal"
+            android:maxHeight="@dimen/sections_progress_bar_height"
+            android:minHeight="@dimen/sections_progress_bar_height"
+            android:progressDrawable="@drawable/achievement_details_progress_bar"
+            style="?android:attr/progressBarStyleHorizontal"
             />
+
       </LinearLayout>
 
     </RelativeLayout>
