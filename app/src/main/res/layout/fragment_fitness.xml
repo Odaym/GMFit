@@ -136,13 +136,18 @@
         android:id="@+id/activitiesRecycler"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/default_margin_2"
+        />
+
+    <include
+        layout="@layout/empty_activities_layout"
+        android:id="@+id/activitiesEmptyLayout"
+        android:visibility="gone"
         />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/chart_title_headline_bar_height"
-        android:layout_marginTop="@dimen/default_margin_2"
+        android:layout_marginTop="@dimen/default_margin_3"
         android:background="@color/fitness_pink"
         >
 
@@ -165,13 +170,13 @@
         android:id="@+id/articlesRecycler"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/default_margin_2"
         />
 
     <LinearLayout
         android:id="@+id/cards_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/default_margin_2"
         android:animateLayoutChanges="true"
         android:orientation="vertical"
         >

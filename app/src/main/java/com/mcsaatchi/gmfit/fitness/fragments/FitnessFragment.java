@@ -85,6 +85,7 @@ public class FitnessFragment extends BaseFragment
   @Bind(R.id.loadingMetricProgressBar) ProgressBar loadingMetricProgressBar;
   @Bind(R.id.activitiesRecycler) RecyclerView activitiesRecycler;
   @Bind(R.id.articlesRecycler) RecyclerView articlesRecycler;
+  @Bind(R.id.activitiesEmptyLayout) LinearLayout activitiesEmptyLayout;
 
   @Inject SharedPreferences prefs;
   @Inject LocalDate dt;
@@ -351,11 +352,19 @@ public class FitnessFragment extends BaseFragment
 
   @Override public void populateUserActivities(
       List<UserActivitiesResponseBody> userActivitiesResponseBodies) {
-    UserActivitiesListRecyclerAdapter userActivitiesListRecyclerAdapter =
-        new UserActivitiesListRecyclerAdapter(getActivity(), userActivitiesResponseBodies);
-    activitiesRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
-    activitiesRecycler.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
-    activitiesRecycler.setAdapter(userActivitiesListRecyclerAdapter);
+    if (userActivitiesResponseBodies.isEmpty()) {
+      activitiesRecycler.setVisibility(View.GONE);
+      activitiesEmptyLayout.setVisibility(View.VISIBLE);
+    } else {
+      activitiesEmptyLayout.setVisibility(View.GONE);
+      activitiesRecycler.setVisibility(View.VISIBLE);
+
+      UserActivitiesListRecyclerAdapter userActivitiesListRecyclerAdapter =
+          new UserActivitiesListRecyclerAdapter(getActivity(), userActivitiesResponseBodies);
+      activitiesRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
+      activitiesRecycler.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
+      activitiesRecycler.setAdapter(userActivitiesListRecyclerAdapter);
+    }
   }
 
   @Override public void populateArticles(List<ArticlesResponseBody> articlesResponseBodies) {

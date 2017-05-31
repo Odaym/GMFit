@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="horizontal"
+    android:paddingBottom="@dimen/default_margin_2"
+    android:paddingTop="@dimen/default_margin_2"
+    >
+
+  <ImageView
+      android:id="@+id/articlesEmptyIconIV"
+      android:layout_width="@dimen/empty_layouts_image_dimens"
+      android:layout_height="@dimen/empty_layouts_image_dimens"
+      android:layout_marginStart="@dimen/default_margin_2"
+      android:src="@drawable/empty_activities_icon"
+      />
+
+  <LinearLayout
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="@dimen/default_margin_3"
+      android:layout_marginTop="@dimen/default_margin_2"
+      android:gravity="center_vertical"
+      android:orientation="vertical"
+      >
+
+    <TextView
+        android:id="@+id/typeOfEmptyMealTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/no_activities_added_title"
+        android:textColor="@color/black"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/activities_empty_tap_get_started"
+        android:textColor="@color/empty_meals_hint_text_gray"
+        />
+  </LinearLayout>
+</LinearLayout>
