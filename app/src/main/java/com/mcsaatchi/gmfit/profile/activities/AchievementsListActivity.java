@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -17,6 +18,7 @@ import java.util.List;
 public class AchievementsListActivity extends BaseActivity {
   @Bind(R.id.achievementsRecycler) RecyclerView achievementsRecycler;
   @Bind(R.id.achievementsCompletionHintTV) TextView achievementsCompletionHintTV;
+  @Bind(R.id.toolbar) Toolbar toolbar;
 
   private List<AchievementsResponseBody> achievementsResponseBodyList;
 
@@ -29,6 +31,8 @@ public class AchievementsListActivity extends BaseActivity {
 
     if (getIntent().getExtras() != null) {
       achievementsResponseBodyList = getIntent().getExtras().getParcelableArrayList("ACHIEVEMENTS");
+
+      setupToolbar(getClass().getSimpleName(), toolbar, getString(R.string.achievement_details_activity_title), true);
 
       showAchievements(achievementsResponseBodyList);
 

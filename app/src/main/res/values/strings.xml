@@ -357,6 +357,7 @@
   <string name="website_header_title">Website</string>
   <string name="social_media_sites_header_title">Social Media</string>
   <string name="achievements_section_header_title">Achievements</string>
+  <string name="achievement_details_activity_title">Achievements</string>
 
   <!-- INSURANCE SECTION -->
   <string name="insurance_section_title">Insurance</string>
