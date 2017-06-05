@@ -195,8 +195,7 @@ public interface DataAccessHandler {
   void getMostPopularMedications(String indNbr, String contractNo, String country, String language,
       String password, Callback<MostPopularMedicationsResponse> callback);
 
-  void searchMedicines(String indNbr, String contractNo, String country, String language,
-      String password, String key, Callback<SearchMedicinesResponse> callback);
+  void searchMedicines(String key, Callback<SearchMedicinesResponse> callback);
 
   void insuranceUserLogin(String indNbr, String country, String language, String password,
       Callback<InsuranceLoginResponse> callback);

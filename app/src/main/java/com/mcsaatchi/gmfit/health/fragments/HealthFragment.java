@@ -12,6 +12,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.text.InputFilter;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -177,7 +178,8 @@ public class HealthFragment extends BaseFragment
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         UserTestsRecyclerAdapter userTestsRecyclerAdapter =
             new UserTestsRecyclerAdapter(getActivity().getApplication(), takenMedicalTests);
-        ItemTouchHelper.Callback callback = new SimpleSwipeItemTouchHelperCallback(userTestsRecyclerAdapter);
+        ItemTouchHelper.Callback callback =
+            new SimpleSwipeItemTouchHelperCallback(userTestsRecyclerAdapter);
         ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
 
         userTestsListView.setLayoutManager(mLayoutManager);
@@ -224,13 +226,18 @@ public class HealthFragment extends BaseFragment
           editWeightET.setText(
               String.valueOf(prefs.getFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, 0)));
           editWeightET.setSelection(editWeightET.getText().toString().length());
+          editWeightET.setFilters(new InputFilter[] { new InputFilter.LengthFilter(4) });
 
           dialogBuilder.setView(dialogView);
           dialogBuilder.setPositiveButton(R.string.ok, (dialogInterface, i) -> {
-            double userWeight = Double.parseDouble(editWeightET.getText().toString());
+            if (!editWeightET.getText().toString().equals(".")) {
+              double userWeight = Double.parseDouble(editWeightET.getText().toString());
 
-            updateUserWeight(editWeightET, userWeight,
-                Helpers.prepareDateWithTimeForAPIRequest(new LocalDateTime()));
+              if (userWeight != 0) {
+                updateUserWeight(editWeightET, userWeight,
+                    Helpers.prepareDateWithTimeForAPIRequest(new LocalDateTime()));
+              }
+            }
           });
           dialogBuilder.setNegativeButton(R.string.decline_cancel,
               (dialogInterface, i) -> dialogInterface.dismiss());

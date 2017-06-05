@@ -69,9 +69,9 @@ public class EditProfileActivity extends BaseActivity
 
     dateOfBirthValueTV.setText(prefs.getString(Constants.EXTRAS_USER_PROFILE_DATE_OF_BIRTH, ""));
 
-    weightValueET.setText(String.valueOf(prefs.getFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, 0)));
+    weightValueET.setText(String.valueOf(prefs.getFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, 80)));
 
-    heightValueET.setText(String.valueOf(prefs.getFloat(Constants.EXTRAS_USER_PROFILE_HEIGHT, 0)));
+    heightValueET.setText(String.valueOf(prefs.getFloat(Constants.EXTRAS_USER_PROFILE_HEIGHT, 160)));
 
     bloodTypeValueTV.setText(prefs.getString(Constants.EXTRAS_USER_PROFILE_BLOOD_TYPE, ""));
 

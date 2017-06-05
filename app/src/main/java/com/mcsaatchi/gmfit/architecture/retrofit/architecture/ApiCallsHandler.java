@@ -952,11 +952,10 @@ public class ApiCallsHandler {
    * INSURANCE API's
    */
 
-  void searchMedicines(String indNbr, String contractNo, String country, String language,
-      String password, String key, final Callback<SearchMedicinesResponse> callback) {
+  void searchMedicines(String key, final Callback<SearchMedicinesResponse> callback) {
     Call<SearchMedicinesResponse> apiCall = restClient.getGMFitService()
         .searchMedicines(
-            new SearchMedicinesRequest(indNbr, contractNo, country, language, password, key));
+            new SearchMedicinesRequest(key));
 
     apiCall.enqueue(new Callback<SearchMedicinesResponse>() {
       @Override public void onResponse(Call<SearchMedicinesResponse> call,
@@ -1562,20 +1561,9 @@ public class ApiCallsHandler {
   }
 
   public class SearchMedicinesRequest {
-    String indNbr;
-    String contractNo;
-    String country;
-    String language;
-    String password;
     String key;
 
-    SearchMedicinesRequest(String indNbr, String contractNo, String country, String language,
-        String password, String key) {
-      this.indNbr = indNbr;
-      this.contractNo = contractNo;
-      this.country = country;
-      this.language = language;
-      this.password = password;
+    SearchMedicinesRequest(String key) {
       this.key = key;
     }
   }

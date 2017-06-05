@@ -116,7 +116,10 @@ public class AddNewMealItemActivity extends BaseActivity
       }
 
       @Override public void onTextChanged(final CharSequence charSequence, int i, int i1, int i2) {
-        if (charSequence.toString().isEmpty()) {
+      }
+
+      @Override public void afterTextChanged(Editable editable) {
+        if (editable.toString().isEmpty()) {
           searchResultsHintTV.setVisibility(View.GONE);
 
           searchIconIV.setImageResource(R.drawable.ic_search_white_24dp);
@@ -126,7 +129,7 @@ public class AddNewMealItemActivity extends BaseActivity
           requestMealLayout.setVisibility(View.GONE);
 
           loadRecentMealsFromServer(mealType);
-        } else if (charSequence.toString().length() > 2) {
+        } else if (editable.toString().length() > 2) {
 
           pb_loading_indicator.setVisibility(View.VISIBLE);
 
@@ -140,13 +143,9 @@ public class AddNewMealItemActivity extends BaseActivity
               imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
             });
 
-            presenter.findMeals(charSequence.toString());
+            presenter.findMeals(editable.toString());
           }, 500);
         }
-      }
-
-      @Override public void afterTextChanged(Editable editable) {
-
       }
     });
   }
@@ -197,6 +196,7 @@ public class AddNewMealItemActivity extends BaseActivity
     if (mealItems.isEmpty()) {
       searchResultsListLayout.setVisibility(View.GONE);
       requestMealLayout.setVisibility(View.VISIBLE);
+
       mealNotFoundTitleTV.setText("\"" + mealName + "\"");
 
       requestMealBTN.setText(getResources().getString(R.string.request_new_meal_button));
@@ -205,6 +205,9 @@ public class AddNewMealItemActivity extends BaseActivity
 
       requestMealBTN.setOnClickListener(view -> presenter.requestNewMeal(mealName));
     } else {
+      searchResultsListLayout.setVisibility(View.VISIBLE);
+      requestMealLayout.setVisibility(View.GONE);
+
       initMealsList(mealsReturned);
     }
 

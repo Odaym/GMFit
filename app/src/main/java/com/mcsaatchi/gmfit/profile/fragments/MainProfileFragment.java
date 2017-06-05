@@ -49,7 +49,6 @@ import com.mcsaatchi.gmfit.architecture.retrofit.responses.UserProfileResponseMe
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.common.fragments.BaseFragment;
-import com.mcsaatchi.gmfit.profile.adapters.AchievementsRecyclerAdapter;
 import com.mcsaatchi.gmfit.onboarding.activities.LoginActivity;
 import com.mcsaatchi.gmfit.onboarding.activities.MedicalConditionsChoiceActivity;
 import com.mcsaatchi.gmfit.onboarding.models.MedicalCondition;
@@ -58,6 +57,7 @@ import com.mcsaatchi.gmfit.profile.activities.ContactUsListActivity;
 import com.mcsaatchi.gmfit.profile.activities.EditProfileActivity;
 import com.mcsaatchi.gmfit.profile.activities.MealRemindersActivity;
 import com.mcsaatchi.gmfit.profile.activities.MetaTextsActivity;
+import com.mcsaatchi.gmfit.profile.adapters.AchievementsRecyclerAdapter;
 import com.mukesh.countrypicker.fragments.CountryPicker;
 import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
@@ -501,12 +501,18 @@ public class MainProfileFragment extends BaseFragment
     dialogBuilder.setView(dialogView);
     dialogBuilder.setPositiveButton(R.string.ok, (dialogInterface, i) -> {
       newUserWeight = Double.parseDouble(editWeightET.getText().toString());
-      weightEntryValueTV.setText(
-          String.valueOf(String.format(Locale.getDefault(), "%.1f", newUserWeight)));
 
-      prefs.edit().putFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, (float) newUserWeight).apply();
+      if (newUserWeight == 0) {
+        Toast.makeText(getActivity(), getString(R.string.height_must_not_be_zero),
+            Toast.LENGTH_SHORT).show();
+      } else {
+        weightEntryValueTV.setText(
+            String.valueOf(String.format(Locale.getDefault(), "%.1f", newUserWeight)));
 
-      updateUserProfile();
+        prefs.edit().putFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, (float) newUserWeight).apply();
+
+        updateUserProfile();
+      }
     });
     dialogBuilder.setNegativeButton(R.string.decline_cancel,
         (dialogInterface, i) -> dialogInterface.dismiss());

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ListView;
@@ -135,8 +134,7 @@ public class SpecifyMealAmountActivity extends BaseActivity
 
   @Override public void handleUpdateUserMeals(int caloriesForThisMeal) {
     mealItem.setAmount(mealAmountET.getText().toString());
-    mealItem.setTotalCalories(
-        (int) (Float.parseFloat(mealItem.getAmount()) * caloriesForThisMeal));
+    mealItem.setTotalCalories((int) (Float.parseFloat(mealItem.getAmount()) * caloriesForThisMeal));
 
     EventBusSingleton.getInstance().post(new MealEntryManipulatedEvent());
 
@@ -152,29 +150,26 @@ public class SpecifyMealAmountActivity extends BaseActivity
 
     addToDiaryBTN.setOnClickListener(view -> {
       if (Helpers.validateFields(allFields)) {
-        if (purposeIsToAddMealToDate) {
-          Log.d("TAG", "purpose add meal on specific date");
-          if (purposeIsEditMeal) {
-            presenter.updateMealOnDate(mealItem.getInstance_id(),
-                Integer.parseInt(mealAmountET.getText().toString()), caloriesForThisMeal);
-            Log.d("TAG", "onClick: Editing");
+        if (!mealAmountET.getText().toString().equals(".")
+            && Float.parseFloat(mealAmountET.getText().toString()) != 0) {
+          if (purposeIsToAddMealToDate) {
+            if (purposeIsEditMeal) {
+              presenter.updateMealOnDate(mealItem.getInstance_id(),
+                  Integer.parseInt(mealAmountET.getText().toString()), caloriesForThisMeal);
+            } else {
+              presenter.storeMealOnDate(mealItem.getMeal_id(),
+                  Float.parseFloat(mealAmountET.getText().toString()), mealItem.getType(),
+                  chosenDate, caloriesForThisMeal);
+            }
           } else {
-            Log.d("TAG", "onClick: Storing new");
-            presenter.storeMealOnDate(mealItem.getMeal_id(),
-                Float.parseFloat(mealAmountET.getText().toString()), mealItem.getType(), chosenDate,
-                caloriesForThisMeal);
-          }
-        } else {
-          Log.d("TAG", "purpose edit meal existing for TODAY");
-          if (purposeIsEditMeal) {
-            Log.d("TAG", "Editing");
-            presenter.updateUserMeals(mealItem.getInstance_id(),
-                Integer.parseInt(mealAmountET.getText().toString()), caloriesForThisMeal);
-          } else {
-            Log.d("TAG", "Storing new");
-            presenter.storeMealOnDate(mealItem.getMeal_id(),
-                Float.parseFloat(mealAmountET.getText().toString()), mealItem.getType(), chosenDate,
-                caloriesForThisMeal);
+            if (purposeIsEditMeal) {
+              presenter.updateUserMeals(mealItem.getInstance_id(),
+                  Float.parseFloat(mealAmountET.getText().toString()), caloriesForThisMeal);
+            } else {
+              presenter.storeMealOnDate(mealItem.getMeal_id(),
+                  Float.parseFloat(mealAmountET.getText().toString()), mealItem.getType(),
+                  chosenDate, caloriesForThisMeal);
+            }
           }
         }
       }

@@ -96,11 +96,7 @@ public class SearchMedicationsActivity extends BaseActivity
               imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
             });
 
-            presenter.searchMedicines(prefs.getString(Constants.EXTRAS_INSURANCE_USER_USERNAME, ""),
-                prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""),
-                prefs.getString(Constants.EXTRAS_INSURANCE_COUNTRY_ISO_CODE, ""), "2",
-                prefs.getString(Constants.EXTRAS_INSURANCE_USER_PASSWORD, ""),
-                charSequence.toString());
+            presenter.searchMedicines(charSequence.toString());
           }, 500);
         }
       }

@@ -211,7 +211,8 @@
   <string name="articles_section_title">Recommended Readings</string>
   <string name="no_activities_added_title">No Activity Added</string>
   <string name="activities_empty_tap_get_started">Tap the \"Add\" button to start</string>
-
+  <string name="weight_must_not_be_zero">Your weight must be larger than zero</string>
+  <string name="height_must_not_be_zero">Your height must be larger than zero</string>
 
   <!-- BREAKDOWN ACTIVITY -->
   <string name="all_time_breakdown_bar_hint">All Time</string>

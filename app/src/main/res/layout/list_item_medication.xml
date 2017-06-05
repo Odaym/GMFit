@@ -95,7 +95,10 @@
           android:id="@+id/medicineNameTV"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
+          android:ellipsize="end"
+          android:maxLines="2"
           android:paddingBottom="@dimen/default_margin_1"
+          android:paddingEnd="@dimen/default_margin_4"
           android:textColor="@android:color/black"
           />
 
@@ -119,7 +122,7 @@
         android:layout_width="@dimen/right_arrow_layout_width"
         android:layout_height="match_parent"
         android:layout_alignParentEnd="true"
-        android:background="@color/much_lighter_gray"
+        android:background="@color/white"
         android:gravity="center"
         >
 

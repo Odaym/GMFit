@@ -30,12 +30,12 @@ import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.classes.GMFitApplication;
-import com.mcsaatchi.gmfit.architecture.retrofit.architecture.DataAccessHandlerImpl;
 import com.mcsaatchi.gmfit.architecture.otto.DataChartDeletedEvent;
 import com.mcsaatchi.gmfit.architecture.otto.DataChartsOrderChangedEvent;
 import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
 import com.mcsaatchi.gmfit.architecture.otto.MealEntryManipulatedEvent;
 import com.mcsaatchi.gmfit.architecture.otto.NutritionWidgetsOrderChangedEvent;
+import com.mcsaatchi.gmfit.architecture.retrofit.architecture.DataAccessHandlerImpl;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.AuthenticationResponseChart;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.AuthenticationResponseChartData;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.AuthenticationResponseWidget;
@@ -161,6 +161,7 @@ public class NutritionFragment extends BaseFragment
 
   @Override public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
     super.onCreateOptionsMenu(menu, inflater);
+    menu.clear();
     inflater.inflate(R.menu.main, menu);
   }
 

@@ -37,7 +37,7 @@
           android:layout_height="match_parent"
           android:hint="@string/add_meal_amount_hint"
           android:inputType="numberDecimal"
-          android:maxLines="1"
+          android:maxLength="4"
           android:paddingBottom="@dimen/default_margin_1"
           android:paddingStart="@dimen/default_margin_2"
           android:textAppearance="?android:textAppearanceSmall"
@@ -94,15 +94,4 @@
       android:background="@android:color/white"
       android:drawSelectorOnTop="true"
       />
-
-  <!--<de.halfbit.pinnedsection.PinnedSectionListView-->
-  <!--android:layout_width="match_parent"-->
-  <!--android:layout_height="match_parent"-->
-  <!--android:background="@android:color/white"-->
-  <!--android:choiceMode="singleChoice"-->
-  <!--android:drawSelectorOnTop="true"-->
-  <!--android:focusable="false"-->
-  <!--android:gravity="center"-->
-  <!--android:scrollbarStyle="outsideOverlay"/>-->
-
 </LinearLayout>

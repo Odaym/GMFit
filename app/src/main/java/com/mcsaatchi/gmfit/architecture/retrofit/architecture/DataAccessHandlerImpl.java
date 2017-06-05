@@ -341,9 +341,8 @@ public class DataAccessHandlerImpl implements DataAccessHandler {
   }
 
   @Override
-  public void searchMedicines(String indNbr, String contractNo, String country, String language,
-      String password, String key, Callback<SearchMedicinesResponse> callback) {
-    apiCallsHandler.searchMedicines(indNbr, contractNo, country, language, password, key, callback);
+  public void searchMedicines(String key, Callback<SearchMedicinesResponse> callback) {
+    apiCallsHandler.searchMedicines(key, callback);
   }
 
   @Override

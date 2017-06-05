@@ -34,9 +34,9 @@ import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.common.classes.AlarmReceiver;
 import com.mcsaatchi.gmfit.common.classes.SimpleDividerItemDecoration;
 import com.mcsaatchi.gmfit.health.adapters.MedicationRemindersRecyclerAdapter;
-import com.mcsaatchi.gmfit.health.models.SelectionItem;
 import com.mcsaatchi.gmfit.health.models.Medication;
 import com.mcsaatchi.gmfit.health.models.MedicationReminder;
+import com.mcsaatchi.gmfit.health.models.SelectionItem;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -104,6 +104,8 @@ public class AddExistingMedicationActivity extends BaseActivity
 
       if (editPurpose) {
         addMedicationBTN.setText(getString(R.string.edit_medication_button));
+      } else {
+        medicineNameET.setEnabled(false);
       }
 
       if (medicationItem.getWhen() != null) {
@@ -179,7 +181,8 @@ public class AddExistingMedicationActivity extends BaseActivity
     super.onActivityResult(requestCode, resultCode, data);
 
     if (requestCode == REMINDER_DAYS_CHOSEN) {
-      ArrayList<SelectionItem> dayChoices = data.getExtras().getParcelableArrayList("REMINDER_DAYS");
+      ArrayList<SelectionItem> dayChoices =
+          data.getExtras().getParcelableArrayList("REMINDER_DAYS");
       daysSelected = dayChoices;
 
       String daysOfWeekResult = "";

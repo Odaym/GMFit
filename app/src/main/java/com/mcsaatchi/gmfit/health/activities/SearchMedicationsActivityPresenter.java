@@ -21,24 +21,21 @@ class SearchMedicationsActivityPresenter extends BaseActivityPresenter {
     this.dataAccessHandler = dataAccessHandler;
   }
 
-  void searchMedicines(String indNbr, String contractNo, String country, String language,
-      String password, String key) {
-    dataAccessHandler.searchMedicines(indNbr, contractNo, country, language, password, key,
-        new Callback<SearchMedicinesResponse>() {
-          @Override public void onResponse(Call<SearchMedicinesResponse> call,
-              Response<SearchMedicinesResponse> response) {
-            switch (response.code()) {
-              case 200:
-                view.displayMedicineResults(
-                    response.body().getData().getBody().getData().getItemLst());
-                break;
-            }
-          }
+  void searchMedicines(String key) {
+    dataAccessHandler.searchMedicines(key, new Callback<SearchMedicinesResponse>() {
+      @Override public void onResponse(Call<SearchMedicinesResponse> call,
+          Response<SearchMedicinesResponse> response) {
+        switch (response.code()) {
+          case 200:
+            view.displayMedicineResults(response.body().getData().getBody().getData().getItemLst());
+            break;
+        }
+      }
 
-          @Override public void onFailure(Call<SearchMedicinesResponse> call, Throwable t) {
-            view.displayRequestErrorDialog(t.getMessage());
-          }
-        });
+      @Override public void onFailure(Call<SearchMedicinesResponse> call, Throwable t) {
+        view.displayRequestErrorDialog(t.getMessage());
+      }
+    });
   }
 
   void getPopularMedicines(String indNbr, String contractNo, String country, String language,
