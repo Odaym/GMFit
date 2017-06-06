@@ -54,6 +54,7 @@
           />
 
       <ImageView
+          android:id="@+id/arrowImage"
           android:layout_width="15dp"
           android:layout_height="15dp"
           android:layout_alignParentEnd="true"

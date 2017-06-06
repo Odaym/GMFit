@@ -93,8 +93,6 @@ public class UserTestsRecyclerAdapter
     dataAccessHandler.deleteUserTest(instance_id, new Callback<DefaultGetResponse>() {
       @Override
       public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
-        Log.d("TAG", "onResponse: Response code was : " + response.code());
-
         switch (response.code()) {
           case 200:
             Log.d("TAG", "onResponse: User test removed!");

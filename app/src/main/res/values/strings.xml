@@ -258,6 +258,7 @@
   <string name="inquiry_more_details_menu">Details</string>
   <string name="write_reply_hint">Write your reply here…</string>
   <string name="choose_date_hint">Choose a date</string>
+  <string name="test_date_empty_error">Date can\'t be empty</string>
 
   <!-- PILL REMINDER ACTIVITY -->
   <string name="pill_reminder_activity_title">Pill Reminder</string>

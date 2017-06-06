@@ -500,18 +500,23 @@ public class MainProfileFragment extends BaseFragment
 
     dialogBuilder.setView(dialogView);
     dialogBuilder.setPositiveButton(R.string.ok, (dialogInterface, i) -> {
-      newUserWeight = Double.parseDouble(editWeightET.getText().toString());
+      if (!editWeightET.getText().toString().equals(".")) {
 
-      if (newUserWeight == 0) {
-        Toast.makeText(getActivity(), getString(R.string.height_must_not_be_zero),
-            Toast.LENGTH_SHORT).show();
-      } else {
-        weightEntryValueTV.setText(
-            String.valueOf(String.format(Locale.getDefault(), "%.1f", newUserWeight)));
+        newUserWeight = Double.parseDouble(editWeightET.getText().toString());
 
-        prefs.edit().putFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, (float) newUserWeight).apply();
+        if (newUserWeight == 0) {
+          Toast.makeText(getActivity(), getString(R.string.weight_must_not_be_zero),
+              Toast.LENGTH_SHORT).show();
+        } else {
+          weightEntryValueTV.setText(
+              String.valueOf(String.format(Locale.getDefault(), "%.1f", newUserWeight)));
 
-        updateUserProfile();
+          prefs.edit()
+              .putFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, (float) newUserWeight)
+              .apply();
+
+          updateUserProfile();
+        }
       }
     });
     dialogBuilder.setNegativeButton(R.string.decline_cancel,

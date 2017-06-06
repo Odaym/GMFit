@@ -2,11 +2,13 @@ package com.mcsaatchi.gmfit.insurance.widget;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.mcsaatchi.gmfit.R;
@@ -19,6 +21,7 @@ public class CustomPicker extends LinearLayout implements View.OnClickListener {
   private static final String TAG = CustomPicker.class.getSimpleName();
   private TextView itemNameTv;
   private TextView itemSelectedTv;
+  private ImageView arrowImage;
   private Context context;
   private AlertDialog.Builder builder;
   private DatePickerDialog datePickerDialog;
@@ -33,6 +36,7 @@ public class CustomPicker extends LinearLayout implements View.OnClickListener {
     View v = mInflater.inflate(R.layout.custom_picker, this, true);
     itemNameTv = (TextView) v.findViewById(R.id.item_name);
     itemSelectedTv = (TextView) v.findViewById(R.id.item_selected);
+    arrowImage = (ImageView) v.findViewById(R.id.arrowImage);
     View touchableContainer = v.findViewById(R.id.touchableContainer);
     touchableContainer.setOnClickListener(this);
   }
@@ -51,6 +55,15 @@ public class CustomPicker extends LinearLayout implements View.OnClickListener {
     setItemName(itemName);
     setSelectedItem(selected);
     setDatePicker(onDatePickerClickListener);
+  }
+
+  public void setArrowTintColor(int resColor) {
+    arrowImage.setColorFilter(ContextCompat.getColor(context, resColor));
+  }
+
+  public void setTextColorOnLabels(int resColor) {
+    itemNameTv.setTextColor(getResources().getColor(resColor));
+    itemSelectedTv.setTextColor(getResources().getColor(resColor));
   }
 
   private void setDatePicker(final OnDatePickerClickListener datePickerClickListener) {

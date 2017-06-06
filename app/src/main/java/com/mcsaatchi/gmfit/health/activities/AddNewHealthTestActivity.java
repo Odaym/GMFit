@@ -23,7 +23,6 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -37,19 +36,18 @@ import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.common.classes.ImageHandler;
+import com.mcsaatchi.gmfit.insurance.widget.CustomPicker;
 import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 import java.io.File;
 import java.io.IOException;
-import java.text.DateFormatSymbols;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import org.joda.time.DateTime;
 import org.joda.time.IllegalFieldValueException;
-import org.joda.time.LocalDate;
 import timber.log.Timber;
 
 public class AddNewHealthTestActivity extends BaseActivity
@@ -60,7 +58,7 @@ public class AddNewHealthTestActivity extends BaseActivity
   private static final String ACTIVITY_TAG_TIME_PICKER = "activity_tag_time_picker";
 
   @Bind(R.id.toolbar) Toolbar toolbar;
-  @Bind(R.id.dateTakenTV) TextView dateTakenTV;
+  @Bind(R.id.testDateTakenPicker) CustomPicker testDateTakenPicker;
   @Bind(R.id.testNameET) FormEditText testNameET;
   @Bind(R.id.addPic1) ImageView addPic1;
   @Bind(R.id.addPic2) ImageView addPic2;
@@ -143,124 +141,133 @@ public class AddNewHealthTestActivity extends BaseActivity
       existingMedicaltest =
           getIntent().getExtras().getParcelable(Constants.EXTRAS_TEST_OBJECT_DETAILS);
 
-      int day = 0, month = 0, year = 0;
+      //try {
+      String dateTakenForDisplay = null;
 
-      final LocalDate dt = new LocalDate();
+      if (existingMedicaltest == null) {
+        ///**
+        // * Existing medical test doesn't exist, we're creating here.
+        // */
+        //day = dt.getDayOfMonth();
+        //month = dt.getMonthOfYear();
+        //year = dt.getYear();
+        //
+        //dateTakenForDisplay = new SimpleDateFormat("MMMM dd, yyyy").format(
+        //    new SimpleDateFormat("yyyyMMdd").parse(
+        //        dt.getYear() + "" + dt.getMonthOfYear() + "" + dt.getDayOfMonth()));
+        //
+        //dateTakenForRequest = year + "-" + month + "-" + day;
+      } else {
+        /**
+         * Existing medical test was passed, we're editing here.
+         */
+        testNameET.setText(existingMedicaltest.getName());
+        testNameET.setSelection(existingMedicaltest.getName().length());
 
-      existingMedicaltest =
-          getIntent().getExtras().getParcelable(Constants.EXTRAS_TEST_OBJECT_DETAILS);
+        for (int i = 0; i < existingMedicaltest.getImages().size(); i++) {
+          if (existingMedicaltest.getImages().get(i) != null && imageViewElements.get(i) != null) {
 
-      try {
-        String dateTakenForDisplay = null;
+            final int finalI = i;
 
-        if (existingMedicaltest == null) {
-          /**
-           * Existing medical test doesn't exist, we're creating here.
-           */
-          day = dt.getDayOfMonth();
-          month = dt.getMonthOfYear();
-          year = dt.getYear();
+            Picasso.with(AddNewHealthTestActivity.this)
+                .load(existingMedicaltest.getImages().get(i).getImage())
+                .resize(400, 400)
+                .centerInside()
+                .into(new Target() {
 
-          dateTakenForDisplay = new SimpleDateFormat("MMMM dd, yyyy").format(
-              new SimpleDateFormat("yyyyMMdd").parse(
-                  dt.getYear() + "" + dt.getMonthOfYear() + "" + dt.getDayOfMonth()));
+                  @Override public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
 
-          dateTakenForRequest = year + "-" + month + "-" + day;
-        } else {
-          /**
-           * Existing medical test was passed, we're editing here.
-           */
-          testNameET.setText(existingMedicaltest.getName());
-          testNameET.setSelection(existingMedicaltest.getName().length());
+                    addPictureElements.get(finalI).setVisibility(View.INVISIBLE);
 
-          for (int i = 0; i < existingMedicaltest.getImages().size(); i++) {
-            if (existingMedicaltest.getImages().get(i) != null
-                && imageViewElements.get(i) != null) {
+                    imageViewElements.get(finalI)
+                        .setBackground(new BitmapDrawable(getResources(), bitmap));
+                  }
 
-              final int finalI = i;
+                  @Override public void onBitmapFailed(final Drawable errorDrawable) {
+                    Log.d("TAG", "FAILED");
+                  }
 
-              Picasso.with(AddNewHealthTestActivity.this)
-                  .load(existingMedicaltest.getImages().get(i).getImage())
-                  .resize(400, 400)
-                  .centerInside()
-                  .into(new Target() {
-
-                    @Override public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-
-                      addPictureElements.get(finalI).setVisibility(View.INVISIBLE);
-
-                      imageViewElements.get(finalI)
-                          .setBackground(new BitmapDrawable(getResources(), bitmap));
-                    }
-
-                    @Override public void onBitmapFailed(final Drawable errorDrawable) {
-                      Log.d("TAG", "FAILED");
-                    }
-
-                    @Override public void onPrepareLoad(final Drawable placeHolderDrawable) {
-                      Log.d("TAG", "Prepare Load");
-                    }
-                  });
-              deleteButtonElements.get(i).setVisibility(View.VISIBLE);
-            }
-          }
-
-          try {
-            DateTime entryDate = new DateTime(existingMedicaltest.getDateTaken());
-
-            dateTakenForDisplay = entryDate.monthOfYear().getAsText()
-                + " "
-                + entryDate.getDayOfMonth()
-                + ", "
-                + entryDate.getYear();
-
-            day = entryDate.getDayOfMonth();
-            month = entryDate.getMonthOfYear();
-            year = entryDate.getYear();
-
-            dateTakenForRequest = year + "-" + month + "-" + day;
-          } catch (IllegalFieldValueException e) {
-            Timber.d("Date taken for this test was returned as 0000-00-00");
+                  @Override public void onPrepareLoad(final Drawable placeHolderDrawable) {
+                    Log.d("TAG", "Prepare Load");
+                  }
+                });
+            deleteButtonElements.get(i).setVisibility(View.VISIBLE);
           }
         }
 
-        dateTakenTV.setText(dateTakenForDisplay);
-      } catch (ParseException e) {
-        e.printStackTrace();
+        try {
+          DateTime entryDate = new DateTime(existingMedicaltest.getDateTaken());
+
+          dateTakenForDisplay = entryDate.monthOfYear().getAsText()
+              + " "
+              + entryDate.getDayOfMonth()
+              + ", "
+              + entryDate.getYear();
+
+          //day = entryDate.getDayOfMonth();
+          //month = entryDate.getMonthOfYear();
+          //year = entryDate.getYear();
+
+          dateTakenForRequest = entryDate.getYear()
+              + "-"
+              + entryDate.getMonthOfYear()
+              + "-"
+              + entryDate.getDayOfMonth();
+        } catch (IllegalFieldValueException e) {
+          Timber.d("Date taken for this test was returned as 0000-00-00");
+        }
       }
 
-      final int finalYear = year;
-      final int finalMonth = month;
-      final int finalDay = day;
-
-      dateTakenTV.setOnClickListener(view -> {
-        CalendarDatePickerDialogFragment cdp =
-            new CalendarDatePickerDialogFragment().setOnDateSetListener(
-                AddNewHealthTestActivity.this)
-                .setFirstDayOfWeek(Calendar.MONDAY)
-                .setDoneText(getString(R.string.accept_ok))
-                .setCancelText(getString(R.string.decline_cancel))
-                .setPreselectedDate(finalYear, finalMonth - 1, finalDay)
-                .setThemeLight();
-        cdp.show(getSupportFragmentManager(), ACTIVITY_TAG_TIME_PICKER);
-      });
-
-      hookupDeleteImageButtons();
+      testDateTakenPicker.setSelectedItem(dateTakenForDisplay);
+      //} catch (ParseException e) {
+      //  e.printStackTrace();
     }
 
-    dateTakenTV.setOnClickListener(view -> {
-      CalendarDatePickerDialogFragment cdp =
-          new CalendarDatePickerDialogFragment().setOnDateSetListener(AddNewHealthTestActivity.this)
-              .setFirstDayOfWeek(Calendar.MONDAY)
-              .setDoneText(getString(R.string.accept_ok))
-              .setCancelText(getString(R.string.decline_cancel))
-              .setPreselectedDate(Calendar.getInstance().get(Calendar.YEAR),
-                  Calendar.getInstance().get(Calendar.MONTH),
-                  Calendar.getInstance().get(Calendar.DAY_OF_MONTH))
-              .setThemeLight();
-      cdp.show(getSupportFragmentManager(), ACTIVITY_TAG_TIME_PICKER);
-    });
+    testDateTakenPicker.setArrowTintColor(R.color.health_green);
+    testDateTakenPicker.setTextColorOnLabels(R.color.black);
+
+    testDateTakenPicker.setUpDatePicker("Service Date", "Choose a date",
+        (year, month, dayOfMonth) -> {
+          Calendar calendar = Calendar.getInstance();
+          calendar.set(Calendar.YEAR, year);
+          calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+          calendar.set(Calendar.MONTH, month);
+
+          Date d = new Date(calendar.getTimeInMillis());
+
+          SimpleDateFormat dateFormatter = new SimpleDateFormat("dd MMM, yyyy");
+          String serviceDateValue = dateFormatter.format(d);
+          testDateTakenPicker.setSelectedItem(serviceDateValue);
+        });
+    //
+    //  setOnClickListener(view -> {
+    //CalendarDatePickerDialogFragment cdp =
+    //    new CalendarDatePickerDialogFragment().setOnDateSetListener(
+    //        AddNewHealthTestActivity.this)
+    //        .setFirstDayOfWeek(Calendar.MONDAY)
+    //        .setDoneText(getString(R.string.accept_ok))
+    //        .setCancelText(getString(R.string.decline_cancel))
+    //        .setPreselectedDate(finalYear, finalMonth - 1, finalDay)
+    //        .setThemeLight();
+    //cdp.show(getSupportFragmentManager(), ACTIVITY_TAG_TIME_PICKER);
+    //});
+
+    hookupDeleteImageButtons();
   }
+
+  //testDateTakenPicker.setOnClickListener(view -> {
+  //  CalendarDatePickerDialogFragment cdp =
+  //      new CalendarDatePickerDialogFragment().setOnDateSetListener(AddNewHealthTestActivity.this)
+  //          .setFirstDayOfWeek(Calendar.MONDAY)
+  //          .setDoneText(getString(R.string.accept_ok))
+  //          .setCancelText(getString(R.string.decline_cancel))
+  //          .setPreselectedDate(Calendar.getInstance().get(Calendar.YEAR),
+  //              Calendar.getInstance().get(Calendar.MONTH),
+  //              Calendar.getInstance().get(Calendar.DAY_OF_MONTH))
+  //          .setThemeLight();
+  //  cdp.show(getSupportFragmentManager(), ACTIVITY_TAG_TIME_PICKER);
+  //});
+  //}
 
   @Override public boolean onCreateOptionsMenu(Menu menu) {
     getMenuInflater().inflate(R.menu.add_new_health_test, menu);
@@ -273,20 +280,26 @@ public class AddNewHealthTestActivity extends BaseActivity
       case R.id.nextBTN:
         if (Helpers.validateFields(allFields)) {
 
-          Intent intent =
-              new Intent(AddNewHealthTestActivity.this, AddNewHealthTestPart2Activity.class);
-          intent.putStringArrayListExtra(Constants.HEALTH_TEST_PICTURE_PATHS, picturePaths);
-          intent.putExtra(Constants.HEALTH_TEST_NAME, testNameET.getText().toString());
-          intent.putExtra(Constants.HEALTH_TEST_DATE_TAKEN, dateTakenForRequest);
+          if (dateTakenForRequest == null) {
+            Toast.makeText(this, "Please make sure you enter a valid date", Toast.LENGTH_SHORT)
+                .show();
+          } else {
+            Intent intent =
+                new Intent(AddNewHealthTestActivity.this, AddNewHealthTestPart2Activity.class);
+            intent.putStringArrayListExtra(Constants.HEALTH_TEST_PICTURE_PATHS, picturePaths);
+            intent.putExtra(Constants.HEALTH_TEST_NAME, testNameET.getText().toString());
+            intent.putExtra(Constants.HEALTH_TEST_DATE_TAKEN, dateTakenForRequest);
 
-          if (existingMedicaltest != null) {
-            intent.putExtra(Constants.EXTRAS_TEST_OBJECT_DETAILS, existingMedicaltest);
-          }
+            if (existingMedicaltest != null) {
+              intent.putExtra(Constants.EXTRAS_TEST_OBJECT_DETAILS, existingMedicaltest);
+            }
 
-          if (deletedImages.size() != 0) {
-            intent.putIntegerArrayListExtra(Constants.HEALTH_TEST_DELETED_IMAGE_IDS, deletedImages);
+            if (deletedImages.size() != 0) {
+              intent.putIntegerArrayListExtra(Constants.HEALTH_TEST_DELETED_IMAGE_IDS,
+                  deletedImages);
+            }
+            startActivity(intent);
           }
-          startActivity(intent);
         }
     }
 
@@ -336,15 +349,15 @@ public class AddNewHealthTestActivity extends BaseActivity
   @Override
   public void onDateSet(CalendarDatePickerDialogFragment dialog, int year, int monthOfYear,
       int dayOfMonth) {
-    dateTakenTV.setText(
-        new DateFormatSymbols().getMonths()[monthOfYear] + " " + dayOfMonth + ", " + year);
-
-    try {
-      dateTakenForRequest = new SimpleDateFormat("yyyy-MM-dd").format(
-          new SimpleDateFormat("MMMM dd, yyyy").parse(dateTakenTV.getText().toString()));
-    } catch (ParseException e) {
-      e.printStackTrace();
-    }
+    //testDateTakenPicker.setText(
+    //    new DateFormatSymbols().getMonths()[monthOfYear] + " " + dayOfMonth + ", " + year);
+    //
+    //try {
+    //  dateTakenForRequest = new SimpleDateFormat("yyyy-MM-dd").format(
+    //      new SimpleDateFormat("MMMM dd, yyyy").parse(testDateTakenPicker.getText().toString()));
+    //} catch (ParseException e) {
+    //  e.printStackTrace();
+    //}
   }
 
   @Subscribe public void reflectMedicalTestEditCreate(MedicalTestEditCreateEvent event) {
@@ -469,7 +482,9 @@ public class AddNewHealthTestActivity extends BaseActivity
       photoFile = null;
       try {
         photoFile = ImageHandler.createImageFile(ImageHandler.constructImageFilename());
-        photoFileUri = FileProvider.getUriForFile(this, getApplicationContext().getPackageName() + ".provider", photoFile);
+        photoFileUri =
+            FileProvider.getUriForFile(this, getApplicationContext().getPackageName() + ".provider",
+                photoFile);
       } catch (IOException ex) {
         ex.printStackTrace();
       }
