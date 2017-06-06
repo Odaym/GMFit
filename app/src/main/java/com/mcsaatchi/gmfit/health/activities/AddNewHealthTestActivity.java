@@ -239,35 +239,9 @@ public class AddNewHealthTestActivity extends BaseActivity
           String serviceDateValue = dateFormatter.format(d);
           testDateTakenPicker.setSelectedItem(serviceDateValue);
         });
-    //
-    //  setOnClickListener(view -> {
-    //CalendarDatePickerDialogFragment cdp =
-    //    new CalendarDatePickerDialogFragment().setOnDateSetListener(
-    //        AddNewHealthTestActivity.this)
-    //        .setFirstDayOfWeek(Calendar.MONDAY)
-    //        .setDoneText(getString(R.string.accept_ok))
-    //        .setCancelText(getString(R.string.decline_cancel))
-    //        .setPreselectedDate(finalYear, finalMonth - 1, finalDay)
-    //        .setThemeLight();
-    //cdp.show(getSupportFragmentManager(), ACTIVITY_TAG_TIME_PICKER);
-    //});
 
     hookupDeleteImageButtons();
   }
-
-  //testDateTakenPicker.setOnClickListener(view -> {
-  //  CalendarDatePickerDialogFragment cdp =
-  //      new CalendarDatePickerDialogFragment().setOnDateSetListener(AddNewHealthTestActivity.this)
-  //          .setFirstDayOfWeek(Calendar.MONDAY)
-  //          .setDoneText(getString(R.string.accept_ok))
-  //          .setCancelText(getString(R.string.decline_cancel))
-  //          .setPreselectedDate(Calendar.getInstance().get(Calendar.YEAR),
-  //              Calendar.getInstance().get(Calendar.MONTH),
-  //              Calendar.getInstance().get(Calendar.DAY_OF_MONTH))
-  //          .setThemeLight();
-  //  cdp.show(getSupportFragmentManager(), ACTIVITY_TAG_TIME_PICKER);
-  //});
-  //}
 
   @Override public boolean onCreateOptionsMenu(Menu menu) {
     getMenuInflater().inflate(R.menu.add_new_health_test, menu);
