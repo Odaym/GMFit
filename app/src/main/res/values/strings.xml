@@ -243,7 +243,7 @@
   <string name="view_more_tests_btn">View More</string>
   <string name="test_name_hint">Test Name</string>
   <string name="test_name_empty_error">Test name cannot be empty</string>
-  <string name="enter_test_name_hint">Set a name for your test</string>
+  <string name="enter_test_name_hint">Choose a name</string>
   <string name="test_date_taken">Date</string>
   <string name="medications_bar_title">My Medications</string>
   <string name="no_medical_tests_found">No Tests Added</string>

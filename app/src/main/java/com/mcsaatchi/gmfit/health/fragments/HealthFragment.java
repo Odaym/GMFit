@@ -80,7 +80,6 @@ public class HealthFragment extends BaseFragment
   @Inject DataAccessHandlerImpl dataAccessHandler;
   @Inject RuntimeExceptionDao<Medication, Integer> medicationDAO;
   @Inject SharedPreferences prefs;
-  private CustomLineChart customLineChart;
   private ArrayList<HealthWidget> healthWidgetsMap = new ArrayList<>();
   private HealthFragmentPresenter presenter;
 
@@ -208,7 +207,7 @@ public class HealthFragment extends BaseFragment
     if (getActivity() != null) {
 
       if (weightHistoryList != null) {
-        customLineChart = new CustomLineChart(getActivity());
+        CustomLineChart customLineChart = new CustomLineChart(getActivity());
 
         customLineChart.setLineChartData(lineChartContainer, weightHistoryList);
 

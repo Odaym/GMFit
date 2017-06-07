@@ -27,7 +27,6 @@ import android.widget.Toast;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import com.andreabaccega.widget.FormEditText;
-import com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialogFragment;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
 import com.mcsaatchi.gmfit.architecture.otto.MedicalTestEditCreateEvent;
@@ -42,6 +41,7 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 import java.io.File;
 import java.io.IOException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -50,8 +50,7 @@ import org.joda.time.DateTime;
 import org.joda.time.IllegalFieldValueException;
 import timber.log.Timber;
 
-public class AddNewHealthTestActivity extends BaseActivity
-    implements CalendarDatePickerDialogFragment.OnDateSetListener {
+public class AddNewHealthTestActivity extends BaseActivity {
   private static final int ASK_CAMERA_AND_STORAGE_PERMISSION = 834;
   private static final int REQUEST_PICK_IMAGE_GALLERY = 329;
   private static final int CAPTURE_NEW_PICTURE_REQUEST_CODE = 871;
@@ -137,27 +136,35 @@ public class AddNewHealthTestActivity extends BaseActivity
       add(deletePic5);
     }};
 
+    testDateTakenPicker.setArrowTintColor(R.color.health_green);
+    testDateTakenPicker.setTextColorOnLabels(R.color.black);
+
+    testDateTakenPicker.setUpDatePicker("Service Date", "Choose a date",
+        (year, month, dayOfMonth) -> {
+          Calendar calendar = Calendar.getInstance();
+          calendar.set(Calendar.YEAR, year);
+          calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+          calendar.set(Calendar.MONTH, month);
+
+          Date d = new Date(calendar.getTimeInMillis());
+
+          SimpleDateFormat dateFormatter = new SimpleDateFormat("dd MMM, yyyy");
+          String serviceDateValue = dateFormatter.format(d);
+          testDateTakenPicker.setSelectedItem(serviceDateValue);
+
+          try {
+            dateTakenForRequest = new SimpleDateFormat("yyyy-MM-dd").format(
+                new SimpleDateFormat("dd MMM, yyyy").parse(serviceDateValue));
+          } catch (ParseException e) {
+            e.printStackTrace();
+          }
+        });
+
     if (getIntent().getExtras() != null) {
       existingMedicaltest =
           getIntent().getExtras().getParcelable(Constants.EXTRAS_TEST_OBJECT_DETAILS);
 
-      //try {
-      String dateTakenForDisplay = null;
-
-      if (existingMedicaltest == null) {
-        ///**
-        // * Existing medical test doesn't exist, we're creating here.
-        // */
-        //day = dt.getDayOfMonth();
-        //month = dt.getMonthOfYear();
-        //year = dt.getYear();
-        //
-        //dateTakenForDisplay = new SimpleDateFormat("MMMM dd, yyyy").format(
-        //    new SimpleDateFormat("yyyyMMdd").parse(
-        //        dt.getYear() + "" + dt.getMonthOfYear() + "" + dt.getDayOfMonth()));
-        //
-        //dateTakenForRequest = year + "-" + month + "-" + day;
-      } else {
+      if (existingMedicaltest != null) {
         /**
          * Existing medical test was passed, we're editing here.
          */
@@ -198,47 +205,25 @@ public class AddNewHealthTestActivity extends BaseActivity
         try {
           DateTime entryDate = new DateTime(existingMedicaltest.getDateTaken());
 
-          dateTakenForDisplay = entryDate.monthOfYear().getAsText()
+          String dateTakenForDisplay = entryDate.monthOfYear().getAsText()
               + " "
               + entryDate.getDayOfMonth()
               + ", "
               + entryDate.getYear();
 
-          //day = entryDate.getDayOfMonth();
-          //month = entryDate.getMonthOfYear();
-          //year = entryDate.getYear();
+          try {
+            dateTakenForRequest = new SimpleDateFormat("dd MMM, yyyy").format(
+                new SimpleDateFormat("MMMM dd, yyyy").parse(dateTakenForDisplay));
 
-          dateTakenForRequest = entryDate.getYear()
-              + "-"
-              + entryDate.getMonthOfYear()
-              + "-"
-              + entryDate.getDayOfMonth();
+            testDateTakenPicker.setSelectedItem(dateTakenForRequest);
+          } catch (ParseException e) {
+            e.printStackTrace();
+          }
         } catch (IllegalFieldValueException e) {
           Timber.d("Date taken for this test was returned as 0000-00-00");
         }
       }
-
-      testDateTakenPicker.setSelectedItem(dateTakenForDisplay);
-      //} catch (ParseException e) {
-      //  e.printStackTrace();
     }
-
-    testDateTakenPicker.setArrowTintColor(R.color.health_green);
-    testDateTakenPicker.setTextColorOnLabels(R.color.black);
-
-    testDateTakenPicker.setUpDatePicker("Service Date", "Choose a date",
-        (year, month, dayOfMonth) -> {
-          Calendar calendar = Calendar.getInstance();
-          calendar.set(Calendar.YEAR, year);
-          calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-          calendar.set(Calendar.MONTH, month);
-
-          Date d = new Date(calendar.getTimeInMillis());
-
-          SimpleDateFormat dateFormatter = new SimpleDateFormat("dd MMM, yyyy");
-          String serviceDateValue = dateFormatter.format(d);
-          testDateTakenPicker.setSelectedItem(serviceDateValue);
-        });
 
     hookupDeleteImageButtons();
   }
@@ -318,20 +303,6 @@ public class AddNewHealthTestActivity extends BaseActivity
         }
         break;
     }
-  }
-
-  @Override
-  public void onDateSet(CalendarDatePickerDialogFragment dialog, int year, int monthOfYear,
-      int dayOfMonth) {
-    //testDateTakenPicker.setText(
-    //    new DateFormatSymbols().getMonths()[monthOfYear] + " " + dayOfMonth + ", " + year);
-    //
-    //try {
-    //  dateTakenForRequest = new SimpleDateFormat("yyyy-MM-dd").format(
-    //      new SimpleDateFormat("MMMM dd, yyyy").parse(testDateTakenPicker.getText().toString()));
-    //} catch (ParseException e) {
-    //  e.printStackTrace();
-    //}
   }
 
   @Subscribe public void reflectMedicalTestEditCreate(MedicalTestEditCreateEvent event) {

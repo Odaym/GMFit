@@ -4,17 +4,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.classes.GMFitApplication;
-import com.mcsaatchi.gmfit.architecture.retrofit.architecture.DataAccessHandlerImpl;
-import com.mcsaatchi.gmfit.architecture.otto.DeletedMealEntryEvent;
 import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
 import com.mcsaatchi.gmfit.architecture.otto.MedicalTestEditCreateEvent;
+import com.mcsaatchi.gmfit.architecture.retrofit.architecture.DataAccessHandlerImpl;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.DefaultGetResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.TakenMedicalTestsResponseBody;
 import com.mcsaatchi.gmfit.architecture.touch_helpers.DragSwipeItemTouchHelperAdapter;
@@ -78,27 +76,20 @@ public class UserTestsRecyclerAdapter
 
   @Override public void onItemDismiss(int position) {
     try {
-      deleteUserTest(userTests.get(position).getInstanceId());
-
-      userTests.remove(position);
-      notifyItemRemoved(position);
-      notifyItemRangeChanged(position, userTests.size());
-
-      EventBusSingleton.getInstance().post(new MedicalTestEditCreateEvent());
+      deleteUserTest(userTests.get(position).getInstanceId(), position);
     } catch (IndexOutOfBoundsException ignored) {
     }
   }
 
-  private void deleteUserTest(int instance_id) {
+  private void deleteUserTest(int instance_id, int itemPosition) {
     dataAccessHandler.deleteUserTest(instance_id, new Callback<DefaultGetResponse>() {
       @Override
       public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
         switch (response.code()) {
           case 200:
-            Log.d("TAG", "onResponse: User test removed!");
-
-            EventBusSingleton.getInstance().post(new DeletedMealEntryEvent());
-
+            userTests.remove(itemPosition);
+            notifyItemRemoved(itemPosition);
+            EventBusSingleton.getInstance().post(new MedicalTestEditCreateEvent());
             break;
         }
       }
