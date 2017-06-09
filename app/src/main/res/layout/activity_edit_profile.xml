@@ -163,7 +163,7 @@
             android:layout_alignParentEnd="true"
             android:background="@null"
             android:gravity="end|center_vertical"
-            android:inputType="phone"
+            android:inputType="number"
             android:paddingEnd="@dimen/activity_vertical_margin"
             android:textAppearance="?android:textAppearanceSmall"
             android:textColor="@color/profile_blue"

@@ -71,10 +71,12 @@ public class InsuranceFragment extends BaseFragment
     InsuranceHomeFragment insuranceHomeFragment = new InsuranceHomeFragment();
     insuranceHomeFragment.setArguments(bundle);
 
-    getChildFragmentManager().beginTransaction()
-        .replace(R.id.root_frame, insuranceHomeFragment)
-        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
-        .commitAllowingStateLoss();
+    if (isAdded()) {
+      getChildFragmentManager().beginTransaction()
+          .replace(R.id.root_frame, insuranceHomeFragment)
+          .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE)
+          .commitAllowingStateLoss();
+    }
   }
 
   private void setupViewPager(ViewPager viewPager) {

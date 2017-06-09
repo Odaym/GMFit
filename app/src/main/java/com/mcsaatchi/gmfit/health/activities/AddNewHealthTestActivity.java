@@ -154,7 +154,7 @@ public class AddNewHealthTestActivity extends BaseActivity {
 
           try {
             dateTakenForRequest = new SimpleDateFormat("yyyy-MM-dd").format(
-                new SimpleDateFormat("dd MMM, yyyy").parse(serviceDateValue));
+                new SimpleDateFormat("dd MMMM, yyyy").parse(serviceDateValue));
           } catch (ParseException e) {
             e.printStackTrace();
           }
@@ -176,28 +176,59 @@ public class AddNewHealthTestActivity extends BaseActivity {
 
             final int finalI = i;
 
-            Picasso.with(AddNewHealthTestActivity.this)
-                .load(existingMedicaltest.getImages().get(i).getImage())
-                .resize(400, 400)
-                .centerInside()
-                .into(new Target() {
+            Timber.d("Picture is this : " + existingMedicaltest.getImages().get(i).getImage());
 
-                  @Override public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+            if (existingMedicaltest.getImages().get(i).getImage().contains("storage")) {
+              Timber.d("Contains storage, loading from File");
 
-                    addPictureElements.get(finalI).setVisibility(View.INVISIBLE);
+              Picasso.with(AddNewHealthTestActivity.this)
+                  .load(new File(existingMedicaltest.getImages().get(i).getImage()))
+                  .resize(400, 400)
+                  .centerInside()
+                  .into(new Target() {
 
-                    imageViewElements.get(finalI)
-                        .setBackground(new BitmapDrawable(getResources(), bitmap));
-                  }
+                    @Override public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
 
-                  @Override public void onBitmapFailed(final Drawable errorDrawable) {
-                    Log.d("TAG", "FAILED");
-                  }
+                      addPictureElements.get(finalI).setVisibility(View.INVISIBLE);
 
-                  @Override public void onPrepareLoad(final Drawable placeHolderDrawable) {
-                    Log.d("TAG", "Prepare Load");
-                  }
-                });
+                      imageViewElements.get(finalI)
+                          .setBackground(new BitmapDrawable(getResources(), bitmap));
+                    }
+
+                    @Override public void onBitmapFailed(final Drawable errorDrawable) {
+                      Log.d("TAG", "FAILED");
+                    }
+
+                    @Override public void onPrepareLoad(final Drawable placeHolderDrawable) {
+                      Log.d("TAG", "Prepare Load");
+                    }
+                  });
+            } else if (existingMedicaltest.getImages().get(i).getImage().contains("https")) {
+              Timber.d("Contains https, loading from Internet");
+
+              Picasso.with(AddNewHealthTestActivity.this)
+                  .load(existingMedicaltest.getImages().get(i).getImage())
+                  .resize(400, 400)
+                  .centerInside()
+                  .into(new Target() {
+
+                    @Override public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+
+                      addPictureElements.get(finalI).setVisibility(View.INVISIBLE);
+
+                      imageViewElements.get(finalI)
+                          .setBackground(new BitmapDrawable(getResources(), bitmap));
+                    }
+
+                    @Override public void onBitmapFailed(final Drawable errorDrawable) {
+                      Log.d("TAG", "FAILED");
+                    }
+
+                    @Override public void onPrepareLoad(final Drawable placeHolderDrawable) {
+                      Log.d("TAG", "Prepare Load");
+                    }
+                  });
+            }
             deleteButtonElements.get(i).setVisibility(View.VISIBLE);
           }
         }
@@ -205,17 +236,17 @@ public class AddNewHealthTestActivity extends BaseActivity {
         try {
           DateTime entryDate = new DateTime(existingMedicaltest.getDateTaken());
 
-          String dateTakenForDisplay = entryDate.monthOfYear().getAsText()
+          String dateTakenForDisplay = +entryDate.getDayOfMonth()
               + " "
-              + entryDate.getDayOfMonth()
+              + entryDate.monthOfYear().getAsText()
               + ", "
               + entryDate.getYear();
 
           try {
-            dateTakenForRequest = new SimpleDateFormat("dd MMM, yyyy").format(
-                new SimpleDateFormat("MMMM dd, yyyy").parse(dateTakenForDisplay));
+            dateTakenForRequest = new SimpleDateFormat("yyyy-MM-dd").format(
+                new SimpleDateFormat("dd MMMM, yyyy").parse(dateTakenForDisplay));
 
-            testDateTakenPicker.setSelectedItem(dateTakenForRequest);
+            testDateTakenPicker.setSelectedItem(dateTakenForDisplay);
           } catch (ParseException e) {
             e.printStackTrace();
           }

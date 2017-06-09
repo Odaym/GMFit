@@ -21,7 +21,7 @@ public class OperationContactsResponseBody implements Parcelable{
   @SerializedName("id") @Expose private Integer id;
   @SerializedName("name") @Expose private String name;
   @SerializedName("title") @Expose private String title;
-  @SerializedName("social_media_links") @Expose private Object socialMediaLinks;
+  @SerializedName("social_media_links") @Expose private String socialMediaLinks;
   @SerializedName("created_at") @Expose private String createdAt;
   @SerializedName("updated_at") @Expose private String updatedAt;
   @SerializedName("emails") @Expose private String emails;
@@ -34,7 +34,7 @@ public class OperationContactsResponseBody implements Parcelable{
     this.id = (Integer) in.readValue(Integer.class.getClassLoader());
     this.name = in.readString();
     this.title = in.readString();
-    this.socialMediaLinks = in.readParcelable(Object.class.getClassLoader());
+    this.socialMediaLinks = in.readString();
     this.createdAt = in.readString();
     this.updatedAt = in.readString();
     this.emails = in.readString();
@@ -66,11 +66,11 @@ public class OperationContactsResponseBody implements Parcelable{
     this.title = title;
   }
 
-  public Object getSocialMediaLinks() {
+  public String getSocialMediaLinks() {
     return socialMediaLinks;
   }
 
-  public void setSocialMediaLinks(Object socialMediaLinks) {
+  public void setSocialMediaLinks(String socialMediaLinks) {
     this.socialMediaLinks = socialMediaLinks;
   }
 
@@ -114,7 +114,7 @@ public class OperationContactsResponseBody implements Parcelable{
     dest.writeValue(this.id);
     dest.writeString(this.name);
     dest.writeString(this.title);
-    dest.writeParcelable((Parcelable) this.socialMediaLinks, flags);
+    dest.writeString(this.socialMediaLinks);
     dest.writeString(this.createdAt);
     dest.writeString(this.updatedAt);
     dest.writeString(this.emails);

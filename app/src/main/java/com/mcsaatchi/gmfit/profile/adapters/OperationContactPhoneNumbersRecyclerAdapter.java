@@ -9,7 +9,6 @@ import android.widget.TextView;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.OperationContactsResponsePhoneNumber;
 import java.util.List;
-import timber.log.Timber;
 
 class OperationContactPhoneNumbersRecyclerAdapter extends RecyclerView.Adapter {
   private Context context;
@@ -31,9 +30,6 @@ class OperationContactPhoneNumbersRecyclerAdapter extends RecyclerView.Adapter {
 
   @Override public void onBindViewHolder(RecyclerView.ViewHolder h, int position) {
     final ViewHolder holder = (ViewHolder) h;
-
-    Timber.d("Name : " + phoneNumbers.get(position).getName());
-    Timber.d("Number : " + phoneNumbers.get(position).getNumber());
 
     holder.phoneNumberNameTV.setText(phoneNumbers.get(position).getName());
     holder.phoneNumberValueTV.setText(phoneNumbers.get(position).getNumber());

@@ -11,6 +11,7 @@ import android.text.TextWatcher;
 import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -135,6 +136,9 @@ public class SignUpActivity extends BaseActivity
 
   @OnClick(R.id.createAccountBTN) public void handleCreateAccount() {
     if (Helpers.validateFields(allFields)) {
+      if (passwordET.getText().toString().length() <= 7) {
+        Toast.makeText(this, R.string.field_password_too_short_error, Toast.LENGTH_LONG).show();
+      }
       presenter.signUserUp(firstNameET.getText().toString() + " " + lastNameET.getText().toString(),
           emailET.getText().toString(), passwordET.getText().toString());
     } else {

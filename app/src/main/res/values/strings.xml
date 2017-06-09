@@ -56,7 +56,7 @@
   <string name="email_empty_error">Email address can\'t be empty</string>
   <string name="password_empty_error">Passsword can\'t be empty</string>
   <string name="field_invalid_email_error">Email address is not valid</string>
-  <string name="field_password_too_short_error">Password too short</string>
+  <string name="field_password_too_short_error">Password too short, must be at least 8 characters long</string>
   <string name="email_address_label">Email Address</string>
   <string name="password_hint">Password</string>
   <string name="confirm_password_hint">Confirm Password</string>
@@ -95,11 +95,11 @@
   <string name="verify_account_hint">We\'ve just sent a verification code to your email address, please enter that code below to complete the
         registration process.
     </string>
-  <string name="verification_code_hint">6-digit code</string>
+  <string name="verification_code_hint">Verification code</string>
   <string name="wrong_verification_code">The code you provided is incorrect.</string>
   <string name="verifying_email_dialog_title">Verifying email address</string>
   <string name="verification_required_title">Verification Required</string>
-  <string name="verification_required_message">Please enter the 6-digit verification code we sent\nyou via e-mail.</string>
+  <string name="verification_required_message">Please enter the verification code we sent\nyou via e-mail.</string>
   <string name="setup_my_profile_button">Setup My Profile</string>
 
   <!-- TERMS OF USAGE ACTIVITY -->

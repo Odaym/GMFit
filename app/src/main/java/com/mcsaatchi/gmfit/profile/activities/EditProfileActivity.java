@@ -71,9 +71,14 @@ public class EditProfileActivity extends BaseActivity
 
     weightValueET.setText(String.valueOf(prefs.getFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, 80)));
 
-    heightValueET.setText(String.valueOf(prefs.getFloat(Constants.EXTRAS_USER_PROFILE_HEIGHT, 160)));
+    heightValueET.setText(
+        String.valueOf(prefs.getFloat(Constants.EXTRAS_USER_PROFILE_HEIGHT, 160)));
 
     bloodTypeValueTV.setText(prefs.getString(Constants.EXTRAS_USER_PROFILE_BLOOD_TYPE, ""));
+
+    firstNameValueET.setSelection(firstNameValueET.getText().toString().length());
+    lastNameValueET.setSelection(lastNameValueET.getText().toString().length());
+    mobileNumberValueET.setSelection(mobileNumberValueET.getText().toString().length());
 
     int gender = prefs.getInt(Constants.EXTRAS_USER_PROFILE_GENDER, 0);
     if (gender == 0) {

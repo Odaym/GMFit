@@ -16,13 +16,12 @@ import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.onboarding.models.MedicalCondition;
 import java.util.ArrayList;
+import timber.log.Timber;
 
 import static com.mcsaatchi.gmfit.onboarding.fragments.SetupProfile4Fragment.MEDICAL_CONDITIONS_SELECTED;
 
 public class MedicalConditionsChoiceActivity extends BaseActivity {
-  //@Bind(R.id.medicalConditionsRecyclerView) RecyclerView medicalConditionsRecyclerView;
   @Bind(R.id.toolbar) Toolbar toolbar;
-
   @Bind(R.id.medicalChoicesContainer) LinearLayout medicalChoicesContainer;
 
   private ArrayList<MedicalCondition> medicalConditions = new ArrayList<>();
@@ -40,6 +39,8 @@ public class MedicalConditionsChoiceActivity extends BaseActivity {
     if (getIntent().getExtras() != null) {
       medicalConditions = getIntent().getExtras().getParcelableArrayList("MEDICAL_CONDITIONS");
     }
+
+    Timber.d("medical conditions size before setup : " + medicalConditions.size());
 
     setMedicalConditionsChoiceList(medicalConditions);
   }
@@ -68,6 +69,8 @@ public class MedicalConditionsChoiceActivity extends BaseActivity {
 
   private void setMedicalConditionsChoiceList(ArrayList<MedicalCondition> medicalConditions) {
     ArrayList<CheckBox> allCheckBoxes = new ArrayList<>();
+
+    Timber.d("medical conditions size inside setup : " + medicalConditions.size());
 
     for (int i = 0; i < medicalConditions.size(); i++) {
       View itemView = LayoutInflater.from(this)

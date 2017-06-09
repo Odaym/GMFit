@@ -31,6 +31,7 @@ import com.mcsaatchi.gmfit.health.adapters.TesticularMetricsRecyclerAdapter;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
@@ -97,7 +98,9 @@ public class AddNewHealthTestPart2Activity extends BaseActivity
   @Override public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
       case R.id.doneBTN:
-        HashMap<String, RequestBody> metrics, imageParts;
+        LinkedHashMap<String, RequestBody> imageParts;
+        HashMap<String, RequestBody> metrics;
+
         String deletedImagesString = "";
 
         if (existingMedicaltest == null) {
@@ -271,8 +274,8 @@ public class AddNewHealthTestPart2Activity extends BaseActivity
     return metrics;
   }
 
-  private HashMap<String, RequestBody> constructSelectedImagesForRequest() {
-    HashMap<String, RequestBody> imageParts = new HashMap<>();
+  private LinkedHashMap<String, RequestBody> constructSelectedImagesForRequest() {
+    LinkedHashMap<String, RequestBody> imageParts = new LinkedHashMap<>();
 
     RequestBody file;
     File imageFile;
@@ -288,8 +291,8 @@ public class AddNewHealthTestPart2Activity extends BaseActivity
     return imageParts;
   }
 
-  private HashMap<String, RequestBody> constructEditableMetricsForRequest() {
-    HashMap<String, RequestBody> metrics = new HashMap<>();
+  private LinkedHashMap<String, RequestBody> constructEditableMetricsForRequest() {
+    LinkedHashMap<String, RequestBody> metrics = new LinkedHashMap<>();
 
     for (int i = 0; i < existingMedicaltest.getMetrics().size(); i++) {
       if (Integer.parseInt(existingMedicaltest.getMetrics().get(i).getValue()) != -1) {

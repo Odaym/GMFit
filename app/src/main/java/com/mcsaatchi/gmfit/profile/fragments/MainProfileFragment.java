@@ -192,14 +192,17 @@ public class MainProfileFragment extends BaseFragment
           ArrayList<MedicalCondition> conditionsFromExtras =
               data.getExtras().getParcelableArrayList("MEDICAL_CONDITIONS");
 
+          medicalConditionIDs.clear();
+
           if (conditionsFromExtras != null) {
             for (int i = 0; i < conditionsFromExtras.size(); i++) {
               if (conditionsFromExtras.get(i).isSelected()) {
-                if (!conditionsFromExtras.get(i).getMedicalCondition().equals("None")) {
+                if (conditionsFromExtras.get(i).getMedicalCondition().equals("None")) {
+                  valueForCondition += "None";
+                } else {
                   medicalConditionIDs.add(conditionsFromExtras.get(i).getId());
                   valueForCondition += conditionsFromExtras.get(i).getMedicalCondition() + ", ";
-                } else {
-                  valueForCondition += "None";
+                  Timber.d("Medical Condition ID is selected : " + conditionsFromExtras.get(i).getId());
                 }
               }
             }
@@ -237,6 +240,8 @@ public class MainProfileFragment extends BaseFragment
 
   @Override public void populateUserProfileInformation(UserProfileResponseDatum userProfileData) {
     SharedPreferences.Editor prefsEditor = prefs.edit();
+
+    medicalConditions.clear();
 
     if (userProfileData != null) {
       userMedicalConditions = userProfileData.getMedicalConditions();
@@ -843,8 +848,6 @@ public class MainProfileFragment extends BaseFragment
     float height = prefs.getFloat(Constants.EXTRAS_USER_PROFILE_HEIGHT, 180);
     float weight = prefs.getFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, 82);
 
-    medicalConditionParts = constructMedicalConditionsForRequest(medicalConditionIDs);
-
     presenter.updateUserProfile(Helpers.toRequestBody(dateOfBirth),
         Helpers.toRequestBody(bloodType), Helpers.toRequestBody(nationality), medicalConditionParts,
         Helpers.toRequestBody(measurementSystem.toLowerCase()),
@@ -875,6 +878,8 @@ public class MainProfileFragment extends BaseFragment
     HashMap<String, RequestBody> medicalConditionParts = new HashMap<>();
 
     for (int i = 0; i < medicalConditionIDs.size(); i++) {
+      Timber.d("Medical condition ID selected inside construction : " + medicalConditionIDs.get(i));
+
       medicalConditionParts.put("medical_conditions[" + i + "]",
           Helpers.toRequestBody(String.valueOf(medicalConditionIDs.get(i))));
     }

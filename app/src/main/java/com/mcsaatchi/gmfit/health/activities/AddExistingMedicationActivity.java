@@ -249,8 +249,6 @@ public class AddExistingMedicationActivity extends BaseActivity
       Toast.makeText(this, R.string.fill_in_below_fields_hint, Toast.LENGTH_LONG).show();
     } else {
       if (editPurpose) {
-        Timber.d("Purpose is to edit");
-
         medicationDAO.refresh(medicationItem);
 
         medicationItem.setName(medicineNameET.getText().toString());
