@@ -8,6 +8,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.andreabaccega.widget.FormEditText;
 import com.mcsaatchi.gmfit.R;
+import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
 import java.util.ArrayList;
@@ -35,6 +36,9 @@ public class ForgotPasswordActivity extends BaseActivity
         getResources().getString(R.string.forgot_password_activity_title), true);
 
     allFields.add(emailET);
+
+    emailET.setText(prefs.getString(Constants.EXTRAS_USER_EMAIL, ""));
+    emailET.setSelection(emailET.getText().toString().length());
   }
 
   @OnClick(R.id.submitForgotPasswordEmailBTN) public void handleForgotPassword() {

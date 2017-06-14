@@ -138,9 +138,11 @@ public class SignUpActivity extends BaseActivity
     if (Helpers.validateFields(allFields)) {
       if (passwordET.getText().toString().length() <= 7) {
         Toast.makeText(this, R.string.field_password_too_short_error, Toast.LENGTH_LONG).show();
+      } else {
+        presenter.signUserUp(
+            firstNameET.getText().toString() + " " + lastNameET.getText().toString(),
+            emailET.getText().toString(), passwordET.getText().toString());
       }
-      presenter.signUserUp(firstNameET.getText().toString() + " " + lastNameET.getText().toString(),
-          emailET.getText().toString(), passwordET.getText().toString());
     } else {
       showPasswordTV.setVisibility(View.GONE);
     }

@@ -105,6 +105,8 @@ public class SetupProfile4Fragment extends BaseFragment
     } catch (IllegalArgumentException ignored) {
     }
 
+    medicalConditionIDs.add(-1);
+
     initCustomSpinner(genderItems, genderSpinner);
 
     initCustomSpinner(bloodTypeItems, bloodTypeSpinner);
@@ -173,6 +175,8 @@ public class SetupProfile4Fragment extends BaseFragment
           ArrayList<MedicalCondition> conditionsFromExtras =
               data.getExtras().getParcelableArrayList("MEDICAL_CONDITIONS");
 
+          medicalConditionIDs.clear();
+
           String finalMedicalConditions = "";
 
           if (conditionsFromExtras != null) {
@@ -187,8 +191,6 @@ public class SetupProfile4Fragment extends BaseFragment
 
             medicalConditionsValueTV.setText(finalMedicalConditions.replaceAll(", $", ""));
           }
-
-          medicalConditionParts = constructMedicalConditionsForRequest(medicalConditionIDs);
 
           medicalConditions = conditionsFromExtras;
         } else {
@@ -263,6 +265,8 @@ public class SetupProfile4Fragment extends BaseFragment
         prefs.getString(Constants.EXTRAS_USER_PROFILE_MEASUREMENT_SYSTEM, "");
     int goalId = prefs.getInt(Constants.EXTRAS_USER_PROFILE_GOAL_ID, 0);
     int activityLevelId = prefs.getInt(Constants.EXTRAS_USER_PROFILE_ACTIVITY_LEVEL_ID, 0);
+
+    medicalConditionParts = constructMedicalConditionsForRequest(medicalConditionIDs);
 
     presenter.setupUserProfile(Helpers.toRequestBody(finalDateOfBirth),
         Helpers.toRequestBody(finalBloodType), Helpers.toRequestBody(nationality),

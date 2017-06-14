@@ -12,33 +12,23 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Build;
-import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
-import com.crashlytics.android.Crashlytics;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.mcsaatchi.gmfit.BuildConfig;
 import com.mcsaatchi.gmfit.architecture.classes.GMFitApplication;
 import com.mcsaatchi.gmfit.architecture.database.DBHelper;
-import com.mcsaatchi.gmfit.architecture.retrofit.architecture.DataAccessHandlerImpl;
 import com.mcsaatchi.gmfit.architecture.otto.CaloriesCounterIncrementedEvent;
 import com.mcsaatchi.gmfit.architecture.otto.DistanceCounterIncrementedEvent;
 import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
 import com.mcsaatchi.gmfit.architecture.otto.StepCounterIncrementedEvent;
-import com.mcsaatchi.gmfit.architecture.retrofit.responses.AuthenticationResponse;
-import com.mcsaatchi.gmfit.architecture.retrofit.responses.DefaultGetResponse;
+import com.mcsaatchi.gmfit.architecture.retrofit.architecture.DataAccessHandlerImpl;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.fitness.models.FitnessWidget;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
 import java.util.Timer;
-import java.util.TimerTask;
 import javax.inject.Inject;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import timber.log.Timber;
 
 /**
  * Background service which keeps the step-sensor listener alive to always get
@@ -51,11 +41,9 @@ public class SensorListener extends Service implements SensorEventListener {
 
   private static final float STEP_LENGTH = 20;
   private static float METRIC_RUNNING_FACTOR = 1.02784823f;
-  private final Handler handler = new Handler();
   @Inject DataAccessHandlerImpl dataAccessHandler;
   @Inject SharedPreferences prefs;
   @Inject DBHelper dbHelper;
-  private Timer timer = new Timer();
 
   private RuntimeExceptionDao<FitnessWidget, Integer> fitnessWidgetsDAO;
 
@@ -69,15 +57,6 @@ public class SensorListener extends Service implements SensorEventListener {
     reRegisterSensor();
 
     fitnessWidgetsDAO = dbHelper.getFitnessWidgetsDAO();
-
-    TimerTask doAsynchronousTask = new TimerTask() {
-      @Override public void run() {
-
-        handler.post(() -> refreshAccessToken());
-      }
-    };
-
-    timer.schedule(doAsynchronousTask, 0, Constants.WAIT_TIME_BEFORE_CHECKING_METRICS_SERVICE);
   }
 
   @Override public void onAccuracyChanged(final Sensor sensor, int accuracy) {
@@ -168,82 +147,6 @@ public class SensorListener extends Service implements SensorEventListener {
             PendingIntent.FLAG_UPDATE_CURRENT));
 
     return START_STICKY;
-  }
-
-  private void refreshAccessToken() {
-    dataAccessHandler.refreshAccessToken(new Callback<AuthenticationResponse>() {
-      @Override public void onResponse(Call<AuthenticationResponse> call,
-          Response<AuthenticationResponse> response) {
-        switch (response.code()) {
-          case 200:
-            prefs.edit()
-                .putString(Constants.PREF_USER_ACCESS_TOKEN,
-                    "Bearer " + response.body().getData().getBody().getToken())
-                .apply();
-
-            String[] slugsArray = new String[] {
-                "steps-count", "active-calories", "distance-traveled"
-            };
-
-            Number[] valuesArray = new Number[] {
-                prefs.getInt("steps_taken", 0), (int) prefs.getFloat("calories_spent", 0),
-                prefs.getFloat("distance_traveled", 0)
-            };
-
-            synchronizeMetricsWithServer(slugsArray, valuesArray);
-
-            break;
-        }
-      }
-
-      @Override public void onFailure(Call<AuthenticationResponse> call, Throwable t) {
-        Crashlytics.log(Log.ERROR, "GM_METRICS",
-            "REFRESHING TOKEN FAILED, CANNOT REACH SYNCHRONISE METRICS");
-      }
-    });
-  }
-
-  private void synchronizeMetricsWithServer(String[] slugsArray, Number[] valuesArray) {
-    dataAccessHandler.synchronizeMetricsWithServer(slugsArray, valuesArray,
-        new Callback<DefaultGetResponse>() {
-          @Override public void onResponse(Call<DefaultGetResponse> call,
-              Response<DefaultGetResponse> response) {
-            switch (response.code()) {
-              case 200:
-                Calendar c = Calendar.getInstance();
-                int hour = c.get(Calendar.HOUR_OF_DAY);
-                int minute = c.get(Calendar.MINUTE);
-                int second = c.get(Calendar.SECOND);
-
-                //If current time is between 12AM and 12:05AM, clear metrics
-                if (hour * 3600 + minute * 60 + second < 900) {
-                  Timber.d("Time is between, wiping metrics");
-                  wipeOutFitnessMetricsAtMidnight();
-                  sendOutEventBusEvents();
-                } else {
-                  Timber.d("Time is not between");
-                }
-
-                break;
-            }
-          }
-
-          @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
-            Crashlytics.log(Log.ERROR, "GM_METRICS", "SYNCRONISING METRICS HAS FAILED!");
-          }
-        });
-  }
-
-  private void wipeOutFitnessMetricsAtMidnight() {
-    clearMetricsInPrefs();
-
-    List<FitnessWidget> fitnessWidgets = fitnessWidgetsDAO.queryForAll();
-
-    for (int i = 0; i < fitnessWidgets.size(); i++) {
-      fitnessWidgets.get(i).setValue(0);
-
-      fitnessWidgetsDAO.update(fitnessWidgets.get(i));
-    }
   }
 
   private void clearMetricsInPrefs() {

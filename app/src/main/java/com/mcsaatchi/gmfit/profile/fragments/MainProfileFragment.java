@@ -878,8 +878,6 @@ public class MainProfileFragment extends BaseFragment
     HashMap<String, RequestBody> medicalConditionParts = new HashMap<>();
 
     for (int i = 0; i < medicalConditionIDs.size(); i++) {
-      Timber.d("Medical condition ID selected inside construction : " + medicalConditionIDs.get(i));
-
       medicalConditionParts.put("medical_conditions[" + i + "]",
           Helpers.toRequestBody(String.valueOf(medicalConditionIDs.get(i))));
     }

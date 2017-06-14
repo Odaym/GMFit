@@ -79,6 +79,8 @@ public class EditProfileActivity extends BaseActivity
     firstNameValueET.setSelection(firstNameValueET.getText().toString().length());
     lastNameValueET.setSelection(lastNameValueET.getText().toString().length());
     mobileNumberValueET.setSelection(mobileNumberValueET.getText().toString().length());
+    heightValueET.setSelection(heightValueET.getText().toString().length());
+    weightValueET.setSelection(weightValueET.getText().toString().length());
 
     int gender = prefs.getInt(Constants.EXTRAS_USER_PROFILE_GENDER, 0);
     if (gender == 0) {
@@ -114,12 +116,15 @@ public class EditProfileActivity extends BaseActivity
   }
 
   @OnClick(R.id.dateOfBirthLayout) public void handleDateOfBirthLayoutPressed() {
+    String[] splitDOB = dateOfBirthValueTV.getText().toString().split("-");
+
     CalendarDatePickerDialogFragment cdp =
         new CalendarDatePickerDialogFragment().setOnDateSetListener(this)
             .setFirstDayOfWeek(Calendar.MONDAY)
             .setDoneText(getString(R.string.accept_ok))
             .setCancelText(getString(R.string.decline_cancel))
-            .setPreselectedDate(2000, 0, 1)
+            .setPreselectedDate(Integer.parseInt(splitDOB[0]), Integer.parseInt(splitDOB[1]),
+                Integer.parseInt(splitDOB[2]))
             .setThemeLight();
     cdp.show(this.getSupportFragmentManager(), FRAG_TAG_DATE_PICKER);
   }
