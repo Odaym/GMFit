@@ -14,10 +14,12 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.classes.GMFitApplication;
+import com.mcsaatchi.gmfit.architecture.countrypicker.Country;
+import com.mcsaatchi.gmfit.architecture.countrypicker.CountryPicker;
 import com.mcsaatchi.gmfit.common.Constants;
-import com.mukesh.countrypicker.fragments.CountryPicker;
-import com.mukesh.countrypicker.models.Country;
 import javax.inject.Inject;
+
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class SetupProfile1Fragment extends Fragment {
   @Bind(R.id.chooseCountryBTN) Button chooseCountryBTN;
@@ -39,10 +41,12 @@ public class SetupProfile1Fragment extends Fragment {
 
     picker = CountryPicker.newInstance(getString(R.string.choose_country_hint));
 
-    Country userCountry = picker.getUserCountryInfo(getActivity());
+    Country userCountry = Country.getCountryFromSIM(getApplicationContext());
 
-    countryFlagIV.setImageResource(userCountry.getFlag());
-    chooseCountryBTN.setText(userCountry.getName());
+    if (userCountry != null) {
+      countryFlagIV.setImageResource(userCountry.getFlag());
+      chooseCountryBTN.setText(userCountry.getName());
+    }
 
     prefs.edit().putString(Constants.EXTRAS_USER_PROFILE_MEASUREMENT_SYSTEM, "metric").apply();
     prefs.edit()

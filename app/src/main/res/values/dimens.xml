@@ -25,6 +25,10 @@
   <dimen name="default_margin_8">80dp</dimen>
   <dimen name="default_margin_10">100dp</dimen>
 
+  <!-- COUNTRY PICKER -->
+  <dimen name="cp_dialog_width">200dp</dimen>
+  <dimen name="cp_dialog_height">300dp</dimen>
+
   <dimen name="default_button_text_size">20sp</dimen>
 
   <dimen name="progress_loader_indicator_dimens">50dp</dimen>
