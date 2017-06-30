@@ -34,7 +34,7 @@ public class CounsellingInformationActivity extends BaseActivity
       CounsellingInformationActivityPresenter presenter =
           new CounsellingInformationActivityPresenter(this, dataAccessHandler);
 
-      presenter.getCounsellingInformation();
+      presenter.getCounsellingInformation("AUGME2");
     }
   }
 

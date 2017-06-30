@@ -1,11 +1,15 @@
 package com.mcsaatchi.gmfit.profile.activities;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.util.Linkify;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import butterknife.Bind;
@@ -16,7 +20,12 @@ import com.mcsaatchi.gmfit.architecture.retrofit.responses.OperationContactsResp
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.common.classes.SimpleDividerItemDecoration;
 import com.mcsaatchi.gmfit.profile.adapters.OperationContactAddressesRecyclerAdapter;
+import java.util.Iterator;
 import java.util.List;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import timber.log.Timber;
 
 public class OperationContactDetailsActivity extends BaseActivity {
   @Bind(R.id.toolbar) Toolbar toolbar;
@@ -26,6 +35,11 @@ public class OperationContactDetailsActivity extends BaseActivity {
   @Bind(R.id.emailAddressesLayout) LinearLayout emailAddressesLayout;
   @Bind(R.id.socialMediaLinksSection) LinearLayout socialMediaLinksSection;
   @Bind(R.id.websitesLayout) LinearLayout websitesLayout;
+  @Bind(R.id.facebookIMG) ImageView facebookIMG;
+  @Bind(R.id.twitterIMG) ImageView twitterIMG;
+  @Bind(R.id.linkedinIMG) ImageView linkedinIMG;
+  @Bind(R.id.youtubeIMG) ImageView youtubeIMG;
+  @Bind(R.id.googlePlusIMG) ImageView googlePlusIMG;
 
   private OperationContactsResponseBody operationContactsResponseBody;
 
@@ -44,24 +58,81 @@ public class OperationContactDetailsActivity extends BaseActivity {
 
       displayOperationContactAddresses(operationContactsResponseBody.getLocations());
 
-      emailAddressesTV.setText(operationContactsResponseBody.getEmails());
+      if (operationContactsResponseBody.getEmails() != null) {
+        emailAddressesTV.setText(operationContactsResponseBody.getEmails());
+        emailAddressesTV.setOnClickListener(view -> {
+          final Intent emailIntent = new Intent(Intent.ACTION_SEND);
 
-      socialMediaLinksSection.setVisibility(View.GONE);
+          emailIntent.setType("plain/text");
+          emailIntent.putExtra(Intent.EXTRA_EMAIL,
+              new String[] { operationContactsResponseBody.getEmails() });
+          emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Subject");
+          emailIntent.putExtra(Intent.EXTRA_TEXT, "Text");
 
-      //Timber.d(
-      //    "Social media links string : " + operationContactsResponseBody.getSocialMediaLinks());
-      //if (operationContactsResponseBody.getSocialMediaLinks().isEmpty()) {
-      //} else {
-      //  /**
-      //   *
-      //   * ???????
-      //   */
-      //}
+          startActivity(Intent.createChooser(emailIntent, "Send us an email"));
+        });
+      }
 
-      //if (operationContactsResponseBody.getSocialMediaLinks() != null
-      //    && !operationContactsResponseBody.getSocialMediaLinks().isEmpty()) {
-      //  websiteValueTV.setText(operationContactsResponseBody.getSocialMediaLinks());
-      //}
+      final JSONArray jsonArray;
+      try {
+        jsonArray = new JSONArray(operationContactsResponseBody.getSocialMediaLinks());
+
+        for (int i = 0; i < jsonArray.length(); i++) {
+
+          JSONObject obj = new JSONObject(String.valueOf(jsonArray.get(i)));
+
+          Iterator<String> iterator = obj.keys();
+          while (iterator.hasNext()) {
+            String key = iterator.next();
+
+            try {
+              String value = obj.getString(key);
+
+              Timber.d("Value is %s", value);
+
+              Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(value));
+
+              switch (value) {
+                case "website":
+                  websitesLayout.setVisibility(View.VISIBLE);
+                  websiteValueTV.setText(value);
+                  Linkify.addLinks(websiteValueTV, Linkify.WEB_URLS);
+                  break;
+                case "Facebook":
+                case "facebook":
+                  facebookIMG.setOnClickListener(view -> startActivity(browserIntent));
+                  socialMediaLinksSection.setVisibility(View.VISIBLE);
+                  facebookIMG.setVisibility(View.VISIBLE);
+                  break;
+                case "Twitter":
+                case "twitter":
+                  twitterIMG.setOnClickListener(view -> startActivity(browserIntent));
+                  socialMediaLinksSection.setVisibility(View.VISIBLE);
+                  twitterIMG.setVisibility(View.VISIBLE);
+                  break;
+                case "G+":
+                  googlePlusIMG.setOnClickListener(view -> startActivity(browserIntent));
+                  socialMediaLinksSection.setVisibility(View.VISIBLE);
+                  googlePlusIMG.setVisibility(View.VISIBLE);
+                  break;
+                case "LinkedIn":
+                  linkedinIMG.setOnClickListener(view -> startActivity(browserIntent));
+                  socialMediaLinksSection.setVisibility(View.VISIBLE);
+                  linkedinIMG.setVisibility(View.VISIBLE);
+                  break;
+                case "YouTube":
+                  youtubeIMG.setOnClickListener(view -> startActivity(browserIntent));
+                  socialMediaLinksSection.setVisibility(View.VISIBLE);
+                  youtubeIMG.setVisibility(View.VISIBLE);
+                  break;
+              }
+            } catch (JSONException ignored) {
+            }
+          }
+        }
+      } catch (JSONException e) {
+        e.printStackTrace();
+      }
     }
   }
 

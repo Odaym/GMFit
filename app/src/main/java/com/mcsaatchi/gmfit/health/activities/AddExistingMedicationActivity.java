@@ -327,7 +327,7 @@ public class AddExistingMedicationActivity extends BaseActivity
       alertDialog.setMessage(getString(R.string.check_compatibility_dialog_hint));
       alertDialog.show();
     } else {
-      presenter.getCounsellingInformation();
+      presenter.getCounsellingInformation(medicationItem.getName());
     }
   }
 

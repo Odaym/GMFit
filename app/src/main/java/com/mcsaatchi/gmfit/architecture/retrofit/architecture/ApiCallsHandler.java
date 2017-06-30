@@ -953,9 +953,8 @@ public class ApiCallsHandler {
    */
 
   void searchMedicines(String key, final Callback<SearchMedicinesResponse> callback) {
-    Call<SearchMedicinesResponse> apiCall = restClient.getGMFitService()
-        .searchMedicines(
-            new SearchMedicinesRequest(key));
+    Call<SearchMedicinesResponse> apiCall =
+        restClient.getGMFitService().searchMedicines(new SearchMedicinesRequest(key));
 
     apiCall.enqueue(new Callback<SearchMedicinesResponse>() {
       @Override public void onResponse(Call<SearchMedicinesResponse> call,
@@ -1270,9 +1269,9 @@ public class ApiCallsHandler {
     });
   }
 
-  void getCounsellingInformation(final Callback<CounsellingInformationResponse> callback) {
+  void getCounsellingInformation(String medCode, final Callback<CounsellingInformationResponse> callback) {
     Call<CounsellingInformationResponse> apiCall =
-        restClient.getGMFitService().getCounsellingInformation();
+        restClient.getGMFitService().getCounsellingInformation(new CounsellingInformationRequest(medCode));
 
     apiCall.enqueue(new Callback<CounsellingInformationResponse>() {
       @Override public void onResponse(Call<CounsellingInformationResponse> call,
@@ -1723,6 +1722,14 @@ public class ApiCallsHandler {
 
     public DeleteFitnessActivityRequest(int instance_id) {
       this.instance_id = instance_id;
+    }
+  }
+
+  public class CounsellingInformationRequest {
+    String medCode;
+
+    public CounsellingInformationRequest(String medCode) {
+      this.medCode = medCode;
     }
   }
 }

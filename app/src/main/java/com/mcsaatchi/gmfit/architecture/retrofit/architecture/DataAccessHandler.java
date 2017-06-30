@@ -245,7 +245,7 @@ public interface DataAccessHandler {
   void getInquiriesList(String incidentId, String crm_country,
       final Callback<InquiriesListResponse> callback);
 
-  void getCounsellingInformation(final Callback<CounsellingInformationResponse> callback);
+  void getCounsellingInformation(String medCode, final Callback<CounsellingInformationResponse> callback);
 
   void getCRMIncidentNotes(String incidentId, final Callback<CRMNotesResponse> callback);
 

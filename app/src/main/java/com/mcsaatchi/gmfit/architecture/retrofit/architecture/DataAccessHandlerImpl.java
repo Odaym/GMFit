@@ -136,7 +136,8 @@ public class DataAccessHandlerImpl implements DataAccessHandler {
     apiCallsHandler.editFitnessActivity(id, duration, date, level_id, callback);
   }
 
-  @Override public void deleteFitnessActivity(int instance_id, Callback<DeleteActivityResponse> callback) {
+  @Override
+  public void deleteFitnessActivity(int instance_id, Callback<DeleteActivityResponse> callback) {
     apiCallsHandler.deleteFitnessActivity(instance_id, callback);
   }
 
@@ -340,8 +341,7 @@ public class DataAccessHandlerImpl implements DataAccessHandler {
         callback);
   }
 
-  @Override
-  public void searchMedicines(String key, Callback<SearchMedicinesResponse> callback) {
+  @Override public void searchMedicines(String key, Callback<SearchMedicinesResponse> callback) {
     apiCallsHandler.searchMedicines(key, callback);
   }
 
@@ -356,8 +356,8 @@ public class DataAccessHandlerImpl implements DataAccessHandler {
     apiCallsHandler.getCoverageDescription(contractNo, indNbr, callback);
   }
 
-  @Override public void getMembersGuide(String contractNo, String indNbr,
-      Callback<ResponseBody> callback) {
+  @Override
+  public void getMembersGuide(String contractNo, String indNbr, Callback<ResponseBody> callback) {
     apiCallsHandler.getMembersGuide(contractNo, indNbr, callback);
   }
 
@@ -431,8 +431,8 @@ public class DataAccessHandlerImpl implements DataAccessHandler {
     apiCallsHandler.getChronicTreatmentsList(contractNo, requestType, callback);
   }
 
-  @Override public void getSnapshot(String contractNo, String period,
-      final Callback<ResponseBody> callback) {
+  @Override
+  public void getSnapshot(String contractNo, String period, final Callback<ResponseBody> callback) {
     apiCallsHandler.getSnapshot(contractNo, period, callback);
   }
 
@@ -442,8 +442,8 @@ public class DataAccessHandlerImpl implements DataAccessHandler {
   }
 
   @Override
-  public void getCounsellingInformation(final Callback<CounsellingInformationResponse> callback) {
-    apiCallsHandler.getCounsellingInformation(callback);
+  public void getCounsellingInformation(String medCode, final Callback<CounsellingInformationResponse> callback) {
+    apiCallsHandler.getCounsellingInformation(medCode, callback);
   }
 
   @Override

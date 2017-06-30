@@ -19,10 +19,10 @@ class AddExistingMedicationActivityPresenter extends BaseActivityPresenter {
     this.dataAccessHandler = dataAccessHandler;
   }
 
-  void getCounsellingInformation() {
+  void getCounsellingInformation(String medCode) {
     view.callDisplayWaitingDialog(R.string.loading_data_dialog_title);
 
-    dataAccessHandler.getCounsellingInformation(new Callback<CounsellingInformationResponse>() {
+    dataAccessHandler.getCounsellingInformation(medCode, new Callback<CounsellingInformationResponse>() {
       @Override public void onResponse(Call<CounsellingInformationResponse> call,
           Response<CounsellingInformationResponse> response) {
         switch (response.code()) {

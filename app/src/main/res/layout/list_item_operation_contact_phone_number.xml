@@ -14,7 +14,7 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginBottom="@dimen/default_margin_1"
-      android:textAppearance="?android:textAppearanceMedium"
+      android:textAppearance="?android:textAppearanceSmall"
       android:textColor="@android:color/black"
       android:textStyle="bold"
       />
@@ -23,7 +23,7 @@
       android:id="@+id/phoneNumberValueTV"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:textAppearance="?android:textAppearanceMedium"
+      android:textAppearance="?android:textAppearanceSmall"
       android:textColor="@android:color/black"
       />
 </LinearLayout>

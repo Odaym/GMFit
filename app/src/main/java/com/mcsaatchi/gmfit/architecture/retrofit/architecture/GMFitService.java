@@ -294,7 +294,10 @@ public interface GMFitService {
   @POST("insurance/crm/request/get") Call<InquiriesListResponse> getInquiriesList(
       @Body ApiCallsHandler.InquiriesListRequest inquiriesListRequest);
 
-  @POST("insurance/expert-system") Call<CounsellingInformationResponse> getCounsellingInformation();
+  @POST("insurance/expert-system") Call<CounsellingInformationResponse> getCounsellingInformation(
+      @Body ApiCallsHandler.CounsellingInformationRequest counsellingInformationRequest);
+
+  //@POST("insurance/medecines/counsel") Call<CounsellingInformationResponse> getCounsellingInformation();
 
   @POST("insurance/crm/request/notes") Call<CRMNotesResponse> getCRMIncidentNotes(
       @Body ApiCallsHandler.CRMNotesRequest crmNotesRequest);

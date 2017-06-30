@@ -36,7 +36,6 @@
           android:layout_height="wrap_content"
           android:layout_marginTop="@dimen/default_margin_2"
           android:orientation="vertical"
-          android:visibility="gone"
           >
 
         <LinearLayout
@@ -58,15 +57,23 @@
               />
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/emailAddressesTV"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/activity_vertical_margin"
-            android:textAppearance="?android:textAppearanceMedium"
-            android:textColor="@android:color/black"
-            />
+            android:background="@color/white"
+            >
 
+          <TextView
+              android:id="@+id/emailAddressesTV"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_marginBottom="@dimen/default_margin_2"
+              android:layout_marginTop="@dimen/default_margin_2"
+              android:padding="@dimen/activity_vertical_margin"
+              android:textAppearance="?android:textAppearanceSmall"
+              android:textColor="@android:color/black"
+              />
+        </LinearLayout>
       </LinearLayout>
 
       <!-- WEBSITES SECTION -->
@@ -86,8 +93,7 @@
             android:background="@color/profile_blue"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:paddingEnd="@dimen/activity_vertical_margin"
-            android:paddingStart="@dimen/activity_vertical_margin"
+            android:padding="@dimen/default_margin_2"
             >
 
           <TextView
@@ -99,14 +105,23 @@
               />
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/websiteValueTV"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/activity_vertical_margin"
-            android:textAppearance="?android:textAppearanceMedium"
-            android:textColor="@android:color/black"
-            />
+            android:background="@color/white"
+            >
+
+          <TextView
+              android:id="@+id/websiteValueTV"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_marginBottom="@dimen/default_margin_2"
+              android:layout_marginTop="@dimen/default_margin_2"
+              android:padding="@dimen/activity_vertical_margin"
+              android:textAppearance="?android:textAppearanceSmall"
+              android:textColor="@android:color/black"
+              />
+        </LinearLayout>
       </LinearLayout>
 
       <LinearLayout
@@ -140,42 +155,53 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/white"
             android:orientation="horizontal"
             android:padding="@dimen/default_margin_2"
             >
 
           <ImageView
+              android:id="@+id/facebookIMG"
               android:layout_width="@dimen/social_media_icons_profile"
               android:layout_height="@dimen/social_media_icons_profile"
               android:layout_marginEnd="@dimen/default_margin_2"
               android:src="@drawable/ic_social_media_facebook_logo"
+              android:visibility="gone"
               />
 
           <ImageView
+              android:id="@+id/twitterIMG"
               android:layout_width="@dimen/social_media_icons_profile"
               android:layout_height="@dimen/social_media_icons_profile"
               android:layout_marginEnd="@dimen/default_margin_2"
               android:src="@drawable/ic_social_media_twitter_logo"
+              android:visibility="gone"
               />
 
           <ImageView
+              android:id="@+id/linkedinIMG"
               android:layout_width="@dimen/social_media_icons_profile"
               android:layout_height="@dimen/social_media_icons_profile"
               android:layout_marginEnd="@dimen/default_margin_2"
               android:src="@drawable/ic_social_media_linkedin_logo"
+              android:visibility="gone"
               />
 
           <ImageView
+              android:id="@+id/youtubeIMG"
               android:layout_width="@dimen/social_media_icons_profile"
               android:layout_height="@dimen/social_media_icons_profile"
               android:layout_marginEnd="@dimen/default_margin_2"
               android:src="@drawable/ic_social_media_youtube_logo"
+              android:visibility="gone"
               />
 
           <ImageView
+              android:id="@+id/googlePlusIMG"
               android:layout_width="@dimen/social_media_icons_profile"
               android:layout_height="@dimen/social_media_icons_profile"
               android:src="@drawable/ic_social_media_gplus_logo"
+              android:visibility="gone"
               />
         </LinearLayout>
       </LinearLayout>
