@@ -202,7 +202,8 @@ public class MainProfileFragment extends BaseFragment
                 } else {
                   medicalConditionIDs.add(conditionsFromExtras.get(i).getId());
                   valueForCondition += conditionsFromExtras.get(i).getMedicalCondition() + ", ";
-                  Timber.d("Medical Condition ID is selected : " + conditionsFromExtras.get(i).getId());
+                  Timber.d(
+                      "Medical Condition ID is selected : " + conditionsFromExtras.get(i).getId());
                 }
               }
             }
@@ -266,6 +267,7 @@ public class MainProfileFragment extends BaseFragment
         }
       }
 
+      medicalConditionIDs.clear();
       String medicalConditionString = "";
       for (int i = 0; i < medicalConditions.size(); i++) {
         try {
@@ -273,10 +275,17 @@ public class MainProfileFragment extends BaseFragment
             medicalConditionsValueTV.setText("None");
           } else {
             medicalConditionString += userMedicalConditions.get(i).getName() + ", ";
+            medicalConditionIDs.add(Integer.parseInt(userMedicalConditions.get(i).getId()));
           }
         } catch (IndexOutOfBoundsException ignored) {
         }
       }
+
+      if (medicalConditionString.equals("None")){
+        medicalConditionIDs.add(-1);
+      }
+
+      medicalConditionParts = constructMedicalConditionsForRequest(medicalConditionIDs);
 
       medicalConditionsValueTV.setText(medicalConditionString.replaceAll(", $", ""));
 
@@ -847,6 +856,15 @@ public class MainProfileFragment extends BaseFragment
     int gender = prefs.getInt(Constants.EXTRAS_USER_PROFILE_GENDER, 1);
     float height = prefs.getFloat(Constants.EXTRAS_USER_PROFILE_HEIGHT, 180);
     float weight = prefs.getFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, 82);
+
+    Timber.d("dateOfBirth is : " + dateOfBirth);
+    Timber.d("bloodType is : " + bloodType);
+    Timber.d("nationality is : " + nationality);
+    Timber.d("measurementSystem is : " + measurementSystem);
+    Timber.d("userGoalId is : " + userGoalId);
+    Timber.d("activityLevelId is : " + activityLevelId);
+    Timber.d("gender is : " + gender);
+    Timber.d("height is : " + height);
 
     presenter.updateUserProfile(Helpers.toRequestBody(dateOfBirth),
         Helpers.toRequestBody(bloodType), Helpers.toRequestBody(nationality), medicalConditionParts,

@@ -412,6 +412,7 @@
       <LinearLayout
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
+          android:layout_marginTop="@dimen/default_margin_2"
           android:background="@color/white"
           android:orientation="vertical"
           >
@@ -699,60 +700,62 @@
             android:layout_height="0.5dp"
             android:background="@color/offwhite_background_gray"
             />
+      </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/changePasswordParentLayout"
+      <!-- CHANGE PASSWORD LAYOUT IS SEPARATED FROM THE REST HERE -->
+      <LinearLayout
+          android:id="@+id/changePasswordParentLayout"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="@dimen/default_margin_2"
+          android:background="@color/white"
+          android:orientation="vertical"
+          >
+
+        <!-- SEPARATOR -->
+        <View
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/default_margin_2"
-            android:orientation="vertical"
+            android:layout_height="0.5dp"
+            android:background="@color/offwhite_background_gray"
+            />
+
+        <RelativeLayout
+            android:id="@+id/changePasswordLayout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/add_meal_item_layout_height"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:paddingStart="@dimen/activity_vertical_margin"
             >
 
-          <!-- SEPARATOR -->
-          <View
-              android:layout_width="match_parent"
-              android:layout_height="0.5dp"
-              android:background="@color/offwhite_background_gray"
+          <!-- CHANGE PASSWORD ENTRY-->
+          <TextView
+              android:id="@+id/changePasswordTitleTV"
+              android:layout_width="@dimen/meal_item_name_width"
+              android:layout_height="match_parent"
+              android:ellipsize="end"
+              android:gravity="center_vertical"
+              android:maxLines="1"
+              android:text="@string/change_password_entry"
               />
 
-          <RelativeLayout
-              android:id="@+id/changePasswordLayout"
-              android:layout_width="match_parent"
-              android:layout_height="@dimen/add_meal_item_layout_height"
-              android:background="?android:attr/selectableItemBackground"
-              android:clickable="true"
-              android:focusable="true"
-              android:paddingStart="@dimen/activity_vertical_margin"
-              >
-
-            <!-- CHANGE PASSWORD ENTRY-->
-            <TextView
-                android:id="@+id/changePasswordTitleTV"
-                android:layout_width="@dimen/meal_item_name_width"
-                android:layout_height="match_parent"
-                android:ellipsize="end"
-                android:gravity="center_vertical"
-                android:maxLines="1"
-                android:text="@string/change_password_entry"
-                />
-
-            <ImageView
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="@dimen/default_margin_2"
-                android:src="@drawable/ic_arrow_right_blue"
-                />
-          </RelativeLayout>
-
-          <!-- SEPARATOR -->
-          <View
-              android:layout_width="match_parent"
-              android:layout_height="0.5dp"
-              android:background="@color/offwhite_background_gray"
+          <ImageView
+              android:layout_width="15dp"
+              android:layout_height="15dp"
+              android:layout_alignParentEnd="true"
+              android:layout_centerVertical="true"
+              android:layout_marginEnd="@dimen/default_margin_2"
+              android:src="@drawable/ic_arrow_right_blue"
               />
-        </LinearLayout>
+        </RelativeLayout>
+
+        <!-- SEPARATOR -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/offwhite_background_gray"
+            />
       </LinearLayout>
 
       <Button

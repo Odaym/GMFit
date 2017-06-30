@@ -33,7 +33,7 @@ public class OperationContactAddressesRecyclerAdapter extends RecyclerView.Adapt
   @Override public void onBindViewHolder(RecyclerView.ViewHolder h, int position) {
     final ViewHolder holder = (ViewHolder) h;
 
-    holder.addressTitleTV.setText(locations.get(position).getLocation());
+    holder.addressesValueTV.setText(locations.get(position).getLocation());
 
     RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(context);
     OperationContactPhoneNumbersRecyclerAdapter operationContactPhoneNumbersRecyclerAdapter =
@@ -55,13 +55,13 @@ public class OperationContactAddressesRecyclerAdapter extends RecyclerView.Adapt
   }
 
   private class ViewHolder extends RecyclerView.ViewHolder {
-    private TextView addressTitleTV;
+    private TextView addressesValueTV;
     private RecyclerView phoneNumbersRecycler;
 
     public ViewHolder(View itemView) {
       super(itemView);
 
-      addressTitleTV = (TextView) itemView.findViewById(R.id.addressTitleTV);
+      addressesValueTV = (TextView) itemView.findViewById(R.id.addressesValueTV);
       phoneNumbersRecycler = (RecyclerView) itemView.findViewById(R.id.phoneNumbersRecycler);
     }
   }

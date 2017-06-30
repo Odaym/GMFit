@@ -29,11 +29,14 @@
           android:background="@color/offwhite_background_gray"
           />
 
+      <!-- EMAIL ADDRESSES -->
       <LinearLayout
+          android:id="@+id/emailAddressesLayout"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_marginTop="@dimen/default_margin_2"
           android:orientation="vertical"
+          android:visibility="gone"
           >
 
         <LinearLayout
@@ -66,11 +69,14 @@
 
       </LinearLayout>
 
+      <!-- WEBSITES SECTION -->
       <LinearLayout
+          android:id="@+id/websitesLayout"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_marginTop="@dimen/default_margin_2"
           android:orientation="vertical"
+          android:visibility="gone"
           >
 
         <LinearLayout
@@ -104,6 +110,7 @@
       </LinearLayout>
 
       <LinearLayout
+          android:id="@+id/socialMediaLinksSection"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_marginTop="@dimen/default_margin_2"

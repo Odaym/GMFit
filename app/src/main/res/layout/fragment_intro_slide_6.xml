@@ -33,7 +33,7 @@
       android:layout_marginTop="@dimen/default_margin_2"
       android:gravity="center_horizontal"
       android:text="@string/daily_goals_section_message"
-      android:textColor="@color/offwhite_transparent"
+      android:textColor="@color/white"
       />
 
 </LinearLayout>
