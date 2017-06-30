@@ -25,7 +25,6 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import timber.log.Timber;
 
 public class OperationContactDetailsActivity extends BaseActivity {
   @Bind(R.id.toolbar) Toolbar toolbar;
@@ -88,11 +87,12 @@ public class OperationContactDetailsActivity extends BaseActivity {
             try {
               String value = obj.getString(key);
 
-              Timber.d("Value is %s", value);
+              String url = value;
+              if (!url.startsWith("http://") && !url.startsWith("https://")) url = "http://" + url;
 
-              Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(value));
+              Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
 
-              switch (value) {
+              switch (key) {
                 case "website":
                   websitesLayout.setVisibility(View.VISIBLE);
                   websiteValueTV.setText(value);
