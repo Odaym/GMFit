@@ -205,11 +205,13 @@ public class AddExistingMedicationActivity extends BaseActivity
   @Override public void displayCounsellingInformation(String compatibilityDescription) {
     Intent intent = new Intent(this, CounsellingInformationActivity.class);
     intent.putExtra("COMPATIBILITY_CHECK_RESULT", compatibilityDescription);
+    //intent.putExtra("MEDICATION_CODE", medicationItem.getMedCode());
     startActivity(intent);
   }
 
   @OnClick(R.id.counsellingInformationHintTV) public void handleGetCounsellingInformation() {
     Intent intent = new Intent(this, CounsellingInformationActivity.class);
+    intent.putExtra("MEDICATION_CODE", medicationItem.getMedCode());
     startActivity(intent);
   }
 
@@ -327,7 +329,7 @@ public class AddExistingMedicationActivity extends BaseActivity
       alertDialog.setMessage(getString(R.string.check_compatibility_dialog_hint));
       alertDialog.show();
     } else {
-      presenter.getCounsellingInformation(medicationItem.getName());
+      presenter.getCounsellingInformation(medicationItem.getMedCode());
     }
   }
 

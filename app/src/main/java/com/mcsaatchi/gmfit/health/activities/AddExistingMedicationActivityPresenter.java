@@ -28,7 +28,7 @@ class AddExistingMedicationActivityPresenter extends BaseActivityPresenter {
         switch (response.code()) {
           case 200:
             view.displayCounsellingInformation(
-                response.body().getData().getBody().getData().getCompatibilityCheckDesc());
+                response.body().getData().getBody().getData().getConselingInfoMsg());
             break;
           case 449:
             view.displayRequestErrorDialog(

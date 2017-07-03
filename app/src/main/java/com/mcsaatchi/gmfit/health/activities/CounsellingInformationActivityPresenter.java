@@ -25,11 +25,10 @@ class CounsellingInformationActivityPresenter extends BaseActivityPresenter {
     dataAccessHandler.getCounsellingInformation(medCode, new Callback<CounsellingInformationResponse>() {
       @Override public void onResponse(Call<CounsellingInformationResponse> call,
           Response<CounsellingInformationResponse> response) {
-
         switch (response.code()) {
           case 200:
             view.displayCounsellingInformation(
-                response.body().getData().getBody().getData().getCompatibilityCheckDesc());
+                response.body().getData().getBody().getData().getConselingInfoMsg());
             break;
           case 449:
             view.displayRequestErrorDialog(

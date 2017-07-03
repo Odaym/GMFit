@@ -22,19 +22,24 @@ public class CounsellingInformationActivity extends BaseActivity
     ButterKnife.bind(this);
 
     if (getIntent().getExtras() != null) {
-      setupToolbar(getClass().getSimpleName(), toolbar,
-          getResources().getString(R.string.check_compatibility_activity_title), true);
+      String medCode = getIntent().getExtras().getString("MEDICATION_CODE");
 
-      counsellingInformationTV.setText(
-          getIntent().getExtras().getString("COMPATIBILITY_CHECK_RESULT"));
-    } else {
-      setupToolbar(getClass().getSimpleName(), toolbar,
-          getResources().getString(R.string.counselling_information_activity_title), true);
+      String compatibilityCheckResult =
+          getIntent().getExtras().getString("COMPATIBILITY_CHECK_RESULT");
 
-      CounsellingInformationActivityPresenter presenter =
-          new CounsellingInformationActivityPresenter(this, dataAccessHandler);
+      if (medCode != null) {
+        setupToolbar(getClass().getSimpleName(), toolbar,
+            getResources().getString(R.string.counselling_information_activity_title), true);
 
-      presenter.getCounsellingInformation("AUGME2");
+        CounsellingInformationActivityPresenter presenter =
+            new CounsellingInformationActivityPresenter(this, dataAccessHandler);
+
+        presenter.getCounsellingInformation(medCode);
+      } else if (compatibilityCheckResult != null) {
+        setupToolbar(getClass().getSimpleName(), toolbar,
+            getResources().getString(R.string.check_compatibility_activity_title), true);
+        counsellingInformationTV.setText(compatibilityCheckResult);
+      }
     }
   }
 

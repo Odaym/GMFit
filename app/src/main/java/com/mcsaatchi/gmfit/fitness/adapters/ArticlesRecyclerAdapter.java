@@ -42,6 +42,7 @@ public class ArticlesRecyclerAdapter extends RecyclerView.Adapter {
         .load(articlesResponseBodies.get(position).getImage())
         .resize(context.getResources().getDimensionPixelSize(R.dimen.article_image_dimens),
             context.getResources().getDimensionPixelSize(R.dimen.article_image_dimens))
+        .centerInside()
         .into(holder.articleImageIV);
   }
 

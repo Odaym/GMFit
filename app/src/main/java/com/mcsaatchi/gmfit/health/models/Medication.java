@@ -11,6 +11,7 @@ import java.util.ArrayList;
 @DatabaseTable(tableName = "Medication") public class Medication implements Serializable {
   @DatabaseField(generatedId = true) private int id;
   @DatabaseField private String name;
+  @DatabaseField private String medCode;
   @DatabaseField private String description;
   @DatabaseField private String dosage;
   @DatabaseField private int frequency;
@@ -137,6 +138,14 @@ import java.util.ArrayList;
 
   public void setRemindersEnabled(boolean remindersEnabled) {
     this.remindersEnabled = remindersEnabled;
+  }
+
+  public String getMedCode() {
+    return medCode;
+  }
+
+  public void setMedCode(String medCode) {
+    this.medCode = medCode;
   }
 
   @Override public String toString() {

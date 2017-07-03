@@ -4,11 +4,20 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class SearchMedicinesResponseDatum {
+  @SerializedName("code") @Expose private String code;
   @SerializedName("descr") @Expose private String descr;
   @SerializedName("MDosg") @Expose private String mDosg;
   @SerializedName("MForm") @Expose private String mForm;
   @SerializedName("MPres") @Expose private String mPres;
   @SerializedName("unitForm") @Expose private String unitForm;
+
+  public String getCode() {
+    return code;
+  }
+
+  public void setCode(String code) {
+    this.code = code;
+  }
 
   public String getDescr() {
     return descr;

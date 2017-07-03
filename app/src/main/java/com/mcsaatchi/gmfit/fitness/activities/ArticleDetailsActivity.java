@@ -48,7 +48,9 @@ public class ArticleDetailsActivity extends BaseActivity {
         articleContentsTV.setText(
             Html.fromHtml(articlesResponseBody.getContent(), Html.FROM_HTML_MODE_COMPACT));
       } else {
-        articleContentsTV.setText(Html.fromHtml(articlesResponseBody.getContent()));
+        if (articlesResponseBody.getContent() != null) {
+          articleContentsTV.setText(Html.fromHtml(articlesResponseBody.getContent()));
+        }
       }
     }
   }

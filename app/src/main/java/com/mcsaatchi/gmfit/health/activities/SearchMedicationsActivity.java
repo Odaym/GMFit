@@ -123,6 +123,7 @@ public class SearchMedicationsActivity extends BaseActivity
 
         Medication medication = new Medication();
 
+        medication.setMedCode(medicationDatum.getCode());
         medication.setName(medicationDatum.getDescr());
         medication.setUnitForm(medicationDatum.getUnitForm());
         medication.setDescription(medicationDatum.getMPres()
@@ -158,6 +159,7 @@ public class SearchMedicationsActivity extends BaseActivity
 
       Medication medication = new Medication();
 
+      medication.setMedCode(medicationDatum.getCode());
       medication.setName(medicationDatum.getDescr());
       medication.setUnitForm(medicationDatum.getUnitForm());
       medication.setDescription(medicationDatum.getMPres()
