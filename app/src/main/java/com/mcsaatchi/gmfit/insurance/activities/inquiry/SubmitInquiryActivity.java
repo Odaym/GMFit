@@ -65,6 +65,7 @@ public class SubmitInquiryActivity extends BaseActivity {
   private ImageView currentImageView;
 
   private ArrayList<String> imagePaths = new ArrayList<>();
+  private ArrayList<String> imagesDocumentTypes = new ArrayList<>();
   private List<CRMCategoriesResponseDatum> categoriesList;
 
   private String category = "";
@@ -101,7 +102,7 @@ public class SubmitInquiryActivity extends BaseActivity {
           REQUEST_CAPTURE_PERMISSIONS);
     }
 
-    hookupImagesPickerImages(medicalReportImagesPicker);
+    hookupImagesPickerImages(medicalReportImagesPicker, 1);
   }
 
   @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -175,7 +176,7 @@ public class SubmitInquiryActivity extends BaseActivity {
     }
   }
 
-  private void hookupImagesPickerImages(CustomAttachmentPicker imagePicker) {
+  private void hookupImagesPickerImages(CustomAttachmentPicker imagePicker, int documentType) {
     LinearLayout parentLayout = (LinearLayout) imagePicker.getChildAt(0);
     final LinearLayout innerLayoutWithPickers = (LinearLayout) parentLayout.getChildAt(1);
 
@@ -183,6 +184,8 @@ public class SubmitInquiryActivity extends BaseActivity {
       if (innerLayoutWithPickers.getChildAt(i) instanceof ImageView) {
         final int finalI = i;
         innerLayoutWithPickers.getChildAt(i).setOnClickListener(view -> {
+          imagesDocumentTypes.add(String.valueOf(documentType));
+
           ImageView imageView = (ImageView) innerLayoutWithPickers.findViewById(
               innerLayoutWithPickers.getChildAt(finalI).getId());
           showImagePickerDialog(imageView);
@@ -246,7 +249,7 @@ public class SubmitInquiryActivity extends BaseActivity {
         imageParts.put("attachements[" + i + "][content]", toRequestBody(
             Base64.encodeToString(ImageHandler.turnImageToByteArray(imagePaths.get(i)),
                 Base64.NO_WRAP)));
-        imageParts.put("attachements[" + i + "][documType]", toRequestBody("2"));
+        imageParts.put("attachements[" + i + "][documType]", toRequestBody(imagesDocumentTypes.get(i)));
         imageParts.put("attachements[" + i + "][name]", toRequestBody(imagePaths.get(i)));
         imageParts.put("attachements[" + i + "][id]", toRequestBody(String.valueOf(i + 1)));
       }

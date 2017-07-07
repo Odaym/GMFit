@@ -39,6 +39,7 @@ import com.mcsaatchi.gmfit.architecture.retrofit.responses.SubCategoriesResponse
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.TakenMedicalTestsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.UiResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.UpdateInsurancePasswordResponse;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.UploadInsuranceImageResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.UserActivitiesResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.UserGoalMetricsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.UserGoalsResponse;
@@ -1076,6 +1077,20 @@ public class ApiCallsHandler {
     });
   }
 
+  void uploadInsuranceImage(Map<String, RequestBody> file, final Callback<UploadInsuranceImageResponse> callback) {
+    Call<UploadInsuranceImageResponse> apiCall = restClient.getGMFitService().uploadInsuranceImage(file);
+
+    apiCall.enqueue(new Callback<UploadInsuranceImageResponse>() {
+      @Override
+      public void onResponse(Call<UploadInsuranceImageResponse> call, Response<UploadInsuranceImageResponse> response) {
+        callback.onResponse(call, response);
+      }
+
+      @Override public void onFailure(Call<UploadInsuranceImageResponse> call, Throwable t) {
+      }
+    });
+  }
+
   void getNearbyClinics(String contractNo, String providerTypesCode, int searchCtry,
       double longitude, double latitude, int fetchClosest,
       final Callback<GetNearbyClinicsResponse> callback) {
@@ -1269,9 +1284,10 @@ public class ApiCallsHandler {
     });
   }
 
-  void getCounsellingInformation(String medCode, final Callback<CounsellingInformationResponse> callback) {
-    Call<CounsellingInformationResponse> apiCall =
-        restClient.getGMFitService().getCounsellingInformation(new CounsellingInformationRequest(medCode));
+  void getCounsellingInformation(String medCode,
+      final Callback<CounsellingInformationResponse> callback) {
+    Call<CounsellingInformationResponse> apiCall = restClient.getGMFitService()
+        .getCounsellingInformation(new CounsellingInformationRequest(medCode));
 
     apiCall.enqueue(new Callback<CounsellingInformationResponse>() {
       @Override public void onResponse(Call<CounsellingInformationResponse> call,

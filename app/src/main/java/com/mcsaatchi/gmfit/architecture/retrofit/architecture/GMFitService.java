@@ -37,6 +37,7 @@ import com.mcsaatchi.gmfit.architecture.retrofit.responses.SubCategoriesResponse
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.TakenMedicalTestsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.UiResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.UpdateInsurancePasswordResponse;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.UploadInsuranceImageResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.UserActivitiesResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.UserGoalMetricsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.UserGoalsResponse;
@@ -296,6 +297,9 @@ public interface GMFitService {
 
   @POST("insurance/medecines/counsel") Call<CounsellingInformationResponse> getCounsellingInformation(
       @Body ApiCallsHandler.CounsellingInformationRequest counsellingInformationRequest);
+
+  @Multipart @POST("insurance/upload-img") Call<UploadInsuranceImageResponse> uploadInsuranceImage(
+      @PartMap() Map<String, RequestBody> file);
 
   //@POST("insurance/medecines/counsel") Call<CounsellingInformationResponse> getCounsellingInformation();
 

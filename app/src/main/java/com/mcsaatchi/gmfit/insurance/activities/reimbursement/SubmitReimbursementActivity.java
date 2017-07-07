@@ -10,7 +10,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
-import android.util.Base64;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -39,6 +38,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
+import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import timber.log.Timber;
 
@@ -67,6 +67,9 @@ public class SubmitReimbursementActivity extends BaseActivity
   private ProgressDialog waitingDialog;
 
   private ArrayList<String> imagePaths = new ArrayList<>();
+  private ArrayList<String> imagePathsFinal = new ArrayList<>();
+  private ArrayList<String> imagesDocumentType = new ArrayList<>();
+
   private SubmitReimbursementActivityPresenter presenter;
 
   private File photoFile;
@@ -124,12 +127,12 @@ public class SubmitReimbursementActivity extends BaseActivity
           REQUEST_CAPTURE_PERMISSIONS);
     }
 
-    hookupImagesPickerImages(medicalReportImagesPicker);
-    hookupImagesPickerImages(invoiceImagesPicker);
-    hookupImagesPickerImages(originalReceiptImagesPicker);
-    hookupImagesPickerImages(identityCardImagesPicker);
-    hookupImagesPickerImages(testResultsImagesPicker);
-    hookupImagesPickerImages(otherDocumentsImagesPicker);
+    hookupImagesPickerImages(medicalReportImagesPicker, 1);
+    hookupImagesPickerImages(invoiceImagesPicker, 2);
+    hookupImagesPickerImages(originalReceiptImagesPicker, 3);
+    hookupImagesPickerImages(identityCardImagesPicker, 4);
+    hookupImagesPickerImages(testResultsImagesPicker, 5);
+    hookupImagesPickerImages(otherDocumentsImagesPicker, 6);
   }
 
   @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -189,6 +192,20 @@ public class SubmitReimbursementActivity extends BaseActivity
     finish();
   }
 
+  @Override public void saveImagePath(String imagePath) {
+    imagePathsFinal.add(imagePath);
+
+    if (imagePaths.size() == imagePathsFinal.size()) {
+      Timber.d("Images and their paths are matching, upload");
+
+      HashMap<String, RequestBody> attachments = constructSelectedImagesForRequest();
+
+      presenter.submitReimbursement(prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""),
+          categoryValue, subCategoryId, requestTypeId, amountClaimedET.getText().toString(),
+          remarksET.getText().toString(), attachments);
+    }
+  }
+
   @Override public void dismissWaitingDialog() {
     waitingDialog.dismiss();
   }
@@ -196,8 +213,9 @@ public class SubmitReimbursementActivity extends BaseActivity
   @OnClick(R.id.submitReimbursementBTN) public void handleSubmitReimbursement() {
     ArrayList<String> errorMessages = new ArrayList<>();
 
-    if (amountClaimedET.getText().toString().isEmpty()) {
-      errorMessages.add("The Amount field is required.");
+    if (amountClaimedET.getText().toString().isEmpty()
+        || Double.parseDouble(amountClaimedET.getText().toString()) == 0) {
+      errorMessages.add("The Amount field is required, cannot be zero.");
     }
     if (serviceDateValue.isEmpty()) {
       errorMessages.add("The Service Date field is required.");
@@ -228,19 +246,14 @@ public class SubmitReimbursementActivity extends BaseActivity
       waitingDialog.setMessage(
           getResources().getString(R.string.uploading_attachments_dialog_message));
       waitingDialog.setOnShowListener(dialogInterface -> {
-        HashMap<String, RequestBody> attachments = constructSelectedImagesForRequest();
-
-        presenter.submitReimbursement(
-            prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""), categoryValue,
-            subCategoryId, requestTypeId, amountClaimedET.getText().toString(),
-            remarksET.getText().toString(), attachments);
+        uploadInsuranceImagesFirst();
       });
 
       waitingDialog.show();
     }
   }
 
-  private void hookupImagesPickerImages(CustomAttachmentPicker imagePicker) {
+  private void hookupImagesPickerImages(CustomAttachmentPicker imagePicker, int documentType) {
     LinearLayout parentLayout = (LinearLayout) imagePicker.getChildAt(0);
     final LinearLayout innerLayoutWithPickers = (LinearLayout) parentLayout.getChildAt(1);
 
@@ -248,6 +261,8 @@ public class SubmitReimbursementActivity extends BaseActivity
       if (innerLayoutWithPickers.getChildAt(i) instanceof ImageView) {
         final int finalI = i;
         innerLayoutWithPickers.getChildAt(i).setOnClickListener(view -> {
+          imagesDocumentType.add(String.valueOf(documentType));
+
           ImageView imageView = (ImageView) innerLayoutWithPickers.findViewById(
               innerLayoutWithPickers.getChildAt(finalI).getId());
           showImagePickerDialog(imageView);
@@ -303,15 +318,31 @@ public class SubmitReimbursementActivity extends BaseActivity
     builderSingle.show();
   }
 
+  private void uploadInsuranceImagesFirst() {
+    for (int i = 0; i < imagePaths.size(); i++) {
+      if (imagePaths.get(i) != null) {
+        HashMap<String, RequestBody> insuranceImages = new HashMap<>();
+
+        File imageFile = new File(imagePaths.get(i));
+
+        RequestBody imageFilePart = RequestBody.create(MediaType.parse("image/*"), imageFile);
+
+        insuranceImages.put("file\"; filename=\"" + imagePaths.get(i), imageFilePart);
+
+        presenter.uploadInsuranceImage(insuranceImages);
+      }
+    }
+  }
+
   private HashMap<String, RequestBody> constructSelectedImagesForRequest() {
     LinkedHashMap<String, RequestBody> imageParts = new LinkedHashMap<>();
 
     for (int i = 0; i < imagePaths.size(); i++) {
       if (imagePaths.get(i) != null) {
-        imageParts.put("attachements[" + i + "][content]", Helpers.toRequestBody(
-            Base64.encodeToString(ImageHandler.turnImageToByteArray(imagePaths.get(i)),
-                Base64.NO_WRAP)));
-        imageParts.put("attachements[" + i + "][documType]", Helpers.toRequestBody("2"));
+        imageParts.put("attachements[" + i + "][content]",
+            Helpers.toRequestBody(imagePathsFinal.get(i)));
+        imageParts.put("attachements[" + i + "][documType]",
+            Helpers.toRequestBody(imagesDocumentType.get(i)));
         imageParts.put("attachements[" + i + "][name]", Helpers.toRequestBody(imagePaths.get(i)));
         imageParts.put("attachements[" + i + "][id]", Helpers.toRequestBody(String.valueOf(i + 1)));
       }

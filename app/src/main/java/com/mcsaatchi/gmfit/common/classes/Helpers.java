@@ -147,6 +147,7 @@ public class Helpers {
       switch (status) {
         case "Under Processing":
         case "Processing":
+        case "Received":
         case "Submited":
         case "Dispensed":
         case "Submitted":

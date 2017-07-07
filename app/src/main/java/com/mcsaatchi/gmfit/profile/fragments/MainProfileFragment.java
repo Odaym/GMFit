@@ -281,7 +281,7 @@ public class MainProfileFragment extends BaseFragment
         }
       }
 
-      if (medicalConditionString.equals("None")){
+      if (medicalConditionString.equals("None")) {
         medicalConditionIDs.add(-1);
       }
 
@@ -856,15 +856,6 @@ public class MainProfileFragment extends BaseFragment
     int gender = prefs.getInt(Constants.EXTRAS_USER_PROFILE_GENDER, 1);
     float height = prefs.getFloat(Constants.EXTRAS_USER_PROFILE_HEIGHT, 180);
     float weight = prefs.getFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, 82);
-
-    Timber.d("dateOfBirth is : " + dateOfBirth);
-    Timber.d("bloodType is : " + bloodType);
-    Timber.d("nationality is : " + nationality);
-    Timber.d("measurementSystem is : " + measurementSystem);
-    Timber.d("userGoalId is : " + userGoalId);
-    Timber.d("activityLevelId is : " + activityLevelId);
-    Timber.d("gender is : " + gender);
-    Timber.d("height is : " + height);
 
     presenter.updateUserProfile(Helpers.toRequestBody(dateOfBirth),
         Helpers.toRequestBody(bloodType), Helpers.toRequestBody(nationality), medicalConditionParts,

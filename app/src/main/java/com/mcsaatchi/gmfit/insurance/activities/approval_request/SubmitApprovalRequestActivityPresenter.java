@@ -2,9 +2,11 @@ package com.mcsaatchi.gmfit.insurance.activities.approval_request;
 
 import com.mcsaatchi.gmfit.architecture.retrofit.architecture.DataAccessHandlerImpl;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.CreateNewRequestResponse;
-import com.mcsaatchi.gmfit.common.classes.Helpers;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.UploadInsuranceImageResponse;
 import com.mcsaatchi.gmfit.common.activities.BaseActivityPresenter;
+import com.mcsaatchi.gmfit.common.classes.Helpers;
 import java.util.HashMap;
+import java.util.Map;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -18,6 +20,25 @@ class SubmitApprovalRequestActivityPresenter extends BaseActivityPresenter {
       DataAccessHandlerImpl dataAccessHandler) {
     this.view = view;
     this.dataAccessHandler = dataAccessHandler;
+  }
+
+  void uploadInsuranceImage(Map<String, RequestBody> file) {
+    dataAccessHandler.uploadInsuranceImage(file, new Callback<UploadInsuranceImageResponse>() {
+      @Override
+      public void onResponse(Call<UploadInsuranceImageResponse> call, Response<UploadInsuranceImageResponse> response) {
+        switch (response.code()) {
+          case 200:
+            view.saveImagePath(response.body().getData().getBody().getPath());
+            break;
+        }
+
+        view.callDismissWaitingDialog();
+      }
+
+      @Override public void onFailure(Call<UploadInsuranceImageResponse> call, Throwable t) {
+        view.displayRequestErrorDialog(t.getMessage());
+      }
+    });
   }
 
   void submitApprovalRequest(String contractNo, String remarks, String categoryValue,
@@ -54,6 +75,8 @@ class SubmitApprovalRequestActivityPresenter extends BaseActivityPresenter {
 
   interface SubmitApprovalRequestActivityView extends BaseActivityView {
     void openApprovalRequestDetailsActivity(Integer claimId);
+
+    void saveImagePath(String imagePath);
 
     void dismissWaitingDialog();
   }

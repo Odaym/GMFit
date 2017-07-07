@@ -9,9 +9,9 @@ import com.mcsaatchi.gmfit.architecture.retrofit.responses.ClaimListDetailsRespo
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
-import com.mcsaatchi.gmfit.common.classes.ImageHandler;
 import com.mcsaatchi.gmfit.insurance.widget.CustomAttachmentPicker;
 import com.mcsaatchi.gmfit.insurance.widget.ItemLabel;
+import com.squareup.picasso.Picasso;
 import org.joda.time.LocalDate;
 
 public class ReimbursementDetailsActivity extends BaseActivity
@@ -68,34 +68,46 @@ public class ReimbursementDetailsActivity extends BaseActivity
       try {
         switch (claimDetails.getImages().get(i).getDocumType()) {
           case 1:
-            medicalReportImagesPicker.returnImagePicker(i)
-                .setImageBitmap(
-                    ImageHandler.turnBase64ToImage(claimDetails.getImages().get(i).getContent()));
+            Picasso.with(this)
+                .load("https://mobileapp.globemedfit.com/api/v1/" + claimDetails.getImages()
+                    .get(i)
+                    .getContent())
+                .into(medicalReportImagesPicker.returnImagePicker(i));
             break;
           case 2:
-            invoiceImagesPicker.returnImagePicker(i)
-                .setImageBitmap(
-                    ImageHandler.turnBase64ToImage(claimDetails.getImages().get(i).getContent()));
+            Picasso.with(this)
+                .load("https://mobileapp.globemedfit.com/api/v1/" + claimDetails.getImages()
+                    .get(i)
+                    .getContent())
+                .into(invoiceImagesPicker.returnImagePicker(i));
             break;
           case 3:
-            originalReceiptImagesPicker.returnImagePicker(i)
-                .setImageBitmap(
-                    ImageHandler.turnBase64ToImage(claimDetails.getImages().get(i).getContent()));
+            Picasso.with(this)
+                .load("https://mobileapp.globemedfit.com/api/v1/" + claimDetails.getImages()
+                    .get(i)
+                    .getContent())
+                .into(originalReceiptImagesPicker.returnImagePicker(i));
             break;
           case 4:
-            identityCardImagesPicker.returnImagePicker(i)
-                .setImageBitmap(
-                    ImageHandler.turnBase64ToImage(claimDetails.getImages().get(i).getContent()));
+            Picasso.with(this)
+                .load("https://mobileapp.globemedfit.com/api/v1/" + claimDetails.getImages()
+                    .get(i)
+                    .getContent())
+                .into(identityCardImagesPicker.returnImagePicker(i));
             break;
           case 5:
-            testResultsImagesPicker.returnImagePicker(i)
-                .setImageBitmap(
-                    ImageHandler.turnBase64ToImage(claimDetails.getImages().get(i).getContent()));
+            Picasso.with(this)
+                .load("https://mobileapp.globemedfit.com/api/v1/" + claimDetails.getImages()
+                    .get(i)
+                    .getContent())
+                .into(testResultsImagesPicker.returnImagePicker(i));
             break;
           case 6:
-            otherDocumentsImagesPicker.returnImagePicker(i)
-                .setImageBitmap(
-                    ImageHandler.turnBase64ToImage(claimDetails.getImages().get(i).getContent()));
+            Picasso.with(this)
+                .load("https://mobileapp.globemedfit.com/api/v1/" + claimDetails.getImages()
+                    .get(i)
+                    .getContent())
+                .into(otherDocumentsImagesPicker.returnImagePicker(i));
             break;
         }
       } catch (NullPointerException ignored) {

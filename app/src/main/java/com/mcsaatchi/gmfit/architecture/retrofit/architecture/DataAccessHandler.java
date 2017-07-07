@@ -37,6 +37,7 @@ import com.mcsaatchi.gmfit.architecture.retrofit.responses.SubCategoriesResponse
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.TakenMedicalTestsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.UiResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.UpdateInsurancePasswordResponse;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.UploadInsuranceImageResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.UserActivitiesResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.UserGoalMetricsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.UserGoalsResponse;
@@ -224,6 +225,8 @@ public interface DataAccessHandler {
       RequestBody subcategory, RequestBody title, RequestBody area, RequestBody crm_country,
       Map<String, RequestBody> attachements, final Callback<CreateNewRequestResponse> callback);
 
+  void uploadInsuranceImage(Map<String, RequestBody> file, Callback<UploadInsuranceImageResponse> callback);
+
   void getCountriesList(final Callback<CountriesListResponse> callback);
 
   void getCRMCategories(RequestBody contractNo, final Callback<CRMCategoriesResponse> callback);
@@ -245,7 +248,8 @@ public interface DataAccessHandler {
   void getInquiriesList(String incidentId, String crm_country,
       final Callback<InquiriesListResponse> callback);
 
-  void getCounsellingInformation(String medCode, final Callback<CounsellingInformationResponse> callback);
+  void getCounsellingInformation(String medCode,
+      final Callback<CounsellingInformationResponse> callback);
 
   void getCRMIncidentNotes(String incidentId, final Callback<CRMNotesResponse> callback);
 

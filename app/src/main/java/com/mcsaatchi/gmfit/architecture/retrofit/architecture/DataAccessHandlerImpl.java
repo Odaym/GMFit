@@ -39,6 +39,7 @@ import com.mcsaatchi.gmfit.architecture.retrofit.responses.SubCategoriesResponse
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.TakenMedicalTestsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.UiResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.UpdateInsurancePasswordResponse;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.UploadInsuranceImageResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.UserActivitiesResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.UserGoalMetricsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.UserGoalsResponse;
@@ -300,6 +301,11 @@ public class DataAccessHandlerImpl implements DataAccessHandler {
         deletedImages, callback);
   }
 
+  @Override
+  public void uploadInsuranceImage(Map<String, RequestBody> file, Callback<UploadInsuranceImageResponse> callback) {
+    apiCallsHandler.uploadInsuranceImage(file, callback);
+  }
+
   @Override public void getTakenMedicalTests(Callback<TakenMedicalTestsResponse> callback) {
     apiCallsHandler.getTakenMedicalTests(callback);
   }
@@ -441,8 +447,8 @@ public class DataAccessHandlerImpl implements DataAccessHandler {
     apiCallsHandler.getInquiriesList(incidentId, crm_country, callback);
   }
 
-  @Override
-  public void getCounsellingInformation(String medCode, final Callback<CounsellingInformationResponse> callback) {
+  @Override public void getCounsellingInformation(String medCode,
+      final Callback<CounsellingInformationResponse> callback) {
     apiCallsHandler.getCounsellingInformation(medCode, callback);
   }
 
