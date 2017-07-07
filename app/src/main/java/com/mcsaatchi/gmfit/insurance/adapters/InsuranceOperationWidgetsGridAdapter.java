@@ -58,7 +58,7 @@ public class InsuranceOperationWidgetsGridAdapter
   private FragmentActivity fragmentActivity;
   private Context context;
   private String[] dialogItems =
-      new String[] { "Reimbursement", "Approval Request", "Chronic", "Requests" };
+      new String[] { "Reimbursement", "Approval Request", "Chronic", "Complaint" };
 
   public InsuranceOperationWidgetsGridAdapter(FragmentActivity fragmentActivity, Context context,
       ArrayList<InsuranceOperationWidget> widgets) {

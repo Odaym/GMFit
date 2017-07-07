@@ -127,9 +127,6 @@ public class SubmitChronicActivity extends BaseActivity
   @OnClick(R.id.submitChronicTreatmentBTN) public void handleSubmitChronicTreatment() {
     ArrayList<String> errorMessages = new ArrayList<>();
 
-    if (providerNameET.getText().toString().isEmpty()) {
-      errorMessages.add("The Provider Name field is required.");
-    }
     if (imagePaths.isEmpty()) {
       errorMessages.add("You are required to attach some images.");
     }

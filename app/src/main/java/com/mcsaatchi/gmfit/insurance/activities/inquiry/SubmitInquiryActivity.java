@@ -144,9 +144,6 @@ public class SubmitInquiryActivity extends BaseActivity {
       errorMessages.add("The Subcategory field is required.");
     }
 
-    if (imagePaths.isEmpty()) {
-      errorMessages.add("You are required to attach some images.");
-    }
     if (!errorMessages.isEmpty()) {
       String finalErrorMessage = "";
 

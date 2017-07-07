@@ -11,6 +11,7 @@ import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -63,6 +64,7 @@ public class SubmitReimbursementActivity extends BaseActivity
   @Bind(R.id.currencyLabel) TextView currencyLabel;
   @Bind(R.id.amountClaimedET) EditText amountClaimedET;
   @Bind(R.id.remarksET) EditText remarksET;
+  @Bind(R.id.submitReimbursementBTN) Button submitReimbursementBTN;
 
   private ProgressDialog waitingDialog;
 
@@ -203,6 +205,8 @@ public class SubmitReimbursementActivity extends BaseActivity
       presenter.submitReimbursement(prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""),
           categoryValue, subCategoryId, requestTypeId, amountClaimedET.getText().toString(),
           remarksET.getText().toString(), attachments);
+
+      submitReimbursementBTN.setEnabled(true);
     }
   }
 
@@ -211,6 +215,8 @@ public class SubmitReimbursementActivity extends BaseActivity
   }
 
   @OnClick(R.id.submitReimbursementBTN) public void handleSubmitReimbursement() {
+    submitReimbursementBTN.setEnabled(false);
+
     ArrayList<String> errorMessages = new ArrayList<>();
 
     if (amountClaimedET.getText().toString().isEmpty()

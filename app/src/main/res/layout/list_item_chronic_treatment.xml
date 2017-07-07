@@ -17,7 +17,7 @@
 
     <RelativeLayout
         android:id="@+id/delete_layout"
-        android:layout_width="@dimen/right_arrow_layout_width"
+        android:layout_width="@dimen/chronic_deletion_edge_width"
         android:layout_height="match_parent"
         android:background="@color/medication_list_delete_action_layout_red"
         android:gravity="center"
