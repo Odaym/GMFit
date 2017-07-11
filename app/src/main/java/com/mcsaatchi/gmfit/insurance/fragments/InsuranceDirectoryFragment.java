@@ -197,9 +197,18 @@ public class InsuranceDirectoryFragment extends BaseFragment
             }
           }
 
-          getNearbyClinics(prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""),
-              finalProviderType, Integer.valueOf(countrySelected), userLatLong[1], userLatLong[0],
-              0);
+          if (countrySelected != null) {
+            getNearbyClinics(prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""),
+                finalProviderType, Integer.valueOf(countrySelected), userLatLong[1], userLatLong[0],
+                0);
+          }else{
+            final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+            alertDialog.setTitle(R.string.required_fields_dialog_title);
+            alertDialog.setMessage("Please select a country to proceed");
+            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getResources().getString(R.string.ok),
+                (dialog, which) -> dialog.dismiss());
+            alertDialog.show();
+          }
         }
 
         break;

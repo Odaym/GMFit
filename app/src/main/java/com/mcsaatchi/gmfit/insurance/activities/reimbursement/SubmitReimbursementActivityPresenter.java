@@ -28,8 +28,8 @@ class SubmitReimbursementActivityPresenter extends BaseActivityPresenter {
 
   void uploadInsuranceImage(Map<String, RequestBody> file) {
     dataAccessHandler.uploadInsuranceImage(file, new Callback<UploadInsuranceImageResponse>() {
-      @Override
-      public void onResponse(Call<UploadInsuranceImageResponse> call, Response<UploadInsuranceImageResponse> response) {
+      @Override public void onResponse(Call<UploadInsuranceImageResponse> call,
+          Response<UploadInsuranceImageResponse> response) {
         switch (response.code()) {
           case 200:
             view.saveImagePath(response.body().getData().getBody().getPath());
@@ -46,15 +46,17 @@ class SubmitReimbursementActivityPresenter extends BaseActivityPresenter {
   }
 
   void submitReimbursement(String contractNo, String category, String subCategoryId,
-      String requestTypeId, String amountClaimed, String remarks,
-      HashMap<String, RequestBody> attachements) {
+      String serviceDateValue, String requestTypeId, String amountClaimed, String currencyCode,
+      String remarks, HashMap<String, RequestBody> attachements) {
+
+    if (category.equals("In")) category = "HP";
+
     dataAccessHandler.createNewRequest(Helpers.toRequestBody(contractNo),
-        Helpers.toRequestBody(category), Helpers.toRequestBody(subCategoryId),
+        Helpers.toRequestBody(category.toUpperCase()), Helpers.toRequestBody(subCategoryId),
         Helpers.toRequestBody(requestTypeId), Helpers.toRequestBody(amountClaimed),
-        Helpers.toRequestBody("2"),
-        Helpers.toRequestBody(Helpers.formatRequestTime() + "T16:27:32+02:00"),
-        Helpers.toRequestBody("D"), Helpers.toRequestBody(remarks), attachements,
-        new Callback<CreateNewRequestResponse>() {
+        Helpers.toRequestBody(currencyCode),
+        Helpers.toRequestBody(serviceDateValue + "T16:27:32+02:00"), Helpers.toRequestBody("D"),
+        Helpers.toRequestBody(remarks), attachements, new Callback<CreateNewRequestResponse>() {
           @Override public void onResponse(Call<CreateNewRequestResponse> call,
               Response<CreateNewRequestResponse> response) {
             switch (response.code()) {

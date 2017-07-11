@@ -78,6 +78,7 @@ public class SubmitReimbursementActivity extends BaseActivity
   private Uri photoFileUri;
 
   private String categoryValue = "Out";
+  private String currencyValue = "2";
   private String serviceDateValue = "";
   private String subCategoryId = "";
   private String requestTypeId = "1";
@@ -101,8 +102,18 @@ public class SubmitReimbursementActivity extends BaseActivity
       final String[] items = new String[] { "LBP", "USD" };
 
       AlertDialog.Builder builder = new AlertDialog.Builder(SubmitReimbursementActivity.this);
-      builder.setTitle("Pick currency")
-          .setItems(items, (dialogInterface, i) -> currencyLabel.setText(items[i]));
+      builder.setTitle("Pick currency").setItems(items, (dialogInterface, i) -> {
+        switch (items[i]) {
+          case "USD":
+            currencyValue = "2";
+            break;
+          case "LBP":
+            currencyValue = "1";
+            break;
+        }
+
+        currencyLabel.setText(items[i]);
+      });
       builder.create();
       builder.show();
     });
@@ -203,7 +214,8 @@ public class SubmitReimbursementActivity extends BaseActivity
       HashMap<String, RequestBody> attachments = constructSelectedImagesForRequest();
 
       presenter.submitReimbursement(prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""),
-          categoryValue, subCategoryId, requestTypeId, amountClaimedET.getText().toString(),
+          categoryValue, subCategoryId, Helpers.formatActivitiesDate(serviceDateValue),
+          requestTypeId, amountClaimedET.getText().toString(), currencyValue,
           remarksET.getText().toString(), attachments);
 
       submitReimbursementBTN.setEnabled(true);

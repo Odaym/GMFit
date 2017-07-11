@@ -1,13 +1,10 @@
 package com.mcsaatchi.gmfit.fitness.fragments;
 
-import android.util.Log;
-import com.crashlytics.android.Crashlytics;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.retrofit.architecture.DataAccessHandlerImpl;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ArticlesResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ArticlesResponseBody;
-import com.mcsaatchi.gmfit.architecture.retrofit.responses.AuthenticationResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ChartMetricBreakdownResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ChartMetricBreakdownResponseDatum;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.DefaultGetResponse;
@@ -217,42 +214,6 @@ class FitnessFragmentPresenter extends BaseFragmentPresenter {
     return null;
   }
 
-  void refreshAccessToken() {
-    dataAccessHandler.refreshAccessToken(new Callback<AuthenticationResponse>() {
-      @Override public void onResponse(Call<AuthenticationResponse> call,
-          Response<AuthenticationResponse> response) {
-        switch (response.code()) {
-          case 200:
-            view.handleSuccessfulRefreshToken(response.body().getData().getBody().getToken());
-            break;
-        }
-      }
-
-      @Override public void onFailure(Call<AuthenticationResponse> call, Throwable t) {
-        Crashlytics.log(Log.ERROR, "GM_METRICS",
-            "REFRESHING TOKEN FAILED, CANNOT REACH SYNCHRONISE METRICS");
-      }
-    });
-  }
-
-  void synchronizeMetricsWithServer(String[] slugsArray, Number[] valuesArray) {
-    dataAccessHandler.synchronizeMetricsWithServer(slugsArray, valuesArray,
-        new Callback<DefaultGetResponse>() {
-          @Override public void onResponse(Call<DefaultGetResponse> call,
-              Response<DefaultGetResponse> response) {
-            switch (response.code()) {
-              case 200:
-                view.handleSuccessSynchronizeMetrics();
-                break;
-            }
-          }
-
-          @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
-            Crashlytics.log(Log.ERROR, "GM_METRICS", "SYNCRONISING METRICS HAS FAILED!");
-          }
-        });
-  }
-
   interface FitnessFragmentView extends BaseFragmentView {
     void showMetricsLoadingBar();
 
@@ -272,9 +233,5 @@ class FitnessFragmentPresenter extends BaseFragmentPresenter {
     void populateUserActivities(List<UserActivitiesResponseBody> userActivitiesResponseBodies);
 
     void populateArticles(List<ArticlesResponseBody> articlesResponseBodies);
-
-    void handleSuccessfulRefreshToken(String accessToken);
-
-    void handleSuccessSynchronizeMetrics();
   }
 }

@@ -52,9 +52,9 @@ public class MainActivity extends BaseActivity {
     setupToolbar(getClass().getSimpleName(), toolbar, getResources().getString(R.string.app_name),
         false);
 
-    Timber.d("onCreate: User access token is : %s ",
-        prefs.getString(Constants.PREF_USER_ACCESS_TOKEN,
-            Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS));
+    //Timber.d("onCreate: User access token is : %s ",
+    //    prefs.getString(Constants.PREF_USER_ACCESS_TOKEN,
+    //        Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS));
 
     if (getIntent().getExtras() != null) {
       ArrayList<AuthenticationResponseChart> chartsMap =
@@ -62,16 +62,19 @@ public class MainActivity extends BaseActivity {
 
       if (chartsMap != null) {
         for (int i = 0; i < chartsMap.size(); i++) {
-          DataChart dataChart = new DataChart();
-          dataChart.setChart_id(chartsMap.get(i).getChartId());
-          dataChart.setName(chartsMap.get(i).getName());
-          dataChart.setType(chartsMap.get(i).getSlug());
-          dataChart.setPosition(Integer.parseInt(chartsMap.get(i).getPosition()));
-          dataChart.setChartData(
-              (ArrayList<AuthenticationResponseChartData>) chartsMap.get(i).getData());
-          dataChart.setWhichFragment(Constants.EXTRAS_FITNESS_FRAGMENT);
+          if (!chartsMap.get(i).getSlug().equals("flights-climbed")) {
+            Timber.d("Chart being added has name : " + chartsMap.get(i).getName());
+            DataChart dataChart = new DataChart();
+            dataChart.setChart_id(chartsMap.get(i).getChartId());
+            dataChart.setName(chartsMap.get(i).getName());
+            dataChart.setType(chartsMap.get(i).getSlug());
+            dataChart.setPosition(Integer.parseInt(chartsMap.get(i).getPosition()));
+            dataChart.setChartData(
+                (ArrayList<AuthenticationResponseChartData>) chartsMap.get(i).getData());
+            dataChart.setWhichFragment(Constants.EXTRAS_FITNESS_FRAGMENT);
 
-          finalChartsMap.add(dataChart);
+            finalChartsMap.add(dataChart);
+          }
         }
       }
     }

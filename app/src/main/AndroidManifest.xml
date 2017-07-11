@@ -407,13 +407,25 @@
         android:name="io.fabric.ApiKey"
         android:value="36e136351325660be3ac92f428de565fcbdc3033"/>
 
+    <!-- PRODUCTION FROM WORK KEY-->
     <meta-data
         android:name="com.google.android.geo.API_KEY"
-        android:value="AIzaSyClLfg5jnBIui1fjBgywGvNNJxPvjtMzVg"/>
+        android:value="AIzaSyBzptbw8-xsnunOTUpQfAM7xe5YyGk87i4"/>
 
+    <!-- PRODUCTION FROM HOME KEY-->
+    <!--<meta-data-->
+    <!--android:name="com.google.android.geo.API_KEY"-->
+    <!--android:value="AIzaSyBzptbw8-xsnunOTUpQfAM7xe5YyGk87i4"/>-->
+
+    <!-- DEV FROM WORK KEY-->
     <!--<meta-data-->
     <!--android:name="com.google.android.geo.API_KEY"-->
     <!--android:value="AIzaSyDzwRq628GqkaxN3cZQoTuAergqlZJms6k"/>-->
+
+    <!-- DEV FROM WORK KEY-->
+    <!--<meta-data-->
+    <!--android:name="com.google.android.geo.API_KEY"-->
+    <!--android:value="AIzaSyAAkrJDVmU6AGHfDNEm18jjuQqGHNOPalI"/>-->
 
     <meta-data
         android:name="com.google.android.gms.version"

@@ -61,7 +61,6 @@ import com.mcsaatchi.gmfit.fitness.models.FitnessWidget;
 import com.squareup.otto.Subscribe;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import javax.inject.Inject;
 import org.joda.time.DateTime;
@@ -114,8 +113,6 @@ public class FitnessFragment extends BaseFragment
     presenter.getUserActivities();
 
     presenter.getArticles("fitness");
-
-    presenter.refreshAccessToken();
 
     if (((AppCompatActivity) getActivity()).getSupportActionBar() != null) {
       ((AppCompatActivity) getActivity()).getSupportActionBar()
@@ -379,37 +376,6 @@ public class FitnessFragment extends BaseFragment
     articlesRecycler.setAdapter(userActivitiesListRecyclerAdapter);
   }
 
-  @Override public void handleSuccessfulRefreshToken(String accessToken) {
-    prefs.edit().putString(Constants.PREF_USER_ACCESS_TOKEN, "Bearer " + accessToken).apply();
-
-    String[] slugsArray = new String[] {
-        "steps-count", "active-calories", "distance-traveled"
-    };
-
-    Number[] valuesArray = new Number[] {
-        prefs.getInt("steps_taken", 0), (int) prefs.getFloat("calories_spent", 0),
-        prefs.getFloat("distance_traveled", 0)
-    };
-
-    presenter.synchronizeMetricsWithServer(slugsArray, valuesArray);
-  }
-
-  @Override public void handleSuccessSynchronizeMetrics() {
-    Calendar c = Calendar.getInstance();
-    int hour = c.get(Calendar.HOUR_OF_DAY);
-    int minute = c.get(Calendar.MINUTE);
-    int second = c.get(Calendar.SECOND);
-
-    //If current time is between 12AM and 12:05AM, clear metrics
-    if (hour * 3600 + minute * 60 + second < 900) {
-      Timber.d("Time is between, wiping metrics");
-      wipeOutFitnessMetricsAtMidnight();
-      sendOutEventBusEvents();
-    } else {
-      Timber.d("Time is not between");
-    }
-  }
-
   @Subscribe public void updateWidgetsOrder(FitnessWidgetsOrderChangedEvent event) {
     widgetsMap = event.getWidgetsMapFitness();
     setupWidgetViews(widgetsMap);
@@ -538,29 +504,5 @@ public class FitnessFragment extends BaseFragment
     }
 
     return metricCountTextView;
-  }
-
-  private void wipeOutFitnessMetricsAtMidnight() {
-    clearMetricsInPrefs();
-
-    List<FitnessWidget> fitnessWidgets = fitnessWidgetsDAO.queryForAll();
-
-    for (int i = 0; i < fitnessWidgets.size(); i++) {
-      fitnessWidgets.get(i).setValue(0);
-
-      fitnessWidgetsDAO.update(fitnessWidgets.get(i));
-    }
-  }
-
-  private void clearMetricsInPrefs() {
-    prefs.edit().putInt("steps_taken", 0).apply();
-    prefs.edit().putFloat("calories_spent", 0).apply();
-    prefs.edit().putFloat("distance_traveled", 0.00f).apply();
-  }
-
-  public void sendOutEventBusEvents() {
-    EventBusSingleton.getInstance().post(new StepCounterIncrementedEvent());
-    EventBusSingleton.getInstance().post(new CaloriesCounterIncrementedEvent());
-    EventBusSingleton.getInstance().post(new DistanceCounterIncrementedEvent());
   }
 }

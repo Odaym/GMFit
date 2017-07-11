@@ -5,8 +5,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -133,28 +131,6 @@ public class AddActivityDetailsActivity extends BaseActivity
   @Override public void finishAndLoadActivities() {
     EventBusSingleton.getInstance().post(new FitnessActivityEvent());
     finish();
-  }
-
-  @Override public boolean onCreateOptionsMenu(Menu menu) {
-    getMenuInflater().inflate(R.menu.add_user_activity, menu);
-
-    return super.onCreateOptionsMenu(menu);
-  }
-
-  @Override public boolean onOptionsItemSelected(MenuItem item) {
-    switch (item.getItemId()) {
-      case R.id.doneBTN:
-        for (SelectionItem activityLevelChoice : activityLevelChoices) {
-          if (activityLevelChoice.isItemSelected()) {
-            activityLevelID = activityLevelChoice.getId();
-          }
-        }
-
-        gatherInfoAndSubmitActivity(true);
-        break;
-    }
-
-    return super.onOptionsItemSelected(item);
   }
 
   @OnClick(R.id.deleteActivityLayout) public void handleDeleteActivityPressed() {

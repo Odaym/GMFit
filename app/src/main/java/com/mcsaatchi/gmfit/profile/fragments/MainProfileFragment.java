@@ -90,6 +90,7 @@ public class MainProfileFragment extends BaseFragment
   @Bind(R.id.userEmailTV) TextView userEmailTV;
   @Bind(R.id.countryValueTV) TextView countryValueTV;
   @Bind(R.id.weightEntryValueTV) TextView weightEntryValueTV;
+  @Bind(R.id.achievementsInfoTV) TextView achievementsInfoTV;
   @Bind(R.id.goalsEntryValueTV) TextView goalsEntryValueTV;
   @Bind(R.id.medicalConditionsValueTV) TextView medicalConditionsValueTV;
   @Bind(R.id.activityLevelsEntryValueTV) TextView activityLevelsEntryValueTV;
@@ -202,8 +203,6 @@ public class MainProfileFragment extends BaseFragment
                 } else {
                   medicalConditionIDs.add(conditionsFromExtras.get(i).getId());
                   valueForCondition += conditionsFromExtras.get(i).getMedicalCondition() + ", ";
-                  Timber.d(
-                      "Medical Condition ID is selected : " + conditionsFromExtras.get(i).getId());
                 }
               }
             }
@@ -476,6 +475,8 @@ public class MainProfileFragment extends BaseFragment
     achievementsRecycler.setLayoutManager(
         new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
     achievementsRecycler.setAdapter(userActivitiesListRecyclerAdapter);
+
+    calculateRemainingAchievements(achievementsResponseBodies);
   }
 
   @Subscribe public void handleSuccessfulProfileUpdate(ProfileUpdatedEvent event) {
@@ -892,5 +893,19 @@ public class MainProfileFragment extends BaseFragment
     }
 
     return medicalConditionParts;
+  }
+
+  private void calculateRemainingAchievements(
+      List<AchievementsResponseBody> achievementsResponseBodyList) {
+
+    int achievementsDone = 0;
+
+    for (int i = 0; i < achievementsResponseBodyList.size(); i++) {
+      if (achievementsResponseBodyList.get(i).getIsDone()) {
+        achievementsDone++;
+      }
+    }
+
+    achievementsInfoTV.setText(achievementsDone + " out of " + achievementsResponseBodyList.size());
   }
 }

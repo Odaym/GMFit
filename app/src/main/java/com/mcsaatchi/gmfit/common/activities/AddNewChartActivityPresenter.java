@@ -27,7 +27,15 @@ public class AddNewChartActivityPresenter extends BaseActivityPresenter {
           case 200:
             view.dismissWaitingDialog();
 
-            view.displayChartsBySection(response.body().getData().getBody().getData(),
+            List<ChartsBySectionResponseDatum> chartsFromResponse = response.body().getData().getBody().getData();
+
+            for (int i = 0; i < chartsFromResponse.size(); i++) {
+              if (chartsFromResponse.get(i).getSlug().equals("flights-climbed")) {
+                chartsFromResponse.remove(i);
+              }
+            }
+
+            view.displayChartsBySection(chartsFromResponse,
                 requestCodeToSendBack);
             break;
         }

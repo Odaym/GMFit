@@ -98,7 +98,6 @@
               android:gravity="center_vertical"
               android:paddingEnd="@dimen/default_margin_2"
               android:paddingStart="@dimen/default_margin_2"
-              android:text="2 of 14 completed"
               android:textAppearance="?android:textAppearanceSmall"
               android:textColor="@color/offwhite_background_gray"
               />
