@@ -63,7 +63,6 @@ public class MainActivity extends BaseActivity {
       if (chartsMap != null) {
         for (int i = 0; i < chartsMap.size(); i++) {
           if (!chartsMap.get(i).getSlug().equals("flights-climbed")) {
-            Timber.d("Chart being added has name : " + chartsMap.get(i).getName());
             DataChart dataChart = new DataChart();
             dataChart.setChart_id(chartsMap.get(i).getChartId());
             dataChart.setName(chartsMap.get(i).getName());

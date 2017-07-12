@@ -74,18 +74,20 @@ public class ReimbursementTrackActivity extends BaseActivity
                 }
 
                 if (originalClaimsList.get(j).getStatus().equals(statusesCriteria.get(i))) {
-                  filteredClaimList.add(originalClaimsList.get(j));
-                }
-              }
-            }
-          }
 
-          if (yearsCriteria != null) {
-            for (int i = 0; i < yearsCriteria.size(); i++) {
-              for (int j = 0; j < originalClaimsList.size(); j++) {
-                if (originalClaimsList.get(j).getDate().contains(yearsCriteria.get(i))
-                    && !filteredClaimList.contains(originalClaimsList.get(j))) {
                   filteredClaimList.add(originalClaimsList.get(j));
+
+                  if (yearsCriteria != null) {
+                    for (int k = 0; k < yearsCriteria.size(); k++) {
+                      for (int l = 0; l < originalClaimsList.size(); l++) {
+                        if (originalClaimsList.get(l).getDate().contains(yearsCriteria.get(k))
+                            && !filteredClaimList.contains(originalClaimsList.get(l))) {
+
+                          filteredClaimList.add(originalClaimsList.get(l));
+                        }
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -154,10 +156,10 @@ public class ReimbursementTrackActivity extends BaseActivity
   }
 
   @OnClick(R.id.filtersLayout) public void handleFiltersLayoutClicked() {
-    searchBarET.setText("");
-
     Intent intent =
         new Intent(ReimbursementTrackActivity.this, ReimbursementSearchFilterActivity.class);
     startActivityForResult(intent, SEARCH_CRITERIA_SELECTED);
+
+    searchBarET.setText("");
   }
 }
