@@ -227,8 +227,6 @@ public class SubmitReimbursementActivity extends BaseActivity
   }
 
   @OnClick(R.id.submitReimbursementBTN) public void handleSubmitReimbursement() {
-    submitReimbursementBTN.setEnabled(false);
-
     ArrayList<String> errorMessages = new ArrayList<>();
 
     if (amountClaimedET.getText().toString().isEmpty()

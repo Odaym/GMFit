@@ -5,6 +5,7 @@ import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import com.mcsaatchi.gmfit.R;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
@@ -29,7 +30,7 @@ public class Country {
       new Country("AT", "Austria", "+43", R.drawable.flag_at),
       new Country("AU", "Australia", "+61", R.drawable.flag_au),
       new Country("AW", "Aruba", "+297", R.drawable.flag_aw),
-      new Country("AX", "Åland Islands", "+358", R.drawable.flag_ax),
+      new Country("AX", "Aland Islands", "+358", R.drawable.flag_ax),
       new Country("AZ", "Azerbaijan", "+994", R.drawable.flag_az),
       new Country("BA", "Bosnia and Herzegovina", "+387", R.drawable.flag_ba),
       new Country("BB", "Barbados", "+1", R.drawable.flag_bb),
@@ -224,7 +225,7 @@ public class Country {
       new Country("SS", "South Sudan", "+211", R.drawable.flag_ss),
       new Country("ST", "Sao Tome and Principe", "+239", R.drawable.flag_st),
       new Country("SV", "El Salvador", "+503", R.drawable.flag_sv),
-      new Country("SX", "  Sint Maarten", "+1", R.drawable.flag_sx),
+      new Country("SX", "Sint Maarten", "+1", R.drawable.flag_sx),
       new Country("SY", "Syrian Arab Republic", "+963", R.drawable.flag_sy),
       new Country("SZ", "Swaziland", "+268", R.drawable.flag_sz),
       new Country("TC", "Turks and Caicos Islands", "+1", R.drawable.flag_tc),
@@ -278,14 +279,14 @@ public class Country {
     this.flag = flag;
   }
 
-  ;
-
-
   public Country() {
   }
 
   public static List<Country> getAllCountries() {
     if (allCountriesList == null) {
+      Collections.sort(Arrays.asList(COUNTRIES),
+          (country, t1) -> country.getName().compareTo(t1.getName()));
+
       allCountriesList = Arrays.asList(COUNTRIES);
     }
     return allCountriesList;
@@ -369,8 +370,7 @@ public class Country {
   }
 
   public void loadFlagByCode(Context context) {
-    if (this.flag != -1)
-      return;
+    if (this.flag != -1) return;
 
     try {
       this.flag = context.getResources()
@@ -387,16 +387,13 @@ public class Country {
      */
 
   public static class ISOCodeComparator implements Comparator<Country> {
-    @Override
-    public int compare(Country country, Country t1) {
+    @Override public int compare(Country country, Country t1) {
       return country.code.compareTo(t1.code);
     }
   }
 
-
   public static class NameComparator implements Comparator<Country> {
-    @Override
-    public int compare(Country country, Country t1) {
+    @Override public int compare(Country country, Country t1) {
       return country.name.compareTo(t1.name);
     }
   }

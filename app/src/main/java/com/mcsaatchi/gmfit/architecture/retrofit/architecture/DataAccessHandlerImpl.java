@@ -6,12 +6,14 @@ import com.mcsaatchi.gmfit.architecture.retrofit.responses.AchievementsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ActivitiesListResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ActivityLevelsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.AddCRMNoteResponse;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.ArticleDetailsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ArticlesResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.AuthenticationResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.CRMCategoriesResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.CRMNotesResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ChartMetricBreakdownResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ChartsBySectionResponse;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.ChronicDeletionResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ChronicTreatmentDetailsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ChronicTreatmentListResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ClaimListDetailsResponse;
@@ -148,6 +150,10 @@ public class DataAccessHandlerImpl implements DataAccessHandler {
 
   @Override public void getUserActivities(Callback<UserActivitiesResponse> callback) {
     apiCallsHandler.getUserActivities(callback);
+  }
+
+  @Override public void getArticleDetails(String fullUrl, Callback<ArticleDetailsResponse> callback) {
+    apiCallsHandler.getArticleDetails(fullUrl, callback);
   }
 
   @Override public void getArticles(String sectionName, Callback<ArticlesResponse> callback) {
@@ -430,6 +436,12 @@ public class DataAccessHandlerImpl implements DataAccessHandler {
   public void getChronicTreatmentDetails(String contractNo, String requestType, String claimId,
       final Callback<ChronicTreatmentDetailsResponse> callback) {
     apiCallsHandler.getChronicTreatmentDetails(contractNo, requestType, claimId, callback);
+  }
+
+  @Override
+  public void deleteChronicTreatment(String contractNo, String requestID, String requestType,
+      final Callback<ChronicDeletionResponse> callback) {
+    apiCallsHandler.deleteChronicTreatment(contractNo, requestID, requestType, callback);
   }
 
   @Override public void getChronicTreatmentsList(String contractNo, String requestType,

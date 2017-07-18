@@ -4,12 +4,14 @@ import com.mcsaatchi.gmfit.architecture.retrofit.responses.AchievementsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ActivitiesListResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ActivityLevelsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.AddCRMNoteResponse;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.ArticleDetailsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ArticlesResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.AuthenticationResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.CRMCategoriesResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.CRMNotesResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ChartMetricBreakdownResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ChartsBySectionResponse;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.ChronicDeletionResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ChronicTreatmentDetailsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ChronicTreatmentListResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ClaimListDetailsResponse;
@@ -180,6 +182,8 @@ public interface DataAccessHandler {
 
   void getArticles(String sectionName, Callback<ArticlesResponse> callback);
 
+  void getArticleDetails(String fullUrl, Callback<ArticleDetailsResponse> callback);
+
   void getUserAchievements(Callback<AchievementsResponse> callback);
 
   void deleteUserChart(String chart_id, Callback<DefaultGetResponse> callback);
@@ -225,7 +229,8 @@ public interface DataAccessHandler {
       RequestBody subcategory, RequestBody title, RequestBody area, RequestBody crm_country,
       Map<String, RequestBody> attachements, final Callback<CreateNewRequestResponse> callback);
 
-  void uploadInsuranceImage(Map<String, RequestBody> file, Callback<UploadInsuranceImageResponse> callback);
+  void uploadInsuranceImage(Map<String, RequestBody> file,
+      Callback<UploadInsuranceImageResponse> callback);
 
   void getCountriesList(final Callback<CountriesListResponse> callback);
 
@@ -239,6 +244,9 @@ public interface DataAccessHandler {
 
   void getChronicTreatmentDetails(String contractNo, String requestType, String claimId,
       final Callback<ChronicTreatmentDetailsResponse> callback);
+
+  void deleteChronicTreatment(String contractNo, String requestID, String requestType,
+      final Callback<ChronicDeletionResponse> callback);
 
   void getChronicTreatmentsList(String contractNo, String requestType,
       final Callback<ChronicTreatmentListResponse> callback);

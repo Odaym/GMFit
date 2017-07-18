@@ -27,7 +27,7 @@ class ChangePasswordActivityPresenter {
               Response<DefaultGetResponse> response) {
             switch (response.code()) {
               case 200:
-                view.displaySuccessToast();
+                view.displaySuccessToastAndSavePassword(new_password);
                 break;
             }
 
@@ -41,6 +41,6 @@ class ChangePasswordActivityPresenter {
   }
 
   interface ChangePasswordActivityView extends BaseActivityPresenter.BaseActivityView {
-    void displaySuccessToast();
+    void displaySuccessToastAndSavePassword(String new_password);
   }
 }

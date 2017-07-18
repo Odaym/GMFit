@@ -8,6 +8,7 @@ import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -15,6 +16,8 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.mcsaatchi.gmfit.R;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.ChronicTreatmentListInnerData;
+import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.common.classes.ImageHandler;
 import com.mcsaatchi.gmfit.insurance.widget.CustomAttachmentPicker;
@@ -27,10 +30,16 @@ import timber.log.Timber;
 import static com.mcsaatchi.gmfit.insurance.widget.CustomAttachmentPicker.CAPTURE_NEW_PICTURE_REQUEST_CODE;
 import static com.mcsaatchi.gmfit.insurance.widget.CustomAttachmentPicker.REQUEST_PICK_IMAGE_GALLERY;
 
-public class ChronicDeletionActivity extends BaseActivity {
+public class ChronicDeletionActivity extends BaseActivity
+    implements ChronicDeletionActivityPresenter.ChronicDeletionActivityView {
 
   @Bind(R.id.doctorConfirmationImagePicker) CustomAttachmentPicker doctorConfirmationImagePicker;
   @Bind(R.id.toolbar) Toolbar toolbar;
+  @Bind(R.id.passwordET) EditText passwordET;
+
+  private ChronicDeletionActivityPresenter presenter;
+
+  private ChronicTreatmentListInnerData chronicObject;
 
   private File photoFile;
   private Uri photoFileUri;
@@ -42,6 +51,12 @@ public class ChronicDeletionActivity extends BaseActivity {
     setContentView(R.layout.activity_chronic_request_deletion);
     ButterKnife.bind(this);
     setupToolbar(getClass().getSimpleName(), toolbar, "Request Deletion", true);
+
+    presenter = new ChronicDeletionActivityPresenter(this, dataAccessHandler);
+
+    if (getIntent().getExtras() != null) {
+      chronicObject = getIntent().getExtras().getParcelable("CHRONIC_OBJECT");
+    }
 
     hookupImagesPickerImages(doctorConfirmationImagePicker);
   }
@@ -92,7 +107,20 @@ public class ChronicDeletionActivity extends BaseActivity {
   }
 
   @OnClick(R.id.submitDeletionRequestBTN) public void handleSubmitDeletionRequest() {
-    Toast.makeText(this, "Deletion request button not hooked up yet!", Toast.LENGTH_SHORT).show();
+    if (passwordET.getText().toString().isEmpty()) {
+      final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+      alertDialog.setMessage(getResources().getString(R.string.password_empty_error));
+      alertDialog.show();
+    } else if (!prefs.getString(Constants.EXTRAS_INSURANCE_USER_PASSWORD, "")
+        .equals(passwordET.getText().toString())) {
+      final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+      alertDialog.setMessage(getResources().getString(R.string.password_mismatch_chronic_deletion));
+      alertDialog.show();
+    } else {
+      presenter.deleteChronicTreatment(
+          prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""),
+          chronicObject.getRequestNbr(), "4");
+    }
   }
 
   private void showImagePickerDialog(ImageView view) {
@@ -123,7 +151,8 @@ public class ChronicDeletionActivity extends BaseActivity {
               photoFile = null;
               try {
                 photoFile = ImageHandler.createImageFile(ImageHandler.constructImageFilename());
-                photoFileUri = FileProvider.getUriForFile(this, getApplicationContext().getPackageName() + ".provider", photoFile);
+                photoFileUri = FileProvider.getUriForFile(this,
+                    getApplicationContext().getPackageName() + ".provider", photoFile);
               } catch (IOException ex) {
                 ex.printStackTrace();
               }
@@ -139,5 +168,11 @@ public class ChronicDeletionActivity extends BaseActivity {
       }
     });
     builderSingle.show();
+  }
+
+  @Override public void successfullyDeletedChronicTreatment() {
+    Toast.makeText(this, R.string.chronic_treatment_deleted_successfully, Toast.LENGTH_SHORT)
+        .show();
+    finish();
   }
 }

@@ -455,7 +455,6 @@ public class NutritionFragment extends BaseFragment
   }
 
   @Subscribe public void chartDeleted(DataChartDeletedEvent event) {
-
     DataChart chartObject = event.getChartObject();
 
     presenter.deleteUserChart(chartObject);
@@ -552,6 +551,8 @@ public class NutritionFragment extends BaseFragment
   private void setupDateCarousel() {
     dateCarouselLayout.addClickListener((todayDate, finalDate) -> {
       showProgressBarsForLoading();
+
+      finalDesiredDate = finalDate;
 
       presenter.getUserGoalMetrics(finalDate, "nutrition");
       presenter.getUserAddedMeals(finalDate);
@@ -708,6 +709,7 @@ public class NutritionFragment extends BaseFragment
     Intent intent = new Intent(parentActivity, AddNewMealItemActivity.class);
     intent.putExtra(Constants.EXTRAS_MAIN_MEAL_NAME, mainMealName);
     intent.putExtra(Constants.EXTRAS_DATE_TO_ADD_MEAL_ON, finalDesiredDate);
+    //Timber.d("Final desired date is : " + finalDesiredDate);
     startActivity(intent);
   }
 

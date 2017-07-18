@@ -4,12 +4,14 @@ import com.mcsaatchi.gmfit.architecture.retrofit.responses.AchievementsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ActivitiesListResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ActivityLevelsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.AddCRMNoteResponse;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.ArticleDetailsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ArticlesResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.AuthenticationResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.CRMCategoriesResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.CRMNotesResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ChartMetricBreakdownResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ChartsBySectionResponse;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.ChronicDeletionResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ChronicTreatmentDetailsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ChronicTreatmentListResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ClaimListDetailsResponse;
@@ -111,6 +113,8 @@ public interface GMFitService {
       @Body ApiCallsHandler.DeleteFitnessActivityRequest deleteFitnessActivityRequest);
 
   @GET("articles") Call<ArticlesResponse> getArticles(@Query("section") String sectionName);
+
+  @GET Call<ArticleDetailsResponse> getArticleDetails(@Url String fullUrl);
 
   @GET("user/metrics/range") Call<ChartMetricBreakdownResponse> getPeriodicalChartData(
       @Query("start_date") String start_date, @Query("end_date") String end_date,
@@ -286,6 +290,9 @@ public interface GMFitService {
   @POST("insurance/claims/list") Call<ChronicTreatmentDetailsResponse> getChronicTreatmentDetails(
       @Body ApiCallsHandler.ClaimsListDetailsRequest claimsListRequest);
 
+  @POST("insurance/request/delete") Call<ChronicDeletionResponse> deleteChronicTreatment(
+      @Body ApiCallsHandler.ChronicDeletionRequest chronicDeletionRequest);
+
   @POST("insurance/claims/list") Call<ClaimListDetailsResponse> getClaimsListDetails(
       @Body ApiCallsHandler.ClaimsListDetailsRequest claimsListDetailsRequest);
 
@@ -295,7 +302,8 @@ public interface GMFitService {
   @POST("insurance/crm/request/get") Call<InquiriesListResponse> getInquiriesList(
       @Body ApiCallsHandler.InquiriesListRequest inquiriesListRequest);
 
-  @POST("insurance/medecines/counsel") Call<CounsellingInformationResponse> getCounsellingInformation(
+  @POST("insurance/medecines/counsel")
+  Call<CounsellingInformationResponse> getCounsellingInformation(
       @Body ApiCallsHandler.CounsellingInformationRequest counsellingInformationRequest);
 
   @Multipart @POST("insurance/upload-img") Call<UploadInsuranceImageResponse> uploadInsuranceImage(

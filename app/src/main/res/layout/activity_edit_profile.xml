@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:validator="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/general_background"
@@ -43,18 +45,39 @@
             android:text="@string/first_name_hint"
             />
 
-        <EditText
-            android:id="@+id/firstNameValueET"
+        <com.wrapp.floatlabelededittext.FloatLabeledEditText
+            android:id="@+id/firstNameETFloating"
             android:layout_width="@dimen/edit_profile_fields_width"
             android:layout_height="match_parent"
             android:layout_alignParentEnd="true"
-            android:background="@null"
-            android:gravity="end|center_vertical"
-            android:inputType="textNoSuggestions"
-            android:paddingEnd="@dimen/activity_vertical_margin"
-            android:textAppearance="?android:textAppearanceSmall"
-            android:textColor="@color/profile_blue"
-            />
+            android:layout_marginBottom="@dimen/default_margin_0"
+            android:paddingBottom="@dimen/default_margin_0"
+            app:fletPaddingLeft="@dimen/default_margin_2"
+            app:fletPaddingTop="@dimen/default_margin_1"
+            app:fletTextAppearance="@style/TextAppearence.App.TextInputLayout"
+            >
+
+          <com.andreabaccega.widget.FormEditText
+              android:id="@+id/firstNameValueET"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@android:color/transparent"
+              android:gravity="end|center_vertical"
+              android:inputType="textCapSentences"
+              android:longClickable="false"
+              android:maxLines="1"
+              android:paddingBottom="@dimen/default_margin_1"
+              android:paddingEnd="@dimen/default_margin_2"
+              android:paddingStart="@dimen/default_margin_2"
+              android:textAppearance="?android:textAppearanceSmall"
+              android:textColor="@color/profile_blue"
+              validator:emptyErrorString="@string/first_name_empty_error"
+              validator:testErrorString="@string/error_first_name_not_valid"
+              validator:testType="alpha"
+              />
+
+        </com.wrapp.floatlabelededittext.FloatLabeledEditText>
+
       </RelativeLayout>
 
       <View
@@ -81,18 +104,38 @@
             android:text="@string/last_name_hint"
             />
 
-        <EditText
-            android:id="@+id/lastNameValueET"
+        <com.wrapp.floatlabelededittext.FloatLabeledEditText
+            android:id="@+id/lastNameETFloating"
             android:layout_width="@dimen/edit_profile_fields_width"
             android:layout_height="match_parent"
             android:layout_alignParentEnd="true"
-            android:background="@null"
-            android:gravity="end|center_vertical"
-            android:inputType="textNoSuggestions"
-            android:paddingEnd="@dimen/activity_vertical_margin"
-            android:textAppearance="?android:textAppearanceSmall"
-            android:textColor="@color/profile_blue"
-            />
+            android:layout_marginBottom="@dimen/default_margin_0"
+            android:paddingBottom="@dimen/default_margin_0"
+            app:fletPaddingLeft="@dimen/default_margin_2"
+            app:fletPaddingTop="@dimen/default_margin_1"
+            app:fletTextAppearance="@style/TextAppearence.App.TextInputLayout"
+            >
+
+          <com.andreabaccega.widget.FormEditText
+              android:id="@+id/lastNameValueET"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@android:color/transparent"
+              android:gravity="end|center_vertical"
+              android:inputType="textCapSentences"
+              android:longClickable="false"
+              android:maxLines="1"
+              android:paddingBottom="@dimen/default_margin_1"
+              android:paddingEnd="@dimen/default_margin_2"
+              android:paddingStart="@dimen/default_margin_2"
+              android:textAppearance="?android:textAppearanceSmall"
+              android:textColor="@color/profile_blue"
+              validator:emptyErrorString="@string/last_name_empty_error"
+              validator:testErrorString="@string/error_first_name_not_valid"
+              validator:testType="alpha"
+              />
+
+        </com.wrapp.floatlabelededittext.FloatLabeledEditText>
       </RelativeLayout>
 
       <View
@@ -156,18 +199,38 @@
             android:text="@string/clinic_mobile_hint"
             />
 
-        <EditText
-            android:id="@+id/mobileNumberValueET"
+        <com.wrapp.floatlabelededittext.FloatLabeledEditText
+            android:id="@+id/mobileNumberETFloating"
             android:layout_width="@dimen/edit_profile_fields_width"
             android:layout_height="match_parent"
             android:layout_alignParentEnd="true"
-            android:background="@null"
-            android:gravity="end|center_vertical"
-            android:inputType="number"
-            android:paddingEnd="@dimen/activity_vertical_margin"
-            android:textAppearance="?android:textAppearanceSmall"
-            android:textColor="@color/profile_blue"
-            />
+            android:layout_marginBottom="@dimen/default_margin_0"
+            android:paddingBottom="@dimen/default_margin_0"
+            app:fletPaddingLeft="@dimen/default_margin_2"
+            app:fletPaddingTop="@dimen/default_margin_1"
+            app:fletTextAppearance="@style/TextAppearence.App.TextInputLayout"
+            >
+
+          <com.andreabaccega.widget.FormEditText
+              android:id="@+id/mobileNumberValueET"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@android:color/transparent"
+              android:gravity="end|center_vertical"
+              android:inputType="phone"
+              android:longClickable="false"
+              android:maxLines="1"
+              android:paddingBottom="@dimen/default_margin_1"
+              android:paddingEnd="@dimen/default_margin_2"
+              android:paddingStart="@dimen/default_margin_2"
+              android:textAppearance="?android:textAppearanceSmall"
+              android:textColor="@color/profile_blue"
+              validator:emptyErrorString="@string/mobile_number_empty_error"
+              validator:testErrorString="@string/error_phone_not_valid"
+              validator:testType="phone"
+              />
+
+        </com.wrapp.floatlabelededittext.FloatLabeledEditText>
       </RelativeLayout>
 
       <View
@@ -329,18 +392,38 @@
             android:text="@string/weight_hint"
             />
 
-        <EditText
-            android:id="@+id/weightValueET"
+        <com.wrapp.floatlabelededittext.FloatLabeledEditText
+            android:id="@+id/weightETFloating"
             android:layout_width="@dimen/edit_profile_fields_width"
             android:layout_height="match_parent"
             android:layout_alignParentEnd="true"
-            android:background="@null"
-            android:gravity="end|center_vertical"
-            android:inputType="numberDecimal"
+            android:layout_marginBottom="@dimen/default_margin_0"
+            android:paddingBottom="@dimen/default_margin_0"
             android:paddingEnd="@dimen/default_margin_4"
-            android:textAppearance="?android:textAppearanceSmall"
-            android:textColor="@color/profile_blue"
-            />
+            app:fletPaddingLeft="@dimen/default_margin_2"
+            app:fletPaddingTop="@dimen/default_margin_1"
+            app:fletTextAppearance="@style/TextAppearence.App.TextInputLayout"
+            >
+
+          <com.andreabaccega.widget.FormEditText
+              android:id="@+id/weightValueET"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@android:color/transparent"
+              android:gravity="end|center_vertical"
+              android:inputType="textCapSentences"
+              android:longClickable="false"
+              android:maxLines="1"
+              android:paddingBottom="@dimen/default_margin_1"
+              android:paddingEnd="@dimen/default_margin_2"
+              android:paddingStart="@dimen/default_margin_2"
+              android:textAppearance="?android:textAppearanceSmall"
+              android:textColor="@color/profile_blue"
+              validator:emptyErrorString="@string/weight_empty_error"
+              />
+
+        </com.wrapp.floatlabelededittext.FloatLabeledEditText>
+
 
         <TextView
             android:id="@+id/weightUnitTV"
@@ -378,18 +461,38 @@
             android:text="@string/height_hint"
             />
 
-        <EditText
-            android:id="@+id/heightValueET"
+        <com.wrapp.floatlabelededittext.FloatLabeledEditText
+            android:id="@+id/heightETFloating"
             android:layout_width="@dimen/edit_profile_fields_width"
             android:layout_height="match_parent"
             android:layout_alignParentEnd="true"
-            android:background="@null"
-            android:gravity="end|center_vertical"
-            android:inputType="numberDecimal"
+            android:layout_marginBottom="@dimen/default_margin_0"
+            android:paddingBottom="@dimen/default_margin_0"
             android:paddingEnd="@dimen/default_margin_4"
-            android:textAppearance="?android:textAppearanceSmall"
-            android:textColor="@color/profile_blue"
-            />
+            app:fletPaddingLeft="@dimen/default_margin_2"
+            app:fletPaddingTop="@dimen/default_margin_1"
+            app:fletTextAppearance="@style/TextAppearence.App.TextInputLayout"
+            >
+
+          <com.andreabaccega.widget.FormEditText
+              android:id="@+id/heightValueET"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@android:color/transparent"
+              android:gravity="end|center_vertical"
+              android:inputType="textCapSentences"
+              android:longClickable="false"
+              android:maxLines="1"
+              android:paddingBottom="@dimen/default_margin_1"
+              android:paddingEnd="@dimen/default_margin_2"
+              android:paddingStart="@dimen/default_margin_2"
+              android:textAppearance="?android:textAppearanceSmall"
+              android:textColor="@color/profile_blue"
+              validator:emptyErrorString="@string/height_empty_error"
+              />
+
+        </com.wrapp.floatlabelededittext.FloatLabeledEditText>
+
 
         <TextView
             android:id="@+id/heightUnitTV"

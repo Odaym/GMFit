@@ -2,7 +2,8 @@
   <string name="app_name">GlobeMed Fit</string>
 
   <!-- GLOBAL COMMON -->
-  <string name="facebook_app_id" translatable="false">114477082289283</string>
+  <!--<string name="facebook_app_id" translatable="false">114477082289283</string>-->
+  <string name="facebook_app_id" translatable="false">1910359685848230</string>
 
   <string name="shared_file_provider">com.nguyenhoanglam.imagepicker.provider.gmfit</string>
 
@@ -11,7 +12,9 @@
   <string name="search">Search&#8230;</string>
   <string name="OK">OK</string>
   <string name="settings">Settings</string>
-  <string name="password_requirements_regex">^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$</string>
+  <!--<string name="password_requirements_regex">^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$</string>-->
+  <string name="password_requirements_regex">^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,15}$</string>
+  <string name="password_format_wrong">Password between 8 - 15 characters. Must contain at least 1 upper, 1 lower case letter, and a number</string>
   <string name="intro_text">Hi! Let\'s listen to some available data sources! Check the menu for more actions!</string>
   <string name="action_unregister_listener">Unregister listener</string>
   <string name="permission_rationale">Location data is used as part of the Google Fit API</string>
@@ -360,6 +363,10 @@
   <string name="social_media_sites_header_title">Social Media</string>
   <string name="achievements_section_header_title">Achievements</string>
   <string name="achievement_details_activity_title">Achievements</string>
+  <string name="mobile_number_empty_error">Mobile number cannot be empty</string>
+  <string name="weight_empty_error">Weight cannot be empty</string>
+  <string name="height_empty_error">Height cannot be empty</string>
+
 
   <!-- INSURANCE SECTION -->
   <string name="insurance_section_title">Insurance</string>
@@ -428,6 +435,9 @@
   <string name="search_filters_activity_title">Filters</string>
   <string name="apply_search_filters_button_title">Apply</string>
   <string name="clear_filters_label">Clear Filter</string>
+  <string name="deleting_chronic_treatment_dialog_title">Deleting Chronic Treatment</string>
+  <string name="password_mismatch_chronic_deletion">The password you entered does not match your current password</string>
+  <string name="chronic_treatment_deleted_successfully">Chronic treatment deleted successfully</string>
 
   <!-- MEMBER'S GUIDE-->
   <string name="members_guide_activity_title">Member\'s Guide</string>

@@ -6,12 +6,14 @@ import com.mcsaatchi.gmfit.architecture.retrofit.responses.AchievementsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ActivitiesListResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ActivityLevelsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.AddCRMNoteResponse;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.ArticleDetailsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ArticlesResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.AuthenticationResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.CRMCategoriesResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.CRMNotesResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ChartMetricBreakdownResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ChartsBySectionResponse;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.ChronicDeletionResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ChronicTreatmentDetailsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ChronicTreatmentListResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ClaimListDetailsResponse;
@@ -804,6 +806,20 @@ public class ApiCallsHandler {
     });
   }
 
+  void getArticleDetails(String fullUrl, final Callback<ArticleDetailsResponse> callback) {
+    Call<ArticleDetailsResponse> apiCall = restClient.getGMFitService().getArticleDetails(fullUrl);
+
+    apiCall.enqueue(new Callback<ArticleDetailsResponse>() {
+      @Override public void onResponse(Call<ArticleDetailsResponse> call,
+          Response<ArticleDetailsResponse> response) {
+        callback.onResponse(call, response);
+      }
+
+      @Override public void onFailure(Call<ArticleDetailsResponse> call, Throwable t) {
+      }
+    });
+  }
+
   void getUserAchievements(final Callback<AchievementsResponse> callback) {
     Call<AchievementsResponse> apiCall = restClient.getGMFitService().getUserAchievements();
 
@@ -1077,12 +1093,14 @@ public class ApiCallsHandler {
     });
   }
 
-  void uploadInsuranceImage(Map<String, RequestBody> file, final Callback<UploadInsuranceImageResponse> callback) {
-    Call<UploadInsuranceImageResponse> apiCall = restClient.getGMFitService().uploadInsuranceImage(file);
+  void uploadInsuranceImage(Map<String, RequestBody> file,
+      final Callback<UploadInsuranceImageResponse> callback) {
+    Call<UploadInsuranceImageResponse> apiCall =
+        restClient.getGMFitService().uploadInsuranceImage(file);
 
     apiCall.enqueue(new Callback<UploadInsuranceImageResponse>() {
-      @Override
-      public void onResponse(Call<UploadInsuranceImageResponse> call, Response<UploadInsuranceImageResponse> response) {
+      @Override public void onResponse(Call<UploadInsuranceImageResponse> call,
+          Response<UploadInsuranceImageResponse> response) {
         callback.onResponse(call, response);
       }
 
@@ -1220,6 +1238,22 @@ public class ApiCallsHandler {
       }
 
       @Override public void onFailure(Call<ChronicTreatmentListResponse> call, Throwable t) {
+      }
+    });
+  }
+
+  void deleteChronicTreatment(String contractNo, String requestID, String requestType,
+      final Callback<ChronicDeletionResponse> callback) {
+    Call<ChronicDeletionResponse> apiCall = restClient.getGMFitService()
+        .deleteChronicTreatment(new ChronicDeletionRequest(contractNo, requestID, requestType));
+
+    apiCall.enqueue(new Callback<ChronicDeletionResponse>() {
+      @Override public void onResponse(Call<ChronicDeletionResponse> call,
+          Response<ChronicDeletionResponse> response) {
+        callback.onResponse(call, response);
+      }
+
+      @Override public void onFailure(Call<ChronicDeletionResponse> call, Throwable t) {
       }
     });
   }
@@ -1730,6 +1764,18 @@ public class ApiCallsHandler {
       this.duration = duration;
       this.date = date;
       this.level_id = level_id;
+    }
+  }
+
+  public class ChronicDeletionRequest {
+    String contractNo;
+    String requestID;
+    String requestType;
+
+    public ChronicDeletionRequest(String contractNo, String requestID, String requestType) {
+      this.contractNo = contractNo;
+      this.requestID = requestID;
+      this.requestType = requestType;
     }
   }
 

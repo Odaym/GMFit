@@ -3,6 +3,7 @@ package com.mcsaatchi.gmfit.profile.activities;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import com.andreabaccega.widget.FormEditText;
 import com.codetroopers.betterpickers.calendardatepicker.CalendarDatePickerDialogFragment;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
@@ -20,6 +22,7 @@ import com.mcsaatchi.gmfit.common.classes.Helpers;
 import java.text.DateFormatSymbols;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -31,15 +34,17 @@ public class EditProfileActivity extends BaseActivity
   private static final String FRAG_TAG_DATE_PICKER = "fragment_date_picker_name";
 
   @Bind(R.id.toolbar) Toolbar toolbar;
-  @Bind(R.id.firstNameValueET) EditText firstNameValueET;
-  @Bind(R.id.lastNameValueET) EditText lastNameValueET;
+  @Bind(R.id.firstNameValueET) FormEditText firstNameValueET;
+  @Bind(R.id.lastNameValueET) FormEditText lastNameValueET;
   @Bind(R.id.emailValueTV) TextView emailValueTV;
   @Bind(R.id.mobileNumberValueET) EditText mobileNumberValueET;
   @Bind(R.id.genderValueTV) TextView genderValueTV;
   @Bind(R.id.dateOfBirthValueTV) TextView dateOfBirthValueTV;
   @Bind(R.id.bloodTypeValueTV) TextView bloodTypeValueTV;
-  @Bind(R.id.weightValueET) EditText weightValueET;
-  @Bind(R.id.heightValueET) EditText heightValueET;
+  @Bind(R.id.weightValueET) FormEditText weightValueET;
+  @Bind(R.id.heightValueET) FormEditText heightValueET;
+
+  private ArrayList<FormEditText> allFields = new ArrayList<>();
 
   private String finalDOB = null;
 
@@ -56,6 +61,11 @@ public class EditProfileActivity extends BaseActivity
         getString(R.string.edit_profile_activity_title), true);
 
     presenter = new EditProfileActivityPresenter(this, dataAccessHandler);
+
+    allFields.add(firstNameValueET);
+    allFields.add(lastNameValueET);
+    allFields.add(heightValueET);
+    allFields.add(weightValueET);
 
     firstNameValueET.setText(
         prefs.getString(Constants.EXTRAS_USER_PROFILE_USER_FULL_NAME, "").split(" ")[0]);
@@ -81,6 +91,8 @@ public class EditProfileActivity extends BaseActivity
     mobileNumberValueET.setSelection(mobileNumberValueET.getText().toString().length());
     heightValueET.setSelection(heightValueET.getText().toString().length());
     weightValueET.setSelection(weightValueET.getText().toString().length());
+
+    mobileNumberValueET.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
 
     int gender = prefs.getInt(Constants.EXTRAS_USER_PROFILE_GENDER, 0);
     if (gender == 0) {
@@ -108,9 +120,8 @@ public class EditProfileActivity extends BaseActivity
     };
 
     AlertDialog.Builder builder = new AlertDialog.Builder(this);
-    builder.setTitle("Pick a blood type").setItems(items, (dialogInterface, i) -> {
-      bloodTypeValueTV.setText(items[i]);
-    });
+    builder.setTitle("Pick a blood type")
+        .setItems(items, (dialogInterface, i) -> bloodTypeValueTV.setText(items[i]));
     builder.create();
     builder.show();
   }
@@ -152,49 +163,6 @@ public class EditProfileActivity extends BaseActivity
     finalDOB = year + "-" + (monthOfYear + 1) + "-" + dayOfMonth;
   }
 
-  private void updateUserProfile() {
-    String firstNameValue = firstNameValueET.getText().toString();
-    String lastNameValue = lastNameValueET.getText().toString();
-    String mobileNumberValue = mobileNumberValueET.getText().toString();
-    int genderValue = genderValueTV.getText().toString().equals("Male") ? 0 : 1;
-    String bloodTypeValue = bloodTypeValueTV.getText().toString();
-    String weightValue = weightValueET.getText().toString();
-    String heightValue = heightValueET.getText().toString();
-
-    String DOBToSend = "";
-
-    if (finalDOB == null) {
-      try {
-        Date unformattedDOB = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault()).parse(
-            prefs.getString(Constants.EXTRAS_USER_PROFILE_DATE_OF_BIRTH, ""));
-
-        SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-
-        DOBToSend = dt.format(unformattedDOB);
-      } catch (ParseException e) {
-        try {
-          Date unformattedDOB = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(
-              prefs.getString(Constants.EXTRAS_USER_PROFILE_DATE_OF_BIRTH, ""));
-
-          SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-
-          DOBToSend = dt.format(unformattedDOB);
-        } catch (ParseException e1) {
-          e1.printStackTrace();
-        }
-      }
-    } else {
-      DOBToSend = finalDOB;
-    }
-
-    presenter.updateUserProfileExplicitly(
-        Helpers.toRequestBody(firstNameValue + " " + lastNameValue),
-        Helpers.toRequestBody(mobileNumberValue),
-        Helpers.toRequestBody(String.valueOf(genderValue)), Helpers.toRequestBody(DOBToSend),
-        Helpers.toRequestBody(bloodTypeValue), Helpers.toRequestBody(String.valueOf(heightValue)),
-        Helpers.toRequestBody(String.valueOf(weightValue)));
-  }
-
   @Override public void handleSuccessfulProfileUpdate() {
     prefs.edit()
         .putString(Constants.EXTRAS_USER_PROFILE_PHONE_NUMBER,
@@ -232,5 +200,50 @@ public class EditProfileActivity extends BaseActivity
     EventBusSingleton.getInstance().post(new ProfileUpdatedEvent());
 
     finish();
+  }
+
+  private void updateUserProfile() {
+    if (Helpers.validateFields(allFields)) {
+      String firstNameValue = firstNameValueET.getText().toString();
+      String lastNameValue = lastNameValueET.getText().toString();
+      String mobileNumberValue = mobileNumberValueET.getText().toString();
+      int genderValue = genderValueTV.getText().toString().equals("Male") ? 0 : 1;
+      String bloodTypeValue = bloodTypeValueTV.getText().toString();
+      String weightValue = weightValueET.getText().toString();
+      String heightValue = heightValueET.getText().toString();
+
+      String DOBToSend = "";
+
+      if (finalDOB == null) {
+        try {
+          Date unformattedDOB = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault()).parse(
+              prefs.getString(Constants.EXTRAS_USER_PROFILE_DATE_OF_BIRTH, ""));
+
+          SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+
+          DOBToSend = dt.format(unformattedDOB);
+        } catch (ParseException e) {
+          try {
+            Date unformattedDOB = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(
+                prefs.getString(Constants.EXTRAS_USER_PROFILE_DATE_OF_BIRTH, ""));
+
+            SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+
+            DOBToSend = dt.format(unformattedDOB);
+          } catch (ParseException e1) {
+            e1.printStackTrace();
+          }
+        }
+      } else {
+        DOBToSend = finalDOB;
+      }
+
+      presenter.updateUserProfileExplicitly(
+          Helpers.toRequestBody(firstNameValue + " " + lastNameValue),
+          Helpers.toRequestBody(mobileNumberValue),
+          Helpers.toRequestBody(String.valueOf(genderValue)), Helpers.toRequestBody(DOBToSend),
+          Helpers.toRequestBody(bloodTypeValue), Helpers.toRequestBody(String.valueOf(heightValue)),
+          Helpers.toRequestBody(String.valueOf(weightValue)));
+    }
   }
 }

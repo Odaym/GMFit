@@ -197,8 +197,9 @@
               android:textColor="@android:color/white"
               android:textColorHint="@color/offwhite_transparent"
               android:textCursorDrawable="@null"
+              app:customRegexp="@string/password_requirements_regex"
+              app:testErrorString="@string/password_format_wrong"
               validator:emptyErrorString="@string/password_empty_error"
-              validator:testErrorString="@string/field_password_too_short_error"
               />
 
           <TextView

@@ -116,6 +116,9 @@ public class AddActivityDetailsActivity extends BaseActivity
             .resize(200, 200)
             .into(activityPictureIV);
 
+        caloriesValueTV.setText(String.valueOf((int) Double.parseDouble(
+            activitiesListResponseBody.getActivityLevels().get(0).getRate())));
+
         setupDatePicker();
 
         timeSpentActivityET.setSelection(timeSpentActivityET.getText().toString().length());

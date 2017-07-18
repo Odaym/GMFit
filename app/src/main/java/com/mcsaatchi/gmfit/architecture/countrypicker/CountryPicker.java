@@ -9,7 +9,6 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import com.mcsaatchi.gmfit.R;
@@ -67,15 +66,11 @@ public class CountryPicker extends DialogFragment {
     adapter = new CountryListAdapter(getActivity(), selectedCountriesList);
     countryListView.setAdapter(adapter);
 
-    countryListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-      @Override
-      public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (listener != null) {
-          Country country = selectedCountriesList.get(position);
-          listener.onSelectCountry(country.getName(), country.getCode(), country.getDialCode(),
-              country.getFlag());
-        }
+    countryListView.setOnItemClickListener((parent, view1, position, id) -> {
+      if (listener != null) {
+        Country country = selectedCountriesList.get(position);
+        listener.onSelectCountry(country.getName(), country.getCode(), country.getDialCode(),
+            country.getFlag());
       }
     });
 
