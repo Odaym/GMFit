@@ -79,9 +79,9 @@ public class SearchMedicationsActivity extends BaseActivity
 
           presenter.getPopularMedicines(
               prefs.getString(Constants.EXTRAS_INSURANCE_USER_USERNAME, ""),
-              prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""),
+              prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, "2012250"),
               prefs.getString(Constants.EXTRAS_INSURANCE_COUNTRY_ISO_CODE, ""), "2",
-              prefs.getString(Constants.EXTRAS_INSURANCE_USER_PASSWORD, ""));
+              prefs.getString(Constants.EXTRAS_INSURANCE_USER_PASSWORD, "odayoday"));
         } else if (charSequence.toString().length() > 2) {
           searchResultsHintTV.setText(getString(R.string.search_results_list_label));
           pb_loading_indicator.setVisibility(View.VISIBLE);

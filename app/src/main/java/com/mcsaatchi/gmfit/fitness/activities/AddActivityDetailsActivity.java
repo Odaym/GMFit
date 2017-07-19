@@ -153,7 +153,7 @@ public class AddActivityDetailsActivity extends BaseActivity
       errorMessages.add("Activity Level is required.");
     }
     if (timeSpentActivityET.getText().toString().isEmpty()) {
-      errorMessages.add("Time Spent on actity is required.");
+      errorMessages.add("Time Spent on activity is required.");
     }
     if (activityDate == null) {
       errorMessages.add("Activity Date is required");
@@ -194,8 +194,12 @@ public class AddActivityDetailsActivity extends BaseActivity
       presenter.editFitnessActivity(String.valueOf(activityInstanceID),
           timeSpentActivityET.getText().toString(), activityDate, String.valueOf(activityLevelID));
     } else {
-      presenter.addFitnessActivity(String.valueOf(activityLevelID),
-          timeSpentActivityET.getText().toString(), Helpers.getCalendarDate());
+      for (int i = 0; i < activityLevelChoices.size(); i++) {
+        if (activityLevelChoices.get(i).isItemSelected()){
+          presenter.addFitnessActivity(String.valueOf(activityLevelID),
+              timeSpentActivityET.getText().toString(), Helpers.getCalendarDate());
+        }
+      }
     }
   }
 
