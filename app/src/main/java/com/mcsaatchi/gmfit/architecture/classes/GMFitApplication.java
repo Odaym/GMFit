@@ -51,17 +51,18 @@ public class GMFitApplication extends Application {
 
     component.inject(this);
 
+    JodaTimeAndroid.init(this);
+
     OneSignal.startInit(this)
         .inFocusDisplaying(OneSignal.OSInFocusDisplayOption.Notification)
         .unsubscribeWhenNotificationsAreDisabled(true)
         .init();
+    //OneSignal.init(this, "944339899462", "5eb5a37e-b458-11e3-ac11-000c2940e62c");
 
-    OneSignal.idsAvailable((userId, registrationId) -> {
-      Timber.d("OneSignal User ID : " + userId);
-      updateOneSignalToken(userId);
-    });
-
-    JodaTimeAndroid.init(this);
+    //OneSignal.idsAvailable((userId, registrationId) -> {
+    //  Timber.d("OneSignal User ID : " + userId);
+    //  updateOneSignalToken(userId);
+    //});
 
     prefs = getSharedPreferences(Constants.SHARED_PREFS_TITLE, Context.MODE_PRIVATE);
 
@@ -106,7 +107,7 @@ public class GMFitApplication extends Application {
     return networkInfo != null && networkInfo.isConnected();
   }
 
-  public String getBaseURL(){
-    return "https://mobileapp.globemedfit.com/api/v1/";
+  public String getBaseURL() {
+    return Constants.BASE_URL_ADDRESS;
   }
 }

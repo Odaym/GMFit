@@ -41,13 +41,11 @@ android {
     applicationId "com.mcsaatchi.gmfit"
     minSdkVersion 19
     targetSdkVersion 24
-    versionCode 4
+    versionCode 5
     multiDexEnabled true
-    versionName "1.4"
-    manifestPlaceholders = [onesignal_app_id               : "c3770e88-9f44-4f4d-bd4f-2b952d0d198a",
-                            // Project number pulled from dashboard, local value is ignored.
+    versionName "1.5"
+    manifestPlaceholders = [onesignal_app_id: "5eb5a37e-b458-11e3-ac11-000c2940e62c",
                             onesignal_google_project_number: "944339899462"]
-    //                            onesignal_google_project_number: "944339899462"]
   }
 
   compileOptions {
