@@ -256,7 +256,7 @@
   <string name="my_weight_chart_label">My Weight</string>
   <string name="update_weight_label">+ Update</string>
   <string name="search_tests_hint">Find a test from the list below</string>
-  <string name="counselling_information_activity_title">Counselling Information</string>
+  <string name="counselling_information_activity_title">Counseling Information</string>
   <string name="check_compatibility_activity_title">Check Compatibility</string>
   <string name="check_compatibility_dialog_hint">This feature is available for the insured members only.\nYou may enable the “Check Compatibility” by login to the Insurance section.</string>
   <string name="inquiry_more_details_menu">Details</string>
@@ -507,7 +507,7 @@
   <string name="editing_existing_test_dialog_title">Applying changes to medical test</string>
   <string name="medication_name_label">Name</string>
   <string name="units_label">Units</string>
-  <string name="counselling_information_label">View Counselling Information</string>
+  <string name="counselling_information_label">View Counseling Information</string>
   <string name="frequency_label">Frequency</string>
   <string name="days_of_week_label">Days of Week</string>
   <string name="treatment_duration">Treatment Duration</string>
@@ -518,10 +518,10 @@
   <string name="reminder_2">Reminder 2</string>
   <string name="reminder_3">Reminder 3</string>
   <string name="check_compatibility_label">Check Compatibility</string>
-  <string name="check_compatibility_recommended_hint">This feature is available for the insured members only. You may enable the “Check Compatibility” by login to the Insurance section.</string>
+  <string name="check_compatibility_recommended_hint">This feature is available for the insured members only. You may enable the “Check Compatibility” by logging in to the Insurance section.</string>
   <string name="days_choice_activity_title">Days of Week</string>
   <string name="add_medication_button">Add Medication</string>
-  <string name="edit_medication_button">Edit Medication</string>
+  <string name="save_medication_button">Save Medication</string>
 
   <!-- INSURANCE DIRECTORY -->
   <string name="within_network_icon_hint">Within Network</string>

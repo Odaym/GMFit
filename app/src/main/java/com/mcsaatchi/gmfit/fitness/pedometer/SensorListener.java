@@ -248,7 +248,8 @@ public class SensorListener extends Service implements SensorEventListener {
   private void clearMetricsInPrefs() {
     prefs.edit().putInt("steps_taken", 0).apply();
     prefs.edit().putFloat("calories_spent", 0).apply();
-    prefs.edit().putFloat("distance_traveled", 0.00f).apply();
+    prefs.edit().putFloat("activity_calories_spent", 0).apply();
+    prefs.edit().putFloat("distance_traveled", 0).apply();
   }
 
   @Override public void onTaskRemoved(final Intent rootIntent) {

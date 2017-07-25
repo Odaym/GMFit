@@ -132,6 +132,10 @@ public class AddActivityDetailsActivity extends BaseActivity
   }
 
   @Override public void finishAndLoadActivities() {
+    prefs.edit()
+        .putFloat("activity_calories_spent", prefs.getFloat("activity_calories_spent", 0) + Float.parseFloat(
+            caloriesValueTV.getText().toString())).apply();
+
     EventBusSingleton.getInstance().post(new FitnessActivityEvent());
     finish();
   }
@@ -195,7 +199,7 @@ public class AddActivityDetailsActivity extends BaseActivity
           timeSpentActivityET.getText().toString(), activityDate, String.valueOf(activityLevelID));
     } else {
       for (int i = 0; i < activityLevelChoices.size(); i++) {
-        if (activityLevelChoices.get(i).isItemSelected()){
+        if (activityLevelChoices.get(i).isItemSelected()) {
           presenter.addFitnessActivity(String.valueOf(activityLevelID),
               timeSpentActivityET.getText().toString(), Helpers.getCalendarDate());
         }

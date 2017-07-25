@@ -19,6 +19,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -199,6 +200,8 @@ public class HealthFragment extends BaseFragment
             .apply();
         metricCounterTV.setText(String.valueOf(String.format(Locale.getDefault(), "%.1f",
             Float.parseFloat(userProfileData.getWeight()))));
+
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
       }
     }
   }

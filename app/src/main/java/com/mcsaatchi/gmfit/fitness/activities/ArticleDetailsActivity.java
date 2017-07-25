@@ -41,8 +41,9 @@ public class ArticleDetailsActivity extends BaseActivity
       ArticlesResponseBody articlesResponseBody = getIntent().getExtras().getParcelable("ARTICLE");
 
       if (articlesResponseBody != null) {
-        presenter.getArticleDetails(Constants.BASE_URL_ADDRESS + "articles/" + articlesResponseBody.getId());
-      }else{
+        presenter.getArticleDetails(
+            Constants.BASE_URL_ADDRESS + "articles/" + articlesResponseBody.getId());
+      } else {
 
       }
     }

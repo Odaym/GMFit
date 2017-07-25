@@ -178,7 +178,7 @@ public interface DataAccessHandler {
 
   void getAllActivities(Callback<ActivitiesListResponse> callback);
 
-  void getUserActivities(Callback<UserActivitiesResponse> callback);
+  void getUserActivities(String date, Callback<UserActivitiesResponse> callback);
 
   void getArticles(String sectionName, Callback<ArticlesResponse> callback);
 

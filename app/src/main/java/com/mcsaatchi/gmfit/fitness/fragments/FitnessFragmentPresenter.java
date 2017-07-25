@@ -170,8 +170,8 @@ class FitnessFragmentPresenter extends BaseFragmentPresenter {
         });
   }
 
-  void getUserActivities() {
-    dataAccessHandler.getUserActivities(new Callback<UserActivitiesResponse>() {
+  void getUserActivities(String date) {
+    dataAccessHandler.getUserActivities(date, new Callback<UserActivitiesResponse>() {
       @Override public void onResponse(Call<UserActivitiesResponse> call,
           Response<UserActivitiesResponse> response) {
         switch (response.code()) {

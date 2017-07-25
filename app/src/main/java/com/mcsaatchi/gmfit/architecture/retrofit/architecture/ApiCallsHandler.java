@@ -848,8 +848,8 @@ public class ApiCallsHandler {
     });
   }
 
-  void getUserActivities(final Callback<UserActivitiesResponse> callback) {
-    Call<UserActivitiesResponse> apiCall = restClient.getGMFitService().getUserActivities();
+  void getUserActivities(String date, final Callback<UserActivitiesResponse> callback) {
+    Call<UserActivitiesResponse> apiCall = restClient.getGMFitService().getUserActivities(date);
 
     apiCall.enqueue(new Callback<UserActivitiesResponse>() {
       @Override public void onResponse(Call<UserActivitiesResponse> call,

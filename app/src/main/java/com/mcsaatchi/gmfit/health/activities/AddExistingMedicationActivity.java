@@ -103,7 +103,7 @@ public class AddExistingMedicationActivity extends BaseActivity
           getIntent().getExtras().getBoolean(Constants.EXTRAS_PURPOSE_EDIT_MEDICATION_REMINDER);
 
       if (editPurpose) {
-        addMedicationBTN.setText(getString(R.string.edit_medication_button));
+        addMedicationBTN.setText(getString(R.string.save_medication_button));
       } else {
         medicineNameET.setEnabled(false);
       }

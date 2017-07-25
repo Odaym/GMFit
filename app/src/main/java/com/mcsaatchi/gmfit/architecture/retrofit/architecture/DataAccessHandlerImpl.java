@@ -148,8 +148,8 @@ public class DataAccessHandlerImpl implements DataAccessHandler {
     apiCallsHandler.getAllActivities(callback);
   }
 
-  @Override public void getUserActivities(Callback<UserActivitiesResponse> callback) {
-    apiCallsHandler.getUserActivities(callback);
+  @Override public void getUserActivities(String date, Callback<UserActivitiesResponse> callback) {
+    apiCallsHandler.getUserActivities(date, callback);
   }
 
   @Override public void getArticleDetails(String fullUrl, Callback<ArticleDetailsResponse> callback) {

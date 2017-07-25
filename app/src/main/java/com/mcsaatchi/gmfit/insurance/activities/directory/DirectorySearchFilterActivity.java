@@ -25,6 +25,7 @@ public class DirectorySearchFilterActivity extends BaseActivity
     implements DirectorySearchFilterActivityPresenter.DirectorySearchFilterActivityView {
   @Bind(R.id.toolbar) Toolbar toolbar;
   @Bind(R.id.countryPicker) CustomPicker countryPicker;
+  @Bind(R.id.cityPicker) CustomPicker cityPicker;
   @Bind(R.id.typePicker) CustomPicker typePicker;
   @Bind(R.id.servicesPicker) CustomPicker servicesPicker;
   @Bind(R.id.statusPicker) CustomPicker statusPicker;
@@ -84,6 +85,10 @@ public class DirectorySearchFilterActivity extends BaseActivity
             }
           });
     }
+
+    cityPicker.setUpDropDown("City", "Choose a City",new String[] { "Empty", "Empty", "Empty" },
+        (index, selected) -> serviceSelected = selected);
+
   }
 
   @OnClick(R.id.searchFiltersBTN) public void handleApplySearchTerms() {

@@ -95,7 +95,7 @@ public class FitnessFragment extends BaseFragment
   private ArrayList<FitnessWidget> widgetsMap;
   private FitnessFragmentPresenter presenter;
   private ArrayList<DataChart> chartsMap;
-  private String todayDate;
+  private String todayDate, previousDate;
 
   @RequiresApi(api = Build.VERSION_CODES.KITKAT) @Override public void onAttach(Context context) {
     super.onAttach(context);
@@ -105,12 +105,13 @@ public class FitnessFragment extends BaseFragment
     ((GMFitApplication) getActivity().getApplication()).getAppComponent().inject(this);
 
     todayDate = dt.toString();
+    previousDate = dt.toString();
 
     presenter = new FitnessFragmentPresenter(this, fitnessWidgetsDAO, dataAccessHandler);
 
     presenter.getUserGoalMetrics(todayDate, "fitness", false);
 
-    presenter.getUserActivities();
+    presenter.getUserActivities(todayDate);
 
     presenter.getArticles("fitness");
 
@@ -146,12 +147,14 @@ public class FitnessFragment extends BaseFragment
       DateTime finalTodayDateTime = new DateTime(todayDate1);
       DateTime finalDesiredDateTime = new DateTime(finalDate);
 
+      previousDate = finalDate;
+
       presenter.getUserGoalMetrics(finalDate, "fitness",
           !finalTodayDateTime.isEqual(finalDesiredDateTime));
 
       presenter.getArticles("fitness");
 
-      presenter.getUserActivities();
+      presenter.getUserActivities(finalDate);
 
       presenter.getWidgetsWithDate(finalDate);
 
@@ -208,7 +211,7 @@ public class FitnessFragment extends BaseFragment
 
         presenter.getArticles("fitness");
 
-        presenter.getUserActivities();
+        presenter.getUserActivities(todayDate);
 
         presenter.getWidgetsWithDate(todayDate);
 
@@ -407,7 +410,7 @@ public class FitnessFragment extends BaseFragment
   }
 
   @Subscribe public void fetchNewlyChangedActivities(FitnessActivityEvent event) {
-    presenter.getUserActivities();
+    presenter.getUserActivities(previousDate);
   }
 
   @Subscribe public void incrementStepCounter(StepCounterIncrementedEvent event) {

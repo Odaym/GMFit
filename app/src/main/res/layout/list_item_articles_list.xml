@@ -12,9 +12,10 @@
 
   <ImageView
       android:id="@+id/articleImageIV"
-      android:layout_width="@dimen/article_image_dimens"
-      android:layout_height="@dimen/article_image_dimens"
+      android:layout_width="@dimen/article_image_dimens_horizontal"
+      android:layout_height="@dimen/article_image_dimens_vertical"
       android:layout_centerVertical="true"
+      android:scaleType="fitXY"
       />
 
   <TextView

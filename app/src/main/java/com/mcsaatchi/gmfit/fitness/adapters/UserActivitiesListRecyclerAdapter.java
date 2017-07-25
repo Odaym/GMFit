@@ -11,7 +11,6 @@ import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.UserActivitiesResponseBody;
 import com.mcsaatchi.gmfit.fitness.activities.AddActivityDetailsActivity;
 import java.util.List;
-import timber.log.Timber;
 
 public class UserActivitiesListRecyclerAdapter extends RecyclerView.Adapter {
   private Context context;
@@ -36,7 +35,7 @@ public class UserActivitiesListRecyclerAdapter extends RecyclerView.Adapter {
 
     holder.activityNameTV.setText(userActivitiesResponseBodies.get(position).getActivityName());
     holder.durationAndLevelTV.setText(userActivitiesResponseBodies.get(position).getDuration()
-        + " - "
+        + " mins - "
         + userActivitiesResponseBodies.get(position).getName());
     if (userActivitiesResponseBodies.get(position).getCalories() % 1 == 0) {
       holder.caloriesBurnedTV.setText(
@@ -71,8 +70,6 @@ public class UserActivitiesListRecyclerAdapter extends RecyclerView.Adapter {
         intent.putExtra("ACTIVITY_ITEM", userActivitiesResponseBodies.get(getAdapterPosition()));
         intent.putExtra("CALL_PURPOSE_EDIT", true);
         context.startActivity(intent);
-
-        Timber.d("Activity rate is : " + userActivitiesResponseBodies.get(getAdapterPosition()).getRate());
       });
     }
   }

@@ -215,7 +215,8 @@ public interface GMFitService {
   @POST("user/charts/delete") Call<DefaultGetResponse> deleteUserChart(
       @Body ApiCallsHandler.DeleteUserChartRequest chart_id);
 
-  @GET("user/fitness_activities") Call<UserActivitiesResponse> getUserActivities();
+  @GET("user/fitness_activities") Call<UserActivitiesResponse> getUserActivities(
+      @Query("date") String date);
 
   @GET("fitness_activities") Call<ActivitiesListResponse> getAllActivities();
 

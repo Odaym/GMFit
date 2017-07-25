@@ -12,6 +12,8 @@ import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ArticlesResponseBody;
 import com.mcsaatchi.gmfit.fitness.activities.ArticleDetailsActivity;
 import com.squareup.picasso.Picasso;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 public class ArticlesRecyclerAdapter extends RecyclerView.Adapter {
@@ -36,13 +38,20 @@ public class ArticlesRecyclerAdapter extends RecyclerView.Adapter {
     final ViewHolder holder = (ViewHolder) h;
 
     holder.articleNameTV.setText(articlesResponseBodies.get(position).getTitle());
-    holder.articleDateTV.setText(
-        articlesResponseBodies.get(position).getDatePublishing().split(" ")[0]);
+    try {
+      holder.articleDateTV.setText(new SimpleDateFormat("dd MMMM, yyyy").format(
+          new SimpleDateFormat("yyyy-MM-dd").parse(
+              articlesResponseBodies.get(position).getDatePublishing().split(" ")[0])));
+    } catch (ParseException e) {
+      e.printStackTrace();
+    }
+
     Picasso.with(context)
         .load(articlesResponseBodies.get(position).getImage())
-        .resize(context.getResources().getDimensionPixelSize(R.dimen.article_image_dimens),
-            context.getResources().getDimensionPixelSize(R.dimen.article_image_dimens))
-        .centerInside()
+        .resize(
+            context.getResources().getDimensionPixelSize(R.dimen.article_image_dimens_horizontal),
+            context.getResources().getDimensionPixelSize(R.dimen.article_image_dimens_vertical))
+        .centerCrop()
         .into(holder.articleImageIV);
   }
 

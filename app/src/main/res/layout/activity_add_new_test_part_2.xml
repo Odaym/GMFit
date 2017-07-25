@@ -22,7 +22,7 @@
         android:layout_height="match_parent"
         android:background="@color/offwhite_more_transparent"
         android:hint="@string/search_metrics_hint"
-        android:inputType="textCapSentences"
+        android:inputType="numberDecimal"
         android:paddingStart="@dimen/default_margin_1_5"
         android:textColor="@color/white"
         android:textColorHint="@color/offwhite_transparent"
