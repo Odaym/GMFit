@@ -52,6 +52,8 @@ public class AddExistingMedicationActivity extends BaseActivity
   @Bind(R.id.toolbar) Toolbar toolbar;
   @Bind(R.id.medicineNameET) EditText medicineNameET;
   @Bind(R.id.unitMeasurementTV) TextView unitMeasurementTV;
+  @Bind(R.id.viewBelowDaysOfWeek) View viewBelowDaysOfWeek;
+  @Bind(R.id.treatmentDurationTV) TextView treatmentDurationTV;
   @Bind(R.id.daysOfWeekLayout) LinearLayout daysOfWeekLayout;
   @Bind(R.id.daysOfWeekTV) TextView daysOfWeekTV;
   @Bind(R.id.frequencyET) EditText frequencyET;
@@ -62,6 +64,7 @@ public class AddExistingMedicationActivity extends BaseActivity
   @Bind(R.id.addMedicationBTN) Button addMedicationBTN;
   @Bind(R.id.enableRemindersSwitch) Switch enableRemindersSwitch;
   @Bind(R.id.timesPerDayMeasurementTV) TextView timesPerDayMeasurementTV;
+  @Bind(R.id.remindersLayout) LinearLayout remindersLayout;
 
   private RuntimeExceptionDao<Medication, Integer> medicationDAO;
   private ArrayList<MedicationReminder> medicationReminders;
@@ -221,6 +224,7 @@ public class AddExistingMedicationActivity extends BaseActivity
 
     final ArrayAdapter<String> arrayAdapter =
         new ArrayAdapter<>(AddExistingMedicationActivity.this, android.R.layout.simple_list_item_1);
+    arrayAdapter.add(getString(R.string.frequency_type_daily));
     arrayAdapter.add(getString(R.string.frequency_type_weekly));
     arrayAdapter.add(getString(R.string.frequency_type_monthly));
     arrayAdapter.add(getString(R.string.frequency_type_when_needed));
@@ -230,6 +234,31 @@ public class AddExistingMedicationActivity extends BaseActivity
     builderSingle.setAdapter(arrayAdapter, (dialog, which) -> {
       String strName = arrayAdapter.getItem(which);
       timesPerDayMeasurementTV.setText(strName);
+      switch (strName) {
+        case "Times per week":
+          treatmentDurationTV.setText("Weeks");
+          remindersLayout.setVisibility(View.VISIBLE);
+          daysOfWeekLayout.setVisibility(View.VISIBLE);
+          viewBelowDaysOfWeek.setVisibility(View.VISIBLE);
+        case "Times per day":
+          treatmentDurationTV.setText("Days");
+          remindersLayout.setVisibility(View.VISIBLE);
+          daysOfWeekLayout.setVisibility(View.VISIBLE);
+          viewBelowDaysOfWeek.setVisibility(View.VISIBLE);
+          break;
+        case "Times per month":
+          treatmentDurationTV.setText("Months");
+          remindersLayout.setVisibility(View.VISIBLE);
+          daysOfWeekLayout.setVisibility(View.GONE);
+          viewBelowDaysOfWeek.setVisibility(View.GONE);
+          break;
+        case "When needed":
+          remindersLayout.setVisibility(View.GONE);
+          daysOfWeekLayout.setVisibility(View.GONE);
+          viewBelowDaysOfWeek.setVisibility(View.GONE);
+          break;
+        default:
+      }
     });
 
     builderSingle.show();
@@ -418,6 +447,9 @@ public class AddExistingMedicationActivity extends BaseActivity
         break;
       case "when needed":
         medication.setFrequencyType(3);
+        break;
+      case "times per day":
+        medication.setFrequencyType(4);
         break;
     }
   }

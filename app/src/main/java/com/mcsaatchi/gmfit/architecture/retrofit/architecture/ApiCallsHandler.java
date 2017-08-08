@@ -217,10 +217,10 @@ public class ApiCallsHandler {
     });
   }
 
-  void updateUserWeight(double weight, String created_at,
+  void updateUserWeight(double weight,
       final Callback<DefaultGetResponse> callback) {
     Call<DefaultGetResponse> apiCall = restClient.getGMFitService()
-        .updateUserWeight(new UpdateUserWeightRequest(weight, created_at));
+        .updateUserWeight(new UpdateUserWeightRequest(weight));
 
     apiCall.enqueue(new Callback<DefaultGetResponse>() {
       @Override
@@ -1518,11 +1518,9 @@ public class ApiCallsHandler {
 
   public class UpdateUserWeightRequest {
     final double weight;
-    final String created_at;
 
-    public UpdateUserWeightRequest(double weight, String created_at) {
+    public UpdateUserWeightRequest(double weight) {
       this.weight = weight;
-      this.created_at = created_at;
     }
   }
 

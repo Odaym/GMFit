@@ -62,18 +62,18 @@ public class SlugBreakdownFragment extends Fragment {
       switch (slugBreakDownDataType) {
         case Constants.BUNDLE_SLUG_BREAKDOWN_DATA_DAILY:
           hookupListWithItems((ArrayList<SlugBreakdownResponsePeriod>) slugBreakdownData.getDaily(),
-              measurementUnitForMetric);
+              measurementUnitForMetric, Constants.BUNDLE_SLUG_BREAKDOWN_DATA_DAILY);
           break;
 
         case Constants.BUNDLE_SLUG_BREAKDOWN_DATA_MONTHLY:
           hookupListWithItems(
               (ArrayList<SlugBreakdownResponsePeriod>) slugBreakdownData.getMonthly(),
-              measurementUnitForMetric);
+              measurementUnitForMetric, Constants.BUNDLE_SLUG_BREAKDOWN_DATA_MONTHLY);
           break;
         case Constants.BUNDLE_SLUG_BREAKDOWN_DATA_YEARLY:
           hookupListWithItems(
               (ArrayList<SlugBreakdownResponsePeriod>) slugBreakdownData.getYearly(),
-              measurementUnitForMetric);
+              measurementUnitForMetric, Constants.BUNDLE_SLUG_BREAKDOWN_DATA_YEARLY);
           break;
       }
     }
@@ -82,9 +82,10 @@ public class SlugBreakdownFragment extends Fragment {
   }
 
   private void hookupListWithItems(ArrayList<SlugBreakdownResponsePeriod> items,
-      String measurementUnitForMetric) {
+      String measurementUnitForMetric, String breakdownType) {
     final SlugBreakdown_ListAdapter slugBreakdownListAdapter =
-        new SlugBreakdown_ListAdapter(getActivity(), items, measurementUnitForMetric);
+        new SlugBreakdown_ListAdapter(getActivity(), items, measurementUnitForMetric,
+            breakdownType);
     slugBreakdownListView.setAdapter(slugBreakdownListAdapter);
 
     if (typeOfFragmentToCustomizeFor.equals(Constants.EXTRAS_NUTRITION_FRAGMENT)) {
@@ -102,13 +103,16 @@ public class SlugBreakdownFragment extends Fragment {
     private ArrayList<SlugBreakdownResponsePeriod> slugBreakdownData;
     private Context context;
     private String measurementUnit;
+    private String breakdownType;
 
     SlugBreakdown_ListAdapter(Context context,
-        ArrayList<SlugBreakdownResponsePeriod> slugBreakdownData, String measurementUnit) {
+        ArrayList<SlugBreakdownResponsePeriod> slugBreakdownData, String measurementUnit,
+        String breakdownType) {
       super();
       this.context = context;
       this.slugBreakdownData = slugBreakdownData;
       this.measurementUnit = measurementUnit;
+      this.breakdownType = breakdownType;
     }
 
     @Override public int getCount() {
@@ -142,11 +146,22 @@ public class SlugBreakdownFragment extends Fragment {
 
       DateTime entryDate = new DateTime(getItem(position).getDate());
 
-      holder.slugDateTV.setText(entryDate.getDayOfMonth()
-          + " "
-          + entryDate.monthOfYear().getAsText()
-          + ", "
-          + entryDate.getYear());
+      switch (breakdownType) {
+        case Constants.BUNDLE_SLUG_BREAKDOWN_DATA_DAILY:
+          holder.slugDateTV.setText(entryDate.getDayOfMonth()
+              + " "
+              + entryDate.monthOfYear().getAsText()
+              + ", "
+              + entryDate.getYear());
+          break;
+        case Constants.BUNDLE_SLUG_BREAKDOWN_DATA_MONTHLY:
+          holder.slugDateTV.setText(
+              entryDate.monthOfYear().getAsText() + ", " + entryDate.getYear());
+          break;
+        case Constants.BUNDLE_SLUG_BREAKDOWN_DATA_YEARLY:
+          holder.slugDateTV.setText(String.valueOf(entryDate.getYear()) );
+          break;
+      }
 
       holder.slugTotalTV.setText(NumberFormat.getNumberInstance(Locale.US)
           .format((int) Double.parseDouble(getItem(position).getTotal())) + " " + measurementUnit);

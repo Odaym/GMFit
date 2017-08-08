@@ -134,8 +134,7 @@
           android:layout_marginRight="@dimen/default_margin_2"
           android:layout_marginTop="@dimen/default_margin_2"
           android:background="@color/buttons_blue"
-          android:text="@string/search"
-          android:textAllCaps="false"
+          android:text="@string/search_advanced_filter_button"
           android:textColor="@color/white"
           />
 

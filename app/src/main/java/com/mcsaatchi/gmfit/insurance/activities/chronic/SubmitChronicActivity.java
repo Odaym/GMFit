@@ -46,6 +46,7 @@ public class SubmitChronicActivity extends BaseActivity
   @Bind(R.id.prescriptionImagesPicker) CustomAttachmentPicker prescriptionImagesPicker;
   @Bind(R.id.providerNameET) EditText providerNameET;
 
+  private ProgressDialog waitingDialog;
   private File photoFile;
   private Uri photoFileUri;
   private ImageView currentImageView;
@@ -76,23 +77,15 @@ public class SubmitChronicActivity extends BaseActivity
     hookupImagesPickerImages(prescriptionImagesPicker, 2);
   }
 
-  private void hookupImagesPickerImages(CustomAttachmentPicker imagePicker, int documentType) {
-    LinearLayout parentLayout = (LinearLayout) imagePicker.getChildAt(0);
-    final LinearLayout innerLayoutWithPickers = (LinearLayout) parentLayout.getChildAt(1);
+  @Override public void openChronicTrackActivity(Integer requestId) {
+    Intent intent = new Intent(SubmitChronicActivity.this, ChronicTrackActivity.class);
+    intent.putExtra(ReimbursementDetailsActivity.REIMBURSEMENT_REQUEST_ID, requestId);
+    startActivity(intent);
+    finish();
+  }
 
-    for (int i = 0; i < innerLayoutWithPickers.getChildCount(); i++) {
-      if (innerLayoutWithPickers.getChildAt(i) instanceof ImageView) {
-        final int finalI = i;
-
-        innerLayoutWithPickers.getChildAt(i).setOnClickListener(view -> {
-          imagesDocumentTypes.add(String.valueOf(documentType));
-
-          ImageView imageView = (ImageView) innerLayoutWithPickers.findViewById(
-              innerLayoutWithPickers.getChildAt(finalI).getId());
-          showImagePickerDialog(imageView);
-        });
-      }
-    }
+  @Override public void dismissWaitingDialog() {
+    waitingDialog.dismiss();
   }
 
   @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -145,19 +138,37 @@ public class SubmitChronicActivity extends BaseActivity
           (dialog, which) -> dialog.dismiss());
       alertDialog.show();
     } else {
-      final ProgressDialog waitingDialog = new ProgressDialog(this);
+      waitingDialog = new ProgressDialog(this);
       waitingDialog.setTitle(
           getResources().getString(R.string.submit_new_chronic_treatment_dialog_title));
       waitingDialog.setMessage(
           getResources().getString(R.string.uploading_attachments_dialog_message));
       waitingDialog.setOnShowListener(dialogInterface -> {
         HashMap<String, RequestBody> attachments = constructSelectedImagesForRequest();
-
         presenter.submitChronicTreatment(
             prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""), attachments);
       });
 
       waitingDialog.show();
+    }
+  }
+
+  private void hookupImagesPickerImages(CustomAttachmentPicker imagePicker, int documentType) {
+    LinearLayout parentLayout = (LinearLayout) imagePicker.getChildAt(0);
+    final LinearLayout innerLayoutWithPickers = (LinearLayout) parentLayout.getChildAt(1);
+
+    for (int i = 0; i < innerLayoutWithPickers.getChildCount(); i++) {
+      if (innerLayoutWithPickers.getChildAt(i) instanceof ImageView) {
+        final int finalI = i;
+
+        innerLayoutWithPickers.getChildAt(i).setOnClickListener(view -> {
+          imagesDocumentTypes.add(String.valueOf(documentType));
+
+          ImageView imageView = (ImageView) innerLayoutWithPickers.findViewById(
+              innerLayoutWithPickers.getChildAt(finalI).getId());
+          showImagePickerDialog(imageView);
+        });
+      }
     }
   }
 
@@ -215,19 +226,13 @@ public class SubmitChronicActivity extends BaseActivity
         imageParts.put("attachements[" + i + "][content]", toRequestBody(
             Base64.encodeToString(ImageHandler.turnImageToByteArray(imagePaths.get(i)),
                 Base64.NO_WRAP)));
-        imageParts.put("attachements[" + i + "][documType]", toRequestBody(imagesDocumentTypes.get(i)));
+        imageParts.put("attachements[" + i + "][documType]",
+            toRequestBody(imagesDocumentTypes.get(i)));
         imageParts.put("attachements[" + i + "][name]", toRequestBody(imagePaths.get(i)));
         imageParts.put("attachements[" + i + "][id]", toRequestBody(String.valueOf(i + 1)));
       }
     }
 
     return imageParts;
-  }
-
-  @Override public void openChronicTrackActivity(Integer requestId) {
-    Intent intent = new Intent(SubmitChronicActivity.this, ChronicTrackActivity.class);
-    intent.putExtra(ReimbursementDetailsActivity.REIMBURSEMENT_REQUEST_ID, requestId);
-    startActivity(intent);
-    finish();
   }
 }

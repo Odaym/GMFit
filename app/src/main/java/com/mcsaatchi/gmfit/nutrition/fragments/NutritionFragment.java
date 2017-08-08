@@ -236,9 +236,7 @@ public class NutritionFragment extends BaseFragment
     todayTV.setText(Helpers.getFormattedString((int) Double.parseDouble(currentValue)));
     goalTV.setText(Helpers.getFormattedString(Integer.parseInt(maxValue)));
 
-    activeTV.setText(String.valueOf(
-        (int) prefs.getFloat("calories_spent", 0) + (int) prefs.getFloat("activity_calories_spent",
-            0)));
+    activeTV.setText(String.valueOf((int) prefs.getFloat("calories_spent", 0)));
 
     if (!activeTV.getText().toString().isEmpty()
         && !goalTV.getText().toString().isEmpty()

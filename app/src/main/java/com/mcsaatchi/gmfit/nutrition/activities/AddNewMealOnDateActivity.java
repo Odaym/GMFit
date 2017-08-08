@@ -20,6 +20,8 @@ import com.mcsaatchi.gmfit.common.classes.SimpleDividerItemDecoration;
 import com.mcsaatchi.gmfit.nutrition.adapters.UserMealsRecyclerAdapterDragSwipe;
 import com.mcsaatchi.gmfit.nutrition.models.MealItem;
 import com.squareup.otto.Subscribe;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -78,6 +80,12 @@ public class AddNewMealOnDateActivity extends BaseActivity
 
     if (getIntent().getExtras() != null) {
       chosenDate = getIntent().getExtras().getString(Constants.EXTRAS_DATE_TO_ADD_MEAL_ON, "");
+      try {
+        chosenDate = new SimpleDateFormat("dd MMMM, yyyy").format(
+            new SimpleDateFormat("yyyy-MM-dd").parse(chosenDate));
+      } catch (ParseException e) {
+        e.printStackTrace();
+      }
     }
 
     setupToolbar(getClass().getSimpleName(), toolbar, chosenDate, true);

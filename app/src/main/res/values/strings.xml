@@ -274,9 +274,11 @@
   <string name="posology_bar_title">Posology</string>
   <string name="get_notifications_bar_title">Get Notifications</string>
   <string name="days_choice_select_all">Select All</string>
-  <string name="frequency_type_weekly">times per week</string>
-  <string name="frequency_type_monthly">times per month</string>
-  <string name="frequency_type_when_needed">when needed</string>
+  <string name="select_days_of_week">select days of week</string>
+  <string name="frequency_type_daily">Times per day</string>
+  <string name="frequency_type_weekly">Times per week</string>
+  <string name="frequency_type_monthly">Times per month</string>
+  <string name="frequency_type_when_needed">When needed</string>
 
   <!-- ADD NEW CHART -->
   <string name="add_new_chart_activity_title">Add New Chart</string>
@@ -511,8 +513,6 @@
   <string name="frequency_label">Frequency</string>
   <string name="days_of_week_label">Days of Week</string>
   <string name="treatment_duration">Treatment Duration</string>
-  <string name="times_per_day_label_small">times per day</string>
-  <string name="times_per_week_label_small">weeks</string>
   <string name="enable_reminders_label">Enable Reminders</string>
   <string name="reminder_1">Reminder 1</string>
   <string name="reminder_2">Reminder 2</string>
@@ -547,4 +547,5 @@
   <string name="by_provider_header_title">By Provider</string>
   <string name="working_days_header_title">Working Days</string>
   <string name="advanced_search_activity_title">Advanced Search</string>
+  <string name="search_advanced_filter_button">Search</string>
 </resources>

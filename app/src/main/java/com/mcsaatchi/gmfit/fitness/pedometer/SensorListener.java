@@ -215,7 +215,7 @@ public class SensorListener extends Service implements SensorEventListener {
                 int second = c.get(Calendar.SECOND);
 
                 //If current time is between 12AM and 12:05AM, clear metrics
-                if (hour * 3600 + minute * 60 + second < 900) {
+                if (hour * 3600 + minute * 60 + second < 2700) {
                   Timber.d("Time is between, wiping metrics");
                   wipeOutFitnessMetricsAtMidnight();
                   sendOutEventBusEvents();
@@ -248,7 +248,6 @@ public class SensorListener extends Service implements SensorEventListener {
   private void clearMetricsInPrefs() {
     prefs.edit().putInt("steps_taken", 0).apply();
     prefs.edit().putFloat("calories_spent", 0).apply();
-    prefs.edit().putFloat("activity_calories_spent", 0).apply();
     prefs.edit().putFloat("distance_traveled", 0).apply();
   }
 

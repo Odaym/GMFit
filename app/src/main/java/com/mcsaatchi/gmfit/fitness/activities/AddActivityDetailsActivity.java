@@ -5,6 +5,8 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,12 +24,12 @@ import com.mcsaatchi.gmfit.architecture.retrofit.responses.ActivitiesListRespons
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.UserActivitiesResponseBody;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.common.classes.FontTextView;
-import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.common.classes.SimpleDividerItemDecoration;
 import com.mcsaatchi.gmfit.fitness.adapters.ActivityLevelsChoiceRecyclerAdapter;
 import com.mcsaatchi.gmfit.health.models.SelectionItem;
 import com.mcsaatchi.gmfit.insurance.widget.CustomDatePickerFitnessActivity;
 import com.squareup.picasso.Picasso;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -131,10 +133,29 @@ public class AddActivityDetailsActivity extends BaseActivity
     }
   }
 
+  @Override public boolean onCreateOptionsMenu(Menu menu) {
+    getMenuInflater().inflate(R.menu.edit_activity, menu);
+    return super.onCreateOptionsMenu(menu);
+  }
+
+  @Override public boolean onOptionsItemSelected(MenuItem item) {
+    switch (item.getItemId()) {
+      case R.id.saveBTN:
+        gatherInfoAndSubmitActivity(false);
+
+        break;
+    }
+    return super.onOptionsItemSelected(item);
+  }
+
   @Override public void finishAndLoadActivities() {
-    prefs.edit()
-        .putFloat("activity_calories_spent", prefs.getFloat("activity_calories_spent", 0) + Float.parseFloat(
-            caloriesValueTV.getText().toString())).apply();
+    /**
+     *
+     * prefs.edit()
+     .putFloat("activity_calories_spent", prefs.getFloat("activity_calories_spent", 0) + Float.parseFloat(
+     caloriesValueTV.getText().toString())).apply();
+
+     */
 
     EventBusSingleton.getInstance().post(new FitnessActivityEvent());
     finish();
@@ -200,8 +221,16 @@ public class AddActivityDetailsActivity extends BaseActivity
     } else {
       for (int i = 0; i < activityLevelChoices.size(); i++) {
         if (activityLevelChoices.get(i).isItemSelected()) {
+
+          try {
+            activityDate = new SimpleDateFormat("yyyy-MM-dd").format(
+                new SimpleDateFormat("dd MMMM, yyyy").parse(activityDate));
+          } catch (ParseException e) {
+            e.printStackTrace();
+          }
+
           presenter.addFitnessActivity(String.valueOf(activityLevelID),
-              timeSpentActivityET.getText().toString(), Helpers.getCalendarDate());
+              timeSpentActivityET.getText().toString(), activityDate);
         }
       }
     }

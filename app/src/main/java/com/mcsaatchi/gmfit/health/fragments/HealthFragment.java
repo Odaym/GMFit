@@ -201,7 +201,8 @@ public class HealthFragment extends BaseFragment
         metricCounterTV.setText(String.valueOf(String.format(Locale.getDefault(), "%.1f",
             Float.parseFloat(userProfileData.getWeight()))));
 
-        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        getActivity().getWindow()
+            .setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
       }
     }
   }
@@ -299,7 +300,7 @@ public class HealthFragment extends BaseFragment
       if (waitingDialog.isShowing()) waitingDialog.dismiss();
     });
 
-    dataAccessHandler.updateUserWeight(weight, created_at, new Callback<DefaultGetResponse>() {
+    dataAccessHandler.updateUserWeight(weight, new Callback<DefaultGetResponse>() {
       @Override
       public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
         switch (response.code()) {

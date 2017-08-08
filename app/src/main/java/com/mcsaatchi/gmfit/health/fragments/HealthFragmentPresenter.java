@@ -140,10 +140,14 @@ class HealthFragmentPresenter extends BaseFragmentPresenter {
           Response<WeightHistoryResponse> response) {
         switch (response.code()) {
           case 200:
-            List<WeightHistoryResponseDatum> weightHistoryList =
+            List<WeightHistoryResponseDatum> weightHistoryFromResponse =
                 response.body().getData().getBody().getData();
 
-            view.displayUserWeightChart(weightHistoryList);
+            List<WeightHistoryResponseDatum> finalList = weightHistoryFromResponse.subList(
+                Math.max(weightHistoryFromResponse.size() - 10, 0),
+                weightHistoryFromResponse.size());
+
+            view.displayUserWeightChart(finalList);
 
             break;
         }

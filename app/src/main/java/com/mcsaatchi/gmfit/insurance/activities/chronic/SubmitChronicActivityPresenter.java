@@ -37,7 +37,7 @@ class SubmitChronicActivityPresenter extends BaseActivityPresenter {
                 break;
             }
 
-            view.callDismissWaitingDialog();
+            view.dismissWaitingDialog();
           }
 
           @Override public void onFailure(Call<CreateNewRequestResponse> call, Throwable t) {
@@ -48,5 +48,7 @@ class SubmitChronicActivityPresenter extends BaseActivityPresenter {
 
   interface SubmitChronicActivityView extends BaseActivityView {
     void openChronicTrackActivity(Integer requestId);
+
+    void dismissWaitingDialog();
   }
 }

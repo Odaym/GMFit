@@ -122,9 +122,9 @@ public class DataAccessHandlerImpl implements DataAccessHandler {
         blood_type, height, weight, callback);
   }
 
-  @Override public void updateUserWeight(double weight, String created_at,
+  @Override public void updateUserWeight(double weight,
       Callback<DefaultGetResponse> callback) {
-    apiCallsHandler.updateUserWeight(weight, created_at, callback);
+    apiCallsHandler.updateUserWeight(weight, callback);
   }
 
   @Override

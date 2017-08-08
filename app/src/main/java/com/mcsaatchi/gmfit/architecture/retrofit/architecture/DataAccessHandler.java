@@ -85,7 +85,7 @@ public interface DataAccessHandler {
       RequestBody date_of_birth, RequestBody blood_type, RequestBody height, RequestBody weight,
       Callback<DefaultGetResponse> callback);
 
-  void updateUserWeight(double weight, String created_at, Callback<DefaultGetResponse> callback);
+  void updateUserWeight(double weight, Callback<DefaultGetResponse> callback);
 
   void updateOneSignalToken(String onesignal_id, Callback<DefaultGetResponse> callback);
 

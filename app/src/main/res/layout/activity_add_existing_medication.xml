@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/health_background"
@@ -41,7 +42,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@null"
-            android:gravity="center_vertical"
+            android:gravity="center_vertical|end"
+            android:paddingEnd="@dimen/default_margin_2"
             android:paddingStart="@dimen/default_margin_2"
             android:textColor="@color/black_alpha_50"
             />
@@ -131,11 +133,14 @@
             android:layout_height="match_parent"
             android:layout_weight="5"
             android:background="@null"
-            android:gravity="center_vertical"
+            android:gravity="center_vertical|end"
+            android:hint="Enter Units"
             android:inputType="number"
             android:maxLength="2"
             android:paddingStart="@dimen/default_margin_2"
+            android:textAppearance="?android:textAppearanceSmall"
             android:textColor="@color/black_alpha_50"
+            android:textColorHint="@color/edittext_hint_color"
             />
 
         <TextView
@@ -173,13 +178,17 @@
             android:id="@+id/frequencyET"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="5"
+            android:layout_weight="11"
             android:background="@null"
-            android:gravity="center_vertical"
+            android:gravity="center_vertical|end"
+            android:hint="Enter Frequency"
             android:inputType="number"
             android:maxLength="2"
+            android:paddingEnd="@dimen/default_margin_2"
             android:paddingStart="@dimen/default_margin_2"
+            android:textAppearance="?android:textAppearanceSmall"
             android:textColor="@color/black_alpha_50"
+            android:textColorHint="@color/edittext_hint_color"
             />
 
         <TextView
@@ -187,7 +196,8 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center_vertical|end"
-            android:text="@string/times_per_day_label_small"
+            android:paddingEnd="@dimen/default_margin_1"
+            android:text="@string/frequency_type_daily"
             android:textColor="@color/black_alpha_50"
             />
 
@@ -197,6 +207,7 @@
             android:layout_gravity="end"
             android:layout_weight="0.77"
             android:gravity="center"
+            android:paddingEnd="@dimen/default_margin_2"
             >
 
           <ImageView
@@ -221,6 +232,7 @@
           android:background="@color/white"
           android:clickable="true"
           android:focusable="true"
+          android:orientation="horizontal"
           android:paddingStart="@dimen/default_margin_2"
           >
 
@@ -233,21 +245,25 @@
 
         <TextView
             android:id="@+id/daysOfWeekTV"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="11"
+            android:ellipsize="end"
             android:gravity="center_vertical|end"
-            android:hint="select days of week"
+            android:hint="@string/select_days_of_week"
+            android:maxLines="1"
+            android:paddingEnd="@dimen/default_margin_1"
             android:paddingStart="@dimen/default_margin_1"
             android:textColor="@color/black_alpha_50"
+            android:textColorHint="@color/edittext_hint_color"
             />
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="31dp"
             android:layout_height="match_parent"
             android:layout_gravity="end"
-            android:layout_weight="1.17"
             android:gravity="center"
+            android:paddingEnd="@dimen/default_margin_2"
             >
 
           <ImageView
@@ -259,6 +275,7 @@
       </LinearLayout>
 
       <View
+          android:id="@+id/viewBelowDaysOfWeek"
           android:layout_width="match_parent"
           android:layout_height="1dp"
           android:background="@color/offwhite_background_gray"
@@ -285,11 +302,15 @@
             android:layout_height="match_parent"
             android:layout_weight="4"
             android:background="@null"
-            android:gravity="center_vertical"
+            android:gravity="center_vertical|end"
+            android:hint="Select Duration"
             android:inputType="number"
             android:maxLength="2"
+            android:paddingEnd="@dimen/default_margin_2"
             android:paddingStart="@dimen/default_margin_2"
+            android:textAppearance="?android:textAppearanceSmall"
             android:textColor="@color/black_alpha_50"
+            android:textColorHint="@color/edittext_hint_color"
             />
 
         <TextView
@@ -297,8 +318,8 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginEnd="@dimen/default_margin_2"
-            android:gravity="center_vertical|end"
-            android:text="@string/times_per_week_label_small"
+            android:gravity="center_vertical"
+            android:text="Weeks"
             android:textColor="@color/black_alpha_50"
             />
       </LinearLayout>
@@ -310,71 +331,79 @@
           />
 
       <LinearLayout
-          android:id="@+id/chartTopBarLayout_GET_NOTIFICATIONS"
-          android:layout_width="match_parent"
-          android:layout_height="@dimen/add_medical_tests_layout_height"
-          android:layout_marginTop="@dimen/default_margin_3"
-          android:background="@color/add_medical_tests_bar_background"
-          android:gravity="center_vertical"
-          android:orientation="horizontal"
-          android:paddingEnd="@dimen/activity_vertical_margin"
-          android:paddingStart="@dimen/activity_vertical_margin"
-          >
-
-        <TextView
-            android:id="@+id/chartTitleTV_GET_NOTIFICATIONS"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="30"
-            android:text="@string/get_notifications_bar_title"
-            android:textAppearance="?android:textAppearanceMedium"
-            android:textColor="@android:color/white"
-            />
-      </LinearLayout>
-
-      <LinearLayout
-          android:layout_width="match_parent"
-          android:layout_height="@dimen/add_medication_row_height"
-          android:background="@color/white"
-          android:orientation="horizontal"
-          android:paddingStart="@dimen/default_margin_2"
-          >
-
-        <TextView
-            android:layout_width="@dimen/add_medication_fields_width"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:text="@string/enable_reminders_label"
-            />
-
-        <Switch
-            android:id="@+id/enableRemindersSwitch"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="3"
-            android:gravity="center_vertical"
-            android:paddingEnd="@dimen/default_margin_2"
-            />
-      </LinearLayout>
-
-      <View
-          android:layout_width="match_parent"
-          android:layout_height="1dp"
-          android:background="@color/offwhite_background_gray"
-          />
-
-      <android.support.v7.widget.RecyclerView
-          android:id="@+id/remindersRecyclerView"
+          android:id="@+id/remindersLayout"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:background="@color/white"
-          />
+          android:orientation="vertical"
+          >
 
-      <View
-          android:layout_width="match_parent"
-          android:layout_height="1dp"
-          android:background="@color/offwhite_background_gray"
-          />
+        <LinearLayout
+            android:id="@+id/chartTopBarLayout_GET_NOTIFICATIONS"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/add_medical_tests_layout_height"
+            android:layout_marginTop="@dimen/default_margin_3"
+            android:background="@color/add_medical_tests_bar_background"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingEnd="@dimen/activity_vertical_margin"
+            android:paddingStart="@dimen/activity_vertical_margin"
+            >
+
+          <TextView
+              android:id="@+id/chartTitleTV_GET_NOTIFICATIONS"
+              android:layout_width="0dp"
+              android:layout_height="wrap_content"
+              android:layout_weight="30"
+              android:text="@string/get_notifications_bar_title"
+              android:textAppearance="?android:textAppearanceMedium"
+              android:textColor="@android:color/white"
+              />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/add_medication_row_height"
+            android:background="@color/white"
+            android:orientation="horizontal"
+            android:paddingStart="@dimen/default_margin_2"
+            >
+
+          <TextView
+              android:layout_width="@dimen/add_medication_fields_width"
+              android:layout_height="match_parent"
+              android:gravity="center_vertical"
+              android:text="@string/enable_reminders_label"
+              />
+
+          <Switch
+              android:id="@+id/enableRemindersSwitch"
+              android:layout_width="0dp"
+              android:layout_height="match_parent"
+              android:layout_weight="3"
+              android:gravity="center_vertical"
+              android:paddingEnd="@dimen/default_margin_2"
+              />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/offwhite_background_gray"
+            />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/remindersRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/offwhite_background_gray"
+            />
+      </LinearLayout>
 
       <LinearLayout
           android:layout_width="match_parent"

@@ -41,10 +41,10 @@ public class SnapshotActivity extends BaseActivity
 
     selectPeriodTV.setOnClickListener(view -> {
       final String[] items =
-          new String[] { "1 month", "3 months", "6 months", "12 months", "24 months" };
+          new String[] {"3 months", "6 months", "12 months", "24 months" };
 
       AlertDialog.Builder builder = new AlertDialog.Builder(SnapshotActivity.this);
-      builder.setTitle("Pick currency").setItems(items, (dialogInterface, i) -> {
+      builder.setTitle("Pick Period").setItems(items, (dialogInterface, i) -> {
         presenter.getSnapshot(items[i],
             prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""));
         selectPeriodTV.setText(items[i]);
