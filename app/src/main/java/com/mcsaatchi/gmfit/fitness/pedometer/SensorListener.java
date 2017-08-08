@@ -83,6 +83,7 @@ public class SensorListener extends Service implements SensorEventListener {
   }
 
   @Override public void onSensorChanged(final SensorEvent event) {
+
     if (prefs.getBoolean(Constants.EXTRAS_FIRST_APP_LAUNCH, true)) {
       prefs.edit().putBoolean(Constants.EXTRAS_FIRST_APP_LAUNCH, false).apply();
 
@@ -110,6 +111,8 @@ public class SensorListener extends Service implements SensorEventListener {
 
       sendOutEventBusEvents();
     }
+
+    Timber.d("Sensor value has changed - %s", prefs.getInt("steps_taken", 0));
   }
 
   public float calculateCalories(float weight, float metricRunningFactor, float stepLength) {
