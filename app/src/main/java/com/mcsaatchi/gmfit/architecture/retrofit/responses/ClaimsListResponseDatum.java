@@ -29,7 +29,7 @@ public class ClaimsListResponseDatum implements Parcelable {
   @SerializedName("provider") @Expose private String provider;
   @SerializedName("reasonOfRejection") @Expose private String reasonOfRejection;
   @SerializedName("medicationinfo") @Expose private List<String> medicationinfo = null;
-  @SerializedName("images") @Expose private List<ClaimListDetailsResponseImage> images = null;
+  @SerializedName("images") @Expose private List<String> images = null;
   @SerializedName("conversation") @Expose private List<String> conversation = null;
 
   public ClaimsListResponseDatum() {
@@ -47,7 +47,7 @@ public class ClaimsListResponseDatum implements Parcelable {
     this.provider = in.readString();
     this.reasonOfRejection = in.readString();
     this.medicationinfo = in.createStringArrayList();
-    this.images = new ArrayList<ClaimListDetailsResponseImage>();
+    this.images = new ArrayList<>();
     in.readList(this.images, ClaimListDetailsResponseImage.class.getClassLoader());
     this.conversation = in.createStringArrayList();
   }
@@ -140,11 +140,11 @@ public class ClaimsListResponseDatum implements Parcelable {
     this.medicationinfo = medicationinfo;
   }
 
-  public List<ClaimListDetailsResponseImage> getImages() {
+  public List<String> getImages() {
     return images;
   }
 
-  public void setImages(List<ClaimListDetailsResponseImage> images) {
+  public void setImages(List<String> images) {
     this.images = images;
   }
 

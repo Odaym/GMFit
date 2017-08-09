@@ -32,7 +32,7 @@ class SubmitApprovalRequestActivityPresenter extends BaseActivityPresenter {
             break;
         }
 
-        view.callDismissWaitingDialog();
+        view.dismissWaitingDialog();
       }
 
       @Override public void onFailure(Call<UploadInsuranceImageResponse> call, Throwable t) {

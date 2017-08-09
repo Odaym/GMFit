@@ -64,6 +64,13 @@ public class SubmitApprovalRequestActivity extends BaseActivity
   private ArrayList<String> imagePathsFinal = new ArrayList<>();
   private ArrayList<String> imagesDocumentType = new ArrayList<>();
 
+  private ArrayList<Integer> medicalReportImagesPlacement = new ArrayList<>();
+  private ArrayList<Integer> invoiceImagesPlacement = new ArrayList<>();
+  private ArrayList<Integer> identityCardImagesPlacement = new ArrayList<>();
+  private ArrayList<Integer> testResultsImagesPlacement = new ArrayList<>();
+  private ArrayList<Integer> originalReceiptImagesPlacement = new ArrayList<>();
+  private ArrayList<Integer> otherDocumentsImagesPlacement = new ArrayList<>();
+
   private ProgressDialog waitingDialog;
   private ImageView currentImageView;
 
@@ -151,7 +158,12 @@ public class SubmitApprovalRequestActivity extends BaseActivity
     Intent intent =
         new Intent(SubmitApprovalRequestActivity.this, ApprovalRequestDetailsActivity.class);
     intent.putExtra(ApprovalRequestDetailsActivity.APPROVAL_REQUEST_CLAIM_ID, claimId);
-
+    intent.putExtra("medicalReportImagesPlacement", medicalReportImagesPlacement);
+    intent.putExtra("invoiceImagesPlacement", invoiceImagesPlacement);
+    intent.putExtra("identityCardImagesPlacement", identityCardImagesPlacement);
+    intent.putExtra("testResultsImagesPlacement", testResultsImagesPlacement);
+    intent.putExtra("originalReceiptImagesPlacement", originalReceiptImagesPlacement);
+    intent.putExtra("otherDocumentsImagesPlacement", otherDocumentsImagesPlacement);
     startActivity(intent);
   }
 
@@ -170,11 +182,6 @@ public class SubmitApprovalRequestActivity extends BaseActivity
       presenter.submitApprovalRequest(
           prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""),
           remarksET.getText().toString(), categoryValue, attachments);
-      //
-      //presenter.submitReimbursement(
-      //    prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""), categoryValue,
-      //    subCategoryId, requestTypeId, amountClaimedET.getText().toString(),
-      //    remarksET.getText().toString(), attachments);
     }
   }
 
@@ -228,6 +235,27 @@ public class SubmitApprovalRequestActivity extends BaseActivity
         final int finalI = i;
         innerLayoutWithPickers.getChildAt(i).setOnClickListener(view -> {
           imagesDocumentType.add(String.valueOf(documentType));
+
+          switch (documentType) {
+            case 1:
+              medicalReportImagesPlacement.add(finalI);
+              break;
+            case 2:
+              invoiceImagesPlacement.add(finalI);
+              break;
+            case 3:
+              identityCardImagesPlacement.add(finalI);
+              break;
+            case 4:
+              testResultsImagesPlacement.add(finalI);
+              break;
+            case 5:
+              originalReceiptImagesPlacement.add(finalI);
+              break;
+            case 6:
+              otherDocumentsImagesPlacement.add(finalI);
+              break;
+          }
 
           ImageView imageView = (ImageView) innerLayoutWithPickers.findViewById(
               innerLayoutWithPickers.getChildAt(finalI).getId());

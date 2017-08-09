@@ -28,7 +28,9 @@ class ReimbursementDetailsActivityPresenter extends BaseActivityPresenter {
               Response<ClaimListDetailsResponse> response) {
             switch (response.code()) {
               case 200:
-                view.populateClaimDetails(response.body().getData().getBody().getData().get(0));
+                if (response.body().getData().getBody().getData() != null) {
+                  view.populateClaimDetails(response.body().getData().getBody().getData().get(0));
+                }
                 break;
             }
 

@@ -12,6 +12,7 @@ import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.insurance.widget.CustomAttachmentPicker;
 import com.mcsaatchi.gmfit.insurance.widget.ItemLabel;
 import com.squareup.picasso.Picasso;
+import java.util.ArrayList;
 import org.joda.time.LocalDate;
 
 public class ReimbursementDetailsActivity extends BaseActivity
@@ -32,6 +33,10 @@ public class ReimbursementDetailsActivity extends BaseActivity
   @Bind(R.id.originalReceiptImagesPicker) CustomAttachmentPicker originalReceiptImagesPicker;
   @Bind(R.id.otherDocumentsImagesPicker) CustomAttachmentPicker otherDocumentsImagesPicker;
 
+  private ArrayList<Integer> medicalReportImagesPlacement, invoiceImagesPlacement,
+      identityCardImagesPlacement, testResultsImagesPlacement, originalReceiptImagesPlacement,
+      otherDocumentsImagesPlacement = new ArrayList<>();
+
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
@@ -46,6 +51,35 @@ public class ReimbursementDetailsActivity extends BaseActivity
 
     if (incomingExtras != null) {
       int requestId = incomingExtras.getInt(REIMBURSEMENT_REQUEST_ID);
+
+      if (incomingExtras.getIntegerArrayList("medicalReportImagesPlacement") != null) {
+        medicalReportImagesPlacement =
+            incomingExtras.getIntegerArrayList("medicalReportImagesPlacement");
+      }
+
+      if (incomingExtras.getIntegerArrayList("invoiceImagesPlacement") != null) {
+        invoiceImagesPlacement = incomingExtras.getIntegerArrayList("invoiceImagesPlacement");
+      }
+
+      if (incomingExtras.getIntegerArrayList("identityCardImagesPlacement") != null) {
+        identityCardImagesPlacement =
+            incomingExtras.getIntegerArrayList("identityCardImagesPlacement");
+      }
+
+      if (incomingExtras.getIntegerArrayList("testResultsImagesPlacement") != null) {
+        testResultsImagesPlacement =
+            incomingExtras.getIntegerArrayList("testResultsImagesPlacement");
+      }
+
+      if (incomingExtras.getIntegerArrayList("originalReceiptImagesPlacement") != null) {
+        originalReceiptImagesPlacement =
+            incomingExtras.getIntegerArrayList("originalReceiptImagesPlacement");
+      }
+
+      if (incomingExtras.getIntegerArrayList("otherDocumentsImagesPlacement") != null) {
+        otherDocumentsImagesPlacement =
+            incomingExtras.getIntegerArrayList("otherDocumentsImagesPlacement");
+      }
 
       presenter.getReimbursementClaimDetails(
           prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""), requestId);
@@ -68,46 +102,75 @@ public class ReimbursementDetailsActivity extends BaseActivity
       try {
         switch (claimDetails.getImages().get(i).getDocumType()) {
           case 1:
-            Picasso.with(this)
-                .load("https://mobileapp.globemedfit.com/api/v1/" + claimDetails.getImages()
-                    .get(i)
-                    .getContent())
-                .into(medicalReportImagesPicker.returnImagePicker(i));
+            for (int k = 0; k < medicalReportImagesPlacement.size(); k++) {
+              Picasso.with(this)
+                  .load(Constants.BASE_IMAGES_URL + claimDetails.getImages()
+                      .get(i)
+                      .getContent()
+                      .replace("/jpg", ".jpg"))
+                  .resize(100, 100)
+                  .into(medicalReportImagesPicker.returnImagePicker(
+                      medicalReportImagesPlacement.get(k)));
+            }
             break;
           case 2:
-            Picasso.with(this)
-                .load("https://mobileapp.globemedfit.com/api/v1/" + claimDetails.getImages()
-                    .get(i)
-                    .getContent())
-                .into(invoiceImagesPicker.returnImagePicker(i));
+            for (int k = 0; k < invoiceImagesPlacement.size(); k++) {
+              Picasso.with(this)
+                  .load(Constants.BASE_IMAGES_URL + claimDetails.getImages()
+                      .get(i)
+                      .getContent()
+                      .replace("/jpg", ".jpg"))
+                  .resize(100, 100)
+                  .into(invoiceImagesPicker.returnImagePicker(invoiceImagesPlacement.get(k)));
+            }
             break;
           case 3:
-            Picasso.with(this)
-                .load("https://mobileapp.globemedfit.com/api/v1/" + claimDetails.getImages()
-                    .get(i)
-                    .getContent())
-                .into(originalReceiptImagesPicker.returnImagePicker(i));
+            for (int k = 0; k < identityCardImagesPlacement.size(); k++) {
+              Picasso.with(this)
+                  .load(Constants.BASE_IMAGES_URL + claimDetails.getImages()
+                      .get(i)
+                      .getContent()
+                      .replace("/jpg", ".jpg"))
+                  .resize(100, 100)
+                  .into(originalReceiptImagesPicker.returnImagePicker(
+                      identityCardImagesPlacement.get(k)));
+            }
             break;
           case 4:
-            Picasso.with(this)
-                .load("https://mobileapp.globemedfit.com/api/v1/" + claimDetails.getImages()
-                    .get(i)
-                    .getContent())
-                .into(identityCardImagesPicker.returnImagePicker(i));
+            for (int k = 0; k < testResultsImagesPlacement.size(); k++) {
+              Picasso.with(this)
+                  .load(Constants.BASE_IMAGES_URL + claimDetails.getImages()
+                      .get(i)
+                      .getContent()
+                      .replace("/jpg", ".jpg"))
+                  .resize(100, 100)
+                  .into(identityCardImagesPicker.returnImagePicker(
+                      testResultsImagesPlacement.get(k)));
+            }
             break;
           case 5:
-            Picasso.with(this)
-                .load("https://mobileapp.globemedfit.com/api/v1/" + claimDetails.getImages()
-                    .get(i)
-                    .getContent())
-                .into(testResultsImagesPicker.returnImagePicker(i));
+            for (int k = 0; k < originalReceiptImagesPlacement.size(); k++) {
+              Picasso.with(this)
+                  .load(Constants.BASE_IMAGES_URL + claimDetails.getImages()
+                      .get(i)
+                      .getContent()
+                      .replace("/jpg", ".jpg"))
+                  .resize(100, 100)
+                  .into(testResultsImagesPicker.returnImagePicker(
+                      originalReceiptImagesPlacement.get(k)));
+            }
             break;
           case 6:
-            Picasso.with(this)
-                .load("https://mobileapp.globemedfit.com/api/v1/" + claimDetails.getImages()
-                    .get(i)
-                    .getContent())
-                .into(otherDocumentsImagesPicker.returnImagePicker(i));
+            for (int k = 0; k < otherDocumentsImagesPlacement.size(); k++) {
+              Picasso.with(this)
+                  .load(Constants.BASE_IMAGES_URL + claimDetails.getImages()
+                      .get(i)
+                      .getContent()
+                      .replace("/jpg", ".jpg"))
+                  .resize(100, 100)
+                  .into(otherDocumentsImagesPicker.returnImagePicker(
+                      otherDocumentsImagesPlacement.get(k)));
+            }
             break;
         }
       } catch (NullPointerException ignored) {

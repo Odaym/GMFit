@@ -72,6 +72,13 @@ public class SubmitReimbursementActivity extends BaseActivity
   private ArrayList<String> imagePathsFinal = new ArrayList<>();
   private ArrayList<String> imagesDocumentType = new ArrayList<>();
 
+  private ArrayList<Integer> medicalReportImagesPlacement = new ArrayList<>();
+  private ArrayList<Integer> invoiceImagesPlacement = new ArrayList<>();
+  private ArrayList<Integer> identityCardImagesPlacement = new ArrayList<>();
+  private ArrayList<Integer> testResultsImagesPlacement = new ArrayList<>();
+  private ArrayList<Integer> originalReceiptImagesPlacement = new ArrayList<>();
+  private ArrayList<Integer> otherDocumentsImagesPlacement = new ArrayList<>();
+
   private SubmitReimbursementActivityPresenter presenter;
 
   private File photoFile;
@@ -151,15 +158,14 @@ public class SubmitReimbursementActivity extends BaseActivity
   @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
     super.onActivityResult(requestCode, resultCode, data);
 
+    String finalPath = null;
+
     switch (requestCode) {
       case CAPTURE_NEW_PICTURE_REQUEST_CODE:
         if (photoFile.getTotalSpace() > 0) {
-          Picasso.with(this)
-              .load(new File(photoFile.getAbsolutePath()))
-              .fit()
-              .into(currentImageView);
+          finalPath = photoFile.getAbsolutePath();
 
-          imagePaths.add(photoFile.getAbsolutePath());
+          Picasso.with(this).load(new File(finalPath)).fit().into(currentImageView);
         } else {
           Timber.d("No picture was taken, photoFile size : %d", photoFile.getTotalSpace());
         }
@@ -168,12 +174,13 @@ public class SubmitReimbursementActivity extends BaseActivity
       case REQUEST_PICK_IMAGE_GALLERY:
         if (data != null) {
           Uri selectedImageUri = data.getData();
-          String selectedImagePath = ImageHandler.getPhotoPathFromGallery(this, selectedImageUri);
 
-          Picasso.with(this).load(new File(selectedImagePath)).fit().into(currentImageView);
+          finalPath = ImageHandler.getPhotoPathFromGallery(this, selectedImageUri);
 
-          imagePaths.add(selectedImagePath);
+          Picasso.with(this).load(new File(finalPath)).fit().into(currentImageView);
         }
+
+        imagePaths.add(finalPath);
     }
   }
 
@@ -201,6 +208,12 @@ public class SubmitReimbursementActivity extends BaseActivity
     Intent intent =
         new Intent(SubmitReimbursementActivity.this, ReimbursementDetailsActivity.class);
     intent.putExtra(ReimbursementDetailsActivity.REIMBURSEMENT_REQUEST_ID, claimId);
+    intent.putExtra("medicalReportImagesPlacement", medicalReportImagesPlacement);
+    intent.putExtra("invoiceImagesPlacement", invoiceImagesPlacement);
+    intent.putExtra("identityCardImagesPlacement", identityCardImagesPlacement);
+    intent.putExtra("testResultsImagesPlacement", testResultsImagesPlacement);
+    intent.putExtra("originalReceiptImagesPlacement", originalReceiptImagesPlacement);
+    intent.putExtra("otherDocumentsImagesPlacement", otherDocumentsImagesPlacement);
     startActivity(intent);
     finish();
   }
@@ -276,8 +289,30 @@ public class SubmitReimbursementActivity extends BaseActivity
     for (int i = 0; i < innerLayoutWithPickers.getChildCount(); i++) {
       if (innerLayoutWithPickers.getChildAt(i) instanceof ImageView) {
         final int finalI = i;
+
         innerLayoutWithPickers.getChildAt(i).setOnClickListener(view -> {
           imagesDocumentType.add(String.valueOf(documentType));
+
+          switch (documentType) {
+            case 1:
+              medicalReportImagesPlacement.add(finalI);
+              break;
+            case 2:
+              invoiceImagesPlacement.add(finalI);
+              break;
+            case 3:
+              identityCardImagesPlacement.add(finalI);
+              break;
+            case 4:
+              testResultsImagesPlacement.add(finalI);
+              break;
+            case 5:
+              originalReceiptImagesPlacement.add(finalI);
+              break;
+            case 6:
+              otherDocumentsImagesPlacement.add(finalI);
+              break;
+          }
 
           ImageView imageView = (ImageView) innerLayoutWithPickers.findViewById(
               innerLayoutWithPickers.getChildAt(finalI).getId());
