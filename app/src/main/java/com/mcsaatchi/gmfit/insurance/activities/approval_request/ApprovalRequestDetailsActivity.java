@@ -31,7 +31,7 @@ public class ApprovalRequestDetailsActivity extends BaseActivity
   @Bind(R.id.otherDocumentsImagesPicker) CustomAttachmentPicker otherDocumentsImagesPicker;
 
   private ArrayList<Integer> medicalReportImagesPlacement, invoiceImagesPlacement,
-      identityCardImagesPlacement, testResultsImagesPlacement, originalReceiptImagesPlacement,
+      identityCardImagesPlacement, passportImagesPlacement, testResultsImagesPlacement,
       otherDocumentsImagesPlacement = new ArrayList<>();
 
   @Override protected void onCreate(Bundle savedInstanceState) {
@@ -61,14 +61,13 @@ public class ApprovalRequestDetailsActivity extends BaseActivity
             incomingExtras.getIntegerArrayList("identityCardImagesPlacement");
       }
 
+      if (incomingExtras.getIntegerArrayList("passportImagesPlacement") != null) {
+        passportImagesPlacement = incomingExtras.getIntegerArrayList("passportImagesPlacement");
+      }
+
       if (incomingExtras.getIntegerArrayList("testResultsImagesPlacement") != null) {
         testResultsImagesPlacement =
             incomingExtras.getIntegerArrayList("testResultsImagesPlacement");
-      }
-
-      if (incomingExtras.getIntegerArrayList("originalReceiptImagesPlacement") != null) {
-        originalReceiptImagesPlacement =
-            incomingExtras.getIntegerArrayList("originalReceiptImagesPlacement");
       }
 
       if (incomingExtras.getIntegerArrayList("otherDocumentsImagesPlacement") != null) {
@@ -129,6 +128,17 @@ public class ApprovalRequestDetailsActivity extends BaseActivity
           }
           break;
         case 4:
+          for (int k = 0; k < passportImagesPlacement.size(); k++) {
+            Picasso.with(this)
+                .load(Constants.BASE_IMAGES_URL + responseDatum.getImages()
+                    .get(i)
+                    .getContent()
+                    .replace("/jpg", ".jpg"))
+                .resize(100, 100)
+                .into(testResultsImagesPicker.returnImagePicker(passportImagesPlacement.get(k)));
+          }
+          break;
+        case 5:
           for (int k = 0; k < testResultsImagesPlacement.size(); k++) {
             Picasso.with(this)
                 .load(Constants.BASE_IMAGES_URL + responseDatum.getImages()
@@ -137,18 +147,6 @@ public class ApprovalRequestDetailsActivity extends BaseActivity
                     .replace("/jpg", ".jpg"))
                 .resize(100, 100)
                 .into(passportImagesPicker.returnImagePicker(testResultsImagesPlacement.get(k)));
-          }
-          break;
-        case 5:
-          for (int k = 0; k < originalReceiptImagesPlacement.size(); k++) {
-            Picasso.with(this)
-                .load(Constants.BASE_IMAGES_URL + responseDatum.getImages()
-                    .get(i)
-                    .getContent()
-                    .replace("/jpg", ".jpg"))
-                .resize(100, 100)
-                .into(testResultsImagesPicker.returnImagePicker(
-                    originalReceiptImagesPlacement.get(k)));
           }
           break;
         case 6:

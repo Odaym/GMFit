@@ -22,7 +22,6 @@ import com.mcsaatchi.gmfit.nutrition.fragments.NutritionFragment;
 import com.mcsaatchi.gmfit.profile.fragments.MainProfileFragment;
 import com.roughike.bottombar.BottomBar;
 import java.util.ArrayList;
-import timber.log.Timber;
 
 public class MainActivity extends BaseActivity {
 

@@ -67,8 +67,8 @@ public class SubmitApprovalRequestActivity extends BaseActivity
   private ArrayList<Integer> medicalReportImagesPlacement = new ArrayList<>();
   private ArrayList<Integer> invoiceImagesPlacement = new ArrayList<>();
   private ArrayList<Integer> identityCardImagesPlacement = new ArrayList<>();
+  private ArrayList<Integer> passportImagesPlacement = new ArrayList<>();
   private ArrayList<Integer> testResultsImagesPlacement = new ArrayList<>();
-  private ArrayList<Integer> originalReceiptImagesPlacement = new ArrayList<>();
   private ArrayList<Integer> otherDocumentsImagesPlacement = new ArrayList<>();
 
   private ProgressDialog waitingDialog;
@@ -117,12 +117,12 @@ public class SubmitApprovalRequestActivity extends BaseActivity
           REQUEST_CAPTURE_PERMISSIONS);
     }
 
-    hookupImagesPickerImages(medicalReportImagesPicker,1);
-    hookupImagesPickerImages(invoiceImagesPicker,2);
-    hookupImagesPickerImages(identityCardImagesPicker,3);
-    hookupImagesPickerImages(passportImagesPicker,4);
-    hookupImagesPickerImages(testResultsImagesPicker,5);
-    hookupImagesPickerImages(otherDocumentsImagesPicker,6);
+    hookupImagesPickerImages(medicalReportImagesPicker, 1);
+    hookupImagesPickerImages(invoiceImagesPicker, 2);
+    hookupImagesPickerImages(identityCardImagesPicker, 3);
+    hookupImagesPickerImages(passportImagesPicker, 4);
+    hookupImagesPickerImages(testResultsImagesPicker, 5);
+    hookupImagesPickerImages(otherDocumentsImagesPicker, 6);
   }
 
   @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -161,8 +161,8 @@ public class SubmitApprovalRequestActivity extends BaseActivity
     intent.putExtra("medicalReportImagesPlacement", medicalReportImagesPlacement);
     intent.putExtra("invoiceImagesPlacement", invoiceImagesPlacement);
     intent.putExtra("identityCardImagesPlacement", identityCardImagesPlacement);
+    intent.putExtra("passportImagesPlacement", passportImagesPlacement);
     intent.putExtra("testResultsImagesPlacement", testResultsImagesPlacement);
-    intent.putExtra("originalReceiptImagesPlacement", originalReceiptImagesPlacement);
     intent.putExtra("otherDocumentsImagesPlacement", otherDocumentsImagesPlacement);
     startActivity(intent);
   }
@@ -174,7 +174,7 @@ public class SubmitApprovalRequestActivity extends BaseActivity
   @Override public void saveImagePath(String imagePath) {
     imagePathsFinal.add(imagePath);
 
-    if (imagePaths.size() == imagePathsFinal.size()){
+    if (imagePaths.size() == imagePathsFinal.size()) {
       Timber.d("Images and their paths are matching, upload");
 
       HashMap<String, RequestBody> attachments = constructSelectedImagesForRequest();
@@ -197,6 +197,13 @@ public class SubmitApprovalRequestActivity extends BaseActivity
     if (imagePaths.isEmpty()) {
       errorMessages.add("You are required to attach some images.");
     }
+    if (medicalReportImagesPlacement.isEmpty()
+        || invoiceImagesPlacement.isEmpty()
+        || identityCardImagesPlacement.isEmpty()
+        || passportImagesPlacement.isEmpty()
+        || testResultsImagesPlacement.isEmpty()) {
+      errorMessages.add("Please populate all the attachment categories");
+    }
 
     if (!errorMessages.isEmpty()) {
       String finalErrorMessage = "";
@@ -217,8 +224,6 @@ public class SubmitApprovalRequestActivity extends BaseActivity
       waitingDialog.setMessage(
           getResources().getString(R.string.uploading_attachments_dialog_message));
       waitingDialog.setOnShowListener(dialogInterface -> {
-        //HashMap<String, RequestBody> attachments = constructSelectedImagesForRequest();
-
         uploadInsuranceImagesFirst();
       });
 
@@ -247,10 +252,10 @@ public class SubmitApprovalRequestActivity extends BaseActivity
               identityCardImagesPlacement.add(finalI);
               break;
             case 4:
-              testResultsImagesPlacement.add(finalI);
+              passportImagesPlacement.add(finalI);
               break;
             case 5:
-              originalReceiptImagesPlacement.add(finalI);
+              testResultsImagesPlacement.add(finalI);
               break;
             case 6:
               otherDocumentsImagesPlacement.add(finalI);
@@ -333,8 +338,10 @@ public class SubmitApprovalRequestActivity extends BaseActivity
 
     for (int i = 0; i < imagePaths.size(); i++) {
       if (imagePaths.get(i) != null) {
-        imageParts.put("attachements[" + i + "][content]", Helpers.toRequestBody(imagePathsFinal.get(i)));
-        imageParts.put("attachements[" + i + "][documType]", Helpers.toRequestBody(imagesDocumentType.get(i)));
+        imageParts.put("attachements[" + i + "][content]",
+            Helpers.toRequestBody(imagePathsFinal.get(i)));
+        imageParts.put("attachements[" + i + "][documType]",
+            Helpers.toRequestBody(imagesDocumentType.get(i)));
         imageParts.put("attachements[" + i + "][name]", Helpers.toRequestBody(imagePaths.get(i)));
         imageParts.put("attachements[" + i + "][id]", Helpers.toRequestBody(String.valueOf(i + 1)));
       }

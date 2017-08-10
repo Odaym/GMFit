@@ -74,9 +74,9 @@ public class SubmitReimbursementActivity extends BaseActivity
 
   private ArrayList<Integer> medicalReportImagesPlacement = new ArrayList<>();
   private ArrayList<Integer> invoiceImagesPlacement = new ArrayList<>();
+  private ArrayList<Integer> originalReceiptImagesPlacement = new ArrayList<>();
   private ArrayList<Integer> identityCardImagesPlacement = new ArrayList<>();
   private ArrayList<Integer> testResultsImagesPlacement = new ArrayList<>();
-  private ArrayList<Integer> originalReceiptImagesPlacement = new ArrayList<>();
   private ArrayList<Integer> otherDocumentsImagesPlacement = new ArrayList<>();
 
   private SubmitReimbursementActivityPresenter presenter;
@@ -210,9 +210,9 @@ public class SubmitReimbursementActivity extends BaseActivity
     intent.putExtra(ReimbursementDetailsActivity.REIMBURSEMENT_REQUEST_ID, claimId);
     intent.putExtra("medicalReportImagesPlacement", medicalReportImagesPlacement);
     intent.putExtra("invoiceImagesPlacement", invoiceImagesPlacement);
+    intent.putExtra("originalReceiptImagesPlacement", originalReceiptImagesPlacement);
     intent.putExtra("identityCardImagesPlacement", identityCardImagesPlacement);
     intent.putExtra("testResultsImagesPlacement", testResultsImagesPlacement);
-    intent.putExtra("originalReceiptImagesPlacement", originalReceiptImagesPlacement);
     intent.putExtra("otherDocumentsImagesPlacement", otherDocumentsImagesPlacement);
     startActivity(intent);
     finish();
@@ -254,6 +254,12 @@ public class SubmitReimbursementActivity extends BaseActivity
     }
     if (imagePaths.isEmpty()) {
       errorMessages.add("You are required to attach some images.");
+    }
+    if (medicalReportImagesPlacement.isEmpty()
+        || invoiceImagesPlacement.isEmpty()
+        || originalReceiptImagesPlacement.isEmpty()
+        || identityCardImagesPlacement.isEmpty()) {
+      errorMessages.add("Please populate all the attachment categories");
     }
 
     if (!errorMessages.isEmpty()) {
@@ -301,13 +307,13 @@ public class SubmitReimbursementActivity extends BaseActivity
               invoiceImagesPlacement.add(finalI);
               break;
             case 3:
-              identityCardImagesPlacement.add(finalI);
+              originalReceiptImagesPlacement.add(finalI);
               break;
             case 4:
-              testResultsImagesPlacement.add(finalI);
+              identityCardImagesPlacement.add(finalI);
               break;
             case 5:
-              originalReceiptImagesPlacement.add(finalI);
+              testResultsImagesPlacement.add(finalI);
               break;
             case 6:
               otherDocumentsImagesPlacement.add(finalI);
