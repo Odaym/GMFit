@@ -5,6 +5,7 @@
   <!--<string name="facebook_app_id" translatable="false">114477082289283</string>-->
   <!--<string name="facebook_app_id" translatable="false">1910359685848230</string>-->
   <string name="facebook_app_id" translatable="false">304078090067926</string>
+  <string name="fb_login_protocol_scheme">fb304078090067926</string>
 
   <string name="shared_file_provider">com.nguyenhoanglam.imagepicker.provider.gmfit</string>
 

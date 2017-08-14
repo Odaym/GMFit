@@ -201,8 +201,10 @@ public class HealthFragment extends BaseFragment
         metricCounterTV.setText(String.valueOf(String.format(Locale.getDefault(), "%.1f",
             Float.parseFloat(userProfileData.getWeight()))));
 
-        getActivity().getWindow()
-            .setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        if (getActivity() != null) {
+          getActivity().getWindow()
+              .setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        }
       }
     }
   }

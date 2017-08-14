@@ -201,12 +201,12 @@ public class InsuranceDirectoryFragment extends BaseFragment
             getNearbyClinics(prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""),
                 finalProviderType, Integer.valueOf(countrySelected), userLatLong[1], userLatLong[0],
                 0);
-          }else{
+          } else {
             final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
             alertDialog.setTitle(R.string.required_fields_dialog_title);
             alertDialog.setMessage("Please select a country to proceed");
-            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getResources().getString(R.string.ok),
-                (dialog, which) -> dialog.dismiss());
+            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE,
+                getResources().getString(R.string.ok), (dialog, which) -> dialog.dismiss());
             alertDialog.show();
           }
         }
@@ -404,11 +404,13 @@ public class InsuranceDirectoryFragment extends BaseFragment
       }, PERMISSION_LOCATION_REQUEST_CODE);
     } else {
       Location location = lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-      userLatLong[0] = location.getLatitude();
-      userLatLong[1] = location.getLongitude();
+      if (location != null) {
+        userLatLong[0] = location.getLatitude();
+        userLatLong[1] = location.getLongitude();
 
-      getNearbyClinics(prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""), "H", 22,
-          userLatLong[1], userLatLong[0], 0);
+        getNearbyClinics(prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""), "H", 22,
+            userLatLong[1], userLatLong[0], 0);
+      }
     }
   }
 

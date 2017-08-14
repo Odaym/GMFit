@@ -143,11 +143,11 @@ public class NutritionFragment extends BaseFragment
 
     presenter = new NutritionFragmentPresenter(this, dataAccessHandler);
 
+    presenter.getUiForSection("nutrition", finalDesiredDate);
+
     presenter.getUserGoalMetrics(finalDesiredDate, "nutrition");
 
     presenter.getUserAddedMeals(finalDesiredDate);
-
-    presenter.getUiForSection("nutrition", finalDesiredDate);
 
     setupDateCarousel();
 
@@ -390,6 +390,8 @@ public class NutritionFragment extends BaseFragment
         setupWidgetViews(finalWidgets);
 
         setupChartViews(finalCharts);
+
+        changeMetricProgressValue();
 
         hideProgressBarsForLoading();
       });
@@ -709,7 +711,6 @@ public class NutritionFragment extends BaseFragment
     Intent intent = new Intent(parentActivity, AddNewMealItemActivity.class);
     intent.putExtra(Constants.EXTRAS_MAIN_MEAL_NAME, mainMealName);
     intent.putExtra(Constants.EXTRAS_DATE_TO_ADD_MEAL_ON, finalDesiredDate);
-    //Timber.d("Final desired date is : " + finalDesiredDate);
     startActivity(intent);
   }
 

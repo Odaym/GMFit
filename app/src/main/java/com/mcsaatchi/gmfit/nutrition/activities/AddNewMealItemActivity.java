@@ -98,9 +98,6 @@ public class AddNewMealItemActivity extends BaseActivity
 
     mealItemsList.setOnScrollListener(new AbsListView.OnScrollListener() {
       @Override public void onScrollStateChanged(AbsListView absListView, int i) {
-
-        //Hide keyboard
-
         InputMethodManager imm =
             (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(getWindow().getDecorView().getRootView().getWindowToken(), 0);

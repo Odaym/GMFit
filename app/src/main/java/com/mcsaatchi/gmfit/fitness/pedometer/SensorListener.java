@@ -111,8 +111,6 @@ public class SensorListener extends Service implements SensorEventListener {
 
       sendOutEventBusEvents();
     }
-
-    Timber.d("Sensor value has changed - %s", prefs.getInt("steps_taken", 0));
   }
 
   public float calculateCalories(float weight, float metricRunningFactor, float stepLength) {
