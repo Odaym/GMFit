@@ -33,7 +33,8 @@ public class Constants {
 
   public static final String EXTRAS_FIRST_APP_LAUNCH = "first_app_launch";
 
-  public static final int WAIT_TIME_BEFORE_CHECKING_METRICS_SERVICE = 3600000;
+  //4 minutes (divide by 6000)
+  public static final int WAIT_TIME_BEFORE_CHECKING_METRICS_SERVICE = 24000;
 
   public static final int NUMBER_OF_DAYS_IN_DATE_CAROUSEL = 30;
 

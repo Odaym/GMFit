@@ -38,7 +38,6 @@ import javax.inject.Inject;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import timber.log.Timber;
 
 /**
  * Background service which keeps the step-sensor listener alive to always get
@@ -210,18 +209,25 @@ public class SensorListener extends Service implements SensorEventListener {
               Response<DefaultGetResponse> response) {
             switch (response.code()) {
               case 200:
-                Calendar c = Calendar.getInstance();
-                int hour = c.get(Calendar.HOUR_OF_DAY);
-                int minute = c.get(Calendar.MINUTE);
-                int second = c.get(Calendar.SECOND);
+                Calendar midNight = Calendar.getInstance();
+                midNight.set(Calendar.HOUR_OF_DAY, 0);
+                midNight.set(Calendar.MINUTE, 0);
+                midNight.set(Calendar.SECOND, 0);
+                midNight.set(Calendar.MILLISECOND, 0);
 
-                //If current time is between 12AM and 12:05AM, clear metrics
-                if (hour * 3600 + minute * 60 + second < 2700) {
-                  Timber.d("Time is between, wiping metrics");
+                Calendar midnightFuture = Calendar.getInstance();
+                midnightFuture.set(Calendar.HOUR_OF_DAY, 0);
+                midnightFuture.set(Calendar.MINUTE, 20);
+                midnightFuture.set(Calendar.SECOND, 0);
+                midnightFuture.set(Calendar.MILLISECOND, 0);
+
+                Calendar timeNow = Calendar.getInstance();
+
+                //Time is between 12 and 12:20
+                if (timeNow.getTime().after(midNight.getTime()) && timeNow.getTime()
+                    .before(midnightFuture.getTime())) {
                   wipeOutFitnessMetricsAtMidnight();
                   sendOutEventBusEvents();
-                } else {
-                  Timber.d("Time is not between");
                 }
 
                 break;
