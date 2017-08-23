@@ -240,6 +240,8 @@
   <string name="scanned_meal_not_found">The meal you scanned was not found in our database of meals</string>
   <string name="searching_for_barcode_meal">Searching for product</string>
   <string name="meals_empty_tap_get_started">Tap the \"Add\" or \"Scan\" buttons to start</string>
+  <string name="requesting_meal_dialog_title">Requesting Meal</string>
+  <string name="meal_requested_dialog_message">Your meal has been requested successfully</string>
 
   <!-- HEALTH FRAGMENT -->
   <string name="user_weight_label_metric">Kilograms</string>
@@ -370,7 +372,8 @@
   <string name="mobile_number_empty_error">Mobile number cannot be empty</string>
   <string name="weight_empty_error">Weight cannot be empty</string>
   <string name="height_empty_error">Height cannot be empty</string>
-
+  <string name="weight_height_zero_error">Weight and height cannot be zero</string>
+  <string name="error_updating_profile">Error updating profile</string>
 
   <!-- INSURANCE SECTION -->
   <string name="insurance_section_title">Insurance</string>

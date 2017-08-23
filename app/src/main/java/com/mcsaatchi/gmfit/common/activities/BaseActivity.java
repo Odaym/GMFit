@@ -39,19 +39,17 @@ public class BaseActivity extends AppCompatActivity
 
     ((GMFitApplication) getApplication()).getAppComponent().inject(this);
 
-    //firebaseAnalytics = FirebaseAnalytics.getInstance(this);
+    firebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
     overridePendingTransitionEnter();
   }
 
-  @Override
-  public void finish() {
+  @Override public void finish() {
     super.finish();
     overridePendingTransitionExit();
   }
 
-  @Override
-  public void onBackPressed() {
+  @Override public void onBackPressed() {
     super.onBackPressed();
     overridePendingTransitionExit();
   }
@@ -157,7 +155,7 @@ public class BaseActivity extends AppCompatActivity
 
     Bundle params = new Bundle();
     params.putString("activity_name", activityName);
-    //firebaseAnalytics.logEvent("activity_visited", params);
+    firebaseAnalytics.logEvent("activity_visited", params);
 
     if (toolbarTitle == null) {
       toolbar.setTitle(R.string.app_name);

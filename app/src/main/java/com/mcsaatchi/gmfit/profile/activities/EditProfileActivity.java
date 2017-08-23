@@ -212,38 +212,48 @@ public class EditProfileActivity extends BaseActivity
       String weightValue = weightValueET.getText().toString();
       String heightValue = heightValueET.getText().toString();
 
-      String DOBToSend = "";
+      if (Double.parseDouble(heightValue) == 0 || Double.parseDouble(weightValue) == 0) {
+        final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+        alertDialog.setTitle(R.string.error_updating_profile);
+        alertDialog.setMessage(getString(R.string.weight_height_zero_error));
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
+            (dialog, which) -> dialog.dismiss());
+        alertDialog.show();
+      } else {
+        String DOBToSend = "";
 
-      if (finalDOB == null) {
-        try {
-          Date unformattedDOB = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault()).parse(
-              prefs.getString(Constants.EXTRAS_USER_PROFILE_DATE_OF_BIRTH, ""));
-
-          SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-
-          DOBToSend = dt.format(unformattedDOB);
-        } catch (ParseException e) {
+        if (finalDOB == null) {
           try {
-            Date unformattedDOB = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(
+            Date unformattedDOB = new SimpleDateFormat("MMM dd, yyyy", Locale.getDefault()).parse(
                 prefs.getString(Constants.EXTRAS_USER_PROFILE_DATE_OF_BIRTH, ""));
 
             SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
 
             DOBToSend = dt.format(unformattedDOB);
-          } catch (ParseException e1) {
-            e1.printStackTrace();
-          }
-        }
-      } else {
-        DOBToSend = finalDOB;
-      }
+          } catch (ParseException e) {
+            try {
+              Date unformattedDOB = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).parse(
+                  prefs.getString(Constants.EXTRAS_USER_PROFILE_DATE_OF_BIRTH, ""));
 
-      presenter.updateUserProfileExplicitly(
-          Helpers.toRequestBody(firstNameValue + " " + lastNameValue),
-          Helpers.toRequestBody(mobileNumberValue),
-          Helpers.toRequestBody(String.valueOf(genderValue)), Helpers.toRequestBody(DOBToSend),
-          Helpers.toRequestBody(bloodTypeValue), Helpers.toRequestBody(String.valueOf(heightValue)),
-          Helpers.toRequestBody(String.valueOf(weightValue)));
+              SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+
+              DOBToSend = dt.format(unformattedDOB);
+            } catch (ParseException e1) {
+              e1.printStackTrace();
+            }
+          }
+        } else {
+          DOBToSend = finalDOB;
+        }
+
+        presenter.updateUserProfileExplicitly(
+            Helpers.toRequestBody(firstNameValue + " " + lastNameValue),
+            Helpers.toRequestBody(mobileNumberValue),
+            Helpers.toRequestBody(String.valueOf(genderValue)), Helpers.toRequestBody(DOBToSend),
+            Helpers.toRequestBody(bloodTypeValue),
+            Helpers.toRequestBody(String.valueOf(heightValue)),
+            Helpers.toRequestBody(String.valueOf(weightValue)));
+      }
     }
   }
 }

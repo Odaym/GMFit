@@ -408,16 +408,16 @@
         android:label="@string/app_name"/>
 
     <!--<activity-->
-        <!--android:name="com.facebook.CustomTabActivity"-->
-        <!--android:exported="true">-->
-      <!--<intent-filter>-->
-        <!--<action android:name="android.intent.action.VIEW"/>-->
+    <!--android:name="com.facebook.CustomTabActivity"-->
+    <!--android:exported="true">-->
+    <!--<intent-filter>-->
+    <!--<action android:name="android.intent.action.VIEW"/>-->
 
-        <!--<category android:name="android.intent.category.DEFAULT"/>-->
-        <!--<category android:name="android.intent.category.BROWSABLE"/>-->
+    <!--<category android:name="android.intent.category.DEFAULT"/>-->
+    <!--<category android:name="android.intent.category.BROWSABLE"/>-->
 
-        <!--<data android:scheme="@string/fb_login_protocol_scheme"/>-->
-      <!--</intent-filter>-->
+    <!--<data android:scheme="@string/fb_login_protocol_scheme"/>-->
+    <!--</intent-filter>-->
     <!--</activity>-->
     <!-- END OF FACEBOOK CONSIDERATIONS -->
 
@@ -426,10 +426,10 @@
         android:value="36e136351325660be3ac92f428de565fcbdc3033"/>
 
     <!-- GOOGLE MAPS API KEYS -->
-    <!-- PRODUCTION FROM WORK KEY-->
-    <!--<meta-data-->
-        <!--android:name="com.google.android.geo.API_KEY"-->
-        <!--android:value="AIzaSyBzptbw8-xsnunOTUpQfAM7xe5YyGk87i4"/>-->
+    <!--PRODUCTION FROM WORK KEY-->
+    <meta-data
+        android:name="com.google.android.geo.API_KEY"
+        android:value="AIzaSyBzptbw8-xsnunOTUpQfAM7xe5YyGk87i4"/>
 
     <!-- PRODUCTION FROM HOME KEY-->
     <!--<meta-data-->
@@ -437,9 +437,9 @@
     <!--android:value="AIzaSyBzptbw8-xsnunOTUpQfAM7xe5YyGk87i4"/>-->
 
     <!-- DEV FROM WORK KEY-->
-    <meta-data
-    android:name="com.google.android.geo.API_KEY"
-    android:value="AIzaSyDzwRq628GqkaxN3cZQoTuAergqlZJms6k"/>
+    <!--<meta-data-->
+    <!--android:name="com.google.android.geo.API_KEY"-->
+    <!--android:value="AIzaSyDzwRq628GqkaxN3cZQoTuAergqlZJms6k"/>-->
 
     <!-- DEV FROM WORK KEY-->
     <!--<meta-data-->

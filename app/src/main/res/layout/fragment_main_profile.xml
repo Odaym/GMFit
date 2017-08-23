@@ -291,8 +291,8 @@
               android:layout_alignParentEnd="true"
               android:gravity="end|center_vertical"
               android:paddingEnd="@dimen/default_margin_5"
-              android:textAppearance="?android:textAppearanceSmall"
               android:textColor="@color/fitness_dark_blue"
+              android:textSize="12sp"
               />
 
           <ImageView

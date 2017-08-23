@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -216,6 +217,15 @@ public class AddNewMealItemActivity extends BaseActivity
     requestMealBTN.setText(getResources().getString(R.string.request_new_meal_sent_thanks));
     requestMealBTN.setAlpha(0.5f);
     requestMealBTN.setEnabled(false);
+
+    final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+    alertDialog.setTitle(R.string.requesting_meal_dialog_title);
+    alertDialog.setMessage(getString(R.string.meal_requested_dialog_message));
+    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok), (dialog, which) -> {
+      dialog.dismiss();
+      finish();
+    });
+    alertDialog.show();
   }
 
   @Override public void displayRecentMeals(ArrayList<RecentMealsResponseBody> recentMealsFromAPI,

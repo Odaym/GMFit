@@ -17,8 +17,8 @@ import com.mcsaatchi.gmfit.architecture.retrofit.responses.UserGoalMetricsRespon
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.UserMealsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.UserMealsResponseInner;
 import com.mcsaatchi.gmfit.common.Constants;
-import com.mcsaatchi.gmfit.common.models.DataChart;
 import com.mcsaatchi.gmfit.common.fragments.BaseFragmentPresenter;
+import com.mcsaatchi.gmfit.common.models.DataChart;
 import java.util.ArrayList;
 import java.util.List;
 import org.joda.time.LocalDate;
@@ -206,7 +206,7 @@ class NutritionFragmentPresenter extends BaseFragmentPresenter {
         "nutrition", chartObject.getName(), new Callback<ChartMetricBreakdownResponse>() {
           @Override public void onResponse(Call<ChartMetricBreakdownResponse> call,
               Response<ChartMetricBreakdownResponse> response) {
-            if (response.body().getData().getBody() != null) {
+            if (response.body().getData() != null && response.body().getData().getBody() != null) {
               List<ChartMetricBreakdownResponseDatum> rawChartData =
                   response.body().getData().getBody().getData();
 
