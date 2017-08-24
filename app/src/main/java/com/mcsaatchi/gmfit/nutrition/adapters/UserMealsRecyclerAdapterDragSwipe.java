@@ -115,9 +115,9 @@ public class UserMealsRecyclerAdapterDragSwipe
     MyViewHolder(View view) {
       super(view);
       view.setOnClickListener(this);
-      entryTitleTV = (TextView) view.findViewById(R.id.entryTitleTV);
-      entryDescriptionTV = (TextView) view.findViewById(R.id.entryDescriptionTV);
-      entryUnitsTV = (TextView) view.findViewById(R.id.entryUnitsTV);
+      entryTitleTV = view.findViewById(R.id.entryTitleTV);
+      entryDescriptionTV = view.findViewById(R.id.entryDescriptionTV);
+      entryUnitsTV = view.findViewById(R.id.entryUnitsTV);
     }
 
     @Override public void onClick(View view) {

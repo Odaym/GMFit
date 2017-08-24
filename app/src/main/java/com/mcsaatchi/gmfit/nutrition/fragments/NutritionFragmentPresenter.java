@@ -206,7 +206,9 @@ class NutritionFragmentPresenter extends BaseFragmentPresenter {
         "nutrition", chartObject.getName(), new Callback<ChartMetricBreakdownResponse>() {
           @Override public void onResponse(Call<ChartMetricBreakdownResponse> call,
               Response<ChartMetricBreakdownResponse> response) {
-            if (response.body().getData() != null && response.body().getData().getBody() != null) {
+            if (response.body() != null
+                && response.body().getData() != null
+                && response.body().getData().getBody() != null) {
               List<ChartMetricBreakdownResponseDatum> rawChartData =
                   response.body().getData().getBody().getData();
 

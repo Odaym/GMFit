@@ -102,7 +102,7 @@
   <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:background="@android:color/white"
+      android:background="@color/offwhite_background_gray"
       android:orientation="vertical"
       >
 
@@ -122,6 +122,9 @@
       <LinearLayout
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
+          android:layout_marginBottom="@dimen/default_margin_0"
+          android:layout_marginTop="@dimen/default_margin_2"
+          android:background="@android:color/white"
           android:orientation="vertical"
           >
 
@@ -148,7 +151,7 @@
 
           <LinearLayout
               android:layout_width="wrap_content"
-              android:layout_height="match_parent"
+              android:layout_height="@dimen/add_meal_item_layout_height"
               android:gravity="center_vertical"
               >
 
@@ -208,7 +211,9 @@
       <LinearLayout
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
+          android:layout_marginBottom="@dimen/default_margin_0"
           android:layout_marginTop="@dimen/default_margin_2"
+          android:background="@android:color/white"
           android:orientation="vertical"
           >
 
@@ -286,7 +291,6 @@
             android:layout_height="wrap_content"
             android:scrollbars="vertical"
             />
-
       </LinearLayout>
 
       <!---->
@@ -295,7 +299,9 @@
       <LinearLayout
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
+          android:layout_marginBottom="@dimen/default_margin_0"
           android:layout_marginTop="@dimen/default_margin_2"
+          android:background="@android:color/white"
           android:orientation="vertical"
           >
 
@@ -382,8 +388,9 @@
       <LinearLayout
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:layout_marginBottom="@dimen/default_margin_2"
+          android:layout_marginBottom="@dimen/default_margin_0"
           android:layout_marginTop="@dimen/default_margin_2"
+          android:background="@android:color/white"
           android:orientation="vertical"
           >
 

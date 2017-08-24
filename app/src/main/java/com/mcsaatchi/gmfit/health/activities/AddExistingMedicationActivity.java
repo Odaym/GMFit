@@ -134,12 +134,21 @@ public class AddExistingMedicationActivity extends BaseActivity
         setupRemindersRecyclerView(medicationReminders);
       }
 
-      unitsET.setText(String.valueOf(medicationItem.getUnits()));
-      treatmentDurationET.setText(String.valueOf(medicationItem.getTreatmentDuration()));
+      if (medicationItem.getUnits() != 0) {
+        unitsET.setText(String.valueOf(medicationItem.getUnits()));
+      }
+
+      if (medicationItem.getTreatmentDuration() != 0) {
+        treatmentDurationET.setText(String.valueOf(medicationItem.getTreatmentDuration()));
+      }
+
+      if (medicationItem.getFrequency() != 0) {
+        frequencyET.setText(String.valueOf(medicationItem.getFrequency()));
+      }
+
       unitMeasurementTV.setText(
           medicationItem.getUnitForm().substring(0, 1).toUpperCase() + medicationItem.getUnitForm()
               .substring(1));
-      frequencyET.setText(String.valueOf(medicationItem.getFrequency()));
       daysOfWeekTV.setText(medicationItem.getWhenString());
       treatmentDurationET.setText(String.valueOf(medicationItem.getTreatmentDuration()));
       yourNotesET.setText(medicationItem.getRemarks());

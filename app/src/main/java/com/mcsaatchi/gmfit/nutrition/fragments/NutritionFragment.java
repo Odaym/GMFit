@@ -176,7 +176,7 @@ public class NutritionFragment extends BaseFragment
         break;
       case R.id.calendarToday:
         LinearLayout dateCarouselContainer =
-            (LinearLayout) dateCarouselLayout.findViewById(R.id.dateCarouselContainer);
+            dateCarouselLayout.findViewById(R.id.dateCarouselContainer);
 
         dateCarouselContainer.removeAllViews();
         dateCarouselLayout.setupDateCarousel();
@@ -620,7 +620,7 @@ public class NutritionFragment extends BaseFragment
             writeAppropriateEmptyText(breakfastMealsEmptyLayout, "Breakfast");
 
             ImageView mealsEmptyIconIV =
-                (ImageView) breakfastMealsEmptyLayout.findViewById(R.id.mealsEmptyIconIV);
+                breakfastMealsEmptyLayout.findViewById(R.id.mealsEmptyIconIV);
             Picasso.with(getActivity()).load(R.drawable.ic_empty_meals).into(mealsEmptyIconIV);
           } else {
             breakfastMealsEmptyLayout.setVisibility(View.GONE);
@@ -632,8 +632,7 @@ public class NutritionFragment extends BaseFragment
             lunchMealsEmptyLayout.setVisibility(View.VISIBLE);
             writeAppropriateEmptyText(lunchMealsEmptyLayout, "Lunch");
 
-            ImageView mealsEmptyIconIV =
-                (ImageView) lunchMealsEmptyLayout.findViewById(R.id.mealsEmptyIconIV);
+            ImageView mealsEmptyIconIV = lunchMealsEmptyLayout.findViewById(R.id.mealsEmptyIconIV);
             Picasso.with(getActivity()).load(R.drawable.ic_empty_meals).into(mealsEmptyIconIV);
           } else {
             lunchMealsEmptyLayout.setVisibility(View.GONE);
@@ -645,8 +644,7 @@ public class NutritionFragment extends BaseFragment
             dinnerMealsEmptyLayout.setVisibility(View.VISIBLE);
             writeAppropriateEmptyText(dinnerMealsEmptyLayout, "Dinner");
 
-            ImageView mealsEmptyIconIV =
-                (ImageView) dinnerMealsEmptyLayout.findViewById(R.id.mealsEmptyIconIV);
+            ImageView mealsEmptyIconIV = dinnerMealsEmptyLayout.findViewById(R.id.mealsEmptyIconIV);
             Picasso.with(getActivity()).load(R.drawable.ic_empty_meals).into(mealsEmptyIconIV);
           } else {
             dinnerMealsEmptyLayout.setVisibility(View.GONE);
@@ -658,8 +656,7 @@ public class NutritionFragment extends BaseFragment
             snackMealsEmptyLayout.setVisibility(View.VISIBLE);
             writeAppropriateEmptyText(snackMealsEmptyLayout, "Snacks");
 
-            ImageView mealsEmptyIconIV =
-                (ImageView) snackMealsEmptyLayout.findViewById(R.id.mealsEmptyIconIV);
+            ImageView mealsEmptyIconIV = snackMealsEmptyLayout.findViewById(R.id.mealsEmptyIconIV);
             Picasso.with(getActivity()).load(R.drawable.ic_empty_snacks).into(mealsEmptyIconIV);
           } else {
             snackMealsEmptyLayout.setVisibility(View.GONE);
@@ -715,13 +712,16 @@ public class NutritionFragment extends BaseFragment
   }
 
   private void changeMetricProgressValue() {
-    int progressValue = ((Helpers.getNumberFromFromattedString(metricCounterTV.getText().toString())
-        + Helpers.getNumberFromFromattedString(activeTV.getText().toString())) * 100)
-        / Helpers.getNumberFromFromattedString(goalTV.getText().toString());
+    if (Helpers.getNumberFromFromattedString(goalTV.getText().toString()) != 0) {
+      int progressValue =
+          ((Helpers.getNumberFromFromattedString(metricCounterTV.getText().toString())
+              + Helpers.getNumberFromFromattedString(activeTV.getText().toString())) * 100)
+              / Helpers.getNumberFromFromattedString(goalTV.getText().toString());
 
-    if (progressValue > 100) progressValue = 100;
+      if (progressValue > 100) progressValue = 100;
 
-    metricProgressBar.setProgress(progressValue);
+      metricProgressBar.setProgress(progressValue);
+    }
   }
 
   private void showProgressBarsForLoading() {

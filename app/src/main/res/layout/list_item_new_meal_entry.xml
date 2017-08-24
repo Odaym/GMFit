@@ -33,7 +33,6 @@
       android:layout_height="@dimen/add_new_chart_list_item_edge_width"
       android:layout_alignParentEnd="true"
       android:layout_centerVertical="true"
-      android:background="@color/much_lighter_gray"
       android:gravity="center"
       />
 </RelativeLayout>

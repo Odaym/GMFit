@@ -226,7 +226,8 @@ public class InsuranceOperationWidgetsGridAdapter
     Intent intent = new Intent(Intent.ACTION_VIEW);
     intent.setDataAndType(Uri.fromFile(file), "application/pdf");
     intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-    fragmentActivity.startActivity(intent);
+    intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+    fragmentActivity.startActivity(Intent.createChooser(intent, "Open PDF with"));
   }
 
   class RecyclerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -237,6 +238,7 @@ public class InsuranceOperationWidgetsGridAdapter
     RecyclerViewHolder(View itemView) {
       super(itemView);
       itemView.setOnClickListener(this);
+
 
       widgetIcon = (ImageView) itemView.findViewById(R.id.widgetIconIV);
       widgetName = (TextView) itemView.findViewById(R.id.widgetNameTV);

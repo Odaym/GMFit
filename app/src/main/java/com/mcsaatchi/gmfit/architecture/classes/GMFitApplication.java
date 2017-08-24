@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.StrictMode;
 import com.crashlytics.android.Crashlytics;
 import com.mcsaatchi.gmfit.BuildConfig;
 import com.mcsaatchi.gmfit.architecture.dagger.AppComponent;
@@ -42,6 +43,9 @@ public class GMFitApplication extends Application {
 
   @Override public void onCreate() {
     super.onCreate();
+
+    StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+    StrictMode.setVmPolicy(builder.build());
 
     component = DaggerAppComponent.builder()
         .appModule(new AppModule(this))

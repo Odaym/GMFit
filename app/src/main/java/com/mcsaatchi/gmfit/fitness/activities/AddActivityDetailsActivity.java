@@ -123,6 +123,10 @@ public class AddActivityDetailsActivity extends BaseActivity
 
         setupDatePicker();
 
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("dd MMM, yyyy", Locale.getDefault());
+        activityDate = dateFormatter.format(Calendar.getInstance().getTime());
+        datePicker.setSelectedItem(activityDate);
+
         timeSpentActivityET.setSelection(timeSpentActivityET.getText().toString().length());
 
         activityLevelChoices =
@@ -134,7 +138,10 @@ public class AddActivityDetailsActivity extends BaseActivity
   }
 
   @Override public boolean onCreateOptionsMenu(Menu menu) {
-    getMenuInflater().inflate(R.menu.edit_activity, menu);
+    if (call_purpose_edit) {
+      getMenuInflater().inflate(R.menu.edit_activity, menu);
+    }
+
     return super.onCreateOptionsMenu(menu);
   }
 

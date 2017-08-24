@@ -138,7 +138,6 @@
             android:gravity="center_vertical"
             android:inputType="number"
             android:maxLength="4"
-            android:text="30"
             android:textColor="@color/fitness_pink"
             />
 
