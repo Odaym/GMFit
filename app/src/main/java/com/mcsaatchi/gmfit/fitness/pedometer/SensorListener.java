@@ -71,7 +71,7 @@ public class SensorListener extends Service implements SensorEventListener {
     TimerTask doAsynchronousTask = new TimerTask() {
       @Override public void run() {
 
-        handler.post(() -> refreshAccessToken());
+        //handler.post(() -> refreshAccessToken());
       }
     };
 
