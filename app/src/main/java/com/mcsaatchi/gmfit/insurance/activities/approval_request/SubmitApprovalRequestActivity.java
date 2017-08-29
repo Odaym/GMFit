@@ -74,6 +74,8 @@ public class SubmitApprovalRequestActivity extends BaseActivity
   private ProgressDialog waitingDialog;
   private ImageView currentImageView;
 
+  private int imageFilesSize = 0;
+
   private File photoFile;
   private Uri photoFileUri;
   private String categoryValue = "Out";
@@ -174,7 +176,11 @@ public class SubmitApprovalRequestActivity extends BaseActivity
   @Override public void saveImagePath(String imagePath) {
     imagePathsFinal.add(imagePath);
 
-    if (imagePaths.size() == imagePathsFinal.size()) {
+    imageFilesSize++;
+
+    if (imageFilesSize < imagePaths.size()) {
+      startUploadImages(imageFilesSize);
+    } else if (imagePaths.size() == imagePathsFinal.size()) {
       Timber.d("Images and their paths are matching, upload");
 
       HashMap<String, RequestBody> attachments = constructSelectedImagesForRequest();
@@ -224,7 +230,7 @@ public class SubmitApprovalRequestActivity extends BaseActivity
       waitingDialog.setMessage(
           getResources().getString(R.string.uploading_attachments_dialog_message));
       waitingDialog.setOnShowListener(dialogInterface -> {
-        uploadInsuranceImagesFirst();
+        startUploadImages(imageFilesSize);
       });
 
       waitingDialog.show();
@@ -317,19 +323,17 @@ public class SubmitApprovalRequestActivity extends BaseActivity
     builderSingle.show();
   }
 
-  private void uploadInsuranceImagesFirst() {
-    for (int i = 0; i < imagePaths.size(); i++) {
-      if (imagePaths.get(i) != null) {
-        HashMap<String, RequestBody> insuranceImages = new HashMap<>();
+  private void startUploadImages(int imageFilesIndex) {
+    if (imagePaths.get(imageFilesIndex) != null) {
+      HashMap<String, RequestBody> insuranceImages = new HashMap<>();
 
-        File imageFile = new File(imagePaths.get(i));
+      File imageFile = new File(imagePaths.get(imageFilesIndex));
 
-        RequestBody imageFilePart = RequestBody.create(MediaType.parse("image/*"), imageFile);
+      RequestBody imageFilePart = RequestBody.create(MediaType.parse("image/*"), imageFile);
 
-        insuranceImages.put("file\"; filename=\"" + imagePaths.get(i), imageFilePart);
+      insuranceImages.put("file\"; filename=\"" + imagePaths.get(imageFilesIndex), imageFilePart);
 
-        presenter.uploadInsuranceImage(insuranceImages);
-      }
+      presenter.uploadInsuranceImage(insuranceImages);
     }
   }
 
@@ -338,11 +342,12 @@ public class SubmitApprovalRequestActivity extends BaseActivity
 
     for (int i = 0; i < imagePaths.size(); i++) {
       if (imagePaths.get(i) != null) {
-        imageParts.put("attachements[" + i + "][content]",
+        imageParts.put("attachements[" + i + "][path]",
             Helpers.toRequestBody(imagePathsFinal.get(i)));
         imageParts.put("attachements[" + i + "][documType]",
             Helpers.toRequestBody(imagesDocumentType.get(i)));
-        imageParts.put("attachements[" + i + "][name]", Helpers.toRequestBody(imagePaths.get(i)));
+        imageParts.put("attachements[" + i + "][filename]",
+            Helpers.toRequestBody(imagePaths.get(i)));
         imageParts.put("attachements[" + i + "][id]", Helpers.toRequestBody(String.valueOf(i + 1)));
       }
     }

@@ -11,9 +11,9 @@ import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.insurance.widget.CustomAttachmentPicker;
 import com.mcsaatchi.gmfit.insurance.widget.ItemLabel;
-import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import org.joda.time.LocalDate;
+import timber.log.Timber;
 
 public class ReimbursementDetailsActivity extends BaseActivity
     implements ReimbursementDetailsActivityPresenter.ReimbursementDetailsActivityView {
@@ -98,138 +98,87 @@ public class ReimbursementDetailsActivity extends BaseActivity
     status.setTextColor(Helpers.determineStatusColor(claimDetails.getStatus()));
     status.setLabel("Status", claimDetails.getStatus());
 
+    Timber.d("Images size in total : " + claimDetails.getImages().size());
+
     for (int i = 0; i < claimDetails.getImages().size(); i++) {
       try {
         switch (claimDetails.getImages().get(i).getDocumType()) {
           case 1:
             if (medicalReportImagesPlacement != null) {
               for (int k = 0; k < medicalReportImagesPlacement.size(); k++) {
-                Picasso.with(this)
-                    .load(Constants.BASE_IMAGES_URL + claimDetails.getImages()
-                        .get(i)
-                        .getContent()
-                        .replace("/jpg", ".jpg"))
-                    .resize(100, 100)
-                    .into(medicalReportImagesPicker.returnImagePicker(
-                        medicalReportImagesPlacement.get(k)));
+                medicalReportImagesPicker.returnImagePicker(medicalReportImagesPlacement.get(k))
+                    .setImageBitmap(
+                        Helpers.convertToBase64(claimDetails.getImages().get(i).getContent()));
               }
             } else {
-              Picasso.with(this)
-                  .load(Constants.BASE_IMAGES_URL + claimDetails.getImages()
-                      .get(i)
-                      .getContent()
-                      .replace("/jpg", ".jpg"))
-                  .resize(100, 100)
-                  .into(medicalReportImagesPicker.returnImagePicker(i));
+              medicalReportImagesPicker.returnImagePicker(i)
+                  .setImageBitmap(
+                      Helpers.convertToBase64(claimDetails.getImages().get(i).getContent()));
             }
             break;
           case 2:
             if (invoiceImagesPlacement != null) {
               for (int k = 0; k < invoiceImagesPlacement.size(); k++) {
-                Picasso.with(this)
-                    .load(Constants.BASE_IMAGES_URL + claimDetails.getImages()
-                        .get(i)
-                        .getContent()
-                        .replace("/jpg", ".jpg"))
-                    .resize(100, 100)
-                    .into(invoiceImagesPicker.returnImagePicker(invoiceImagesPlacement.get(k)));
+                invoiceImagesPicker.returnImagePicker(invoiceImagesPlacement.get(k))
+                    .setImageBitmap(
+                        Helpers.convertToBase64(claimDetails.getImages().get(i).getContent()));
               }
             } else {
-              Picasso.with(this)
-                  .load(Constants.BASE_IMAGES_URL + claimDetails.getImages()
-                      .get(i)
-                      .getContent()
-                      .replace("/jpg", ".jpg"))
-                  .resize(100, 100)
-                  .into(invoiceImagesPicker.returnImagePicker(i));
+              invoiceImagesPicker.returnImagePicker(i)
+                  .setImageBitmap(
+                      Helpers.convertToBase64(claimDetails.getImages().get(i).getContent()));
             }
             break;
           case 3:
-            if (identityCardImagesPlacement != null) {
-              for (int k = 0; k < identityCardImagesPlacement.size(); k++) {
-                Picasso.with(this)
-                    .load(Constants.BASE_IMAGES_URL + claimDetails.getImages()
-                        .get(i)
-                        .getContent()
-                        .replace("/jpg", ".jpg"))
-                    .resize(100, 100)
-                    .into(originalReceiptImagesPicker.returnImagePicker(
-                        identityCardImagesPlacement.get(k)));
+            if (originalReceiptImagesPlacement != null) {
+              for (int k = 0; k < originalReceiptImagesPlacement.size(); k++) {
+                originalReceiptImagesPicker.returnImagePicker(originalReceiptImagesPlacement.get(k))
+                    .setImageBitmap(
+                        Helpers.convertToBase64(claimDetails.getImages().get(i).getContent()));
               }
             } else {
-              Picasso.with(this)
-                  .load(Constants.BASE_IMAGES_URL + claimDetails.getImages()
-                      .get(i)
-                      .getContent()
-                      .replace("/jpg", ".jpg"))
-                  .resize(100, 100)
-                  .into(originalReceiptImagesPicker.returnImagePicker(i));
+              originalReceiptImagesPicker.returnImagePicker(i)
+                  .setImageBitmap(
+                      Helpers.convertToBase64(claimDetails.getImages().get(i).getContent()));
             }
             break;
           case 4:
-            if (testResultsImagesPlacement != null) {
-              for (int k = 0; k < testResultsImagesPlacement.size(); k++) {
-                Picasso.with(this)
-                    .load(Constants.BASE_IMAGES_URL + claimDetails.getImages()
-                        .get(i)
-                        .getContent()
-                        .replace("/jpg", ".jpg"))
-                    .resize(100, 100)
-                    .into(identityCardImagesPicker.returnImagePicker(
-                        testResultsImagesPlacement.get(k)));
+            if (identityCardImagesPlacement != null) {
+              for (int k = 0; k < identityCardImagesPlacement.size(); k++) {
+                identityCardImagesPicker.returnImagePicker(identityCardImagesPlacement.get(k))
+                    .setImageBitmap(
+                        Helpers.convertToBase64(claimDetails.getImages().get(i).getContent()));
               }
             } else {
-              Picasso.with(this)
-                  .load(Constants.BASE_IMAGES_URL + claimDetails.getImages()
-                      .get(i)
-                      .getContent()
-                      .replace("/jpg", ".jpg"))
-                  .resize(100, 100)
-                  .into(identityCardImagesPicker.returnImagePicker(i));
+              identityCardImagesPicker.returnImagePicker(i)
+                  .setImageBitmap(
+                      Helpers.convertToBase64(claimDetails.getImages().get(i).getContent()));
             }
             break;
           case 5:
-            if (originalReceiptImagesPlacement != null) {
-              for (int k = 0; k < originalReceiptImagesPlacement.size(); k++) {
-                Picasso.with(this)
-                    .load(Constants.BASE_IMAGES_URL + claimDetails.getImages()
-                        .get(i)
-                        .getContent()
-                        .replace("/jpg", ".jpg"))
-                    .resize(100, 100)
-                    .into(testResultsImagesPicker.returnImagePicker(
-                        originalReceiptImagesPlacement.get(k)));
+            if (testResultsImagesPlacement != null) {
+              for (int k = 0; k < testResultsImagesPlacement.size(); k++) {
+                testResultsImagesPicker.returnImagePicker(testResultsImagesPlacement.get(k))
+                    .setImageBitmap(
+                        Helpers.convertToBase64(claimDetails.getImages().get(i).getContent()));
               }
             } else {
-              Picasso.with(this)
-                  .load(Constants.BASE_IMAGES_URL + claimDetails.getImages()
-                      .get(i)
-                      .getContent()
-                      .replace("/jpg", ".jpg"))
-                  .resize(100, 100)
-                  .into(testResultsImagesPicker.returnImagePicker(i));
+              testResultsImagesPicker.returnImagePicker(i)
+                  .setImageBitmap(
+                      Helpers.convertToBase64(claimDetails.getImages().get(i).getContent()));
             }
             break;
           case 6:
             if (otherDocumentsImagesPlacement != null) {
               for (int k = 0; k < otherDocumentsImagesPlacement.size(); k++) {
-                Picasso.with(this)
-                    .load(Constants.BASE_IMAGES_URL + claimDetails.getImages()
-                        .get(i)
-                        .getContent()
-                        .replace("/jpg", ".jpg"))
-                    .resize(100, 100)
-                    .into(otherDocumentsImagesPicker.returnImagePicker(
-                        otherDocumentsImagesPlacement.get(k)));
+                otherDocumentsImagesPicker.returnImagePicker(otherDocumentsImagesPlacement.get(k))
+                    .setImageBitmap(
+                        Helpers.convertToBase64(claimDetails.getImages().get(i).getContent()));
               }
             } else {
-              Picasso.with(this)
-                  .load(Constants.BASE_IMAGES_URL + claimDetails.getImages()
-                      .get(i)
-                      .getContent()
-                      .replace("/jpg", ".jpg"))
-                  .resize(100, 100)
-                  .into(otherDocumentsImagesPicker.returnImagePicker(i));
+              otherDocumentsImagesPicker.returnImagePicker(i)
+                  .setImageBitmap(
+                      Helpers.convertToBase64(claimDetails.getImages().get(i).getContent()));
             }
             break;
         }

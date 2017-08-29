@@ -38,7 +38,6 @@ import javax.inject.Inject;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import timber.log.Timber;
 
 /**
  * Background service which keeps the step-sensor listener alive to always get
@@ -237,14 +236,9 @@ public class SensorListener extends Service implements SensorEventListener {
 
     Calendar timeNow = Calendar.getInstance();
 
-    Timber.d("Time does not match");
-    Timber.d(
-        "Midnight : " + midNight.getTime() + " -- Future Midnight: " + midnightFuture.getTime());
-
     //Time is between 12 and 12:04
     if (timeNow.getTime().after(midNight.getTime()) && timeNow.getTime()
         .before(midnightFuture.getTime())) {
-      Timber.d("Time is between 12 and 12:04");
       wipeOutFitnessMetricsAtMidnight();
       sendOutEventBusEvents();
     }

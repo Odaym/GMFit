@@ -1,15 +1,19 @@
 package com.mcsaatchi.gmfit.common.classes;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AlertDialog;
+import android.util.Base64;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import com.andreabaccega.widget.FormEditText;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.common.Constants;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -210,6 +214,19 @@ public class Helpers {
     alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, context.getString(R.string.ok),
         (dialog, which) -> dialog.dismiss());
     alertDialog.show();
+  }
+
+  public static Bitmap convertToBase64(String base64) {
+    InputStream stream = new ByteArrayInputStream(Base64.decode(base64.getBytes(), Base64.DEFAULT));
+    try {
+      return BitmapFactory.decodeStream(stream);
+    } finally {
+      try {
+        stream.close();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+    }
   }
 
   public static boolean writeResponseBodyToDisk(ResponseBody body, String desiredFileName) {
