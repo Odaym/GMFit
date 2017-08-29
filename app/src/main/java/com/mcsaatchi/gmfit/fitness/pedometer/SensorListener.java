@@ -38,6 +38,7 @@ import javax.inject.Inject;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import timber.log.Timber;
 
 /**
  * Background service which keeps the step-sensor listener alive to always get
@@ -70,8 +71,10 @@ public class SensorListener extends Service implements SensorEventListener {
 
     TimerTask doAsynchronousTask = new TimerTask() {
       @Override public void run() {
-
-        //handler.post(() -> refreshAccessToken());
+        handler.post(() -> {
+          refreshAccessToken();
+          checkIfMidnightWipePrefs();
+        });
       }
     };
 
@@ -209,27 +212,6 @@ public class SensorListener extends Service implements SensorEventListener {
               Response<DefaultGetResponse> response) {
             switch (response.code()) {
               case 200:
-                Calendar midNight = Calendar.getInstance();
-                midNight.set(Calendar.HOUR_OF_DAY, 0);
-                midNight.set(Calendar.MINUTE, 0);
-                midNight.set(Calendar.SECOND, 0);
-                midNight.set(Calendar.MILLISECOND, 0);
-
-                Calendar midnightFuture = Calendar.getInstance();
-                midnightFuture.set(Calendar.HOUR_OF_DAY, 0);
-                midnightFuture.set(Calendar.MINUTE, 20);
-                midnightFuture.set(Calendar.SECOND, 0);
-                midnightFuture.set(Calendar.MILLISECOND, 0);
-
-                Calendar timeNow = Calendar.getInstance();
-
-                //Time is between 12 and 12:20
-                if (timeNow.getTime().after(midNight.getTime()) && timeNow.getTime()
-                    .before(midnightFuture.getTime())) {
-                  wipeOutFitnessMetricsAtMidnight();
-                  sendOutEventBusEvents();
-                }
-
                 break;
             }
           }
@@ -238,6 +220,34 @@ public class SensorListener extends Service implements SensorEventListener {
             Crashlytics.log(Log.ERROR, "GM_METRICS", "SYNCRONISING METRICS HAS FAILED!");
           }
         });
+  }
+
+  private void checkIfMidnightWipePrefs() {
+    Calendar midNight = Calendar.getInstance();
+    midNight.set(Calendar.HOUR_OF_DAY, 0);
+    midNight.set(Calendar.MINUTE, 0);
+    midNight.set(Calendar.SECOND, 0);
+    midNight.set(Calendar.MILLISECOND, 0);
+
+    Calendar midnightFuture = Calendar.getInstance();
+    midnightFuture.set(Calendar.HOUR_OF_DAY, 0);
+    midnightFuture.set(Calendar.MINUTE, 4);
+    midnightFuture.set(Calendar.SECOND, 0);
+    midnightFuture.set(Calendar.MILLISECOND, 0);
+
+    Calendar timeNow = Calendar.getInstance();
+
+    Timber.d("Time does not match");
+    Timber.d(
+        "Midnight : " + midNight.getTime() + " -- Future Midnight: " + midnightFuture.getTime());
+
+    //Time is between 12 and 12:04
+    if (timeNow.getTime().after(midNight.getTime()) && timeNow.getTime()
+        .before(midnightFuture.getTime())) {
+      Timber.d("Time is between 12 and 12:04");
+      wipeOutFitnessMetricsAtMidnight();
+      sendOutEventBusEvents();
+    }
   }
 
   private void wipeOutFitnessMetricsAtMidnight() {

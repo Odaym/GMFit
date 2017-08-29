@@ -246,7 +246,8 @@ public class SubmitInquiryActivity extends BaseActivity {
         imageParts.put("attachements[" + i + "][content]", toRequestBody(
             Base64.encodeToString(ImageHandler.turnImageToByteArray(imagePaths.get(i)),
                 Base64.NO_WRAP)));
-        imageParts.put("attachements[" + i + "][documType]", toRequestBody(imagesDocumentTypes.get(i)));
+        imageParts.put("attachements[" + i + "][documType]",
+            toRequestBody(imagesDocumentTypes.get(i)));
         imageParts.put("attachements[" + i + "][name]", toRequestBody(imagePaths.get(i)));
         imageParts.put("attachements[" + i + "][id]", toRequestBody(String.valueOf(i + 1)));
       }
@@ -310,6 +311,7 @@ public class SubmitInquiryActivity extends BaseActivity {
 
     dataAccessHandler.getCRMCategories(
         toRequestBody(prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, "")),
+        toRequestBody(prefs.getString(Constants.EXTRAS_INSURANCE_COUNTRY_CRM_CODE, "")),
         new Callback<CRMCategoriesResponse>() {
           @Override public void onResponse(Call<CRMCategoriesResponse> call,
               Response<CRMCategoriesResponse> response) {

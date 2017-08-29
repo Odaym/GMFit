@@ -217,10 +217,9 @@ public class ApiCallsHandler {
     });
   }
 
-  void updateUserWeight(double weight,
-      final Callback<DefaultGetResponse> callback) {
-    Call<DefaultGetResponse> apiCall = restClient.getGMFitService()
-        .updateUserWeight(new UpdateUserWeightRequest(weight));
+  void updateUserWeight(double weight, final Callback<DefaultGetResponse> callback) {
+    Call<DefaultGetResponse> apiCall =
+        restClient.getGMFitService().updateUserWeight(new UpdateUserWeightRequest(weight));
 
     apiCall.enqueue(new Callback<DefaultGetResponse>() {
       @Override
@@ -1274,8 +1273,10 @@ public class ApiCallsHandler {
     });
   }
 
-  void getCRMCategories(RequestBody contractNo, final Callback<CRMCategoriesResponse> callback) {
-    Call<CRMCategoriesResponse> apiCall = restClient.getGMFitService().getCRMCategories(contractNo);
+  void getCRMCategories(RequestBody contractNo, RequestBody dbCountry,
+      final Callback<CRMCategoriesResponse> callback) {
+    Call<CRMCategoriesResponse> apiCall =
+        restClient.getGMFitService().getCRMCategories(contractNo, dbCountry);
 
     apiCall.enqueue(new Callback<CRMCategoriesResponse>() {
       @Override public void onResponse(Call<CRMCategoriesResponse> call,

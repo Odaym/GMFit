@@ -267,7 +267,7 @@ public interface GMFitService {
   @POST("insurance/sub-categories") Call<SubCategoriesResponse> getSubCategories(
       @Body ApiCallsHandler.SimpleInsuranceRequest simpleInsuranceRequest);
 
-  @Multipart @POST("insurance/request/create") Call<CreateNewRequestResponse> createNewRequest(
+  @Multipart @POST("insurance/request/create_alt") Call<CreateNewRequestResponse> createNewRequest(
       @Part("contractNo") RequestBody contractNo, @Part("categ") RequestBody categ,
       @Part("subCategId") RequestBody subCategId, @Part("requestTypeId") RequestBody requestTypeId,
       @Part("claimedAmount") RequestBody claimedAmount,
@@ -283,7 +283,7 @@ public interface GMFitService {
       @PartMap() Map<String, RequestBody> attachements);
 
   @Multipart @POST("insurance/crm/categories") Call<CRMCategoriesResponse> getCRMCategories(
-      @Part("contractNo") RequestBody contractNo);
+      @Part("contractNo") RequestBody contractNo, @Part("dbCountry") RequestBody dbCountry);
 
   @POST("insurance/claims/list") Call<ClaimsListResponse> getClaimsList(
       @Body ApiCallsHandler.ClaimsListRequest claimsListRequest);

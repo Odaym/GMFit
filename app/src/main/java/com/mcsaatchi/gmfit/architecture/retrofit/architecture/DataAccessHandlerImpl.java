@@ -122,8 +122,7 @@ public class DataAccessHandlerImpl implements DataAccessHandler {
         blood_type, height, weight, callback);
   }
 
-  @Override public void updateUserWeight(double weight,
-      Callback<DefaultGetResponse> callback) {
+  @Override public void updateUserWeight(double weight, Callback<DefaultGetResponse> callback) {
     apiCallsHandler.updateUserWeight(weight, callback);
   }
 
@@ -152,7 +151,8 @@ public class DataAccessHandlerImpl implements DataAccessHandler {
     apiCallsHandler.getUserActivities(date, callback);
   }
 
-  @Override public void getArticleDetails(String fullUrl, Callback<ArticleDetailsResponse> callback) {
+  @Override
+  public void getArticleDetails(String fullUrl, Callback<ArticleDetailsResponse> callback) {
     apiCallsHandler.getArticleDetails(fullUrl, callback);
   }
 
@@ -307,8 +307,8 @@ public class DataAccessHandlerImpl implements DataAccessHandler {
         deletedImages, callback);
   }
 
-  @Override
-  public void uploadInsuranceImage(Map<String, RequestBody> file, Callback<UploadInsuranceImageResponse> callback) {
+  @Override public void uploadInsuranceImage(Map<String, RequestBody> file,
+      Callback<UploadInsuranceImageResponse> callback) {
     apiCallsHandler.uploadInsuranceImage(file, callback);
   }
 
@@ -417,9 +417,9 @@ public class DataAccessHandlerImpl implements DataAccessHandler {
     apiCallsHandler.getCountriesList(callback);
   }
 
-  @Override public void getCRMCategories(RequestBody contractNo,
+  @Override public void getCRMCategories(RequestBody contractNo, RequestBody dbCountry,
       final Callback<CRMCategoriesResponse> callback) {
-    apiCallsHandler.getCRMCategories(contractNo, callback);
+    apiCallsHandler.getCRMCategories(contractNo, dbCountry,  callback);
   }
 
   @Override public void getClaimsList(String contractNo, String requestType,
