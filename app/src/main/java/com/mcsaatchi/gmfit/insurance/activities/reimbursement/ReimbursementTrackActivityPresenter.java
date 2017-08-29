@@ -4,12 +4,13 @@ import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.retrofit.architecture.DataAccessHandlerImpl;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ClaimsListResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ClaimsListResponseDatum;
-import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.common.activities.BaseActivityPresenter;
+import com.mcsaatchi.gmfit.common.classes.Helpers;
 import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import timber.log.Timber;
 
 class ReimbursementTrackActivityPresenter extends BaseActivityPresenter {
   private ReimbursementTrackActivityView view;
