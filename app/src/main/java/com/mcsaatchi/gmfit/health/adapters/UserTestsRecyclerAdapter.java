@@ -110,8 +110,8 @@ public class UserTestsRecyclerAdapter
     MyViewHolder(View view) {
       super(view);
       view.setOnClickListener(this);
-      itemNameTV = (TextView) view.findViewById(R.id.itemNameTV);
-      itemSubtitleTV = (TextView) view.findViewById(R.id.itemSubtitleTV);
+      itemNameTV = view.findViewById(R.id.itemNameTV);
+      itemSubtitleTV = view.findViewById(R.id.itemSubtitleTV);
     }
 
     @Override public void onClick(View view) {

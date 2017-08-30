@@ -57,7 +57,7 @@ public class ActivitiesListActivity extends BaseActivity
     activitiesRecycler.addItemDecoration(new SimpleDividerItemDecoration(this));
   }
 
-  @Subscribe public void handleFitnessActivityEvent(FitnessActivityEvent event){
+  @Subscribe public void handleFitnessActivityEvent(FitnessActivityEvent event) {
     finish();
   }
 }

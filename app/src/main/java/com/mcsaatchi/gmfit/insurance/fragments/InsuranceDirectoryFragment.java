@@ -94,7 +94,7 @@ public class InsuranceDirectoryFragment extends BaseFragment
 
     parentFragmentView = ((ViewGroup) getParentFragment().getView());
 
-    contractChooserBTN = (ImageView) parentFragmentView.findViewById(R.id.contractChooserBTN);
+    contractChooserBTN = parentFragmentView.findViewById(R.id.contractChooserBTN);
 
     lm = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
 
@@ -313,7 +313,7 @@ public class InsuranceDirectoryFragment extends BaseFragment
 
   private void setupSwitchMapViewButton() {
     if (parentFragmentView != null) {
-      switchMapViewBTN = (ImageView) parentFragmentView.findViewById(R.id.switchMapViewBTN);
+      switchMapViewBTN = parentFragmentView.findViewById(R.id.switchMapViewBTN);
 
       switchMapViewBTN.setOnClickListener(view -> {
         if (!listingVisible) {

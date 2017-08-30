@@ -13,11 +13,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DefaultIndicatorController implements IndicatorController {
-  public final static int DEFAULT_COLOR = 1;
+  private final static int DEFAULT_COLOR = 1;
   private static final int FIRST_PAGE_NUM = 0;
-  int selectedDotColor = DEFAULT_COLOR;
-  int unselectedDotColor = DEFAULT_COLOR;
-  int mCurrentposition;
+  private int selectedDotColor = DEFAULT_COLOR;
+  private int unselectedDotColor = DEFAULT_COLOR;
+  private int mCurrentposition;
   private Context mContext;
   private LinearLayout mDotLayout;
   private List<ImageView> mDots;

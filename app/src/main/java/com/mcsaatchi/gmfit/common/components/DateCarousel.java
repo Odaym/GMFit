@@ -65,10 +65,8 @@ public class DateCarousel extends HorizontalScrollView {
           getResources().getDimensionPixelSize(R.dimen.default_margin_1), 0,
           getResources().getDimensionPixelSize(R.dimen.default_margin_1), 0);
 
-      final TextView dayOfMonthTV =
-          (TextView) itemDateCarouselLayout.findViewById(R.id.dayOfMonthTV);
-      final TextView monthOfYearTV =
-          (TextView) itemDateCarouselLayout.findViewById(R.id.monthOfYearTV);
+      final TextView dayOfMonthTV = itemDateCarouselLayout.findViewById(R.id.dayOfMonthTV);
+      final TextView monthOfYearTV = itemDateCarouselLayout.findViewById(R.id.monthOfYearTV);
 
       dayOfMonthTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
       monthOfYearTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
@@ -126,13 +124,10 @@ public class DateCarousel extends HorizontalScrollView {
     LinearLayout dateEntryLayout;
 
     for (int i = 0; i < dateCarouselContainer.getChildCount(); i++) {
-      dateEntryLayout =
-          (LinearLayout) dateCarouselContainer.getChildAt(i).findViewById(R.id.dateEntryLayout);
-      dayOfMonthTV = (TextView) dateCarouselContainer.getChildAt(i).findViewById(R.id.dayOfMonthTV);
-      monthOfYearTV =
-          (TextView) dateCarouselContainer.getChildAt(i).findViewById(R.id.monthOfYearTV);
-      indicatorArrowIV =
-          (ImageView) dateCarouselContainer.getChildAt(i).findViewById(R.id.indicatorArrowIV);
+      dateEntryLayout = dateCarouselContainer.getChildAt(i).findViewById(R.id.dateEntryLayout);
+      dayOfMonthTV = dateCarouselContainer.getChildAt(i).findViewById(R.id.dayOfMonthTV);
+      monthOfYearTV = dateCarouselContainer.getChildAt(i).findViewById(R.id.monthOfYearTV);
+      indicatorArrowIV = dateCarouselContainer.getChildAt(i).findViewById(R.id.indicatorArrowIV);
 
       dateEntryLayout.setBackgroundColor(0);
       dateEntryLayout.setLayoutParams(new LinearLayout.LayoutParams(
@@ -147,15 +142,14 @@ public class DateCarousel extends HorizontalScrollView {
 
       monthOfYearTV.setPadding(0, 0, 0, 20);
 
-
       dayOfMonthTV.setTypeface(null, Typeface.NORMAL);
       monthOfYearTV.setTypeface(null, Typeface.NORMAL);
     }
 
-    dateEntryLayout = (LinearLayout) view.findViewById(R.id.dateEntryLayout);
-    dayOfMonthTV = (TextView) view.findViewById(R.id.dayOfMonthTV);
-    monthOfYearTV = (TextView) view.findViewById(R.id.monthOfYearTV);
-    indicatorArrowIV = (ImageView) view.findViewById(R.id.indicatorArrowIV);
+    dateEntryLayout = view.findViewById(R.id.dateEntryLayout);
+    dayOfMonthTV = view.findViewById(R.id.dayOfMonthTV);
+    monthOfYearTV = view.findViewById(R.id.monthOfYearTV);
+    indicatorArrowIV = view.findViewById(R.id.indicatorArrowIV);
 
     dateEntryLayout.setLayoutParams(new LinearLayout.LayoutParams(
         getResources().getDimensionPixelSize(R.dimen.date_carousel_focused_item_cell_width),

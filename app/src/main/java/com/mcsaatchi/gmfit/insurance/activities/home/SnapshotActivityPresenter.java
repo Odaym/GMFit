@@ -21,8 +21,7 @@ class SnapshotActivityPresenter {
     view.callDisplayWaitingDialog(R.string.loading_data_dialog_title);
 
     dataAccessHandler.getSnapshot(contractNo, period, new Callback<ResponseBody>() {
-      @Override
-      public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+      @Override public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
         switch (response.code()) {
           case 200:
             view.saveAndOpenPDF(response.body(), "Snapshot.pdf");

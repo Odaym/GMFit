@@ -81,8 +81,8 @@ public class MedicationRemindersRecyclerAdapter extends RecyclerView.Adapter {
       super(itemView);
 
       clickableLayout = (LinearLayout) itemView.findViewById(R.id.clickableLayout);
-      reminderValueTV = (TextView) itemView.findViewById(R.id.reminderValueTV);
-      reminderLabelTV = (TextView) itemView.findViewById(R.id.reminderLabelTV);
+      reminderValueTV = itemView.findViewById(R.id.reminderValueTV);
+      reminderLabelTV = itemView.findViewById(R.id.reminderLabelTV);
     }
 
     public void bind(Calendar alarmTimeForMedication, final MedicationReminder medReminder) {

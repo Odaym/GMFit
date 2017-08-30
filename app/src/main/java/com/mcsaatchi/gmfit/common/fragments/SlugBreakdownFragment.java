@@ -136,8 +136,8 @@ public class SlugBreakdownFragment extends Fragment {
 
         holder = new ViewHolder();
 
-        holder.slugDateTV = (TextView) convertView.findViewById(R.id.slugDateTV);
-        holder.slugTotalTV = (TextView) convertView.findViewById(R.id.slugTotalTV);
+        holder.slugDateTV = convertView.findViewById(R.id.slugDateTV);
+        holder.slugTotalTV = convertView.findViewById(R.id.slugTotalTV);
 
         convertView.setTag(holder);
       } else {
@@ -159,7 +159,7 @@ public class SlugBreakdownFragment extends Fragment {
               entryDate.monthOfYear().getAsText() + ", " + entryDate.getYear());
           break;
         case Constants.BUNDLE_SLUG_BREAKDOWN_DATA_YEARLY:
-          holder.slugDateTV.setText(String.valueOf(entryDate.getYear()) );
+          holder.slugDateTV.setText(String.valueOf(entryDate.getYear()));
           break;
       }
 

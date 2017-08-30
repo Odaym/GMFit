@@ -2,8 +2,8 @@ package com.mcsaatchi.gmfit.insurance.activities.chronic;
 
 import com.mcsaatchi.gmfit.architecture.retrofit.architecture.DataAccessHandlerImpl;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.CreateNewRequestResponse;
-import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.common.activities.BaseActivityPresenter;
+import com.mcsaatchi.gmfit.common.classes.Helpers;
 import java.util.HashMap;
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -29,7 +29,8 @@ class SubmitChronicActivityPresenter extends BaseActivityPresenter {
               Response<CreateNewRequestResponse> response) {
             switch (response.code()) {
               case 200:
-                view.openChronicTrackActivity(response.body().getData().getBody().getData().getRequestId());
+                view.openChronicTrackActivity(
+                    response.body().getData().getBody().getData().getRequestId());
                 break;
               case 449:
                 view.displayRequestErrorDialog(

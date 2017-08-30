@@ -61,9 +61,9 @@ public class UserActivitiesListRecyclerAdapter extends RecyclerView.Adapter {
     public ViewHolder(View itemView) {
       super(itemView);
 
-      activityNameTV = (TextView) itemView.findViewById(R.id.activityNameTV);
-      durationAndLevelTV = (TextView) itemView.findViewById(R.id.durationAndLevelTV);
-      caloriesBurnedTV = (TextView) itemView.findViewById(R.id.caloriesBurnedTV);
+      activityNameTV = itemView.findViewById(R.id.activityNameTV);
+      durationAndLevelTV = itemView.findViewById(R.id.durationAndLevelTV);
+      caloriesBurnedTV = itemView.findViewById(R.id.caloriesBurnedTV);
 
       itemView.setOnClickListener(view -> {
         Intent intent = new Intent(context, AddActivityDetailsActivity.class);

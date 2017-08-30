@@ -42,6 +42,7 @@ class ContactUsListActivityPresenter extends BaseActivityPresenter {
   }
 
   interface ContactUsListActivityView extends BaseActivityView {
-    void displayOperationContacts(List<OperationContactsResponseBody>  operationContactsResponseBody);
+    void displayOperationContacts(
+        List<OperationContactsResponseBody> operationContactsResponseBody);
   }
 }

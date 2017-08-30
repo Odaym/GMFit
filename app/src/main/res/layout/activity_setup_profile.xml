@@ -8,8 +8,10 @@
     android:orientation="vertical"
     >
 
-  <include layout="@layout/app_toolbar"
-      android:id="@+id/toolbarFrameLayout"/>
+  <include
+      layout="@layout/app_toolbar"
+      android:id="@+id/toolbarFrameLayout"
+      />
 
   <com.mcsaatchi.gmfit.common.classes.NonSwipeableViewPager
       android:id="@+id/viewpager"

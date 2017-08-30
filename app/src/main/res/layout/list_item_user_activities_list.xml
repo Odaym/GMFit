@@ -6,10 +6,10 @@
     android:layout_height="@dimen/add_medication_row_height"
     android:background="@color/white"
     android:gravity="center_vertical"
-    android:paddingTop="@dimen/default_margin_1"
     android:paddingBottom="@dimen/default_margin_1"
     android:paddingEnd="@dimen/default_margin_2"
     android:paddingStart="@dimen/default_margin_2"
+    android:paddingTop="@dimen/default_margin_1"
     >
 
   <TextView
@@ -26,8 +26,8 @@
       android:id="@+id/durationAndLevelTV"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_marginBottom="@dimen/default_margin_1"
       android:layout_below="@id/activityNameTV"
+      android:layout_marginBottom="@dimen/default_margin_1"
       android:layout_marginTop="@dimen/default_margin_0"
       android:textColor="@color/fitness_pink"
       />

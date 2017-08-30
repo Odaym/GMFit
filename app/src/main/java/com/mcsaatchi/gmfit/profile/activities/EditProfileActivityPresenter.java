@@ -13,7 +13,8 @@ class EditProfileActivityPresenter extends BaseActivityPresenter {
   private EditProfileActivityView view;
   private DataAccessHandlerImpl dataAccessHandler;
 
-  EditProfileActivityPresenter(EditProfileActivityView view, DataAccessHandlerImpl dataAccessHandler) {
+  EditProfileActivityPresenter(EditProfileActivityView view,
+      DataAccessHandlerImpl dataAccessHandler) {
     this.view = view;
     this.dataAccessHandler = dataAccessHandler;
   }

@@ -15,7 +15,7 @@ public class ItemHeader extends LinearLayout {
     LayoutInflater mInflater =
         (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     View v = mInflater.inflate(R.layout.item_header, this, true);
-    TextView tv = (TextView) v.findViewById(R.id.headerText);
+    TextView tv = v.findViewById(R.id.headerText);
     TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ItemHeader, 0, 0);
     String headerText = a.getString(R.styleable.ItemHeader_header_text);
     tv.setText(headerText);

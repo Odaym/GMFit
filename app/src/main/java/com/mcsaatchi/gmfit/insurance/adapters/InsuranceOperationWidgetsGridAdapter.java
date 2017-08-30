@@ -239,9 +239,8 @@ public class InsuranceOperationWidgetsGridAdapter
       super(itemView);
       itemView.setOnClickListener(this);
 
-
-      widgetIcon = (ImageView) itemView.findViewById(R.id.widgetIconIV);
-      widgetName = (TextView) itemView.findViewById(R.id.widgetNameTV);
+      widgetIcon = itemView.findViewById(R.id.widgetIconIV);
+      widgetName = itemView.findViewById(R.id.widgetNameTV);
     }
 
     @Override public void onClick(View view) {

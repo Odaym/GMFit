@@ -88,8 +88,8 @@ public class EditableTestMetricsRecyclerAdapter
 
     MyViewHolder(View view) {
       super(view);
-      metricNameTV = (TextView) view.findViewById(R.id.metricNameTV);
-      metricValueET = (EditText) view.findViewById(R.id.metricValueET);
+      metricNameTV = view.findViewById(R.id.metricNameTV);
+      metricValueET = view.findViewById(R.id.metricValueET);
       metricUnitsSpinner = (Spinner) view.findViewById(R.id.metricUnitsSpinner);
     }
   }

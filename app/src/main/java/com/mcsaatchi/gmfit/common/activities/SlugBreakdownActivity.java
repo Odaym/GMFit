@@ -169,8 +169,7 @@ public class SlugBreakdownActivity extends BaseActivity {
       slugBreakdownFragment = new SlugBreakdownFragment();
       fragmentArguments.putFloat(Constants.BUNDLE_SLUG_BREAKDOWN_YEARLY_TOTAL,
           slugBreakdownYearlyTotal);
-      fragmentArguments.putParcelable(Constants.BUNDLE_SLUG_BREAKDOWN_DATA,
-          slugBreakdownData);
+      fragmentArguments.putParcelable(Constants.BUNDLE_SLUG_BREAKDOWN_DATA, slugBreakdownData);
       fragmentArguments.putString(Constants.BUNDLE_SLUG_BREAKDOWN_MEASUREMENT_UNIT,
           measurementUnit);
       fragmentArguments.putString(Constants.EXTRAS_FRAGMENT_TYPE, typeOfFragmentToCustomizeFor);

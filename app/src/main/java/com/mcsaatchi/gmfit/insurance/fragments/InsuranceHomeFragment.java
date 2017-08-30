@@ -161,7 +161,7 @@ public class InsuranceHomeFragment extends BaseFragment
 
       contractChooserDialog.getWindow().setAttributes(lp);
 
-      contractChooserBTN = (ImageView) parentFragmentView.findViewById(R.id.contractChooserBTN);
+      contractChooserBTN = parentFragmentView.findViewById(R.id.contractChooserBTN);
 
       contractChooserBTN.setVisibility(View.VISIBLE);
 

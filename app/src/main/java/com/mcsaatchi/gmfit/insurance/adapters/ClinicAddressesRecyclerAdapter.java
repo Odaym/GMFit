@@ -59,11 +59,11 @@ public class ClinicAddressesRecyclerAdapter extends RecyclerView.Adapter {
       super(itemView);
 
       parentLayout = (LinearLayout) itemView.findViewById(R.id.parentLayout);
-      clinicNameTV = (TextView) itemView.findViewById(R.id.clinicNameTV);
-      clinicAddressTV = (TextView) itemView.findViewById(R.id.clinicAddressTV);
-      withinNetworkIV = (ImageView) itemView.findViewById(R.id.withinNetworkIV);
-      open247IV = (ImageView) itemView.findViewById(R.id.open247IV);
-      onlineNowIV = (ImageView) itemView.findViewById(R.id.onlineNowIV);
+      clinicNameTV = itemView.findViewById(R.id.clinicNameTV);
+      clinicAddressTV = itemView.findViewById(R.id.clinicAddressTV);
+      withinNetworkIV = itemView.findViewById(R.id.withinNetworkIV);
+      open247IV = itemView.findViewById(R.id.open247IV);
+      onlineNowIV = itemView.findViewById(R.id.onlineNowIV);
     }
 
     public void bind(GetNearbyClinicsResponseDatum clinic) {

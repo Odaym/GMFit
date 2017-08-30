@@ -54,6 +54,9 @@ class FitnessFragmentPresenter extends BaseFragmentPresenter {
             String currentValue =
                 response.body().getData().getBody().getMetrics().getStepsCount().getValue();
 
+            view.saveNutritionCalories(
+                response.body().getData().getBody().getMetrics().getActiveCalories().getValue());
+
             view.displayUserGoalMetrics(maxValue, currentValue, requestingPreviousData);
 
             break;
@@ -233,5 +236,7 @@ class FitnessFragmentPresenter extends BaseFragmentPresenter {
     void populateUserActivities(List<UserActivitiesResponseBody> userActivitiesResponseBodies);
 
     void populateArticles(List<ArticlesResponseBody> articlesResponseBodies);
+
+    void saveNutritionCalories(String active_nutrition_calories);
   }
 }

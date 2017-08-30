@@ -62,10 +62,10 @@ public class NutritionWidgetsRecyclerAdapter
 
     RecyclerViewHolder(View itemView) {
       super(itemView);
-      metricTV = (FontTextView) itemView.findViewById(R.id.metricTV);
-      metricPercentageTV = (TextView) itemView.findViewById(R.id.metricPercentageTV);
-      measurementUnitTV = (TextView) itemView.findViewById(R.id.measurementUnitTV);
-      metricTitleTV = (FontTextView) itemView.findViewById(R.id.metricTitleTV);
+      metricTV = itemView.findViewById(R.id.metricTV);
+      metricPercentageTV = itemView.findViewById(R.id.metricPercentageTV);
+      measurementUnitTV = itemView.findViewById(R.id.measurementUnitTV);
+      metricTitleTV = itemView.findViewById(R.id.metricTitleTV);
     }
   }
 }

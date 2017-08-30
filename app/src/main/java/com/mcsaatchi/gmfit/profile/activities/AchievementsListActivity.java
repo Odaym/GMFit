@@ -32,7 +32,8 @@ public class AchievementsListActivity extends BaseActivity {
     if (getIntent().getExtras() != null) {
       achievementsResponseBodyList = getIntent().getExtras().getParcelableArrayList("ACHIEVEMENTS");
 
-      setupToolbar(getClass().getSimpleName(), toolbar, getString(R.string.achievement_details_activity_title), true);
+      setupToolbar(getClass().getSimpleName(), toolbar,
+          getString(R.string.achievement_details_activity_title), true);
 
       showAchievements(achievementsResponseBodyList);
 

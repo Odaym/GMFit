@@ -53,9 +53,9 @@ public class ChronicStatusAdapter extends RecyclerView.Adapter {
 
       parentLayout = (RelativeLayout) itemView.findViewById(R.id.parentLayout);
       deleteLayout = itemView.findViewById(R.id.delete_layout);
-      treatmentNameTV = (TextView) itemView.findViewById(R.id.treatmentNameTV);
-      treatmentDescriptionTV = (TextView) itemView.findViewById(R.id.treatmentDescriptionTV);
-      treatmentStatusTV = (TextView) itemView.findViewById(R.id.treatmentStatusTV);
+      treatmentNameTV = itemView.findViewById(R.id.treatmentNameTV);
+      treatmentDescriptionTV = itemView.findViewById(R.id.treatmentDescriptionTV);
+      treatmentStatusTV = itemView.findViewById(R.id.treatmentStatusTV);
     }
 
     public void bind(ChronicTreatmentListInnerData chronicTreatment) {

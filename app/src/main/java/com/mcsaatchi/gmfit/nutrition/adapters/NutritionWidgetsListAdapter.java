@@ -51,8 +51,8 @@ public class NutritionWidgetsListAdapter extends BaseAdapter {
 
       holder = new ViewHolder();
 
-      holder.itemNameTV = (TextView) convertView.findViewById(R.id.itemNameTV);
-      holder.itemIconRightIMG = (ImageView) convertView.findViewById(R.id.itemIconRightIMG);
+      holder.itemNameTV = convertView.findViewById(R.id.itemNameTV);
+      holder.itemIconRightIMG = convertView.findViewById(R.id.itemIconRightIMG);
       holder.itemLayout = (RelativeLayout) convertView.findViewById(R.id.itemLayout);
 
       convertView.setTag(holder);

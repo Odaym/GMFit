@@ -62,7 +62,7 @@ public class ActivityLevelsChoiceRecyclerAdapter
     RecyclerViewHolder(View itemView) {
       super(itemView);
 
-      activityLevelTV = (TextView) itemView.findViewById(R.id.activityLevelTV);
+      activityLevelTV = itemView.findViewById(R.id.activityLevelTV);
       activityCheckedLayout = (LinearLayout) itemView.findViewById(R.id.activityCheckedLayout);
 
       itemView.setOnClickListener(this);

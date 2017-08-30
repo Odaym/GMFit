@@ -70,8 +70,8 @@ public class CustomizeChartsRecyclerAdapter
 
     MyViewHolder(View view) {
       super(view);
-      itemNameTV = (TextView) view.findViewById(R.id.itemNameTV);
-      itemIconRightIMG = (ImageView) view.findViewById(R.id.itemIconRightIMG);
+      itemNameTV = view.findViewById(R.id.itemNameTV);
+      itemIconRightIMG = view.findViewById(R.id.itemIconRightIMG);
     }
   }
 }

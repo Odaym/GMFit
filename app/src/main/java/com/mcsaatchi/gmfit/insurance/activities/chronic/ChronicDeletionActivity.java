@@ -69,7 +69,7 @@ public class ChronicDeletionActivity extends BaseActivity
       if (innerLayoutWithPickers.getChildAt(i) instanceof ImageView) {
         final int finalI = i;
         innerLayoutWithPickers.getChildAt(i).setOnClickListener(view -> {
-          ImageView imageView = (ImageView) innerLayoutWithPickers.findViewById(
+          ImageView imageView = innerLayoutWithPickers.findViewById(
               innerLayoutWithPickers.getChildAt(finalI).getId());
           showImagePickerDialog(imageView);
         });

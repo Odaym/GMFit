@@ -5,8 +5,8 @@ import com.mcsaatchi.gmfit.architecture.retrofit.architecture.DataAccessHandlerI
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.AddCRMNoteResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.CRMNotesResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.CRMNotesResponseNoteAttribute;
-import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.common.activities.BaseActivityPresenter;
+import com.mcsaatchi.gmfit.common.classes.Helpers;
 import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -16,7 +16,8 @@ class InquiryNotesActivityPresenter extends BaseActivityPresenter {
   private InquiryNotesActivityView view;
   private DataAccessHandlerImpl dataAccessHandler;
 
-  InquiryNotesActivityPresenter(InquiryNotesActivityView view, DataAccessHandlerImpl dataAccessHandler) {
+  InquiryNotesActivityPresenter(InquiryNotesActivityView view,
+      DataAccessHandlerImpl dataAccessHandler) {
     this.view = view;
     this.dataAccessHandler = dataAccessHandler;
   }
@@ -58,7 +59,8 @@ class InquiryNotesActivityPresenter extends BaseActivityPresenter {
       public void onResponse(Call<CRMNotesResponse> call, Response<CRMNotesResponse> response) {
         switch (response.code()) {
           case 200:
-            view.displayCRMIncidentNotes(response.body().getData().getBody().getData().getNoteAttributesLst());
+            view.displayCRMIncidentNotes(
+                response.body().getData().getBody().getData().getNoteAttributesLst());
             break;
           case 449:
             view.displayRequestErrorDialog(

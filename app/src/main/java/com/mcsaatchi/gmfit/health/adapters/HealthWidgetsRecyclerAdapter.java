@@ -57,9 +57,9 @@ public class HealthWidgetsRecyclerAdapter
 
     RecyclerViewHolder(View itemView) {
       super(itemView);
-      metricTV = (FontTextView) itemView.findViewById(R.id.metricTV);
-      measurementUnitTV = (TextView) itemView.findViewById(R.id.measurementUnitTV);
-      metricTitleTV = (FontTextView) itemView.findViewById(R.id.metricTitleTV);
+      metricTV = itemView.findViewById(R.id.metricTV);
+      measurementUnitTV = itemView.findViewById(R.id.measurementUnitTV);
+      metricTitleTV = itemView.findViewById(R.id.metricTitleTV);
     }
   }
 }

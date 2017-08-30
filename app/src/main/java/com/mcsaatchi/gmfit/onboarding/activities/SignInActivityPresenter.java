@@ -1,9 +1,9 @@
 package com.mcsaatchi.gmfit.onboarding.activities;
 
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.retrofit.architecture.DataAccessHandlerImpl;
 import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
 import com.mcsaatchi.gmfit.architecture.otto.SignedInSuccessfullyEvent;
+import com.mcsaatchi.gmfit.architecture.retrofit.architecture.DataAccessHandlerImpl;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.AuthenticationResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.AuthenticationResponseChart;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.AuthenticationResponseInnerBody;

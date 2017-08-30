@@ -12,8 +12,8 @@ import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.common.activities.BaseActivityPresenter;
 import java.util.ArrayList;
 
-public class ResetPasswordActivity extends BaseActivity implements
-    BaseActivityPresenter.BaseActivityView{
+public class ResetPasswordActivity extends BaseActivity
+    implements BaseActivityPresenter.BaseActivityView {
 
   @Bind(R.id.passwordET) FormEditText passwordET;
   @Bind(R.id.verifyCodeET) FormEditText verifyCodeET;

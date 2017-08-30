@@ -183,7 +183,7 @@ public class SubmitInquiryActivity extends BaseActivity {
         innerLayoutWithPickers.getChildAt(i).setOnClickListener(view -> {
           imagesDocumentTypes.add(String.valueOf(documentType));
 
-          ImageView imageView = (ImageView) innerLayoutWithPickers.findViewById(
+          ImageView imageView = innerLayoutWithPickers.findViewById(
               innerLayoutWithPickers.getChildAt(finalI).getId());
           showImagePickerDialog(imageView);
         });

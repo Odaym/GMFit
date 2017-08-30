@@ -90,84 +90,93 @@ public class ApprovalRequestDetailsActivity extends BaseActivity
     status.setLabel("Status", responseDatum.getStatus());
 
     for (int i = 0; i < responseDatum.getImages().size(); i++) {
+
+      String imageContents = responseDatum.getImages().get(i).getContent();
+
       try {
         switch (responseDatum.getImages().get(i).getDocumType()) {
           case 1:
             if (medicalReportImagesPlacement != null) {
               for (int k = 0; k < medicalReportImagesPlacement.size(); k++) {
                 medicalReportImagesPicker.returnImagePicker(medicalReportImagesPlacement.get(k))
-                    .setImageBitmap(
-                        Helpers.convertToBase64(responseDatum.getImages().get(i).getContent()));
+                    .setImageBitmap(Helpers.getResizedBitmap(Helpers.convertToBase64(imageContents),
+                        Constants.BITMAP_RESIZE_DIMENS_WIDTH,
+                        Constants.BITMAP_RESIZE_DIMENS_HEIGHT));
               }
             } else {
               medicalReportImagesPicker.returnImagePicker(i)
-                  .setImageBitmap(
-                      Helpers.convertToBase64(responseDatum.getImages().get(i).getContent()));
+                  .setImageBitmap(Helpers.getResizedBitmap(Helpers.convertToBase64(imageContents),
+                      Constants.BITMAP_RESIZE_DIMENS_WIDTH, Constants.BITMAP_RESIZE_DIMENS_HEIGHT));
             }
             break;
           case 2:
             if (invoiceImagesPlacement != null) {
               for (int k = 0; k < invoiceImagesPlacement.size(); k++) {
                 invoiceImagesPicker.returnImagePicker(invoiceImagesPlacement.get(k))
-                    .setImageBitmap(
-                        Helpers.convertToBase64(responseDatum.getImages().get(i).getContent()));
+                    .setImageBitmap(Helpers.getResizedBitmap(Helpers.convertToBase64(imageContents),
+                        Constants.BITMAP_RESIZE_DIMENS_WIDTH,
+                        Constants.BITMAP_RESIZE_DIMENS_HEIGHT));
               }
             } else {
               invoiceImagesPicker.returnImagePicker(i)
-                  .setImageBitmap(
-                      Helpers.convertToBase64(responseDatum.getImages().get(i).getContent()));
+                  .setImageBitmap(Helpers.getResizedBitmap(Helpers.convertToBase64(imageContents),
+                      Constants.BITMAP_RESIZE_DIMENS_WIDTH, Constants.BITMAP_RESIZE_DIMENS_HEIGHT));
             }
             break;
           case 3:
             if (identityCardImagesPlacement != null) {
               for (int k = 0; k < identityCardImagesPlacement.size(); k++) {
                 identityCardImagesPicker.returnImagePicker(identityCardImagesPlacement.get(k))
-                    .setImageBitmap(
-                        Helpers.convertToBase64(responseDatum.getImages().get(i).getContent()));
+                    .setImageBitmap(Helpers.getResizedBitmap(Helpers.convertToBase64(imageContents),
+                        Constants.BITMAP_RESIZE_DIMENS_WIDTH,
+                        Constants.BITMAP_RESIZE_DIMENS_HEIGHT));
               }
             } else {
               identityCardImagesPicker.returnImagePicker(i)
-                  .setImageBitmap(
-                      Helpers.convertToBase64(responseDatum.getImages().get(i).getContent()));
+                  .setImageBitmap(Helpers.getResizedBitmap(Helpers.convertToBase64(imageContents),
+                      Constants.BITMAP_RESIZE_DIMENS_WIDTH, Constants.BITMAP_RESIZE_DIMENS_HEIGHT));
             }
             break;
           case 4:
             if (passportImagesPlacement != null) {
               for (int k = 0; k < passportImagesPlacement.size(); k++) {
                 passportImagesPicker.returnImagePicker(passportImagesPlacement.get(k))
-                    .setImageBitmap(
-                        Helpers.convertToBase64(responseDatum.getImages().get(i).getContent()));
+                    .setImageBitmap(Helpers.getResizedBitmap(Helpers.convertToBase64(imageContents),
+                        Constants.BITMAP_RESIZE_DIMENS_WIDTH,
+                        Constants.BITMAP_RESIZE_DIMENS_HEIGHT));
               }
             } else {
               passportImagesPicker.returnImagePicker(i)
-                  .setImageBitmap(
-                      Helpers.convertToBase64(responseDatum.getImages().get(i).getContent()));
+                  .setImageBitmap(Helpers.getResizedBitmap(Helpers.convertToBase64(imageContents),
+                      Constants.BITMAP_RESIZE_DIMENS_WIDTH, Constants.BITMAP_RESIZE_DIMENS_HEIGHT));
             }
             break;
           case 5:
             if (testResultsImagesPlacement != null) {
               for (int k = 0; k < testResultsImagesPlacement.size(); k++) {
                 testResultsImagesPicker.returnImagePicker(testResultsImagesPlacement.get(k))
-                    .setImageBitmap(
-                        Helpers.convertToBase64(responseDatum.getImages().get(i).getContent()));
+                    .setImageBitmap(Helpers.getResizedBitmap(Helpers.convertToBase64(imageContents),
+                        Constants.BITMAP_RESIZE_DIMENS_WIDTH,
+                        Constants.BITMAP_RESIZE_DIMENS_HEIGHT));
               }
             } else {
               testResultsImagesPicker.returnImagePicker(i)
-                  .setImageBitmap(
-                      Helpers.convertToBase64(responseDatum.getImages().get(i).getContent()));
+                  .setImageBitmap(Helpers.getResizedBitmap(Helpers.convertToBase64(imageContents),
+                      Constants.BITMAP_RESIZE_DIMENS_WIDTH, Constants.BITMAP_RESIZE_DIMENS_HEIGHT));
             }
             break;
           case 6:
             if (otherDocumentsImagesPlacement != null) {
               for (int k = 0; k < otherDocumentsImagesPlacement.size(); k++) {
                 otherDocumentsImagesPicker.returnImagePicker(otherDocumentsImagesPlacement.get(k))
-                    .setImageBitmap(
-                        Helpers.convertToBase64(responseDatum.getImages().get(i).getContent()));
+                    .setImageBitmap(Helpers.getResizedBitmap(Helpers.convertToBase64(imageContents),
+                        Constants.BITMAP_RESIZE_DIMENS_WIDTH,
+                        Constants.BITMAP_RESIZE_DIMENS_HEIGHT));
               }
             } else {
               otherDocumentsImagesPicker.returnImagePicker(i)
-                  .setImageBitmap(
-                      Helpers.convertToBase64(responseDatum.getImages().get(i).getContent()));
+                  .setImageBitmap(Helpers.getResizedBitmap(Helpers.convertToBase64(imageContents),
+                      Constants.BITMAP_RESIZE_DIMENS_WIDTH, Constants.BITMAP_RESIZE_DIMENS_HEIGHT));
             }
             break;
         }

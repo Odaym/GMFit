@@ -51,11 +51,11 @@ public class MedicalInformationAdapter
 
     public ViewHolder(View v) {
       super(v);
-      medicineNameTv = (TextView) v.findViewById(R.id.medicineName);
-      tabletCountTv = (TextView) v.findViewById(R.id.tabletCount);
-      statusTv = (TextView) v.findViewById(R.id.status);
-      frequencyTv = (TextView) v.findViewById(R.id.frequency);
-      durationTv = (TextView) v.findViewById(R.id.duration);
+      medicineNameTv = v.findViewById(R.id.medicineName);
+      tabletCountTv = v.findViewById(R.id.tabletCount);
+      statusTv = v.findViewById(R.id.status);
+      frequencyTv = v.findViewById(R.id.frequency);
+      durationTv = v.findViewById(R.id.duration);
       container = v.findViewById(R.id.container);
     }
 

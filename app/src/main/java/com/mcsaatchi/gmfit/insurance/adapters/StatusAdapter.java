@@ -52,13 +52,13 @@ public class StatusAdapter extends RecyclerView.Adapter<StatusAdapter.ViewHolder
 
     public ViewHolder(View v) {
       super(v);
-      idTv = (TextView) v.findViewById(R.id.reimbursementId);
-      categoryTv = (TextView) v.findViewById(R.id.category);
-      subCategoryTv = (TextView) v.findViewById(R.id.subCategory);
-      typeTv = (TextView) v.findViewById(R.id.type);
-      serviceDateTv = (TextView) v.findViewById(R.id.dateTime);
-      amountTv = (TextView) v.findViewById(R.id.amount);
-      statusTv = (TextView) v.findViewById(R.id.status);
+      idTv = v.findViewById(R.id.reimbursementId);
+      categoryTv = v.findViewById(R.id.category);
+      subCategoryTv = v.findViewById(R.id.subCategory);
+      typeTv = v.findViewById(R.id.type);
+      serviceDateTv = v.findViewById(R.id.dateTime);
+      amountTv = v.findViewById(R.id.amount);
+      statusTv = v.findViewById(R.id.status);
       container = v.findViewById(R.id.container);
     }
 

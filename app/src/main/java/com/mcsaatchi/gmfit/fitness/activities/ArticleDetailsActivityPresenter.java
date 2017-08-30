@@ -20,8 +20,8 @@ public class ArticleDetailsActivityPresenter {
 
   void getArticleDetails(String fullUrl) {
     dataAccessHandler.getArticleDetails(fullUrl, new Callback<ArticleDetailsResponse>() {
-      @Override
-      public void onResponse(Call<ArticleDetailsResponse> call, Response<ArticleDetailsResponse> response) {
+      @Override public void onResponse(Call<ArticleDetailsResponse> call,
+          Response<ArticleDetailsResponse> response) {
         switch (response.code()) {
           case 200:
             view.displayArticleDetails(response.body().getData().getBody().get(0).get(0));

@@ -9,8 +9,7 @@ public class UserMealsResponseInnerData {
   @SerializedName("breakfast") @Expose private List<UserMealsResponseInner> breakfast =
       new ArrayList<>();
   @SerializedName("lunch") @Expose private List<UserMealsResponseInner> lunch = new ArrayList<>();
-  @SerializedName("dinner") @Expose private List<UserMealsResponseInner> dinner =
-      new ArrayList<>();
+  @SerializedName("dinner") @Expose private List<UserMealsResponseInner> dinner = new ArrayList<>();
   @SerializedName("snack") @Expose private List<UserMealsResponseInner> snack = new ArrayList<>();
 
   /**

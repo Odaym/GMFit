@@ -34,9 +34,9 @@ public class CustomPicker extends LinearLayout implements View.OnClickListener {
     LayoutInflater mInflater =
         (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     View v = mInflater.inflate(R.layout.custom_picker, this, true);
-    itemNameTv = (TextView) v.findViewById(R.id.item_name);
-    itemSelectedTv = (TextView) v.findViewById(R.id.item_selected);
-    arrowImage = (ImageView) v.findViewById(R.id.arrowImage);
+    itemNameTv = v.findViewById(R.id.item_name);
+    itemSelectedTv = v.findViewById(R.id.item_selected);
+    arrowImage = v.findViewById(R.id.arrowImage);
     View touchableContainer = v.findViewById(R.id.touchableContainer);
     touchableContainer.setOnClickListener(this);
   }

@@ -16,9 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-/**
- * Created by mukesh on 25/04/16.
- */
 public class CountryPicker extends DialogFragment {
 
   private EditText searchEditText;
@@ -44,9 +41,8 @@ public class CountryPicker extends DialogFragment {
     return picker;
   }
 
-  @Override
-  public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                           Bundle savedInstanceState) {
+  @Override public View onCreateView(LayoutInflater inflater, ViewGroup container,
+      Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.country_picker, null);
     Bundle args = getArguments();
     if (args != null) {
@@ -57,8 +53,8 @@ public class CountryPicker extends DialogFragment {
       int height = getResources().getDimensionPixelSize(R.dimen.cp_dialog_height);
       getDialog().getWindow().setLayout(width, height);
     }
-    searchEditText = (EditText) view.findViewById(R.id.country_code_picker_search);
-    countryListView = (ListView) view.findViewById(R.id.country_code_picker_listview);
+    searchEditText = view.findViewById(R.id.country_code_picker_search);
+    countryListView = view.findViewById(R.id.country_code_picker_listview);
 
     selectedCountriesList = new ArrayList<>(countriesList.size());
     selectedCountriesList.addAll(countriesList);
@@ -76,16 +72,13 @@ public class CountryPicker extends DialogFragment {
 
     searchEditText.addTextChangedListener(new TextWatcher() {
 
-      @Override
-      public void onTextChanged(CharSequence s, int start, int before, int count) {
+      @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
       }
 
-      @Override
-      public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+      @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {
       }
 
-      @Override
-      public void afterTextChanged(Editable s) {
+      @Override public void afterTextChanged(Editable s) {
         search(s.toString());
       }
     });
@@ -97,8 +90,7 @@ public class CountryPicker extends DialogFragment {
     this.listener = listener;
   }
 
-  @SuppressLint("DefaultLocale")
-  private void search(String text) {
+  @SuppressLint("DefaultLocale") private void search(String text) {
     selectedCountriesList.clear();
     for (Country country : countriesList) {
       if (country.getName().toLowerCase(Locale.ENGLISH).contains(text.toLowerCase())) {
@@ -112,5 +104,4 @@ public class CountryPicker extends DialogFragment {
     this.countriesList.clear();
     this.countriesList.addAll(newCountries);
   }
-
 }

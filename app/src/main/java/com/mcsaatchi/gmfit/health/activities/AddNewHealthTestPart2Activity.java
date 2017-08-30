@@ -264,8 +264,8 @@ public class AddNewHealthTestPart2Activity extends BaseActivity
 
         for (int j = 0; j < testicularMetrics.get(i).getUnits().size(); j++) {
           if (testicularMetrics.get(j).getUnits().get(j).isSelected()) {
-            metrics.put("metrics[" + i + "][unit_id]",
-                Helpers.toRequestBody(String.valueOf(testicularMetrics.get(j).getUnits().get(j).getId())));
+            metrics.put("metrics[" + i + "][unit_id]", Helpers.toRequestBody(
+                String.valueOf(testicularMetrics.get(j).getUnits().get(j).getId())));
           }
         }
       }

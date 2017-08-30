@@ -78,10 +78,10 @@ public class FitnessWidgetsRecyclerAdapter
 
     RecyclerViewHolder(View itemView) {
       super(itemView);
-      metricTV = (FontTextView) itemView.findViewById(R.id.metricTV);
-      metricIcon = (ImageView) itemView.findViewById(R.id.metricIMG);
-      moreInfoIV = (ImageView) itemView.findViewById(R.id.moreInfoIV);
-      measurementUnitTV = (TextView) itemView.findViewById(R.id.measurementUnitTV);
+      metricTV = itemView.findViewById(R.id.metricTV);
+      metricIcon = itemView.findViewById(R.id.metricIMG);
+      moreInfoIV = itemView.findViewById(R.id.moreInfoIV);
+      measurementUnitTV = itemView.findViewById(R.id.measurementUnitTV);
     }
   }
 }

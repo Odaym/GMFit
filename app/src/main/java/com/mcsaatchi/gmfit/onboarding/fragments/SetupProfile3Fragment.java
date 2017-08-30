@@ -20,8 +20,8 @@ import java.util.List;
 import javax.inject.Inject;
 import worker8.com.github.radiogroupplus.RadioGroupPlus;
 
-public class SetupProfile3Fragment extends BaseFragment implements
-    SetupProfileFragmentsPresenter.SetupProfileFragmentsView_3 {
+public class SetupProfile3Fragment extends BaseFragment
+    implements SetupProfileFragmentsPresenter.SetupProfileFragmentsView_3 {
 
   @Bind(R.id.activityLevelsRadioButtonsGroup) RadioGroupPlus activityLevelsRadioButtonsGroup;
 
@@ -46,8 +46,6 @@ public class SetupProfile3Fragment extends BaseFragment implements
     return fragmentView;
   }
 
-
-
   public boolean wasDataSelected() {
     return dataWasSelected;
   }
@@ -70,8 +68,7 @@ public class SetupProfile3Fragment extends BaseFragment implements
         dataWasSelected = true;
 
         prefs.edit()
-            .putInt(Constants.EXTRAS_USER_PROFILE_ACTIVITY_LEVEL_ID,
-                radioButtonItem.getId())
+            .putInt(Constants.EXTRAS_USER_PROFILE_ACTIVITY_LEVEL_ID, radioButtonItem.getId())
             .apply();
         prefs.edit()
             .putString(Constants.EXTRAS_USER_PROFILE_ACTIVITY_LEVEL,

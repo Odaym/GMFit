@@ -50,7 +50,7 @@ public class OperationContactsRecyclerAdapter extends RecyclerView.Adapter {
     public ViewHolder(View itemView) {
       super(itemView);
 
-      operationContactNameTV = (TextView) itemView.findViewById(R.id.operationContactNameTV);
+      operationContactNameTV = itemView.findViewById(R.id.operationContactNameTV);
 
       itemView.setOnClickListener(view -> {
         Intent intent = new Intent(context, OperationContactDetailsActivity.class);

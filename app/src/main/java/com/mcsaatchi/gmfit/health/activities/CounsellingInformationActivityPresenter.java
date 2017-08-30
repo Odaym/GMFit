@@ -22,27 +22,28 @@ class CounsellingInformationActivityPresenter extends BaseActivityPresenter {
   void getCounsellingInformation(String medCode) {
     view.callDisplayWaitingDialog(R.string.loading_data_dialog_title);
 
-    dataAccessHandler.getCounsellingInformation(medCode, new Callback<CounsellingInformationResponse>() {
-      @Override public void onResponse(Call<CounsellingInformationResponse> call,
-          Response<CounsellingInformationResponse> response) {
-        switch (response.code()) {
-          case 200:
-            view.displayCounsellingInformation(
-                response.body().getData().getBody().getData().getConselingInfoMsg());
-            break;
-          case 449:
-            view.displayRequestErrorDialog(
-                Helpers.provideErrorStringFromJSON(response.errorBody()));
-            break;
-        }
+    dataAccessHandler.getCounsellingInformation(medCode,
+        new Callback<CounsellingInformationResponse>() {
+          @Override public void onResponse(Call<CounsellingInformationResponse> call,
+              Response<CounsellingInformationResponse> response) {
+            switch (response.code()) {
+              case 200:
+                view.displayCounsellingInformation(
+                    response.body().getData().getBody().getData().getConselingInfoMsg());
+                break;
+              case 449:
+                view.displayRequestErrorDialog(
+                    Helpers.provideErrorStringFromJSON(response.errorBody()));
+                break;
+            }
 
-        view.callDismissWaitingDialog();
-      }
+            view.callDismissWaitingDialog();
+          }
 
-      @Override public void onFailure(Call<CounsellingInformationResponse> call, Throwable t) {
-        view.displayRequestErrorDialog(t.getMessage());
-      }
-    });
+          @Override public void onFailure(Call<CounsellingInformationResponse> call, Throwable t) {
+            view.displayRequestErrorDialog(t.getMessage());
+          }
+        });
   }
 
   interface CounsellingInformationActivityView extends BaseActivityView {

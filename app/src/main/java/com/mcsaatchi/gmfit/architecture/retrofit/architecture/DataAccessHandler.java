@@ -234,7 +234,8 @@ public interface DataAccessHandler {
 
   void getCountriesList(final Callback<CountriesListResponse> callback);
 
-  void getCRMCategories(RequestBody contractNo, RequestBody dbCountr, final Callback<CRMCategoriesResponse> callback);
+  void getCRMCategories(RequestBody contractNo, RequestBody dbCountr,
+      final Callback<CRMCategoriesResponse> callback);
 
   void getClaimsList(String contractNo, String requestType,
       final Callback<ClaimsListResponse> callback);

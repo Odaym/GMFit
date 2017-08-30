@@ -62,9 +62,9 @@ public class MedicationsRecyclerAdapter extends RecyclerView.Adapter {
       parentLayout = (RelativeLayout) itemView.findViewById(R.id.parentLayout);
       deleteLayout = itemView.findViewById(R.id.delete_layout);
       deactivate_layout = itemView.findViewById(R.id.deactivate_layout);
-      medicineNameTV = (TextView) itemView.findViewById(R.id.medicineNameTV);
-      medicineDescriptionTV = (TextView) itemView.findViewById(R.id.medicineDescriptionTV);
-      medicineIntakeDetailsTV = (TextView) itemView.findViewById(R.id.medicineIntakeDetailsTV);
+      medicineNameTV = itemView.findViewById(R.id.medicineNameTV);
+      medicineDescriptionTV = itemView.findViewById(R.id.medicineDescriptionTV);
+      medicineIntakeDetailsTV = itemView.findViewById(R.id.medicineIntakeDetailsTV);
     }
 
     public void bind(final Medication medicationItem) {

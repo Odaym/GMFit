@@ -204,7 +204,7 @@ public class FitnessFragment extends BaseFragment
         break;
       case R.id.calendarToday:
         LinearLayout dateCarouselContainer =
-            (LinearLayout) dateCarouselLayout.findViewById(R.id.dateCarouselContainer);
+            dateCarouselLayout.findViewById(R.id.dateCarouselContainer);
 
         dateCarouselContainer.removeAllViews();
         dateCarouselLayout.setupDateCarousel();
@@ -377,6 +377,12 @@ public class FitnessFragment extends BaseFragment
     articlesRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
     articlesRecycler.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
     articlesRecycler.setAdapter(userActivitiesListRecyclerAdapter);
+  }
+
+  @Override public void saveNutritionCalories(String active_nutrition_calories) {
+    prefs.edit()
+        .putString(Constants.EXTRAS_ACTIVE_NUTRITION_CALORIES, active_nutrition_calories)
+        .apply();
   }
 
   @Subscribe public void updateWidgetsOrder(FitnessWidgetsOrderChangedEvent event) {

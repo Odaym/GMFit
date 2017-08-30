@@ -23,7 +23,8 @@ import javax.inject.Singleton;
     return dbHelper.getFitnessWidgetsDAO();
   }
 
-  @Provides @Singleton RuntimeExceptionDao<Medication, Integer> providesMedicationDAO(DBHelper dbHelper){
+  @Provides @Singleton RuntimeExceptionDao<Medication, Integer> providesMedicationDAO(
+      DBHelper dbHelper) {
     return dbHelper.getMedicationDAO();
   }
 }

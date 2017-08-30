@@ -6,6 +6,16 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class AchievementsResponseBody implements Parcelable {
+  public static final Creator<AchievementsResponseBody> CREATOR =
+      new Creator<AchievementsResponseBody>() {
+        @Override public AchievementsResponseBody createFromParcel(Parcel source) {
+          return new AchievementsResponseBody(source);
+        }
+
+        @Override public AchievementsResponseBody[] newArray(int size) {
+          return new AchievementsResponseBody[size];
+        }
+      };
   @SerializedName("id") @Expose private Integer id;
   @SerializedName("name") @Expose private String name;
   @SerializedName("description") @Expose private String description;
@@ -14,6 +24,20 @@ public class AchievementsResponseBody implements Parcelable {
   @SerializedName("is_done") @Expose private Boolean isDone;
   @SerializedName("finishes") @Expose private Integer finishes;
   @SerializedName("last_finish") @Expose private String lastFinish;
+
+  public AchievementsResponseBody() {
+  }
+
+  protected AchievementsResponseBody(Parcel in) {
+    this.id = (Integer) in.readValue(Integer.class.getClassLoader());
+    this.name = in.readString();
+    this.description = in.readString();
+    this.image = in.readString();
+    this.progress = (Integer) in.readValue(Integer.class.getClassLoader());
+    this.isDone = (Boolean) in.readValue(Boolean.class.getClassLoader());
+    this.finishes = (Integer) in.readValue(Integer.class.getClassLoader());
+    this.lastFinish = in.readString();
+  }
 
   public Integer getId() {
     return id;
@@ -93,29 +117,4 @@ public class AchievementsResponseBody implements Parcelable {
     dest.writeValue(this.finishes);
     dest.writeString(this.lastFinish);
   }
-
-  public AchievementsResponseBody() {
-  }
-
-  protected AchievementsResponseBody(Parcel in) {
-    this.id = (Integer) in.readValue(Integer.class.getClassLoader());
-    this.name = in.readString();
-    this.description = in.readString();
-    this.image = in.readString();
-    this.progress = (Integer) in.readValue(Integer.class.getClassLoader());
-    this.isDone = (Boolean) in.readValue(Boolean.class.getClassLoader());
-    this.finishes = (Integer) in.readValue(Integer.class.getClassLoader());
-    this.lastFinish = in.readString();
-  }
-
-  public static final Creator<AchievementsResponseBody> CREATOR =
-      new Creator<AchievementsResponseBody>() {
-        @Override public AchievementsResponseBody createFromParcel(Parcel source) {
-          return new AchievementsResponseBody(source);
-        }
-
-        @Override public AchievementsResponseBody[] newArray(int size) {
-          return new AchievementsResponseBody[size];
-        }
-      };
 }

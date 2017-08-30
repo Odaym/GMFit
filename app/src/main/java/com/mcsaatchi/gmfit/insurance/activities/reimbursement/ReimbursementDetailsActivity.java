@@ -13,7 +13,6 @@ import com.mcsaatchi.gmfit.insurance.widget.CustomAttachmentPicker;
 import com.mcsaatchi.gmfit.insurance.widget.ItemLabel;
 import java.util.ArrayList;
 import org.joda.time.LocalDate;
-import timber.log.Timber;
 
 public class ReimbursementDetailsActivity extends BaseActivity
     implements ReimbursementDetailsActivityPresenter.ReimbursementDetailsActivityView {
@@ -98,87 +97,94 @@ public class ReimbursementDetailsActivity extends BaseActivity
     status.setTextColor(Helpers.determineStatusColor(claimDetails.getStatus()));
     status.setLabel("Status", claimDetails.getStatus());
 
-    Timber.d("Images size in total : " + claimDetails.getImages().size());
-
     for (int i = 0; i < claimDetails.getImages().size(); i++) {
+
+      String imageContents = claimDetails.getImages().get(i).getContent();
+
       try {
         switch (claimDetails.getImages().get(i).getDocumType()) {
           case 1:
             if (medicalReportImagesPlacement != null) {
               for (int k = 0; k < medicalReportImagesPlacement.size(); k++) {
                 medicalReportImagesPicker.returnImagePicker(medicalReportImagesPlacement.get(k))
-                    .setImageBitmap(
-                        Helpers.convertToBase64(claimDetails.getImages().get(i).getContent()));
+                    .setImageBitmap(Helpers.getResizedBitmap(Helpers.convertToBase64(imageContents),
+                        Constants.BITMAP_RESIZE_DIMENS_WIDTH,
+                        Constants.BITMAP_RESIZE_DIMENS_HEIGHT));
               }
             } else {
               medicalReportImagesPicker.returnImagePicker(i)
-                  .setImageBitmap(
-                      Helpers.convertToBase64(claimDetails.getImages().get(i).getContent()));
+                  .setImageBitmap(Helpers.getResizedBitmap(Helpers.convertToBase64(imageContents),
+                      Constants.BITMAP_RESIZE_DIMENS_WIDTH, Constants.BITMAP_RESIZE_DIMENS_HEIGHT));
             }
             break;
           case 2:
             if (invoiceImagesPlacement != null) {
               for (int k = 0; k < invoiceImagesPlacement.size(); k++) {
                 invoiceImagesPicker.returnImagePicker(invoiceImagesPlacement.get(k))
-                    .setImageBitmap(
-                        Helpers.convertToBase64(claimDetails.getImages().get(i).getContent()));
+                    .setImageBitmap(Helpers.getResizedBitmap(Helpers.convertToBase64(imageContents),
+                        Constants.BITMAP_RESIZE_DIMENS_WIDTH,
+                        Constants.BITMAP_RESIZE_DIMENS_HEIGHT));
               }
             } else {
               invoiceImagesPicker.returnImagePicker(i)
-                  .setImageBitmap(
-                      Helpers.convertToBase64(claimDetails.getImages().get(i).getContent()));
+                  .setImageBitmap(Helpers.getResizedBitmap(Helpers.convertToBase64(imageContents),
+                      Constants.BITMAP_RESIZE_DIMENS_WIDTH, Constants.BITMAP_RESIZE_DIMENS_HEIGHT));
             }
             break;
           case 3:
             if (originalReceiptImagesPlacement != null) {
               for (int k = 0; k < originalReceiptImagesPlacement.size(); k++) {
                 originalReceiptImagesPicker.returnImagePicker(originalReceiptImagesPlacement.get(k))
-                    .setImageBitmap(
-                        Helpers.convertToBase64(claimDetails.getImages().get(i).getContent()));
+                    .setImageBitmap(Helpers.getResizedBitmap(Helpers.convertToBase64(imageContents),
+                        Constants.BITMAP_RESIZE_DIMENS_WIDTH,
+                        Constants.BITMAP_RESIZE_DIMENS_HEIGHT));
               }
             } else {
               originalReceiptImagesPicker.returnImagePicker(i)
-                  .setImageBitmap(
-                      Helpers.convertToBase64(claimDetails.getImages().get(i).getContent()));
+                  .setImageBitmap(Helpers.getResizedBitmap(Helpers.convertToBase64(imageContents),
+                      Constants.BITMAP_RESIZE_DIMENS_WIDTH, Constants.BITMAP_RESIZE_DIMENS_HEIGHT));
             }
             break;
           case 4:
             if (identityCardImagesPlacement != null) {
               for (int k = 0; k < identityCardImagesPlacement.size(); k++) {
                 identityCardImagesPicker.returnImagePicker(identityCardImagesPlacement.get(k))
-                    .setImageBitmap(
-                        Helpers.convertToBase64(claimDetails.getImages().get(i).getContent()));
+                    .setImageBitmap(Helpers.getResizedBitmap(Helpers.convertToBase64(imageContents),
+                        Constants.BITMAP_RESIZE_DIMENS_WIDTH,
+                        Constants.BITMAP_RESIZE_DIMENS_HEIGHT));
               }
             } else {
               identityCardImagesPicker.returnImagePicker(i)
-                  .setImageBitmap(
-                      Helpers.convertToBase64(claimDetails.getImages().get(i).getContent()));
+                  .setImageBitmap(Helpers.getResizedBitmap(Helpers.convertToBase64(imageContents),
+                      Constants.BITMAP_RESIZE_DIMENS_WIDTH, Constants.BITMAP_RESIZE_DIMENS_HEIGHT));
             }
             break;
           case 5:
             if (testResultsImagesPlacement != null) {
               for (int k = 0; k < testResultsImagesPlacement.size(); k++) {
                 testResultsImagesPicker.returnImagePicker(testResultsImagesPlacement.get(k))
-                    .setImageBitmap(
-                        Helpers.convertToBase64(claimDetails.getImages().get(i).getContent()));
+                    .setImageBitmap(Helpers.getResizedBitmap(Helpers.convertToBase64(imageContents),
+                        Constants.BITMAP_RESIZE_DIMENS_WIDTH,
+                        Constants.BITMAP_RESIZE_DIMENS_HEIGHT));
               }
             } else {
               testResultsImagesPicker.returnImagePicker(i)
-                  .setImageBitmap(
-                      Helpers.convertToBase64(claimDetails.getImages().get(i).getContent()));
+                  .setImageBitmap(Helpers.getResizedBitmap(Helpers.convertToBase64(imageContents),
+                      Constants.BITMAP_RESIZE_DIMENS_WIDTH, Constants.BITMAP_RESIZE_DIMENS_HEIGHT));
             }
             break;
           case 6:
             if (otherDocumentsImagesPlacement != null) {
               for (int k = 0; k < otherDocumentsImagesPlacement.size(); k++) {
                 otherDocumentsImagesPicker.returnImagePicker(otherDocumentsImagesPlacement.get(k))
-                    .setImageBitmap(
-                        Helpers.convertToBase64(claimDetails.getImages().get(i).getContent()));
+                    .setImageBitmap(Helpers.getResizedBitmap(Helpers.convertToBase64(imageContents),
+                        Constants.BITMAP_RESIZE_DIMENS_WIDTH,
+                        Constants.BITMAP_RESIZE_DIMENS_HEIGHT));
               }
             } else {
               otherDocumentsImagesPicker.returnImagePicker(i)
-                  .setImageBitmap(
-                      Helpers.convertToBase64(claimDetails.getImages().get(i).getContent()));
+                  .setImageBitmap(Helpers.getResizedBitmap(Helpers.convertToBase64(imageContents),
+                      Constants.BITMAP_RESIZE_DIMENS_WIDTH, Constants.BITMAP_RESIZE_DIMENS_HEIGHT));
             }
             break;
         }

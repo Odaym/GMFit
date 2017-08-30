@@ -24,8 +24,8 @@ class SubmitApprovalRequestActivityPresenter extends BaseActivityPresenter {
 
   void uploadInsuranceImage(Map<String, RequestBody> file) {
     dataAccessHandler.uploadInsuranceImage(file, new Callback<UploadInsuranceImageResponse>() {
-      @Override
-      public void onResponse(Call<UploadInsuranceImageResponse> call, Response<UploadInsuranceImageResponse> response) {
+      @Override public void onResponse(Call<UploadInsuranceImageResponse> call,
+          Response<UploadInsuranceImageResponse> response) {
         switch (response.code()) {
           case 200:
             view.saveImagePath(response.body().getData().getBody().getPath());

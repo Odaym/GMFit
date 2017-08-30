@@ -61,7 +61,7 @@ public class OperationContactAddressesRecyclerAdapter extends RecyclerView.Adapt
     public ViewHolder(View itemView) {
       super(itemView);
 
-      addressesValueTV = (TextView) itemView.findViewById(R.id.addressesValueTV);
+      addressesValueTV = itemView.findViewById(R.id.addressesValueTV);
       phoneNumbersRecycler = (RecyclerView) itemView.findViewById(R.id.phoneNumbersRecycler);
     }
   }

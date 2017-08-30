@@ -226,7 +226,7 @@ public class HealthFragment extends BaseFragment
 
           View dialogView =
               LayoutInflater.from(getActivity()).inflate(R.layout.profile_edit_weight_dialog, null);
-          final EditText editWeightET = (EditText) dialogView.findViewById(R.id.dialogWeightET);
+          final EditText editWeightET = dialogView.findViewById(R.id.dialogWeightET);
 
           editWeightET.setText(
               String.valueOf(prefs.getFloat(Constants.EXTRAS_USER_PROFILE_WEIGHT, 0)));

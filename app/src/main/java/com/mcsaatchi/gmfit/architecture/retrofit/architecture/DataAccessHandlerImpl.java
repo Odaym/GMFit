@@ -419,7 +419,7 @@ public class DataAccessHandlerImpl implements DataAccessHandler {
 
   @Override public void getCRMCategories(RequestBody contractNo, RequestBody dbCountry,
       final Callback<CRMCategoriesResponse> callback) {
-    apiCallsHandler.getCRMCategories(contractNo, dbCountry,  callback);
+    apiCallsHandler.getCRMCategories(contractNo, dbCountry, callback);
   }
 
   @Override public void getClaimsList(String contractNo, String requestType,

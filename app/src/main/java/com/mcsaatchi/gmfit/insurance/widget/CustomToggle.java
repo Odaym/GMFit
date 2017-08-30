@@ -23,9 +23,9 @@ public class CustomToggle extends LinearLayout implements View.OnClickListener {
     LayoutInflater inflater =
         (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     View v = inflater.inflate(R.layout.custom_toggle, this, true);
-    toggleNameTv = (TextView) v.findViewById(R.id.toggleName);
-    toggleOptionOneTv = (TextView) v.findViewById(R.id.toggleOptionOne);
-    toggleOptionTwoTv = (TextView) v.findViewById(R.id.toggleOptionTwo);
+    toggleNameTv = v.findViewById(R.id.toggleName);
+    toggleOptionOneTv = v.findViewById(R.id.toggleOptionOne);
+    toggleOptionTwoTv = v.findViewById(R.id.toggleOptionTwo);
     containerOptionOne = v.findViewById(R.id.containerOptionOne);
     containerOptionTwo = v.findViewById(R.id.containerOptionTwo);
     containerOptionOne.setOnClickListener(this);

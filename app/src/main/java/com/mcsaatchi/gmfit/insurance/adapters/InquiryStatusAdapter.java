@@ -49,10 +49,10 @@ public class InquiryStatusAdapter extends RecyclerView.Adapter {
       super(itemView);
 
       parentLayout = (RelativeLayout) itemView.findViewById(R.id.parentLayout);
-      requestTitleTV = (TextView) itemView.findViewById(R.id.requestTitleTV);
-      requestCreatedOnTV = (TextView) itemView.findViewById(R.id.requestCreatedOnTV);
-      requestSubCategoryTV = (TextView) itemView.findViewById(R.id.requestSubCategoryTV);
-      requestCategoryTV = (TextView) itemView.findViewById(R.id.requestCategoryTV);
+      requestTitleTV = itemView.findViewById(R.id.requestTitleTV);
+      requestCreatedOnTV = itemView.findViewById(R.id.requestCreatedOnTV);
+      requestSubCategoryTV = itemView.findViewById(R.id.requestSubCategoryTV);
+      requestCategoryTV = itemView.findViewById(R.id.requestCategoryTV);
     }
 
     public void bind(InquiriesListResponseInnerData inquiryItem) {

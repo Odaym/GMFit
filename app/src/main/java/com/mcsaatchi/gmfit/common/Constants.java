@@ -60,6 +60,9 @@ public class Constants {
   public static final String EXTRAS_USER_PROFILE_BLOOD_TYPE = "user_profile_blood_type";
   public static final String EXTRAS_USER_PROFILE_IMAGE = "user_profile_image";
 
+
+  public static final String EXTRAS_ACTIVE_NUTRITION_CALORIES = "extras_active_nutrition_calories";
+
   public static final String EXTRAS_FITNESS_FRAGMENT = "FITNESS";
   public static final String EXTRAS_NUTRITION_FRAGMENT = "NUTRITION";
   public static final String EXTRAS_HEALTH_FRAGMENT = "HEALTH";
@@ -111,6 +114,9 @@ public class Constants {
   public static final String HEALTH_TEST_DATE_TAKEN = "health_test_date_taken";
   public static final String HEALTH_TEST_PICTURE_PATHS = "health_test_picture_paths";
   public static final String HEALTH_TEST_DELETED_IMAGE_IDS = "health_test_deleted_image_ids";
+
+  public static final int BITMAP_RESIZE_DIMENS_WIDTH = 200;
+  public static final int BITMAP_RESIZE_DIMENS_HEIGHT = 200;
 
   /**
    * REMINDERS ACTIVITY

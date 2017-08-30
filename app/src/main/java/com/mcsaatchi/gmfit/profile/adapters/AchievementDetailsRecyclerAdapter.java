@@ -90,11 +90,11 @@ public class AchievementDetailsRecyclerAdapter extends RecyclerView.Adapter {
 
       achievementCompletionProgressLayout =
           (LinearLayout) itemView.findViewById(R.id.achievementCompletionProgressLayout);
-      achievementImageIV = (ImageView) itemView.findViewById(R.id.achievementImageIV);
+      achievementImageIV = itemView.findViewById(R.id.achievementImageIV);
       achievementCompletedCheckmarkIV =
           (ImageView) itemView.findViewById(R.id.achievementCompletedCheckmarkIV);
-      achievementNameTV = (TextView) itemView.findViewById(R.id.achievementNameTV);
-      achievementDetailsTV = (TextView) itemView.findViewById(R.id.achievementDetailsTV);
+      achievementNameTV = itemView.findViewById(R.id.achievementNameTV);
+      achievementDetailsTV = itemView.findViewById(R.id.achievementDetailsTV);
       achievementCompletedDetailsTV =
           (TextView) itemView.findViewById(R.id.achievementCompletedDetailsTV);
       achievementCompletedPercentageTV =

@@ -27,8 +27,8 @@ public class CustomCountryPicker extends LinearLayout implements View.OnClickLis
     LayoutInflater mInflater =
         (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     View v = mInflater.inflate(R.layout.insurance_login_country_picker, this, true);
-    itemNameTv = (TextView) v.findViewById(R.id.item_name);
-    itemSelectedTv = (TextView) v.findViewById(R.id.item_selected);
+    itemNameTv = v.findViewById(R.id.item_name);
+    itemSelectedTv = v.findViewById(R.id.item_selected);
     View touchableContainer = v.findViewById(R.id.touchableContainer);
     touchableContainer.setOnClickListener(this);
   }

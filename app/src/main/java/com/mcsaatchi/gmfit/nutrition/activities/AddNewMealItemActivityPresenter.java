@@ -19,7 +19,8 @@ class AddNewMealItemActivityPresenter extends BaseActivityPresenter {
   private AddNewMealItemView view;
   private DataAccessHandlerImpl dataAccessHandler;
 
-  AddNewMealItemActivityPresenter(AddNewMealItemView view, DataAccessHandlerImpl dataAccessHandler) {
+  AddNewMealItemActivityPresenter(AddNewMealItemView view,
+      DataAccessHandlerImpl dataAccessHandler) {
     this.view = view;
     this.dataAccessHandler = dataAccessHandler;
   }

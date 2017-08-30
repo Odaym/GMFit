@@ -70,9 +70,7 @@ class SignUpActivityPresenter {
     });
   }
 
-
-  interface SignUpActivityView
-      extends BaseActivityPresenter.BaseActivityView {
+  interface SignUpActivityView extends BaseActivityPresenter.BaseActivityView {
     void saveUserSignUpDetails(String accessToken, String full_name, String email, String password);
 
     void openAccountVerificationActivity();

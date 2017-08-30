@@ -31,8 +31,8 @@ public class CustomDatePickerFitnessActivity extends LinearLayout implements Vie
     LayoutInflater mInflater =
         (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     View v = mInflater.inflate(R.layout.custom_date_picker_fitness_activity, this, true);
-    itemNameTv = (TextView) v.findViewById(R.id.item_name);
-    itemSelectedTv = (TextView) v.findViewById(R.id.item_selected);
+    itemNameTv = v.findViewById(R.id.item_name);
+    itemSelectedTv = v.findViewById(R.id.item_selected);
     View touchableContainer = v.findViewById(R.id.touchableContainer);
     touchableContainer.setOnClickListener(this);
   }

@@ -28,7 +28,7 @@ public class ImageHandler {
     Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
 
     Bitmap scaled = Bitmap.createScaledBitmap(bitmap, w, h, true);
-    
+
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
     scaled.compress(Bitmap.CompressFormat.JPEG, 50, baos);

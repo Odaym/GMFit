@@ -70,9 +70,9 @@ public class ArticlesRecyclerAdapter extends RecyclerView.Adapter {
     public ViewHolder(View itemView) {
       super(itemView);
 
-      articleNameTV = (TextView) itemView.findViewById(R.id.articleNameTV);
-      articleDateTV = (TextView) itemView.findViewById(R.id.articleDateTV);
-      articleImageIV = (ImageView) itemView.findViewById(R.id.articleImageIV);
+      articleNameTV = itemView.findViewById(R.id.articleNameTV);
+      articleDateTV = itemView.findViewById(R.id.articleDateTV);
+      articleImageIV = itemView.findViewById(R.id.articleImageIV);
 
       itemView.setOnClickListener(view -> {
         Intent intent = new Intent(context, ArticleDetailsActivity.class);

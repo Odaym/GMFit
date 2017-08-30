@@ -10,9 +10,6 @@ import android.widget.TextView;
 import com.mcsaatchi.gmfit.R;
 import java.util.List;
 
-/**
- * Created by mukesh on 25/04/16.
- */
 public class CountryListAdapter extends BaseAdapter {
 
   List<Country> countries;
@@ -26,34 +23,28 @@ public class CountryListAdapter extends BaseAdapter {
     inflater = LayoutInflater.from(context);
   }
 
-  @Override
-  public int getCount() {
+  @Override public int getCount() {
     return countries.size();
   }
 
-  @Override
-  public Object getItem(int arg0) {
+  @Override public Object getItem(int arg0) {
     return null;
   }
 
-  @Override
-  public long getItemId(int arg0) {
+  @Override public long getItemId(int arg0) {
     return 0;
   }
 
-  @Override
-  public View getView(int position, View view, ViewGroup parent) {
+  @Override public View getView(int position, View view, ViewGroup parent) {
     Country country = countries.get(position);
 
-    if (view == null)
-      view = inflater.inflate(R.layout.country_picker_row, null);
+    if (view == null) view = inflater.inflate(R.layout.country_picker_row, null);
 
     Cell cell = Cell.from(view);
     cell.textView.setText(country.getName());
 
     country.loadFlagByCode(mContext);
-    if (country.getFlag() != -1)
-      cell.imageView.setImageResource(country.getFlag());
+    if (country.getFlag() != -1) cell.imageView.setImageResource(country.getFlag());
     return view;
   }
 
@@ -62,13 +53,12 @@ public class CountryListAdapter extends BaseAdapter {
     public ImageView imageView;
 
     static Cell from(View view) {
-      if (view == null)
-        return null;
+      if (view == null) return null;
 
       if (view.getTag() == null) {
         Cell cell = new Cell();
-        cell.textView = (TextView) view.findViewById(R.id.row_title);
-        cell.imageView = (ImageView) view.findViewById(R.id.row_icon);
+        cell.textView = view.findViewById(R.id.row_title);
+        cell.imageView = view.findViewById(R.id.row_icon);
         view.setTag(cell);
         return cell;
       } else {

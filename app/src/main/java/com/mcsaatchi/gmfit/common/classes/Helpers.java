@@ -45,6 +45,10 @@ public class Helpers {
     return RequestBody.create(MediaType.parse("text/plain"), value);
   }
 
+  public static Bitmap getResizedBitmap(Bitmap image, int bitmapWidth, int bitmapHeight) {
+    return Bitmap.createScaledBitmap(image, bitmapWidth, bitmapHeight, true);
+  }
+
   public static void hideKeyboard(View currentFocus, Context context) {
     if (currentFocus != null) {
       InputMethodManager imm =

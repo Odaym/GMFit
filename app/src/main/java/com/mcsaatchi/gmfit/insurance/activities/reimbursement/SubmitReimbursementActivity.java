@@ -328,7 +328,7 @@ public class SubmitReimbursementActivity extends BaseActivity
               break;
           }
 
-          ImageView imageView = (ImageView) innerLayoutWithPickers.findViewById(
+          ImageView imageView = innerLayoutWithPickers.findViewById(
               innerLayoutWithPickers.getChildAt(finalI).getId());
           showImagePickerDialog(imageView);
         });

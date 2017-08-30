@@ -14,7 +14,9 @@ public class AddNewChartActivityPresenter extends BaseActivityPresenter {
 
   private AddNewChartActivityView view;
   private DataAccessHandlerImpl dataAccessHandler;
-  AddNewChartActivityPresenter(AddNewChartActivityView view, DataAccessHandlerImpl dataAccessHandler) {
+
+  AddNewChartActivityPresenter(AddNewChartActivityView view,
+      DataAccessHandlerImpl dataAccessHandler) {
     this.view = view;
     this.dataAccessHandler = dataAccessHandler;
   }
@@ -27,7 +29,8 @@ public class AddNewChartActivityPresenter extends BaseActivityPresenter {
           case 200:
             view.dismissWaitingDialog();
 
-            List<ChartsBySectionResponseDatum> chartsFromResponse = response.body().getData().getBody().getData();
+            List<ChartsBySectionResponseDatum> chartsFromResponse =
+                response.body().getData().getBody().getData();
 
             for (int i = 0; i < chartsFromResponse.size(); i++) {
               if (chartsFromResponse.get(i).getSlug().equals("flights-climbed")) {
@@ -35,8 +38,7 @@ public class AddNewChartActivityPresenter extends BaseActivityPresenter {
               }
             }
 
-            view.displayChartsBySection(chartsFromResponse,
-                requestCodeToSendBack);
+            view.displayChartsBySection(chartsFromResponse, requestCodeToSendBack);
             break;
         }
       }
@@ -47,7 +49,7 @@ public class AddNewChartActivityPresenter extends BaseActivityPresenter {
     });
   }
 
-  void addMetricChart(int chart_id){
+  void addMetricChart(int chart_id) {
     dataAccessHandler.addMetricChart(chart_id, new Callback<DefaultGetResponse>() {
       @Override
       public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {

@@ -62,7 +62,7 @@ public class AchievementsRecyclerAdapter extends RecyclerView.Adapter {
     public ViewHolder(View itemView) {
       super(itemView);
 
-      achievementImageIV = (ImageView) itemView.findViewById(R.id.achievementImageIV);
+      achievementImageIV = itemView.findViewById(R.id.achievementImageIV);
       achievementCompletedCheckmarkIV =
           (ImageView) itemView.findViewById(R.id.achievementCompletedCheckmarkIV);
 

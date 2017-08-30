@@ -6,9 +6,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.classes.GMFitApplication;
-import com.mcsaatchi.gmfit.architecture.retrofit.architecture.DataAccessHandlerImpl;
 import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
 import com.mcsaatchi.gmfit.architecture.otto.SignedUpSuccessfullyEvent;
+import com.mcsaatchi.gmfit.architecture.retrofit.architecture.DataAccessHandlerImpl;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.AuthenticationResponseChart;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
@@ -38,7 +38,7 @@ public class SplashActivity extends BaseActivity
           prefs.getString(Constants.EXTRAS_USER_PASSWORD, ""));
     }
 
-    if (!prefs.getString(Constants.EXTRAS_USER_FACEBOOK_TOKEN, "").isEmpty()){
+    if (!prefs.getString(Constants.EXTRAS_USER_FACEBOOK_TOKEN, "").isEmpty()) {
       presenter.login(prefs.getString(Constants.EXTRAS_USER_FACEBOOK_TOKEN, ""));
     }
   }

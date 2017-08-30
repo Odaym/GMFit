@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OperationContactsResponseBody implements Parcelable{
+public class OperationContactsResponseBody implements Parcelable {
   public static final Creator<OperationContactsResponseBody> CREATOR =
       new Creator<OperationContactsResponseBody>() {
         @Override public OperationContactsResponseBody createFromParcel(Parcel source) {
@@ -25,7 +25,8 @@ public class OperationContactsResponseBody implements Parcelable{
   @SerializedName("created_at") @Expose private String createdAt;
   @SerializedName("updated_at") @Expose private String updatedAt;
   @SerializedName("emails") @Expose private String emails;
-  @SerializedName("locations") @Expose private List<OperationContactsResponseLocation> locations = null;
+  @SerializedName("locations") @Expose private List<OperationContactsResponseLocation> locations =
+      null;
 
   public OperationContactsResponseBody() {
   }

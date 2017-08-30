@@ -56,12 +56,12 @@ public class SimpleSectionedListAdapter extends BaseAdapter
       if (mealItems.get(position).getSectionType() == SECTION_VIEWTYPE) {
         convertView = inflater.inflate(android.R.layout.simple_list_item_1, parent, false);
 
-        holder.itemNameTV = (TextView) convertView.findViewById(android.R.id.text1);
+        holder.itemNameTV = convertView.findViewById(android.R.id.text1);
       } else {
         convertView = inflater.inflate(R.layout.list_item_one_with_icon, parent, false);
 
-        holder.itemNameTV = (TextView) convertView.findViewById(R.id.itemNameTV);
-        holder.itemIconRightIMG = (ImageView) convertView.findViewById(R.id.itemIconRightIMG);
+        holder.itemNameTV = convertView.findViewById(R.id.itemNameTV);
+        holder.itemIconRightIMG = convertView.findViewById(R.id.itemIconRightIMG);
       }
 
       convertView.setTag(holder);

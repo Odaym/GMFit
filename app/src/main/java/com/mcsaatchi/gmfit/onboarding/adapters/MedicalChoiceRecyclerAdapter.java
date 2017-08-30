@@ -51,7 +51,6 @@ public class MedicalChoiceRecyclerAdapter
           }
         }
 
-
         //new Handler().post(this::notifyDataSetChanged);
       } else {
         conditions.get(position).setSelected(selected);

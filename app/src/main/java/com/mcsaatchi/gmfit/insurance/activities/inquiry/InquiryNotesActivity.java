@@ -145,10 +145,10 @@ public class InquiryNotesActivity extends BaseActivity
 
       View noteView = inflater.inflate(R.layout.individual_crm_note, null);
 
-      TextView senderNameTV = (TextView) noteView.findViewById(R.id.senderNameTV);
-      TextView sentDateTV = (TextView) noteView.findViewById(R.id.sentDateTV);
-      TextView messageContentTV = (TextView) noteView.findViewById(R.id.messageContentTV);
-      ImageView messageImageIV = (ImageView) noteView.findViewById(R.id.messageImageIV);
+      TextView senderNameTV = noteView.findViewById(R.id.senderNameTV);
+      TextView sentDateTV = noteView.findViewById(R.id.sentDateTV);
+      TextView messageContentTV = noteView.findViewById(R.id.messageContentTV);
+      ImageView messageImageIV = noteView.findViewById(R.id.messageImageIV);
 
       if (noteAttributesList.get(i).getCreatedBy() != null) {
         senderNameTV.setText(noteAttributesList.get(i).getCreatedBy());
@@ -242,7 +242,8 @@ public class InquiryNotesActivity extends BaseActivity
               photoFile = null;
               try {
                 photoFile = ImageHandler.createImageFile(ImageHandler.constructImageFilename());
-                photoFileUri = FileProvider.getUriForFile(this, getApplicationContext().getPackageName() + ".provider", photoFile);
+                photoFileUri = FileProvider.getUriForFile(this,
+                    getApplicationContext().getPackageName() + ".provider", photoFile);
               } catch (IOException ex) {
                 ex.printStackTrace();
               }

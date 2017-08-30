@@ -86,9 +86,8 @@ public class DirectorySearchFilterActivity extends BaseActivity
           });
     }
 
-    cityPicker.setUpDropDown("City", "Choose a City",new String[] { "Empty", "Empty", "Empty" },
+    cityPicker.setUpDropDown("City", "Choose a City", new String[] { "Empty", "Empty", "Empty" },
         (index, selected) -> serviceSelected = selected);
-
   }
 
   @OnClick(R.id.searchFiltersBTN) public void handleApplySearchTerms() {

@@ -42,8 +42,8 @@ public class NutritionalFactsListAdapter extends BaseAdapter {
 
       holder = new ViewHolder();
 
-      holder.itemNameTV = (TextView) convertView.findViewById(R.id.itemNameTV);
-      holder.itemHintTV = (TextView) convertView.findViewById(R.id.itemHintTV);
+      holder.itemNameTV = convertView.findViewById(R.id.itemNameTV);
+      holder.itemHintTV = convertView.findViewById(R.id.itemHintTV);
 
       convertView.setTag(holder);
     } else {

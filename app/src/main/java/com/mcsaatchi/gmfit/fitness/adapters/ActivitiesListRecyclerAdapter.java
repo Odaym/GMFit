@@ -50,7 +50,7 @@ public class ActivitiesListRecyclerAdapter extends RecyclerView.Adapter {
     public ViewHolder(View itemView) {
       super(itemView);
 
-      activityNameTV = (TextView) itemView.findViewById(R.id.activityNameTV);
+      activityNameTV = itemView.findViewById(R.id.activityNameTV);
 
       itemView.setOnClickListener(view -> {
         Intent intent = new Intent(context, AddActivityDetailsActivity.class);

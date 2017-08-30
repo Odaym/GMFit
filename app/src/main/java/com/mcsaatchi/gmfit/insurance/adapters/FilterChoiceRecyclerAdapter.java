@@ -50,7 +50,7 @@ public class FilterChoiceRecyclerAdapter
     RecyclerViewHolder(View itemView) {
       super(itemView);
 
-      choiceNameTV = (TextView) itemView.findViewById(R.id.choiceNameTV);
+      choiceNameTV = itemView.findViewById(R.id.choiceNameTV);
       choiceCheckedLayout = (LinearLayout) itemView.findViewById(R.id.choiceCheckedLayout);
 
       itemView.setOnClickListener(this);

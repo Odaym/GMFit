@@ -17,8 +17,8 @@ public class ItemLabel extends LinearLayout {
     LayoutInflater mInflater =
         (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     View v = mInflater.inflate(R.layout.item_label, this, true);
-    itemNameTv = (TextView) v.findViewById(R.id.item_name);
-    itemInfoTv = (TextView) v.findViewById(R.id.item_selected);
+    itemNameTv = v.findViewById(R.id.item_name);
+    itemInfoTv = v.findViewById(R.id.item_selected);
   }
 
   public void setLabel(String name, String info) {

@@ -50,8 +50,8 @@ class OperationContactPhoneNumbersRecyclerAdapter extends RecyclerView.Adapter {
     public ViewHolder(View itemView) {
       super(itemView);
 
-      phoneNumberNameTV = (TextView) itemView.findViewById(R.id.phoneNumberNameTV);
-      phoneNumberValueTV = (TextView) itemView.findViewById(R.id.phoneNumberValueTV);
+      phoneNumberNameTV = itemView.findViewById(R.id.phoneNumberNameTV);
+      phoneNumberValueTV = itemView.findViewById(R.id.phoneNumberValueTV);
     }
   }
 }

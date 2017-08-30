@@ -50,7 +50,7 @@ public class DaysChoiceRecyclerAdapter
     RecyclerViewHolder(View itemView) {
       super(itemView);
 
-      dayNameTV = (TextView) itemView.findViewById(R.id.dayNameTV);
+      dayNameTV = itemView.findViewById(R.id.dayNameTV);
       dayCheckedLayout = (LinearLayout) itemView.findViewById(R.id.dayCheckedLayout);
 
       itemView.setOnClickListener(this);
