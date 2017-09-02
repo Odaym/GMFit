@@ -308,6 +308,12 @@ public class MainProfileFragment extends BaseFragment
         }
       }
 
+      //Set the blood type
+      if (userProfileData.getBloodType() != null) {
+        prefsEditor.putString(Constants.EXTRAS_USER_PROFILE_BLOOD_TYPE,
+            userProfileData.getBloodType());
+      }
+
       //Set the user goals
       for (int i = 0; i < userGoals.size(); i++) {
         if (userGoals.get(i).getSelected().equals("1")) {
