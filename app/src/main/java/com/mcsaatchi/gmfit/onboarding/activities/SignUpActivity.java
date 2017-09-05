@@ -5,11 +5,13 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextWatcher;
 import android.text.method.PasswordTransformationMethod;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 import butterknife.Bind;
@@ -32,8 +34,10 @@ public class SignUpActivity extends BaseActivity
   @Bind(R.id.passwordET) FormEditText passwordET;
   @Bind(R.id.firstNameET) FormEditText firstNameET;
   @Bind(R.id.lastNameET) FormEditText lastNameET;
+  @Bind(R.id.phoneNumberET) FormEditText phoneNumberET;
   @Bind(R.id.showPasswordTV) TextView showPasswordTV;
   @Bind(R.id.creatingAccountTOSTV) TextView creatingAccountTOSTV;
+  @Bind(R.id.TOSAgreementCheckbox) CheckBox TOSAgreementCheckbox;
   @Bind(R.id.toolbar) Toolbar toolbar;
 
   private boolean passwordShowing = false;
@@ -57,8 +61,11 @@ public class SignUpActivity extends BaseActivity
     allFields.add(lastNameET);
     allFields.add(emailET);
     allFields.add(passwordET);
+    allFields.add(phoneNumberET);
 
     passwordET.setTypeface(Typeface.DEFAULT);
+
+    phoneNumberET.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
 
     creatingAccountTOSTV.setText(Html.fromHtml(getString(R.string.creating_account_TOS)));
 
@@ -95,6 +102,7 @@ public class SignUpActivity extends BaseActivity
     prefs.edit().putString(Constants.PREF_USER_ACCESS_TOKEN, "Bearer " + accessToken).apply();
     prefs.edit().putString(Constants.EXTRAS_USER_FULL_NAME, full_name).apply();
     prefs.edit().putString(Constants.EXTRAS_USER_EMAIL, email).apply();
+    //prefs.edit().putString(Constants.EXTRAS_USER_PROFILE_PHONE_NUMBER, )
     prefs.edit().putString(Constants.EXTRAS_USER_PASSWORD, password).apply();
   }
 
@@ -136,12 +144,12 @@ public class SignUpActivity extends BaseActivity
 
   @OnClick(R.id.createAccountBTN) public void handleCreateAccount() {
     if (Helpers.validateFields(allFields)) {
-      if (passwordET.getText().toString().length() <= 7) {
-        Toast.makeText(this, R.string.field_password_too_short_error, Toast.LENGTH_LONG).show();
-      } else {
+      if (TOSAgreementCheckbox.isChecked()) {
         presenter.signUserUp(
             firstNameET.getText().toString() + " " + lastNameET.getText().toString(),
             emailET.getText().toString(), passwordET.getText().toString());
+      } else {
+        Toast.makeText(this, R.string.accept_TOS_error, Toast.LENGTH_LONG).show();
       }
     } else {
       showPasswordTV.setVisibility(View.GONE);

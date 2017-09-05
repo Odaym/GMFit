@@ -66,7 +66,8 @@
   <string name="password_hint">Password</string>
   <string name="confirm_password_hint">Confirm Password</string>
   <string name="create_account_button">Create Account</string>
-  <string name="creating_account_TOS">* By creating an account, you agree to the &lt;u>Terms of Use&lt;u>.</string>
+  <string name="creating_account_TOS">Check here to indicate that you have read and agreed to our service &lt;u>terms and conditions &amp; privacy policy&lt;u>.</string>
+  <string name="accept_TOS_error">Please accept the Terms and Conditions to proceed.</string>
   <string name="signing_up_dialog_title">Registering a new account</string>
   <string name="email_already_taken_api_response">Email already in use, please choose a different email.</string>
   <string name="signup_failed_alert_dialog_title">Registration failed</string>
@@ -169,6 +170,7 @@
   <string name="weight_hint">Weight</string>
   <string name="height_hint">Height</string>
   <string name="error_first_name_not_valid">Names cannot contain numbers</string>
+  <string name="phone_number_cannot_be_empty">Phone number cannot be empty</string>
   <string name="setting_up_profile_dialog_title">Setting up your profile</string>
   <string name="setup_profile_step_3_heading_hint">Tell us more about yourself</string>
   <string name="setup_profile_step_1_title">Step 1 of 4</string>
@@ -210,7 +212,7 @@
   <string name="add_activity_button">+ Add Activity</string>
   <string name="activity_period_choice_minutes">Minutes</string>
   <string name="adding_new_activity_dialog_title">Adding new activity</string>
-  <string name="editing_new_activity_dialog_title">Deleting activity</string>
+  <string name="editing_new_activity_dialog_title">Editing activity</string>
   <string name="delete_activity_hint">Delete Activity</string>
   <string name="deleting_user_activity_dialog_title">Deleting activity</string>
   <string name="articles_section_title">Recommended Readings</string>

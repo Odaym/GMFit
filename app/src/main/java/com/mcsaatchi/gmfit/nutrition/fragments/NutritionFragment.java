@@ -237,8 +237,12 @@ public class NutritionFragment extends BaseFragment
     todayTV.setText(Helpers.getFormattedString((int) Double.parseDouble(currentValue)));
     goalTV.setText(Helpers.getFormattedString(Integer.parseInt(maxValue)));
 
-    activeTV.setText(String.format(Locale.getDefault(), "%.2f",
-        Double.parseDouble(prefs.getString(Constants.EXTRAS_ACTIVE_NUTRITION_CALORIES, ""))));
+    if (Double.parseDouble(prefs.getString(Constants.EXTRAS_ACTIVE_NUTRITION_CALORIES, "")) == 0) {
+      activeTV.setText("0");
+    } else {
+      activeTV.setText(String.format(Locale.getDefault(), "%.2f",
+          Double.parseDouble(prefs.getString(Constants.EXTRAS_ACTIVE_NUTRITION_CALORIES, ""))));
+    }
 
     if (!activeTV.getText().toString().isEmpty()
         && !goalTV.getText().toString().isEmpty()

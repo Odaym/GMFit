@@ -219,6 +219,13 @@ public class EditProfileActivity extends BaseActivity
         alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
             (dialog, which) -> dialog.dismiss());
         alertDialog.show();
+      } else if (mobileNumberValueET.getText().toString().isEmpty()) {
+        final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+        alertDialog.setTitle(R.string.error_updating_profile);
+        alertDialog.setMessage(getString(R.string.phone_number_cannot_be_empty));
+        alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
+            (dialog, which) -> dialog.dismiss());
+        alertDialog.show();
       } else {
         String DOBToSend = "";
 

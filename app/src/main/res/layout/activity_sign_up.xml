@@ -125,6 +125,49 @@
           >
 
         <com.wrapp.floatlabelededittext.FloatLabeledEditText
+            android:id="@+id/phoneNumberETFloating"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/radiobutton_row_height"
+            android:layout_marginBottom="@dimen/default_margin_0"
+            android:background="@color/color_primary_dark_transparent"
+            android:paddingBottom="@dimen/default_margin_0"
+            app:fletPaddingLeft="@dimen/default_margin_2"
+            app:fletPaddingTop="@dimen/default_margin_1"
+            app:fletTextAppearance="@style/TextAppearence.App.TextInputLayout"
+            >
+
+          <com.andreabaccega.widget.FormEditText
+              android:id="@+id/phoneNumberET"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@android:color/transparent"
+              android:hint="@string/phone_number_label"
+              android:inputType="phone"
+              android:longClickable="false"
+              android:maxLines="1"
+              android:paddingBottom="@dimen/default_margin_1"
+              android:paddingEnd="@dimen/default_margin_2"
+              android:paddingStart="@dimen/default_margin_2"
+              android:textAppearance="?android:textAppearanceSmall"
+              android:textColor="@android:color/white"
+              android:textColorHint="@color/offwhite_transparent"
+              android:textCursorDrawable="@null"
+              validator:emptyErrorString="@string/mobile_number_empty_error"
+              validator:testErrorString="@string/error_phone_not_valid"
+              validator:testType="phone"
+              />
+        </com.wrapp.floatlabelededittext.FloatLabeledEditText>
+      </LinearLayout>
+
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="@dimen/radiobutton_row_height"
+          android:layout_marginBottom="@dimen/default_margin_0"
+          android:background="@color/color_primary_dark_transparent"
+          android:orientation="vertical"
+          >
+
+        <com.wrapp.floatlabelededittext.FloatLabeledEditText
             android:id="@+id/emailETFloating"
             android:layout_width="match_parent"
             android:layout_height="@dimen/radiobutton_row_height"
@@ -199,6 +242,7 @@
               android:textCursorDrawable="@null"
               app:customRegexp="@string/password_requirements_regex"
               app:testErrorString="@string/password_format_wrong"
+              app:testType="regexp"
               validator:emptyErrorString="@string/password_empty_error"
               />
 
@@ -217,17 +261,31 @@
         </com.wrapp.floatlabelededittext.FloatLabeledEditText>
       </LinearLayout>
 
-      <TextView
-          android:id="@+id/creatingAccountTOSTV"
+      <LinearLayout
           android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_marginTop="20dp"
-          android:gravity="center"
-          android:paddingEnd="@dimen/default_margin_2"
-          android:paddingStart="@dimen/default_margin_2"
-          android:textColor="@color/offwhite_background_gray"
-          />
+          android:layout_height="50dp"
+          android:layout_marginTop="@dimen/default_margin_1"
+          android:gravity="center_vertical"
+          android:orientation="horizontal"
+          >
 
+        <CheckBox
+            android:id="@+id/TOSAgreementCheckbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/default_margin_1"
+            android:layout_marginStart="@dimen/default_margin_1"
+            android:buttonTint="@android:color/white"
+            />
+
+        <TextView
+            android:id="@+id/creatingAccountTOSTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingEnd="@dimen/default_margin_2"
+            android:textColor="@color/offwhite_background_gray"
+            />
+      </LinearLayout>
     </LinearLayout>
   </ScrollView>
 

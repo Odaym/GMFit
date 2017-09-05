@@ -119,7 +119,7 @@ public class SetupProfileActivity extends BaseActivity {
                 viewPager.getCurrentItem())).getFinalWeight() == 0) {
 
               Toast.makeText(SetupProfileActivity.this,
-                  "Please fill in your Height and Weight to proceed", Toast.LENGTH_SHORT).show();
+                  getString(R.string.weight_height_zero_error), Toast.LENGTH_SHORT).show();
             } else {
               viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
 

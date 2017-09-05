@@ -282,6 +282,7 @@
 
       <!-- TREATMENT DURATION -->
       <LinearLayout
+          android:id="@+id/treatmentDurationLayout"
           android:layout_width="match_parent"
           android:layout_height="@dimen/add_medication_row_height"
           android:background="@color/white"

@@ -148,8 +148,11 @@ public class AddActivityDetailsActivity extends BaseActivity
   @Override public boolean onOptionsItemSelected(MenuItem item) {
     switch (item.getItemId()) {
       case R.id.saveBTN:
-        gatherInfoAndSubmitActivity(false);
-
+        if (call_purpose_edit) {
+          gatherInfoAndSubmitActivity(true);
+        } else {
+          gatherInfoAndSubmitActivity(false);
+        }
         break;
     }
     return super.onOptionsItemSelected(item);

@@ -101,7 +101,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:visibility="gone"
         >
 
       <LinearLayout
@@ -148,8 +147,6 @@
           android:padding="@dimen/default_margin_2"
           android:text="@string/request_new_meal_hint"
           />
-
-
     </LinearLayout>
   </RelativeLayout>
 </LinearLayout>

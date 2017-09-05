@@ -57,6 +57,7 @@ public class AddExistingMedicationActivity extends BaseActivity
   @Bind(R.id.daysOfWeekLayout) LinearLayout daysOfWeekLayout;
   @Bind(R.id.daysOfWeekTV) TextView daysOfWeekTV;
   @Bind(R.id.frequencyET) EditText frequencyET;
+  @Bind(R.id.treatmentDurationLayout) LinearLayout treatmentDurationLayout;
   @Bind(R.id.treatmentDurationET) EditText treatmentDurationET;
   @Bind(R.id.remindersRecyclerView) RecyclerView remindersRecyclerView;
   @Bind(R.id.yourNotesET) EditText yourNotesET;
@@ -150,7 +151,6 @@ public class AddExistingMedicationActivity extends BaseActivity
           medicationItem.getUnitForm().substring(0, 1).toUpperCase() + medicationItem.getUnitForm()
               .substring(1));
       daysOfWeekTV.setText(medicationItem.getWhenString());
-      treatmentDurationET.setText(String.valueOf(medicationItem.getTreatmentDuration()));
       yourNotesET.setText(medicationItem.getRemarks());
     }
 
@@ -243,30 +243,37 @@ public class AddExistingMedicationActivity extends BaseActivity
     builderSingle.setAdapter(arrayAdapter, (dialog, which) -> {
       String strName = arrayAdapter.getItem(which);
       timesPerDayMeasurementTV.setText(strName);
-      switch (strName) {
-        case "Times per week":
-          treatmentDurationTV.setText("Weeks");
-          remindersLayout.setVisibility(View.VISIBLE);
-          daysOfWeekLayout.setVisibility(View.VISIBLE);
-          viewBelowDaysOfWeek.setVisibility(View.VISIBLE);
-        case "Times per day":
-          treatmentDurationTV.setText("Days");
-          remindersLayout.setVisibility(View.VISIBLE);
-          daysOfWeekLayout.setVisibility(View.VISIBLE);
-          viewBelowDaysOfWeek.setVisibility(View.VISIBLE);
-          break;
-        case "Times per month":
-          treatmentDurationTV.setText("Months");
-          remindersLayout.setVisibility(View.VISIBLE);
-          daysOfWeekLayout.setVisibility(View.GONE);
-          viewBelowDaysOfWeek.setVisibility(View.GONE);
-          break;
-        case "When needed":
-          remindersLayout.setVisibility(View.GONE);
-          daysOfWeekLayout.setVisibility(View.GONE);
-          viewBelowDaysOfWeek.setVisibility(View.GONE);
-          break;
-        default:
+      if (strName != null) {
+        switch (strName) {
+          case "Times per week":
+            treatmentDurationLayout.setVisibility(View.VISIBLE);
+            treatmentDurationTV.setText("Weeks");
+            remindersLayout.setVisibility(View.VISIBLE);
+            daysOfWeekLayout.setVisibility(View.VISIBLE);
+            viewBelowDaysOfWeek.setVisibility(View.VISIBLE);
+            break;
+          case "Times per day":
+            treatmentDurationLayout.setVisibility(View.VISIBLE);
+            treatmentDurationTV.setText("Days");
+            remindersLayout.setVisibility(View.VISIBLE);
+            daysOfWeekLayout.setVisibility(View.VISIBLE);
+            viewBelowDaysOfWeek.setVisibility(View.VISIBLE);
+            break;
+          case "Times per month":
+            treatmentDurationLayout.setVisibility(View.VISIBLE);
+            treatmentDurationTV.setText("Months");
+            remindersLayout.setVisibility(View.VISIBLE);
+            daysOfWeekLayout.setVisibility(View.GONE);
+            viewBelowDaysOfWeek.setVisibility(View.GONE);
+            break;
+          case "When needed":
+            treatmentDurationLayout.setVisibility(View.GONE);
+            remindersLayout.setVisibility(View.GONE);
+            daysOfWeekLayout.setVisibility(View.GONE);
+            viewBelowDaysOfWeek.setVisibility(View.GONE);
+            break;
+          default:
+        }
       }
     });
 
