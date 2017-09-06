@@ -66,7 +66,6 @@ import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import javax.inject.Inject;
 import org.joda.time.LocalDate;
 
@@ -240,8 +239,7 @@ public class NutritionFragment extends BaseFragment
     if (Double.parseDouble(prefs.getString(Constants.EXTRAS_ACTIVE_NUTRITION_CALORIES, "")) == 0) {
       activeTV.setText("0");
     } else {
-      activeTV.setText(String.format(Locale.getDefault(), "%.2f",
-          Double.parseDouble(prefs.getString(Constants.EXTRAS_ACTIVE_NUTRITION_CALORIES, ""))));
+      activeTV.setText(prefs.getString(Constants.EXTRAS_ACTIVE_NUTRITION_CALORIES, ""));
     }
 
     if (!activeTV.getText().toString().isEmpty()

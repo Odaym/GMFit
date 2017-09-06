@@ -26,6 +26,7 @@ public class CustomPicker extends LinearLayout implements View.OnClickListener {
   private AlertDialog.Builder builder;
   private DatePickerDialog datePickerDialog;
   private CustomPickerType customPickerType;
+  private View touchableContainer;
 
   public CustomPicker(Context context, AttributeSet attributeSet) {
     super(context, attributeSet);
@@ -37,7 +38,7 @@ public class CustomPicker extends LinearLayout implements View.OnClickListener {
     itemNameTv = v.findViewById(R.id.item_name);
     itemSelectedTv = v.findViewById(R.id.item_selected);
     arrowImage = v.findViewById(R.id.arrowImage);
-    View touchableContainer = v.findViewById(R.id.touchableContainer);
+    touchableContainer = v.findViewById(R.id.touchableContainer);
     touchableContainer.setOnClickListener(this);
   }
 
@@ -55,6 +56,14 @@ public class CustomPicker extends LinearLayout implements View.OnClickListener {
     setItemName(itemName);
     setSelectedItem(selected);
     setDatePicker(onDatePickerClickListener);
+  }
+
+  public void disable() {
+    touchableContainer.setOnClickListener(null);
+  }
+
+  public void enable() {
+    touchableContainer.setOnClickListener(this);
   }
 
   public void setArrowTintColor(int resColor) {

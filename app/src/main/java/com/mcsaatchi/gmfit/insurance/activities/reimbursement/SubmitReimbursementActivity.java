@@ -51,7 +51,7 @@ public class SubmitReimbursementActivity extends BaseActivity
 
   private static final int REQUEST_CAPTURE_PERMISSIONS = 123;
   @Bind(R.id.toolbar) Toolbar toolbar;
-  @Bind(R.id.reimbursementSubcategory) CustomPicker subcategoryPicker;
+  @Bind(R.id.reimbursementSubcategory) CustomPicker subCategoryPicker;
   @Bind(R.id.reimbursementServiceDate) CustomPicker serviceDate;
   @Bind(R.id.categoryInOutToggle) CustomToggle categoryToggle;
   @Bind(R.id.medicalReportImagesPicker) CustomAttachmentPicker medicalReportImagesPicker;
@@ -140,7 +140,15 @@ public class SubmitReimbursementActivity extends BaseActivity
       serviceDate.setSelectedItem(serviceDateValue);
     });
 
-    categoryToggle.setUp("Category", "Out", "In", option -> categoryValue = option);
+    categoryToggle.setUp("Category", "Out", "In", option -> {
+      categoryValue = option;
+
+      if (option.equals("In")) {
+        subCategoryPicker.disable();
+      } else {
+        subCategoryPicker.enable();
+      }
+    });
 
     if (permChecker.lacksPermissions(Manifest.permission.CAMERA,
         Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
@@ -195,7 +203,7 @@ public class SubmitReimbursementActivity extends BaseActivity
       }
     }
 
-    subcategoryPicker.setUpDropDown("Subcategory", "Choose a subcategory",
+    subCategoryPicker.setUpDropDown("Subcategory", "Choose a subcategory",
         finalCategoryNames.toArray(new String[finalCategoryNames.size()]), (index, selected) -> {
           for (SubCategoriesResponseDatum subCategoriesResponseDatum : subCategoriesList) {
             if (subCategoriesResponseDatum.getName() != null && subCategoriesResponseDatum.getName()

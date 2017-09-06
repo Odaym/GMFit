@@ -19,6 +19,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.mcsaatchi.gmfit.R;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.SubCategoriesResponseDatum;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
@@ -35,6 +36,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import timber.log.Timber;
@@ -47,7 +49,7 @@ public class SubmitApprovalRequestActivity extends BaseActivity
 
   private static final int REQUEST_CAPTURE_PERMISSIONS = 123;
   @Bind(R.id.toolbar) Toolbar toolbar;
-  @Bind(R.id.reimbursementSubcategory) CustomPicker subcategory;
+  @Bind(R.id.reimbursementSubcategory) CustomPicker subCategoryPicker;
   @Bind(R.id.reimbursementServiceDate) CustomPicker serviceDate;
   @Bind(R.id.categoryInOutToggle) CustomToggle categoryToggle;
   @Bind(R.id.submitApprovalRequestBTN) Button submitApprovalRequestBTN;
@@ -79,7 +81,7 @@ public class SubmitApprovalRequestActivity extends BaseActivity
   private File photoFile;
   private Uri photoFileUri;
   private String categoryValue = "Out";
-  private String subCategoryValue = "";
+  private String subCategoryId = "";
   private String serviceDateValue = "";
 
   @Override protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +94,8 @@ public class SubmitApprovalRequestActivity extends BaseActivity
     setupToolbar(getClass().getSimpleName(), toolbar, "Submit Approval Request", true);
 
     presenter = new SubmitApprovalRequestActivityPresenter(this, dataAccessHandler);
+
+    presenter.getSubCategories(prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""));
 
     serviceDate.setUpDatePicker("Service Date", "Choose a date", (year, month, dayOfMonth) -> {
       Calendar calendar = Calendar.getInstance();
@@ -106,11 +110,15 @@ public class SubmitApprovalRequestActivity extends BaseActivity
       serviceDate.setSelectedItem(serviceDateValue);
     });
 
-    categoryToggle.setUp("Category", "Out", "In", option -> categoryValue = option);
+    categoryToggle.setUp("Category", "Out", "In", option -> {
+      categoryValue = option;
 
-    subcategory.setUpDropDown("Subcategory", "Choose a subcategory",
-        new String[] { "Dental PCC", "Ambulatory", "Doctors Visit", "PCP", "Dental" },
-        (index, selected) -> subCategoryValue = selected);
+      if (option.equals("In")) {
+        subCategoryPicker.disable();
+      } else {
+        subCategoryPicker.enable();
+      }
+    });
 
     if (permChecker.lacksPermissions(Manifest.permission.CAMERA,
         Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
@@ -156,6 +164,26 @@ public class SubmitApprovalRequestActivity extends BaseActivity
     }
   }
 
+  @Override public void populateSubCategories(List<SubCategoriesResponseDatum> subCategoriesList) {
+    ArrayList<String> finalCategoryNames = new ArrayList<>();
+
+    for (int i = 0; i < subCategoriesList.size(); i++) {
+      if (subCategoriesList.get(i).getName() != null) {
+        finalCategoryNames.add(subCategoriesList.get(i).getName());
+      }
+    }
+
+    subCategoryPicker.setUpDropDown("Subcategory", "Choose a subcategory",
+        finalCategoryNames.toArray(new String[finalCategoryNames.size()]), (index, selected) -> {
+          for (SubCategoriesResponseDatum subCategoriesResponseDatum : subCategoriesList) {
+            if (subCategoriesResponseDatum.getName() != null && subCategoriesResponseDatum.getName()
+                .equals(selected)) {
+              subCategoryId = subCategoriesResponseDatum.getId();
+            }
+          }
+        });
+  }
+
   @Override public void openApprovalRequestDetailsActivity(Integer claimId) {
     Intent intent =
         new Intent(SubmitApprovalRequestActivity.this, ApprovalRequestDetailsActivity.class);
@@ -187,7 +215,7 @@ public class SubmitApprovalRequestActivity extends BaseActivity
 
       presenter.submitApprovalRequest(
           prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""),
-          remarksET.getText().toString(), categoryValue, attachments);
+          remarksET.getText().toString(), categoryValue, subCategoryId, attachments);
     }
   }
 
@@ -197,7 +225,7 @@ public class SubmitApprovalRequestActivity extends BaseActivity
     if (serviceDateValue.isEmpty()) {
       errorMessages.add("The Service Date field is required.");
     }
-    if (subCategoryValue.isEmpty()) {
+    if (subCategoryId.isEmpty()) {
       errorMessages.add("The Subcategory field is required.");
     }
     if (imagePaths.isEmpty()) {

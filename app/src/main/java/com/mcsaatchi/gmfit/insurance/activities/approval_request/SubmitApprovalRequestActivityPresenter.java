@@ -1,11 +1,15 @@
 package com.mcsaatchi.gmfit.insurance.activities.approval_request;
 
+import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.retrofit.architecture.DataAccessHandlerImpl;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.CreateNewRequestResponse;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.SubCategoriesResponse;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.SubCategoriesResponseDatum;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.UploadInsuranceImageResponse;
 import com.mcsaatchi.gmfit.common.activities.BaseActivityPresenter;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -42,10 +46,10 @@ class SubmitApprovalRequestActivityPresenter extends BaseActivityPresenter {
   }
 
   void submitApprovalRequest(String contractNo, String remarks, String categoryValue,
-      HashMap<String, RequestBody> attachements) {
+      String subcategoryId, HashMap<String, RequestBody> attachements) {
 
     dataAccessHandler.createNewRequest(Helpers.toRequestBody(contractNo),
-        Helpers.toRequestBody(categoryValue), Helpers.toRequestBody("2"),
+        Helpers.toRequestBody(categoryValue), Helpers.toRequestBody(subcategoryId),
         Helpers.toRequestBody("2"), Helpers.toRequestBody("10"), Helpers.toRequestBody("2"),
         Helpers.toRequestBody(Helpers.formatRequestTime() + "T16:27:32+02:00"),
         Helpers.toRequestBody("D"), Helpers.toRequestBody(remarks), attachements,
@@ -73,8 +77,30 @@ class SubmitApprovalRequestActivityPresenter extends BaseActivityPresenter {
         });
   }
 
+  void getSubCategories(String contractNo) {
+    view.callDisplayWaitingDialog(R.string.loading_data_dialog_title);
+
+    dataAccessHandler.getSubCategories(contractNo, new Callback<SubCategoriesResponse>() {
+      @Override public void onResponse(Call<SubCategoriesResponse> call,
+          Response<SubCategoriesResponse> response) {
+        switch (response.code()) {
+          case 200:
+            view.populateSubCategories(response.body().getData().getBody().getData());
+        }
+
+        view.callDismissWaitingDialog();
+      }
+
+      @Override public void onFailure(Call<SubCategoriesResponse> call, Throwable t) {
+        view.displayRequestErrorDialog(t.getMessage());
+      }
+    });
+  }
+
   interface SubmitApprovalRequestActivityView extends BaseActivityView {
     void openApprovalRequestDetailsActivity(Integer claimId);
+
+    void populateSubCategories(List<SubCategoriesResponseDatum> subCategories);
 
     void saveImagePath(String imagePath);
 

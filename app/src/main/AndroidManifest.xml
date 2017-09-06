@@ -422,9 +422,9 @@
     <!-- GOOGLE MAPS API KEYS -->
 
     <!--PRODUCTION ... WORK KEY-->
-    <meta-data
-        android:name="com.google.android.geo.API_KEY"
-        android:value="AIzaSyBzptbw8-xsnunOTUpQfAM7xe5YyGk87i4"/>
+    <!--<meta-data-->
+    <!--android:name="com.google.android.geo.API_KEY"-->
+    <!--android:value="AIzaSyBzptbw8-xsnunOTUpQfAM7xe5YyGk87i4"/>-->
 
     <!-- PRODUCTION ... HOME KEY-->
     <!--<meta-data-->
@@ -437,9 +437,9 @@
     <!--android:value="AIzaSyAAkrJDVmU6AGHfDNEm18jjuQqGHNOPalI"/>-->
 
     <!--DEV ... WORK KEY-->
-    <!--<meta-data-->
-    <!--android:name="com.google.android.geo.API_KEY"-->
-    <!--android:value="AIzaSyDzwRq628GqkaxN3cZQoTuAergqlZJms6k"/>-->
+    <meta-data
+        android:name="com.google.android.geo.API_KEY"
+        android:value="AIzaSyDzwRq628GqkaxN3cZQoTuAergqlZJms6k"/>
 
     <!-- END OF GOOGLE MAPS API KEYS -->
 

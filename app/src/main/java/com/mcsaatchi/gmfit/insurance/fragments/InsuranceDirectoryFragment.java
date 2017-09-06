@@ -49,6 +49,7 @@ import com.mcsaatchi.gmfit.insurance.adapters.CustomInfoWindowAdapter;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
+import timber.log.Timber;
 
 import static com.mcsaatchi.gmfit.insurance.activities.reimbursement.ReimbursementTrackActivity.SEARCH_CRITERIA_SELECTED;
 
@@ -217,6 +218,11 @@ public class InsuranceDirectoryFragment extends BaseFragment
 
   @Override public void setUserVisibleHint(boolean isVisibleToUser) {
     super.setUserVisibleHint(isVisibleToUser);
+
+    /*
+      ENTRY POINT HERE
+     */
+
     if (isVisibleToUser) {
       contractChooserBTN.setVisibility(View.INVISIBLE);
       switchMapViewBTN.setVisibility(View.VISIBLE);
@@ -233,6 +239,8 @@ public class InsuranceDirectoryFragment extends BaseFragment
 
   @Override public void onMapReady(GoogleMap googleMap) {
     map = googleMap;
+
+    Timber.d("onMapReady");
 
     filterClinicsAndAddMarkers();
   }
@@ -269,8 +277,7 @@ public class InsuranceDirectoryFragment extends BaseFragment
 
       mapFragment.getMapAsync(InsuranceDirectoryFragment.this);
       mapFragment.setListener(() -> {
-        NestedScrollView myScrollingContent =
-            ((NestedScrollView) getActivity().findViewById(R.id.myScrollingContent));
+        NestedScrollView myScrollingContent = getActivity().findViewById(R.id.myScrollingContent);
         myScrollingContent.requestDisallowInterceptTouchEvent(true);
       });
     }
@@ -332,6 +339,8 @@ public class InsuranceDirectoryFragment extends BaseFragment
   private void filterClinicsAndAddMarkers() {
     List<GetNearbyClinicsResponseDatum> filteredClinics =
         filterValidClinics(userLatLong, clinicsWithLocation);
+
+    Timber.d("Filter clinics and add markers");
 
     addMarkersToMap(filteredClinics);
   }
@@ -408,7 +417,8 @@ public class InsuranceDirectoryFragment extends BaseFragment
         userLatLong[0] = location.getLatitude();
         userLatLong[1] = location.getLongitude();
 
-        getNearbyClinics(prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""), "H", 22,
+        getNearbyClinics(prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""), "H",
+            Integer.parseInt(prefs.getString(Constants.EXTRAS_INSURANCE_COUNTRY_ISO_CODE, "422")),
             userLatLong[1], userLatLong[0], 0);
       }
     }
