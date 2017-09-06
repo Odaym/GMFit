@@ -82,6 +82,8 @@ public class InquiryNotesActivity extends BaseActivity
       if (inquiryItem != null) {
         setupToolbar(getClass().getSimpleName(), toolbar, inquiryItem.getTitle(), true);
 
+        Timber.d("Incident id : " + inquiryItem.getIncidentId());
+
         presenter.getCRMIncidentNotes(inquiryItem.getIncidentId());
       }
     }

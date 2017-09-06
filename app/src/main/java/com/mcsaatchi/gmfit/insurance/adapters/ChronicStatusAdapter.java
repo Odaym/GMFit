@@ -51,7 +51,7 @@ public class ChronicStatusAdapter extends RecyclerView.Adapter {
     public ViewHolder(View itemView) {
       super(itemView);
 
-      parentLayout = (RelativeLayout) itemView.findViewById(R.id.parentLayout);
+      parentLayout = itemView.findViewById(R.id.parentLayout);
       deleteLayout = itemView.findViewById(R.id.delete_layout);
       treatmentNameTV = itemView.findViewById(R.id.treatmentNameTV);
       treatmentDescriptionTV = itemView.findViewById(R.id.treatmentDescriptionTV);
@@ -73,13 +73,13 @@ public class ChronicStatusAdapter extends RecyclerView.Adapter {
           .getColor(Helpers.determineStatusColor(chronicTreatment.getStatus())));
       treatmentStatusTV.setText(chronicTreatment.getStatus());
 
-      if (chronicTreatment.getStartDate() != null && chronicTreatment.getEndDate() != null) {
-        treatmentDescriptionTV.setText(
-            chronicTreatment.getStartDate().split("T")[0] + " - " + chronicTreatment.getEndDate()
-                .split("T")[0]);
-      } else {
-        treatmentDescriptionTV.setText("Start and end dates not available yet");
-      }
+      //if (chronicTreatment.getStartDate() != null && chronicTreatment.getEndDate() != null) {
+      //  treatmentDescriptionTV.setText(
+      //      chronicTreatment.getStartDate().split("T")[0] + " - " + chronicTreatment.getEndDate()
+      //          .split("T")[0]);
+      //} else {
+      //  treatmentDescriptionTV.setText("Start and end dates not available yet");
+      //}
 
       parentLayout.setOnClickListener(view -> {
         Intent intent = new Intent(context, ChronicDetailsActivity.class);

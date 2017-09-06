@@ -83,10 +83,9 @@ public class ContractsChoiceRecyclerAdapter
       super(itemView);
 
       contractTitleTV = itemView.findViewById(R.id.contractTitleTV);
-      contractInsuranceCompanyTV =
-          (TextView) itemView.findViewById(R.id.contractInsuranceCompanyTV);
+      contractInsuranceCompanyTV = itemView.findViewById(R.id.contractInsuranceCompanyTV);
       contractExpiryDateTV = itemView.findViewById(R.id.contractExpiryDateTV);
-      contractCheckedLayout = (LinearLayout) itemView.findViewById(R.id.contractCheckedLayout);
+      contractCheckedLayout = itemView.findViewById(R.id.contractCheckedLayout);
 
       itemView.setOnClickListener(this);
     }

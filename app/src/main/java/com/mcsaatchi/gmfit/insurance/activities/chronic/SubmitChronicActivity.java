@@ -10,7 +10,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
-import android.util.Base64;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -21,6 +20,7 @@ import butterknife.OnClick;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
+import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.common.classes.ImageHandler;
 import com.mcsaatchi.gmfit.insurance.activities.reimbursement.ReimbursementDetailsActivity;
 import com.mcsaatchi.gmfit.insurance.widget.CustomAttachmentPicker;
@@ -52,11 +52,10 @@ public class SubmitChronicActivity extends BaseActivity
   private ImageView currentImageView;
   private SubmitChronicActivityPresenter presenter;
   private ArrayList<String> imagePaths = new ArrayList<>();
+  private ArrayList<String> imagePathsFinal = new ArrayList<>();
   private ArrayList<String> imagesDocumentTypes = new ArrayList<>();
 
-  public static RequestBody toRequestBody(String value) {
-    return RequestBody.create(MediaType.parse("text/plain"), value);
-  }
+  private int imageFilesSize = 0;
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -117,6 +116,23 @@ public class SubmitChronicActivity extends BaseActivity
     }
   }
 
+  @Override public void saveImagePath(String imagePath) {
+    imagePathsFinal.add(imagePath);
+
+    imageFilesSize++;
+
+    if (imageFilesSize < imagePaths.size()) {
+      startUploadImages(imageFilesSize);
+    } else if (imagePaths.size() == imagePathsFinal.size()) {
+      Timber.d("Images and their paths are matching, upload");
+
+      HashMap<String, RequestBody> attachments = constructSelectedImagesForRequest();
+
+      presenter.submitChronicTreatment(
+          prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""), attachments);
+    }
+  }
+
   @OnClick(R.id.submitChronicTreatmentBTN) public void handleSubmitChronicTreatment() {
     ArrayList<String> errorMessages = new ArrayList<>();
 
@@ -144,9 +160,7 @@ public class SubmitChronicActivity extends BaseActivity
       waitingDialog.setMessage(
           getResources().getString(R.string.uploading_attachments_dialog_message));
       waitingDialog.setOnShowListener(dialogInterface -> {
-        HashMap<String, RequestBody> attachments = constructSelectedImagesForRequest();
-        presenter.submitChronicTreatment(
-            prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""), attachments);
+        startUploadImages(imageFilesSize);
       });
 
       waitingDialog.show();
@@ -218,18 +232,32 @@ public class SubmitChronicActivity extends BaseActivity
     builderSingle.show();
   }
 
+  private void startUploadImages(int imageFilesIndex) {
+    if (imagePaths.get(imageFilesIndex) != null) {
+      HashMap<String, RequestBody> insuranceImages = new HashMap<>();
+
+      File imageFile = new File(imagePaths.get(imageFilesIndex));
+
+      RequestBody imageFilePart = RequestBody.create(MediaType.parse("image/*"), imageFile);
+
+      insuranceImages.put("file\"; filename=\"" + imagePaths.get(imageFilesIndex), imageFilePart);
+
+      presenter.uploadInsuranceImage(insuranceImages);
+    }
+  }
+
   private HashMap<String, RequestBody> constructSelectedImagesForRequest() {
     LinkedHashMap<String, RequestBody> imageParts = new LinkedHashMap<>();
 
     for (int i = 0; i < imagePaths.size(); i++) {
       if (imagePaths.get(i) != null) {
-        imageParts.put("attachements[" + i + "][content]", toRequestBody(
-            Base64.encodeToString(ImageHandler.turnImageToByteArray(imagePaths.get(i)),
-                Base64.NO_WRAP)));
+        imageParts.put("attachements[" + i + "][path]",
+            Helpers.toRequestBody(imagePathsFinal.get(i)));
         imageParts.put("attachements[" + i + "][documType]",
-            toRequestBody(imagesDocumentTypes.get(i)));
-        imageParts.put("attachements[" + i + "][name]", toRequestBody(imagePaths.get(i)));
-        imageParts.put("attachements[" + i + "][id]", toRequestBody(String.valueOf(i + 1)));
+            Helpers.toRequestBody(imagesDocumentTypes.get(i)));
+        imageParts.put("attachements[" + i + "][filename]",
+            Helpers.toRequestBody(imagePaths.get(i)));
+        imageParts.put("attachements[" + i + "][id]", Helpers.toRequestBody(String.valueOf(i + 1)));
       }
     }
 

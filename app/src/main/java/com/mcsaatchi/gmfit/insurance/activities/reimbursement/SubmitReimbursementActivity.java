@@ -70,7 +70,7 @@ public class SubmitReimbursementActivity extends BaseActivity
 
   private ArrayList<String> imagePaths = new ArrayList<>();
   private ArrayList<String> imagePathsFinal = new ArrayList<>();
-  private ArrayList<String> imagesDocumentType = new ArrayList<>();
+  private ArrayList<String> imagesDocumentTypes = new ArrayList<>();
 
   private ArrayList<Integer> medicalReportImagesPlacement = new ArrayList<>();
   private ArrayList<Integer> invoiceImagesPlacement = new ArrayList<>();
@@ -305,7 +305,7 @@ public class SubmitReimbursementActivity extends BaseActivity
         final int finalI = i;
 
         innerLayoutWithPickers.getChildAt(i).setOnClickListener(view -> {
-          imagesDocumentType.add(String.valueOf(documentType));
+          imagesDocumentTypes.add(String.valueOf(documentType));
 
           switch (documentType) {
             case 1:
@@ -405,7 +405,7 @@ public class SubmitReimbursementActivity extends BaseActivity
         imageParts.put("attachements[" + i + "][path]",
             Helpers.toRequestBody(imagePathsFinal.get(i)));
         imageParts.put("attachements[" + i + "][documType]",
-            Helpers.toRequestBody(imagesDocumentType.get(i)));
+            Helpers.toRequestBody(imagesDocumentTypes.get(i)));
         imageParts.put("attachements[" + i + "][filename]",
             Helpers.toRequestBody(imagePaths.get(i)));
         imageParts.put("attachements[" + i + "][id]", Helpers.toRequestBody(String.valueOf(i + 1)));

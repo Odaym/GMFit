@@ -48,7 +48,7 @@ public class InquiryStatusAdapter extends RecyclerView.Adapter {
     public ViewHolder(View itemView) {
       super(itemView);
 
-      parentLayout = (RelativeLayout) itemView.findViewById(R.id.parentLayout);
+      parentLayout = itemView.findViewById(R.id.parentLayout);
       requestTitleTV = itemView.findViewById(R.id.requestTitleTV);
       requestCreatedOnTV = itemView.findViewById(R.id.requestCreatedOnTV);
       requestSubCategoryTV = itemView.findViewById(R.id.requestSubCategoryTV);

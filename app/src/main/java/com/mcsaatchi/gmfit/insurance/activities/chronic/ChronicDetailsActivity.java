@@ -46,10 +46,10 @@ public class ChronicDetailsActivity extends BaseActivity
           getResources().getColor(Helpers.determineStatusColor(chronicTreatment.getStatus())));
       statusValueTV.setText(chronicTreatment.getStatus());
 
-      if (chronicTreatment.getStartDate() != null && chronicTreatment.getEndDate() != null) {
-        startDateTV.setText(chronicTreatment.getStartDate().split("T")[0]);
-        endDateTV.setText(chronicTreatment.getEndDate().split("T")[0]);
-      }
+      //if (chronicTreatment.getStartDate() != null && chronicTreatment.getEndDate() != null) {
+      //  startDateTV.setText(chronicTreatment.getStartDate().split("T")[0]);
+      //  endDateTV.setText(chronicTreatment.getEndDate().split("T")[0]);
+      //}
 
       presenter.getChronicTreatmentDetails(
           prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""),

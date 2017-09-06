@@ -19,9 +19,7 @@ public class ChronicTreatmentListInnerData implements Parcelable {
   @SerializedName("name") @Expose private String name;
   @SerializedName("requestNbr") @Expose private String requestNbr;
   @SerializedName("status") @Expose private String status;
-  @SerializedName("endDate") @Expose private String endDate;
-  @SerializedName("lastDispenssedDate") @Expose private String lastDispenssedDate;
-  @SerializedName("startDate") @Expose private String startDate;
+  @SerializedName("statusCode") @Expose private String statusCode;
 
   public ChronicTreatmentListInnerData() {
   }
@@ -30,9 +28,7 @@ public class ChronicTreatmentListInnerData implements Parcelable {
     this.name = in.readString();
     this.requestNbr = in.readString();
     this.status = in.readString();
-    this.endDate = in.readString();
-    this.lastDispenssedDate = in.readString();
-    this.startDate = in.readString();
+    this.statusCode = in.readString();
   }
 
   public String getName() {
@@ -59,28 +55,12 @@ public class ChronicTreatmentListInnerData implements Parcelable {
     this.status = status;
   }
 
-  public String getEndDate() {
-    return endDate;
+  public String getStatusCode() {
+    return statusCode;
   }
 
-  public void setEndDate(String endDate) {
-    this.endDate = endDate;
-  }
-
-  public String getLastDispenssedDate() {
-    return lastDispenssedDate;
-  }
-
-  public void setLastDispenssedDate(String lastDispenssedDate) {
-    this.lastDispenssedDate = lastDispenssedDate;
-  }
-
-  public String getStartDate() {
-    return startDate;
-  }
-
-  public void setStartDate(String startDate) {
-    this.startDate = startDate;
+  public void setStatusCode(String statusCode) {
+    this.statusCode = statusCode;
   }
 
   @Override public int describeContents() {
@@ -91,8 +71,6 @@ public class ChronicTreatmentListInnerData implements Parcelable {
     dest.writeString(this.name);
     dest.writeString(this.requestNbr);
     dest.writeString(this.status);
-    dest.writeString(this.endDate);
-    dest.writeString(this.lastDispenssedDate);
-    dest.writeString(this.startDate);
+    dest.writeString(this.statusCode);
   }
 }

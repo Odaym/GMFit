@@ -162,7 +162,7 @@
   <dimen name="doctor_confirmation_picker_height">140dp</dimen>
   <dimen name="contracts_choice_checkbox_width">100dp</dimen>
   <dimen name="contracts_selector_height">500dp</dimen>
-  <dimen name="contract_choice_row_height">90dp</dimen>
+  <dimen name="contract_choice_row_height">110dp</dimen>
   <dimen name="insurance_login_screen_icon">110dp</dimen>
   <dimen name="attached_images_dimens">55dp</dimen>
   <dimen name="image_placeholder_dimens">110dp</dimen>
