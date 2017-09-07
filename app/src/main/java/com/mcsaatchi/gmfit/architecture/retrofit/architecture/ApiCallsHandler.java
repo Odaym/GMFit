@@ -1129,6 +1129,24 @@ public class ApiCallsHandler {
     });
   }
 
+  void applySearchFilters(String contractNo, int searchCtry, int searchCity,
+      String providerTypesCode, int fetchClosest,
+      final Callback<GetNearbyClinicsResponse> callback) {
+    Call<GetNearbyClinicsResponse> apiCall = restClient.getGMFitService()
+        .applySearchFilters(
+            new ApplySearchFiltersRequest(contractNo, searchCtry, searchCity, providerTypesCode, fetchClosest));
+
+    apiCall.enqueue(new Callback<GetNearbyClinicsResponse>() {
+      @Override public void onResponse(Call<GetNearbyClinicsResponse> call,
+          Response<GetNearbyClinicsResponse> response) {
+        callback.onResponse(call, response);
+      }
+
+      @Override public void onFailure(Call<GetNearbyClinicsResponse> call, Throwable t) {
+      }
+    });
+  }
+
   void sendInsurancePasswordResetLink(String email, final Callback<DefaultGetResponse> callback) {
     Call<DefaultGetResponse> apiCall = restClient.getGMFitService()
         .sendInsurancePasswordResetLink(new ForgotPasswordRequest(email));
@@ -1211,12 +1229,11 @@ public class ApiCallsHandler {
   }
 
   void getServicesList(final Callback<ServicesListResponse> callback) {
-    Call<ServicesListResponse> apiCall =
-        restClient.getGMFitService().getServicesList();
+    Call<ServicesListResponse> apiCall = restClient.getGMFitService().getServicesList();
 
     apiCall.enqueue(new Callback<ServicesListResponse>() {
-      @Override
-      public void onResponse(Call<ServicesListResponse> call, Response<ServicesListResponse> response) {
+      @Override public void onResponse(Call<ServicesListResponse> call,
+          Response<ServicesListResponse> response) {
         callback.onResponse(call, response);
       }
 
@@ -1688,6 +1705,23 @@ public class ApiCallsHandler {
       this.searchCtry = searchCtry;
       this.longitude = longitude;
       this.latitude = latitude;
+      this.fetchClosest = fetchClosest;
+    }
+  }
+
+  public class ApplySearchFiltersRequest {
+    String contractNo;
+    int searchCtry;
+    int searchCity;
+    String providerTypesCode;
+    int fetchClosest;
+
+    public ApplySearchFiltersRequest(String contractNo, int searchCtry, int searchCity,
+        String providerTypesCode, int fetchClosest) {
+      this.contractNo = contractNo;
+      this.searchCtry = searchCtry;
+      this.searchCity = searchCity;
+      this.providerTypesCode = providerTypesCode;
       this.fetchClosest = fetchClosest;
     }
   }

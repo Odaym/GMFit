@@ -8,7 +8,6 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import timber.log.Timber;
 
 class InsuranceDirectoryFragmentPresenter extends BaseFragmentPresenter {
   private InsuranceDirectoryFragmentView view;
@@ -28,9 +27,25 @@ class InsuranceDirectoryFragmentPresenter extends BaseFragmentPresenter {
               Response<GetNearbyClinicsResponse> response) {
             switch (response.code()) {
               case 200:
-                Timber.d("Got results for country: " + searchCtry);
-
                 view.displayNearbyClinics(response.body().getData().getBody().getData());
+            }
+          }
+
+          @Override public void onFailure(Call<GetNearbyClinicsResponse> call, Throwable t) {
+            view.displayRequestErrorDialog(t.getMessage());
+          }
+        });
+  }
+
+  void applySearchFilters(String contractNo, int searchCtry, int searchCity,
+      String providerTypesCode, int fetchClosest) {
+    dataAccessHandler.applySearchFilters(contractNo, searchCtry, searchCity, providerTypesCode,
+        fetchClosest, new Callback<GetNearbyClinicsResponse>() {
+          @Override public void onResponse(Call<GetNearbyClinicsResponse> call,
+              Response<GetNearbyClinicsResponse> response) {
+            switch (response.code()) {
+              case 200:
+                view.displaySearchResults(response.body().getData().getBody().getData());
             }
           }
 
@@ -42,5 +57,7 @@ class InsuranceDirectoryFragmentPresenter extends BaseFragmentPresenter {
 
   interface InsuranceDirectoryFragmentView extends BaseFragmentView {
     void displayNearbyClinics(List<GetNearbyClinicsResponseDatum> clinicsList);
+
+    void displaySearchResults(List<GetNearbyClinicsResponseDatum> searchResults);
   }
 }

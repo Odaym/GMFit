@@ -155,9 +155,9 @@ public class DirectorySearchFilterActivity extends BaseActivity
     intent.putStringArrayListExtra("WORKING_DAYS", finalWorkingDays);
     intent.putExtra("Country_code", countrySelectedCode);
     intent.putExtra("Service_code", serviceSelectedCode);
+    intent.putExtra("City_code", citySelectedCode);
     intent.putExtra("Network", networkSelected);
     intent.putExtra("Status", statusSelected);
-    intent.putExtra("City", citySelectedCode);
     intent.putExtra("Type", typeSelected);
     setResult(SEARCH_CRITERIA_SELECTED, intent);
     finish();

@@ -399,6 +399,12 @@ public class DataAccessHandlerImpl implements DataAccessHandler {
         fetchClosest, callback);
   }
 
+  @Override public void applySearchFilters(String contractNo, int searchCtry, int searchCity,
+      String providerTypesCode, int fetchClosest, Callback<GetNearbyClinicsResponse> callback) {
+    apiCallsHandler.applySearchFilters(contractNo, searchCtry, searchCity, providerTypesCode,
+        fetchClosest, callback);
+  }
+
   @Override
   public void createNewRequest(RequestBody contractNo, RequestBody categ, RequestBody subCategId,
       RequestBody requestTypeId, RequestBody claimedAmount, RequestBody currencyCode,
@@ -419,7 +425,8 @@ public class DataAccessHandlerImpl implements DataAccessHandler {
     apiCallsHandler.getCountriesList(callback);
   }
 
-  @Override public void getCitiesList(String selectedCtry, final Callback<CitiesListResponse> callback) {
+  @Override
+  public void getCitiesList(String selectedCtry, final Callback<CitiesListResponse> callback) {
     apiCallsHandler.getCitiesList(selectedCtry, callback);
   }
 

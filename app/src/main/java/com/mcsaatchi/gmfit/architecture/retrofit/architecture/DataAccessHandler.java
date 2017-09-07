@@ -222,6 +222,10 @@ public interface DataAccessHandler {
       double longitude, double latitude, int fetchClosest,
       Callback<GetNearbyClinicsResponse> callback);
 
+  void applySearchFilters(String contractNo, int searchCtry, int searchCity,
+      String providerTypesCode, int fetchClosest,
+      Callback<GetNearbyClinicsResponse> callback);
+
   void createNewRequest(RequestBody contractNo, RequestBody categ, RequestBody subCategId,
       RequestBody requestTypeId, RequestBody claimedAmount, RequestBody currencyCode,
       RequestBody serviceDate, RequestBody providerCode, RequestBody remarks,
