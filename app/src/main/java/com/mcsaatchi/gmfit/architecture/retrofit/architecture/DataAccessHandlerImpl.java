@@ -16,6 +16,7 @@ import com.mcsaatchi.gmfit.architecture.retrofit.responses.ChartsBySectionRespon
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ChronicDeletionResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ChronicTreatmentDetailsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ChronicTreatmentListResponse;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.CitiesListResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ClaimListDetailsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ClaimsListResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.CounsellingInformationResponse;
@@ -36,6 +37,7 @@ import com.mcsaatchi.gmfit.architecture.retrofit.responses.OperationContactsResp
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.RecentMealsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.SearchMealItemResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.SearchMedicinesResponse;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.ServicesListResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.SlugBreakdownResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.SubCategoriesResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.TakenMedicalTestsResponse;
@@ -415,6 +417,14 @@ public class DataAccessHandlerImpl implements DataAccessHandler {
 
   @Override public void getCountriesList(final Callback<CountriesListResponse> callback) {
     apiCallsHandler.getCountriesList(callback);
+  }
+
+  @Override public void getCitiesList(String selectedCtry, final Callback<CitiesListResponse> callback) {
+    apiCallsHandler.getCitiesList(selectedCtry, callback);
+  }
+
+  @Override public void getServicesList(final Callback<ServicesListResponse> callback) {
+    apiCallsHandler.getServicesList(callback);
   }
 
   @Override public void getCRMCategories(RequestBody contractNo, RequestBody dbCountry,

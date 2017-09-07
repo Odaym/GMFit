@@ -167,7 +167,7 @@ public class InsuranceDirectoryFragment extends BaseFragment
 
         break;
       case SEARCH_CRITERIA_SELECTED:
-        String countrySelected, citySelected, typeSelected, serviceSelected, networkSelected,
+        String countrySelectedCode, citySelected, typeSelected, serviceSelectedCode, networkSelected,
             statusSelected;
 
         if (data != null) {
@@ -175,10 +175,10 @@ public class InsuranceDirectoryFragment extends BaseFragment
           ArrayList<String> workingDaysCriteria =
               data.getExtras().getStringArrayList("WORKING_DAYS");
 
-          countrySelected = data.getExtras().getString("Country");
+          countrySelectedCode = data.getExtras().getString("Country_code");
           citySelected = data.getExtras().getString("City");
           typeSelected = data.getExtras().getString("Type");
-          serviceSelected = data.getExtras().getString("Service");
+          serviceSelectedCode = data.getExtras().getString("Service_code");
           networkSelected = data.getExtras().getString("Status");
           statusSelected = data.getExtras().getString("Network");
 
@@ -198,9 +198,9 @@ public class InsuranceDirectoryFragment extends BaseFragment
             }
           }
 
-          if (countrySelected != null) {
+          if (countrySelectedCode != null) {
             getNearbyClinics(prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""),
-                finalProviderType, Integer.valueOf(countrySelected), userLatLong[1], userLatLong[0],
+                finalProviderType, Integer.valueOf(countrySelectedCode), userLatLong[1], userLatLong[0],
                 0);
           } else {
             final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();

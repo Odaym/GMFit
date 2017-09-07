@@ -10,7 +10,10 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.mcsaatchi.gmfit.R;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.CitiesListResponseCityVOArr;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.CountriesListResponseDatum;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.ServicesListResponseServiceVOArr;
+import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.common.classes.SimpleDividerItemDecoration;
 import com.mcsaatchi.gmfit.insurance.adapters.FilterChoiceRecyclerAdapter;
@@ -32,11 +35,10 @@ public class DirectorySearchFilterActivity extends BaseActivity
   @Bind(R.id.networkPicker) CustomPicker networkPicker;
   @Bind(R.id.workingDaysRecycler) RecyclerView workingDaysRecycler;
 
-  private String countrySelectedCode, citySelected, typeSelected, serviceSelected, networkSelected,
-      statusSelected;
+  private String countrySelectedCode, citySelectedCode, typeSelected, serviceSelectedCode,
+      networkSelected, statusSelected;
 
   private DirectorySearchFilterActivityPresenter presenter;
-  private FilterChoiceRecyclerAdapter filterChoiceRecyclerAdapter;
   private ArrayList<FilterChoice> workingDays;
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -53,11 +55,9 @@ public class DirectorySearchFilterActivity extends BaseActivity
 
     presenter.getCountriesList();
 
-    presenter.getCitiesList();
+    presenter.getServicesList();
 
-    setupCitiesPicker();
     setupTypePicker();
-    setupServicesPicker();
     setupStatusPicker();
     setupNetworkPicker();
 
@@ -75,19 +75,63 @@ public class DirectorySearchFilterActivity extends BaseActivity
       }
     }
 
+    setupDefaultCountryAndCities(countriesResponse);
+
     if (!countries.isEmpty()) {
       countryPicker.setUpDropDown("Country", "Choose a Country",
           countries.toArray(new String[countries.size()]), (index, selected) -> {
             for (int i = 0; i < countriesResponse.size(); i++) {
               if (countriesResponse.get(i).getLabel().equals(selected)) {
                 countrySelectedCode = countriesResponse.get(i).getIsoCode();
+                presenter.getCitiesList(countrySelectedCode);
               }
             }
           });
     }
+  }
 
-    cityPicker.setUpDropDown("City", "Choose a City", new String[] { "Empty", "Empty", "Empty" },
-        (index, selected) -> serviceSelected = selected);
+  @Override
+  public void populateCitiesDropdown(List<CitiesListResponseCityVOArr> citiesListResponses) {
+    ArrayList<String> cities = new ArrayList<>();
+
+    for (int i = 0; i < citiesListResponses.size(); i++) {
+      if (citiesListResponses.get(i) != null) {
+        cities.add(citiesListResponses.get(i).getCityName());
+      }
+    }
+
+    if (!cities.isEmpty()) {
+      cityPicker.setUpDropDown("City", "Choose a City", cities.toArray(new String[cities.size()]),
+          (index, selected) -> {
+            for (int i = 0; i < citiesListResponses.size(); i++) {
+              if (citiesListResponses.get(i).getCityName().equals(selected)) {
+                citySelectedCode = citiesListResponses.get(i).getCityCode();
+              }
+            }
+          });
+    }
+  }
+
+  @Override public void populateServicesDropdown(
+      List<ServicesListResponseServiceVOArr> servicesListResponseServiceVOArrs) {
+    ArrayList<String> services = new ArrayList<>();
+
+    for (int i = 0; i < servicesListResponseServiceVOArrs.size(); i++) {
+      if (servicesListResponseServiceVOArrs.get(i) != null) {
+        services.add(servicesListResponseServiceVOArrs.get(i).getServiceName());
+      }
+    }
+
+    if (!services.isEmpty()) {
+      servicesPicker.setUpDropDown("Service", "Choose a Service",
+          services.toArray(new String[services.size()]), (index, selected) -> {
+            for (int i = 0; i < servicesListResponseServiceVOArrs.size(); i++) {
+              if (servicesListResponseServiceVOArrs.get(i).getServiceName().equals(selected)) {
+                serviceSelectedCode = servicesListResponseServiceVOArrs.get(i).getServiceCode();
+              }
+            }
+          });
+    }
   }
 
   @OnClick(R.id.searchFiltersBTN) public void handleApplySearchTerms() {
@@ -109,14 +153,25 @@ public class DirectorySearchFilterActivity extends BaseActivity
 
     Intent intent = new Intent();
     intent.putStringArrayListExtra("WORKING_DAYS", finalWorkingDays);
-    intent.putExtra("Country", countrySelectedCode);
-    intent.putExtra("Service", serviceSelected);
+    intent.putExtra("Country_code", countrySelectedCode);
+    intent.putExtra("Service_code", serviceSelectedCode);
     intent.putExtra("Network", networkSelected);
     intent.putExtra("Status", statusSelected);
-    intent.putExtra("City", citySelected);
+    intent.putExtra("City", citySelectedCode);
     intent.putExtra("Type", typeSelected);
     setResult(SEARCH_CRITERIA_SELECTED, intent);
     finish();
+  }
+
+  private void setupDefaultCountryAndCities(List<CountriesListResponseDatum> countriesResponse) {
+    for (int i = 0; i < countriesResponse.size(); i++) {
+      if (countriesResponse.get(i)
+          .getIsoCode()
+          .equals(prefs.getString(Constants.EXTRAS_INSURANCE_COUNTRY_ISO_CODE, ""))) {
+        countryPicker.setSelectedItem(countriesResponse.get(i).getLabel());
+        presenter.getCitiesList(countriesResponse.get(i).getIsoCode());
+      }
+    }
   }
 
   private ArrayList<FilterChoice> getWorkingDayChoices() {
@@ -128,27 +183,17 @@ public class DirectorySearchFilterActivity extends BaseActivity
   }
 
   private void setupWorkingDaysRecycler(ArrayList<FilterChoice> workingDays) {
-    filterChoiceRecyclerAdapter = new FilterChoiceRecyclerAdapter(workingDays);
+    FilterChoiceRecyclerAdapter filterChoiceRecyclerAdapter =
+        new FilterChoiceRecyclerAdapter(workingDays);
     workingDaysRecycler.setLayoutManager(new LinearLayoutManager(this));
     workingDaysRecycler.addItemDecoration(new SimpleDividerItemDecoration(this));
     workingDaysRecycler.setAdapter(filterChoiceRecyclerAdapter);
-  }
-
-  private void setupCitiesPicker() {
-    typePicker.setUpDropDown("City", "Choose a City", new String[] { "" },
-        (index, selected) -> citySelected = selected);
   }
 
   private void setupTypePicker() {
     typePicker.setUpDropDown("Type", "Choose a Type",
         new String[] { "Hospital", "Doctor", "Clinic" },
         (index, selected) -> typeSelected = selected);
-  }
-
-  private void setupServicesPicker() {
-    servicesPicker.setUpDropDown("Services", "Choose a Service",
-        new String[] { "Empty", "Empty", "Empty" },
-        (index, selected) -> serviceSelected = selected);
   }
 
   private void setupStatusPicker() {

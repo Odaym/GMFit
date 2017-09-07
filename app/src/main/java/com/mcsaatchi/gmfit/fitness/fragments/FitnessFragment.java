@@ -81,6 +81,7 @@ public class FitnessFragment extends BaseFragment
   @Bind(R.id.goalStatusWordTV) TextView goalStatusWordTV;
   @Bind(R.id.remainingTV) FontTextView remainingTV;
   @Bind(R.id.todayTV) FontTextView todayTV;
+  @Bind(R.id.activitiesLayout) LinearLayout activitiesLayout;
   @Bind(R.id.metricProgressBar) ProgressBar metricProgressBar;
   @Bind(R.id.loadingMetricProgressBar) ProgressBar loadingMetricProgressBar;
   @Bind(R.id.activitiesRecycler) RecyclerView activitiesRecycler;
@@ -111,7 +112,7 @@ public class FitnessFragment extends BaseFragment
 
     presenter.getUserGoalMetrics(todayDate, "fitness", false);
 
-    presenter.getUserActivities(todayDate);
+    //presenter.getUserActivities(todayDate);
 
     presenter.getArticles("fitness");
 

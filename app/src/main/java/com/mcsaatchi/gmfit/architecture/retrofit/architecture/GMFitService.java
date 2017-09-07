@@ -14,6 +14,7 @@ import com.mcsaatchi.gmfit.architecture.retrofit.responses.ChartsBySectionRespon
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ChronicDeletionResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ChronicTreatmentDetailsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ChronicTreatmentListResponse;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.CitiesListResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ClaimListDetailsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ClaimsListResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.CounsellingInformationResponse;
@@ -34,6 +35,7 @@ import com.mcsaatchi.gmfit.architecture.retrofit.responses.OperationContactsResp
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.RecentMealsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.SearchMealItemResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.SearchMedicinesResponse;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.ServicesListResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.SlugBreakdownResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.SubCategoriesResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.TakenMedicalTestsResponse;
@@ -252,6 +254,14 @@ public interface GMFitService {
       @Body ApiCallsHandler.SnapShotRequest snapShotRequest);
 
   @POST("insurance/countries") Call<CountriesListResponse> getCountriesList();
+
+  @POST("insurance/network/countries/regions/territories/cities")
+  Call<CitiesListResponse> getCitiesList(
+      @Body ApiCallsHandler.GetCitiesListRequest citiesListRequest);
+
+  @POST("insurance/providers/services")
+  Call<ServicesListResponse> getServicesList();
+
   //HOME SCREEN
 
   // MEDICINES

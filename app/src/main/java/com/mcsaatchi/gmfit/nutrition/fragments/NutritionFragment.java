@@ -143,11 +143,9 @@ public class NutritionFragment extends BaseFragment
 
     presenter = new NutritionFragmentPresenter(this, dataAccessHandler);
 
-    presenter.getUiForSection("nutrition", finalDesiredDate);
-
     presenter.getUserGoalMetrics(finalDesiredDate, "nutrition");
-
     presenter.getUserAddedMeals(finalDesiredDate);
+    presenter.getUiForSection("nutrition", finalDesiredDate);
 
     setupDateCarousel();
 
@@ -185,7 +183,6 @@ public class NutritionFragment extends BaseFragment
 
         presenter.getUserGoalMetrics(finalDesiredDate, "nutrition");
         presenter.getUserAddedMeals(finalDesiredDate);
-
         presenter.getUiForSection("nutrition", finalDesiredDate);
 
         dateCarouselLayout.post(() -> {

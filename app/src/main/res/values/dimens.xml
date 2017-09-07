@@ -179,6 +179,7 @@
   <dimen name="article_image_dimens_vertical">55dp</dimen>
   <dimen name="contact_us_operations_row_height">60dp</dimen>
   <dimen name="chronic_deletion_edge_width">80dp</dimen>
+  <dimen name="services_picker_height">75dp</dimen>
 
   <!-- PILL REMINDER SECTION -->
   <dimen name="medications_list_row_item_height">100dp</dimen>

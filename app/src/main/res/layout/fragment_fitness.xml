@@ -98,51 +98,60 @@
           />
     </LinearLayout>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/chart_title_headline_bar_height"
-        android:layout_marginTop="@dimen/default_margin_2"
-        android:background="@color/fitness_pink"
+    <LinearLayout
+        android:id="@+id/activitiesLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone"
         >
 
-      <TextView
-          android:id="@+id/activitiesTitleTV"
+      <RelativeLayout
+          android:layout_width="match_parent"
+          android:layout_height="@dimen/chart_title_headline_bar_height"
+          android:layout_marginTop="@dimen/default_margin_2"
+          android:background="@color/fitness_pink"
+          >
+
+        <TextView
+            android:id="@+id/activitiesTitleTV"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:gravity="center_vertical"
+            android:paddingEnd="@dimen/default_margin_2"
+            android:paddingStart="@dimen/default_margin_2"
+            android:text="@string/activities_section_title"
+            android:textAppearance="?android:textAppearanceMedium"
+            android:textColor="@android:color/white"
+            />
+
+        <TextView
+            android:id="@+id/addActivityLabelBTN"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:gravity="center_vertical"
+            android:paddingEnd="@dimen/default_margin_2"
+            android:paddingStart="@dimen/default_margin_2"
+            android:text="@string/add_item_with_plussign"
+            android:textColor="@color/white"
+            />
+      </RelativeLayout>
+
+      <android.support.v7.widget.RecyclerView
+          android:id="@+id/activitiesRecycler"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:layout_centerVertical="true"
-          android:gravity="center_vertical"
-          android:paddingEnd="@dimen/default_margin_2"
-          android:paddingStart="@dimen/default_margin_2"
-          android:text="@string/activities_section_title"
-          android:textAppearance="?android:textAppearanceMedium"
-          android:textColor="@android:color/white"
           />
 
-      <TextView
-          android:id="@+id/addActivityLabelBTN"
-          android:layout_width="wrap_content"
-          android:layout_height="match_parent"
-          android:layout_alignParentEnd="true"
-          android:layout_centerVertical="true"
-          android:gravity="center_vertical"
-          android:paddingEnd="@dimen/default_margin_2"
-          android:paddingStart="@dimen/default_margin_2"
-          android:text="@string/add_item_with_plussign"
-          android:textColor="@color/white"
+      <include
+          layout="@layout/empty_activities_layout"
+          android:id="@+id/activitiesEmptyLayout"
+          android:visibility="gone"
           />
-    </RelativeLayout>
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/activitiesRecycler"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        />
-
-    <include
-        layout="@layout/empty_activities_layout"
-        android:id="@+id/activitiesEmptyLayout"
-        android:visibility="gone"
-        />
+    </LinearLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"

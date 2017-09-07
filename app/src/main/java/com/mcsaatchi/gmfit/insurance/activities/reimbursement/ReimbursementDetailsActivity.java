@@ -32,6 +32,13 @@ public class ReimbursementDetailsActivity extends BaseActivity
   @Bind(R.id.originalReceiptImagesPicker) CustomAttachmentPicker originalReceiptImagesPicker;
   @Bind(R.id.otherDocumentsImagesPicker) CustomAttachmentPicker otherDocumentsImagesPicker;
 
+  private int medicalReportRowCounter = 0;
+  private int invoiceRowCounter = 0;
+  private int identityCardRowCounter = 0;
+  private int testResultsRowCounter = 0;
+  private int originalReceiptRowCounter = 0;
+  private int otherDocumentsRowCounter = 0;
+
   private ArrayList<Integer> medicalReportImagesPlacement, invoiceImagesPlacement,
       identityCardImagesPlacement, testResultsImagesPlacement, originalReceiptImagesPlacement,
       otherDocumentsImagesPlacement = new ArrayList<>();
@@ -112,9 +119,10 @@ public class ReimbursementDetailsActivity extends BaseActivity
                         Constants.BITMAP_RESIZE_DIMENS_HEIGHT));
               }
             } else {
-              medicalReportImagesPicker.returnImagePicker(i)
+              medicalReportImagesPicker.returnImagePicker(medicalReportRowCounter)
                   .setImageBitmap(Helpers.getResizedBitmap(Helpers.convertToBase64(imageContents),
                       Constants.BITMAP_RESIZE_DIMENS_WIDTH, Constants.BITMAP_RESIZE_DIMENS_HEIGHT));
+              medicalReportRowCounter++;
             }
             break;
           case 2:
@@ -126,9 +134,10 @@ public class ReimbursementDetailsActivity extends BaseActivity
                         Constants.BITMAP_RESIZE_DIMENS_HEIGHT));
               }
             } else {
-              invoiceImagesPicker.returnImagePicker(i)
+              invoiceImagesPicker.returnImagePicker(invoiceRowCounter)
                   .setImageBitmap(Helpers.getResizedBitmap(Helpers.convertToBase64(imageContents),
                       Constants.BITMAP_RESIZE_DIMENS_WIDTH, Constants.BITMAP_RESIZE_DIMENS_HEIGHT));
+              invoiceRowCounter++;
             }
             break;
           case 3:
@@ -140,9 +149,10 @@ public class ReimbursementDetailsActivity extends BaseActivity
                         Constants.BITMAP_RESIZE_DIMENS_HEIGHT));
               }
             } else {
-              originalReceiptImagesPicker.returnImagePicker(i)
+              originalReceiptImagesPicker.returnImagePicker(originalReceiptRowCounter)
                   .setImageBitmap(Helpers.getResizedBitmap(Helpers.convertToBase64(imageContents),
                       Constants.BITMAP_RESIZE_DIMENS_WIDTH, Constants.BITMAP_RESIZE_DIMENS_HEIGHT));
+              originalReceiptRowCounter++;
             }
             break;
           case 4:
@@ -154,9 +164,10 @@ public class ReimbursementDetailsActivity extends BaseActivity
                         Constants.BITMAP_RESIZE_DIMENS_HEIGHT));
               }
             } else {
-              identityCardImagesPicker.returnImagePicker(i)
+              identityCardImagesPicker.returnImagePicker(identityCardRowCounter)
                   .setImageBitmap(Helpers.getResizedBitmap(Helpers.convertToBase64(imageContents),
                       Constants.BITMAP_RESIZE_DIMENS_WIDTH, Constants.BITMAP_RESIZE_DIMENS_HEIGHT));
+              identityCardRowCounter++;
             }
             break;
           case 5:
@@ -168,9 +179,10 @@ public class ReimbursementDetailsActivity extends BaseActivity
                         Constants.BITMAP_RESIZE_DIMENS_HEIGHT));
               }
             } else {
-              testResultsImagesPicker.returnImagePicker(i)
+              testResultsImagesPicker.returnImagePicker(testResultsRowCounter)
                   .setImageBitmap(Helpers.getResizedBitmap(Helpers.convertToBase64(imageContents),
                       Constants.BITMAP_RESIZE_DIMENS_WIDTH, Constants.BITMAP_RESIZE_DIMENS_HEIGHT));
+              testResultsRowCounter++;
             }
             break;
           case 6:
@@ -182,9 +194,10 @@ public class ReimbursementDetailsActivity extends BaseActivity
                         Constants.BITMAP_RESIZE_DIMENS_HEIGHT));
               }
             } else {
-              otherDocumentsImagesPicker.returnImagePicker(i)
+              otherDocumentsImagesPicker.returnImagePicker(otherDocumentsRowCounter)
                   .setImageBitmap(Helpers.getResizedBitmap(Helpers.convertToBase64(imageContents),
                       Constants.BITMAP_RESIZE_DIMENS_WIDTH, Constants.BITMAP_RESIZE_DIMENS_HEIGHT));
+              otherDocumentsRowCounter++;
             }
             break;
         }

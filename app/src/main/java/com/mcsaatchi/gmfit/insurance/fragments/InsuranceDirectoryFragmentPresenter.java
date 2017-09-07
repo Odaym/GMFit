@@ -8,6 +8,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import timber.log.Timber;
 
 class InsuranceDirectoryFragmentPresenter extends BaseFragmentPresenter {
   private InsuranceDirectoryFragmentView view;
@@ -27,6 +28,8 @@ class InsuranceDirectoryFragmentPresenter extends BaseFragmentPresenter {
               Response<GetNearbyClinicsResponse> response) {
             switch (response.code()) {
               case 200:
+                Timber.d("Got results for country: " + searchCtry);
+
                 view.displayNearbyClinics(response.body().getData().getBody().getData());
             }
           }

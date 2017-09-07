@@ -16,6 +16,7 @@ import com.mcsaatchi.gmfit.architecture.retrofit.responses.ChartsBySectionRespon
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ChronicDeletionResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ChronicTreatmentDetailsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ChronicTreatmentListResponse;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.CitiesListResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ClaimListDetailsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ClaimsListResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.CounsellingInformationResponse;
@@ -36,6 +37,7 @@ import com.mcsaatchi.gmfit.architecture.retrofit.responses.OperationContactsResp
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.RecentMealsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.SearchMealItemResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.SearchMedicinesResponse;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.ServicesListResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.SlugBreakdownResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.SubCategoriesResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.TakenMedicalTestsResponse;
@@ -1193,6 +1195,36 @@ public class ApiCallsHandler {
     });
   }
 
+  void getCitiesList(String selectedCtry, final Callback<CitiesListResponse> callback) {
+    Call<CitiesListResponse> apiCall =
+        restClient.getGMFitService().getCitiesList(new GetCitiesListRequest(selectedCtry));
+
+    apiCall.enqueue(new Callback<CitiesListResponse>() {
+      @Override
+      public void onResponse(Call<CitiesListResponse> call, Response<CitiesListResponse> response) {
+        callback.onResponse(call, response);
+      }
+
+      @Override public void onFailure(Call<CitiesListResponse> call, Throwable t) {
+      }
+    });
+  }
+
+  void getServicesList(final Callback<ServicesListResponse> callback) {
+    Call<ServicesListResponse> apiCall =
+        restClient.getGMFitService().getServicesList();
+
+    apiCall.enqueue(new Callback<ServicesListResponse>() {
+      @Override
+      public void onResponse(Call<ServicesListResponse> call, Response<ServicesListResponse> response) {
+        callback.onResponse(call, response);
+      }
+
+      @Override public void onFailure(Call<ServicesListResponse> call, Throwable t) {
+      }
+    });
+  }
+
   void getClaimslist(String contractNo, String requestType,
       final Callback<ClaimsListResponse> callback) {
     Call<ClaimsListResponse> apiCall =
@@ -1775,6 +1807,14 @@ public class ApiCallsHandler {
       this.contractNo = contractNo;
       this.requestID = requestID;
       this.requestType = requestType;
+    }
+  }
+
+  public class GetCitiesListRequest {
+    String selectedCtry;
+
+    public GetCitiesListRequest(String selectedCtry) {
+      this.selectedCtry = selectedCtry;
     }
   }
 
