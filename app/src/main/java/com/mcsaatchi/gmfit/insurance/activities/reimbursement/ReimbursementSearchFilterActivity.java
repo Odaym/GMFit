@@ -54,10 +54,8 @@ public class ReimbursementSearchFilterActivity extends BaseActivity {
       if (statuses.get(i).isSelected() && statuses.get(i).getName().equals("All Statuses")) {
         finalStatuses.clear();
 
-        for (int i1 = 0; i1 < statuses.size(); i1++) {
-          if (!statuses.get(i1).getName().equals("All Statuses")) {
-            finalStatuses.add(statuses.get(i1).getName());
-          }
+        if (!statuses.get(i).getName().equals("All Statuses")) {
+          finalStatuses.add(statuses.get(i).getName());
         }
       } else if (statuses.get(i).isSelected()) {
         finalStatuses.add(statuses.get(i).getName());
@@ -68,10 +66,8 @@ public class ReimbursementSearchFilterActivity extends BaseActivity {
       if (years.get(i).isSelected() && years.get(i).getName().equals("All Years")) {
         finalYears.clear();
 
-        for (int i1 = 0; i1 < years.size(); i1++) {
-          if (!years.get(i1).getName().equals("All Years")) {
-            finalYears.add(years.get(i1).getName());
-          }
+        if (!years.get(i).getName().equals("All Years")) {
+          finalYears.add(years.get(i).getName());
         }
       } else if (years.get(i).isSelected()) {
         finalYears.add(years.get(i).getName());

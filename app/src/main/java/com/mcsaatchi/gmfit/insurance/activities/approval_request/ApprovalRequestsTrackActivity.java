@@ -68,10 +68,6 @@ public class ApprovalRequestsTrackActivity extends BaseActivity
           if (statusesCriteria != null) {
             for (int i = 0; i < statusesCriteria.size(); i++) {
               for (int j = 0; j < originalClaimsList.size(); j++) {
-                if (statusesCriteria.get(i).equals("Submitted")) {
-                  statusesCriteria.set(i, "Submited");
-                }
-
                 if (originalClaimsList.get(j).getStatus().equals(statusesCriteria.get(i))) {
                   filteredClaimList.add(originalClaimsList.get(j));
                 }

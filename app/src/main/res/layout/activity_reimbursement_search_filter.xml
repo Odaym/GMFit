@@ -44,8 +44,8 @@
       <android.support.v7.widget.RecyclerView
           android:id="@+id/statusFilterRecycler"
           android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_marginBottom="@dimen/default_margin_2"
+          android:layout_height="@dimen/status_choice_recycler_height"
+          android:nestedScrollingEnabled="false"
           />
 
       <LinearLayout
@@ -72,6 +72,7 @@
           android:id="@+id/yearFilterRecycler"
           android:layout_width="match_parent"
           android:layout_height="@dimen/years_choice_recycler_height"
+          android:nestedScrollingEnabled="false"
           />
 
       <Button

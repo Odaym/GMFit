@@ -111,7 +111,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginEnd="@dimen/default_margin_1"
                 android:gravity="center_vertical"
-                android:text="LBP"
+                android:text="USD"
                 android:textColor="@color/insurance_blue"
                 />
 

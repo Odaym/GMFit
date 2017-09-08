@@ -422,14 +422,14 @@
     <!-- GOOGLE MAPS API KEYS -->
 
     <!--PRODUCTION ... WORK KEY-->
-    <meta-data
-        android:name="com.google.android.geo.API_KEY"
-        android:value="AIzaSyBzptbw8-xsnunOTUpQfAM7xe5YyGk87i4"/>
-
-    <!-- PRODUCTION ... HOME KEY-->
     <!--<meta-data-->
     <!--android:name="com.google.android.geo.API_KEY"-->
-    <!--android:value="AIzaSyClLfg5jnBIui1fjBgywGvNNJxPvjtMzVg"/>-->
+    <!--android:value="AIzaSyBzptbw8-xsnunOTUpQfAM7xe5YyGk87i4"/>-->
+
+    <!-- PRODUCTION ... HOME KEY-->
+    <meta-data
+        android:name="com.google.android.geo.API_KEY"
+        android:value="AIzaSyClLfg5jnBIui1fjBgywGvNNJxPvjtMzVg"/>
 
     <!-- DEV ... HOME KEY-->
     <!--<meta-data-->

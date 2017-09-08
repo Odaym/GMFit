@@ -7,7 +7,6 @@ public class Constants {
 
   //public static final String BASE_URL_ADDRESS = "https://mobileapp.globemedfit.com/api/v1/";
   public static final String BASE_URL_ADDRESS = "http://mobileapp-test.globemedfit.com/api/v1/";
-  public static final String BASE_IMAGES_URL = "http://mobileapp-test.globemedfit.com/";
   //public static final String BASE_URL_ADDRESS = "http://172.16.1.89/api/v1/";
 
   public static final String NO_ACCESS_TOKEN_FOUND_IN_PREFS = "no_access_token_in_prefs";

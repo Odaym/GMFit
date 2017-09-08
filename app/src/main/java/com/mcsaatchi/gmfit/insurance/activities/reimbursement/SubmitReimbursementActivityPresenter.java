@@ -3,6 +3,7 @@ package com.mcsaatchi.gmfit.insurance.activities.reimbursement;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.retrofit.architecture.DataAccessHandlerImpl;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.CreateNewRequestResponse;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.CurrenciesListResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.SubCategoriesResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.SubCategoriesResponseDatum;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.UploadInsuranceImageResponse;
@@ -101,8 +102,26 @@ class SubmitReimbursementActivityPresenter extends BaseActivityPresenter {
     });
   }
 
+  void getCurrenciesList() {
+    dataAccessHandler.getCurrenciesList(new Callback<List<CurrenciesListResponse>>() {
+      @Override public void onResponse(Call<List<CurrenciesListResponse>> call,
+          Response<List<CurrenciesListResponse>> response) {
+        switch (response.code()) {
+          case 200:
+            view.populateCurrenciesList(response.body());
+        }
+      }
+
+      @Override public void onFailure(Call<List<CurrenciesListResponse>> call, Throwable t) {
+        view.displayRequestErrorDialog(t.getMessage());
+      }
+    });
+  }
+
   interface SubmitReimbursementActivityView extends BaseActivityView {
     void populateSubCategories(List<SubCategoriesResponseDatum> subCategories);
+
+    void populateCurrenciesList(List<CurrenciesListResponse> currenciesListResponses);
 
     void openReimbursementDetailsActivity(Integer claimId);
 

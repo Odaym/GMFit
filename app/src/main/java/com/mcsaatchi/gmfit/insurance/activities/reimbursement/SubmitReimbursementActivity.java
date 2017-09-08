@@ -20,6 +20,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.mcsaatchi.gmfit.R;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.CurrenciesListResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.SubCategoriesResponseDatum;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
@@ -107,25 +108,7 @@ public class SubmitReimbursementActivity extends BaseActivity
 
     presenter.getSubCategories(prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""));
 
-    currencyLayout.setOnClickListener(view -> {
-      final String[] items = new String[] { "LBP", "USD" };
-
-      AlertDialog.Builder builder = new AlertDialog.Builder(SubmitReimbursementActivity.this);
-      builder.setTitle("Pick currency").setItems(items, (dialogInterface, i) -> {
-        switch (items[i]) {
-          case "USD":
-            currencyValue = "2";
-            break;
-          case "LBP":
-            currencyValue = "1";
-            break;
-        }
-
-        currencyLabel.setText(items[i]);
-      });
-      builder.create();
-      builder.show();
-    });
+    presenter.getCurrenciesList();
 
     serviceDate.setUpDatePicker("Service Date", "Choose a date", (year, month, dayOfMonth) -> {
       Calendar calendar = Calendar.getInstance();
@@ -212,6 +195,27 @@ public class SubmitReimbursementActivity extends BaseActivity
             }
           }
         });
+  }
+
+  @Override
+  public void populateCurrenciesList(List<CurrenciesListResponse> currenciesListResponses) {
+    currencyLayout.setOnClickListener(view -> {
+      final String[] items = new String[currenciesListResponses.size()];
+
+      for (int i = 0; i < currenciesListResponses.size(); i++) {
+        items[i] = currenciesListResponses.get(i).getName() + " - " + currenciesListResponses.get(i)
+            .getCode();
+      }
+
+      AlertDialog.Builder builder = new AlertDialog.Builder(SubmitReimbursementActivity.this);
+      builder.setTitle("Pick currency").setItems(items, (dialogInterface, i) -> {
+        currencyValue = String.valueOf(currenciesListResponses.get(i).getId());
+
+        currencyLabel.setText(currenciesListResponses.get(i).getCode());
+      });
+      builder.create();
+      builder.show();
+    });
   }
 
   @Override public void openReimbursementDetailsActivity(Integer claimId) {

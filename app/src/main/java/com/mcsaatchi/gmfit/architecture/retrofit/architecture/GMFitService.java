@@ -20,6 +20,7 @@ import com.mcsaatchi.gmfit.architecture.retrofit.responses.ClaimsListResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.CounsellingInformationResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.CountriesListResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.CreateNewRequestResponse;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.CurrenciesListResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.DefaultGetResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.DeleteActivityResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.GetNearbyClinicsResponse;
@@ -49,6 +50,7 @@ import com.mcsaatchi.gmfit.architecture.retrofit.responses.UserMealsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.UserProfileResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.WeightHistoryResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.WidgetsResponse;
+import java.util.List;
 import java.util.Map;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -264,6 +266,9 @@ public interface GMFitService {
 
   @POST("insurance/providers/services")
   Call<ServicesListResponse> getServicesList();
+
+  @POST("insurance/currencies")
+  Call<List<CurrenciesListResponse>> getCurrenciesList();
 
   //HOME SCREEN
 

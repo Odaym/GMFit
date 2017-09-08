@@ -22,6 +22,7 @@ import com.mcsaatchi.gmfit.architecture.retrofit.responses.ClaimsListResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.CounsellingInformationResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.CountriesListResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.CreateNewRequestResponse;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.CurrenciesListResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.DefaultGetResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.DeleteActivityResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.GetNearbyClinicsResponse;
@@ -54,6 +55,7 @@ import com.mcsaatchi.gmfit.architecture.retrofit.responses.WidgetsResponse;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.inject.Inject;
 import okhttp3.RequestBody;
@@ -1134,7 +1136,8 @@ public class ApiCallsHandler {
       final Callback<GetNearbyClinicsResponse> callback) {
     Call<GetNearbyClinicsResponse> apiCall = restClient.getGMFitService()
         .applySearchFilters(
-            new ApplySearchFiltersRequest(contractNo, searchCtry, searchCity, providerTypesCode, fetchClosest));
+            new ApplySearchFiltersRequest(contractNo, searchCtry, searchCity, providerTypesCode,
+                fetchClosest));
 
     apiCall.enqueue(new Callback<GetNearbyClinicsResponse>() {
       @Override public void onResponse(Call<GetNearbyClinicsResponse> call,
@@ -1238,6 +1241,20 @@ public class ApiCallsHandler {
       }
 
       @Override public void onFailure(Call<ServicesListResponse> call, Throwable t) {
+      }
+    });
+  }
+
+  void getCurrenciesList(final Callback<List<CurrenciesListResponse>> callback) {
+    Call<List<CurrenciesListResponse>> apiCall = restClient.getGMFitService().getCurrenciesList();
+
+    apiCall.enqueue(new Callback<List<CurrenciesListResponse>>() {
+      @Override public void onResponse(Call<List<CurrenciesListResponse>> call,
+          Response<List<CurrenciesListResponse>> response) {
+        callback.onResponse(call, response);
+      }
+
+      @Override public void onFailure(Call<List<CurrenciesListResponse>> call, Throwable t) {
       }
     });
   }

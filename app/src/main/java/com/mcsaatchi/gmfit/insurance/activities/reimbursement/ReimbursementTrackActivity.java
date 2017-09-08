@@ -69,25 +69,19 @@ public class ReimbursementTrackActivity extends BaseActivity
           if (statusesCriteria != null) {
             for (int i = 0; i < statusesCriteria.size(); i++) {
               for (int j = 0; j < originalClaimsList.size(); j++) {
-                if (statusesCriteria.get(i).equals("Submitted")) {
-                  statusesCriteria.set(i, "Submited");
-                }
-
                 if (originalClaimsList.get(j).getStatus().equals(statusesCriteria.get(i))) {
-
                   filteredClaimList.add(originalClaimsList.get(j));
+                }
+              }
+            }
+          }
 
-                  if (yearsCriteria != null) {
-                    for (int k = 0; k < yearsCriteria.size(); k++) {
-                      for (int l = 0; l < originalClaimsList.size(); l++) {
-                        if (originalClaimsList.get(l).getDate().contains(yearsCriteria.get(k))
-                            && !filteredClaimList.contains(originalClaimsList.get(l))) {
-
-                          filteredClaimList.add(originalClaimsList.get(l));
-                        }
-                      }
-                    }
-                  }
+          if (yearsCriteria != null) {
+            for (int i = 0; i < yearsCriteria.size(); i++) {
+              for (int j = 0; j < originalClaimsList.size(); j++) {
+                if (originalClaimsList.get(j).getDate().contains(yearsCriteria.get(i))
+                    && !filteredClaimList.contains(originalClaimsList.get(j))) {
+                  filteredClaimList.add(originalClaimsList.get(j));
                 }
               }
             }
