@@ -160,7 +160,8 @@ public class InsuranceDirectoryFragment extends BaseFragment
           userLatLong[0] = location.getLatitude();
           userLatLong[1] = location.getLongitude();
 
-          getNearbyClinics(prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""), "H", 22,
+          getNearbyClinics(prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""), "H",
+              Integer.parseInt(prefs.getString(Constants.EXTRAS_INSURANCE_COUNTRY_ISO_CODE, "422")),
               userLatLong[1], userLatLong[0], 0);
         }
 
@@ -197,18 +198,13 @@ public class InsuranceDirectoryFragment extends BaseFragment
             }
           }
 
-          if (countrySelectedCode != null || citySelectedCode != null) {
-            applySearchFilters(prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""),
-                Integer.parseInt(countrySelectedCode), Integer.parseInt(citySelectedCode),
-                finalProviderType, 0);
-          } else {
-            final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
-            alertDialog.setTitle(R.string.required_fields_dialog_title);
-            alertDialog.setMessage(getString(R.string.required_fields_for_search));
-            alertDialog.setButton(AlertDialog.BUTTON_POSITIVE,
-                getResources().getString(R.string.ok), (dialog, which) -> dialog.dismiss());
-            alertDialog.show();
+          if (citySelectedCode == null) {
+            citySelectedCode = "0";
           }
+
+          applySearchFilters(prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""),
+              Integer.parseInt(countrySelectedCode), Integer.parseInt(citySelectedCode),
+              finalProviderType, 0);
         }
 
         break;
@@ -251,7 +247,8 @@ public class InsuranceDirectoryFragment extends BaseFragment
           userLatLong[0] = location.getLatitude();
           userLatLong[1] = location.getLongitude();
 
-          getNearbyClinics(prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""), "H", 22,
+          getNearbyClinics(prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""), "H",
+              Integer.parseInt(prefs.getString(Constants.EXTRAS_INSURANCE_COUNTRY_ISO_CODE, "422")),
               userLatLong[1], userLatLong[0], 0);
         }
       }
@@ -406,18 +403,22 @@ public class InsuranceDirectoryFragment extends BaseFragment
         snippet.append("247");
       }
 
-      locationMarker = new MarkerOptions().position(
-          new LatLng(Double.parseDouble(validClinics.get(i).getLatitude()),
-              Double.parseDouble(validClinics.get(i).getLongitude())))
-          .title(validClinics.get(i).getName())
-          .snippet(snippet.toString())
-          .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_custom_map_marker));
+      try {
+        locationMarker = new MarkerOptions().position(
+            new LatLng(Double.parseDouble(validClinics.get(i).getLatitude()),
+                Double.parseDouble(validClinics.get(i).getLongitude())))
+            .title(validClinics.get(i).getName())
+            .snippet(snippet.toString())
+            .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_custom_map_marker));
 
-      map.addMarker(locationMarker);
+        map.addMarker(locationMarker);
 
-      map.setInfoWindowAdapter(
-          new CustomInfoWindowAdapter((GMFitApplication) getActivity().getApplication(),
-              getActivity()));
+        map.setInfoWindowAdapter(
+            new CustomInfoWindowAdapter((GMFitApplication) getActivity().getApplication(),
+                getActivity()));
+
+      } catch (NullPointerException ignored) {
+      }
     }
 
     if (fromSearch) {

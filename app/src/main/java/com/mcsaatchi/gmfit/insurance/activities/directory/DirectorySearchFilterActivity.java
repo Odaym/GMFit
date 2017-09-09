@@ -3,6 +3,7 @@ package com.mcsaatchi.gmfit.insurance.activities.directory;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -104,8 +105,10 @@ public class DirectorySearchFilterActivity extends BaseActivity
       cityPicker.setUpDropDown("City", "Choose a City", cities.toArray(new String[cities.size()]),
           (index, selected) -> {
             for (int i = 0; i < citiesListResponses.size(); i++) {
-              if (citiesListResponses.get(i).getCityName().equals(selected)) {
-                citySelectedCode = citiesListResponses.get(i).getCityCode();
+              if (citiesListResponses.get(i).getCityName() != null) {
+                if (citiesListResponses.get(i).getCityName().equals(selected)) {
+                  citySelectedCode = citiesListResponses.get(i).getCityCode();
+                }
               }
             }
           });
@@ -151,16 +154,25 @@ public class DirectorySearchFilterActivity extends BaseActivity
       }
     }
 
-    Intent intent = new Intent();
-    intent.putStringArrayListExtra("WORKING_DAYS", finalWorkingDays);
-    intent.putExtra("Country_code", countrySelectedCode);
-    intent.putExtra("Service_code", serviceSelectedCode);
-    intent.putExtra("City_code", citySelectedCode);
-    intent.putExtra("Network", networkSelected);
-    intent.putExtra("Status", statusSelected);
-    intent.putExtra("Type", typeSelected);
-    setResult(SEARCH_CRITERIA_SELECTED, intent);
-    finish();
+    if (countrySelectedCode == null) {
+      final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+      alertDialog.setTitle(R.string.required_fields_dialog_title);
+      alertDialog.setMessage(getString(R.string.required_fields_for_search));
+      alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getResources().getString(R.string.ok),
+          (dialog, which) -> dialog.dismiss());
+      alertDialog.show();
+    } else {
+      Intent intent = new Intent();
+      intent.putStringArrayListExtra("WORKING_DAYS", finalWorkingDays);
+      intent.putExtra("Country_code", countrySelectedCode);
+      intent.putExtra("Service_code", serviceSelectedCode);
+      intent.putExtra("City_code", citySelectedCode);
+      intent.putExtra("Network", networkSelected);
+      intent.putExtra("Status", statusSelected);
+      intent.putExtra("Type", typeSelected);
+      setResult(SEARCH_CRITERIA_SELECTED, intent);
+      finish();
+    }
   }
 
   private void setupDefaultCountryAndCities(List<CountriesListResponseDatum> countriesResponse) {

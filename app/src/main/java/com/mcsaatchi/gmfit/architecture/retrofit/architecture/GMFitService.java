@@ -254,6 +254,9 @@ public interface GMFitService {
   @POST("insurance/network/advanced-search") Call<GetNearbyClinicsResponse> applySearchFilters(
       @Body ApiCallsHandler.ApplySearchFiltersRequest applySearchFiltersRequest);
 
+  @POST("insurance/network/advanced-search") Call<GetNearbyClinicsResponse> applySearchFilters(
+      @Body ApiCallsHandler.ApplySearchFiltersRequestWithoutCity applySearchFiltersRequestWithoutCity);
+
   @POST("insurance/snapshot/pdf") Call<ResponseBody> getSnapshot(
       @Body ApiCallsHandler.SnapShotRequest snapShotRequest);
 

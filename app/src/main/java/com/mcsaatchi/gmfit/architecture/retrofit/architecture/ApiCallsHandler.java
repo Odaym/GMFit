@@ -55,7 +55,6 @@ import com.mcsaatchi.gmfit.architecture.retrofit.responses.WidgetsResponse;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import javax.inject.Inject;
 import okhttp3.RequestBody;
@@ -1134,20 +1133,32 @@ public class ApiCallsHandler {
   void applySearchFilters(String contractNo, int searchCtry, int searchCity,
       String providerTypesCode, int fetchClosest,
       final Callback<GetNearbyClinicsResponse> callback) {
-    Call<GetNearbyClinicsResponse> apiCall = restClient.getGMFitService()
-        .applySearchFilters(
-            new ApplySearchFiltersRequest(contractNo, searchCtry, searchCity, providerTypesCode,
-                fetchClosest));
 
-    apiCall.enqueue(new Callback<GetNearbyClinicsResponse>() {
-      @Override public void onResponse(Call<GetNearbyClinicsResponse> call,
-          Response<GetNearbyClinicsResponse> response) {
-        callback.onResponse(call, response);
-      }
+    Call<GetNearbyClinicsResponse> apiCall;
 
-      @Override public void onFailure(Call<GetNearbyClinicsResponse> call, Throwable t) {
-      }
-    });
+    if (searchCity == 0) {
+      apiCall = restClient.getGMFitService()
+          .applySearchFilters(
+              new ApplySearchFiltersRequestWithoutCity(contractNo, searchCtry, providerTypesCode,
+                  fetchClosest));
+    } else {
+      apiCall = restClient.getGMFitService()
+          .applySearchFilters(
+              new ApplySearchFiltersRequest(contractNo, searchCtry, searchCity, providerTypesCode,
+                  fetchClosest));
+    }
+
+    if (apiCall != null) {
+      apiCall.enqueue(new Callback<GetNearbyClinicsResponse>() {
+        @Override public void onResponse(Call<GetNearbyClinicsResponse> call,
+            Response<GetNearbyClinicsResponse> response) {
+          callback.onResponse(call, response);
+        }
+
+        @Override public void onFailure(Call<GetNearbyClinicsResponse> call, Throwable t) {
+        }
+      });
+    }
   }
 
   void sendInsurancePasswordResetLink(String email, final Callback<DefaultGetResponse> callback) {
@@ -1738,6 +1749,21 @@ public class ApiCallsHandler {
       this.contractNo = contractNo;
       this.searchCtry = searchCtry;
       this.searchCity = searchCity;
+      this.providerTypesCode = providerTypesCode;
+      this.fetchClosest = fetchClosest;
+    }
+  }
+
+  public class ApplySearchFiltersRequestWithoutCity {
+    String contractNo;
+    int searchCtry;
+    String providerTypesCode;
+    int fetchClosest;
+
+    public ApplySearchFiltersRequestWithoutCity(String contractNo, int searchCtry,
+        String providerTypesCode, int fetchClosest) {
+      this.contractNo = contractNo;
+      this.searchCtry = searchCtry;
       this.providerTypesCode = providerTypesCode;
       this.fetchClosest = fetchClosest;
     }

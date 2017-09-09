@@ -555,5 +555,5 @@
   <string name="working_days_header_title">Working Days</string>
   <string name="advanced_search_activity_title">Advanced Search</string>
   <string name="search_advanced_filter_button">Search</string>
-  <string name="required_fields_for_search">Please fill in all the required fields for a successful search</string>
+  <string name="required_fields_for_search">Please fill in a value for Country for a successful search</string>
 </resources>
