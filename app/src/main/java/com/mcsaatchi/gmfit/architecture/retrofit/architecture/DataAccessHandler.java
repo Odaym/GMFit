@@ -51,7 +51,6 @@ import com.mcsaatchi.gmfit.architecture.retrofit.responses.UserProfileResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.WeightHistoryResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.WidgetsResponse;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -246,7 +245,7 @@ public interface DataAccessHandler {
 
   void getServicesList(final Callback<ServicesListResponse> callback);
 
-  void getCurrenciesList(final Callback<List<CurrenciesListResponse>> callback);
+  void getCurrenciesList(final Callback<CurrenciesListResponse> callback);
 
   void getCRMCategories(RequestBody contractNo, RequestBody dbCountr,
       final Callback<CRMCategoriesResponse> callback);

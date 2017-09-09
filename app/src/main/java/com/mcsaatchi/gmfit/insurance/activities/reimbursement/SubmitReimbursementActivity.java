@@ -20,7 +20,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.retrofit.responses.CurrenciesListResponse;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.CurrenciesListResponseBody;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.SubCategoriesResponseDatum;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
@@ -198,7 +198,7 @@ public class SubmitReimbursementActivity extends BaseActivity
   }
 
   @Override
-  public void populateCurrenciesList(List<CurrenciesListResponse> currenciesListResponses) {
+  public void populateCurrenciesList(List<CurrenciesListResponseBody> currenciesListResponses) {
     currencyLayout.setOnClickListener(view -> {
       final String[] items = new String[currenciesListResponses.size()];
 

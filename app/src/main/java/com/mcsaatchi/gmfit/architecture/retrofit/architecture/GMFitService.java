@@ -50,7 +50,6 @@ import com.mcsaatchi.gmfit.architecture.retrofit.responses.UserMealsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.UserProfileResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.WeightHistoryResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.WidgetsResponse;
-import java.util.List;
 import java.util.Map;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -268,7 +267,7 @@ public interface GMFitService {
   Call<ServicesListResponse> getServicesList();
 
   @POST("insurance/currencies")
-  Call<List<CurrenciesListResponse>> getCurrenciesList();
+  Call<CurrenciesListResponse> getCurrenciesList();
 
   //HOME SCREEN
 

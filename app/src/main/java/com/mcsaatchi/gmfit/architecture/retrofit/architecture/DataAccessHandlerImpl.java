@@ -53,7 +53,6 @@ import com.mcsaatchi.gmfit.architecture.retrofit.responses.UserProfileResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.WeightHistoryResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.WidgetsResponse;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import javax.inject.Inject;
 import okhttp3.RequestBody;
@@ -436,7 +435,7 @@ public class DataAccessHandlerImpl implements DataAccessHandler {
     apiCallsHandler.getServicesList(callback);
   }
 
-  @Override public void getCurrenciesList(final Callback<List<CurrenciesListResponse>> callback) {
+  @Override public void getCurrenciesList(final Callback<CurrenciesListResponse> callback) {
     apiCallsHandler.getCurrenciesList(callback);
   }
 

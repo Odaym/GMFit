@@ -4,6 +4,7 @@ import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.retrofit.architecture.DataAccessHandlerImpl;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.CreateNewRequestResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.CurrenciesListResponse;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.CurrenciesListResponseBody;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.SubCategoriesResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.SubCategoriesResponseDatum;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.UploadInsuranceImageResponse;
@@ -103,16 +104,16 @@ class SubmitReimbursementActivityPresenter extends BaseActivityPresenter {
   }
 
   void getCurrenciesList() {
-    dataAccessHandler.getCurrenciesList(new Callback<List<CurrenciesListResponse>>() {
-      @Override public void onResponse(Call<List<CurrenciesListResponse>> call,
-          Response<List<CurrenciesListResponse>> response) {
+    dataAccessHandler.getCurrenciesList(new Callback<CurrenciesListResponse>() {
+      @Override public void onResponse(Call<CurrenciesListResponse> call,
+          Response<CurrenciesListResponse> response) {
         switch (response.code()) {
           case 200:
-            view.populateCurrenciesList(response.body());
+            view.populateCurrenciesList(response.body().getData().getBody());
         }
       }
 
-      @Override public void onFailure(Call<List<CurrenciesListResponse>> call, Throwable t) {
+      @Override public void onFailure(Call<CurrenciesListResponse> call, Throwable t) {
         view.displayRequestErrorDialog(t.getMessage());
       }
     });
@@ -121,7 +122,7 @@ class SubmitReimbursementActivityPresenter extends BaseActivityPresenter {
   interface SubmitReimbursementActivityView extends BaseActivityView {
     void populateSubCategories(List<SubCategoriesResponseDatum> subCategories);
 
-    void populateCurrenciesList(List<CurrenciesListResponse> currenciesListResponses);
+    void populateCurrenciesList(List<CurrenciesListResponseBody> currenciesListResponseBodies);
 
     void openReimbursementDetailsActivity(Integer claimId);
 

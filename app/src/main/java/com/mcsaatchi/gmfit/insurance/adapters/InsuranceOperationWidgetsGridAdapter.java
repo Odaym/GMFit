@@ -198,9 +198,6 @@ public class InsuranceOperationWidgetsGridAdapter
                 saveAndOpenPDF(response.body(), PDFname);
 
                 break;
-              case 449:
-                //view.displayRequestErrorDialog(Helpers.provideErrorStringFromJSON(response.errorBody()));
-                break;
             }
 
             waitingDialog.dismiss();

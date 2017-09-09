@@ -1245,16 +1245,16 @@ public class ApiCallsHandler {
     });
   }
 
-  void getCurrenciesList(final Callback<List<CurrenciesListResponse>> callback) {
-    Call<List<CurrenciesListResponse>> apiCall = restClient.getGMFitService().getCurrenciesList();
+  void getCurrenciesList(final Callback<CurrenciesListResponse> callback) {
+    Call<CurrenciesListResponse> apiCall = restClient.getGMFitService().getCurrenciesList();
 
-    apiCall.enqueue(new Callback<List<CurrenciesListResponse>>() {
-      @Override public void onResponse(Call<List<CurrenciesListResponse>> call,
-          Response<List<CurrenciesListResponse>> response) {
+    apiCall.enqueue(new Callback<CurrenciesListResponse>() {
+      @Override public void onResponse(Call<CurrenciesListResponse> call,
+          Response<CurrenciesListResponse> response) {
         callback.onResponse(call, response);
       }
 
-      @Override public void onFailure(Call<List<CurrenciesListResponse>> call, Throwable t) {
+      @Override public void onFailure(Call<CurrenciesListResponse> call, Throwable t) {
       }
     });
   }
