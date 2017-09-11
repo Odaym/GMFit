@@ -95,9 +95,9 @@ public class DataAccessHandlerImpl implements DataAccessHandler {
     apiCallsHandler.signInUser(email, password, callback);
   }
 
-  @Override public void registerUser(String full_name, String email, String password,
+  @Override public void registerUser(String full_name, String email, String password, String phone_number,
       Callback<AuthenticationResponse> callback) {
-    apiCallsHandler.registerUser(full_name, email, password, callback);
+    apiCallsHandler.registerUser(full_name, email, password, phone_number, callback);
   }
 
   @Override public void signInUserSilently(String email, String password,

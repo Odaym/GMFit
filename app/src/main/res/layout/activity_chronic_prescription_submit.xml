@@ -60,7 +60,6 @@
             />
       </LinearLayout>
 
-
       <com.mcsaatchi.gmfit.insurance.widget.ItemHeader
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
@@ -71,14 +70,28 @@
           android:id="@+id/medicalReportImagesPicker"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          custom:header_text="Medical Report"
+          custom:header_text="@string/medical_report"
           />
 
       <com.mcsaatchi.gmfit.insurance.widget.CustomAttachmentPicker
-          android:id="@+id/prescriptionImagesPicker"
+          android:id="@+id/identityCardImagesPicker"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          custom:header_text="Invoice"
+          custom:header_text="@string/identity_card"
+          />
+
+      <com.mcsaatchi.gmfit.insurance.widget.CustomAttachmentPicker
+          android:id="@+id/doctorConfirmationImagesPicker"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          custom:header_text="@string/doctor_confirmation"
+          />
+
+      <com.mcsaatchi.gmfit.insurance.widget.CustomAttachmentPicker
+          android:id="@+id/otherDocumentsImagesPicker"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          custom:header_text="@string/other_documents"
           />
 
       <RelativeLayout

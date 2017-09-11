@@ -11,6 +11,7 @@
   <ScrollView
       android:layout_width="match_parent"
       android:layout_height="match_parent"
+      android:layout_marginBottom="@dimen/margin_bottom_whole_page"
       >
 
     <LinearLayout
@@ -224,7 +225,7 @@
             android:singleLine="true"
             android:textAppearance="?android:textAppearanceSmall"
             android:textColor="@android:color/white"
-            android:textColorHint="@android:color/white"
+            android:textColorHint="@color/edittext_hint_color_white"
             validator:emptyErrorString="@string/field_empty_error_message"
             validator:testErrorString="@string/error_only_numeric_digits_allowed"
             validator:testType="numeric"
@@ -267,7 +268,7 @@
             android:singleLine="true"
             android:textAppearance="?android:textAppearanceSmall"
             android:textColor="@android:color/white"
-            android:textColorHint="@android:color/white"
+            android:textColorHint="@color/edittext_hint_color_white"
             validator:emptyErrorString="@string/field_empty_error_message"
             validator:testErrorString="@string/error_only_numeric_digits_allowed"
             validator:testType="numeric"

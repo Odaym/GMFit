@@ -447,6 +447,15 @@
   <string name="deleting_chronic_treatment_dialog_title">Deleting Chronic Treatment</string>
   <string name="password_mismatch_chronic_deletion">The password you entered does not match your current password</string>
   <string name="chronic_treatment_deleted_successfully">Chronic treatment deleted successfully</string>
+  <string name="medical_report">Medical Report</string>
+  <string name="identity_card">Identity Card</string>
+  <string name="identity_card_passport">Identity Card / Passport</string>
+  <string name="doctor_confirmation">Doctor Confirmation</string>
+  <string name="invoice">Invoice</string>
+  <string name="passport">Passport</string>
+  <string name="original_receipt">Original Receipt</string>
+  <string name="other_documents">Other Documents (optional)</string>
+  <string name="test_results">Test Results (optional)</string>
 
   <!-- MEMBER'S GUIDE-->
   <string name="members_guide_activity_title">Member\'s Guide</string>

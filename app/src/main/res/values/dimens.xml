@@ -148,6 +148,7 @@
   <dimen name="achievement_details_cell_item_dimens">100dp</dimen>
   <dimen name="achievement_details_checkmark_icon_inside_recycler_dimens">25dp</dimen>
   <dimen name="contact_address_name_section_height">70dp</dimen>
+  <dimen name="margin_bottom_whole_page">70dp</dimen>
 
   <!-- INSURANCE SECTION -->
   <dimen name="insurance_home_header_section_height">150dp</dimen>

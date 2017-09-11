@@ -137,9 +137,9 @@ public class ApiCallsHandler {
   }
 
   void registerUser(final String full_name, final String email, final String password,
-      final Callback<AuthenticationResponse> callback) {
-    Call<AuthenticationResponse> apiCall =
-        restClient.getGMFitService().registerUser(new RegisterRequest(full_name, email, password));
+      final String phone_number, final Callback<AuthenticationResponse> callback) {
+    Call<AuthenticationResponse> apiCall = restClient.getGMFitService()
+        .registerUser(new RegisterRequest(full_name, email, password, phone_number));
 
     apiCall.enqueue(new Callback<AuthenticationResponse>() {
       @Override public void onResponse(Call<AuthenticationResponse> call,
@@ -1470,11 +1470,13 @@ public class ApiCallsHandler {
     final String name;
     final String email;
     final String password;
+    final String phone_number;
 
-    RegisterRequest(String name, String email, String password) {
+    RegisterRequest(String name, String email, String password, String phone_number) {
       this.name = name;
       this.email = email;
       this.password = password;
+      this.phone_number = phone_number;
     }
   }
 

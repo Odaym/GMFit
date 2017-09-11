@@ -56,12 +56,11 @@ public class SetupProfile3Fragment extends BaseFragment
           .inflate(R.layout.activity_levels_list_item_radio_button_row, null);
 
       final RadioButton radioButtonItem =
-          (RadioButton) listItemRadioButton.findViewById(R.id.activityLevelRadioButtonItem);
+          listItemRadioButton.findViewById(R.id.activityLevelRadioButtonItem);
       radioButtonItem.setText(activityLevels.get(i).getName());
       radioButtonItem.setId(activityLevels.get(i).getId());
 
-      TextView radioButtonHintTV =
-          (TextView) listItemRadioButton.findViewById(R.id.radioButtonHintTV);
+      TextView radioButtonHintTV = listItemRadioButton.findViewById(R.id.radioButtonHintTV);
       radioButtonHintTV.setText(activityLevels.get(i).getDescription());
 
       radioButtonItem.setOnClickListener(view -> {

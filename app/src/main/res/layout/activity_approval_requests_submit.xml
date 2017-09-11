@@ -74,42 +74,42 @@
           android:id="@+id/medicalReportImagesPicker"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          custom:header_text="Medical Report"
+          custom:header_text="@string/medical_report"
           />
 
       <com.mcsaatchi.gmfit.insurance.widget.CustomAttachmentPicker
           android:id="@+id/invoiceImagesPicker"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          custom:header_text="Invoice"
+          custom:header_text="@string/invoice"
           />
 
       <com.mcsaatchi.gmfit.insurance.widget.CustomAttachmentPicker
           android:id="@+id/identityCardImagesPicker"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          custom:header_text="Identity Card"
+          custom:header_text="@string/identity_card"
           />
 
       <com.mcsaatchi.gmfit.insurance.widget.CustomAttachmentPicker
           android:id="@+id/passportImagesPicker"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          custom:header_text="Passport"
+          custom:header_text="@string/passport"
           />
 
       <com.mcsaatchi.gmfit.insurance.widget.CustomAttachmentPicker
           android:id="@+id/testResultsImagesPicker"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          custom:header_text="Test Results"
+          custom:header_text="@string/test_results"
           />
 
       <com.mcsaatchi.gmfit.insurance.widget.CustomAttachmentPicker
           android:id="@+id/otherDocumentsImagesPicker"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          custom:header_text="Other Documents (Optional)"
+          custom:header_text="@string/other_documents"
           />
 
       <RelativeLayout
@@ -127,7 +127,7 @@
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             android:background="@color/buttons_blue"
-            android:text="Submit"
+            android:text="@string/submit"
             android:textAllCaps="false"
             android:textColor="@color/white"
             />

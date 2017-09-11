@@ -274,7 +274,6 @@ public class InsuranceDirectoryFragment extends BaseFragment
   }
 
   @Override public void displaySearchResults(List<GetNearbyClinicsResponseDatum> searchResults) {
-    map.clear();
     addMarkersToMap(searchResults, true);
   }
 
@@ -375,6 +374,7 @@ public class InsuranceDirectoryFragment extends BaseFragment
   private void addMarkersToMap(List<GetNearbyClinicsResponseDatum> validClinics,
       boolean fromSearch) {
     map.getUiSettings().setMyLocationButtonEnabled(true);
+    map.clear();
 
     MarkerOptions locationMarker = null;
 
@@ -416,7 +416,6 @@ public class InsuranceDirectoryFragment extends BaseFragment
         map.setInfoWindowAdapter(
             new CustomInfoWindowAdapter((GMFitApplication) getActivity().getApplication(),
                 getActivity()));
-
       } catch (NullPointerException ignored) {
       }
     }

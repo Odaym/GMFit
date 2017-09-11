@@ -98,11 +98,11 @@ public class SignUpActivity extends BaseActivity
   }
 
   @Override public void saveUserSignUpDetails(String accessToken, String full_name, String email,
-      String password) {
+      String password, String phone_number) {
     prefs.edit().putString(Constants.PREF_USER_ACCESS_TOKEN, "Bearer " + accessToken).apply();
     prefs.edit().putString(Constants.EXTRAS_USER_FULL_NAME, full_name).apply();
     prefs.edit().putString(Constants.EXTRAS_USER_EMAIL, email).apply();
-    //prefs.edit().putString(Constants.EXTRAS_USER_PROFILE_PHONE_NUMBER, )
+    prefs.edit().putString(Constants.EXTRAS_USER_PROFILE_PHONE_NUMBER, phone_number).apply();
     prefs.edit().putString(Constants.EXTRAS_USER_PASSWORD, password).apply();
   }
 
@@ -147,7 +147,8 @@ public class SignUpActivity extends BaseActivity
       if (TOSAgreementCheckbox.isChecked()) {
         presenter.signUserUp(
             firstNameET.getText().toString() + " " + lastNameET.getText().toString(),
-            emailET.getText().toString(), passwordET.getText().toString());
+            emailET.getText().toString(), passwordET.getText().toString(),
+            phoneNumberET.getText().toString());
       } else {
         Toast.makeText(this, R.string.accept_TOS_error, Toast.LENGTH_LONG).show();
       }

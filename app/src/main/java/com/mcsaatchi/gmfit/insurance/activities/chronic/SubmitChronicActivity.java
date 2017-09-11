@@ -43,7 +43,9 @@ public class SubmitChronicActivity extends BaseActivity
   private static final int REQUEST_CAPTURE_PERMISSIONS = 123;
   @Bind(R.id.toolbar) Toolbar toolbar;
   @Bind(R.id.medicalReportImagesPicker) CustomAttachmentPicker medicalReportImagesPicker;
-  @Bind(R.id.prescriptionImagesPicker) CustomAttachmentPicker prescriptionImagesPicker;
+  @Bind(R.id.identityCardImagesPicker) CustomAttachmentPicker identityCardImagesPicker;
+  @Bind(R.id.doctorConfirmationImagesPicker) CustomAttachmentPicker doctorConfirmationImagesPicker;
+  @Bind(R.id.otherDocumentsImagesPicker) CustomAttachmentPicker otherDocumentsImagesPicker;
   @Bind(R.id.providerNameET) EditText providerNameET;
 
   private ProgressDialog waitingDialog;
@@ -73,7 +75,9 @@ public class SubmitChronicActivity extends BaseActivity
     presenter = new SubmitChronicActivityPresenter(this, dataAccessHandler);
 
     hookupImagesPickerImages(medicalReportImagesPicker, 1);
-    hookupImagesPickerImages(prescriptionImagesPicker, 2);
+    hookupImagesPickerImages(identityCardImagesPicker, 2);
+    hookupImagesPickerImages(doctorConfirmationImagesPicker, 3);
+    hookupImagesPickerImages(otherDocumentsImagesPicker, 4);
   }
 
   @Override public void openChronicTrackActivity(Integer requestId) {
@@ -113,6 +117,7 @@ public class SubmitChronicActivity extends BaseActivity
 
           imagePaths.add(selectedImagePath);
         }
+        break;
     }
   }
 
@@ -124,8 +129,6 @@ public class SubmitChronicActivity extends BaseActivity
     if (imageFilesSize < imagePaths.size()) {
       startUploadImages(imageFilesSize);
     } else if (imagePaths.size() == imagePathsFinal.size()) {
-      Timber.d("Images and their paths are matching, upload");
-
       HashMap<String, RequestBody> attachments = constructSelectedImagesForRequest();
 
       presenter.submitChronicTreatment(

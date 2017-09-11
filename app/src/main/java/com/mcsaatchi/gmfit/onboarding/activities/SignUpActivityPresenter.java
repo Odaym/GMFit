@@ -19,10 +19,10 @@ class SignUpActivityPresenter {
     this.dataAccessHandler = dataAccessHandler;
   }
 
-  void signUserUp(final String full_name, final String email, final String password) {
+  void signUserUp(final String full_name, final String email, final String password, final String phone_number) {
     view.callDisplayWaitingDialog(R.string.signing_up_dialog_title);
 
-    dataAccessHandler.registerUser(full_name, email, password,
+    dataAccessHandler.registerUser(full_name, email, password, phone_number,
         new Callback<AuthenticationResponse>() {
           @Override public void onResponse(Call<AuthenticationResponse> call,
               Response<AuthenticationResponse> response) {
@@ -30,7 +30,7 @@ class SignUpActivityPresenter {
               case 200:
                 AuthenticationResponseInnerBody responseBody = response.body().getData().getBody();
 
-                view.saveUserSignUpDetails(responseBody.getToken(), full_name, email, password);
+                view.saveUserSignUpDetails(responseBody.getToken(), full_name, email, password, phone_number);
 
                 view.openAccountVerificationActivity();
 
@@ -71,7 +71,7 @@ class SignUpActivityPresenter {
   }
 
   interface SignUpActivityView extends BaseActivityPresenter.BaseActivityView {
-    void saveUserSignUpDetails(String accessToken, String full_name, String email, String password);
+    void saveUserSignUpDetails(String accessToken, String full_name, String email, String password, String phone_number);
 
     void openAccountVerificationActivity();
 

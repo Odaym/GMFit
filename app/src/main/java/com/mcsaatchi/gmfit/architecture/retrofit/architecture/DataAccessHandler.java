@@ -71,7 +71,7 @@ public interface DataAccessHandler {
 
   void signInUser(String email, String password, Callback<AuthenticationResponse> callback);
 
-  void registerUser(String full_name, String email, String password,
+  void registerUser(String full_name, String email, String password, String phone_number,
       Callback<AuthenticationResponse> callback);
 
   void signInUserSilently(String email, String password, Callback<AuthenticationResponse> callback);
@@ -224,8 +224,7 @@ public interface DataAccessHandler {
       Callback<GetNearbyClinicsResponse> callback);
 
   void applySearchFilters(String contractNo, int searchCtry, int searchCity,
-      String providerTypesCode, int fetchClosest,
-      Callback<GetNearbyClinicsResponse> callback);
+      String providerTypesCode, int fetchClosest, Callback<GetNearbyClinicsResponse> callback);
 
   void createNewRequest(RequestBody contractNo, RequestBody categ, RequestBody subCategId,
       RequestBody requestTypeId, RequestBody claimedAmount, RequestBody currencyCode,
