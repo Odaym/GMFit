@@ -41,6 +41,8 @@ import org.json.JSONObject;
 
 public class Helpers {
 
+  private static ResponseBody pdfResponseBody;
+
   public static RequestBody toRequestBody(String value) {
     return RequestBody.create(MediaType.parse("text/plain"), value);
   }
@@ -55,6 +57,14 @@ public class Helpers {
           (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
       imm.hideSoftInputFromWindow(currentFocus.getWindowToken(), 0);
     }
+  }
+
+  public static void setPDFResponseBody(ResponseBody responseBody) {
+    pdfResponseBody = responseBody;
+  }
+
+  public static InputStream getInputStreamFromPdfResponseBody() {
+    return pdfResponseBody.byteStream();
   }
 
   public static boolean validateFields(ArrayList<FormEditText> allFields) {

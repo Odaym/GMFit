@@ -4,8 +4,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
-import android.os.Environment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
@@ -18,6 +16,7 @@ import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.classes.GMFitApplication;
 import com.mcsaatchi.gmfit.architecture.retrofit.architecture.DataAccessHandlerImpl;
 import com.mcsaatchi.gmfit.common.Constants;
+import com.mcsaatchi.gmfit.common.activities.PDFViewerActivity;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.insurance.activities.approval_request.ApprovalRequestsTrackActivity;
 import com.mcsaatchi.gmfit.insurance.activities.approval_request.SubmitApprovalRequestActivity;
@@ -29,7 +28,6 @@ import com.mcsaatchi.gmfit.insurance.activities.inquiry.SubmitInquiryActivity;
 import com.mcsaatchi.gmfit.insurance.activities.reimbursement.ReimbursementTrackActivity;
 import com.mcsaatchi.gmfit.insurance.activities.reimbursement.SubmitReimbursementActivity;
 import com.mcsaatchi.gmfit.insurance.models.InsuranceOperationWidget;
-import java.io.File;
 import java.util.ArrayList;
 import javax.inject.Inject;
 import okhttp3.ResponseBody;
@@ -109,7 +107,9 @@ public class InsuranceOperationWidgetsGridAdapter
 
             switch (response.code()) {
               case 200:
-                String PDFname = "PolicyLimitation.pdf";
+                String PDFname = "GM Fit - "
+                    + prefs.getString(Constants.EXTRAS_USER_FULL_NAME, "")
+                    + " - Policy Limitation.pdf";
 
                 saveAndOpenPDF(response.body(), PDFname);
 
@@ -151,7 +151,9 @@ public class InsuranceOperationWidgetsGridAdapter
 
             switch (response.code()) {
               case 200:
-                String PDFname = "CoverageDescription.pdf";
+                String PDFname = "GM Fit - "
+                    + prefs.getString(Constants.EXTRAS_USER_FULL_NAME, "")
+                    + " - Coverage Description.pdf";
 
                 saveAndOpenPDF(response.body(), PDFname);
 
@@ -193,7 +195,9 @@ public class InsuranceOperationWidgetsGridAdapter
 
             switch (response.code()) {
               case 200:
-                String PDFname = "MembersGuide.pdf";
+                String PDFname = "GM Fit - "
+                    + prefs.getString(Constants.EXTRAS_USER_FULL_NAME, "")
+                    + " - Member's Guide.pdf";
 
                 saveAndOpenPDF(response.body(), PDFname);
 
@@ -212,19 +216,11 @@ public class InsuranceOperationWidgetsGridAdapter
   }
 
   private void saveAndOpenPDF(ResponseBody responseBody, String PDFname) {
-    Helpers.writeResponseBodyToDisk(responseBody, PDFname);
+    Helpers.setPDFResponseBody(responseBody);
 
-    File file = new File(Environment.getExternalStorageDirectory()
-        + File.separator
-        + "GMFit"
-        + File.separator
-        + PDFname);
-
-    Intent intent = new Intent(Intent.ACTION_VIEW);
-    intent.setDataAndType(Uri.fromFile(file), "application/pdf");
-    intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-    intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-    fragmentActivity.startActivity(Intent.createChooser(intent, "Open PDF with"));
+    Intent intent = new Intent(context, PDFViewerActivity.class);
+    intent.putExtra("PDF_FILE_NAME", PDFname);
+    fragmentActivity.startActivity(intent);
   }
 
   class RecyclerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

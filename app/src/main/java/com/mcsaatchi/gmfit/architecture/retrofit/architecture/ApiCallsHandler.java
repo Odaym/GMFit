@@ -1412,9 +1412,10 @@ public class ApiCallsHandler {
     });
   }
 
-  void getCRMIncidentNotes(String incidentId, final Callback<CRMNotesResponse> callback) {
-    Call<CRMNotesResponse> apiCall =
-        restClient.getGMFitService().getCRMIncidentNotes(new CRMNotesRequest(incidentId));
+  void getCRMIncidentNotes(String incidentId, String dbCountry,
+      final Callback<CRMNotesResponse> callback) {
+    Call<CRMNotesResponse> apiCall = restClient.getGMFitService()
+        .getCRMIncidentNotes(new CRMNotesRequest(incidentId, dbCountry));
 
     apiCall.enqueue(new Callback<CRMNotesResponse>() {
       @Override
@@ -1428,10 +1429,12 @@ public class ApiCallsHandler {
   }
 
   void addCRMNote(String incidentId, String subject, String noteText, String mimeType,
-      String fileName, String documentBody, final Callback<AddCRMNoteResponse> callback) {
+      String fileName, String documentBody, String dbCountry,
+      final Callback<AddCRMNoteResponse> callback) {
     Call<AddCRMNoteResponse> apiCall = restClient.getGMFitService()
         .addCRMNote(
-            new AddCRMNoteRequest(incidentId, subject, noteText, mimeType, fileName, documentBody));
+            new AddCRMNoteRequest(incidentId, subject, noteText, mimeType, fileName, documentBody,
+                dbCountry));
 
     apiCall.enqueue(new Callback<AddCRMNoteResponse>() {
       @Override
@@ -1825,9 +1828,11 @@ public class ApiCallsHandler {
 
   public class CRMNotesRequest {
     private String incidentId;
+    private String dbCountry;
 
-    CRMNotesRequest(String incidentId) {
+    CRMNotesRequest(String incidentId, String dbCountry) {
       this.incidentId = incidentId;
+      this.dbCountry = dbCountry;
     }
   }
 
@@ -1838,15 +1843,17 @@ public class ApiCallsHandler {
     String mimeType;
     String fileName;
     String documentBody;
+    String dbCountry;
 
     AddCRMNoteRequest(String incidentId, String subject, String noteText, String mimeType,
-        String fileName, String documentBody) {
+        String fileName, String documentBody, String dbCountry) {
       this.incidentId = incidentId;
       this.subject = subject;
       this.noteText = noteText;
       this.mimeType = mimeType;
       this.fileName = fileName;
       this.documentBody = documentBody;
+      this.dbCountry = dbCountry;
     }
   }
 

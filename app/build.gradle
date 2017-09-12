@@ -35,9 +35,9 @@ android {
     applicationId "com.mcsaatchi.gmfit"
     minSdkVersion 19
     targetSdkVersion 26
-    versionCode 21
+    versionCode 22
     multiDexEnabled true
-    versionName "2.6.4"
+    versionName "2.6.5"
     manifestPlaceholders = [onesignal_app_id               : "5eb5a37e-b458-11e3-ac11-000c2940e62c",
                             onesignal_google_project_number: "944339899462"]
   }
@@ -87,6 +87,7 @@ dependencies {
   compile "com.android.support:design:$supportLibVersion"
   compile 'com.code-troopers.betterpickers:library:2.5.3'
   compile 'com.github.florent37:materialtextfield:1.0.4'
+  compile 'com.github.barteksc:android-pdf-viewer:2.7.0'
   compile 'com.wrapp.floatlabelededittext:library:0.0.6'
   compile 'io.michaelrocks:libphonenumber-android:8.6.0'
   compile 'com.github.nguyenhoanglam:ImagePicker:1.1.2'

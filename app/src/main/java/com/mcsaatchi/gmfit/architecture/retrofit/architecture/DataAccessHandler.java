@@ -272,10 +272,12 @@ public interface DataAccessHandler {
   void getCounsellingInformation(String medCode,
       final Callback<CounsellingInformationResponse> callback);
 
-  void getCRMIncidentNotes(String incidentId, final Callback<CRMNotesResponse> callback);
+  void getCRMIncidentNotes(String incidentId, String dbCountry,
+      final Callback<CRMNotesResponse> callback);
 
   void sendInsurancePasswordResetLink(String email, Callback<DefaultGetResponse> callback);
 
   void addCRMNote(String incidentId, String subject, String noteText, String mimeType,
-      String fileName, String documentBody, final Callback<AddCRMNoteResponse> callback);
+      String fileName, String documentBody, String dbCountry,
+      final Callback<AddCRMNoteResponse> callback);
 }

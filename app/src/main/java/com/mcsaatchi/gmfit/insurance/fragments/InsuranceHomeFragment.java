@@ -4,9 +4,7 @@ import android.Manifest;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -27,13 +25,13 @@ import com.mcsaatchi.gmfit.architecture.classes.PermissionsChecker;
 import com.mcsaatchi.gmfit.architecture.retrofit.architecture.DataAccessHandlerImpl;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.InsuranceLoginResponseInnerData;
 import com.mcsaatchi.gmfit.common.Constants;
+import com.mcsaatchi.gmfit.common.activities.PDFViewerActivity;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.common.fragments.BaseFragment;
 import com.mcsaatchi.gmfit.insurance.activities.home.ContractsChoiceView;
 import com.mcsaatchi.gmfit.insurance.adapters.InsuranceOperationWidgetsGridAdapter;
 import com.mcsaatchi.gmfit.insurance.models.InsuranceContract;
 import com.mcsaatchi.gmfit.insurance.models.InsuranceOperationWidget;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
@@ -120,18 +118,12 @@ public class InsuranceHomeFragment extends BaseFragment
     return fragmentView;
   }
 
-  @Override public void saveAndOpenPDF(ResponseBody responseBody, String PDFname) {
-    Helpers.writeResponseBodyToDisk(responseBody, PDFname);
+  @Override public void saveAndOpenPDF(ResponseBody responseBody) {
+    Helpers.setPDFResponseBody(responseBody);
 
-    File file = new File(Environment.getExternalStorageDirectory()
-        + File.separator
-        + "GMFit"
-        + File.separator
-        + PDFname);
-
-    Intent intent = new Intent(Intent.ACTION_VIEW);
-    intent.setDataAndType(Uri.fromFile(file), "application/pdf");
-    intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+    Intent intent = new Intent(getActivity(), PDFViewerActivity.class);
+    intent.putExtra("PDF_FILE_NAME",
+        "GM Fit - " + prefs.getString(Constants.EXTRAS_USER_FULL_NAME, "") + " - Card Details.pdf");
     startActivity(intent);
   }
 
@@ -145,8 +137,7 @@ public class InsuranceHomeFragment extends BaseFragment
           new ContractsChoiceView((GMFitApplication) getActivity().getApplication(), getActivity(),
               insuranceContracts);
 
-      Button logoutContractButton =
-          (Button) contractsChoiceView.findViewById(R.id.logoutContractBTN);
+      Button logoutContractButton = contractsChoiceView.findViewById(R.id.logoutContractBTN);
 
       final Dialog contractChooserDialog = new Dialog(getActivity());
       contractChooserDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);

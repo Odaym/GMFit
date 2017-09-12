@@ -12,10 +12,12 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Marker;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.classes.GMFitApplication;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.GetNearbyClinicsResponseDatum;
 import com.mcsaatchi.gmfit.common.Constants;
 import javax.inject.Inject;
 
-public class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
+public class CustomInfoWindowAdapter
+    implements GoogleMap.InfoWindowAdapter {
 
   @Bind(R.id.open247Layout) LinearLayout open247Layout;
   @Bind(R.id.withinNetworkLayout) LinearLayout withinNetworkLayout;
@@ -24,9 +26,12 @@ public class CustomInfoWindowAdapter implements GoogleMap.InfoWindowAdapter {
   @Bind(R.id.linearLayout) LinearLayout linearLayout;
   @Inject SharedPreferences prefs;
   private Context context;
+  private GetNearbyClinicsResponseDatum clinic;
 
-  public CustomInfoWindowAdapter(GMFitApplication application, Context context) {
+  public CustomInfoWindowAdapter(GMFitApplication application, Context context,
+      GetNearbyClinicsResponseDatum clinic) {
     this.context = context;
+    this.clinic = clinic;
 
     application.getAppComponent().inject(this);
   }

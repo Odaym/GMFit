@@ -24,7 +24,7 @@ class SnapshotActivityPresenter {
       @Override public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
         switch (response.code()) {
           case 200:
-            view.saveAndOpenPDF(response.body(), "Snapshot.pdf");
+            view.saveAndOpenPDF(response.body());
             break;
         }
 
@@ -38,6 +38,6 @@ class SnapshotActivityPresenter {
   }
 
   interface SnapshotActivityView extends BaseActivityPresenter.BaseActivityView {
-    void saveAndOpenPDF(ResponseBody responseBody, String pdfData);
+    void saveAndOpenPDF(ResponseBody responseBody);
   }
 }

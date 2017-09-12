@@ -29,6 +29,7 @@ import com.andreabaccega.widget.FormEditText;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.CRMNotesResponseNoteAttribute;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.InquiriesListResponseInnerData;
+import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.common.classes.ImageHandler;
@@ -82,9 +83,8 @@ public class InquiryNotesActivity extends BaseActivity
       if (inquiryItem != null) {
         setupToolbar(getClass().getSimpleName(), toolbar, inquiryItem.getTitle(), true);
 
-        Timber.d("Incident id : " + inquiryItem.getIncidentId());
-
-        presenter.getCRMIncidentNotes(inquiryItem.getIncidentId());
+        presenter.getCRMIncidentNotes(inquiryItem.getIncidentId(),
+            prefs.getString(Constants.EXTRAS_INSURANCE_COUNTRY_CRM_CODE, ""));
       }
     }
   }
@@ -198,7 +198,8 @@ public class InquiryNotesActivity extends BaseActivity
       }
 
       addCRMNote(inquiryItem.getIncidentId(), null, yourReplyET.getText().toString(), "image/jpeg",
-          imageAttachment, documentBody);
+          imageAttachment, documentBody,
+          prefs.getString(Constants.EXTRAS_INSURANCE_COUNTRY_CRM_CODE, ""));
     }
   }
 
@@ -266,7 +267,7 @@ public class InquiryNotesActivity extends BaseActivity
   }
 
   private void addCRMNote(String incidentId, String subject, String noteText, String mimeType,
-      String fileName, String documentBody) {
+      String fileName, String documentBody, String dbCountry) {
     final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
     alertDialog.setTitle(R.string.submitting_data_dialog_title);
 
@@ -283,7 +284,7 @@ public class InquiryNotesActivity extends BaseActivity
 
     waitingDialog.setOnShowListener(
         dialogInterface -> presenter.addCRMNote(incidentId, subject, noteText, mimeType, fileName,
-            documentBody));
+            documentBody, dbCountry));
 
     waitingDialog.show();
   }

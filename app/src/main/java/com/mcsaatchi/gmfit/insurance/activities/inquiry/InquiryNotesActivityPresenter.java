@@ -23,9 +23,9 @@ class InquiryNotesActivityPresenter extends BaseActivityPresenter {
   }
 
   void addCRMNote(String incidentId, String subject, String noteText, String mimeType,
-      String fileName, String documentBody) {
+      String fileName, String documentBody, String dbCountry) {
     dataAccessHandler.addCRMNote(incidentId, subject, noteText, mimeType, fileName, documentBody,
-        new Callback<AddCRMNoteResponse>() {
+        dbCountry, new Callback<AddCRMNoteResponse>() {
 
           @Override public void onResponse(Call<AddCRMNoteResponse> call,
               Response<AddCRMNoteResponse> response) {
@@ -34,7 +34,7 @@ class InquiryNotesActivityPresenter extends BaseActivityPresenter {
               case 200:
                 view.clearViews();
 
-                getCRMIncidentNotes(incidentId);
+                getCRMIncidentNotes(incidentId, dbCountry);
                 break;
               case 449:
                 view.displayRequestErrorDialog(
@@ -51,10 +51,10 @@ class InquiryNotesActivityPresenter extends BaseActivityPresenter {
         });
   }
 
-  void getCRMIncidentNotes(String incidentId) {
+  void getCRMIncidentNotes(String incidentId, String dbCountry) {
     view.callDisplayWaitingDialog(R.string.loading_data_dialog_title);
 
-    dataAccessHandler.getCRMIncidentNotes(incidentId, new Callback<CRMNotesResponse>() {
+    dataAccessHandler.getCRMIncidentNotes(incidentId, dbCountry, new Callback<CRMNotesResponse>() {
       @Override
       public void onResponse(Call<CRMNotesResponse> call, Response<CRMNotesResponse> response) {
         switch (response.code()) {

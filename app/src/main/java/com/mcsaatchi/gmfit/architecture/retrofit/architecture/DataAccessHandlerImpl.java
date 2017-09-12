@@ -95,7 +95,8 @@ public class DataAccessHandlerImpl implements DataAccessHandler {
     apiCallsHandler.signInUser(email, password, callback);
   }
 
-  @Override public void registerUser(String full_name, String email, String password, String phone_number,
+  @Override
+  public void registerUser(String full_name, String email, String password, String phone_number,
       Callback<AuthenticationResponse> callback) {
     apiCallsHandler.registerUser(full_name, email, password, phone_number, callback);
   }
@@ -486,9 +487,9 @@ public class DataAccessHandlerImpl implements DataAccessHandler {
     apiCallsHandler.getCounsellingInformation(medCode, callback);
   }
 
-  @Override
-  public void getCRMIncidentNotes(String incidentId, final Callback<CRMNotesResponse> callback) {
-    apiCallsHandler.getCRMIncidentNotes(incidentId, callback);
+  @Override public void getCRMIncidentNotes(String incidentId, String dbCountry,
+      final Callback<CRMNotesResponse> callback) {
+    apiCallsHandler.getCRMIncidentNotes(incidentId, dbCountry, callback);
   }
 
   @Override
@@ -498,8 +499,9 @@ public class DataAccessHandlerImpl implements DataAccessHandler {
 
   @Override
   public void addCRMNote(String incidentId, String subject, String noteText, String mimeType,
-      String fileName, String documentBody, final Callback<AddCRMNoteResponse> callback) {
+      String fileName, String documentBody, String dbCountry,
+      final Callback<AddCRMNoteResponse> callback) {
     apiCallsHandler.addCRMNote(incidentId, subject, noteText, mimeType, fileName, documentBody,
-        callback);
+        dbCountry, callback);
   }
 }

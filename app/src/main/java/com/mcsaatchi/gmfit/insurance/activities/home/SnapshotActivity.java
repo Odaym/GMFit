@@ -1,9 +1,7 @@
 package com.mcsaatchi.gmfit.insurance.activities.home;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
@@ -13,8 +11,8 @@ import butterknife.ButterKnife;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
+import com.mcsaatchi.gmfit.common.activities.PDFViewerActivity;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
-import java.io.File;
 import okhttp3.ResponseBody;
 import org.joda.time.LocalDate;
 
@@ -56,18 +54,12 @@ public class SnapshotActivity extends BaseActivity
         prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""));
   }
 
-  @Override public void saveAndOpenPDF(ResponseBody responseBody, String PDFname) {
-    Helpers.writeResponseBodyToDisk(responseBody, PDFname);
+  @Override public void saveAndOpenPDF(ResponseBody responseBody) {
+    Helpers.setPDFResponseBody(responseBody);
 
-    File file = new File(Environment.getExternalStorageDirectory()
-        + File.separator
-        + "GMFit"
-        + File.separator
-        + PDFname);
-
-    Intent intent = new Intent(Intent.ACTION_VIEW);
-    intent.setDataAndType(Uri.fromFile(file), "application/pdf");
-    intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+    Intent intent = new Intent(this, PDFViewerActivity.class);
+    intent.putExtra("PDF_FILE_NAME",
+        "GM Fit - " + prefs.getString(Constants.EXTRAS_USER_FULL_NAME, "") + " - Snapshot.pdf");
     startActivity(intent);
   }
 }

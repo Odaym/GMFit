@@ -54,7 +54,8 @@ import static com.mcsaatchi.gmfit.insurance.activities.reimbursement.Reimburseme
 
 public class InsuranceDirectoryFragment extends BaseFragment
     implements InsuranceDirectoryFragmentPresenter.InsuranceDirectoryFragmentView,
-    OnMapReadyCallback {
+    OnMapReadyCallback{
+
   private static final int PERMISSION_LOCATION_REQUEST_CODE = 375;
 
   @Inject DataAccessHandlerImpl dataAccessHandler;
@@ -67,6 +68,8 @@ public class InsuranceDirectoryFragment extends BaseFragment
   @Bind(R.id.searchImage) ImageView searchImage;
   @Bind(R.id.searchResultsLayout) RelativeLayout searchResultsLayout;
   @Bind(R.id.clearFilterTV) TextView clearFilterTV;
+
+  private boolean searchBarClicked = false;
 
   private InsuranceDirectoryFragmentPresenter presenter;
   private List<GetNearbyClinicsResponseDatum> clinicsWithLocation = new ArrayList<>();
@@ -143,6 +146,12 @@ public class InsuranceDirectoryFragment extends BaseFragment
           displayClinicAddressesRecycler(clinicsWithLocation);
         }
       }
+    });
+
+    searchBarET.setOnTouchListener((view, motionEvent) -> {
+      if (!searchBarClicked) switchMapViewBTN.performClick();
+      searchBarClicked = !searchBarClicked;
+      return false;
     });
 
     return fragmentView;
@@ -274,6 +283,7 @@ public class InsuranceDirectoryFragment extends BaseFragment
   }
 
   @Override public void displaySearchResults(List<GetNearbyClinicsResponseDatum> searchResults) {
+    displayClinicAddressesRecycler(searchResults);
     addMarkersToMap(searchResults, true);
   }
 
@@ -404,18 +414,29 @@ public class InsuranceDirectoryFragment extends BaseFragment
       }
 
       try {
-        locationMarker = new MarkerOptions().position(
-            new LatLng(Double.parseDouble(validClinics.get(i).getLatitude()),
-                Double.parseDouble(validClinics.get(i).getLongitude())))
-            .title(validClinics.get(i).getName())
-            .snippet(snippet.toString())
-            .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_custom_map_marker));
+        if (validClinics.get(i).getLatitude() != null
+            && validClinics.get(i).getLongitude() != null) {
+          locationMarker = new MarkerOptions().position(
+              new LatLng(Double.parseDouble(validClinics.get(i).getLatitude()),
+                  Double.parseDouble(validClinics.get(i).getLongitude())))
+              .title(validClinics.get(i).getName())
+              .snippet(snippet.toString())
+              .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_custom_map_marker));
 
-        map.addMarker(locationMarker);
+          map.addMarker(locationMarker);
 
-        map.setInfoWindowAdapter(
-            new CustomInfoWindowAdapter((GMFitApplication) getActivity().getApplication(),
-                getActivity()));
+          map.setInfoWindowAdapter(
+              new CustomInfoWindowAdapter((GMFitApplication) getActivity().getApplication(),
+                  getActivity(), validClinics.get(i)));
+
+          GetNearbyClinicsResponseDatum clinic = validClinics.get(i);
+
+          //map.setOnInfoWindowClickListener(marker -> {
+          //  Intent intent = new Intent(getActivity(), ClinicDetailsActivity.class);
+          //  intent.putExtra("CLINIC_OBJECT", clinic);
+          //  getActivity().startActivity(intent);
+          //});
+        }
       } catch (NullPointerException ignored) {
       }
     }

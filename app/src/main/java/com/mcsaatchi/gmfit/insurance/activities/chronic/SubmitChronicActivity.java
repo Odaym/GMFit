@@ -11,7 +11,6 @@ import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import butterknife.Bind;
@@ -46,7 +45,6 @@ public class SubmitChronicActivity extends BaseActivity
   @Bind(R.id.identityCardImagesPicker) CustomAttachmentPicker identityCardImagesPicker;
   @Bind(R.id.doctorConfirmationImagesPicker) CustomAttachmentPicker doctorConfirmationImagesPicker;
   @Bind(R.id.otherDocumentsImagesPicker) CustomAttachmentPicker otherDocumentsImagesPicker;
-  @Bind(R.id.providerNameET) EditText providerNameET;
 
   private ProgressDialog waitingDialog;
   private File photoFile;

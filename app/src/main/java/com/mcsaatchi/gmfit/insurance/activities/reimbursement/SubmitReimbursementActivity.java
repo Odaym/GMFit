@@ -127,9 +127,9 @@ public class SubmitReimbursementActivity extends BaseActivity
       categoryValue = option;
 
       if (option.equals("In")) {
-        subCategoryPicker.disable();
+        subCategoryPicker.hide();
       } else {
-        subCategoryPicker.enable();
+        subCategoryPicker.show();
       }
     });
 

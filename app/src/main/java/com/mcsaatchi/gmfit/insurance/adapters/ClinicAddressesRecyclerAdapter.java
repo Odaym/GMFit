@@ -58,7 +58,7 @@ public class ClinicAddressesRecyclerAdapter extends RecyclerView.Adapter {
     public ViewHolder(View itemView) {
       super(itemView);
 
-      parentLayout = (LinearLayout) itemView.findViewById(R.id.parentLayout);
+      parentLayout = itemView.findViewById(R.id.parentLayout);
       clinicNameTV = itemView.findViewById(R.id.clinicNameTV);
       clinicAddressTV = itemView.findViewById(R.id.clinicAddressTV);
       withinNetworkIV = itemView.findViewById(R.id.withinNetworkIV);
@@ -67,34 +67,40 @@ public class ClinicAddressesRecyclerAdapter extends RecyclerView.Adapter {
     }
 
     public void bind(GetNearbyClinicsResponseDatum clinic) {
-      clinicNameTV.setText(WordUtils.capitalizeFully(clinic.getName()));
-      clinicAddressTV.setText(clinic.getAddress());
+      if (clinic.getName() != null
+          && clinic.getAddress() != null
+          && clinic.getOnline() != null
+          && clinic.getPartOfNetwork()
+          && clinic.getTwentyfourseven() != null) {
+        clinicNameTV.setText(WordUtils.capitalizeFully(clinic.getName()));
+        clinicAddressTV.setText(clinic.getAddress());
 
-      if (!prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, "").isEmpty()) {
-        if (clinic.getOnline() != null) {
-          if (clinic.getOnline()) {
-            onlineNowIV.setVisibility(View.VISIBLE);
+        if (!prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, "").isEmpty()) {
+          if (clinic.getOnline() != null) {
+            if (clinic.getOnline()) {
+              onlineNowIV.setVisibility(View.VISIBLE);
+            }
+          }
+
+          if (clinic.getPartOfNetwork() != null) {
+            if (clinic.getPartOfNetwork()) {
+              withinNetworkIV.setVisibility(View.VISIBLE);
+            }
+          }
+
+          if (clinic.getTwentyfourseven() != null) {
+            if (clinic.getTwentyfourseven()) {
+              open247IV.setVisibility(View.VISIBLE);
+            }
           }
         }
 
-        if (clinic.getPartOfNetwork() != null) {
-          if (clinic.getPartOfNetwork()) {
-            withinNetworkIV.setVisibility(View.VISIBLE);
-          }
-        }
-
-        if (clinic.getTwentyfourseven() != null) {
-          if (clinic.getTwentyfourseven()) {
-            open247IV.setVisibility(View.VISIBLE);
-          }
-        }
+        parentLayout.setOnClickListener(view -> {
+          Intent intent = new Intent(context, ClinicDetailsActivity.class);
+          intent.putExtra("CLINIC_OBJECT", clinicsList.get(getAdapterPosition()));
+          context.startActivity(intent);
+        });
       }
-
-      parentLayout.setOnClickListener(view -> {
-        Intent intent = new Intent(context, ClinicDetailsActivity.class);
-        intent.putExtra("CLINIC_OBJECT", clinicsList.get(getAdapterPosition()));
-        context.startActivity(intent);
-      });
     }
   }
 }

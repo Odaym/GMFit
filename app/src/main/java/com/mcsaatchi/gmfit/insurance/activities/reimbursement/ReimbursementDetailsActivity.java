@@ -11,7 +11,9 @@ import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.insurance.widget.CustomAttachmentPicker;
 import com.mcsaatchi.gmfit.insurance.widget.ItemLabel;
+import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 import org.joda.time.LocalDate;
 
 public class ReimbursementDetailsActivity extends BaseActivity
@@ -96,7 +98,10 @@ public class ReimbursementDetailsActivity extends BaseActivity
     setupToolbar(getClass().getSimpleName(), toolbar, "Reimbursement #" + claimDetails.getId(),
         true);
 
-    amount.setLabel("Amount", String.valueOf(claimDetails.getAmount()));
+    amount.setLabel("Amount",
+        String.valueOf(NumberFormat.getNumberInstance(Locale.US).format(claimDetails.getAmount()))
+            + " "
+            + claimDetails.getCurrency());
     serviceDate.setLabel("Service Date",
         Helpers.formatInsuranceDate(new LocalDate(claimDetails.getDate().split(" ")[0])));
     subCategory.setLabel("Sub Category", claimDetails.getSubcategory());

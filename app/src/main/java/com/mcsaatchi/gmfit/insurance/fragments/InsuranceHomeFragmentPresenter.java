@@ -25,7 +25,7 @@ class InsuranceHomeFragmentPresenter extends BaseFragmentPresenter {
       @Override public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
         switch (response.code()) {
           case 200:
-            view.saveAndOpenPDF(response.body(), "CardDetailsPDF.pdf");
+            view.saveAndOpenPDF(response.body());
             break;
         }
 
@@ -39,6 +39,6 @@ class InsuranceHomeFragmentPresenter extends BaseFragmentPresenter {
   }
 
   interface InsuranceHomeFragmentView extends BaseFragmentView {
-    void saveAndOpenPDF(ResponseBody responseBody, String PDFname);
+    void saveAndOpenPDF(ResponseBody responseBody);
   }
 }
