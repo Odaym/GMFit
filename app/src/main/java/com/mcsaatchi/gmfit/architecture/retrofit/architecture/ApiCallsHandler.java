@@ -1195,12 +1195,30 @@ public class ApiCallsHandler {
     });
   }
 
-  void createNewInquiryComplaint(RequestBody contractNo, RequestBody category,
-      RequestBody subcategory, RequestBody title, RequestBody area, RequestBody crm_country,
-      Map<String, RequestBody> attachements, final Callback<CreateNewRequestResponse> callback) {
+  void createNewInquiryComplaint(RequestBody contractNo, RequestBody crm_country,
+      RequestBody category, RequestBody subcategory, RequestBody area, RequestBody title,
+      RequestBody path, final Callback<CreateNewRequestResponse> callback) {
     Call<CreateNewRequestResponse> apiCall = restClient.getGMFitService()
-        .createNewInquiryComplaint(contractNo, category, subcategory, title, area, crm_country,
-            attachements);
+        .createNewInquiryComplaint(contractNo, crm_country, category, subcategory, area, title,
+            path);
+
+    apiCall.enqueue(new Callback<CreateNewRequestResponse>() {
+      @Override public void onResponse(Call<CreateNewRequestResponse> call,
+          Response<CreateNewRequestResponse> response) {
+        callback.onResponse(call, response);
+      }
+
+      @Override public void onFailure(Call<CreateNewRequestResponse> call, Throwable t) {
+      }
+    });
+  }
+
+  void createNewInquiryComplaintWithoutImage(RequestBody contractNo, RequestBody crm_country,
+      RequestBody category, RequestBody subcategory, RequestBody area, RequestBody title,
+      final Callback<CreateNewRequestResponse> callback) {
+    Call<CreateNewRequestResponse> apiCall = restClient.getGMFitService()
+        .createNewInquiryComplaintWithoutImage(contractNo, crm_country, category, subcategory, area,
+            title);
 
     apiCall.enqueue(new Callback<CreateNewRequestResponse>() {
       @Override public void onResponse(Call<CreateNewRequestResponse> call,

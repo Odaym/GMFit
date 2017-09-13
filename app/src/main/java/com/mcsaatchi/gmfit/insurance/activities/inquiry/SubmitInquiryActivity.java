@@ -1,7 +1,6 @@
 package com.mcsaatchi.gmfit.insurance.activities.inquiry;
 
 import android.Manifest;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -11,7 +10,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
-import android.util.Base64;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -21,11 +19,10 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.andreabaccega.widget.FormEditText;
 import com.mcsaatchi.gmfit.R;
-import com.mcsaatchi.gmfit.architecture.retrofit.responses.CRMCategoriesResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.CRMCategoriesResponseDatum;
-import com.mcsaatchi.gmfit.architecture.retrofit.responses.CreateNewRequestResponse;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
+import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.common.classes.ImageHandler;
 import com.mcsaatchi.gmfit.insurance.widget.CustomAttachmentPicker;
 import com.mcsaatchi.gmfit.insurance.widget.CustomPicker;
@@ -35,19 +32,17 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import timber.log.Timber;
 
+import static com.mcsaatchi.gmfit.common.classes.Helpers.toRequestBody;
 import static com.mcsaatchi.gmfit.insurance.widget.CustomAttachmentPicker.CAPTURE_NEW_PICTURE_REQUEST_CODE;
 import static com.mcsaatchi.gmfit.insurance.widget.CustomAttachmentPicker.REQUEST_PICK_IMAGE_GALLERY;
 
-public class SubmitInquiryActivity extends BaseActivity {
+public class SubmitInquiryActivity extends BaseActivity
+    implements SubmitInquiryActivityPresenter.SubmitInquiryActivityView {
 
   private static final int REQUEST_CAPTURE_PERMISSIONS = 123;
   @Bind(R.id.toolbar) Toolbar toolbar;
@@ -57,24 +52,23 @@ public class SubmitInquiryActivity extends BaseActivity {
   @Bind(R.id.fullNameET) EditText fullNameET;
   @Bind(R.id.riskCarrierET) EditText riskCarrierET;
   @Bind(R.id.cardNumberET) EditText cardNumberET;
-  @Bind(R.id.requestTitleTV) FormEditText requestTitleTV;
-  @Bind(R.id.medicalReportImagesPicker) CustomAttachmentPicker medicalReportImagesPicker;
+  @Bind(R.id.requestTitleET) FormEditText requestTitleET;
+  @Bind(R.id.optionalImageImagesPicker) CustomAttachmentPicker optionalImageImagesPicker;
   private File photoFile;
   private Uri photoFileUri;
 
   private ImageView currentImageView;
 
+  private SubmitInquiryActivityPresenter presenter;
+
   private ArrayList<String> imagePaths = new ArrayList<>();
-  private ArrayList<String> imagesDocumentTypes = new ArrayList<>();
+
   private List<CRMCategoriesResponseDatum> categoriesList;
+  private ArrayList<String> finalCategoryNames = new ArrayList<>();
 
   private String category = "";
   private String subcategory = "";
   private String area = "local";
-
-  public static RequestBody toRequestBody(String value) {
-    return RequestBody.create(MediaType.parse("text/plain"), value);
-  }
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -83,7 +77,13 @@ public class SubmitInquiryActivity extends BaseActivity {
     ButterKnife.bind(this);
     setupToolbar(getClass().getSimpleName(), toolbar, "Submit Complaint/Inquiry", true);
 
-    getCRMCategories();
+    optionalImageImagesPicker.hideRemainingImages();
+
+    presenter = new SubmitInquiryActivityPresenter(this, dataAccessHandler);
+
+    presenter.getCRMCategories(
+        Helpers.toRequestBody(prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, "")),
+        Helpers.toRequestBody(prefs.getString(Constants.EXTRAS_INSURANCE_COUNTRY_CRM_CODE, "")));
 
     cardNumberET.setText(prefs.getString(Constants.EXTRAS_INSURANCE_USER_USERNAME, ""));
     fullNameET.setText(prefs.getString(Constants.EXTRAS_INSURANCE_FULL_NAME, ""));
@@ -102,7 +102,7 @@ public class SubmitInquiryActivity extends BaseActivity {
           REQUEST_CAPTURE_PERMISSIONS);
     }
 
-    hookupImagesPickerImages(medicalReportImagesPicker, 1);
+    hookupImagesPickerImages(optionalImageImagesPicker);
   }
 
   @Override public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -134,6 +134,62 @@ public class SubmitInquiryActivity extends BaseActivity {
     }
   }
 
+  @Override public void startSubmitInquiryComplaint(String imagePath) {
+    if (imagePath == null) {
+      presenter.submitInquiryComplaintWithoutImage(
+          toRequestBody(prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, "")),
+          toRequestBody(prefs.getString(Constants.EXTRAS_INSURANCE_COUNTRY_CRM_CODE, "")),
+          toRequestBody(category), toRequestBody(subcategory), toRequestBody(area.toLowerCase()),
+          toRequestBody(requestTitleET.getText().toString()));
+    } else {
+      presenter.submitInquiryComplaint(
+          toRequestBody(prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, "")),
+          toRequestBody(prefs.getString(Constants.EXTRAS_INSURANCE_COUNTRY_CRM_CODE, "")),
+          toRequestBody(category), toRequestBody(subcategory), toRequestBody(area.toLowerCase()),
+          toRequestBody(requestTitleET.getText().toString()), toRequestBody(imagePath));
+    }
+  }
+
+  @Override public void setupCategoryAndSubCategoryPickerDropdown(
+      List<CRMCategoriesResponseDatum> crmCategoriesResponseDatumList) {
+    categoriesList = crmCategoriesResponseDatumList;
+
+    for (int i = 0; i < categoriesList.size(); i++) {
+      if (categoriesList.get(i).getName() != null) {
+        finalCategoryNames.add(categoriesList.get(i).getName());
+      }
+    }
+
+    categoryPicker.setUpDropDown("Category", "Choose a category",
+        finalCategoryNames.toArray(new String[finalCategoryNames.size()]), (index, selected) -> {
+          for (final CRMCategoriesResponseDatum categoriesResponseDatum : categoriesList) {
+            if (categoriesResponseDatum.getName() != null && categoriesResponseDatum.getName()
+                .equals(selected)) {
+              category = categoriesResponseDatum.getId();
+
+              List<String> subCategoryNames = new ArrayList<>();
+
+              for (int i = 0; i < categoriesResponseDatum.getSubs().size(); i++) {
+                if (categoriesResponseDatum.getSubs().get(i).getName() != null) {
+                  subCategoryNames.add(categoriesResponseDatum.getSubs().get(i).getName());
+                }
+              }
+
+              subCategoryPicker.setUpDropDown("SubCategory", "Choose a subcategory",
+                  subCategoryNames.toArray(new String[subCategoryNames.size()]),
+                  (index1, selected1) -> {
+                    for (int i = 0; i < categoriesResponseDatum.getSubs().size(); i++) {
+                      if (categoriesResponseDatum.getSubs().get(i).getName() != null
+                          && categoriesResponseDatum.getSubs().get(i).getName().equals(selected1)) {
+                        subcategory = categoriesResponseDatum.getSubs().get(i).getId();
+                      }
+                    }
+                  });
+            }
+          }
+        });
+  }
+
   @OnClick(R.id.submitInquiryBTN) public void handleSubmitInquiry() {
     ArrayList<String> errorMessages = new ArrayList<>();
 
@@ -142,6 +198,9 @@ public class SubmitInquiryActivity extends BaseActivity {
     }
     if (subcategory.isEmpty()) {
       errorMessages.add("The Subcategory field is required.");
+    }
+    if (requestTitleET.getText().toString().isEmpty()) {
+      errorMessages.add("The Title/Description field is required.");
     }
 
     if (!errorMessages.isEmpty()) {
@@ -158,22 +217,11 @@ public class SubmitInquiryActivity extends BaseActivity {
           (dialog, which) -> dialog.dismiss());
       alertDialog.show();
     } else {
-      final ProgressDialog waitingDialog = new ProgressDialog(this);
-      waitingDialog.setTitle(getResources().getString(R.string.submit_new_inquiry));
-      waitingDialog.setCancelable(false);
-      waitingDialog.setMessage(
-          getResources().getString(R.string.uploading_attachments_dialog_message));
-      waitingDialog.setOnShowListener(dialogInterface -> {
-        HashMap<String, RequestBody> attachments = constructSelectedImagesForRequest();
-
-        submitInquiryComplaint(attachments, waitingDialog);
-      });
-
-      waitingDialog.show();
+      startUploadImages(0);
     }
   }
 
-  private void hookupImagesPickerImages(CustomAttachmentPicker imagePicker, int documentType) {
+  private void hookupImagesPickerImages(CustomAttachmentPicker imagePicker) {
     LinearLayout parentLayout = (LinearLayout) imagePicker.getChildAt(0);
     final LinearLayout innerLayoutWithPickers = (LinearLayout) parentLayout.getChildAt(1);
 
@@ -181,13 +229,27 @@ public class SubmitInquiryActivity extends BaseActivity {
       if (innerLayoutWithPickers.getChildAt(i) instanceof ImageView) {
         final int finalI = i;
         innerLayoutWithPickers.getChildAt(i).setOnClickListener(view -> {
-          imagesDocumentTypes.add(String.valueOf(documentType));
-
           ImageView imageView = innerLayoutWithPickers.findViewById(
               innerLayoutWithPickers.getChildAt(finalI).getId());
           showImagePickerDialog(imageView);
         });
       }
+    }
+  }
+
+  private void startUploadImages(int imageFilesIndex) {
+    if (!imagePaths.isEmpty() && imagePaths.get(imageFilesIndex) != null) {
+      HashMap<String, RequestBody> insuranceImages = new HashMap<>();
+
+      File imageFile = new File(imagePaths.get(imageFilesIndex));
+
+      RequestBody imageFilePart = RequestBody.create(MediaType.parse("image/*"), imageFile);
+
+      insuranceImages.put("file\"; filename=\"" + imagePaths.get(imageFilesIndex), imageFilePart);
+
+      presenter.uploadInsuranceImage(insuranceImages);
+    } else {
+      startSubmitInquiryComplaint(null);
     }
   }
 
@@ -236,137 +298,5 @@ public class SubmitInquiryActivity extends BaseActivity {
       }
     });
     builderSingle.show();
-  }
-
-  private HashMap<String, RequestBody> constructSelectedImagesForRequest() {
-    LinkedHashMap<String, RequestBody> imageParts = new LinkedHashMap<>();
-
-    for (int i = 0; i < imagePaths.size(); i++) {
-      if (imagePaths.get(i) != null) {
-        imageParts.put("attachements[" + i + "][content]", toRequestBody(
-            Base64.encodeToString(ImageHandler.turnImageToByteArray(imagePaths.get(i)),
-                Base64.NO_WRAP)));
-        imageParts.put("attachements[" + i + "][documType]",
-            toRequestBody(imagesDocumentTypes.get(i)));
-        imageParts.put("attachements[" + i + "][name]", toRequestBody(imagePaths.get(i)));
-        imageParts.put("attachements[" + i + "][id]", toRequestBody(String.valueOf(i + 1)));
-      }
-    }
-
-    return imageParts;
-  }
-
-  private void submitInquiryComplaint(HashMap<String, RequestBody> attachements,
-      final ProgressDialog waitingDialog) {
-    final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-    alertDialog.setTitle(R.string.submit_new_inquiry);
-    alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getResources().getString(R.string.ok),
-        (dialog, which) -> {
-          dialog.dismiss();
-
-          if (waitingDialog.isShowing()) waitingDialog.dismiss();
-        });
-
-    dataAccessHandler.createNewInquiryComplaint(
-        toRequestBody(prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, "")),
-        toRequestBody(category), toRequestBody(subcategory),
-        toRequestBody(requestTitleTV.getText().toString()), toRequestBody(area.toLowerCase()),
-        toRequestBody(prefs.getString(Constants.EXTRAS_INSURANCE_COUNTRY_CRM_CODE, "")),
-        attachements, new Callback<CreateNewRequestResponse>() {
-          @Override public void onResponse(Call<CreateNewRequestResponse> call,
-              Response<CreateNewRequestResponse> response) {
-            switch (response.code()) {
-              case 200:
-                alertDialog.setMessage(getString(R.string.submission_successful_dialog_title));
-                alertDialog.show();
-
-                alertDialog.setOnDismissListener(dialogInterface -> finish());
-
-                //Intent intent = new Intent(SubmitInquiryActivity.this,
-                //    ReimbursementDetailsActivity.class);
-                //intent.putExtra(ReimbursementDetailsActivity.REIMBURSEMENT_REQUEST_ID,
-                //    response.body().getData().getBody().getData().getRequestId());
-                //
-                //startActivity(intent);
-                break;
-              case 449:
-                //view.displayRequestErrorDialog(Helpers.provideErrorStringFromJSON(response.errorBody()));
-                break;
-            }
-
-            waitingDialog.dismiss();
-          }
-
-          @Override public void onFailure(Call<CreateNewRequestResponse> call, Throwable t) {
-            Timber.d("Call failed with error : %s", t.getMessage());
-          }
-        });
-  }
-
-  private void getCRMCategories() {
-    final ProgressDialog waitingDialog = new ProgressDialog(this);
-    waitingDialog.setTitle(getResources().getString(R.string.loading_data_dialog_title));
-    waitingDialog.setMessage(getResources().getString(R.string.please_wait_dialog_message));
-    waitingDialog.show();
-
-    dataAccessHandler.getCRMCategories(
-        toRequestBody(prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, "")),
-        toRequestBody(prefs.getString(Constants.EXTRAS_INSURANCE_COUNTRY_CRM_CODE, "")),
-        new Callback<CRMCategoriesResponse>() {
-          @Override public void onResponse(Call<CRMCategoriesResponse> call,
-              Response<CRMCategoriesResponse> response) {
-            switch (response.code()) {
-              case 200:
-                waitingDialog.dismiss();
-
-                categoriesList = response.body().getData().getBody().getData();
-                ArrayList<String> finalCategoryNames = new ArrayList<>();
-
-                for (int i = 0; i < categoriesList.size(); i++) {
-                  if (categoriesList.get(i).getName() != null) {
-                    finalCategoryNames.add(categoriesList.get(i).getName());
-                  }
-                }
-
-                categoryPicker.setUpDropDown("Category", "Choose a category",
-                    finalCategoryNames.toArray(new String[finalCategoryNames.size()]),
-                    (index, selected) -> {
-                      for (final CRMCategoriesResponseDatum categoriesResponseDatum : categoriesList) {
-                        if (categoriesResponseDatum.getName() != null
-                            && categoriesResponseDatum.getName().equals(selected)) {
-                          category = categoriesResponseDatum.getId();
-
-                          List<String> subCategoryNames = new ArrayList<>();
-
-                          for (int i = 0; i < categoriesResponseDatum.getSubs().size(); i++) {
-                            if (categoriesResponseDatum.getSubs().get(i).getName() != null) {
-                              subCategoryNames.add(
-                                  categoriesResponseDatum.getSubs().get(i).getName());
-                            }
-                          }
-
-                          subCategoryPicker.setUpDropDown("SubCategory", "Choose a subcategory",
-                              subCategoryNames.toArray(new String[subCategoryNames.size()]),
-                              (index1, selected1) -> {
-                                for (int i = 0; i < categoriesResponseDatum.getSubs().size(); i++) {
-                                  if (categoriesResponseDatum.getSubs().get(i).getName() != null
-                                      && categoriesResponseDatum.getSubs()
-                                      .get(i)
-                                      .getName()
-                                      .equals(selected1)) {
-                                    subcategory = categoriesResponseDatum.getSubs().get(i).getId();
-                                  }
-                                }
-                              });
-                        }
-                      }
-                    });
-            }
-          }
-
-          @Override public void onFailure(Call<CRMCategoriesResponse> call, Throwable t) {
-            Timber.d("Call failed with error : %s", t.getMessage());
-          }
-        });
   }
 }

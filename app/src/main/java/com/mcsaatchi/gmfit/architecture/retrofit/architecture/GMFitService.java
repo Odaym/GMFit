@@ -254,8 +254,8 @@ public interface GMFitService {
   @POST("insurance/network/advanced-search") Call<GetNearbyClinicsResponse> applySearchFilters(
       @Body ApiCallsHandler.ApplySearchFiltersRequest applySearchFiltersRequest);
 
-  @POST("insurance/network/advanced-search") Call<GetNearbyClinicsResponse> applySearchFilters(
-      @Body ApiCallsHandler.ApplySearchFiltersRequestWithoutCity applySearchFiltersRequestWithoutCity);
+  @POST("insurance/network/advanced-search") Call<GetNearbyClinicsResponse> applySearchFilters(@Body
+      ApiCallsHandler.ApplySearchFiltersRequestWithoutCity applySearchFiltersRequestWithoutCity);
 
   @POST("insurance/snapshot/pdf") Call<ResponseBody> getSnapshot(
       @Body ApiCallsHandler.SnapShotRequest snapShotRequest);
@@ -266,11 +266,9 @@ public interface GMFitService {
   Call<CitiesListResponse> getCitiesList(
       @Body ApiCallsHandler.GetCitiesListRequest citiesListRequest);
 
-  @POST("insurance/providers/services")
-  Call<ServicesListResponse> getServicesList();
+  @POST("insurance/providers/services") Call<ServicesListResponse> getServicesList();
 
-  @POST("insurance/currencies")
-  Call<CurrenciesListResponse> getCurrenciesList();
+  @POST("insurance/currencies") Call<CurrenciesListResponse> getCurrenciesList();
 
   //HOME SCREEN
 
@@ -295,12 +293,18 @@ public interface GMFitService {
       @Part("providerCode") RequestBody providerCode, @Part("remarks") RequestBody remarks,
       @PartMap() Map<String, RequestBody> attachements);
 
-  @Multipart @POST("insurance/crm/request/create")
+  @Multipart @POST("insurance/crm/request/create_alt")
   Call<CreateNewRequestResponse> createNewInquiryComplaint(
-      @Part("contractNo") RequestBody contractNo, @Part("category") RequestBody category,
-      @Part("subcategory") RequestBody subcategory, @Part("title") RequestBody title,
-      @Part("area") RequestBody area, @Part("crm_country") RequestBody crm_country,
-      @PartMap() Map<String, RequestBody> attachements);
+      @Part("contractNo") RequestBody contractNo, @Part("crm_country") RequestBody crm_country,
+      @Part("category") RequestBody category, @Part("subcategory") RequestBody subcategory,
+      @Part("area") RequestBody area, @Part("title") RequestBody title,
+      @Part("path") RequestBody path);
+
+  @Multipart @POST("insurance/crm/request/create_alt")
+  Call<CreateNewRequestResponse> createNewInquiryComplaintWithoutImage(
+      @Part("contractNo") RequestBody contractNo, @Part("crm_country") RequestBody crm_country,
+      @Part("category") RequestBody category, @Part("subcategory") RequestBody subcategory,
+      @Part("area") RequestBody area, @Part("title") RequestBody title);
 
   @Multipart @POST("insurance/crm/categories") Call<CRMCategoriesResponse> getCRMCategories(
       @Part("contractNo") RequestBody contractNo, @Part("dbCountry") RequestBody dbCountry);

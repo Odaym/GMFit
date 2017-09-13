@@ -37,6 +37,13 @@ public class CustomAttachmentPicker extends LinearLayout {
     a.recycle();
   }
 
+  public void hideRemainingImages(){
+    imagePicker2.setVisibility(View.GONE);
+    imagePicker3.setVisibility(View.GONE);
+    imagePicker4.setVisibility(View.GONE);
+    imagePicker5.setVisibility(View.GONE);
+  }
+
   public ImageView returnImagePicker(int position) {
     switch (position) {
       case 0:

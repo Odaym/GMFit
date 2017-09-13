@@ -156,12 +156,12 @@
           />
 
       <com.andreabaccega.widget.FormEditText
-          android:id="@+id/requestTitleTV"
+          android:id="@+id/requestTitleET"
           android:layout_width="match_parent"
           android:layout_height="200dp"
           android:background="@color/white"
           android:gravity="top"
-          android:hint="Request Title"
+          android:hint="@string/submit_inquiry_request_title_hint"
           android:paddingEnd="@dimen/default_margin_2"
           android:paddingStart="@dimen/default_margin_2"
           android:paddingTop="@dimen/default_margin_2"
@@ -176,10 +176,10 @@
           />
 
       <com.mcsaatchi.gmfit.insurance.widget.CustomAttachmentPicker
-          android:id="@+id/medicalReportImagesPicker"
+          android:id="@+id/optionalImageImagesPicker"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          custom:header_text="Medical Report"
+          custom:header_text="@string/optional_image"
           />
 
       <Button

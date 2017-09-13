@@ -445,8 +445,10 @@
   <string name="deleting_chronic_treatment_dialog_title">Deleting Chronic Treatment</string>
   <string name="password_mismatch_chronic_deletion">The password you entered does not match your current password</string>
   <string name="chronic_treatment_deleted_successfully">Chronic treatment deleted successfully</string>
+  <string name="submit_inquiry_request_title_hint">Request Title</string>
   <string name="medical_report">Medical Report</string>
   <string name="identity_card">Identity Card</string>
+  <string name="optional_image">Optional Image</string>
   <string name="identity_card_passport">Identity Card / Passport</string>
   <string name="doctor_confirmation">Doctor Confirmation</string>
   <string name="invoice">Invoice</string>

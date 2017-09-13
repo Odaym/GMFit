@@ -240,7 +240,6 @@ public class SubmitReimbursementActivity extends BaseActivity
     if (imageFilesSize < imagePaths.size()) {
       startUploadImages(imageFilesSize);
     } else if (imagePaths.size() == imagePathsFinal.size()) {
-      Timber.d("Images and their paths are matching, upload");
 
       HashMap<String, RequestBody> attachments = constructSelectedImagesForRequest();
 
