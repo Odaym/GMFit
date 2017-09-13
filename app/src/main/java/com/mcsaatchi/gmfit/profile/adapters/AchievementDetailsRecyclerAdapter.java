@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import com.mcsaatchi.gmfit.R;
@@ -48,23 +47,25 @@ public class AchievementDetailsRecyclerAdapter extends RecyclerView.Adapter {
     holder.achievementNameTV.setText(achievementsResponseBodies.get(position).getName());
     holder.achievementDetailsTV.setText(achievementsResponseBodies.get(position).getDescription());
 
-    if (achievementsResponseBodies.get(position).getIsDone()) {
-      holder.achievementCompletionProgressLayout.setVisibility(View.VISIBLE);
-      holder.achievementCompletedDetailsTV.setVisibility(View.INVISIBLE);
-
-      holder.achievementCompletedPercentageTV.setText(
-          achievementsResponseBodies.get(position).getProgress() + "%");
-      holder.completionProgressBar.setProgress(
-          achievementsResponseBodies.get(position).getProgress());
+    String timeCounter;
+    if (achievementsResponseBodies.get(position).getFinishes() == 1) {
+      timeCounter = "time";
     } else {
-      holder.achievementCompletionProgressLayout.setVisibility(View.INVISIBLE);
-      holder.achievementCompletedDetailsTV.setVisibility(View.VISIBLE);
-
-      holder.achievementCompletedDetailsTV.setText(
-          achievementsResponseBodies.get(position).getFinishes()
-              + " times - Last completed: "
-              + achievementsResponseBodies.get(position).getLastFinish());
+      timeCounter = "times";
     }
+
+    holder.achievementDateCompletedTV.setText(
+        "Last completed: " + achievementsResponseBodies.get(position)
+            .getLastFinish()
+            .split(" ")[0]);
+
+    holder.achievementTimesCompletedTV.setText(
+        achievementsResponseBodies.get(position).getFinishes() + " " + timeCounter);
+
+    holder.achievementCompletedPercentageTV.setText(
+        achievementsResponseBodies.get(position).getProgress() + "%");
+    holder.completionProgressBar.setProgress(
+        achievementsResponseBodies.get(position).getProgress());
   }
 
   @Override public int getItemCount() {
@@ -80,26 +81,23 @@ public class AchievementDetailsRecyclerAdapter extends RecyclerView.Adapter {
     private ImageView achievementCompletedCheckmarkIV;
     private TextView achievementNameTV;
     private TextView achievementDetailsTV;
-    private TextView achievementCompletedDetailsTV;
+    private TextView achievementTimesCompletedTV;
+    private TextView achievementDateCompletedTV;
     private TextView achievementCompletedPercentageTV;
     private ProgressBar completionProgressBar;
-    private LinearLayout achievementCompletionProgressLayout;
 
     public ViewHolder(View itemView) {
       super(itemView);
 
-      achievementCompletionProgressLayout =
-          (LinearLayout) itemView.findViewById(R.id.achievementCompletionProgressLayout);
       achievementImageIV = itemView.findViewById(R.id.achievementImageIV);
-      achievementCompletedCheckmarkIV =
-          (ImageView) itemView.findViewById(R.id.achievementCompletedCheckmarkIV);
+      achievementCompletedCheckmarkIV = itemView.findViewById(R.id.achievementCompletedCheckmarkIV);
       achievementNameTV = itemView.findViewById(R.id.achievementNameTV);
       achievementDetailsTV = itemView.findViewById(R.id.achievementDetailsTV);
-      achievementCompletedDetailsTV =
-          (TextView) itemView.findViewById(R.id.achievementCompletedDetailsTV);
+      achievementTimesCompletedTV = itemView.findViewById(R.id.achievementTimesCompletedTV);
+      achievementDateCompletedTV = itemView.findViewById(R.id.achievementDateCompletedTV);
       achievementCompletedPercentageTV =
-          (TextView) itemView.findViewById(R.id.achievementCompletedPercentageTV);
-      completionProgressBar = (ProgressBar) itemView.findViewById(R.id.completionProgressBar);
+          itemView.findViewById(R.id.achievementCompletedPercentageTV);
+      completionProgressBar = itemView.findViewById(R.id.completionProgressBar);
     }
   }
 }

@@ -59,9 +59,17 @@
         >
 
       <TextView
-          android:id="@+id/achievementCompletedDetailsTV"
+          android:id="@+id/achievementTimesCompletedTV"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
+          android:textColor="@color/profile_blue"
+          />
+
+      <TextView
+          android:id="@+id/achievementDateCompletedTV"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_below="@+id/achievementTimesCompletedTV"
           android:textColor="@color/profile_blue"
           />
 
@@ -69,8 +77,10 @@
           android:id="@+id/achievementCompletionProgressLayout"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
+          android:layout_below="@+id/achievementDateCompletedTV"
+          android:layout_marginTop="@dimen/default_margin_1"
           android:gravity="center_vertical"
-          android:visibility="gone"
+          android:orientation="horizontal"
           >
 
         <TextView

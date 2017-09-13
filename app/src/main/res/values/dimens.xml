@@ -141,7 +141,7 @@
   <dimen name="edit_profile_fields_width">150dp</dimen>
   <dimen name="social_media_icons_profile">40dp</dimen>
   <dimen name="achievement_details_progress_bar_width">150dp</dimen>
-  <dimen name="achievement_details_cell_height">100dp</dimen>
+  <dimen name="achievement_details_cell_height">120dp</dimen>
   <dimen name="achievements_cell_item_dimens">60dp</dimen>
   <dimen name="achievement_checkmark_icon_inside_recycler_dimens">15dp</dimen>
   <dimen name="achievement_progress_bar_height">20dp</dimen>
