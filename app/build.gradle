@@ -35,9 +35,9 @@ android {
     applicationId "com.mcsaatchi.gmfit"
     minSdkVersion 19
     targetSdkVersion 26
-    versionCode 22
+    versionCode 23
     multiDexEnabled true
-    versionName "2.6.5"
+    versionName "2.6.6"
     manifestPlaceholders = [onesignal_app_id               : "5eb5a37e-b458-11e3-ac11-000c2940e62c",
                             onesignal_google_project_number: "944339899462"]
   }
