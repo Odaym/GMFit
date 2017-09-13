@@ -58,8 +58,9 @@ public class SnapshotActivity extends BaseActivity
     Helpers.setPDFResponseBody(responseBody);
 
     Intent intent = new Intent(this, PDFViewerActivity.class);
-    intent.putExtra("PDF_FILE_NAME",
-        "GM Fit - " + prefs.getString(Constants.EXTRAS_USER_FULL_NAME, "") + " - Snapshot.pdf");
+    intent.putExtra("PDF_FILE_NAME", "GM Fit - "
+        + prefs.getString(Constants.EXTRAS_USER_PROFILE_USER_FULL_NAME, "")
+        + " - Snapshot.pdf");
     startActivity(intent);
   }
 }

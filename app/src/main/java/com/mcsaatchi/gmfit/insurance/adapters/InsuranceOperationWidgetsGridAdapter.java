@@ -108,7 +108,7 @@ public class InsuranceOperationWidgetsGridAdapter
             switch (response.code()) {
               case 200:
                 String PDFname = "GM Fit - "
-                    + prefs.getString(Constants.EXTRAS_USER_FULL_NAME, "")
+                    + prefs.getString(Constants.EXTRAS_USER_PROFILE_USER_FULL_NAME, "")
                     + " - Policy Limitation.pdf";
 
                 saveAndOpenPDF(response.body(), PDFname);
@@ -152,7 +152,7 @@ public class InsuranceOperationWidgetsGridAdapter
             switch (response.code()) {
               case 200:
                 String PDFname = "GM Fit - "
-                    + prefs.getString(Constants.EXTRAS_USER_FULL_NAME, "")
+                    + prefs.getString(Constants.EXTRAS_USER_PROFILE_USER_FULL_NAME, "")
                     + " - Coverage Description.pdf";
 
                 saveAndOpenPDF(response.body(), PDFname);
@@ -196,7 +196,7 @@ public class InsuranceOperationWidgetsGridAdapter
             switch (response.code()) {
               case 200:
                 String PDFname = "GM Fit - "
-                    + prefs.getString(Constants.EXTRAS_USER_FULL_NAME, "")
+                    + prefs.getString(Constants.EXTRAS_USER_PROFILE_USER_FULL_NAME, "")
                     + " - Member's Guide.pdf";
 
                 saveAndOpenPDF(response.body(), PDFname);

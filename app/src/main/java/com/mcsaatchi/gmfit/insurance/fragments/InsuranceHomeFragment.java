@@ -122,8 +122,9 @@ public class InsuranceHomeFragment extends BaseFragment
     Helpers.setPDFResponseBody(responseBody);
 
     Intent intent = new Intent(getActivity(), PDFViewerActivity.class);
-    intent.putExtra("PDF_FILE_NAME",
-        "GM Fit - " + prefs.getString(Constants.EXTRAS_USER_FULL_NAME, "") + " - Card Details.pdf");
+    intent.putExtra("PDF_FILE_NAME", "GM Fit - "
+        + prefs.getString(Constants.EXTRAS_USER_PROFILE_USER_FULL_NAME, "")
+        + " - Card Details.pdf");
     startActivity(intent);
   }
 
