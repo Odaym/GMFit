@@ -84,8 +84,6 @@ public class ChronicStatusAdapter extends RecyclerView.Adapter {
       parentLayout.setOnClickListener(view -> {
         Intent intent = new Intent(context, ChronicDetailsActivity.class);
         intent.putExtra("CHRONIC_OBJECT", treatmentsList.get(getAdapterPosition()));
-        //intent.putExtra(Constants.EXTRAS_PURPOSE_EDIT_MEDICATION_REMINDER, true);
-        //intent.putExtra(Constants.EXTRAS_MEDICATION_REMINDER_ITEM, medicationItem);
         context.startActivity(intent);
       });
     }

@@ -21,7 +21,7 @@ class ChronicDeletionActivityPresenter extends BaseActivityPresenter {
   void deleteChronicTreatment(String contractNo, String requestID, String requestType) {
     view.callDisplayWaitingDialog(R.string.deleting_chronic_treatment_dialog_title);
 
-    dataAccessHandler.deleteChronicTreatment(contractNo, requestID, "4",
+    dataAccessHandler.deleteChronicTreatment(contractNo, requestID, requestType,
         new Callback<ChronicDeletionResponse>() {
           @Override public void onResponse(Call<ChronicDeletionResponse> call,
               Response<ChronicDeletionResponse> response) {

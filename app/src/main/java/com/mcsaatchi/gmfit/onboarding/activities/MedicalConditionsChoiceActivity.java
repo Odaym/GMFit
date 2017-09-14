@@ -16,7 +16,6 @@ import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.onboarding.models.MedicalCondition;
 import java.util.ArrayList;
-import timber.log.Timber;
 
 import static com.mcsaatchi.gmfit.onboarding.fragments.SetupProfile4Fragment.MEDICAL_CONDITIONS_SELECTED;
 
@@ -39,8 +38,6 @@ public class MedicalConditionsChoiceActivity extends BaseActivity {
     if (getIntent().getExtras() != null) {
       medicalConditions = getIntent().getExtras().getParcelableArrayList("MEDICAL_CONDITIONS");
     }
-
-    Timber.d("medical conditions size before setup : " + medicalConditions.size());
 
     setMedicalConditionsChoiceList(medicalConditions);
   }
@@ -70,13 +67,12 @@ public class MedicalConditionsChoiceActivity extends BaseActivity {
   private void setMedicalConditionsChoiceList(ArrayList<MedicalCondition> medicalConditions) {
     ArrayList<CheckBox> allCheckBoxes = new ArrayList<>();
 
-    Timber.d("medical conditions size inside setup : " + medicalConditions.size());
 
     for (int i = 0; i < medicalConditions.size(); i++) {
       View itemView = LayoutInflater.from(this)
           .inflate(R.layout.list_item_medical_condition_choice, medicalChoicesContainer, false);
 
-      CheckBox medicalCheckbox = (CheckBox) itemView.findViewById(R.id.medicalCheckbox);
+      CheckBox medicalCheckbox = itemView.findViewById(R.id.medicalCheckbox);
 
       medicalCheckbox.setText(medicalConditions.get(i).getMedicalCondition());
 
@@ -85,11 +81,16 @@ public class MedicalConditionsChoiceActivity extends BaseActivity {
       }
 
       int tempI = i;
+
       medicalCheckbox.setOnCheckedChangeListener((compoundButton, selected) -> {
         if (medicalCheckbox.getText().equals("None")) {
           for (int j = 0; j < allCheckBoxes.size(); j++) {
             allCheckBoxes.get(j).setChecked(false);
             medicalConditions.get(j).setSelected(false);
+
+            if (medicalConditions.get(j).getMedicalCondition().equals("None")) {
+              medicalConditions.get(j).setSelected(true);
+            }
           }
         } else {
           medicalConditions.get(tempI).setSelected(selected);

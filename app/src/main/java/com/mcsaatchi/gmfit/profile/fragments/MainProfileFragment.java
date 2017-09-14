@@ -195,16 +195,25 @@ public class MainProfileFragment extends BaseFragment
 
           medicalConditionIDs.clear();
 
+          boolean nothingSelected = true;
+
           if (conditionsFromExtras != null) {
             for (int i = 0; i < conditionsFromExtras.size(); i++) {
               if (conditionsFromExtras.get(i).isSelected()) {
                 if (conditionsFromExtras.get(i).getMedicalCondition().equals("None")) {
-                  valueForCondition += "None";
+                  valueForCondition += "";
+                  medicalConditionIDs.add(-1);
                 } else {
+                  nothingSelected = false;
                   medicalConditionIDs.add(conditionsFromExtras.get(i).getId());
                   valueForCondition += conditionsFromExtras.get(i).getMedicalCondition() + ", ";
                 }
               }
+            }
+
+            if (nothingSelected) {
+              valueForCondition += "";
+              medicalConditionIDs.add(-1);
             }
 
             medicalConditionsValueTV.setText(valueForCondition.replaceAll(", $", ""));
@@ -554,15 +563,13 @@ public class MainProfileFragment extends BaseFragment
     View dialogView =
         LayoutInflater.from(getActivity()).inflate(R.layout.profile_edit_goal_dialog, null);
 
-    final RadioGroup goalRadioButtonsGroup =
-        (RadioGroup) dialogView.findViewById(R.id.goalRadioButtonsGroup);
+    final RadioGroup goalRadioButtonsGroup = dialogView.findViewById(R.id.goalRadioButtonsGroup);
 
     for (int i = 0; i < userGoals.size(); i++) {
       View listItemRadioButton =
           getActivity().getLayoutInflater().inflate(R.layout.list_item_edit_goal_dialog, null);
 
-      final RadioButton radioButtonItem =
-          (RadioButton) listItemRadioButton.findViewById(R.id.editGoalRadioBTN);
+      final RadioButton radioButtonItem = listItemRadioButton.findViewById(R.id.editGoalRadioBTN);
       radioButtonItem.setText(userGoals.get(i).getName());
       radioButtonItem.setId(Integer.parseInt(userGoals.get(i).getId()));
 
@@ -577,8 +584,8 @@ public class MainProfileFragment extends BaseFragment
 
     dialogBuilder.setView(dialogView);
     dialogBuilder.setPositiveButton(R.string.ok, (dialogInterface, i) -> {
-      RadioButton selectedRadioButton = (RadioButton) goalRadioButtonsGroup.findViewById(
-          goalRadioButtonsGroup.getCheckedRadioButtonId());
+      RadioButton selectedRadioButton =
+          goalRadioButtonsGroup.findViewById(goalRadioButtonsGroup.getCheckedRadioButtonId());
 
       int newUserGoalId = selectedRadioButton.getId();
       String newUserGoalText = selectedRadioButton.getText().toString();
@@ -605,14 +612,14 @@ public class MainProfileFragment extends BaseFragment
         .inflate(R.layout.profile_edit_radio_options_layout, null);
 
     final RadioGroupPlus activityLevelRadioGRP =
-        (RadioGroupPlus) dialogView.findViewById(R.id.collectionsRadioGroup);
+        dialogView.findViewById(R.id.collectionsRadioGroup);
 
     for (int i = 0; i < userActivityLevels.size(); i++) {
       View listItemRadioButton = getActivity().getLayoutInflater()
           .inflate(R.layout.list_item_edit_radio_options_dialog, null);
 
       final RadioButton radioButtonItem =
-          (RadioButton) listItemRadioButton.findViewById(R.id.editRadioOptionsRadioBTN);
+          listItemRadioButton.findViewById(R.id.editRadioOptionsRadioBTN);
       radioButtonItem.setText(userActivityLevels.get(i).getName());
       radioButtonItem.setId(Integer.parseInt(userActivityLevels.get(i).getId()));
 
@@ -627,8 +634,8 @@ public class MainProfileFragment extends BaseFragment
 
     dialogBuilder.setView(dialogView);
     dialogBuilder.setPositiveButton(R.string.ok, (dialogInterface, position) -> {
-      RadioButton selectedRadioButton = (RadioButton) activityLevelRadioGRP.findViewById(
-          activityLevelRadioGRP.getCheckedRadioButtonId());
+      RadioButton selectedRadioButton =
+          activityLevelRadioGRP.findViewById(activityLevelRadioGRP.getCheckedRadioButtonId());
 
       if (selectedRadioButton != null) {
         activityLevelsEntryValueTV.setText(selectedRadioButton.getText().toString());
