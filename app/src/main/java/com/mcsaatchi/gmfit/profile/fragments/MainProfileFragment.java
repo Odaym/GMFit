@@ -417,7 +417,6 @@ public class MainProfileFragment extends BaseFragment
     prefs.edit().putString(Constants.EXTRAS_INSURANCE_COUNTRY_ISO_CODE, "").apply();
 
     if (!prefs.getString(Constants.EXTRAS_USER_FACEBOOK_TOKEN, "-1").equals("-1")) {
-      FacebookSdk.sdkInitialize(getActivity());
       LoginManager.getInstance().logOut();
       prefs.edit().putString(Constants.EXTRAS_USER_FACEBOOK_TOKEN, "-1").apply();
     }
@@ -774,9 +773,11 @@ public class MainProfileFragment extends BaseFragment
   private void openTakePictureIntent() {
     Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
     if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+
       photoFile = null;
       try {
         photoFile = createImageFile(constructImageFilename());
+        FacebookSdk.sdkInitialize(getActivity());
         photoFileUri = FileProvider.getUriForFile(getActivity(),
             getApplicationContext().getPackageName() + ".provider", photoFile);
       } catch (IOException ex) {

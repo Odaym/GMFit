@@ -49,6 +49,7 @@
         android:id="@+id/achievementDetailsTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:paddingEnd="@dimen/default_margin_1"
         android:textColor="@color/grey"
         />
 

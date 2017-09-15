@@ -155,18 +155,41 @@
           custom:header_text="@string/title_and_description_label"
           />
 
-      <com.andreabaccega.widget.FormEditText
-          android:id="@+id/requestTitleET"
+      <LinearLayout
           android:layout_width="match_parent"
-          android:layout_height="200dp"
-          android:background="@color/white"
-          android:gravity="top"
-          android:hint="@string/submit_inquiry_request_title_hint"
-          android:paddingEnd="@dimen/default_margin_2"
-          android:paddingStart="@dimen/default_margin_2"
-          android:paddingTop="@dimen/default_margin_2"
-          android:textSize="15sp"
-          />
+          android:layout_height="@dimen/request_title_and_description_layout_height"
+          android:orientation="vertical"
+          >
+
+        <com.andreabaccega.widget.FormEditText
+            android:id="@+id/requestTitleET"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:gravity="top"
+            android:hint="@string/submit_inquiry_request_title_hint"
+            android:maxLength="50"
+            android:maxLines="1"
+            android:paddingBottom="@dimen/default_margin_2"
+            android:paddingEnd="@dimen/default_margin_2"
+            android:paddingStart="@dimen/default_margin_2"
+            android:paddingTop="@dimen/default_margin_2"
+            android:textSize="15sp"
+            />
+
+        <com.andreabaccega.widget.FormEditText
+            android:id="@+id/requestDescriptionET"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:gravity="top"
+            android:hint="@string/submit_inquiry_request_description_hint"
+            android:paddingEnd="@dimen/default_margin_2"
+            android:paddingStart="@dimen/default_margin_2"
+            android:paddingTop="@dimen/default_margin_2"
+            android:textSize="15sp"
+            />
+      </LinearLayout>
 
       <com.mcsaatchi.gmfit.insurance.widget.ItemHeader
           android:layout_width="match_parent"

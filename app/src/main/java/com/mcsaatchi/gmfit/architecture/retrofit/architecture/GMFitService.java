@@ -298,13 +298,14 @@ public interface GMFitService {
       @Part("contractNo") RequestBody contractNo, @Part("crm_country") RequestBody crm_country,
       @Part("category") RequestBody category, @Part("subcategory") RequestBody subcategory,
       @Part("area") RequestBody area, @Part("title") RequestBody title,
-      @Part("path") RequestBody path);
+      @Part("description") RequestBody description, @Part("path") RequestBody path);
 
   @Multipart @POST("insurance/crm/request/create_alt")
   Call<CreateNewRequestResponse> createNewInquiryComplaintWithoutImage(
       @Part("contractNo") RequestBody contractNo, @Part("crm_country") RequestBody crm_country,
       @Part("category") RequestBody category, @Part("subcategory") RequestBody subcategory,
-      @Part("area") RequestBody area, @Part("title") RequestBody title);
+      @Part("area") RequestBody area, @Part("title") RequestBody title,
+      @Part("description") RequestBody description);
 
   @Multipart @POST("insurance/crm/categories") Call<CRMCategoriesResponse> getCRMCategories(
       @Part("contractNo") RequestBody contractNo, @Part("dbCountry") RequestBody dbCountry);

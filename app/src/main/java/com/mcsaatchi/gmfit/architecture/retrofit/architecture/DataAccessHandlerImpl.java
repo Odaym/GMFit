@@ -418,17 +418,18 @@ public class DataAccessHandlerImpl implements DataAccessHandler {
 
   @Override public void createNewInquiryComplaint(RequestBody contractNo, RequestBody crm_country,
       RequestBody category, RequestBody subcategory, RequestBody area, RequestBody title,
-      RequestBody path, final Callback<CreateNewRequestResponse> callback) {
+      RequestBody description, RequestBody path,
+      final Callback<CreateNewRequestResponse> callback) {
     apiCallsHandler.createNewInquiryComplaint(contractNo, crm_country, category, subcategory, area,
-        title, path, callback);
+        title, description, path, callback);
   }
 
   @Override
   public void createNewInquiryComplaintWithoutImage(RequestBody contractNo, RequestBody crm_country,
       RequestBody category, RequestBody subcategory, RequestBody area, RequestBody title,
-      final Callback<CreateNewRequestResponse> callback) {
-    apiCallsHandler.createNewInquiryComplaintWithoutImage(contractNo, crm_country, category, subcategory, area,
-        title, callback);
+      RequestBody description, final Callback<CreateNewRequestResponse> callback) {
+    apiCallsHandler.createNewInquiryComplaintWithoutImage(contractNo, crm_country, category,
+        subcategory, area, title, description, callback);
   }
 
   @Override public void getCountriesList(final Callback<CountriesListResponse> callback) {

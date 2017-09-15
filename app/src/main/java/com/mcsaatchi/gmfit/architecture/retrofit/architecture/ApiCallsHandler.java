@@ -1197,10 +1197,11 @@ public class ApiCallsHandler {
 
   void createNewInquiryComplaint(RequestBody contractNo, RequestBody crm_country,
       RequestBody category, RequestBody subcategory, RequestBody area, RequestBody title,
-      RequestBody path, final Callback<CreateNewRequestResponse> callback) {
+      RequestBody description, RequestBody path,
+      final Callback<CreateNewRequestResponse> callback) {
     Call<CreateNewRequestResponse> apiCall = restClient.getGMFitService()
         .createNewInquiryComplaint(contractNo, crm_country, category, subcategory, area, title,
-            path);
+            description, path);
 
     apiCall.enqueue(new Callback<CreateNewRequestResponse>() {
       @Override public void onResponse(Call<CreateNewRequestResponse> call,
@@ -1215,10 +1216,10 @@ public class ApiCallsHandler {
 
   void createNewInquiryComplaintWithoutImage(RequestBody contractNo, RequestBody crm_country,
       RequestBody category, RequestBody subcategory, RequestBody area, RequestBody title,
-      final Callback<CreateNewRequestResponse> callback) {
+      RequestBody description, final Callback<CreateNewRequestResponse> callback) {
     Call<CreateNewRequestResponse> apiCall = restClient.getGMFitService()
         .createNewInquiryComplaintWithoutImage(contractNo, crm_country, category, subcategory, area,
-            title);
+            title, description);
 
     apiCall.enqueue(new Callback<CreateNewRequestResponse>() {
       @Override public void onResponse(Call<CreateNewRequestResponse> call,

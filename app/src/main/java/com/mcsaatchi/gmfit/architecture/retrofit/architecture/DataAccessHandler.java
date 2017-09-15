@@ -233,11 +233,11 @@ public interface DataAccessHandler {
 
   void createNewInquiryComplaint(RequestBody contractNo, RequestBody crm_country,
       RequestBody category, RequestBody subcategory, RequestBody area, RequestBody title,
-      RequestBody path, final Callback<CreateNewRequestResponse> callback);
+      RequestBody description, RequestBody path, final Callback<CreateNewRequestResponse> callback);
 
   void createNewInquiryComplaintWithoutImage(RequestBody contractNo, RequestBody crm_country,
       RequestBody category, RequestBody subcategory, RequestBody area, RequestBody title,
-      final Callback<CreateNewRequestResponse> callback);
+      RequestBody description, final Callback<CreateNewRequestResponse> callback);
 
   void uploadInsuranceImage(Map<String, RequestBody> file,
       Callback<UploadInsuranceImageResponse> callback);

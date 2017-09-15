@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <dimen name="date_carousel_indicator_dimens">25dp</dimen>
+  <dimen name="date_carousel_items_font_size_normal">12sp</dimen>
+  <dimen name="date_carousel_items_font_size_large">15sp</dimen>
+</resources>

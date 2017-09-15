@@ -53,6 +53,7 @@ public class SubmitInquiryActivity extends BaseActivity
   @Bind(R.id.riskCarrierET) EditText riskCarrierET;
   @Bind(R.id.cardNumberET) EditText cardNumberET;
   @Bind(R.id.requestTitleET) FormEditText requestTitleET;
+  @Bind(R.id.requestDescriptionET) FormEditText requestDescriptionET;
   @Bind(R.id.optionalImageImagesPicker) CustomAttachmentPicker optionalImageImagesPicker;
   private File photoFile;
   private Uri photoFileUri;
@@ -140,13 +141,15 @@ public class SubmitInquiryActivity extends BaseActivity
           toRequestBody(prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, "")),
           toRequestBody(prefs.getString(Constants.EXTRAS_INSURANCE_COUNTRY_CRM_CODE, "")),
           toRequestBody(category), toRequestBody(subcategory), toRequestBody(area.toLowerCase()),
-          toRequestBody(requestTitleET.getText().toString()));
+          toRequestBody(requestTitleET.getText().toString()),
+          toRequestBody(requestDescriptionET.getText().toString()));
     } else {
       presenter.submitInquiryComplaint(
           toRequestBody(prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, "")),
           toRequestBody(prefs.getString(Constants.EXTRAS_INSURANCE_COUNTRY_CRM_CODE, "")),
           toRequestBody(category), toRequestBody(subcategory), toRequestBody(area.toLowerCase()),
-          toRequestBody(requestTitleET.getText().toString()), toRequestBody(imagePath));
+          toRequestBody(requestTitleET.getText().toString()),
+          toRequestBody(requestDescriptionET.getText().toString()), toRequestBody(imagePath));
     }
   }
 

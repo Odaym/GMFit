@@ -81,6 +81,7 @@
   <dimen name="add_new_chart_list_item_edge_width">90dp</dimen>
   <dimen name="metric_image_dimen">30dp</dimen>
   <dimen name="date_carousel_height">70dp</dimen>
+  <dimen name="date_carousel_height_api_21">90dp</dimen>
   <dimen name="date_carousel_indicator_dimens">25dp</dimen>
   <dimen name="chart_title_headline_bar_height">60dp</dimen>
   <dimen name="date_carousel_cell_height">68dp</dimen>
@@ -184,6 +185,7 @@
   <dimen name="chronic_deletion_edge_width">80dp</dimen>
   <dimen name="services_picker_height">75dp</dimen>
   <dimen name="inquiry_list_item_height">160dp</dimen>
+  <dimen name="request_title_and_description_layout_height">200dp</dimen>
 
   <!-- PILL REMINDER SECTION -->
   <dimen name="medications_list_row_item_height">100dp</dimen>

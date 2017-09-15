@@ -80,7 +80,7 @@ dependencies {
   compile "com.android.support:customtabs:$supportLibVersion"
   compile 'com.andreabaccega:android-form-edittext:1.2.1@aar'
   compile "com.squareup.retrofit2:retrofit:$retroFitVersion"
-  compile 'com.facebook.android:facebook-android-sdk:4.20.0'
+  compile 'com.facebook.android:facebook-android-sdk:4.26.0'
   compile "com.j256.ormlite:ormlite-android:$ormLiteVersion"
   compile "com.jakewharton:butterknife:$butterknifeVersion"
   compile "com.j256.ormlite:ormlite-core:$ormLiteVersion"

@@ -47,10 +47,10 @@ class SubmitInquiryActivityPresenter extends BaseActivityPresenter {
   }
 
   void submitInquiryComplaint(RequestBody contractNo, RequestBody crm_country, RequestBody category,
-      RequestBody subcategory, RequestBody area, RequestBody title, RequestBody path) {
+      RequestBody subcategory, RequestBody area, RequestBody title, RequestBody description, RequestBody path) {
 
     dataAccessHandler.createNewInquiryComplaint(contractNo, crm_country, category, subcategory,
-        area, title, path, new Callback<CreateNewRequestResponse>() {
+        area, title, description, path, new Callback<CreateNewRequestResponse>() {
           @Override public void onResponse(Call<CreateNewRequestResponse> call,
               Response<CreateNewRequestResponse> response) {
             switch (response.code()) {
@@ -68,12 +68,12 @@ class SubmitInquiryActivityPresenter extends BaseActivityPresenter {
   }
 
   void submitInquiryComplaintWithoutImage(RequestBody contractNo, RequestBody crm_country,
-      RequestBody category, RequestBody subcategory, RequestBody area, RequestBody title) {
+      RequestBody category, RequestBody subcategory, RequestBody area, RequestBody title, RequestBody description) {
 
     view.callDisplayWaitingDialog(R.string.submit_new_inquiry);
 
     dataAccessHandler.createNewInquiryComplaintWithoutImage(contractNo, crm_country, category,
-        subcategory, area, title, new Callback<CreateNewRequestResponse>() {
+        subcategory, area, title, description, new Callback<CreateNewRequestResponse>() {
           @Override public void onResponse(Call<CreateNewRequestResponse> call,
               Response<CreateNewRequestResponse> response) {
             switch (response.code()) {
