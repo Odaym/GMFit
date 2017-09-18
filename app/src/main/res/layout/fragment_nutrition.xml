@@ -474,10 +474,39 @@
     <!-- MEAL BARS END HERE -->
     <!---->
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/chart_title_headline_bar_height"
+        android:layout_marginTop="@dimen/default_margin_3"
+        android:background="@color/nutrition_meal_bars_orange"
+        >
+
+      <TextView
+          android:id="@+id/articlesTitleTV"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_centerVertical="true"
+          android:gravity="center_vertical"
+          android:paddingEnd="@dimen/default_margin_2"
+          android:paddingStart="@dimen/default_margin_2"
+          android:text="@string/articles_section_title"
+          android:textAppearance="?android:textAppearanceMedium"
+          android:textColor="@android:color/white"
+          />
+
+    </RelativeLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/articlesRecycler"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+
     <LinearLayout
         android:id="@+id/cards_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/default_margin_3"
         android:animateLayoutChanges="true"
         android:orientation="vertical"
         />

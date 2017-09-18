@@ -94,17 +94,15 @@ public class SubmitChronicActivity extends BaseActivity
 
     switch (requestCode) {
       case CAPTURE_NEW_PICTURE_REQUEST_CODE:
-        if (photoFile.getTotalSpace() > 0) {
-          Picasso.with(this)
-              .load(new File(photoFile.getAbsolutePath()))
-              .fit()
-              .into(currentImageView);
+        if (photoFile != null) {
+          if (photoFile.getTotalSpace() > 0) {
+            Picasso.with(this).load(new File(photoFile.getAbsolutePath())).fit().into(currentImageView);
 
-          imagePaths.add(photoFile.getAbsolutePath());
-        } else {
-          Timber.d("No picture was taken, photoFile size : %d", photoFile.getTotalSpace());
+            imagePaths.add(photoFile.getAbsolutePath());
+          } else {
+            Timber.d("No picture was taken, photoFile size : %d", photoFile.getTotalSpace());
+          }
         }
-
         break;
       case REQUEST_PICK_IMAGE_GALLERY:
         if (data != null) {

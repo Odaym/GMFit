@@ -36,6 +36,7 @@ import com.mcsaatchi.gmfit.architecture.otto.EventBusSingleton;
 import com.mcsaatchi.gmfit.architecture.otto.MealEntryManipulatedEvent;
 import com.mcsaatchi.gmfit.architecture.otto.NutritionWidgetsOrderChangedEvent;
 import com.mcsaatchi.gmfit.architecture.retrofit.architecture.DataAccessHandlerImpl;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.ArticlesResponseBody;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.AuthenticationResponseChart;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.AuthenticationResponseChartData;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.AuthenticationResponseWidget;
@@ -55,6 +56,7 @@ import com.mcsaatchi.gmfit.common.components.CustomBarChart;
 import com.mcsaatchi.gmfit.common.components.DateCarousel;
 import com.mcsaatchi.gmfit.common.fragments.BaseFragment;
 import com.mcsaatchi.gmfit.common.models.DataChart;
+import com.mcsaatchi.gmfit.fitness.adapters.ArticlesRecyclerAdapter;
 import com.mcsaatchi.gmfit.nutrition.activities.AddNewMealItemActivity;
 import com.mcsaatchi.gmfit.nutrition.activities.BarcodeCaptureActivity;
 import com.mcsaatchi.gmfit.nutrition.activities.SpecifyMealAmountActivity;
@@ -100,6 +102,7 @@ public class NutritionFragment extends BaseFragment
   @Bind(R.id.lunchMealsEmptyLayout) LinearLayout lunchMealsEmptyLayout;
   @Bind(R.id.dinnerMealsEmptyLayout) LinearLayout dinnerMealsEmptyLayout;
   @Bind(R.id.snackMealsEmptyLayout) LinearLayout snackMealsEmptyLayout;
+  @Bind(R.id.articlesRecycler) RecyclerView articlesRecycler;
 
   @Inject DataAccessHandlerImpl dataAccessHandler;
   @Inject SharedPreferences prefs;
@@ -146,6 +149,7 @@ public class NutritionFragment extends BaseFragment
     presenter.getUserGoalMetrics(finalDesiredDate, "nutrition");
     presenter.getUserAddedMeals(finalDesiredDate);
     presenter.getUiForSection("nutrition", finalDesiredDate);
+    presenter.getArticles("nutrition");
 
     setupDateCarousel();
 
@@ -418,6 +422,14 @@ public class NutritionFragment extends BaseFragment
       Toast.makeText(parentActivity, getString(R.string.scanned_meal_not_found), Toast.LENGTH_LONG)
           .show();
     }
+  }
+
+  @Override public void populateArticles(List<ArticlesResponseBody> articlesResponseBodies) {
+    ArticlesRecyclerAdapter userActivitiesListRecyclerAdapter =
+        new ArticlesRecyclerAdapter(getActivity(), articlesResponseBodies, "nutrition");
+    articlesRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
+    articlesRecycler.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
+    articlesRecycler.setAdapter(userActivitiesListRecyclerAdapter);
   }
 
   @Override public void setupChartsAfterDeletion(DataChart chartObject) {

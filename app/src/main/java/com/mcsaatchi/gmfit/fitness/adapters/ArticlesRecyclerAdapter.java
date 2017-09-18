@@ -19,11 +19,13 @@ import java.util.List;
 public class ArticlesRecyclerAdapter extends RecyclerView.Adapter {
   private Context context;
   private List<ArticlesResponseBody> articlesResponseBodies;
+  private String section;
 
   public ArticlesRecyclerAdapter(Context context,
-      List<ArticlesResponseBody> articlesResponseBodies) {
+      List<ArticlesResponseBody> articlesResponseBodies, String section) {
     this.context = context;
     this.articlesResponseBodies = articlesResponseBodies;
+    this.section = section;
   }
 
   @Override public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -38,6 +40,7 @@ public class ArticlesRecyclerAdapter extends RecyclerView.Adapter {
     final ViewHolder holder = (ViewHolder) h;
 
     holder.articleNameTV.setText(articlesResponseBodies.get(position).getTitle());
+
     try {
       holder.articleDateTV.setText(new SimpleDateFormat("dd MMMM, yyyy").format(
           new SimpleDateFormat("yyyy-MM-dd").parse(
@@ -77,6 +80,7 @@ public class ArticlesRecyclerAdapter extends RecyclerView.Adapter {
       itemView.setOnClickListener(view -> {
         Intent intent = new Intent(context, ArticleDetailsActivity.class);
         intent.putExtra("ARTICLE", articlesResponseBodies.get(getAdapterPosition()));
+        intent.putExtra("SECTION", section);
         context.startActivity(intent);
       });
     }

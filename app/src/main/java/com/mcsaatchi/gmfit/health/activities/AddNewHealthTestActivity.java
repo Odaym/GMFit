@@ -301,12 +301,13 @@ public class AddNewHealthTestActivity extends BaseActivity {
 
     switch (requestCode) {
       case CAPTURE_NEW_PICTURE_REQUEST_CODE:
-        if (photoFile.getTotalSpace() > 0) {
-          addTestPicture(photoFile.getAbsolutePath());
-        } else {
-          Timber.d("No picture was taken, photoFile size : %s", photoFile.getTotalSpace());
+        if (photoFile != null) {
+          if (photoFile.getTotalSpace() > 0) {
+            addTestPicture(photoFile.getAbsolutePath());
+          } else {
+            Timber.d("No picture was taken, photoFile size : %s", photoFile.getTotalSpace());
+          }
         }
-
         break;
       case REQUEST_PICK_IMAGE_GALLERY:
         if (data != null) {

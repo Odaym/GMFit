@@ -374,7 +374,7 @@ public class FitnessFragment extends BaseFragment
 
   @Override public void populateArticles(List<ArticlesResponseBody> articlesResponseBodies) {
     ArticlesRecyclerAdapter userActivitiesListRecyclerAdapter =
-        new ArticlesRecyclerAdapter(getActivity(), articlesResponseBodies);
+        new ArticlesRecyclerAdapter(getActivity(), articlesResponseBodies, "fitness");
     articlesRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
     articlesRecycler.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
     articlesRecycler.setAdapter(userActivitiesListRecyclerAdapter);
@@ -507,8 +507,7 @@ public class FitnessFragment extends BaseFragment
         fitnessWidgetViewHolder = widgetsGridView.findViewHolderForAdapterPosition(i);
 
         if (fitnessWidgetViewHolder != null) {
-          metricCountTextView =
-              (TextView) fitnessWidgetViewHolder.itemView.findViewById(R.id.metricTV);
+          metricCountTextView = fitnessWidgetViewHolder.itemView.findViewById(R.id.metricTV);
         }
       }
     }

@@ -45,7 +45,7 @@
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:layout_below="@+id/mainHealthMetricDetail"
-      android:background="@android:color/white"
+      android:background="@color/offwhite_background_gray"
       android:orientation="vertical"
       >
 
@@ -53,6 +53,8 @@
         android:id="@+id/widgetsGridViewLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/default_margin_1"
+        android:background="@android:color/white"
         android:padding="@dimen/default_margin_1"
         >
 
@@ -76,6 +78,7 @@
         android:id="@+id/lineChartContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/default_margin_2"
         android:orientation="vertical"
         />
 
@@ -127,6 +130,7 @@
       <RelativeLayout
           android:layout_width="match_parent"
           android:layout_height="match_parent"
+          android:background="@android:color/white"
           >
 
         <include
@@ -192,6 +196,7 @@
       <RelativeLayout
           android:layout_width="match_parent"
           android:layout_height="match_parent"
+          android:background="@android:color/white"
           >
 
         <include
@@ -218,6 +223,34 @@
             />
 
       </RelativeLayout>
+
+      <RelativeLayout
+          android:layout_width="match_parent"
+          android:layout_height="@dimen/chart_title_headline_bar_height"
+          android:layout_marginTop="@dimen/default_margin_2"
+          android:background="@color/health_green"
+          >
+
+        <TextView
+            android:id="@+id/articlesTitleTV"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:gravity="center_vertical"
+            android:paddingEnd="@dimen/default_margin_2"
+            android:paddingStart="@dimen/default_margin_2"
+            android:text="@string/articles_section_title"
+            android:textAppearance="?android:textAppearanceMedium"
+            android:textColor="@android:color/white"
+            />
+      </RelativeLayout>
+
+      <android.support.v7.widget.RecyclerView
+          android:id="@+id/articlesRecycler"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          />
+
     </LinearLayout>
   </LinearLayout>
 </RelativeLayout>

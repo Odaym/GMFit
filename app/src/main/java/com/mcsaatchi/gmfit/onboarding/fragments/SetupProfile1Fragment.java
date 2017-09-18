@@ -12,6 +12,7 @@ import android.widget.RadioButton;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import com.facebook.FacebookSdk;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.classes.GMFitApplication;
 import com.mcsaatchi.gmfit.architecture.countrypicker.Country;
@@ -38,6 +39,8 @@ public class SetupProfile1Fragment extends Fragment {
     ButterKnife.bind(this, fragmentView);
 
     ((GMFitApplication) getActivity().getApplication()).getAppComponent().inject(this);
+
+    FacebookSdk.sdkInitialize(getActivity());
 
     picker = CountryPicker.newInstance(getString(R.string.choose_country_hint));
 

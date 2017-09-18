@@ -383,68 +383,57 @@ public class InsuranceDirectoryFragment extends BaseFragment
 
   private void addMarkersToMap(List<GetNearbyClinicsResponseDatum> validClinics,
       boolean fromSearch) {
-    map.getUiSettings().setMyLocationButtonEnabled(true);
-    map.clear();
+    if (map != null) {
+      map.getUiSettings().setMyLocationButtonEnabled(true);
+      map.clear();
 
-    MarkerOptions locationMarker = null;
+      MarkerOptions locationMarker = null;
 
-    MarkerOptions youMarker =
-        new MarkerOptions().position(new LatLng(userLatLong[0], userLatLong[1]))
-            .title("You")
-            .snippet("")
-            .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_you_custom_map_marker));
+      MarkerOptions youMarker = new MarkerOptions().position(new LatLng(userLatLong[0], userLatLong[1]))
+          .title("You")
+          .snippet("")
+          .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_you_custom_map_marker));
 
-    map.addMarker(youMarker);
+      map.addMarker(youMarker);
 
-    for (int i = 0; i < validClinics.size(); i++) {
-      StringBuilder snippet = new StringBuilder();
+      for (int i = 0; i < validClinics.size(); i++) {
+        StringBuilder snippet = new StringBuilder();
 
-      if (validClinics.get(i).getPartOfNetwork() != null && validClinics.get(i)
-          .getPartOfNetwork()) {
-        snippet.append("N");
-      }
-
-      if (validClinics.get(i).getOnline() != null && validClinics.get(i).getOnline()) {
-        snippet.append("O");
-      }
-
-      if (validClinics.get(i).getTwentyfourseven() != null && validClinics.get(i)
-          .getTwentyfourseven()) {
-        snippet.append("247");
-      }
-
-      try {
-        if (validClinics.get(i).getLatitude() != null
-            && validClinics.get(i).getLongitude() != null) {
-          locationMarker = new MarkerOptions().position(
-              new LatLng(Double.parseDouble(validClinics.get(i).getLatitude()),
-                  Double.parseDouble(validClinics.get(i).getLongitude())))
-              .title(validClinics.get(i).getName())
-              .snippet(snippet.toString())
-              .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_custom_map_marker));
-
-          map.addMarker(locationMarker);
-
-          map.setInfoWindowAdapter(
-              new CustomInfoWindowAdapter((GMFitApplication) getActivity().getApplication(),
-                  getActivity(), validClinics.get(i)));
-
-          GetNearbyClinicsResponseDatum clinic = validClinics.get(i);
-
-          //map.setOnInfoWindowClickListener(marker -> {
-          //  Intent intent = new Intent(getActivity(), ClinicDetailsActivity.class);
-          //  intent.putExtra("CLINIC_OBJECT", clinic);
-          //  getActivity().startActivity(intent);
-          //});
+        if (validClinics.get(i).getPartOfNetwork() != null && validClinics.get(i).getPartOfNetwork()) {
+          snippet.append("N");
         }
-      } catch (NullPointerException ignored) {
-      }
-    }
 
-    if (fromSearch) {
-      zoomAnimateCamera(locationMarker);
-    } else {
-      zoomAnimateCamera(youMarker);
+        if (validClinics.get(i).getOnline() != null && validClinics.get(i).getOnline()) {
+          snippet.append("O");
+        }
+
+        if (validClinics.get(i).getTwentyfourseven() != null && validClinics.get(i).getTwentyfourseven()) {
+          snippet.append("247");
+        }
+
+        try {
+          if (validClinics.get(i).getLatitude() != null && validClinics.get(i).getLongitude() != null) {
+            locationMarker = new MarkerOptions().position(
+                new LatLng(Double.parseDouble(validClinics.get(i).getLatitude()),
+                    Double.parseDouble(validClinics.get(i).getLongitude())))
+                .title(validClinics.get(i).getName())
+                .snippet(snippet.toString())
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_custom_map_marker));
+
+            map.addMarker(locationMarker);
+
+            map.setInfoWindowAdapter(new CustomInfoWindowAdapter((GMFitApplication) getActivity().getApplication(),
+                getActivity(), validClinics.get(i)));
+          }
+        } catch (NullPointerException ignored) {
+        }
+      }
+
+      if (fromSearch) {
+        zoomAnimateCamera(locationMarker);
+      } else {
+        zoomAnimateCamera(youMarker);
+      }
     }
   }
 

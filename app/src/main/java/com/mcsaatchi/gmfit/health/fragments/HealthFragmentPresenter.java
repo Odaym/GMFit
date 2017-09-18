@@ -2,6 +2,8 @@ package com.mcsaatchi.gmfit.health.fragments;
 
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.mcsaatchi.gmfit.architecture.retrofit.architecture.DataAccessHandlerImpl;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.ArticlesResponse;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.ArticlesResponseBody;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.DefaultGetResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.TakenMedicalTestsResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.TakenMedicalTestsResponseBody;
@@ -37,6 +39,23 @@ class HealthFragmentPresenter extends BaseFragmentPresenter {
   List<Medication> getMedicationsFromDB() {
     return medicationDAO.queryForAll();
   }
+
+  void getArticles(String sectionName) {
+    dataAccessHandler.getArticles(sectionName, new Callback<ArticlesResponse>() {
+      @Override
+      public void onResponse(Call<ArticlesResponse> call, Response<ArticlesResponse> response) {
+        switch (response.code()) {
+          case 200:
+            view.populateArticles(response.body().getData().getBody());
+            break;
+        }
+      }
+
+      @Override public void onFailure(Call<ArticlesResponse> call, Throwable t) {
+      }
+    });
+  }
+
 
   void getWidgets() {
     dataAccessHandler.getWidgets("medical", new Callback<WidgetsResponse>() {
@@ -161,6 +180,8 @@ class HealthFragmentPresenter extends BaseFragmentPresenter {
 
   interface HealthFragmentView extends BaseFragmentView {
     void setupWidgetViews(ArrayList<HealthWidget> healthWidgetsMap);
+
+    void populateArticles(List<ArticlesResponseBody> articlesResponseBodies);
 
     void displayTakenMedicalTests(List<TakenMedicalTestsResponseBody> takenMedicalTests);
 

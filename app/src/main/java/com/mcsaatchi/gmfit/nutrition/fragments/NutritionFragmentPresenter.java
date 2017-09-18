@@ -2,6 +2,8 @@ package com.mcsaatchi.gmfit.nutrition.fragments;
 
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.retrofit.architecture.DataAccessHandlerImpl;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.ArticlesResponse;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.ArticlesResponseBody;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.AuthenticationResponseChart;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.AuthenticationResponseChartData;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.AuthenticationResponseWidget;
@@ -34,6 +36,22 @@ class NutritionFragmentPresenter extends BaseFragmentPresenter {
   NutritionFragmentPresenter(NutritionFragmentView view, DataAccessHandlerImpl dataAccessHandler) {
     this.view = view;
     this.dataAccessHandler = dataAccessHandler;
+  }
+
+  void getArticles(String sectionName) {
+    dataAccessHandler.getArticles(sectionName, new Callback<ArticlesResponse>() {
+      @Override
+      public void onResponse(Call<ArticlesResponse> call, Response<ArticlesResponse> response) {
+        switch (response.code()) {
+          case 200:
+            view.populateArticles(response.body().getData().getBody());
+            break;
+        }
+      }
+
+      @Override public void onFailure(Call<ArticlesResponse> call, Throwable t) {
+      }
+    });
   }
 
   void getUserGoalMetrics(final String date, final String type) {
@@ -267,6 +285,8 @@ class NutritionFragmentPresenter extends BaseFragmentPresenter {
 
     void displayBarcodeSearchResults(List<SearchMealItemResponseDatum> mealsResponse,
         String mealType);
+
+    void populateArticles(List<ArticlesResponseBody> articlesResponseBodies);
 
     void setupChartsAfterDeletion(DataChart chartObject);
 

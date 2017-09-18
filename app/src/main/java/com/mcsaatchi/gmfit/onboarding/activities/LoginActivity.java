@@ -48,6 +48,8 @@ public class LoginActivity extends BaseActivity
     super.onCreate(Helpers.createActivityBundleWithProperties(0, false));
     Fabric.with(this, new Crashlytics());
 
+    FacebookSdk.sdkInitialize(this);
+
     callbackManager = CallbackManager.Factory.create();
 
     setContentView(R.layout.activity_login);

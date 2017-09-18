@@ -36,6 +36,7 @@ import com.mcsaatchi.gmfit.architecture.otto.HealthWidgetsOrderChangedEvent;
 import com.mcsaatchi.gmfit.architecture.otto.MedicalTestEditCreateEvent;
 import com.mcsaatchi.gmfit.architecture.otto.MedicationItemCreatedEvent;
 import com.mcsaatchi.gmfit.architecture.retrofit.architecture.DataAccessHandlerImpl;
+import com.mcsaatchi.gmfit.architecture.retrofit.responses.ArticlesResponseBody;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.DefaultGetResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.TakenMedicalTestsResponseBody;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.UserProfileResponseDatum;
@@ -47,6 +48,7 @@ import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.common.classes.SimpleDividerItemDecoration;
 import com.mcsaatchi.gmfit.common.components.CustomLineChart;
 import com.mcsaatchi.gmfit.common.fragments.BaseFragment;
+import com.mcsaatchi.gmfit.fitness.adapters.ArticlesRecyclerAdapter;
 import com.mcsaatchi.gmfit.health.activities.AddNewHealthTestActivity;
 import com.mcsaatchi.gmfit.health.activities.SearchMedicationsActivity;
 import com.mcsaatchi.gmfit.health.adapters.HealthWidgetsRecyclerAdapter;
@@ -78,6 +80,8 @@ public class HealthFragment extends BaseFragment
   @Bind(R.id.medicationsEmptyLayout) LinearLayout medicationsEmptyLayout;
   @Bind(R.id.medicalTestsEmptyLayout) LinearLayout medicalTestsEmptyLayout;
   @Bind(R.id.lineChartContainer) LinearLayout lineChartContainer;
+  @Bind(R.id.articlesRecycler) RecyclerView articlesRecycler;
+
   @Inject DataAccessHandlerImpl dataAccessHandler;
   @Inject RuntimeExceptionDao<Medication, Integer> medicationDAO;
   @Inject SharedPreferences prefs;
@@ -107,12 +111,10 @@ public class HealthFragment extends BaseFragment
     setupMedicationRemindersList(presenter.getMedicationsFromDB());
 
     presenter.getWidgets();
-
     presenter.getTakenMedicalTests();
-
     presenter.getUserWeight();
-
     presenter.setupUserWeightChart();
+    presenter.getArticles("medical");
 
     return fragmentView;
   }
@@ -161,6 +163,14 @@ public class HealthFragment extends BaseFragment
 
       loadingWidgetsProgressBar.setVisibility(View.GONE);
     }
+  }
+
+  @Override public void populateArticles(List<ArticlesResponseBody> articlesResponseBodies) {
+    ArticlesRecyclerAdapter userActivitiesListRecyclerAdapter =
+        new ArticlesRecyclerAdapter(getActivity(), articlesResponseBodies, "medical");
+    articlesRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
+    articlesRecycler.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
+    articlesRecycler.setAdapter(userActivitiesListRecyclerAdapter);
   }
 
   @Override
@@ -218,7 +228,7 @@ public class HealthFragment extends BaseFragment
         customLineChart.setLineChartData(lineChartContainer, weightHistoryList);
 
         final TextView updateUserWeightTV =
-            (TextView) customLineChart.getView().findViewById(R.id.updateWeightTV);
+            customLineChart.getView().findViewById(R.id.updateWeightTV);
 
         updateUserWeightTV.setOnClickListener(view -> {
           final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
