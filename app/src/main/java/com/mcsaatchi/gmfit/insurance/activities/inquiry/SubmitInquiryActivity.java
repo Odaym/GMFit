@@ -76,7 +76,8 @@ public class SubmitInquiryActivity extends BaseActivity
 
     setContentView(R.layout.activity_inquiry_submit);
     ButterKnife.bind(this);
-    setupToolbar(getClass().getSimpleName(), toolbar, "Submit Complaint/Inquiry", true);
+    setupToolbar(getClass().getSimpleName(), toolbar,
+        getString(R.string.submit_complaint_inquiry_activity_title), true);
 
     optionalImageImagesPicker.hideRemainingImages();
 
@@ -90,8 +91,9 @@ public class SubmitInquiryActivity extends BaseActivity
     fullNameET.setText(prefs.getString(Constants.EXTRAS_INSURANCE_FULL_NAME, ""));
     riskCarrierET.setText(prefs.getString(Constants.EXTRAS_INSURANCE_COMPANY_NAME, ""));
 
-    subCategoryPicker.setUpDropDown("Subcategory", "Choose a subcategory",
-        new String[] { "No category loaded" }, (index, selected) -> {
+    subCategoryPicker.setUpDropDown(getString(R.string.sub_category_picker_title),
+        getString(R.string.sub_category_picker_message), new String[] { "No category loaded" },
+        (index, selected) -> {
         });
 
     areaToggle.setUp("Area", "Local", "Cross Border", option -> area = option);
@@ -113,7 +115,10 @@ public class SubmitInquiryActivity extends BaseActivity
       case CAPTURE_NEW_PICTURE_REQUEST_CODE:
         if (photoFile != null) {
           if (photoFile.getTotalSpace() > 0) {
-            Picasso.with(this).load(new File(photoFile.getAbsolutePath())).fit().into(currentImageView);
+            Picasso.with(this)
+                .load(new File(photoFile.getAbsolutePath()))
+                .fit()
+                .into(currentImageView);
 
             imagePaths.add(photoFile.getAbsolutePath());
           } else {
@@ -161,7 +166,8 @@ public class SubmitInquiryActivity extends BaseActivity
       }
     }
 
-    categoryPicker.setUpDropDown("Category", "Choose a category",
+    categoryPicker.setUpDropDown(getString(R.string.category_picker_title),
+        getString(R.string.category_picker_message),
         finalCategoryNames.toArray(new String[finalCategoryNames.size()]), (index, selected) -> {
           for (final CRMCategoriesResponseDatum categoriesResponseDatum : categoriesList) {
             if (categoriesResponseDatum.getName() != null && categoriesResponseDatum.getName()
@@ -176,7 +182,8 @@ public class SubmitInquiryActivity extends BaseActivity
                 }
               }
 
-              subCategoryPicker.setUpDropDown("SubCategory", "Choose a subcategory",
+              subCategoryPicker.setUpDropDown(getString(R.string.sub_category_picker_title),
+                  getString(R.string.sub_category_picker_message),
                   subCategoryNames.toArray(new String[subCategoryNames.size()]),
                   (index1, selected1) -> {
                     for (int i = 0; i < categoriesResponseDatum.getSubs().size(); i++) {
@@ -195,13 +202,13 @@ public class SubmitInquiryActivity extends BaseActivity
     ArrayList<String> errorMessages = new ArrayList<>();
 
     if (category.isEmpty()) {
-      errorMessages.add("The Category field is required.");
+      errorMessages.add(getString(R.string.error_message_category_required));
     }
     if (subcategory.isEmpty()) {
-      errorMessages.add("The Subcategory field is required.");
+      errorMessages.add(getString(R.string.error_message_subcategory_required));
     }
     if (requestTitleET.getText().toString().isEmpty()) {
-      errorMessages.add("The Title/Description field is required.");
+      errorMessages.add(getString(R.string.error_message_title_description_required));
     }
 
     if (!errorMessages.isEmpty()) {
@@ -258,7 +265,7 @@ public class SubmitInquiryActivity extends BaseActivity
     currentImageView = view;
 
     AlertDialog.Builder builderSingle = new AlertDialog.Builder(this);
-    builderSingle.setTitle("Attach a picture");
+    builderSingle.setTitle(getString(R.string.attach_picture_dialog_title));
 
     final ArrayAdapter<String> arrayAdapter =
         new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);

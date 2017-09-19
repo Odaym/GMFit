@@ -42,7 +42,8 @@ public class ApprovalRequestsTrackActivity extends BaseActivity
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_approval_requests_status_list);
     ButterKnife.bind(this);
-    setupToolbar(getClass().getSimpleName(), toolbar, "Approval Requests Status", true);
+    setupToolbar(getClass().getSimpleName(), toolbar,
+        getString(R.string.approval_request_status_activity_title), true);
 
     ApprovalRequestsTrackActivityPresenter presenter =
         new ApprovalRequestsTrackActivityPresenter(this, dataAccessHandler);

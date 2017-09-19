@@ -96,9 +96,9 @@ public class EditProfileActivity extends BaseActivity
 
     int gender = prefs.getInt(Constants.EXTRAS_USER_PROFILE_GENDER, 0);
     if (gender == 0) {
-      genderValueTV.setText("Male");
+      genderValueTV.setText(R.string.gender_dropdown_male_item);
     } else {
-      genderValueTV.setText("Female");
+      genderValueTV.setText(R.string.gender_dropdown_female_item);
     }
   }
 
@@ -108,7 +108,7 @@ public class EditProfileActivity extends BaseActivity
     };
 
     AlertDialog.Builder builder = new AlertDialog.Builder(this);
-    builder.setTitle("Pick gender")
+    builder.setTitle(R.string.gender_dropdown_title)
         .setItems(items, (dialogInterface, i) -> genderValueTV.setText(items[i]));
     builder.create();
     builder.show();
@@ -120,7 +120,7 @@ public class EditProfileActivity extends BaseActivity
     };
 
     AlertDialog.Builder builder = new AlertDialog.Builder(this);
-    builder.setTitle("Pick a blood type")
+    builder.setTitle(R.string.bloodtype_dropdown_title)
         .setItems(items, (dialogInterface, i) -> bloodTypeValueTV.setText(items[i]));
     builder.create();
     builder.show();

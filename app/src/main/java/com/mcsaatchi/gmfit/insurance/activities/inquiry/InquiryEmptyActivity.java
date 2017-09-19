@@ -16,7 +16,7 @@ public class InquiryEmptyActivity extends BaseActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_inquiry_empty);
     ButterKnife.bind(this);
-    setupToolbar(getClass().getSimpleName(), toolbar, "Complaint/Inquiry Status", true);
+    setupToolbar(getClass().getSimpleName(), toolbar, getString(R.string.complaint_inquiry_activity_title), true);
   }
 
   @OnClick(R.id.submitInquiryBTN) public void submitInquiry() {

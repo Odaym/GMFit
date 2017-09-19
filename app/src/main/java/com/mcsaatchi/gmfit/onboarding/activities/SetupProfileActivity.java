@@ -92,7 +92,7 @@ public class SetupProfileActivity extends BaseActivity {
             if (!((SetupProfile2Fragment) setupProfileAdapter.getRegisteredFragment(
                 viewPager.getCurrentItem())).wasDataSelected()) {
 
-              Toast.makeText(SetupProfileActivity.this, "Please make a choice to proceed",
+              Toast.makeText(SetupProfileActivity.this, getString(R.string.error_message_choose_first),
                   Toast.LENGTH_SHORT).show();
             } else {
               viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);
@@ -104,7 +104,7 @@ public class SetupProfileActivity extends BaseActivity {
             if (!((SetupProfile3Fragment) setupProfileAdapter.getRegisteredFragment(
                 viewPager.getCurrentItem())).wasDataSelected()) {
 
-              Toast.makeText(SetupProfileActivity.this, "Please make a choice to proceed",
+              Toast.makeText(SetupProfileActivity.this, getString(R.string.error_message_choose_first),
                   Toast.LENGTH_SHORT).show();
             } else {
               viewPager.setCurrentItem(viewPager.getCurrentItem() + 1);

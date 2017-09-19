@@ -60,10 +60,10 @@ public class AchievementsListActivity extends BaseActivity {
       }
     }
 
-    achievementsCompletionHintTV.setText("You have completed "
+    achievementsCompletionHintTV.setText(getString(R.string.achievement_completed_sentence_part_1)
         + achievementsDone
-        + " out of "
+        + getString(R.string.achievement_completed_sentence_part_2)
         + achievementsResponseBodyList.size()
-        + " achievements");
+        + getString(R.string.achievement_completed_sentence_part_3));
   }
 }

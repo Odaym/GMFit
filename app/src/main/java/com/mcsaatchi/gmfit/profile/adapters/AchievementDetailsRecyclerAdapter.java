@@ -49,13 +49,13 @@ public class AchievementDetailsRecyclerAdapter extends RecyclerView.Adapter {
 
     String timeCounter;
     if (achievementsResponseBodies.get(position).getFinishes() == 1) {
-      timeCounter = "time";
+      timeCounter = context.getString(R.string.times_completed_singular);
     } else {
-      timeCounter = "times";
+      timeCounter = context.getString(R.string.times_completed_plural);
     }
 
     holder.achievementDateCompletedTV.setText(
-        "Last completed: " + achievementsResponseBodies.get(position)
+        context.getString(R.string.achievements_last_completed) + achievementsResponseBodies.get(position)
             .getLastFinish()
             .split(" ")[0]);
 

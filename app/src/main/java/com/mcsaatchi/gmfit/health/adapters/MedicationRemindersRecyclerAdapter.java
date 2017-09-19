@@ -89,7 +89,7 @@ public class MedicationRemindersRecyclerAdapter extends RecyclerView.Adapter {
       final DateTimeFormatter timeFormatter =
           DateTimeFormat.forPattern("hh:mm  a").withLocale(Locale.getDefault());
 
-      reminderLabelTV.setText("Reminder " + (getAdapterPosition() + 1));
+      reminderLabelTV.setText(context.getString(R.string.medication_reminder_label) + (getAdapterPosition() + 1));
 
       reminderValueTV.setText(formatFinalTime(alarmTimeForMedication.get(Calendar.HOUR_OF_DAY),
           alarmTimeForMedication.get(Calendar.MINUTE)));

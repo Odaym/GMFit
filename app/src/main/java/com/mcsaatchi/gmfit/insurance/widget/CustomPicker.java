@@ -97,7 +97,7 @@ public class CustomPicker extends LinearLayout implements View.OnClickListener {
   }
 
   public void setSelectedItem(String selected) {
-    if (!selected.contains("Choose")) itemSelectedTv.setAlpha(1f);
+    if (!selected.contains(getContext().getString(R.string.choose_picker_label))) itemSelectedTv.setAlpha(1f);
 
     itemSelectedTv.setText(selected);
   }
@@ -105,7 +105,7 @@ public class CustomPicker extends LinearLayout implements View.OnClickListener {
   private void setDropDownItems(String itemName, final String[] items,
       final OnDropDownClickListener onDropDownClickListener) {
     builder = new AlertDialog.Builder(context);
-    builder.setTitle("Pick " + itemName).setItems(items, (dialogInterface, i) -> {
+    builder.setTitle(getContext().getString(R.string.pick_picker_label) + itemName).setItems(items, (dialogInterface, i) -> {
       setSelectedItem(items[i]);
       onDropDownClickListener.onClick(i, items[i]);
     });

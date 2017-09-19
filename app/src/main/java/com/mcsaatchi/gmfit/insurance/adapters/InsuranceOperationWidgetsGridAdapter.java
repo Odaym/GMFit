@@ -265,7 +265,7 @@ public class InsuranceOperationWidgetsGridAdapter
 
     void setDropDownItems(final int request_purpose) {
       final AlertDialog.Builder builder = new AlertDialog.Builder(fragmentActivity);
-      builder.setTitle("Please select an item")
+      builder.setTitle(R.string.item_dropdown_message)
           .setItems(dialogItems, (dialogInterface, position) -> {
 
             Intent intent;

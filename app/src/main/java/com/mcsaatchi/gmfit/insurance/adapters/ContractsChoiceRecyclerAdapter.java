@@ -65,7 +65,8 @@ public class ContractsChoiceRecyclerAdapter
 
     if (contracts.get(position).getExpiryDate() != null) {
       String expiryCal = contracts.get(position).getExpiryDate();
-      holder.contractExpiryDateTV.setText("Expiry date: " + expiryCal.replace("\\", ""));
+      holder.contractExpiryDateTV.setText(GMFitApplication.getInstance().
+          getString(R.string.calories_expiry_date) + expiryCal.replace("\\", ""));
     }
   }
 

@@ -35,7 +35,7 @@ public class CustomizeWidgetsAndChartsActivity extends BaseActivity {
   private ArrayList<DataChart> dataChartsMapExtra;
 
   private String[] tabTitles = new String[] {
-      "Widgets", "Charts"
+      getString(R.string.customize_widgets_tab_title), getString(R.string.customize_charts_tab_title)
   };
 
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {

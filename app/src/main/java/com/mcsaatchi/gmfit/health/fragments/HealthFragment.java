@@ -245,12 +245,19 @@ public class HealthFragment extends BaseFragment
 
           dialogBuilder.setView(dialogView);
           dialogBuilder.setPositiveButton(R.string.ok, (dialogInterface, i) -> {
-            if (!editWeightET.getText().toString().equals(".")) {
-              double userWeight = Double.parseDouble(editWeightET.getText().toString());
+            if (editWeightET.getText().toString().isEmpty()) {
+              final AlertDialog alertDialog = new AlertDialog.Builder(getActivity()).create();
+              alertDialog.setMessage(getString(R.string.error_message_weight_empty));
+              alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.ok),
+                  (dialog, which) -> dialog.dismiss());
+            } else {
+              if (!editWeightET.getText().toString().equals(".")) {
+                double userWeight = Double.parseDouble(editWeightET.getText().toString());
 
-              if (userWeight != 0) {
-                updateUserWeight(editWeightET, userWeight,
-                    Helpers.prepareDateWithTimeForAPIRequest(new LocalDateTime()));
+                if (userWeight != 0) {
+                  updateUserWeight(editWeightET, userWeight,
+                      Helpers.prepareDateWithTimeForAPIRequest(new LocalDateTime()));
+                }
               }
             }
           });

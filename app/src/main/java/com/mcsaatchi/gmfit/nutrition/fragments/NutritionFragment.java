@@ -433,7 +433,7 @@ public class NutritionFragment extends BaseFragment
   }
 
   @Override public void setupChartsAfterDeletion(DataChart chartObject) {
-    Toast.makeText(getActivity(), "Chart deleted successfully", Toast.LENGTH_SHORT).show();
+    Toast.makeText(getActivity(), R.string.chart_deleted_successfully, Toast.LENGTH_SHORT).show();
 
     cards_container.removeAllViews();
 

@@ -220,7 +220,7 @@ public class InquiryNotesActivity extends BaseActivity
 
   private void showImagePickerDialog() {
     AlertDialog.Builder builderSingle = new AlertDialog.Builder(this);
-    builderSingle.setTitle("Attach a picture");
+    builderSingle.setTitle(getString(R.string.attach_picture_dialog_title));
 
     final ArrayAdapter<String> arrayAdapter =
         new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);

@@ -102,7 +102,8 @@ public class SubmitReimbursementActivity extends BaseActivity
 
     ButterKnife.bind(this);
 
-    setupToolbar(getClass().getSimpleName(), toolbar, "Submit Reimbursement", true);
+    setupToolbar(getClass().getSimpleName(), toolbar,
+        getString(R.string.submit_reimbursement_activity_title), true);
 
     presenter = new SubmitReimbursementActivityPresenter(this, dataAccessHandler);
 
@@ -110,18 +111,20 @@ public class SubmitReimbursementActivity extends BaseActivity
 
     presenter.getCurrenciesList();
 
-    serviceDate.setUpDatePicker("Service Date", "Choose a date", (year, month, dayOfMonth) -> {
-      Calendar calendar = Calendar.getInstance();
-      calendar.set(Calendar.YEAR, year);
-      calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-      calendar.set(Calendar.MONTH, month);
+    serviceDate.setUpDatePicker(getString(R.string.service_date_picker_title),
+        getString(R.string.choose_date_hint), (year, month, dayOfMonth) -> {
+          Calendar calendar = Calendar.getInstance();
+          calendar.set(Calendar.YEAR, year);
+          calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+          calendar.set(Calendar.MONTH, month);
 
-      Date d = new Date(calendar.getTimeInMillis());
+          Date d = new Date(calendar.getTimeInMillis());
 
-      SimpleDateFormat dateFormatter = new SimpleDateFormat("dd MMM, yyyy", Locale.getDefault());
-      serviceDateValue = dateFormatter.format(d);
-      serviceDate.setSelectedItem(serviceDateValue);
-    });
+          SimpleDateFormat dateFormatter =
+              new SimpleDateFormat("dd MMM, yyyy", Locale.getDefault());
+          serviceDateValue = dateFormatter.format(d);
+          serviceDate.setSelectedItem(serviceDateValue);
+        });
 
     categoryToggle.setUp("Category", "Out", "In", option -> {
       categoryValue = option;
@@ -187,7 +190,8 @@ public class SubmitReimbursementActivity extends BaseActivity
       }
     }
 
-    subCategoryPicker.setUpDropDown("Subcategory", "Choose a subcategory",
+    subCategoryPicker.setUpDropDown(getString(R.string.sub_category_picker_title),
+        getString(R.string.sub_category_picker_message),
         finalCategoryNames.toArray(new String[finalCategoryNames.size()]), (index, selected) -> {
           for (SubCategoriesResponseDatum subCategoriesResponseDatum : subCategoriesList) {
             if (subCategoriesResponseDatum.getName() != null && subCategoriesResponseDatum.getName()
@@ -209,11 +213,12 @@ public class SubmitReimbursementActivity extends BaseActivity
       }
 
       AlertDialog.Builder builder = new AlertDialog.Builder(SubmitReimbursementActivity.this);
-      builder.setTitle("Pick currency").setItems(items, (dialogInterface, i) -> {
-        currencyValue = String.valueOf(currenciesListResponses.get(i).getId());
+      builder.setTitle(getString(R.string.currency_dropdown_title))
+          .setItems(items, (dialogInterface, i) -> {
+            currencyValue = String.valueOf(currenciesListResponses.get(i).getId());
 
-        currencyLabel.setText(currenciesListResponses.get(i).getCode());
-      });
+            currencyLabel.setText(currenciesListResponses.get(i).getCode());
+          });
       builder.create();
       builder.show();
     });
@@ -264,22 +269,22 @@ public class SubmitReimbursementActivity extends BaseActivity
 
     if (amountClaimedET.getText().toString().isEmpty()
         || Double.parseDouble(amountClaimedET.getText().toString()) == 0) {
-      errorMessages.add("The Amount field is required, cannot be zero.");
+      errorMessages.add(getString(R.string.error_message_amount_required));
     }
     if (serviceDateValue.isEmpty()) {
-      errorMessages.add("The Service Date field is required.");
+      errorMessages.add(getString(R.string.error_message_service_date_required));
     }
     if (subCategoryId.isEmpty()) {
-      errorMessages.add("The Subcategory field is required.");
+      errorMessages.add(getString(R.string.error_message_subcategory_required));
     }
     if (imagePaths.isEmpty()) {
-      errorMessages.add("You are required to attach some images.");
+      errorMessages.add(getString(R.string.error_message_attachments_required));
     }
     if (medicalReportImagesPlacement.isEmpty()
         || invoiceImagesPlacement.isEmpty()
         || originalReceiptImagesPlacement.isEmpty()
         || identityCardImagesPlacement.isEmpty()) {
-      errorMessages.add("Please populate all the attachment categories");
+      errorMessages.add(getString(R.string.error_message_populate_all_attachments));
     }
 
     if (!errorMessages.isEmpty()) {

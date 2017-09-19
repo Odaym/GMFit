@@ -91,13 +91,13 @@ public class SubmitApprovalRequestActivity extends BaseActivity
 
     ButterKnife.bind(this);
 
-    setupToolbar(getClass().getSimpleName(), toolbar, "Submit Approval Request", true);
+    setupToolbar(getClass().getSimpleName(), toolbar, getString(R.string.submit_approval_request_activity_title), true);
 
     presenter = new SubmitApprovalRequestActivityPresenter(this, dataAccessHandler);
 
     presenter.getSubCategories(prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""));
 
-    serviceDate.setUpDatePicker("Service Date", "Choose a date", (year, month, dayOfMonth) -> {
+    serviceDate.setUpDatePicker(getString(R.string.service_date_picker_title), getString(R.string.choose_date_hint), (year, month, dayOfMonth) -> {
       Calendar calendar = Calendar.getInstance();
       calendar.set(Calendar.YEAR, year);
       calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
@@ -110,15 +110,17 @@ public class SubmitApprovalRequestActivity extends BaseActivity
       serviceDate.setSelectedItem(serviceDateValue);
     });
 
-    categoryToggle.setUp("Category", "Out", "In", option -> {
-      categoryValue = option;
+    categoryToggle.setUp(getString(R.string.category_picker_title),
+        getString(R.string.category_label_out_item), getString(R.string.category_label_in_item),
+        option -> {
+          categoryValue = option;
 
-      if (option.equals("In")) {
-        subCategoryPicker.hide();
-      } else {
-        subCategoryPicker.show();
-      }
-    });
+          if (option.equals("In")) {
+            subCategoryPicker.hide();
+          } else {
+            subCategoryPicker.show();
+          }
+        });
 
     if (permChecker.lacksPermissions(Manifest.permission.CAMERA,
         Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
@@ -142,7 +144,10 @@ public class SubmitApprovalRequestActivity extends BaseActivity
       case CAPTURE_NEW_PICTURE_REQUEST_CODE:
         if (photoFile != null) {
           if (photoFile.getTotalSpace() > 0) {
-            Picasso.with(this).load(new File(photoFile.getAbsolutePath())).fit().into(currentImageView);
+            Picasso.with(this)
+                .load(new File(photoFile.getAbsolutePath()))
+                .fit()
+                .into(currentImageView);
 
             imagePaths.add(photoFile.getAbsolutePath());
           } else {
@@ -171,7 +176,8 @@ public class SubmitApprovalRequestActivity extends BaseActivity
       }
     }
 
-    subCategoryPicker.setUpDropDown("Subcategory", "Choose a subcategory",
+    subCategoryPicker.setUpDropDown(getString(R.string.sub_category_picker_title),
+        getString(R.string.sub_category_picker_message),
         finalCategoryNames.toArray(new String[finalCategoryNames.size()]), (index, selected) -> {
           for (SubCategoriesResponseDatum subCategoriesResponseDatum : subCategoriesList) {
             if (subCategoriesResponseDatum.getName() != null && subCategoriesResponseDatum.getName()
@@ -221,20 +227,20 @@ public class SubmitApprovalRequestActivity extends BaseActivity
     ArrayList<String> errorMessages = new ArrayList<>();
 
     if (serviceDateValue.isEmpty()) {
-      errorMessages.add("The Service Date field is required.");
+      errorMessages.add(getString(R.string.error_message_service_date_required));
     }
     if (subCategoryId.isEmpty()) {
-      errorMessages.add("The Subcategory field is required.");
+      errorMessages.add(getString(R.string.error_message_subcategory_required));
     }
     if (imagePaths.isEmpty()) {
-      errorMessages.add("You are required to attach some images.");
+      errorMessages.add(getString(R.string.error_message_images_required));
     }
     if (medicalReportImagesPlacement.isEmpty()
         || invoiceImagesPlacement.isEmpty()
         || identityCardImagesPlacement.isEmpty()
         || passportImagesPlacement.isEmpty()
         || testResultsImagesPlacement.isEmpty()) {
-      errorMessages.add("Please populate all the attachment categories");
+      errorMessages.add(getString(R.string.error_message_attachments_required));
     }
 
     if (!errorMessages.isEmpty()) {
@@ -306,7 +312,7 @@ public class SubmitApprovalRequestActivity extends BaseActivity
     currentImageView = view;
 
     AlertDialog.Builder builderSingle = new AlertDialog.Builder(this);
-    builderSingle.setTitle("Attach a picture");
+    builderSingle.setTitle(getString(R.string.attach_picture_dialog_title));
 
     final ArrayAdapter<String> arrayAdapter =
         new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);

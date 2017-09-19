@@ -61,7 +61,7 @@ public class SubmitChronicActivity extends BaseActivity
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_chronic_prescription_submit);
     ButterKnife.bind(this);
-    setupToolbar(getClass().getSimpleName(), toolbar, "Submit Chronic Prescription", true);
+    setupToolbar(getClass().getSimpleName(), toolbar, getString(R.string.submit_chronic_prescription_activity_title), true);
 
     if (permChecker.lacksPermissions(Manifest.permission.CAMERA,
         Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
@@ -136,7 +136,7 @@ public class SubmitChronicActivity extends BaseActivity
     ArrayList<String> errorMessages = new ArrayList<>();
 
     if (imagePaths.isEmpty()) {
-      errorMessages.add("You are required to attach some images.");
+      errorMessages.add(getString(R.string.error_message_attachments_required));
     }
 
     if (!errorMessages.isEmpty()) {
@@ -189,7 +189,7 @@ public class SubmitChronicActivity extends BaseActivity
     currentImageView = view;
 
     AlertDialog.Builder builderSingle = new AlertDialog.Builder(this);
-    builderSingle.setTitle("Attach a picture");
+    builderSingle.setTitle(getString(R.string.attach_picture_dialog_title));
 
     final ArrayAdapter<String> arrayAdapter =
         new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);

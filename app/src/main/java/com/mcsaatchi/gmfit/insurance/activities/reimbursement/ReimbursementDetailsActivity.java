@@ -98,16 +98,16 @@ public class ReimbursementDetailsActivity extends BaseActivity
     setupToolbar(getClass().getSimpleName(), toolbar, "Reimbursement #" + claimDetails.getId(),
         true);
 
-    amount.setLabel("Amount",
+    amount.setLabel(getString(R.string.amount_label_title),
         String.valueOf(NumberFormat.getNumberInstance(Locale.US).format(claimDetails.getAmount()))
             + " "
             + claimDetails.getCurrency());
-    serviceDate.setLabel("Service Date",
+    serviceDate.setLabel(getString(R.string.amount_label_title),
         Helpers.formatInsuranceDate(new LocalDate(claimDetails.getDate().split(" ")[0])));
-    subCategory.setLabel("Sub Category", claimDetails.getSubcategory());
-    category.setLabel("Category", claimDetails.getCategory());
+    subCategory.setLabel(getString(R.string.sub_category_picker_title), claimDetails.getSubcategory());
+    category.setLabel(getString(R.string.category_picker_title), claimDetails.getCategory());
     status.setTextColor(Helpers.determineStatusColor(claimDetails.getStatus()));
-    status.setLabel("Status", claimDetails.getStatus());
+    status.setLabel(getString(R.string.status_dropdown_title), claimDetails.getStatus());
 
     for (int i = 0; i < claimDetails.getImages().size(); i++) {
 

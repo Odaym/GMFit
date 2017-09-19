@@ -89,12 +89,12 @@ public class ApprovalRequestDetailsActivity extends BaseActivity
   @Override public void displayClaimDetails(ClaimListDetailsResponseDatum responseDatum) {
     setupToolbar(getClass().getSimpleName(), toolbar, "#" + responseDatum.getId(), true);
 
-    serviceDate.setLabel("Service Date",
+    serviceDate.setLabel(getString(R.string.service_date_picker_title),
         Helpers.formatInsuranceDate(new LocalDate(responseDatum.getDate().split(" ")[0])));
-    subCategory.setLabel("Sub Category", responseDatum.getSubcategory());
-    category.setLabel("Category", responseDatum.getCategory());
+    subCategory.setLabel(getString(R.string.sub_category_picker_title), responseDatum.getSubcategory());
+    category.setLabel(getString(R.string.category_picker_title), responseDatum.getCategory());
     status.setTextColor(Helpers.determineStatusColor(responseDatum.getStatus()));
-    status.setLabel("Status", responseDatum.getStatus());
+    status.setLabel(getString(R.string.status_picker_title), responseDatum.getStatus());
 
     for (int i = 0; i < responseDatum.getImages().size(); i++) {
 

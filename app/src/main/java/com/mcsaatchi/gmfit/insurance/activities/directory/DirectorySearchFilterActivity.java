@@ -79,7 +79,7 @@ public class DirectorySearchFilterActivity extends BaseActivity
     setupDefaultCountryAndCities(countriesResponse);
 
     if (!countries.isEmpty()) {
-      countryPicker.setUpDropDown("Country", "Choose a Country",
+      countryPicker.setUpDropDown(getString(R.string.country_dropdown_title), getString(R.string.country_dropdown_message),
           countries.toArray(new String[countries.size()]), (index, selected) -> {
             for (int i = 0; i < countriesResponse.size(); i++) {
               if (countriesResponse.get(i).getLabel().equals(selected)) {
@@ -102,7 +102,7 @@ public class DirectorySearchFilterActivity extends BaseActivity
     }
 
     if (!cities.isEmpty()) {
-      cityPicker.setUpDropDown("City", "Choose a City", cities.toArray(new String[cities.size()]),
+      cityPicker.setUpDropDown(getString(R.string.city_dropdown_title), getString(R.string.city_dropdown_message), cities.toArray(new String[cities.size()]),
           (index, selected) -> {
             for (int i = 0; i < citiesListResponses.size(); i++) {
               if (citiesListResponses.get(i).getCityName() != null) {
@@ -126,7 +126,7 @@ public class DirectorySearchFilterActivity extends BaseActivity
     }
 
     if (!services.isEmpty()) {
-      servicesPicker.setUpDropDown("Service", "Choose a Service",
+      servicesPicker.setUpDropDown(getString(R.string.service_dropdown_title), getString(R.string.service_dropdown_message),
           services.toArray(new String[services.size()]), (index, selected) -> {
             for (int i = 0; i < servicesListResponseServiceVOArrs.size(); i++) {
               if (servicesListResponseServiceVOArrs.get(i).getServiceName().equals(selected)) {
@@ -203,18 +203,20 @@ public class DirectorySearchFilterActivity extends BaseActivity
   }
 
   private void setupTypePicker() {
-    typePicker.setUpDropDown("Type", "Choose a Type",
-        new String[] { "Hospital", "Doctor", "Clinic" },
+    typePicker.setUpDropDown(getString(R.string.type_dropdown_title), getString(R.string.type_dropdown_message),
+        new String[] { getString(R.string.type_dropdown_hospital_item), getString(R.string.type_dropdown_doctor_item), getString(
+                    R.string.type_dropdown_clinic_item) },
         (index, selected) -> typeSelected = selected);
   }
 
   private void setupStatusPicker() {
-    statusPicker.setUpDropDown("Status", "Choose a Status", new String[] { "Online", "Offline" },
+    statusPicker.setUpDropDown(getString(R.string.status_dropdown_title), getString(R.string.status_dropdown_message), new String[] { getString(
+            R.string.status_dropdown_online_item), getString(R.string.status_dropdown_offline_item) },
         (index, selected) -> statusSelected = selected);
   }
 
   private void setupNetworkPicker() {
-    networkPicker.setUpDropDown("Network", "Choose a Network",
-        new String[] { "All", "Within Network" }, (index, selected) -> networkSelected = selected);
+    networkPicker.setUpDropDown(getString(R.string.network_dropdown_title), getString(R.string.network_dropdown_message),
+        new String[] { getString(R.string.network_dropdown_all_item), getString(R.string.network_dropdown_within_network_item) }, (index, selected) -> networkSelected = selected);
   }
 }

@@ -65,7 +65,7 @@ public class CustomDatePickerFitnessActivity extends LinearLayout implements Vie
   }
 
   public void setSelectedItem(String selected) {
-    if (!selected.contains("Choose")) itemSelectedTv.setAlpha(1f);
+    if (!selected.contains(getContext().getString(R.string.choose_picker_label))) itemSelectedTv.setAlpha(1f);
 
     itemSelectedTv.setText(selected);
   }

@@ -107,7 +107,7 @@ public class AddNewHealthTestPart2Activity extends BaseActivity
           metrics = constructNewMetricsForRequest();
 
           if (metrics.isEmpty()) {
-            Toast.makeText(this, "Please fill in the needed fields to proceed", Toast.LENGTH_SHORT)
+            Toast.makeText(this, R.string.error_message_fill_required_fields, Toast.LENGTH_SHORT)
                 .show();
           } else {
             imageParts = constructSelectedImagesForRequest();

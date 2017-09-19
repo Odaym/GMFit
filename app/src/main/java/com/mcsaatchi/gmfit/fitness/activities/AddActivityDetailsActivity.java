@@ -185,13 +185,13 @@ public class AddActivityDetailsActivity extends BaseActivity
     }
 
     if (activityLevelID == -1) {
-      errorMessages.add("Activity Level is required.");
+      errorMessages.add(getString(R.string.error_message_activity_level_required));
     }
     if (timeSpentActivityET.getText().toString().isEmpty()) {
-      errorMessages.add("Time Spent on activity is required.");
+      errorMessages.add(getString(R.string.error_message_time_spent_required));
     }
     if (activityDate == null) {
-      errorMessages.add("Activity Date is required");
+      errorMessages.add(getString(R.string.error_message_activity_date_required));
     }
 
     if (!errorMessages.isEmpty()) {
@@ -247,7 +247,7 @@ public class AddActivityDetailsActivity extends BaseActivity
   }
 
   private void setupDatePicker() {
-    datePicker.setUpDatePicker("Activity Date", "Choose a date", (year, month, dayOfMonth) -> {
+    datePicker.setUpDatePicker(getString(R.string.dialog_title_activity_date), getString(R.string.dialog_header_choose_date), (year, month, dayOfMonth) -> {
       Calendar calendar = Calendar.getInstance();
       calendar.set(Calendar.YEAR, year);
       calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);

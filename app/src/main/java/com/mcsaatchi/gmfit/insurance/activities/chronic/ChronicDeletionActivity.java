@@ -127,7 +127,7 @@ public class ChronicDeletionActivity extends BaseActivity
     currentImageView = view;
 
     AlertDialog.Builder builderSingle = new AlertDialog.Builder(this);
-    builderSingle.setTitle("Attach a picture");
+    builderSingle.setTitle(R.string.attach_picture_dialog_title);
 
     final ArrayAdapter<String> arrayAdapter =
         new ArrayAdapter<>(this, android.R.layout.simple_list_item_1);

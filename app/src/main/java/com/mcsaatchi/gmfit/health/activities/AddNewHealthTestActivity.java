@@ -54,7 +54,6 @@ public class AddNewHealthTestActivity extends BaseActivity {
   private static final int ASK_CAMERA_AND_STORAGE_PERMISSION = 834;
   private static final int REQUEST_PICK_IMAGE_GALLERY = 329;
   private static final int CAPTURE_NEW_PICTURE_REQUEST_CODE = 871;
-  private static final String ACTIVITY_TAG_TIME_PICKER = "activity_tag_time_picker";
 
   @Bind(R.id.toolbar) Toolbar toolbar;
   @Bind(R.id.testDateTakenPicker) CustomPicker testDateTakenPicker;
@@ -139,7 +138,8 @@ public class AddNewHealthTestActivity extends BaseActivity {
     testDateTakenPicker.setArrowTintColor(R.color.health_green);
     testDateTakenPicker.setTextColorOnLabels(R.color.black);
 
-    testDateTakenPicker.setUpDatePicker("Service Date", "Choose a date",
+    testDateTakenPicker.setUpDatePicker(getString(R.string.date_picker_title_service_date), getString(
+            R.string.date_picker_header_choose_date),
         (year, month, dayOfMonth) -> {
           Calendar calendar = Calendar.getInstance();
           calendar.set(Calendar.YEAR, year);
@@ -271,7 +271,7 @@ public class AddNewHealthTestActivity extends BaseActivity {
         if (Helpers.validateFields(allFields)) {
 
           if (dateTakenForRequest == null) {
-            Toast.makeText(this, "Please make sure you enter a valid date", Toast.LENGTH_SHORT)
+            Toast.makeText(this, R.string.error_message_enter_valid_date, Toast.LENGTH_SHORT)
                 .show();
           } else {
             Intent intent =
@@ -330,8 +330,8 @@ public class AddNewHealthTestActivity extends BaseActivity {
           showImagePickerDialog();
         } else {
           Toast.makeText(this,
-              "The app was not allowed to write to your storage or take use the device's Camera. Hence, it cannot function properly."
-                  + "Please consider granting it these permissions", Toast.LENGTH_LONG).show();
+              getString(R.string.error_message_write_storage_permission_not_granted)
+                  + getString(R.string.error_message_write_storage_permission_not_granted), Toast.LENGTH_LONG).show();
         }
         break;
     }

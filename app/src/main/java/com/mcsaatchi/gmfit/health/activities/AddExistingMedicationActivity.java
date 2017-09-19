@@ -229,7 +229,7 @@ public class AddExistingMedicationActivity extends BaseActivity
 
   @OnClick(R.id.timesPerDayMeasurementTV) void showFrequencyTypeDialog() {
     AlertDialog.Builder builderSingle = new AlertDialog.Builder(AddExistingMedicationActivity.this);
-    builderSingle.setTitle("Type of frequency\n");
+    builderSingle.setTitle(R.string.dialog_title_frequency_type);
 
     final ArrayAdapter<String> arrayAdapter =
         new ArrayAdapter<>(AddExistingMedicationActivity.this, android.R.layout.simple_list_item_1);
@@ -331,15 +331,32 @@ public class AddExistingMedicationActivity extends BaseActivity
         medicationDAO.update(medicationItem);
       } else {
         Medication medication = new Medication();
-        medication.setName(medicineNameET.getText().toString());
-        medication.setRemarks(yourNotesET.getText().toString());
-        medication.setUnits(Integer.parseInt(unitsET.getText().toString()));
-        medication.setFrequency(Integer.parseInt(frequencyET.getText().toString()));
-        medication.setUnitForm(unitMeasurementTV.getText().toString());
-        medication.setWhen(daysSelected);
-        medication.setWhenString(daysOfWeekTV.getText().toString());
-        medication.setDosage("0.5 " + medication.getUnitForm());
-        medication.setTreatmentDuration(Integer.parseInt(treatmentDurationET.getText().toString()));
+        if (medicineNameET.getText() != null) {
+          medication.setName(medicineNameET.getText().toString());
+        }
+        if (yourNotesET.getText() != null) medication.setRemarks(yourNotesET.getText().toString());
+        if (unitsET.getText() != null) {
+          medication.setUnits(Integer.parseInt(unitsET.getText().toString()));
+        }
+        if (frequencyET.getText() != null) {
+          medication.setFrequency(Integer.parseInt(frequencyET.getText().toString()));
+        }
+        if (unitMeasurementTV.getText() != null) {
+          medication.setUnitForm(unitMeasurementTV.getText().toString());
+        }
+        if (daysSelected != null) {
+          medication.setWhen(daysSelected);
+        }
+        if (daysOfWeekTV.getText() != null) {
+          medication.setWhenString(daysOfWeekTV.getText().toString());
+        }
+        if (medication.getUnitForm() != null) {
+          medication.setDosage("0.5 " + medication.getUnitForm());
+        }
+        if (treatmentDurationET.getText() != null) {
+          medication.setTreatmentDuration(
+              Integer.parseInt(treatmentDurationET.getText().toString()));
+        }
         medication.setRemindersEnabled(enableRemindersSwitch.isChecked());
         medication.setDescription(
             medication.getUnits() + " " + medication.getUnitForm() + " " + medication.getUnitForm()
