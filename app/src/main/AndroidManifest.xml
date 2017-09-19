@@ -16,7 +16,7 @@
 
   <uses-feature
       android:name="android.hardware.sensor.stepcounter"
-      android:required="true"/>
+      android:required="false"/>
 
   <uses-feature android:name="android.hardware.location.gps"/>
 
