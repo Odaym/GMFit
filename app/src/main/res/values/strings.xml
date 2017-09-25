@@ -2,7 +2,7 @@
   <string name="app_name">GlobeMed Fit</string>
 
   <!-- GLOBAL COMMON -->
-  <string name="fb_login_protocol_scheme">fb304078090067926</string>
+  <string name="fb_login_protocol_scheme" translatable="false">fb304078090067926</string>
   <string name="facebook_app_id" translatable="false">304078090067926</string>
   <string name="shared_file_provider" translatable="false">com.nguyenhoanglam.imagepicker.provider.gmfit</string>
   <string name="password_requirements_regex" translatable="false">^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,15}$</string>
