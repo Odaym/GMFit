@@ -19,6 +19,7 @@ import com.mcsaatchi.gmfit.architecture.timber.TimberReleaseTree;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.onesignal.OneSignal;
 import io.fabric.sdk.android.Fabric;
+import java.util.Locale;
 import javax.inject.Inject;
 import net.danlew.android.joda.JodaTimeAndroid;
 import retrofit2.Call;
@@ -82,6 +83,17 @@ public class GMFitApplication extends Application {
       });
     } else {
       Timber.plant(new TimberReleaseTree());
+    }
+
+    switch (Locale.getDefault().getLanguage()) {
+      case "ar":
+        Timber.d("Language is AR");
+        prefs.edit().putString(Constants.EXTRAS_SYSTEM_LANGUAGE, "1").apply();
+        break;
+      case "en":
+        Timber.d("Language is EN");
+        prefs.edit().putString(Constants.EXTRAS_SYSTEM_LANGUAGE, "2").apply();
+        break;
     }
   }
 

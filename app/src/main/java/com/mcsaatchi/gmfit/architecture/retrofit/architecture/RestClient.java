@@ -41,10 +41,11 @@ public class RestClient {
 
       try {
         requestBuilder = original.newBuilder()
-            .header("Authorization", prefs.getString(Constants.PREF_USER_ACCESS_TOKEN,
+            .addHeader("Authorization", prefs.getString(Constants.PREF_USER_ACCESS_TOKEN,
                 Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS))
-            .header("Accept-Language", "en")
-            .header("Date", new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss z", Locale.US).format(
+            .addHeader("Accept-Language", "en")
+            .addHeader("Language", prefs.getString(Constants.EXTRAS_SYSTEM_LANGUAGE, "2"))
+            .addHeader("Date", new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss z", Locale.US).format(
                 new SimpleDateFormat("yyyy MM dd HH:mm:ss", Locale.US).parse(dt.getYear()
                     + " "
                     + dt.getMonthOfYear()

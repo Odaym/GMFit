@@ -19,6 +19,7 @@ public class Constants {
   public static final String EXTRAS_META_HTML_CONTENT = "meta_html_content";
   public static final String EXTRAS_USER_FACEBOOK_TOKEN = "user_facebook_token";
   public static final String EXTRAS_USER_ONE_SIGNAL_TOKEN = "user_one_signal_token";
+  public static final String EXTRAS_SYSTEM_LANGUAGE = "system_language";
 
   public static final String EXTRAS_INSURANCE_USER_PASSWORD = "insurance_user_password";
   public static final String EXTRAS_INSURANCE_USER_USERNAME = "insurance_user_username";
