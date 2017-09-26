@@ -44,6 +44,7 @@
             android:background="@color/color_primary_dark_transparent"
             android:paddingBottom="@dimen/default_margin_0"
             app:fletPaddingLeft="@dimen/default_margin_2"
+            app:fletPaddingRight="@dimen/default_margin_2"
             app:fletPaddingTop="@dimen/default_margin_1"
             app:fletTextAppearance="@style/TextAppearence.App.TextInputLayout"
             >
@@ -89,6 +90,7 @@
             android:background="@color/color_primary_dark_transparent"
             android:paddingBottom="@dimen/default_margin_0"
             app:fletPaddingLeft="@dimen/default_margin_2"
+            app:fletPaddingRight="@dimen/default_margin_2"
             app:fletPaddingTop="@dimen/default_margin_1"
             app:fletTextAppearance="@style/TextAppearence.App.TextInputLayout"
             >
@@ -133,6 +135,7 @@
             android:background="@color/color_primary_dark_transparent"
             android:paddingBottom="@dimen/default_margin_0"
             app:fletPaddingLeft="@dimen/default_margin_2"
+            app:fletPaddingRight="@dimen/default_margin_2"
             app:fletPaddingTop="@dimen/default_margin_1"
             app:fletTextAppearance="@style/TextAppearence.App.TextInputLayout"
             >
@@ -176,6 +179,7 @@
             android:background="@color/color_primary_dark_transparent"
             android:paddingBottom="@dimen/default_margin_0"
             app:fletPaddingLeft="@dimen/default_margin_2"
+            app:fletPaddingRight="@dimen/default_margin_2"
             app:fletPaddingTop="@dimen/default_margin_1"
             app:fletTextAppearance="@style/TextAppearence.App.TextInputLayout"
             >
@@ -220,6 +224,7 @@
             android:background="@color/color_primary_dark_transparent"
             android:paddingBottom="@dimen/default_margin_0"
             app:fletPaddingLeft="@dimen/default_margin_2"
+            app:fletPaddingRight="@dimen/default_margin_2"
             app:fletPaddingTop="@dimen/default_margin_1"
             app:fletTextAppearance="@style/TextAppearence.App.TextInputLayout"
             >
@@ -229,7 +234,7 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:background="@android:color/transparent"
-              android:gravity="center_vertical"
+              android:gravity="end"
               android:hint="@string/password_hint"
               android:inputType="textPassword"
               android:longClickable="false"
