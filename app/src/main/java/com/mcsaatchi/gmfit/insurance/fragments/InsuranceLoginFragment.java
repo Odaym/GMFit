@@ -128,14 +128,16 @@ public class InsuranceLoginFragment extends BaseFragment
     }
 
     if (!countries.isEmpty()) {
-      countryPicker.setUpDropDown(getString(R.string.country_dropdown_title), "",
-          countries.toArray(new String[countries.size()]), (index, selected) -> {
-            chosenCountry = true;
+      if (isAdded()) {
+        countryPicker.setUpDropDown(getString(R.string.country_dropdown_title), "",
+            countries.toArray(new String[countries.size()]), (index, selected) -> {
+              chosenCountry = true;
 
-            saveChosenCountry(countriesResponse, selected);
-          });
+              saveChosenCountry(countriesResponse, selected);
+            });
 
-      countryPicker.setSelectedItem(getString(R.string.country_dropdown_message));
+        countryPicker.setSelectedItem(getString(R.string.country_dropdown_message));
+      }
     }
   }
 

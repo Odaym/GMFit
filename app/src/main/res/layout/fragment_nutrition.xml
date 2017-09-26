@@ -128,7 +128,7 @@
           android:orientation="vertical"
           >
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/chartTopBarLayout_BREAKFAST"
             android:layout_width="match_parent"
             android:layout_height="@dimen/add_meal_item_layout_height"
@@ -141,9 +141,9 @@
 
           <TextView
               android:id="@+id/chartTitleTV_BREAKFAST"
-              android:layout_width="0dp"
-              android:layout_height="wrap_content"
-              android:layout_weight="30"
+              android:layout_width="wrap_content"
+              android:layout_height="match_parent"
+              android:gravity="center_vertical"
               android:text="Breakfast"
               android:textAppearance="?android:textAppearanceMedium"
               android:textColor="@android:color/white"
@@ -152,6 +152,7 @@
           <LinearLayout
               android:layout_width="wrap_content"
               android:layout_height="@dimen/add_meal_item_layout_height"
+              android:layout_alignParentEnd="true"
               android:gravity="center_vertical"
               >
 
@@ -188,7 +189,7 @@
                 android:textColor="@android:color/white"
                 />
           </LinearLayout>
-        </LinearLayout>
+        </RelativeLayout>
 
         <include
             layout="@layout/empty_meals_layout"
@@ -217,7 +218,7 @@
           android:orientation="vertical"
           >
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/chartTopBarLayout_LUNCH"
             android:layout_width="match_parent"
             android:layout_height="@dimen/add_meal_item_layout_height"
@@ -230,9 +231,9 @@
 
           <TextView
               android:id="@+id/chartTitleTV_LUNCH"
-              android:layout_width="0dp"
-              android:layout_height="wrap_content"
-              android:layout_weight="30"
+              android:layout_width="wrap_content"
+              android:layout_height="match_parent"
+              android:gravity="center_vertical"
               android:text="Lunch"
               android:textAppearance="?android:textAppearanceMedium"
               android:textColor="@android:color/white"
@@ -241,6 +242,7 @@
           <LinearLayout
               android:layout_width="wrap_content"
               android:layout_height="match_parent"
+              android:layout_alignParentEnd="true"
               android:gravity="center_vertical"
               >
 
@@ -277,7 +279,7 @@
                 android:textColor="@android:color/white"
                 />
           </LinearLayout>
-        </LinearLayout>
+        </RelativeLayout>
 
         <include
             layout="@layout/empty_meals_layout"
@@ -305,7 +307,7 @@
           android:orientation="vertical"
           >
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/chartTopBarLayout_DINNER"
             android:layout_width="match_parent"
             android:layout_height="@dimen/add_meal_item_layout_height"
@@ -318,9 +320,9 @@
 
           <TextView
               android:id="@+id/chartTitleTV_DINNER"
-              android:layout_width="0dp"
-              android:layout_height="wrap_content"
-              android:layout_weight="30"
+              android:layout_width="wrap_content"
+              android:layout_height="match_parent"
+              android:gravity="center_vertical"
               android:text="Dinner"
               android:textAppearance="?android:textAppearanceMedium"
               android:textColor="@android:color/white"
@@ -329,6 +331,7 @@
           <LinearLayout
               android:layout_width="wrap_content"
               android:layout_height="match_parent"
+              android:layout_alignParentEnd="true"
               android:gravity="center_vertical"
               >
 
@@ -365,7 +368,7 @@
                 android:textColor="@android:color/white"
                 />
           </LinearLayout>
-        </LinearLayout>
+        </RelativeLayout>
 
         <include
             layout="@layout/empty_meals_layout"
@@ -394,7 +397,7 @@
           android:orientation="vertical"
           >
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/chartTopBarLayout_SNACKS"
             android:layout_width="match_parent"
             android:layout_height="@dimen/add_meal_item_layout_height"
@@ -407,9 +410,9 @@
 
           <TextView
               android:id="@+id/chartTitleTV_SNACKS"
-              android:layout_width="0dp"
-              android:layout_height="wrap_content"
-              android:layout_weight="30"
+              android:layout_width="wrap_content"
+              android:layout_height="match_parent"
+              android:gravity="center_vertical"
               android:text="Snacks"
               android:textAppearance="?android:textAppearanceMedium"
               android:textColor="@android:color/white"
@@ -418,6 +421,7 @@
           <LinearLayout
               android:layout_width="wrap_content"
               android:layout_height="match_parent"
+              android:layout_alignParentEnd="true"
               android:gravity="center_vertical"
               >
 
@@ -454,7 +458,7 @@
                 android:textColor="@android:color/white"
                 />
           </LinearLayout>
-        </LinearLayout>
+        </RelativeLayout>
 
         <include
             layout="@layout/empty_meals_layout"

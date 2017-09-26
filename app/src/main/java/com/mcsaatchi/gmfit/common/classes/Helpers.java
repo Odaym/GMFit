@@ -85,6 +85,10 @@ public class Helpers {
     return NumberFormat.getNumberInstance(Locale.getDefault()).format(amount);
   }
 
+  public static String getFormattedString(double amount) {
+    return NumberFormat.getNumberInstance(Locale.getDefault()).format(amount);
+  }
+
   public static int getNumberFromFromattedString(String formattedString) {
     try {
       return NumberFormat.getNumberInstance(Locale.US).parse(formattedString).intValue();

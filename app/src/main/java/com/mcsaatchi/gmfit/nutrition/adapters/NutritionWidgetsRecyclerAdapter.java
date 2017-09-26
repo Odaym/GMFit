@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.common.classes.FontTextView;
+import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.nutrition.models.NutritionWidget;
 import java.util.ArrayList;
 
@@ -35,15 +36,16 @@ public class NutritionWidgetsRecyclerAdapter
     holder.metricTitleTV.setText((widgetsMap.get(position)).getTitle());
 
     if (widgetsMap.get(position).getValue() == 0.0) {
-      holder.metricTV.setText(String.valueOf(0));
+      holder.metricTV.setText(Helpers.getFormattedString(0));
     } else {
-      holder.metricTV.setText(String.valueOf(widgetsMap.get(position).getValue()));
+      holder.metricTV.setText(Helpers.getFormattedString(widgetsMap.get(position).getValue()));
     }
 
     if ((widgetsMap.get(position)).getPercentage() == 0.0) {
-      holder.metricPercentageTV.setText("(0%)");
+      holder.metricPercentageTV.setText("(" + Helpers.getFormattedString(0) + "%)");
     } else {
-      holder.metricPercentageTV.setText("(" + (widgetsMap.get(position)).getPercentage() + "%)");
+      holder.metricPercentageTV.setText(
+          "(" + Helpers.getFormattedString((widgetsMap.get(position)).getPercentage()) + "%)");
     }
 
     holder.measurementUnitTV.setText((widgetsMap.get(position)).getMeasurementUnit());

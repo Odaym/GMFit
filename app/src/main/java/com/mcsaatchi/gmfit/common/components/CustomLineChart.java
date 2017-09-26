@@ -13,6 +13,7 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.WeightHistoryResponseDatum;
+import com.mcsaatchi.gmfit.common.classes.Helpers;
 import java.util.ArrayList;
 import java.util.List;
 import org.joda.time.DateTime;
@@ -62,7 +63,7 @@ public class CustomLineChart extends LineChart {
       xVals.add(date.getDayOfMonth() + " " + date.monthOfYear().getAsText().substring(0, 3));
 
       entries.add(
-          new Entry(Float.parseFloat(String.format("%.1f", weights.get(i).getWeight())), i));
+          new Entry(Float.parseFloat(Helpers.getFormattedString(weights.get(i).getWeight())), i));
     }
 
     LineDataSet dataset = new LineDataSet(entries, null);

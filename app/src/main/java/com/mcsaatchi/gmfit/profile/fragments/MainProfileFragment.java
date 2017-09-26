@@ -703,7 +703,7 @@ public class MainProfileFragment extends BaseFragment
       i.setType("text/plain");
       i.putExtra(Intent.EXTRA_SUBJECT, "GMFit");
       String sAux = "\nCheck out GlobeMed's new application!\n\n";
-      sAux = sAux + "https://play.google.com/store/apps/details?id=Orion.Soft \n\n";
+      sAux = sAux + "https://play.google.com/store/apps/details?id=com.mcsaatchi.gmfit";
       i.putExtra(Intent.EXTRA_TEXT, sAux);
       startActivity(Intent.createChooser(i, "Choose sharing method"));
     } catch (Exception e) {

@@ -242,9 +242,10 @@ public class NutritionFragment extends BaseFragment
     goalTV.setText(Helpers.getFormattedString(Integer.parseInt(maxValue)));
 
     if (Double.parseDouble(prefs.getString(Constants.EXTRAS_ACTIVE_NUTRITION_CALORIES, "")) == 0) {
-      activeTV.setText("0");
+      activeTV.setText(Helpers.getFormattedString(0));
     } else {
-      activeTV.setText(prefs.getString(Constants.EXTRAS_ACTIVE_NUTRITION_CALORIES, ""));
+      activeTV.setText(Helpers.getFormattedString(
+          Double.parseDouble(prefs.getString(Constants.EXTRAS_ACTIVE_NUTRITION_CALORIES, ""))));
     }
 
     if (!activeTV.getText().toString().isEmpty()
@@ -580,7 +581,11 @@ public class NutritionFragment extends BaseFragment
 
     dateCarouselLayout.post(() -> {
       dateCarouselLayout.setSmoothScrollingEnabled(true);
-      dateCarouselLayout.fullScroll(HorizontalScrollView.FOCUS_RIGHT);
+      if (Helpers.isLanguageArabic()) {
+        dateCarouselLayout.fullScroll(HorizontalScrollView.FOCUS_LEFT);
+      } else {
+        dateCarouselLayout.fullScroll(HorizontalScrollView.FOCUS_RIGHT);
+      }
     });
   }
 
