@@ -67,6 +67,10 @@ public class Helpers {
     return pdfResponseBody.byteStream();
   }
 
+  public static boolean isLanguageArabic() {
+    return Locale.getDefault().getLanguage().equals("ar");
+  }
+
   public static boolean validateFields(ArrayList<FormEditText> allFields) {
     boolean allValid = true;
 
@@ -78,7 +82,7 @@ public class Helpers {
   }
 
   public static String getFormattedString(int amount) {
-    return NumberFormat.getNumberInstance(Locale.US).format(amount);
+    return NumberFormat.getNumberInstance(Locale.getDefault()).format(amount);
   }
 
   public static int getNumberFromFromattedString(String formattedString) {

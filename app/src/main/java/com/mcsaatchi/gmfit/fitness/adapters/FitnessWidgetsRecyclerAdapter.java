@@ -39,7 +39,8 @@ public class FitnessWidgetsRecyclerAdapter
       case "Active Calories":
         holder.moreInfoIV.setVisibility(View.VISIBLE);
         holder.metricIcon.setImageResource(R.drawable.ic_calories_spent);
-        holder.metricTV.setText(String.valueOf(this.widgetsMap.get(position).getValue()));
+        holder.metricTV.setText(
+            new DecimalFormat("##.##").format(this.widgetsMap.get(position).getValue()));
         holder.measurementUnitTV.setText(this.widgetsMap.get(position).getMeasurementUnit());
 
         holder.moreInfoIV.setOnClickListener(view -> {
@@ -54,8 +55,8 @@ public class FitnessWidgetsRecyclerAdapter
       case "Distance Traveled":
         holder.moreInfoIV.setVisibility(View.GONE);
         holder.metricIcon.setImageResource(R.drawable.ic_distance_traveled);
-        holder.metricTV.setText(String.valueOf(
-            new DecimalFormat("##.##").format(this.widgetsMap.get(position).getValue())));
+        holder.metricTV.setText(
+            new DecimalFormat("##.##").format(this.widgetsMap.get(position).getValue()));
         holder.measurementUnitTV.setText(this.widgetsMap.get(position).getMeasurementUnit());
         break;
     }

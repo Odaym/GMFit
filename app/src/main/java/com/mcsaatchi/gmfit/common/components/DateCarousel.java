@@ -68,8 +68,11 @@ public class DateCarousel extends HorizontalScrollView {
       final TextView dayOfMonthTV = itemDateCarouselLayout.findViewById(R.id.dayOfMonthTV);
       final TextView monthOfYearTV = itemDateCarouselLayout.findViewById(R.id.monthOfYearTV);
 
-      dayOfMonthTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
-      monthOfYearTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+      dayOfMonthTV.setTextSize(TypedValue.COMPLEX_UNIT_SP,
+          getResources().getDimension(R.dimen.date_carousel_day_of_month_unfocused_textsize));
+      monthOfYearTV.setTextSize(TypedValue.COMPLEX_UNIT_SP,
+          getResources().getDimension(R.dimen.date_carousel_month_of_year_unfocused_textsize));
+
       dayOfMonthTV.setTypeface(null, Typeface.NORMAL);
       monthOfYearTV.setTypeface(null, Typeface.NORMAL);
 
@@ -135,8 +138,10 @@ public class DateCarousel extends HorizontalScrollView {
           ViewGroup.LayoutParams.MATCH_PARENT));
 
       indicatorArrowIV.setVisibility(View.GONE);
-      dayOfMonthTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
-      monthOfYearTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
+      dayOfMonthTV.setTextSize(TypedValue.COMPLEX_UNIT_SP,
+          getResources().getDimension(R.dimen.date_carousel_day_of_month_unfocused_textsize));
+      monthOfYearTV.setTextSize(TypedValue.COMPLEX_UNIT_SP,
+          getResources().getDimension(R.dimen.date_carousel_month_of_year_unfocused_textsize));
 
       dayOfMonthTV.setPadding(0, 40, 0, 20);
 
@@ -157,8 +162,10 @@ public class DateCarousel extends HorizontalScrollView {
 
     indicatorArrowIV.setVisibility(View.VISIBLE);
     dateEntryLayout.setBackgroundColor(getResources().getColor(R.color.offwhite_transparent));
-    dayOfMonthTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-    monthOfYearTV.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+    dayOfMonthTV.setTextSize(TypedValue.COMPLEX_UNIT_SP,
+        getResources().getDimension(R.dimen.date_carousel_day_of_month_focused_textsize));
+    monthOfYearTV.setTextSize(TypedValue.COMPLEX_UNIT_SP,
+        getResources().getDimension(R.dimen.date_carousel_month_of_year_focused_textsize));
 
     dayOfMonthTV.setPadding(0, 0, 0, 0);
 

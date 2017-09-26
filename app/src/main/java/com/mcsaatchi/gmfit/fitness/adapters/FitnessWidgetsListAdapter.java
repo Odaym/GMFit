@@ -53,7 +53,7 @@ public class FitnessWidgetsListAdapter extends BaseAdapter {
 
       holder.itemNameTV = convertView.findViewById(R.id.itemNameTV);
       holder.itemIconRightIMG = convertView.findViewById(R.id.itemIconRightIMG);
-      holder.itemLayout = (RelativeLayout) convertView.findViewById(R.id.itemLayout);
+      holder.itemLayout = convertView.findViewById(R.id.itemLayout);
 
       convertView.setTag(holder);
     } else {

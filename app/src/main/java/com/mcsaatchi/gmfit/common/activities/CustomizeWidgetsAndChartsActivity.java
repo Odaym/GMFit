@@ -34,10 +34,6 @@ public class CustomizeWidgetsAndChartsActivity extends BaseActivity {
   private ArrayList<HealthWidget> healthWidgetsMapExtra;
   private ArrayList<DataChart> dataChartsMapExtra;
 
-  private String[] tabTitles = new String[] {
-      getString(R.string.customize_widgets_tab_title), getString(R.string.customize_charts_tab_title)
-  };
-
   @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
@@ -49,6 +45,11 @@ public class CustomizeWidgetsAndChartsActivity extends BaseActivity {
         getResources().getString(R.string.customize_widgets_and_charts_activity_title), true);
 
     Bundle intentExtras = getIntent().getExtras();
+
+    String[] tabTitles = new String[] {
+        getString(R.string.customize_widgets_tab_title),
+        getString(R.string.customize_charts_tab_title)
+    };
 
     //Grab the Fragment type from one of the three Fragments (Fitness, Nutrition, Health)
     if (intentExtras != null) {

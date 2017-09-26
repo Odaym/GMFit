@@ -13,6 +13,11 @@
   <dimen name="sections_progress_bar_height">7dp</dimen>
   <dimen name="metric_counter_font_size">140sp</dimen>
 
+  <dimen name="date_carousel_day_of_month_unfocused_textsize">5sp</dimen>
+  <dimen name="date_carousel_month_of_year_unfocused_textsize">4sp</dimen>
+  <dimen name="date_carousel_day_of_month_focused_textsize">7sp</dimen>
+  <dimen name="date_carousel_month_of_year_focused_textsize">6sp</dimen>
+
   <dimen name="default_margin_0">5dp</dimen>
   <dimen name="default_margin_1">10dp</dimen>
   <dimen name="default_margin_1_5">15dp</dimen>

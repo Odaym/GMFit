@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.ArticlesResponseBody;
+import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.fitness.activities.ArticleDetailsActivity;
 import com.squareup.picasso.Picasso;
 import java.text.ParseException;
@@ -21,8 +22,8 @@ public class ArticlesRecyclerAdapter extends RecyclerView.Adapter {
   private List<ArticlesResponseBody> articlesResponseBodies;
   private String section;
 
-  public ArticlesRecyclerAdapter(Context context,
-      List<ArticlesResponseBody> articlesResponseBodies, String section) {
+  public ArticlesRecyclerAdapter(Context context, List<ArticlesResponseBody> articlesResponseBodies,
+      String section) {
     this.context = context;
     this.articlesResponseBodies = articlesResponseBodies;
     this.section = section;
@@ -68,7 +69,7 @@ public class ArticlesRecyclerAdapter extends RecyclerView.Adapter {
 
   private class ViewHolder extends RecyclerView.ViewHolder {
     private TextView articleNameTV, articleDateTV;
-    private ImageView articleImageIV;
+    private ImageView articleImageIV, indicatorArrowIV;
 
     public ViewHolder(View itemView) {
       super(itemView);
@@ -76,6 +77,11 @@ public class ArticlesRecyclerAdapter extends RecyclerView.Adapter {
       articleNameTV = itemView.findViewById(R.id.articleNameTV);
       articleDateTV = itemView.findViewById(R.id.articleDateTV);
       articleImageIV = itemView.findViewById(R.id.articleImageIV);
+      indicatorArrowIV = itemView.findViewById(R.id.indicatorArrowIV);
+
+      if (Helpers.isLanguageArabic()) {
+        indicatorArrowIV.setScaleX(-1);
+      }
 
       itemView.setOnClickListener(view -> {
         Intent intent = new Intent(context, ArticleDetailsActivity.class);

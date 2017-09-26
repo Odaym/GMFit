@@ -191,7 +191,11 @@ public class NutritionFragment extends BaseFragment
 
         dateCarouselLayout.post(() -> {
           dateCarouselLayout.setSmoothScrollingEnabled(true);
-          dateCarouselLayout.fullScroll(HorizontalScrollView.FOCUS_RIGHT);
+          if (Helpers.isLanguageArabic()) {
+            dateCarouselLayout.fullScroll(HorizontalScrollView.FOCUS_LEFT);
+          } else {
+            dateCarouselLayout.fullScroll(HorizontalScrollView.FOCUS_RIGHT);
+          }
         });
 
         break;
