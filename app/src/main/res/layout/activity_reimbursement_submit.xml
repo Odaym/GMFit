@@ -68,7 +68,7 @@
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:layout_gravity="center_vertical"
-              android:text="Amount"
+              android:text="@string/amount_label_title"
               android:textColor="@color/buttons_text_color"
               />
         </LinearLayout>
@@ -86,10 +86,10 @@
 
           <EditText
               android:id="@+id/amountClaimedET"
-              android:layout_width="match_parent"
+              android:layout_width="wrap_content"
               android:layout_height="match_parent"
               android:background="@null"
-              android:hint="Enter Amount"
+              android:hint="@string/enter_amount_hint"
               android:inputType="numberDecimal"
               android:maxLength="7"
               android:paddingStart="@dimen/default_margin_3"

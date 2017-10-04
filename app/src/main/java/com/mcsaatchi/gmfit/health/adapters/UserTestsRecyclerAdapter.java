@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.classes.GMFitApplication;
@@ -17,6 +18,7 @@ import com.mcsaatchi.gmfit.architecture.retrofit.responses.DefaultGetResponse;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.TakenMedicalTestsResponseBody;
 import com.mcsaatchi.gmfit.architecture.touch_helpers.DragSwipeItemTouchHelperAdapter;
 import com.mcsaatchi.gmfit.common.Constants;
+import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.health.activities.AddNewHealthTestActivity;
 import java.util.List;
 import javax.inject.Inject;
@@ -106,12 +108,18 @@ public class UserTestsRecyclerAdapter
 
   class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
     TextView itemNameTV, itemSubtitleTV;
+    ImageView itemIconRightIMG;
 
     MyViewHolder(View view) {
       super(view);
       view.setOnClickListener(this);
       itemNameTV = view.findViewById(R.id.itemNameTV);
       itemSubtitleTV = view.findViewById(R.id.itemSubtitleTV);
+      itemIconRightIMG = view.findViewById(R.id.itemIconRightIMG);
+
+      if (Helpers.isLanguageArabic()) {
+        itemIconRightIMG.setScaleX(-1);
+      }
     }
 
     @Override public void onClick(View view) {

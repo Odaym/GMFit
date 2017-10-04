@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -32,6 +33,7 @@ import com.mcsaatchi.gmfit.architecture.otto.MedicationItemCreatedEvent;
 import com.mcsaatchi.gmfit.common.Constants;
 import com.mcsaatchi.gmfit.common.activities.BaseActivity;
 import com.mcsaatchi.gmfit.common.classes.AlarmReceiver;
+import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.common.classes.SimpleDividerItemDecoration;
 import com.mcsaatchi.gmfit.health.adapters.MedicationRemindersRecyclerAdapter;
 import com.mcsaatchi.gmfit.health.models.Medication;
@@ -67,6 +69,11 @@ public class AddExistingMedicationActivity extends BaseActivity
   @Bind(R.id.timesPerDayMeasurementTV) TextView timesPerDayMeasurementTV;
   @Bind(R.id.remindersLayout) LinearLayout remindersLayout;
 
+  @Bind(R.id.indicatorArrowIV1) ImageView indicatorArrowIV1;
+  @Bind(R.id.indicatorArrowIV2) ImageView indicatorArrowIV2;
+  @Bind(R.id.indicatorArrowIV3) ImageView indicatorArrowIV3;
+  @Bind(R.id.indicatorArrowIV4) ImageView indicatorArrowIV4;
+
   private RuntimeExceptionDao<Medication, Integer> medicationDAO;
   private ArrayList<MedicationReminder> medicationReminders;
   private Medication medicationItem;
@@ -98,6 +105,13 @@ public class AddExistingMedicationActivity extends BaseActivity
     presenter = new AddExistingMedicationActivityPresenter(this, dataAccessHandler);
 
     medicationDAO = dbHelper.getMedicationDAO();
+
+    if (Helpers.isLanguageArabic()) {
+      indicatorArrowIV1.setScaleX(-1);
+      indicatorArrowIV2.setScaleX(-1);
+      indicatorArrowIV3.setScaleX(-1);
+      indicatorArrowIV4.setScaleX(-1);
+    }
 
     if (getIntent().getExtras() != null) {
       medicationItem =

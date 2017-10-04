@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.common.classes.FontTextView;
+import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.health.models.HealthWidget;
 import java.util.ArrayList;
 
@@ -45,7 +46,7 @@ public class HealthWidgetsRecyclerAdapter
 
   @Override public void onBindViewHolder(RecyclerViewHolder holder, int position) {
     holder.metricTitleTV.setText((widgetsMap.get(position)).getTitle());
-    holder.metricTV.setText(String.valueOf((int) widgetsMap.get(position).getValue()));
+    holder.metricTV.setText(Helpers.getFormattedString((int) widgetsMap.get(position).getValue()));
     holder.measurementUnitTV.setText((widgetsMap.get(position)).getMeasurementUnit());
   }
 

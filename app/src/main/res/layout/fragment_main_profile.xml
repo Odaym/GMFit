@@ -31,7 +31,6 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             />
-
       </RelativeLayout>
 
       <TextView
@@ -206,10 +205,9 @@
 
           <TextView
               android:id="@+id/goalsEntryValueTV"
-              android:layout_width="@dimen/profile_value_fields_item_width"
+              android:layout_width="wrap_content"
               android:layout_height="match_parent"
               android:layout_alignParentEnd="true"
-              android:layout_alignParentTop="true"
               android:layout_marginEnd="@dimen/default_margin_2"
               android:gravity="end|center_vertical"
               android:textColor="@color/fitness_dark_blue"
@@ -236,7 +234,7 @@
 
           <TextView
               android:id="@+id/activityLevelsEntryTitleTV"
-              android:layout_width="@dimen/meal_item_name_width"
+              android:layout_width="wrap_content"
               android:layout_height="match_parent"
               android:ellipsize="end"
               android:gravity="center_vertical"
@@ -246,7 +244,7 @@
 
           <TextView
               android:id="@+id/activityLevelsEntryValueTV"
-              android:layout_width="@dimen/profile_value_fields_item_width"
+              android:layout_width="wrap_content"
               android:layout_height="match_parent"
               android:layout_alignParentEnd="true"
               android:gravity="end|center_vertical"
@@ -296,6 +294,7 @@
               />
 
           <ImageView
+              android:id="@+id/indicatorArrowIV1"
               android:layout_width="15dp"
               android:layout_height="15dp"
               android:layout_alignParentEnd="true"
@@ -334,6 +333,7 @@
               />
 
           <ImageView
+              android:id="@+id/indicatorArrowIV2"
               android:layout_width="15dp"
               android:layout_height="15dp"
               android:layout_alignParentEnd="true"
@@ -489,17 +489,18 @@
 
           <TextView
               android:id="@+id/countryValueTV"
-              android:layout_width="@dimen/profile_value_fields_item_width"
+              android:layout_width="wrap_content"
               android:layout_height="match_parent"
-              android:layout_toStartOf="@+id/arrowImage"
-              android:gravity="center_vertical|end"
+              android:layout_alignParentEnd="true"
+              android:layout_toStartOf="@+id/countryTitleTV"
+              android:gravity="center_vertical"
               android:paddingEnd="@dimen/default_margin_1"
               android:text="Lebanon"
               android:textColor="@color/fitness_dark_blue"
               />
 
           <ImageView
-              android:id="@+id/arrowImage"
+              android:id="@+id/indicatorArrowIV3"
               android:layout_width="15dp"
               android:layout_height="15dp"
               android:layout_alignParentEnd="true"
@@ -570,6 +571,7 @@
               />
 
           <ImageView
+              android:id="@+id/indicatorArrowIV4"
               android:layout_width="15dp"
               android:layout_height="15dp"
               android:layout_alignParentEnd="true"
@@ -608,6 +610,7 @@
               />
 
           <ImageView
+              android:id="@+id/indicatorArrowIV5"
               android:layout_width="15dp"
               android:layout_height="15dp"
               android:layout_alignParentEnd="true"
@@ -646,6 +649,7 @@
               />
 
           <ImageView
+              android:id="@+id/indicatorArrowIV6"
               android:layout_width="15dp"
               android:layout_height="15dp"
               android:layout_alignParentEnd="true"
@@ -684,6 +688,7 @@
               />
 
           <ImageView
+              android:id="@+id/indicatorArrowIV7"
               android:layout_width="15dp"
               android:layout_height="15dp"
               android:layout_alignParentEnd="true"
@@ -740,6 +745,7 @@
               />
 
           <ImageView
+              android:id="@+id/indicatorArrowIV8"
               android:layout_width="15dp"
               android:layout_height="15dp"
               android:layout_alignParentEnd="true"

@@ -97,6 +97,15 @@ public class MainProfileFragment extends BaseFragment
   @Bind(R.id.changePasswordParentLayout) LinearLayout changePasswordParentLayout;
   @Bind(R.id.achievementsRecycler) RecyclerView achievementsRecycler;
 
+  @Bind(R.id.indicatorArrowIV1) ImageView indicatorArrowIV1;
+  @Bind(R.id.indicatorArrowIV2) ImageView indicatorArrowIV2;
+  @Bind(R.id.indicatorArrowIV3) ImageView indicatorArrowIV3;
+  @Bind(R.id.indicatorArrowIV4) ImageView indicatorArrowIV4;
+  @Bind(R.id.indicatorArrowIV5) ImageView indicatorArrowIV5;
+  @Bind(R.id.indicatorArrowIV6) ImageView indicatorArrowIV6;
+  @Bind(R.id.indicatorArrowIV7) ImageView indicatorArrowIV7;
+  @Bind(R.id.indicatorArrowIV8) ImageView indicatorArrowIV8;
+
   @Inject SharedPreferences prefs;
   @Inject DataAccessHandlerImpl dataAccessHandler;
 
@@ -131,6 +140,17 @@ public class MainProfileFragment extends BaseFragment
     presenter = new MainProfileFragmentPresenter(this, dataAccessHandler);
 
     ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.profile_tab_title);
+
+    if (Helpers.isLanguageArabic()) {
+      indicatorArrowIV1.setScaleX(-1);
+      indicatorArrowIV2.setScaleX(-1);
+      indicatorArrowIV3.setScaleX(-1);
+      indicatorArrowIV4.setScaleX(-1);
+      indicatorArrowIV5.setScaleX(-1);
+      indicatorArrowIV6.setScaleX(-1);
+      indicatorArrowIV7.setScaleX(-1);
+      indicatorArrowIV8.setScaleX(-1);
+    }
 
     Picasso.with(getActivity())
         .load(R.drawable.pictures_placeholder)
@@ -822,15 +842,12 @@ public class MainProfileFragment extends BaseFragment
     builderSingle.setAdapter(arrayAdapter, (dialog, which) -> {
       String strName = arrayAdapter.getItem(which);
       if (strName != null) {
-        switch (strName) {
-          case "Choose from gallery":
-            Intent galleryIntent =
-                new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-            startActivityForResult(galleryIntent, REQUEST_PICK_IMAGE_GALLERY);
-            break;
-          case "Take a new picture":
-            openTakePictureIntent();
-            break;
+        if (strName.equals(getResources().getString(R.string.choose_picture_from_gallery))) {
+          Intent galleryIntent =
+              new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+          startActivityForResult(galleryIntent, REQUEST_PICK_IMAGE_GALLERY);
+        } else if (strName.equals(getResources().getString(R.string.take_new_picture))) {
+          openTakePictureIntent();
         }
       }
     });

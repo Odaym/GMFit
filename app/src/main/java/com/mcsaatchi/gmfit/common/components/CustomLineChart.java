@@ -14,8 +14,11 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.WeightHistoryResponseDatum;
 import com.mcsaatchi.gmfit.common.classes.Helpers;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -62,8 +65,19 @@ public class CustomLineChart extends LineChart {
 
       xVals.add(date.getDayOfMonth() + " " + date.monthOfYear().getAsText().substring(0, 3));
 
-      entries.add(
-          new Entry(Float.parseFloat(Helpers.getFormattedString(weights.get(i).getWeight())), i));
+      try {
+        if (Helpers.isLanguageArabic()) {
+          NumberFormat format = NumberFormat.getInstance(new Locale("hin", "IND"));
+          Number parse = format.parse(Helpers.getFormattedString(weights.get(i).getWeight()));
+
+          entries.add(new Entry(Float.parseFloat(parse.toString()), i));
+        } else {
+          entries.add(
+              new Entry(Float.parseFloat(Helpers.getFormattedString(weights.get(i).getWeight())),
+                  i));
+        }
+      } catch (ParseException e) {
+      }
     }
 
     LineDataSet dataset = new LineDataSet(entries, null);

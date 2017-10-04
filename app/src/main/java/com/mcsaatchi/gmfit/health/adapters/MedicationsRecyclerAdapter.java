@@ -59,7 +59,7 @@ public class MedicationsRecyclerAdapter extends RecyclerView.Adapter {
     public ViewHolder(View itemView) {
       super(itemView);
 
-      parentLayout = (RelativeLayout) itemView.findViewById(R.id.parentLayout);
+      parentLayout = itemView.findViewById(R.id.parentLayout);
       deleteLayout = itemView.findViewById(R.id.delete_layout);
       deactivate_layout = itemView.findViewById(R.id.deactivate_layout);
       medicineNameTV = itemView.findViewById(R.id.medicineNameTV);

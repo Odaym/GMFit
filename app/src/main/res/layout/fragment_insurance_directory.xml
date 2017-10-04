@@ -140,6 +140,7 @@
           android:layout_width="wrap_content"
           android:layout_height="match_parent"
           android:layout_marginEnd="@dimen/default_margin_1"
+          android:layout_marginStart="@dimen/default_margin_1"
           android:background="@drawable/map_index_box"
           android:gravity="center"
           android:paddingEnd="@dimen/default_margin_1"

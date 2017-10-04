@@ -19,7 +19,7 @@
         android:id="@+id/addressLabelTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Address"
+        android:text="@string/addresses_header_title"
         android:textAppearance="?android:textAppearanceMedium"
         android:textColor="@android:color/white"
         />
@@ -48,7 +48,7 @@
         android:id="@+id/phoneNumbersLabelTV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Phone Numbers"
+        android:text="@string/phone_numbers_header_title"
         android:textAppearance="?android:textAppearanceMedium"
         android:textColor="@android:color/white"
         />

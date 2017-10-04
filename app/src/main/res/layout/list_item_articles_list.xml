@@ -25,6 +25,7 @@
       android:layout_centerVertical="true"
       android:layout_marginStart="@dimen/default_margin_2"
       android:layout_toEndOf="@+id/articleImageIV"
+      android:layout_toStartOf="@+id/indicatorArrowIV"
       android:gravity="center_vertical"
       android:paddingBottom="@dimen/default_margin_2"
       android:textAppearance="?android:textAppearanceMedium"

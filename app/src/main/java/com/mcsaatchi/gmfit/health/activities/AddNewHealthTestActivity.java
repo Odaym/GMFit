@@ -138,9 +138,8 @@ public class AddNewHealthTestActivity extends BaseActivity {
     testDateTakenPicker.setArrowTintColor(R.color.health_green);
     testDateTakenPicker.setTextColorOnLabels(R.color.black);
 
-    testDateTakenPicker.setUpDatePicker(getString(R.string.date_picker_title_service_date), getString(
-            R.string.date_picker_header_choose_date),
-        (year, month, dayOfMonth) -> {
+    testDateTakenPicker.setUpDatePicker(getString(R.string.date_picker_title_service_date),
+        getString(R.string.date_picker_header_choose_date), (year, month, dayOfMonth) -> {
           Calendar calendar = Calendar.getInstance();
           calendar.set(Calendar.YEAR, year);
           calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
@@ -330,8 +329,9 @@ public class AddNewHealthTestActivity extends BaseActivity {
           showImagePickerDialog();
         } else {
           Toast.makeText(this,
-              getString(R.string.error_message_write_storage_permission_not_granted)
-                  + getString(R.string.error_message_write_storage_permission_not_granted), Toast.LENGTH_LONG).show();
+              getString(R.string.error_message_write_storage_permission_not_granted) + getString(
+                  R.string.error_message_write_storage_permission_not_granted), Toast.LENGTH_LONG)
+              .show();
         }
         break;
     }
@@ -438,15 +438,12 @@ public class AddNewHealthTestActivity extends BaseActivity {
     builderSingle.setAdapter(arrayAdapter, (dialog, which) -> {
       String strName = arrayAdapter.getItem(which);
       if (strName != null) {
-        switch (strName) {
-          case "Choose from gallery":
-            Intent galleryIntent =
-                new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-            startActivityForResult(galleryIntent, REQUEST_PICK_IMAGE_GALLERY);
-            break;
-          case "Take a new picture":
-            openTakePictureIntent();
-            break;
+        if (strName.equals(getResources().getString(R.string.choose_picture_from_gallery))) {
+          Intent galleryIntent =
+              new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+          startActivityForResult(galleryIntent, REQUEST_PICK_IMAGE_GALLERY);
+        } else if (strName.equals(getResources().getString(R.string.take_new_picture))) {
+          openTakePictureIntent();
         }
       }
     });

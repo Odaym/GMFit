@@ -645,4 +645,14 @@
   <string name="submit_complaint_inquiry_activity_title">Submit Complaint/Inquiry</string>
   <string name="error_message_title_description_required">The Title/Description field is required.</string>
   <string name="submit_reimbursement_activity_title">Submit Reimbursement</string>
+
+  <!-- NEW STRINGS -->
+  <string name="one_serving_meal_items">1 serving</string>
+  <string name="servings_suffix">servings</string>
+  <string name="kilocalories_suffix">kcal</string>
+  <string name="enter_amount_hint">Enter Amount</string>
+  <string name="area_toggle_title">Area</string>
+  <string name="area_toggle_choice_local">Local</string>
+  <string name="area_toggle_choice_cross_border">Cross Border</string>
+  <string name="none_meal_reminders_set">None</string>
 </resources>

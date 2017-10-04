@@ -82,7 +82,7 @@ public class ArticleDetailsActivity extends BaseActivity
     }
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
       articleContentsTV.setText(
-          Html.fromHtml(articleDetailsResponseBody.getContent(), Html.FROM_HTML_MODE_COMPACT));
+          Html.fromHtml(articleDetailsResponseBody.getContent(), Html.FROM_HTML_OPTION_USE_CSS_COLORS));
     } else {
       if (articleDetailsResponseBody.getContent() != null) {
         articleContentsTV.setText(Html.fromHtml(articleDetailsResponseBody.getContent()));

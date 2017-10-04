@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +17,7 @@ import com.mcsaatchi.gmfit.architecture.retrofit.architecture.DataAccessHandlerI
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.DefaultGetResponse;
 import com.mcsaatchi.gmfit.architecture.touch_helpers.DragSwipeItemTouchHelperAdapter;
 import com.mcsaatchi.gmfit.common.Constants;
+import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.nutrition.activities.SpecifyMealAmountActivity;
 import com.mcsaatchi.gmfit.nutrition.models.MealItem;
 import java.util.List;
@@ -25,7 +25,6 @@ import javax.inject.Inject;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import timber.log.Timber;
 
 public class UserMealsRecyclerAdapterDragSwipe
     extends RecyclerView.Adapter<UserMealsRecyclerAdapterDragSwipe.MyViewHolder>
@@ -58,13 +57,17 @@ public class UserMealsRecyclerAdapterDragSwipe
 
     if (meal.getAmount() != null) {
       if (Float.parseFloat(meal.getAmount()) == 1) {
-        holder.entryDescriptionTV.setText("1 serving");
+        holder.entryDescriptionTV.setText(R.string.one_serving_meal_items);
       } else {
-        holder.entryDescriptionTV.setText(meal.getAmount() + " servings");
+        holder.entryDescriptionTV.setText(
+            Helpers.getFormattedString(Float.parseFloat(meal.getAmount())) + " " + context.getString(
+                R.string.servings_suffix));
       }
     }
 
-    holder.entryUnitsTV.setText(meal.getTotalCalories() + " kcal");
+    holder.entryUnitsTV.setText(
+        Helpers.getFormattedString(meal.getTotalCalories()) + " " + context.getString(
+            R.string.kilocalories_suffix));
   }
 
   @Override public int getItemCount() {
@@ -87,20 +90,14 @@ public class UserMealsRecyclerAdapterDragSwipe
     dataAccessHandler.deleteUserMeal(instance_id, new Callback<DefaultGetResponse>() {
       @Override
       public void onResponse(Call<DefaultGetResponse> call, Response<DefaultGetResponse> response) {
-        Log.d("TAG", "onResponse: Response code was : " + response.code());
-
         switch (response.code()) {
           case 200:
-            Log.d("TAG", "onResponse: Meal item removed!");
-
             EventBusSingleton.getInstance().post(new MealEntryManipulatedEvent());
-
             break;
         }
       }
 
       @Override public void onFailure(Call<DefaultGetResponse> call, Throwable t) {
-        Timber.d("Call failed with error : %s", t.getMessage());
         final AlertDialog alertDialog = new AlertDialog.Builder(context).create();
         alertDialog.setMessage(
             context.getResources().getString(R.string.server_error_got_returned));

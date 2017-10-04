@@ -6,9 +6,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.common.Constants;
+import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.health.activities.AddExistingMedicationActivity;
 import com.mcsaatchi.gmfit.health.models.Medication;
 import java.util.List;
@@ -46,6 +48,7 @@ public class SearchMedicationsRecyclerAdapter extends RecyclerView.Adapter {
 
   private class ViewHolder extends RecyclerView.ViewHolder {
     private TextView medicineNameTV, medicineDescriptionTV;
+    private ImageView indicatorArrowIV;
 
     public ViewHolder(View itemView) {
       super(itemView);
@@ -58,6 +61,11 @@ public class SearchMedicationsRecyclerAdapter extends RecyclerView.Adapter {
 
       medicineNameTV = itemView.findViewById(R.id.medicineNameTV);
       medicineDescriptionTV = itemView.findViewById(R.id.medicineDescriptionTV);
+      indicatorArrowIV = itemView.findViewById(R.id.indicatorArrowIV);
+
+      if (Helpers.isLanguageArabic()) {
+        indicatorArrowIV.setScaleX(-1);
+      }
     }
 
     public void bind(Medication medicationItem) {

@@ -19,6 +19,7 @@
       />
 
   <ImageView
+      android:id="@+id/indicatorArrowIV"
       android:layout_width="@dimen/far_right_arrow_icon_dimens"
       android:layout_height="@dimen/far_right_arrow_icon_dimens"
       android:layout_alignParentEnd="true"

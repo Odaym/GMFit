@@ -14,6 +14,7 @@ import com.mcsaatchi.gmfit.R;
 import com.mcsaatchi.gmfit.architecture.classes.GMFitApplication;
 import com.mcsaatchi.gmfit.architecture.retrofit.responses.GetNearbyClinicsResponseDatum;
 import com.mcsaatchi.gmfit.common.Constants;
+import com.mcsaatchi.gmfit.common.classes.Helpers;
 import com.mcsaatchi.gmfit.insurance.activities.directory.ClinicDetailsActivity;
 import java.util.List;
 import javax.inject.Inject;
@@ -53,7 +54,7 @@ public class ClinicAddressesRecyclerAdapter extends RecyclerView.Adapter {
   private class ViewHolder extends RecyclerView.ViewHolder {
     private TextView clinicNameTV, clinicAddressTV;
     private LinearLayout parentLayout;
-    private ImageView withinNetworkIV, open247IV, onlineNowIV;
+    private ImageView withinNetworkIV, open247IV, onlineNowIV, indicatorArrowIV;
 
     public ViewHolder(View itemView) {
       super(itemView);
@@ -64,6 +65,7 @@ public class ClinicAddressesRecyclerAdapter extends RecyclerView.Adapter {
       withinNetworkIV = itemView.findViewById(R.id.withinNetworkIV);
       open247IV = itemView.findViewById(R.id.open247IV);
       onlineNowIV = itemView.findViewById(R.id.onlineNowIV);
+      indicatorArrowIV = itemView.findViewById(R.id.indicatorArrowIV);
     }
 
     public void bind(GetNearbyClinicsResponseDatum clinic) {
@@ -74,6 +76,10 @@ public class ClinicAddressesRecyclerAdapter extends RecyclerView.Adapter {
           && clinic.getTwentyfourseven() != null) {
         clinicNameTV.setText(WordUtils.capitalizeFully(clinic.getName()));
         clinicAddressTV.setText(clinic.getAddress());
+
+        if (Helpers.isLanguageArabic()) {
+          indicatorArrowIV.setScaleX(-1);
+        }
 
         if (!prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, "").isEmpty()) {
           if (clinic.getOnline() != null) {

@@ -87,7 +87,7 @@ public class TesticularMetricsRecyclerAdapter
       super(view);
       metricNameTV = view.findViewById(R.id.metricNameTV);
       metricValueET = view.findViewById(R.id.metricValueET);
-      metricUnitsSpinner = (Spinner) view.findViewById(R.id.metricUnitsSpinner);
+      metricUnitsSpinner = view.findViewById(R.id.metricUnitsSpinner);
     }
   }
 }

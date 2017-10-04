@@ -18,7 +18,7 @@
 
     <TextView
         android:id="@+id/medicineNameTV"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingBottom="@dimen/default_margin_1"
         android:textColor="@android:color/black"
@@ -26,7 +26,7 @@
 
     <TextView
         android:id="@+id/medicineDescriptionTV"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/medication_list_item_name_gray"
         />
@@ -41,6 +41,7 @@
       >
 
     <ImageView
+        android:id="@+id/indicatorArrowIV"
         android:layout_width="@dimen/far_right_arrow_icon_dimens"
         android:layout_height="@dimen/far_right_arrow_icon_dimens"
         android:src="@drawable/ic_arrow_right_blue"

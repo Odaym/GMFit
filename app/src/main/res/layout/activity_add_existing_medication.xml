@@ -81,6 +81,7 @@
             >
 
           <ImageView
+              android:id="@+id/indicatorArrowIV1"
               android:layout_width="@dimen/far_right_arrow_icon_dimens"
               android:layout_height="@dimen/far_right_arrow_icon_dimens"
               android:src="@drawable/ic_right_arrow_green"
@@ -210,6 +211,7 @@
             >
 
           <ImageView
+              android:id="@+id/indicatorArrowIV2"
               android:layout_width="@dimen/far_right_arrow_icon_dimens"
               android:layout_height="@dimen/far_right_arrow_icon_dimens"
               android:src="@drawable/ic_right_arrow_green"
@@ -266,6 +268,7 @@
             >
 
           <ImageView
+              android:id="@+id/indicatorArrowIV3"
               android:layout_width="@dimen/far_right_arrow_icon_dimens"
               android:layout_height="@dimen/far_right_arrow_icon_dimens"
               android:src="@drawable/ic_right_arrow_green"
@@ -433,6 +436,7 @@
             >
 
           <ImageView
+              android:id="@+id/indicatorArrowIV4"
               android:layout_width="@dimen/far_right_arrow_icon_dimens"
               android:layout_height="@dimen/far_right_arrow_icon_dimens"
               android:src="@drawable/ic_right_arrow_green"

@@ -126,15 +126,18 @@ public class SubmitReimbursementActivity extends BaseActivity
           serviceDate.setSelectedItem(serviceDateValue);
         });
 
-    categoryToggle.setUp("Category", "Out", "In", option -> {
-      categoryValue = option;
+    categoryToggle.setUp(getString(R.string.category_picker_title),
+        getString(R.string.category_label_out_item), getString(R.string.category_label_in_item),
+        option -> {
+          categoryValue = option;
 
-      if (option.equals("In")) {
-        subCategoryPicker.hide();
-      } else {
-        subCategoryPicker.show();
-      }
-    });
+          if (option.equals("In")) {
+            subCategoryPicker.hide();
+            subCategoryId = "-1";
+          } else {
+            subCategoryPicker.show();
+          }
+        });
 
     if (permChecker.lacksPermissions(Manifest.permission.CAMERA,
         Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
@@ -305,9 +308,7 @@ public class SubmitReimbursementActivity extends BaseActivity
       waitingDialog.setTitle(getResources().getString(R.string.submit_new_reimbursement));
       waitingDialog.setMessage(
           getResources().getString(R.string.uploading_attachments_dialog_message));
-      waitingDialog.setOnShowListener(dialogInterface -> {
-        startUploadImages(imageFilesSize);
-      });
+      waitingDialog.setOnShowListener(dialogInterface -> startUploadImages(imageFilesSize));
 
       waitingDialog.show();
     }
@@ -369,31 +370,27 @@ public class SubmitReimbursementActivity extends BaseActivity
     builderSingle.setAdapter(arrayAdapter, (dialog, which) -> {
       String strName = arrayAdapter.getItem(which);
       if (strName != null) {
-        switch (strName) {
-          case "Choose from gallery":
-            Intent galleryIntent =
-                new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-            startActivityForResult(galleryIntent, REQUEST_PICK_IMAGE_GALLERY);
-            break;
-          case "Take a new picture":
-            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-              photoFile = null;
-              try {
-                photoFile = ImageHandler.createImageFile(ImageHandler.constructImageFilename());
-                photoFileUri = FileProvider.getUriForFile(this,
-                    getApplicationContext().getPackageName() + ".provider", photoFile);
-              } catch (IOException ex) {
-                ex.printStackTrace();
-              }
-
-              if (photoFile != null) {
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoFileUri);
-                startActivityForResult(takePictureIntent, CAPTURE_NEW_PICTURE_REQUEST_CODE);
-              }
+        if (strName.equals(getResources().getString(R.string.choose_picture_from_gallery))) {
+          Intent galleryIntent =
+              new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+          startActivityForResult(galleryIntent, REQUEST_PICK_IMAGE_GALLERY);
+        } else if (strName.equals(getResources().getString(R.string.take_new_picture))) {
+          Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+          if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            photoFile = null;
+            try {
+              photoFile = ImageHandler.createImageFile(ImageHandler.constructImageFilename());
+              photoFileUri = FileProvider.getUriForFile(this,
+                  getApplicationContext().getPackageName() + ".provider", photoFile);
+            } catch (IOException ex) {
+              ex.printStackTrace();
             }
 
-            break;
+            if (photoFile != null) {
+              takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoFileUri);
+              startActivityForResult(takePictureIntent, CAPTURE_NEW_PICTURE_REQUEST_CODE);
+            }
+          }
         }
       }
     });

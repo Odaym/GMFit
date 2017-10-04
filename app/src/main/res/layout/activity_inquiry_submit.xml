@@ -33,22 +33,22 @@
       <LinearLayout
           android:layout_width="match_parent"
           android:layout_height="@dimen/complaint_inquiry_row_height"
+          android:background="@color/white"
           >
 
         <TextView
             android:layout_width="@dimen/insurance_input_row_width"
             android:layout_height="match_parent"
             android:background="@color/white"
-            android:gravity="center_vertical"
+            android:gravity="center_vertical|start"
             android:paddingStart="@dimen/default_margin_2"
             android:text="@string/full_name_label"
             />
 
         <EditText
             android:id="@+id/fullNameET"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="5"
             android:background="@color/white"
             android:enabled="false"
             android:gravity="center_vertical"
@@ -66,6 +66,7 @@
       <LinearLayout
           android:layout_width="match_parent"
           android:layout_height="@dimen/complaint_inquiry_row_height"
+          android:background="@color/white"
           >
 
         <TextView
@@ -79,9 +80,8 @@
 
         <EditText
             android:id="@+id/cardNumberET"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="5"
             android:background="@color/white"
             android:enabled="false"
             android:gravity="center_vertical"
@@ -99,22 +99,22 @@
       <LinearLayout
           android:layout_width="match_parent"
           android:layout_height="@dimen/complaint_inquiry_row_height"
+          android:background="@color/white"
           >
 
         <TextView
             android:layout_width="@dimen/insurance_input_row_width"
             android:layout_height="match_parent"
             android:background="@color/white"
-            android:gravity="center_vertical"
+            android:gravity="center_vertical|start"
             android:paddingStart="@dimen/default_margin_2"
             android:text="@string/risk_carrier_label"
             />
 
         <EditText
             android:id="@+id/riskCarrierET"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="5"
             android:background="@color/white"
             android:enabled="false"
             android:gravity="center_vertical"

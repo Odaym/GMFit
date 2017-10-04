@@ -62,7 +62,7 @@ public class OperationContactAddressesRecyclerAdapter extends RecyclerView.Adapt
       super(itemView);
 
       addressesValueTV = itemView.findViewById(R.id.addressesValueTV);
-      phoneNumbersRecycler = (RecyclerView) itemView.findViewById(R.id.phoneNumbersRecycler);
+      phoneNumbersRecycler = itemView.findViewById(R.id.phoneNumbersRecycler);
     }
   }
 }

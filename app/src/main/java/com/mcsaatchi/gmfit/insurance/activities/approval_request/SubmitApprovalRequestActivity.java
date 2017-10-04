@@ -91,24 +91,26 @@ public class SubmitApprovalRequestActivity extends BaseActivity
 
     ButterKnife.bind(this);
 
-    setupToolbar(getClass().getSimpleName(), toolbar, getString(R.string.submit_approval_request_activity_title), true);
+    setupToolbar(getClass().getSimpleName(), toolbar,
+        getString(R.string.submit_approval_request_activity_title), true);
 
     presenter = new SubmitApprovalRequestActivityPresenter(this, dataAccessHandler);
 
     presenter.getSubCategories(prefs.getString(Constants.EXTRAS_INSURANCE_CONTRACT_NUMBER, ""));
 
-    serviceDate.setUpDatePicker(getString(R.string.service_date_picker_title), getString(R.string.choose_date_hint), (year, month, dayOfMonth) -> {
-      Calendar calendar = Calendar.getInstance();
-      calendar.set(Calendar.YEAR, year);
-      calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-      calendar.set(Calendar.MONTH, month);
+    serviceDate.setUpDatePicker(getString(R.string.service_date_picker_title),
+        getString(R.string.choose_date_hint), (year, month, dayOfMonth) -> {
+          Calendar calendar = Calendar.getInstance();
+          calendar.set(Calendar.YEAR, year);
+          calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+          calendar.set(Calendar.MONTH, month);
 
-      Date d = new Date(calendar.getTimeInMillis());
+          Date d = new Date(calendar.getTimeInMillis());
 
-      SimpleDateFormat dateFormatter = new SimpleDateFormat("dd MMM, yyyy");
-      serviceDateValue = dateFormatter.format(d);
-      serviceDate.setSelectedItem(serviceDateValue);
-    });
+          SimpleDateFormat dateFormatter = new SimpleDateFormat("dd MMM, yyyy");
+          serviceDateValue = dateFormatter.format(d);
+          serviceDate.setSelectedItem(serviceDateValue);
+        });
 
     categoryToggle.setUp(getString(R.string.category_picker_title),
         getString(R.string.category_label_out_item), getString(R.string.category_label_in_item),
@@ -117,6 +119,7 @@ public class SubmitApprovalRequestActivity extends BaseActivity
 
           if (option.equals("In")) {
             subCategoryPicker.hide();
+            subCategoryId = "-1";
           } else {
             subCategoryPicker.show();
           }
@@ -238,8 +241,7 @@ public class SubmitApprovalRequestActivity extends BaseActivity
     if (medicalReportImagesPlacement.isEmpty()
         || invoiceImagesPlacement.isEmpty()
         || identityCardImagesPlacement.isEmpty()
-        || passportImagesPlacement.isEmpty()
-        || testResultsImagesPlacement.isEmpty()) {
+        || passportImagesPlacement.isEmpty()) {
       errorMessages.add(getString(R.string.error_message_attachments_required));
     }
 
@@ -324,31 +326,27 @@ public class SubmitApprovalRequestActivity extends BaseActivity
     builderSingle.setAdapter(arrayAdapter, (dialog, which) -> {
       String strName = arrayAdapter.getItem(which);
       if (strName != null) {
-        switch (strName) {
-          case "Choose from gallery":
-            Intent galleryIntent =
-                new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-            startActivityForResult(galleryIntent, REQUEST_PICK_IMAGE_GALLERY);
-            break;
-          case "Take a new picture":
-            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-              photoFile = null;
-              try {
-                photoFile = ImageHandler.createImageFile(ImageHandler.constructImageFilename());
-                photoFileUri = FileProvider.getUriForFile(this,
-                    getApplicationContext().getPackageName() + ".provider", photoFile);
-              } catch (IOException ex) {
-                ex.printStackTrace();
-              }
-
-              if (photoFile != null) {
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoFileUri);
-                startActivityForResult(takePictureIntent, CAPTURE_NEW_PICTURE_REQUEST_CODE);
-              }
+        if (strName.equals(getResources().getString(R.string.choose_picture_from_gallery))) {
+          Intent galleryIntent =
+              new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+          startActivityForResult(galleryIntent, REQUEST_PICK_IMAGE_GALLERY);
+        } else if (strName.equals(getResources().getString(R.string.take_new_picture))) {
+          Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+          if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            photoFile = null;
+            try {
+              photoFile = ImageHandler.createImageFile(ImageHandler.constructImageFilename());
+              photoFileUri = FileProvider.getUriForFile(this,
+                  getApplicationContext().getPackageName() + ".provider", photoFile);
+            } catch (IOException ex) {
+              ex.printStackTrace();
             }
 
-            break;
+            if (photoFile != null) {
+              takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoFileUri);
+              startActivityForResult(takePictureIntent, CAPTURE_NEW_PICTURE_REQUEST_CODE);
+            }
+          }
         }
       }
     });

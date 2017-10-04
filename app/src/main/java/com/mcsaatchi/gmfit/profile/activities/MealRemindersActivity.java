@@ -106,17 +106,17 @@ public class MealRemindersActivity extends BaseActivity {
 
     areAlarmsEnabled = prefs.getBoolean(Constants.ARE_ALARMS_ENABLED, false);
 
-    breakfastAlarmTime = prefs.getString(Constants.BREAKFAST_REMINDER_ALARM_TIME, "None");
+    breakfastAlarmTime = prefs.getString(Constants.BREAKFAST_REMINDER_ALARM_TIME, getString(R.string.none_meal_reminders_set));
     breakfastReminderValueTV.setText(breakfastAlarmTime);
 
-    lunchAlarmTime = prefs.getString(Constants.LUNCH_REMINDER_ALARM_TIME, "None");
+    lunchAlarmTime = prefs.getString(Constants.LUNCH_REMINDER_ALARM_TIME, getString(R.string.none_meal_reminders_set));
     lunchReminderValueTV.setText(lunchAlarmTime);
 
-    dinnerAlarmTime = prefs.getString(Constants.DINNER_REMINDER_ALARM_TIME, "None");
+    dinnerAlarmTime = prefs.getString(Constants.DINNER_REMINDER_ALARM_TIME, getString(R.string.none_meal_reminders_set));
     dinnerReminderValueTV.setText(dinnerAlarmTime);
 
     breakfastRemindersSwitch.setOnCheckedChangeListener((compoundButton, checked) -> {
-      if (checked && !breakfastAlarmTime.equals("None")) {
+      if (checked && !breakfastAlarmTime.equals(getString(R.string.none_meal_reminders_set))) {
         setupMealRemindersAlarm(MealRemindersActivity.this, prefs, "Breakfast", Integer.parseInt(
             reverseTimeFormatter.print(getLocalTimeFormatted(breakfastAlarmTime)).split(":")[0]),
             Integer.parseInt(reverseTimeFormatter.print(getLocalTimeFormatted(breakfastAlarmTime))
@@ -127,7 +127,7 @@ public class MealRemindersActivity extends BaseActivity {
     });
 
     lunchRemindersSwitch.setOnCheckedChangeListener((compoundButton, checked) -> {
-      if (checked && !lunchAlarmTime.equals("None")) {
+      if (checked && !lunchAlarmTime.equals(getString(R.string.none_meal_reminders_set))) {
         setupMealRemindersAlarm(MealRemindersActivity.this, prefs, "Lunch", Integer.parseInt(
             reverseTimeFormatter.print(getLocalTimeFormatted(lunchAlarmTime)).split(":")[0]),
             Integer.parseInt(
@@ -137,7 +137,7 @@ public class MealRemindersActivity extends BaseActivity {
     });
 
     dinnerRemindersSwitch.setOnCheckedChangeListener((compoundButton, checked) -> {
-      if (checked && !dinnerAlarmTime.equals("None")) {
+      if (checked && !dinnerAlarmTime.equals(getString(R.string.none_meal_reminders_set))) {
         setupMealRemindersAlarm(MealRemindersActivity.this, prefs, "Dinner", Integer.parseInt(
             reverseTimeFormatter.print(getLocalTimeFormatted(dinnerAlarmTime)).split(":")[0]),
             Integer.parseInt(
