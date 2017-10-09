@@ -646,28 +646,25 @@
   <string name="error_message_title_description_required">The Title/Description field is required.</string>
   <string name="submit_reimbursement_activity_title">Submit Reimbursement</string>
 
-  <!-- NEW STRINGS -->
-  <string name="one_serving_meal_items" translatable="false">1 serving</string>
-  <string name="servings_suffix" translatable="false">servings</string>
-  <string name="kilocalories_suffix" translatable="false">kcal</string>
-  <string name="enter_amount_hint" translatable="false">Enter Amount</string>
-  <string name="area_toggle_title" translatable="false">Area</string>
-  <string name="area_toggle_choice_local" translatable="false">Local</string>
-  <string name="area_toggle_choice_cross_border" translatable="false">Cross Border</string>
-  <string name="none_meal_reminders_set" translatable="false">None</string>
+  <string name="one_serving_meal_items">1 serving</string>
+  <string name="servings_suffix">servings</string>
+  <string name="kilocalories_suffix">kcal</string>
+  <string name="enter_amount_hint">Enter Amount</string>
+  <string name="area_toggle_title">Area</string>
+  <string name="area_toggle_choice_local">Local</string>
+  <string name="area_toggle_choice_cross_border">Cross Border</string>
+  <string name="none_meal_reminders_set">None</string>
 
-  <string name="distance_traveled" translatable="false">Distance Traveled</string>
-  <string name="active_calories" translatable="false">Active Calories</string>
-  <string name="steps_count" translatable="false">Steps Count</string>
-  <string name="breakfast" translatable="false">Breakfast</string>
-  <string name="lunch" translatable="false">Lunch</string>
-  <string name="dinner" translatable="false">Dinner</string>
-  <string name="snacks" translatable="false">Snacks</string>
-  <string name="no_breakfast_added" translatable="false">No Breakfast added</string>
-  <string name="no_lunch_added" translatable="false">No Lunch added</string>
-  <string name="no_dinner_added" translatable="false">No Dinner added</string>
-  <string name="no_snacks_added" translatable="false">No Snacks added</string>
-
-
+  <string name="distance_traveled">Distance Traveled</string>
+  <string name="active_calories">Active Calories</string>
+  <string name="steps_count">Steps Count</string>
+  <string name="breakfast">Breakfast</string>
+  <string name="lunch">Lunch</string>
+  <string name="dinner">Dinner</string>
+  <string name="snacks">Snacks</string>
+  <string name="no_breakfast_added">No Breakfast added</string>
+  <string name="no_lunch_added">No Lunch added</string>
+  <string name="no_dinner_added">No Dinner added</string>
+  <string name="no_snacks_added">No Snacks added</string>
 
 </resources>

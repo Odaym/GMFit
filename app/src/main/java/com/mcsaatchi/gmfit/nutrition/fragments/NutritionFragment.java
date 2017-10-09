@@ -23,7 +23,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.google.android.gms.common.api.CommonStatusCodes;
@@ -77,32 +77,32 @@ public class NutritionFragment extends BaseFragment
   public static final int ADD_NEW_NUTRITION_CHART_REQUEST = 2;
   private static final int BARCODE_CAPTURE_RC = 773;
 
-  @Bind(R.id.widgetsGridView) RecyclerView widgetsGridView;
-  @Bind(R.id.metricCounterTV) FontTextView metricCounterTV;
-  @Bind(R.id.metricProgressBar) ProgressBar metricProgressBar;
-  @Bind(R.id.cards_container) LinearLayout cards_container;
-  @Bind(R.id.chartTitleTV_BREAKFAST) TextView chartTitleTV_BREAKFAST;
-  @Bind(R.id.breakfastListView) RecyclerView breakfastListView;
-  @Bind(R.id.chartTitleTV_LUNCH) TextView chartTitleTV_LUNCH;
-  @Bind(R.id.lunchListView) RecyclerView lunchListView;
-  @Bind(R.id.chartTitleTV_DINNER) TextView chartTitleTV_DINNER;
-  @Bind(R.id.dinnerListView) RecyclerView dinnerListView;
-  @Bind(R.id.chartTitleTV_SNACKS) TextView chartTitleTV_SNACKS;
-  @Bind(R.id.snacksListView) RecyclerView snacksListView;
-  @Bind(R.id.loadingMetricProgressBar) ProgressBar loadingMetricProgressBar;
-  @Bind(R.id.loadingWidgetsProgressBar) ProgressBar loadingWidgetsProgressBar;
-  @Bind(R.id.dateCarouselLayout) DateCarousel dateCarouselLayout;
-  @Bind(R.id.goalTV) FontTextView goalTV;
-  @Bind(R.id.remainingTV) FontTextView remainingTV;
-  @Bind(R.id.todayTV) FontTextView todayTV;
-  @Bind(R.id.activeTV) FontTextView activeTV;
-  @Bind(R.id.goalStatusWordTV) TextView goalStatusWordTV;
-  @Bind(R.id.goalStatusIconIV) ImageView goalStatusIconIV;
-  @Bind(R.id.breakfastMealsEmptyLayout) LinearLayout breakfastMealsEmptyLayout;
-  @Bind(R.id.lunchMealsEmptyLayout) LinearLayout lunchMealsEmptyLayout;
-  @Bind(R.id.dinnerMealsEmptyLayout) LinearLayout dinnerMealsEmptyLayout;
-  @Bind(R.id.snackMealsEmptyLayout) LinearLayout snackMealsEmptyLayout;
-  @Bind(R.id.articlesRecycler) RecyclerView articlesRecycler;
+  @BindView(R.id.widgetsGridView) RecyclerView widgetsGridView;
+  @BindView(R.id.metricCounterTV) FontTextView metricCounterTV;
+  @BindView(R.id.metricProgressBar) ProgressBar metricProgressBar;
+  @BindView(R.id.cards_container) LinearLayout cards_container;
+  @BindView(R.id.chartTitleTV_BREAKFAST) TextView chartTitleTV_BREAKFAST;
+  @BindView(R.id.breakfastListView) RecyclerView breakfastListView;
+  @BindView(R.id.chartTitleTV_LUNCH) TextView chartTitleTV_LUNCH;
+  @BindView(R.id.lunchListView) RecyclerView lunchListView;
+  @BindView(R.id.chartTitleTV_DINNER) TextView chartTitleTV_DINNER;
+  @BindView(R.id.dinnerListView) RecyclerView dinnerListView;
+  @BindView(R.id.chartTitleTV_SNACKS) TextView chartTitleTV_SNACKS;
+  @BindView(R.id.snacksListView) RecyclerView snacksListView;
+  @BindView(R.id.loadingMetricProgressBar) ProgressBar loadingMetricProgressBar;
+  @BindView(R.id.loadingWidgetsProgressBar) ProgressBar loadingWidgetsProgressBar;
+  @BindView(R.id.dateCarouselLayout) DateCarousel dateCarouselLayout;
+  @BindView(R.id.goalTV) FontTextView goalTV;
+  @BindView(R.id.remainingTV) FontTextView remainingTV;
+  @BindView(R.id.todayTV) FontTextView todayTV;
+  @BindView(R.id.activeTV) FontTextView activeTV;
+  @BindView(R.id.goalStatusWordTV) TextView goalStatusWordTV;
+  @BindView(R.id.goalStatusIconIV) ImageView goalStatusIconIV;
+  @BindView(R.id.breakfastMealsEmptyLayout) LinearLayout breakfastMealsEmptyLayout;
+  @BindView(R.id.lunchMealsEmptyLayout) LinearLayout lunchMealsEmptyLayout;
+  @BindView(R.id.dinnerMealsEmptyLayout) LinearLayout dinnerMealsEmptyLayout;
+  @BindView(R.id.snackMealsEmptyLayout) LinearLayout snackMealsEmptyLayout;
+  @BindView(R.id.articlesRecycler) RecyclerView articlesRecycler;
 
   @Inject DataAccessHandlerImpl dataAccessHandler;
   @Inject SharedPreferences prefs;
@@ -541,7 +541,7 @@ public class NutritionFragment extends BaseFragment
   }
 
   @OnClick(R.id.addEntryBTN_BREAKFAST) public void addEntryBreakfast() {
-    openMealEntryPickerActivity(chartTitleTV_BREAKFAST.getText().toString());
+    openMealEntryPickerActivity("Breakfast");
   }
 
   @OnClick(R.id.scanEntryBTN_LUNCH) public void handleScanLunch() {
@@ -549,7 +549,7 @@ public class NutritionFragment extends BaseFragment
   }
 
   @OnClick(R.id.addEntryBTN_LUNCH) public void addLunchEntry() {
-    openMealEntryPickerActivity(chartTitleTV_LUNCH.getText().toString());
+    openMealEntryPickerActivity("Lunch");
   }
 
   @OnClick(R.id.scanEntryBTN_DINNER) public void handleScanDinner() {
@@ -557,7 +557,7 @@ public class NutritionFragment extends BaseFragment
   }
 
   @OnClick(R.id.addEntryBTN_DINNER) public void addDinnerEntry() {
-    openMealEntryPickerActivity(chartTitleTV_DINNER.getText().toString());
+    openMealEntryPickerActivity("Dinner");
   }
 
   @OnClick(R.id.scanEntryBTN_SNACKS) public void handleScanSnacks() {
@@ -565,7 +565,7 @@ public class NutritionFragment extends BaseFragment
   }
 
   @OnClick(R.id.addEntryBTN_SNACKS) public void addSnackEntry() {
-    openMealEntryPickerActivity(chartTitleTV_SNACKS.getText().toString());
+    openMealEntryPickerActivity("Snack");
   }
 
   private void setupDateCarousel() {

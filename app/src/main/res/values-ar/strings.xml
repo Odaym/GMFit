@@ -610,4 +610,24 @@
   <string name="submit_complaint_inquiry_activity_title">قدم شكوى / استفسار</string>
   <string name="error_message_title_description_required">حقل العنوان / الوصف مطلوب.</string>
   <string name="submit_reimbursement_activity_title">قدم مطالبة الاسترداد النقدي</string>
+
+  <string name="one_serving_meal_items">حصة واحدة</string>
+  <string name="servings_suffix">حصص</string>
+  <string name="kilocalories_suffix">كيلو كالوري</string>
+  <string name="enter_amount_hint">أدخل الكمية</string>
+  <string name="area_toggle_title">المنطقة</string>
+  <string name="area_toggle_choice_local">محلي</string>
+  <string name="area_toggle_choice_cross_border">عابر للحدود</string>
+  <string name="none_meal_reminders_set">لا يوجد</string>
+  <string name="distance_traveled">المسافة التي تم عبورها</string>
+  <string name="active_calories">السعرات الحرارية النشطة</string>
+  <string name="steps_count">إحصاء الخطوات</string>
+  <string name="breakfast">الفطور</string>
+  <string name="lunch">الغذاء</string>
+  <string name="dinner">العشاء</string>
+  <string name="snacks">وجبات خفيفة</string>
+  <string name="no_breakfast_added">لم تُضاف وجبة الفطور</string>
+  <string name="no_lunch_added">لم تُضاف وجبة الغذاء</string>
+  <string name="no_dinner_added">لم تُضاف وجبة العشاء</string>
+  <string name="no_snacks_added">لم تُضاف وجبات خفيفة</string>
 </resources>

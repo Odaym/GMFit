@@ -40,22 +40,10 @@ public class RestClient {
       Request.Builder requestBuilder = null;
 
       try {
-        int systemLanguage = 2;
-
-        switch (Locale.getDefault().getLanguage()) {
-          case "ar":
-            systemLanguage = 1;
-            break;
-          case "en":
-            systemLanguage = 2;
-            break;
-        }
-
         requestBuilder = original.newBuilder()
             .addHeader("Authorization", prefs.getString(Constants.PREF_USER_ACCESS_TOKEN,
                 Constants.NO_ACCESS_TOKEN_FOUND_IN_PREFS))
-            .addHeader("Accept-Language", "en")
-            .addHeader("Language", String.valueOf(systemLanguage))
+            .addHeader("Accept-Language", Locale.getDefault().getLanguage())
             .addHeader("Date", new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss z", Locale.US).format(
                 new SimpleDateFormat("yyyy MM dd HH:mm:ss", Locale.US).parse(dt.getYear()
                     + " "
